@@ -5,6 +5,7 @@
             <field name="name">res.partner.product.property.form.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id" eval="[(4, ref('product.group_sale_pricelist')), (4, ref('product.group_purchase_pricelist'))]"/>
             <field name="arch" type="xml">
                 <page string="Sales &amp; Purchases" position="inside">
                     <group>

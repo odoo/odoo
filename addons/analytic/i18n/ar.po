@@ -1,27 +1,29 @@
-# Arabic translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-21 09:36+0000\n"
-"Last-Translator: yosra yasser <y.yasser@diamondvision.me>\n"
-"Language-Team: Arabic <ar@li.org>\n"
+"PO-Revision-Date: 2015-06-05 16:29+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-22 05:32+0000\n"
-"X-Generator: Launchpad (build 17405)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (نسخة)"
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
@@ -81,9 +83,7 @@ msgstr "رصيد"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"محسوبة بواسطة ضرب الكمية و السعر المعطى في  سعر تكلفة المنتج. و يعبر عنه "
-"دائما بالعملة الرئيسية للشركة."
+msgstr "محسوبة بواسطة ضرب الكمية و السعر المعطى في  سعر تكلفة المنتج. و يعبر عنه دائما بالعملة الرئيسية للشركة."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -109,7 +109,7 @@ msgstr "الشركة"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
 msgid "Contract Finished"
-msgstr ""
+msgstr "العقد انتهى"
 
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
@@ -155,18 +155,18 @@ msgstr "العقد: "
 #. module: analytic
 #: field:account.analytic.line,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "انشيء سجل"
 
 #. module: analytic
 #: field:account.analytic.account,create_uid:0
 #: field:account.analytic.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "أُنشئ بواسطة"
 
 #. module: analytic
 #: field:account.analytic.account,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "إنشاؤه في"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -181,7 +181,7 @@ msgstr "العملة"
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "العميل"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -191,7 +191,7 @@ msgstr "تاريخ"
 #. module: analytic
 #: help:account.analytic.account,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -207,13 +207,13 @@ msgstr "وصف"
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "End Date"
-msgstr ""
+msgstr "تاريخ الإنتهاء"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "خطأ!"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
@@ -228,99 +228,83 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "المتابعون"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Name"
-msgstr ""
+msgstr "الاسم الكامل"
 
 #. module: analytic
 #: help:account.analytic.account,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "المعرّف"
 
 #. module: analytic
 #: help:account.analytic.account,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
 
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"إذا قمت بتحديد نوع الحساب، وهذا يعني أنك لن تسمح لإنشاء مدخالات دفتر اليومية "
-"باستخدام هذا الحساب.\n"
-"نوع 'الحساب التحليلي' يتوقف على الحسابات المعتادة التي كنت ترغب فقط بها "
-"لاستخدامها في المحاسبة.\n"
-"إذا قمت بتحديد العقد أو مشروع، فإنه يوفر لك إمكانية لإدارة المُصادقة وخيارات "
-"الفواتير لهذا الحساب.\n"
-"نوع خاص 'نموذج من العقد \"يسمح لك لتحديد نموذج يحتوي على البيانات الافتراضية "
-"التي يمكن إعادة استخدامها بسهولة."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "إذا قمت بتحديد نوع الحساب، وهذا يعني أنك لن تسمح لإنشاء مدخالات دفتر اليومية باستخدام هذا الحساب.\nنوع 'الحساب التحليلي' يتوقف على الحسابات المعتادة التي كنت ترغب فقط بها لاستخدامها في المحاسبة.\nإذا قمت بتحديد العقد أو مشروع، فإنه يوفر لك إمكانية لإدارة المُصادقة وخيارات الفواتير لهذا الحساب.\nنوع خاص 'نموذج من العقد \"يسمح لك لتحديد نموذج يحتوي على البيانات الافتراضية التي يمكن إعادة استخدامها بسهولة."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "قيد التقدم"
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "متابع"
 
 #. module: analytic
 #: field:account.analytic.account,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "تاريخ آخر رسالة"
 
 #. module: analytic
 #: field:account.analytic.account,write_uid:0
 #: field:account.analytic.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #. module: analytic
 #: field:account.analytic.account,write_date:0
 #: field:account.analytic.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "آخر تحديث فى"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "الرسائل"
 
 #. module: analytic
 #: help:account.analytic.account,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "الرسائل و سجل التواصل"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -331,21 +315,12 @@ msgstr "جديد"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
-"بجرد انتهاء تاريخ التعاقد يكون \n"
-"قد تم تمريره أو يكون قد وصل الى الحد الأقصى لعدد وحدات الخدمة \n"
-"(على سبيل المثال عقد الدعم)\n"
-"، يتم إعلام مدير الحساب \n"
-"عن طريق البريد الإلكتروني لتجديد العقد مع \n"
-"العميل."
+msgstr "بجرد انتهاء تاريخ التعاقد يكون \nقد تم تمريره أو يكون قد وصل الى الحد الأقصى لعدد وحدات الخدمة \n(على سبيل المثال عقد الدعم)\n، يتم إعلام مدير الحساب \nعن طريق البريد الإلكتروني لتجديد العقد مع \nالعميل."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -360,7 +335,7 @@ msgstr "وحدات الخدمة مسبقة الدفع"
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "مدير المشروع"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -377,7 +352,7 @@ msgstr "غير مسموح بإنشاء حساب سريع ."
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr ""
+msgstr "مرجع"
 
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
@@ -389,9 +364,7 @@ msgstr "تجديد"
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
-"يحدد حد أعلى من الوقت للعمل على العقد، استنادا إلى الجدول الزمني. (على سبيل "
-"المثال، عدد الساعات في عقد دعم محدود)."
+msgstr "يحدد حد أعلى من الوقت للعمل على العقد، استنادا إلى الجدول الزمني. (على سبيل المثال، عدد الساعات في عقد دعم محدود)."
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -401,17 +374,17 @@ msgstr "تحديد مجموع الكمية لعدّها"
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "تاريخ البدء"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "Status"
-msgstr ""
+msgstr "الحالة"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "الملخّص"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -427,12 +400,12 @@ msgstr "نموذج من العقد"
 #. module: analytic
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "الشروط و الأحكام"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "للتجديد"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -442,7 +415,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "رسائل غير مقروءة"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -453,7 +426,7 @@ msgstr "مستخدِم"
 #: code:addons/analytic/analytic.py:272
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #. module: analytic
 #: constraint:account.analytic.line:0

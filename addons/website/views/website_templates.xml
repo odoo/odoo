@@ -85,8 +85,8 @@
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
-                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+                    <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
             </t>
 
@@ -235,10 +235,10 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider"/>
-        <li>
+        <li class="divider" groups="base.group_public"/>
+        <li groups="base.group_public">
             <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>

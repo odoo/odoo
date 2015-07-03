@@ -401,7 +401,7 @@ def is_leaf(element, internal=False):
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
         and ((isinstance(element[0], basestring) and element[0])
-             or element in (TRUE_LEAF, FALSE_LEAF))
+             or tuple(element) in (TRUE_LEAF, FALSE_LEAF))
 
 
 # --------------------------------------------------

@@ -1164,7 +1164,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
     init: function(parent) {
         var self = this;
         this._super(parent);
-        var view = this.getParent();
+        this.view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
             { 'name' : 'other', 'label' : _t('More'), }

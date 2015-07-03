@@ -182,9 +182,8 @@ class mail_thread(osv.AbstractModel):
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
         result = []
-        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one', context=context)
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
-            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_editable = self.pool['res.users'].has_group(cr, uid, 'base.group_no_one')
             is_uid = uid in map(lambda x: x.id, follower.user_ids)
             data = (follower.id,
                     follower.name,
@@ -340,9 +339,7 @@ class mail_thread(osv.AbstractModel):
         options = {
             'display_log_button': False
         }
-        group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
-        is_employee = group_user_id in [group.id for group in group_ids]
+        is_employee = self.pool['res.users'].has_group(cr, uid, 'base.group_user')
         if is_employee:
             options['display_log_button'] = True
         return options
@@ -390,13 +387,6 @@ class mail_thread(osv.AbstractModel):
             name = ir_model_pool.read(cr, uid, ids, ['name'], context=context)[0]['name']
             self.message_post(cr, uid, thread_id, body=_('%s created') % name, context=context)
 
-        # auto_subscribe: take values and defaults into account
-        create_values = dict(values)
-        for key, val in context.iteritems():
-            if key.startswith('default_') and key[8:] not in create_values:
-                create_values[key[8:]] = val
-        self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
-
         # track values
         track_ctx = dict(context)
         if 'lang' not in track_ctx:
@@ -406,6 +396,14 @@ class mail_thread(osv.AbstractModel):
             if tracked_fields:
                 initial_values = {thread_id: dict.fromkeys(tracked_fields, False)}
                 self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=track_ctx)
+
+        # auto_subscribe: take values and defaults into account
+        create_values = dict(values)
+        for key, val in context.iteritems():
+            if key.startswith('default_') and key[8:] not in create_values:
+                create_values[key[8:]] = val
+        self.message_auto_subscribe(cr, uid, [thread_id], create_values.keys(), context=context, values=create_values)
+
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -430,13 +428,15 @@ class mail_thread(osv.AbstractModel):
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in records)
 
-        # Perform write, update followers
+        # Perform write
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
-        self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
         # Perform the tracking
         if tracked_fields:
             self.message_track(cr, uid, ids, tracked_fields, initial_values, context=track_ctx)
+
+        # update followers
+        self.message_auto_subscribe(cr, uid, ids, values.keys(), context=context, values=values)
 
         return result
 
@@ -943,7 +943,7 @@ class mail_thread(osv.AbstractModel):
         email_from = decode_header(message, 'From')
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
-        in_reply_to = decode_header(message, 'In-Reply-To')
+        in_reply_to = decode_header(message, 'In-Reply-To').strip()
         thread_references = references or in_reply_to
 
         # 0. First check if this is a bounce message or not.

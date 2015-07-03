@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-22 13:15+0000\n"
-"Last-Translator: Dariusz Żbikowski (Krokus) <darek@krokus.com.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:31+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_forum
 #: model:email.template,body_html:website_forum.validation_email
@@ -25,15 +26,13 @@ msgid ""
 "    Hello ${object.name},\n"
 "</p>\n"
 "<p>\n"
-"    You have been invited to validate your email in order to get access to "
-"\"${object.company_id.name}\" Q/A Forums.\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
 "</p>\n"
 "<p>\n"
 "    To validate your email, please click on the following link:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for "
-"\"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "    Thanks,\n"
@@ -82,9 +81,7 @@ msgstr "-1"
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
-"<p>Udzielono nowej odpowiedzi na <i>%s</i>. <a "
-"href=\"%s/forum/%s/question/%s\">Kliknij tu, aby przejść do postu.</a></p>"
+msgstr "<p>Udzielono nowej odpowiedzi na <i>%s</i>. <a href=\"%s/forum/%s/question/%s\">Kliknij tu, aby przejść do postu.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -92,9 +89,7 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
-"<p>Zadano nowe pytanie  <i>%s</i> o %s. <a "
-"href=\"%s/forum/%s/question/%s\">Kliknij tu, aby przejść do pytania.</a></p>"
+msgstr "<p>Zadano nowe pytanie  <i>%s</i> o %s. <a href=\"%s/forum/%s/question/%s\">Kliknij tu, aby przejść do pytania.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -109,10 +104,7 @@ msgid ""
 "A tag is a label that categorizes your question with other,\n"
 "            similar questions. Using the right tags makes it easier for\n"
 "            others to find and answer your question."
-msgstr ""
-"Tag jest etykietą, która zbiera pytania podobne do twojego\n"
-"            do jednej kategorii. Używanie prawidłowych tagów pomaga\n"
-"            innym znaleźć twoje pytanie i odpowiedzieć na nie."
+msgstr "Tag jest etykietą, która zbiera pytania podobne do twojego\n            do jednej kategorii. Używanie prawidłowych tagów pomaga\n            innym znaleźć twoje pytanie i odpowiedzieć na nie."
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -135,8 +127,7 @@ msgid "Accepting an answer"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.post,active:0
-#: selection:forum.post,state:0
+#: field:forum.post,active:0 selection:forum.post,state:0
 msgid "Active"
 msgstr "Aktywne"
 
@@ -194,8 +185,7 @@ msgid "Answered on"
 msgstr "Data odpowiedzi"
 
 #. module: website_forum
-#: field:forum.post,child_count:0
-#: field:forum.post,child_ids:0
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
 #: view:website:website_forum.display_post
 #: view:website:website_forum.user_detail_full
 msgid "Answers"
@@ -253,8 +243,7 @@ msgid "Badge \""
 msgstr "Odznaka \""
 
 #. module: website_forum
-#: field:res.users,badge_ids:0
-#: view:website:website_forum.badge
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
 #: view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Badges"
@@ -266,10 +255,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
-"Poza zdobywaniem reputacji za pomocą pytań i odpowiedzi,\n"
-"            otrzymujesz odznaki za bycie wyjątkowo pomocnym. Odznaki\n"
-"            są widoczne w twoim profilu i przy twoich postach."
+msgstr "Poza zdobywaniem reputacji za pomocą pytań i odpowiedzi,\n            otrzymujesz odznaki za bycie wyjątkowo pomocnym. Odznaki\n            są widoczne w twoim profilu i przy twoich postach."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -440,8 +426,8 @@ msgstr "Napisano swoją biografię"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid ""
-"Congratulations! Your email has just been validated. You may now participate "
-"to our forums."
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
 msgstr ""
 
 #. module: website_forum
@@ -463,8 +449,7 @@ msgstr ""
 #. module: website_forum
 #: help:forum.post,is_correct:0
 msgid "Correct Answer or Answer on this question accepted."
-msgstr ""
-"Odpowiedź prawidłowa, lub odpowiedź na to pytanie została zaakceptowana."
+msgstr "Odpowiedź prawidłowa, lub odpowiedź na to pytanie została zaakceptowana."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -482,17 +467,14 @@ msgid "Create Date"
 msgstr "Data utworzenia"
 
 #. module: website_forum
-#: field:forum.forum,create_uid:0
-#: field:forum.post,create_uid:0
-#: field:forum.post.reason,create_uid:0
-#: field:forum.post.vote,create_uid:0
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
 #: field:forum.tag,create_uid:0
 msgid "Created by"
 msgstr "Utworzone przez"
 
 #. module: website_forum
-#: field:forum.forum,create_date:0
-#: field:forum.post.reason,create_date:0
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
 #: field:forum.tag,create_date:0
 msgid "Created on"
 msgstr "Data utworzenia"
@@ -511,8 +493,7 @@ msgid "Critic"
 msgstr "Krytyk"
 
 #. module: website_forum
-#: help:forum.forum,message_last_post:0
-#: help:forum.post,message_last_post:0
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr "Data ostatniej wiadomości w rekordzie."
 
@@ -678,8 +659,7 @@ msgstr "Obserwatorzy"
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 #: view:forum.post:website_forum.view_forum_post_search
-#: field:forum.post,forum_id:0
-#: field:forum.post.vote,forum_id:0
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
 #: field:forum.tag,forum_id:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.ui.menu,name:website_forum.menu_website_forum
@@ -713,8 +693,7 @@ msgstr "Posty na forum"
 #: view:forum.forum:website_forum.view_forum_forum_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.model,name:website_forum.model_forum_forum
-#: model:ir.ui.menu,name:website_forum.menu_forum
-#: view:website:website.layout
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
 msgid "Forums"
 msgstr "Fora"
 
@@ -799,28 +778,20 @@ msgid "Help"
 msgstr "Pomoc"
 
 #. module: website_forum
-#: help:forum.forum,message_summary:0
-#: help:forum.post,message_summary:0
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
-"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
-"kanban."
+msgstr "Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie jest bezpośrednio w formacie html, aby można je było stosować w widokach kanban."
 
 #. module: website_forum
-#: field:forum.forum,id:0
-#: field:forum.post,id:0
-#: field:forum.post.reason,id:0
-#: field:forum.post.vote,id:0
-#: field:forum.tag,id:0
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: website_forum
-#: help:forum.forum,message_unread:0
-#: help:forum.post,message_unread:0
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi."
 
@@ -830,12 +801,7 @@ msgid ""
 "If you close this question, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed questions to moderate\n"
 "            them."
-msgstr ""
-"Jeśli zamkniesz to pytanie, zostanie ono ukryte przed większością "
-"użytkowników. Tylko\n"
-"            użytkownicy o wysokiej karmie widzą zamknięte pytania, aby móc "
-"je\n"
-"            moderować."
+msgstr "Jeśli zamkniesz to pytanie, zostanie ono ukryte przed większością użytkowników. Tylko\n            użytkownicy o wysokiej karmie widzą zamknięte pytania, aby móc je\n            moderować."
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -854,8 +820,7 @@ msgid "It appears your email has not been verified."
 msgstr ""
 
 #. module: website_forum
-#: field:res.users,karma:0
-#: view:website:website_forum.user_detail_full
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
 msgstr "Karma"
 
@@ -920,24 +885,19 @@ msgid "Keep Informed"
 msgstr "Bądź na bieżąco"
 
 #. module: website_forum
-#: field:forum.forum,message_last_post:0
-#: field:forum.post,message_last_post:0
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
 msgid "Last Message Date"
 msgstr "Data ostatniej wiadomości"
 
 #. module: website_forum
-#: field:forum.forum,write_uid:0
-#: field:forum.post.reason,write_uid:0
-#: field:forum.post.vote,write_uid:0
-#: field:forum.tag,write_uid:0
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
 msgid "Last Updated by"
 msgstr "Ostatnio modyfikowano przez"
 
 #. module: website_forum
-#: field:forum.forum,write_date:0
-#: field:forum.post.reason,write_date:0
-#: field:forum.post.vote,write_date:0
-#: field:forum.tag,write_date:0
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
 msgid "Last Updated on"
 msgstr "Data ostatniej modyfikacji"
 
@@ -957,14 +917,12 @@ msgid "Linking files (Editor)"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_ids:0
-#: field:forum.post,message_ids:0
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
 msgid "Messages"
 msgstr "Wiadomości"
 
 #. module: website_forum
-#: help:forum.forum,message_ids:0
-#: help:forum.post,message_ids:0
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
 msgid "Messages and communication history"
 msgstr "Wiadomości i historia komunikacji"
 
@@ -994,8 +952,7 @@ msgid "My Vote"
 msgstr "Mój głos"
 
 #. module: website_forum
-#: field:forum.forum,name:0
-#: view:forum.post:website_forum.view_forum_post_form
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
 #: field:forum.tag,name:0
 msgid "Name"
 msgstr "Nazwa"
@@ -1126,9 +1083,7 @@ msgstr "Wprowadź opisowe pytanie (powinno kończyć się znakiem zapytania)"
 msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
-msgstr ""
-"Wprowadź prawidłowy adres e-mail, aby otrzymywać notyfikacje o odpowiedziach "
-"i komentarzach"
+msgstr "Wprowadź prawidłowy adres e-mail, aby otrzymywać notyfikacje o odpowiedziach i komentarzach"
 
 #. module: website_forum
 #: view:website:website_forum.post_answer
@@ -1162,8 +1117,7 @@ msgid "Popular Question (500)"
 msgstr "Popularne pytanie (500)"
 
 #. module: website_forum
-#: field:forum.post.vote,post_id:0
-#: view:website:website_forum.post_comment
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
 msgid "Post"
 msgstr "Post"
 
@@ -1254,8 +1208,7 @@ msgid "Question:"
 msgstr "Pytanie:"
 
 #. module: website_forum
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
+#: view:website:website_forum.forum_index view:website:website_forum.header
 #: view:website:website_forum.user_detail_full
 msgid "Questions"
 msgstr "Pytania"
@@ -1287,8 +1240,7 @@ msgid "Reason:"
 msgstr "Powód:"
 
 #. module: website_forum
-#: view:website:website_forum.404
-#: view:website:website_forum.private_profile
+#: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
 msgstr "Powrót do listy pytań"
 
@@ -1370,8 +1322,7 @@ msgid "Student"
 msgstr "Uczeń"
 
 #. module: website_forum
-#: field:forum.forum,message_summary:0
-#: field:forum.post,message_summary:0
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
 msgid "Summary"
 msgstr "Podsumowanie"
 
@@ -1388,12 +1339,9 @@ msgid "Tag"
 msgstr "Tag"
 
 #. module: website_forum
-#: field:forum.post,tag_ids:0
-#: view:website:website_forum.ask_question
-#: view:website:website_forum.edit_post
-#: view:website:website_forum.forum_index
-#: view:website:website_forum.header
-#: view:website:website_forum.tag
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
 msgid "Tags"
 msgstr "Tagi"
 
@@ -1434,7 +1382,7 @@ msgstr "Tytuł"
 #. module: website_forum
 #: field:forum.post.vote,recipient_id:0
 msgid "To"
-msgstr ""
+msgstr "Do"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1457,8 +1405,7 @@ msgid "Unlink its own comments"
 msgstr ""
 
 #. module: website_forum
-#: field:forum.forum,message_unread:0
-#: field:forum.post,message_unread:0
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
 msgid "Unread Messages"
 msgstr "Nieprzeczytane wiadomości"
 
@@ -1534,8 +1481,7 @@ msgid "Vote"
 msgstr "Głosuj"
 
 #. module: website_forum
-#: field:forum.post,vote_count:0
-#: field:forum.post,vote_ids:0
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
 #: view:website:website_forum.user_detail_full
 msgid "Votes"
 msgstr "Głosy"
@@ -1571,8 +1517,7 @@ msgstr "Słowa kluczowe dla strony - meta"
 
 #. module: website_forum
 #: field:forum.forum,website_meta_title:0
-#: field:forum.post,website_meta_title:0
-#: field:forum.tag,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
 msgid "Website meta title"
 msgstr "Tytuł strony - meta"
 
@@ -1604,8 +1549,7 @@ msgid "answers"
 msgstr "odpowiedzi"
 
 #. module: website_forum
-#: view:website:website_forum.badge
-#: view:website:website_forum.user_badges
+#: view:website:website_forum.badge view:website:website_forum.user_badges
 msgid "awarded users"
 msgstr "nagrodzeni użytkownicy"
 
@@ -1623,9 +1567,7 @@ msgstr "odznaki:"
 #: view:website:website_forum.ask_question
 msgid ""
 "be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
-msgstr ""
-"wypowiadaj się zwięźle i zrozumiale, unikaj niepotrzebnych wstępów (Cześć, "
-"Dzięki itp.)"
+msgstr "wypowiadaj się zwięźle i zrozumiale, unikaj niepotrzebnych wstępów (Cześć, Dzięki itp.)"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1641,7 +1583,7 @@ msgstr "brąz"
 #: view:website:website_forum.display_post
 #: view:website:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "przez"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1743,12 +1685,12 @@ msgstr "niezwiązane z tematem"
 #: view:website:website_forum.post_comment
 #: view:website:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "na"
 
 #. module: website_forum
 #: view:website:website_forum.close_question
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -1763,8 +1705,7 @@ msgstr "profil"
 #. module: website_forum
 #: view:website:website_forum.ask_question
 msgid "provide enough details and, if possible, give an example"
-msgstr ""
-"podaj wystarczająco szczegółów lub, jeśli to możliwe, posłuż się przykładem"
+msgstr "podaj wystarczająco szczegółów lub, jeśli to możliwe, posłuż się przykładem"
 
 #. module: website_forum
 #: view:website:website_forum.badge_user
@@ -1837,15 +1778,13 @@ msgid "views"
 msgstr "odsłony"
 
 #. module: website_forum
-#: view:website:website_forum.display_post
-#: view:website:website_forum.vote
+#: view:website:website_forum.display_post view:website:website_forum.vote
 msgid "vote"
 msgstr "głos"
 
 #. module: website_forum
 #: view:website:website_forum.display_post
-#: view:website:website_forum.user_detail_full
-#: view:website:website_forum.vote
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
 msgid "votes"
 msgstr "głosy"
 

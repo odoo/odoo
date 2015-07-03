@@ -1,23 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-03-24 16:18+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translations@matmoz.si>\n"
+"PO-Revision-Date: 2015-06-04 05:30+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -28,19 +28,11 @@ msgstr "# postavk"
 #: help:mrp.production.workcenter.line,state:0
 msgid ""
 "* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
-msgstr ""
-"* Ob nastanku delovni nalog v stanju 'Osnutek'\n"
-"* Ob zagonu preide v stanje 'V teku'\n"
-"* Če zaustavljen je v stanju 'Na čakanju'\n"
-"* Ob preklicu je stanje 'Preklicano'\n"
-"* Po končani obdelavi je stanje 'Dokončano'."
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "* Ob nastanku delovni nalog v stanju 'Osnutek'\n* Ob zagonu preide v stanje 'V teku'\n* Če zaustavljen je v stanju 'Na čakanju'\n* Ob preklicu je stanje 'Preklicano'\n* Po končani obdelavi je stanje 'Dokončano'."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -49,28 +41,13 @@ msgid ""
 "            Click to start a new work order.\n"
 "          </p><p>\n"
 "            To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing "
-"operations.\n"
-"            Manufacturing operations are often called Work Orders. The "
-"various\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Ustvari nov delovni nalog.\n"
-"          </p><p>\n"
-"            Za proizvodnjo ali sestavo proizvodov in uporabo surovin in "
-"končnih\n"
-"            proizvodov je potrebno upravljanje proizvodnih operacij. "
-"Proizvodne\n"
-"            operacije so pogosto imenovane delovni nalogi. Različne "
-"operacije\n"
-"            imajo različen vpliv na strošek proizvodnje in načrtovanja\n"
-"            glede na obremenitev.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Ustvari nov delovni nalog.\n          </p><p>\n            Za proizvodnjo ali sestavo proizvodov in uporabo surovin in končnih\n            proizvodov je potrebno upravljanje proizvodnih operacij. Proizvodne\n            operacije so pogosto imenovane delovni nalogi. Različne operacije\n            imajo različen vpliv na strošek proizvodnje in načrtovanja\n            glede na obremenitev.\n          </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -82,23 +59,11 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the "
-"related\n"
+"            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Zagon novega delovnega naloga. \n"
-"          </p><p>\n"
-"            Delovni nalogi so seznam operacij vsakega proizvodnega\n"
-"            naloga. Po zagonu prvega delovnega naloga v sklopu\n"
-"            proizvodnega naloga, se proizvodni nalog samodejno\n"
-"            označi kot zagnan. Po zaključku zadnje operacije preide\n"
-"            v stanje opravljeno opravljeno in vsi povezani proizvodi \n"
-"            so proizvedeni..\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Zagon novega delovnega naloga. \n          </p><p>\n            Delovni nalogi so seznam operacij vsakega proizvodnega\n            naloga. Po zagonu prvega delovnega naloga v sklopu\n            proizvodnega naloga, se proizvodni nalog samodejno\n            označi kot zagnan. Po zaključku zadnje operacije preide\n            v stanje opravljeno opravljeno in vsi povezani proizvodi \n            so proizvedeni..\n          </p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -137,9 +102,7 @@ msgstr "Preklicano"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
-"Označite za možnost neodvisnih premikov vseh proizvodnih nalogov brez "
-"premika odvisnih."
+msgstr "Označite za možnost neodvisnih premikov vseh proizvodnih nalogov brez premika odvisnih."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
@@ -262,8 +225,7 @@ msgid "Hours by Work Center"
 msgstr "Ure po delovnih centrih"
 
 #. module: mrp_operations
-#: field:mrp.workorder,id:0
-#: field:mrp_operations.operation,id:0
+#: field:mrp.workorder,id:0 field:mrp_operations.operation,id:0
 #: field:mrp_operations.operation.code,id:0
 msgid "ID"
 msgstr "ID"
@@ -285,24 +247,20 @@ msgstr "V teku"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Če želite operacijo dokončati, mora biti v stanju Zagon ali Nadaljevanje"
+msgstr "Če želite operacijo dokončati, mora biti v stanju Zagon ali Nadaljevanje"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
 #, python-format
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
-msgstr ""
-"Če želite operacijo začasno ustaviti (pavza), mora biti v stanju Zagon ali "
-"Nadaljevanje"
+msgstr "Če želite operacijo začasno ustaviti (pavza), mora biti v stanju Zagon ali Nadaljevanje"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:449
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
-"Za Nadaljevanje operacije mora le ta biti v stanju Prekinitev (pavza)!"
+msgstr "Za Nadaljevanje operacije mora le ta biti v stanju Prekinitev (pavza)!"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -597,8 +555,7 @@ msgstr "Premik zaloge"
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr ""
-"Čas, ki preteče med začetkom in koncem operacije v tem delovnem centru"
+msgstr "Čas, ki preteče med začetkom in koncem operacije v tem delovnem centru"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0

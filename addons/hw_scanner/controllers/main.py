@@ -208,5 +208,5 @@ if evdev:
 
 class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def scanner_thread(self):
+    def scanner(self):
         return scanner_thread.get_barcode() if scanner_thread else None

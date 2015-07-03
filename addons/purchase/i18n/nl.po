@@ -1,41 +1,37 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-24 15:46+0000\n"
-"Last-Translator: Jos De Graeve - http://www.apertoso.be/ "
-"<Jos.DeGraeve@apertoso.be>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-06-01 17:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-25 05:39+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
@@ -44,8 +40,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -54,16 +49,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -75,119 +65,34 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hallo ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and "
-"'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
-"       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} "
-"${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Orderdatum: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;Orderreferentie: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"       &nbsp;&nbsp;Uw contactpersoon: <a "
-"href=\"mailto:${object.validator.email or "
-"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n"
-"    <p>Dank u!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefoon:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Website:&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n    \n    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Orderdatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferentie: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n    <p>Dank u!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefoon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Website:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "    \n"
-"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-"quotation' or 'purchase order confirmation'} from ${object.company_id.name}: "
-"</p>\n"
+"    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>\n"
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
@@ -200,8 +105,7 @@ msgid ""
 "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
 "       % endif\n"
 "       % if object.validator:\n"
-"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email "
-"or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
 "\n"
@@ -210,16 +114,11 @@ msgid ""
 "    <p>Thank you!</p>\n"
 "    <br/>\n"
 "    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
 "    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
 "        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
 "        % if object.company_id.street:\n"
 "            ${object.company_id.street}<br/>\n"
@@ -231,136 +130,40 @@ msgid ""
 "            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
 "        % endif\n"
 "        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
 "        % endif\n"
 "        </span>\n"
 "        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
 "                Phone:&nbsp; ${object.company_id.phone}\n"
 "            </div>\n"
 "        % endif\n"
 "        % if object.company_id.website:\n"
 "            <div>\n"
-"                Web :&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
 "            </div>\n"
 "        %endif\n"
 "        <p></p>\n"
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
-"\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
-"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
-"\n"
-"    <p>Hallo ${object.partner_id.name},</p>\n"
-"    \n"
-"    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and "
-"'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: "
-"</p>\n"
-"    \n"
-"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-"       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
-"       &nbsp;&nbsp;Aanvraagnumber: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;Aanvraagdatum: ${object.date_order}<br />\n"
-"       % if object.origin:\n"
-"       &nbsp;&nbsp;aanvraagreferentie: ${object.origin}<br />\n"
-"       % endif\n"
-"       % if object.partner_ref:\n"
-"       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n"
-"       % endif\n"
-"       % if object.validator:\n"
-"       &nbsp;&nbsp;Uw contactpersoon: <a "
-"href=\"mailto:${object.validator.email or "
-"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
-"       % endif\n"
-"    </p>\n"
-"\n"
-"    <br/>\n"
-"    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n"
-"    <p>Dank u!</p>\n"
-"    <br/>\n"
-"    <br/>\n"
-"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
-"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
-"background-repeat: repeat no-repeat;\">\n"
-"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
-"#DDD;\">\n"
-"            <strong style=\"text-"
-"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
-"    </div>\n"
-"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
-"16px; background-color: #F2F2F2;\">\n"
-"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
-"        % if object.company_id.street:\n"
-"            ${object.company_id.street}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.street2:\n"
-"            ${object.company_id.street2}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.city or object.company_id.zip:\n"
-"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
-"        % endif\n"
-"        % if object.company_id.country_id:\n"
-"            ${object.company_id.state_id and ('%s, ' % "
-"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
-"or ''}<br/>\n"
-"        % endif\n"
-"        </span>\n"
-"        % if object.company_id.phone:\n"
-"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
-"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
-"0px; padding-left: 0px; \">\n"
-"                Telefoon:&nbsp; ${object.company_id.phone}\n"
-"            </div>\n"
-"        % endif\n"
-"        % if object.company_id.website:\n"
-"            <div>\n"
-"                Website:&nbsp;<a "
-"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
-"            </div>\n"
-"        %endif\n"
-"        <p></p>\n"
-"    </div>\n"
-"</div>\n"
-"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hallo ${object.partner_id.name},</p>\n    \n    <p>Hierbij ontvangt u onze ${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'orderbevestiging'} van ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n       &nbsp;&nbsp;Aanvraagnumber: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Aanvraagdatum: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;aanvraagreferentie: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Als er nog vragen zijn kunt u contact opnemen met ons.</p>\n    <p>Dank u!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefoon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Website:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
-"Creates the dropship route and add more complex tests-This installs the "
-"module stock_dropshipping."
-msgstr ""
-"\n"
-"Maakt de dropship route aan en voegt meer complexe testen toe.\n"
-"- Dit installeert de module stock_dropshipping."
+"Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
+msgstr "\nMaakt de dropship route aan en voegt meer complexe testen toe.\n- Dit installeert de module stock_dropshipping."
 
 #. module: purchase
 #: help:purchase.order.line,state:0
 msgid ""
-" * The 'Draft' status is set automatically when purchase order in draft "
-"status.                                        \n"
-"* The 'Confirmed' status is set automatically as confirm when purchase order "
-"in confirm status.                                        \n"
-"* The 'Done' status is set automatically when purchase order is set as done. "
-"                                       \n"
-"* The 'Cancelled' status is set automatically when user cancel purchase "
-"order."
-msgstr ""
-" * De 'Concept' status wordt automatisch gezet als inkooporder wordt "
-"ingevoerd.                                        \n"
-"* De 'Akkoord' status wordt automatisch gezet nadat de inkooporder is "
-"bevestigd.                         \n"
-"* De 'Gereed' status wordt automatisch gezet als de inkooporder klaar is.    "
-"                                    \n"
-"* De 'Geannuleerd' status wordt automatisch gezet als de gebruiker de "
-"inkooporder annuleert."
+" * The 'Draft' status is set automatically when purchase order in draft status.                                        \n"
+"* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
+"* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
+"* The 'Cancelled' status is set automatically when user cancel purchase order."
+msgstr " * De 'Concept' status wordt automatisch gezet als inkooporder wordt ingevoerd.                                        \n* De 'Akkoord' status wordt automatisch gezet nadat de inkooporder is bevestigd.                         \n* De 'Gereed' status wordt automatisch gezet als de inkooporder klaar is.                                        \n* De 'Geannuleerd' status wordt automatisch gezet als de gebruiker de inkooporder annuleert."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
@@ -392,8 +195,7 @@ msgstr "# Inkooporders"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.company_id.name|safe} Order (Referentie ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} Order (Referentie ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
@@ -411,56 +213,26 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                    Click here to record a supplier invoice.\n"
 "                </p><p>\n"
-"                    Supplier invoices can be pre-generated based on "
-"purchase\n"
+"                    Supplier invoices can be pre-generated based on purchase\n"
 "                    orders or receipts. This allows you to control invoices\n"
 "                    you receive from your supplier according to the draft\n"
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Klik hier voor het maken van een inkoopfactuur.\n"
-"                </p><p>\n"
-"                    Inkoopfacturen kunnen vooraf gegenereerd worden op basis "
-"van inkoop\n"
-"                    orders of inkomende leveringen. Dit stelt u in staat de "
-"facturen\n"
-"                    die u ontvangt van uw leverancier te controleren op "
-"basis van de \n"
-"                    concept documenten in Odoo.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Klik hier voor het maken van een inkoopfactuur.\n                </p><p>\n                    Inkoopfacturen kunnen vooraf gegenereerd worden op basis van inkoop\n                    orders of inkomende leveringen. Dit stelt u in staat de facturen\n                    die u ontvangt van uw leverancier te controleren op basis van de \n                    concept documenten in Odoo.\n                </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                    This supplier has no purchase order. Click to create a "
-"new RfQ.\n"
+"                    This supplier has no purchase order. Click to create a new RfQ.\n"
 "                </p><p>\n"
-"                    The request for quotation is the first step of the "
-"purchases flow. Once\n"
-"                    converted into a purchase order, you will be able to "
-"control the receipt\n"
+"                    The request for quotation is the first step of the purchases flow. Once\n"
+"                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van een offerteaanvraag.\n"
-"              </p><p>\n"
-"                De offerte bevat de geschiedenis van de discussie / "
-"onderhandeling\n"
-"                met uw leverancier. Eenmaal bevestigd, wordt de "
-"offerteaanvraag\n"
-"                omgezet in een inkooporder.\n"
-"              </ p></ p>\n"
-"                De meeste voorstellen voor inkooporders worden automatisch "
-"gemaakt\n"
-"                door Odoo op basis van voorraad behoeften.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van een offerteaanvraag.\n              </p><p>\n                De offerte bevat de geschiedenis van de discussie / onderhandeling\n                met uw leverancier. Eenmaal bevestigd, wordt de offerteaanvraag\n                omgezet in een inkooporder.\n              </ p></ p>\n                De meeste voorstellen voor inkooporders worden automatisch gemaakt\n                door Odoo op basis van voorraad behoeften.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -470,23 +242,11 @@ msgid ""
 "              </p><p>\n"
 "                There can be more than one version of a pricelist, each of\n"
 "                these must be valid during a certain period of time. Some\n"
-"                examples of versions: Main Prices, 2010, 2011, Summer "
-"Sales,\n"
+"                examples of versions: Main Prices, 2010, 2011, Summer Sales,\n"
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik om een prijslijstversie toe te voegen.\n"
-"              </p><p>\n"
-"                Er kan meer dan één versie van een prijslijst worden "
-"gedefinieerd.\n"
-"                Hier heeft u de mogelijkheid voor het aanmaken en beheren "
-"van\n"
-"                nieuwe versies van een prijslijst. Enkele voorbeelden van\n"
-"                versies: 2012, 2013, zomer promotie, enz.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik om een prijslijstversie toe te voegen.\n              </p><p>\n                Er kan meer dan één versie van een prijslijst worden gedefinieerd.\n                Hier heeft u de mogelijkheid voor het aanmaken en beheren van\n                nieuwe versies van een prijslijst. Enkele voorbeelden van\n                versies: 2012, 2013, zomer promotie, enz.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -495,56 +255,26 @@ msgid ""
 "                Click to create a new incoming shipment.\n"
 "              </p><p> \n"
 "                Here you can track all the product receipts of purchase\n"
-"                orders where the invoicing is \"Based on Incoming "
-"Shipments\",\n"
+"                orders where the invoicing is \"Based on Incoming Shipments\",\n"
 "                and for which you have not received a supplier invoice yet.\n"
-"                You can generate a supplier invoice based on those "
-"receipts.\n"
+"                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van een nieuwe inkomende levering\n"
-"              </p><p> \n"
-"                Hier kunt u al uw product ontvangsten van inkoop\n"
-"                orders volgen waar de facturatie is ingesteld op ¨gebaseerd "
-"op inkomende levering\",\n"
-"                en waarvoor u nog geen factuur van uw leverancier heeft "
-"ontvangen.\n"
-"                U kunt een inkoopfactuur genereren gebaseerd op deze "
-"inkomende levering.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van een nieuwe inkomende levering\n              </p><p> \n                Hier kunt u al uw product ontvangsten van inkoop\n                orders volgen waar de facturatie is ingesteld op ¨gebaseerd op inkomende levering\",\n                en waarvoor u nog geen factuur van uw leverancier heeft ontvangen.\n                U kunt een inkoopfactuur genereren gebaseerd op deze inkomende levering.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a quotation that will be converted into a "
-"purchase order. \n"
+"                Click to create a quotation that will be converted into a purchase order. \n"
 "              </p><p>\n"
 "                Use this menu to search within your purchase orders by\n"
-"                references, supplier, products, etc. For each purchase "
-"order,\n"
-"                you can track the related discussion with the supplier, "
-"control\n"
+"                references, supplier, products, etc. For each purchase order,\n"
+"                you can track the related discussion with the supplier, control\n"
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik hier voor het aanmaken van een offerte, welke wordt "
-"omgezet in een inkooporder. \n"
-"              </p><p>\n"
-"                Gebruik dit menu om binnen uw inkooporder te zoeken op\n"
-"                referenties, leverancier, producten, enz. Voor elke "
-"inkooporder,\n"
-"                kunt het bijbehorende overleg met de leverancier bijhouden, "
-"controle\n"
-"                uitvoeren op de ontvangen producten en de facturen van de "
-"leveranciers.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik hier voor het aanmaken van een offerte, welke wordt omgezet in een inkooporder. \n              </p><p>\n                Gebruik dit menu om binnen uw inkooporder te zoeken op\n                referenties, leverancier, producten, enz. Voor elke inkooporder,\n                kunt het bijbehorende overleg met de leverancier bijhouden, controle\n                uitvoeren op de ontvangen producten en de facturen van de leveranciers.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -552,31 +282,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a request for quotation.\n"
 "              </p><p>\n"
-"                The quotation contains the history of the "
-"discussion/negotiation\n"
+"                The quotation contains the history of the discussion/negotiation\n"
 "                you had with your supplier. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order.\n"
 "              </p><p>\n"
-"                Most propositions of purchase orders are created "
-"automatically\n"
+"                Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van een offerteaanvraag.\n"
-"              </p><p>\n"
-"                De offerte bevat de geschiedenis van de "
-"discussie/onderhandeling\n"
-"                welke u had met u leverancier. Bij bevestigen, wordt een "
-"offerteaanvraag\n"
-"                omgezet in een inkooporder.\n"
-"              </p><p>\n"
-"                De meeste offerteaanvragen worden automatisch aangemaakt "
-"door Odoo\n"
-"               op basis van de voorraadbehoefte.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van een offerteaanvraag.\n              </p><p>\n                De offerte bevat de geschiedenis van de discussie/onderhandeling\n                welke u had met u leverancier. Bij bevestigen, wordt een offerteaanvraag\n                omgezet in een inkooporder.\n              </p><p>\n                De meeste offerteaanvragen worden automatisch aangemaakt door Odoo\n               op basis van de voorraadbehoefte.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -592,19 +306,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Klik voor het maken van een concept factuur.\n"
-"          </p><p>\n"
-"            Gebruik dit menu om uw facturen van uw leverancier te "
-"controleren.\n"
-"            Odoo maakt concept inkoopfacturen van inkooporders of\n"
-"            inkomende leveringen. Dit afhankelijk van uw instellingen.\n"
-"          </p><p>\n"
-"            Wanneer u een factuur van uw leverancier heeft ontvangen, kunt\n"
-"            u deze vergelijken met de concept fractuur en deze valideren.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Klik voor het maken van een concept factuur.\n          </p><p>\n            Gebruik dit menu om uw facturen van uw leverancier te controleren.\n            Odoo maakt concept inkoopfacturen van inkooporders of\n            inkomende leveringen. Dit afhankelijk van uw instellingen.\n          </p><p>\n            Wanneer u een factuur van uw leverancier heeft ontvangen, kunt\n            u deze vergelijken met de concept fractuur en deze valideren.\n          </p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -617,53 +319,23 @@ msgid ""
 "            subcontractants.\n"
 "          </p><p>\n"
 "            The product form contains detailed information to improve the\n"
-"            purchase process: prices, procurement logistics, accounting "
-"data,\n"
+"            purchase process: prices, procurement logistics, accounting data,\n"
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Klik voor het aanmaken van een nieuw product.\n"
-"          </p><p>\n"
-"            U dient een nieuw product aan te maken voor alle dat u inkoop. "
-"Of\n"
-"            het nu een verbruiksproduct, een voorraadproduct of een dienst "
-"is van een\n"
-"            onderaannemer. \n"
-"          </p><p>\n"
-"            Het product bevat gedetailleerde informatie om het inkoopproces "
-"te vereenvoudigen, \n"
-"            zoals [prijzen, verwerving, logistieke en financiële gegevens, "
-"alsmede beschikbare leveranciers.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Klik voor het aanmaken van een nieuw product.\n          </p><p>\n            U dient een nieuw product aan te maken voor alle dat u inkoop. Of\n            het nu een verbruiksproduct, een voorraadproduct of een dienst is van een\n            onderaannemer. \n          </p><p>\n            Het product bevat gedetailleerde informatie om het inkoopproces te vereenvoudigen, \n            zoals [prijzen, verwerving, logistieke en financiële gegevens, alsmede beschikbare leveranciers.\n          </p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
 msgid ""
 "<p>\n"
-"                Here you can track all the lines of purchase orders where "
-"the\n"
-"                invoicing is \"Based on Purchase Order Lines\", and for "
-"which you\n"
-"                have not received a supplier invoice yet. You can generate "
-"a\n"
+"                Here you can track all the lines of purchase orders where the\n"
+"                invoicing is \"Based on Purchase Order Lines\", and for which you\n"
+"                have not received a supplier invoice yet. You can generate a\n"
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                 Hier kunt u volgen alle inkooporderregels volgen, waarvan "
-"de facturatie\n"
-"                 is gebaseerd op \"Op basis van inkooporderregels\", en "
-"waarvoor u\n"
-"                 nog geen factuur van uw leverancier heeft gehad. U kunt "
-"een\n"
-"                 concept inkoopfactuur genereren op basis van deze regels in "
-"de lijst.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                 Hier kunt u volgen alle inkooporderregels volgen, waarvan de facturatie\n                 is gebaseerd op \"Op basis van inkooporderregels\", en waarvoor u\n                 nog geen factuur van uw leverancier heeft gehad. U kunt een\n                 concept inkoopfactuur genereren op basis van deze regels in de lijst.\n              </p>\n            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -683,61 +355,42 @@ msgstr "Waarschuwingen per product of leverancier"
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
 msgid ""
-"Allow to configure notification on products and trigger them when a user "
-"wants to purchase a given product or a given supplier.\n"
+"Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
-"Geeft u de mogelijkheid om berichten te configureren op producten en deze te "
-"activeren wanneer een gebruiker een bepaald product wil inkopen of wil "
-"inkopen bij een bepaalde leverancier.\n"
-"Voorbeeld: Product: Dit product is verouderd, Koop niet meer dan 5.\n"
-"Leverancier: vergeet niet te vragen om een ​​spoedlevering."
+msgstr "Geeft u de mogelijkheid om berichten te configureren op producten en deze te activeren wanneer een gebruiker een bepaald product wil inkopen of wil inkopen bij een bepaalde leverancier.\nVoorbeeld: Product: Dit product is verouderd, Koop niet meer dan 5.\nLeverancier: vergeet niet te vragen om een ​​spoedlevering."
 
 #. module: purchase
 #: help:account.config.settings,module_purchase_analytic_plans:0
 #: help:purchase.config.settings,module_purchase_analytic_plans:0
 msgid ""
-"Allows the user to maintain several analysis plans. These let you split "
-"lines on a purchase order between several accounts and analytic plans.\n"
+"Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr ""
-"Geeft de gebruiker de mogelijkheid om meerdere kostenplaatsen te "
-"onderhouden. Dit zal de regels opdelen over meerdere kostenplaatsen.\n"
-"-Dit installeert de module purchase_analytic_plans."
+msgstr "Geeft de gebruiker de mogelijkheid om meerdere kostenplaatsen te onderhouden. Dit zal de regels opdelen over meerdere kostenplaatsen.\n-Dit installeert de module purchase_analytic_plans."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
-"Geeft u de mogelijkheid om verschillende prijzen te beheren op basis van "
-"regels per categorie of leverancier.\n"
-"Bijvoorbeeld: 10% voor retailers, korting van 5 EUR op dit product, etc."
+msgstr "Geeft u de mogelijkheid om verschillende prijzen te beheren op basis van regels per categorie of leverancier.\nBijvoorbeeld: 10% voor retailers, korting van 5 EUR op dit product, etc."
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
-"Geeft u de mogelijkheid om de kostprijs te berekenen op basis van de "
-"gemiddelde kostprijs."
+msgstr "Geeft u de mogelijkheid om de kostprijs te berekenen op basis van de gemiddelde kostprijs."
 
 #. module: purchase
 #: help:purchase.config.settings,group_uom:0
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr ""
-"Hiermee kunt u verschillende maateenheden voor producten selecteren en "
-"onderhouden."
+msgstr "Hiermee kunt u verschillende maateenheden voor producten selecteren en onderhouden."
 
 #. module: purchase
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
-"Geeft u de mogelijkheid tot het specificeren van een kostenplaats bij "
-"inkooporders."
+msgstr "Geeft u de mogelijkheid tot het specificeren van een kostenplaats bij inkooporders."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -804,19 +457,10 @@ msgstr "Gebaseerd op orderregels"
 #. module: purchase
 #: help:purchase.order,invoice_method:0
 msgid ""
-"Based on Purchase Order lines: place individual lines in 'Invoice Control / "
-"On Purchase Order lines' from where you can selectively create an invoice.\n"
+"Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
-"Based on incoming shipments: let you create an invoice when receipts are "
-"validated."
-msgstr ""
-"Gebaseerd op orderregels: plaats de afzonderlijke regels in 'Factuurcontrole "
-"/ Gebaseerd op inkooporders (bestelde hoeveelheden)' van waar u selectief "
-"een factuur kan maken.\n"
-"Vooraf gegenereerde conceptfacturen op basis van inkooporders: maak een "
-"conceptfactuur welke u later kunt goedkeuren.\n"
-"Gebaseerd op ontvangsten (geleverde hoeveelheden): Maak een factuur aan "
-"nadat de ontvangsten zijn goedgekeurd."
+"Based on incoming shipments: let you create an invoice when receipts are validated."
+msgstr "Gebaseerd op orderregels: plaats de afzonderlijke regels in 'Factuurcontrole / Gebaseerd op inkooporders (bestelde hoeveelheden)' van waar u selectief een factuur kan maken.\nVooraf gegenereerde conceptfacturen op basis van inkooporders: maak een conceptfactuur welke u later kunt goedkeuren.\nGebaseerd op ontvangsten (geleverde hoeveelheden): Maak een factuur aan nadat de ontvangsten zijn goedgekeurd."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -851,8 +495,7 @@ msgid "Bid Valid Until"
 msgstr "Offerte geldig t/m"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1171
-#: code:addons/purchase/stock.py:192
+#: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
 #, python-format
 msgid "Buy"
 msgstr "Kopen"
@@ -865,18 +508,10 @@ msgstr "Agendaweergave"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
 msgid ""
-"Calls for bids are used when you want to generate requests for quotations to "
-"several suppliers for a given set of products.\n"
-"            You can configure per product if you directly do a Request for "
-"Quotation\n"
-"            to one supplier or if you want a Call for Bids to compare offers "
-"from several suppliers."
-msgstr ""
-"Inkoopbiedingen worden gebruikt wanneer u offerteaanvragen wilt genereren "
-"van verschillende leveranciers voor een bepaalde groep van producten.\n"
-"            U kunt per product instellen als u een offerteaanvraag \n"
-"            doet bij een leverancier of als u een oproep voor biedingen wilt "
-"doen om te onderhandelen met meerdere leveranciers."
+"Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
+"            You can configure per product if you directly do a Request for Quotation\n"
+"            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
+msgstr "Inkoopbiedingen worden gebruikt wanneer u offerteaanvragen wilt genereren van verschillende leveranciers voor een bepaalde groep van producten.\n            U kunt per product instellen als u een offerteaanvraag \n            doet bij een leverancier of als u een oproep voor biedingen wilt doen om te onderhandelen met meerdere leveranciers."
 
 #. module: purchase
 #: view:product.template:purchase.product_template_search_view_purchase
@@ -890,9 +525,7 @@ msgstr "Inkoop product"
 msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
-msgstr ""
-"Het is niet mogelijk deze verwerving te annuleren, omdat de gekoppeld "
-"inkooporder al bevestigd is. U dient de inkooporder eerst te annuleren. "
+msgstr "Het is niet mogelijk deze verwerving te annuleren, omdat de gekoppeld inkooporder al bevestigd is. U dient de inkooporder eerst te annuleren. "
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
@@ -909,8 +542,7 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
@@ -919,8 +551,7 @@ msgstr "Geannuleerd"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
-"Het is niet mogelijk een inkooporder te verwijderen in de '%s\"status."
+msgstr "Het is niet mogelijk een inkooporder te verwijderen in de '%s\"status."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -943,8 +574,7 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: purchase
-#: field:purchase.order,company_id:0
-#: field:purchase.order.line,company_id:0
+#: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
 #: view:purchase.report:purchase.view_purchase_order_search
 #: field:purchase.report,company_id:0
 msgid "Company"
@@ -1003,8 +633,7 @@ msgstr "Aangemaakt door"
 
 #. module: purchase
 #: field:purchase.config.settings,create_date:0
-#: field:purchase.order,create_date:0
-#: field:purchase.order.group,create_date:0
+#: field:purchase.order,create_date:0 field:purchase.order.group,create_date:0
 #: field:purchase.order.line,create_date:0
 #: field:purchase.order.line_invoice,create_date:0
 msgid "Created on"
@@ -1026,8 +655,7 @@ msgid "Customer Address (Direct Delivery)"
 msgstr "Adres klant (Direct doorleveren)"
 
 #. module: purchase
-#: field:purchase.order,date_approve:0
-#: field:purchase.report,date_approve:0
+#: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
 msgstr "Datum goedgekeurd"
 
@@ -1113,9 +741,7 @@ msgstr "Leveringen & Facturen"
 msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a Purchase Order, by default it's the creation date."
-msgstr ""
-"Geeft de datum weer, wanneer de offerte moet worden gevalideerd en omgezet "
-"in een inkooporder, standaard is dit de aanmaakdatum."
+msgstr "Geeft de datum weer, wanneer de offerte moet worden gevalideerd en omgezet in een inkooporder, standaard is dit de aanmaakdatum."
 
 #. module: purchase
 #: field:purchase.order.line,name:0
@@ -1125,8 +751,7 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-#: field:purchase.report,location_id:0
+#: field:purchase.order,location_id:0 field:purchase.report,location_id:0
 msgid "Destination"
 msgstr "Bestemming"
 
@@ -1138,15 +763,12 @@ msgstr "Wilt u de leveranciersfacturen genereren?"
 #. module: purchase
 #: help:stock.picking,reception_to_invoice:0
 msgid ""
-"Does the picking contains some moves related to a purchase order invoiceable "
-"on the receipt?"
-msgstr ""
-"Bevat de inkomende levering mutaties welke behoren bij een inkooporder, "
-"welke gefactureerd wordt na ontvangst?"
+"Does the picking contains some moves related to a purchase order invoiceable"
+" on the receipt?"
+msgstr "Bevat de inkomende levering mutaties welke behoren bij een inkooporder, welke gefactureerd wordt na ontvangst?"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.order.line,state:0
+#: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
 msgstr "Verwerkt"
@@ -1184,12 +806,9 @@ msgid "Email composition wizard"
 msgstr "E-mail samenstellen wizard"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:159
-#: code:addons/purchase/purchase.py:413
-#: code:addons/purchase/purchase.py:538
-#: code:addons/purchase/purchase.py:555
-#: code:addons/purchase/purchase.py:598
-#: code:addons/purchase/purchase.py:1188
+#: code:addons/purchase/purchase.py:159 code:addons/purchase/purchase.py:413
+#: code:addons/purchase/purchase.py:538 code:addons/purchase/purchase.py:555
+#: code:addons/purchase/purchase.py:598 code:addons/purchase/purchase.py:1188
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Error!"
@@ -1252,18 +871,12 @@ msgstr "Verberg geannuleerde regels"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: purchase
-#: field:purchase.config.settings,id:0
-#: field:purchase.order,id:0
-#: field:purchase.order.group,id:0
-#: field:purchase.order.line,id:0
-#: field:purchase.order.line_invoice,id:0
-#: field:purchase.report,id:0
+#: field:purchase.config.settings,id:0 field:purchase.order,id:0
+#: field:purchase.order.group,id:0 field:purchase.order.line,id:0
+#: field:purchase.order.line_invoice,id:0 field:purchase.report,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -1281,19 +894,14 @@ msgstr "Leveringen"
 #: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
-"Om een inkooporder te kunnen verwijderen, dient u deze eerst te annuleren"
+msgstr "Om een inkooporder te kunnen verwijderen, dient u deze eerst te annuleren"
 
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
 msgid ""
-"In the process of a public bidding, you can compare the bid lines and choose "
-"for each requested product from which bid you\n"
+"In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
-msgstr ""
-"Bij het verwerken van openbare biedingen kunt u de biedingregels vergelijken "
-"en voor ieder gevraagd product kiezen van\n"
-"            welke bieding u welke hoeveelheid wilt kopen"
+msgstr "Bij het verwerken van openbare biedingen kunt u de biedingregels vergelijken en voor ieder gevraagd product kiezen van\n            welke bieding u welke hoeveelheid wilt kopen"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -1326,14 +934,10 @@ msgstr "Leveringscondities"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"International Commercial Terms (INCOTERMS) zijn een set van "
-"voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij "
-"internationaal transport."
+msgstr "International Commercial Terms (INCOTERMS) zijn een set van voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij internationaal transport."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
-#: code:addons/purchase/purchase.py:1016
+#: code:addons/purchase/purchase.py:337 code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -1349,8 +953,7 @@ msgid "Invoice Control"
 msgstr "Factuurcontrole"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
 msgstr "Fouten in facturatie"
 
@@ -1387,15 +990,13 @@ msgid "Invoiceable on incoming shipment?"
 msgstr "Factureerbaar bij inkomende levering?"
 
 #. module: purchase
-#: field:purchase.order,invoiced_rate:0
-#: field:purchase.order.line,invoiced:0
+#: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Gefactureerd"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
-#: field:purchase.order,invoice_count:0
-#: field:purchase.order,invoice_ids:0
+#: field:purchase.order,invoice_count:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
 msgstr "Facturen"
 
@@ -1450,8 +1051,7 @@ msgid "Last Message Date"
 msgstr "Laatste bericht datum"
 
 #. module: purchase
-#: field:purchase.config.settings,write_uid:0
-#: field:purchase.order,write_uid:0
+#: field:purchase.config.settings,write_uid:0 field:purchase.order,write_uid:0
 #: field:purchase.order.group,write_uid:0
 #: field:purchase.order.line,write_uid:0
 #: field:purchase.order.line_invoice,write_uid:0
@@ -1460,8 +1060,7 @@ msgstr "Laatst aangepast door"
 
 #. module: purchase
 #: field:purchase.config.settings,write_date:0
-#: field:purchase.order,write_date:0
-#: field:purchase.order.group,write_date:0
+#: field:purchase.order,write_date:0 field:purchase.order.group,write_date:0
 #: field:purchase.order.line,write_date:0
 #: field:purchase.order.line_invoice,write_date:0
 msgid "Last Updated on"
@@ -1476,8 +1075,7 @@ msgstr "Locatie & Magazijn"
 #: code:addons/purchase/purchase.py:159
 #, python-format
 msgid "Make sure you have at least an incoming picking type defined"
-msgstr ""
-"Zorg ervoor dat u tenminste een inkomende levering type heeft gedefinieerd"
+msgstr "Zorg ervoor dat u tenminste een inkomende levering type heeft gedefinieerd"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
@@ -1520,11 +1118,7 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
-"Foutmarge op een leveranciers aflevertijd. Wanneer het systeem inkooporders "
-"aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel "
-"dagen eerder worden aangemaakt, rekening houdende met onverwachte "
-"vertragingen."
+msgstr "Foutmarge op een leveranciers aflevertijd. Wanneer het systeem inkooporders aanmaakt voor het verwerven van producten, dan zullen de inkooporders zoveel dagen eerder worden aangemaakt, rekening houdende met onverwachte vertragingen."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
@@ -1615,8 +1209,7 @@ msgstr "Inkoop menu openen"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
-#: field:purchase.order,date_order:0
-#: field:purchase.order.line,date_order:0
+#: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
 msgstr "Orderdatum"
@@ -1725,16 +1318,7 @@ msgid ""
 " \n"
 " Lines will only be merged if: \n"
 " * Order lines are exactly the same except for the product,quantity and unit"
-msgstr ""
-"Houdt u er rekening mee dat: \n"
-" \n"
-" Inkooporders worden alleen samengevoegd als: \n"
-" * De inkooporders in concept zijn \n"
-" * De inkooporders hebben dezelfde leverancier\n"
-" * De inkooporders hebben dezelfde voorraadlocatie en prijslijst\n"
-" \n"
-" Regels worden alleen samengevoegd als: \n"
-" * de regels exact gelijk zijn, behalve de hoeveelheid"
+msgstr "Houdt u er rekening mee dat: \n \n Inkooporders worden alleen samengevoegd als: \n * De inkooporders in concept zijn \n * De inkooporders hebben dezelfde leverancier\n * De inkooporders hebben dezelfde voorraadlocatie en prijslijst\n \n Regels worden alleen samengevoegd als: \n * de regels exact gelijk zijn, behalve de hoeveelheid"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:45
@@ -1758,8 +1342,7 @@ msgid "Price Types"
 msgstr "Prijs types"
 
 #. module: purchase
-#: field:purchase.order,pricelist_id:0
-#: field:purchase.report,pricelist_id:0
+#: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
 msgstr "Prijslijst"
 
@@ -1794,8 +1377,7 @@ msgstr "Verwerving regel"
 #: model:ir.model,name:purchase.model_product_product
 #: field:purchase.order,product_id:0
 #: view:purchase.order.line:purchase.purchase_order_line_search
-#: field:purchase.order.line,product_id:0
-#: field:purchase.report,product_id:0
+#: field:purchase.order.line,product_id:0 field:purchase.report,product_id:0
 msgid "Product"
 msgstr "Product"
 
@@ -1842,13 +1424,9 @@ msgstr "Producten ontvangen"
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
-"Provide a double validation mechanism for purchases exceeding minimum "
-"amount.\n"
+"Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "-This installs the module purchase_double_validation."
-msgstr ""
-"Geeft een dubbele controle mechanisme voor inkopen boven een bepaald "
-"bedrag.\n"
-"-Dit installeert de module purchase_double_validation."
+msgstr "Geeft een dubbele controle mechanisme voor inkopen boven een bepaald bedrag.\n-Dit installeert de module purchase_double_validation."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1867,10 +1445,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
-"Inkoop analyse laat u eenvoudig de inkoop historie en prestaties van uw "
-"bedrijf controleren en analyseren. Vanuit dit menu kunt u de onderhandeling "
-"prestaties volgen, de levering prestaties van uw leveranciers volgen, etc."
+msgstr "Inkoop analyse laat u eenvoudig de inkoop historie en prestaties van uw bedrijf controleren en analyseren. Vanuit dit menu kunt u de onderhandeling prestaties volgen, de levering prestaties van uw leveranciers volgen, etc."
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1987,9 +1562,7 @@ msgstr "Inkooporders"
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
-"Geef een adres in, indien u direct vanaf de leverancier wilt leveren aan de "
-"klant. Laat leeg om te leveren aan uw eigen bedrijf."
+msgstr "Geef een adres in, indien u direct vanaf de leverancier wilt leveren aan de klant. Laat leeg om te leveren aan uw eigen bedrijf."
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -2041,8 +1614,7 @@ msgid "RFQ Done"
 msgstr "Offerteaanvraag gereed"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:327
-#: code:addons/purchase/purchase.py:945
+#: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
 msgstr "Offerteaanvraag aangemaakt"
@@ -2104,9 +1676,7 @@ msgstr "Maateenheid referentie"
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
-"Referentie van het document dat deze inkoopaanvraag heeft gegenereerd. En "
-"verkooporder of een interne verwervingsverzoek."
+msgstr "Referentie van het document dat deze inkoopaanvraag heeft gegenereerd. En verkooporder of een interne verwervingsverzoek."
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -2114,11 +1684,7 @@ msgid ""
 "Reference of the sales order or bid sent by your supplier. It's mainly used "
 "to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr ""
-"Referentie van de verkooporder of bieding van uw leverancier. Dit wordt "
-"hoofdzakelijk gebruikt voor de controle op deze referentie, wanneer u de "
-"producten ontvangt. Dit nummer is meestal afgedrukt op de pakbon van de "
-"levering van uw leverancier."
+msgstr "Referentie van de verkooporder of bieding van uw leverancier. Dit wordt hoofdzakelijk gebruikt voor de controle op deze referentie, wanneer u de producten ontvangt. Dit nummer is meestal afgedrukt op de pakbon van de levering van uw leverancier."
 
 #. module: purchase
 #: view:website:purchase.report_purchasequotation_document
@@ -2187,11 +1753,9 @@ msgstr "Selecteer een open verkooprder"
 #: code:addons/purchase/purchase.py:1114
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure."
-msgstr ""
-"De geselecteerde maateenheid behoort niet tot dezelfde maateenheid categorie "
-"van het producten kan zodoende niet worden gebruikt."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure."
+msgstr "De geselecteerde maateenheid behoort niet tot dezelfde maateenheid categorie van het producten kan zodoende niet worden gebruikt."
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -2209,8 +1773,7 @@ msgid "Set to Draft"
 msgstr "Zet op concept"
 
 #. module: purchase
-#: selection:purchase.order,state:0
-#: selection:purchase.report,state:0
+#: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
 msgstr "Fouten in verzendingen"
 
@@ -2228,8 +1791,7 @@ msgstr "Bron document"
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
-"Specificeer of het product kan worden geselecteerd in een inkooporderregel."
+msgstr "Specificeer of het product kan worden geselecteerd in een inkooporderregel."
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -2295,8 +1857,7 @@ msgid "Supplier Reference"
 msgstr "Leverancier referentie"
 
 #. module: purchase
-#: field:purchase.order,amount_tax:0
-#: field:purchase.order.line,taxes_id:0
+#: field:purchase.order,amount_tax:0 field:purchase.order.line,taxes_id:0
 #: view:website:purchase.report_purchaseorder_document
 msgid "Taxes"
 msgstr "Belastingen"
@@ -2321,9 +1882,7 @@ msgstr "Het bedrag excl. belastingen"
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr ""
-"De prijslijst zet de valuta voor deze inkooporder. Het berekend ook de "
-"inkoopprijs voor de geselecteerd producten."
+msgstr "De prijslijst zet de valuta voor deze inkooporder. Het berekend ook de inkoopprijs voor de geselecteerd producten."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1231
@@ -2331,9 +1890,7 @@ msgstr ""
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
-"Het product \"% s\" is gedefinieerd met uw bedrijf als verkoper. Dit lijkt "
-"een instellingsfout te zijn!"
+msgstr "Het product \"% s\" is gedefinieerd met uw bedrijf als verkoper. Dit lijkt een instellingsfout te zijn!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1134
@@ -2341,9 +1898,7 @@ msgstr ""
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
-"Bij de geselecteerde leverancier is een minimale hoeveelheid van %s %s "
-"ingesteld. U zou niet minder moeten bestellen."
+msgstr "Bij de geselecteerde leverancier is een minimale hoeveelheid van %s %s ingesteld. U zou niet minder moeten bestellen."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1130
@@ -2357,17 +1912,11 @@ msgid ""
 "The status of the purchase order or the quotation request. A request for "
 "quotation is a purchase order in a 'Draft' status. Then the order has to be "
 "confirmed by the user, the status switch to 'Confirmed'. Then the supplier "
-"must confirm the order to change the status to 'Approved'. When the purchase "
-"order is paid and received, the status becomes 'Done'. If a cancel action "
+"must confirm the order to change the status to 'Approved'. When the purchase"
+" order is paid and received, the status becomes 'Done'. If a cancel action "
 "occurs in the invoice or in the receipt of goods, the status becomes in "
 "exception."
-msgstr ""
-"De status van de inkooporder of de offerteaanvraag. Een offerteaanvraag is "
-"een inkooporder in concept. Wanneer de inkooporder is bevestigd door de "
-"gebruiker dan staat deze op 'Akkoord'. Vervolgens als de inkooporder door de "
-"leverancier is bevestigd dan wordt deze 'Goedgekeurd'. Bij een annulering "
-"bij de facturatie of de ontvangst van goederen, krijgt de inkooporder een "
-"fout status."
+msgstr "De status van de inkooporder of de offerteaanvraag. Een offerteaanvraag is een inkooporder in concept. Wanneer de inkooporder is bevestigd door de gebruiker dan staat deze op 'Akkoord'. Vervolgens als de inkooporder door de leverancier is bevestigd dan wordt deze 'Goedgekeurd'. Bij een annulering bij de facturatie of de ontvangst van goederen, krijgt de inkooporder een fout status."
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -2390,26 +1939,21 @@ msgstr "Er is geen leverancier gekoppeld aan dit product %s"
 msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
-msgstr ""
-"Dit is een berekende minimale geplande datum van alle inkooporderregels."
+msgstr "Dit is een berekende minimale geplande datum van alle inkooporderregels."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of receipts that have been generated for this purchase "
 "order."
-msgstr ""
-"Dit is de lijst met inkomende leveringen welke zijn aangemaakt voor deze "
-"inkooporder."
+msgstr "Dit is de lijst met inkomende leveringen welke zijn aangemaakt voor deze inkooporder."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
-"Deze prijslijst zal gebruikt worden in plaats van de standaard voor inkopen "
-"bij deze relatie."
+msgstr "Deze prijslijst zal gebruikt worden in plaats van de standaard voor inkopen bij deze relatie."
 
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
@@ -2459,9 +2003,7 @@ msgstr "Niet mogelijk deze Inkooporders te annuleren."
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
-"Uniek nummer van de inkooporder. Deze wordt automatisch berekend bij het "
-"aanmaken van de inkooporder."
+msgstr "Uniek nummer van de inkooporder. Deze wordt automatisch berekend bij het aanmaken van de inkooporder."
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
@@ -2558,8 +2100,7 @@ msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:1114
-#: code:addons/purchase/purchase.py:1130
+#: code:addons/purchase/purchase.py:1114 code:addons/purchase/purchase.py:1130
 #: code:addons/purchase/purchase.py:1134
 #: code:addons/purchase/wizard/purchase_order_group.py:44
 #, python-format
@@ -2579,9 +2120,7 @@ msgstr "Website communicatie geschiedenis"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
-"Wanneer producten worden gekocht, kunnen deze worden geleverd aan dit "
-"magazijn."
+msgstr "Wanneer producten worden gekocht, kunnen deze worden geleverd aan dit magazijn."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538
@@ -2599,9 +2138,7 @@ msgstr "U heeft hier al goederen van ontvangen.  "
 #: code:addons/purchase/purchase.py:701
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
-msgstr ""
-"Eerst moeten alle facturen gerelateerd aan deze inkooporder worden "
-"geannuleerd"
+msgstr "Eerst moeten alle facturen gerelateerd aan deze inkooporder worden geannuleerd"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -2619,12 +2156,3 @@ msgstr "of"
 #: field:purchase.order,related_usage:0
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid "Shipping address :"
-#~ msgstr "Afleveradres :"
-
-#~ msgid "Reference UOM"
-#~ msgstr "Referentie eenheid"
-
-#~ msgid "To Purchase"
-#~ msgstr "Inkoop product"

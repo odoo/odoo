@@ -1,21 +1,22 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * anonymization
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-22 17:07+0000\n"
-"Last-Translator: Daniel Santos - ThinkOpen <dcs@thinkopensolutions.pt>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-8/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:28+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -64,11 +65,9 @@ msgstr "Valor anónimo é : 'Nenhum'. Isto não pode acontecer."
 #: code:addons/anonymization/anonymization.py:300
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
-msgstr ""
-"Antes de executar o processo de anonimização, deve fazer um backup da sua "
-"base de dados."
+"Before executing the anonymization process, you should make a backup of your"
+" database."
+msgstr "Antes de executar o processo de anonimização, deve fazer um backup da sua base de dados."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:444
@@ -76,9 +75,7 @@ msgstr ""
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
-"Não é possível tornar anônimo campos dos tipos: binário, many2many, "
-"many2one, one2many, referência."
+msgstr "Não é possível tornar anônimo campos dos tipos: binário, many2many, many2one, one2many, referência."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -190,9 +187,7 @@ msgstr "Importar"
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
-"Não é possível reverter o processo de anonimização sem fornecer o ficheiro "
-"de exportação de anonimato."
+msgstr "Não é possível reverter o processo de anonimização sem fornecer o ficheiro de exportação de anonimato."
 
 #. module: anonymization
 #: field:ir.model.fields.anonymization,write_uid:0
@@ -286,11 +281,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
-"O anonimato da base de dados está atualmente num estado instável. Alguns "
-"campos estão anonimizados, enquanto outros campos não estão anonimizados. "
-"Deve tentar resolver o problema antes de tentar criar, escrever ou apagar "
-"campos."
+msgstr "O anonimato da base de dados está atualmente num estado instável. Alguns campos estão anonimizados, enquanto outros campos não estão anonimizados. Deve tentar resolver o problema antes de tentar criar, escrever ou apagar campos."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:358
@@ -299,10 +290,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
-"O anonimato da base de dados está atualmente num estado instável. Alguns "
-"campos estão anonimizados, enquanto outros campos não estão anonimizados. "
-"Deve tentar resolver o problema antes de tentar fazer qualquer outra coisa."
+msgstr "O anonimato da base de dados está atualmente num estado instável. Alguns campos estão anonimizados, enquanto outros campos não estão anonimizados. Deve tentar resolver o problema antes de tentar fazer qualquer outra coisa."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:391
@@ -312,27 +300,20 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
-"O anonimato da base de dados está atualmente num estado instável. Alguns "
-"campos estão anonimizados, enquanto outros campos não estão anonimizados. "
-"Deve tentar resolver o problema antes de tentar fazer alguma coisa."
+msgstr "O anonimato da base de dados está atualmente num estado instável. Alguns campos estão anonimizados, enquanto outros campos não estão anonimizados. Deve tentar resolver o problema antes de tentar fazer alguma coisa."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:389
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
-"A base de dados está atualmente anonimizada, não a pode tornar anônima "
-"novamente."
+msgstr "A base de dados está atualmente anonimizada, não a pode tornar anônima novamente."
 
 #. module: anonymization
 #: help:ir.model.fields.anonymize.wizard,file_import:0
 msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
-msgstr ""
-"Este é o arquivo criado pelo processo de anonimização. Ele deve ter a "
-"extensão '.pickle '."
+msgstr "Este é o arquivo criado pelo processo de anonimização. Ele deve ter a extensão '.pickle '."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0

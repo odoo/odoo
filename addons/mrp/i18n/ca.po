@@ -1,21 +1,22 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:56+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:262
@@ -29,8 +30,7 @@ msgid "# Bill of Material"
 msgstr ""
 
 #. module: mrp
-#: field:product.product,mo_count:0
-#: field:product.template,mo_count:0
+#: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:323
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (còpia)"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:977
@@ -49,17 +49,9 @@ msgstr ""
 #. module: mrp
 #: help:mrp.product.produce,mode:0
 msgid ""
-"'Consume only' mode will only consume the products with the quantity "
-"selected.\n"
-"'Consume & Produce' mode will consume as well as produce the products with "
-"the quantity selected and it will finish the production order when total "
-"ordered quantities are produced."
-msgstr ""
-"El mode 'Només consumir' només es consumeixen els productes amb la quantitat "
-"seleccionada.\n"
-"El mode 'Consum i Producció' es consumeixen i també es produeixen els "
-"productes amb la quantitat seleccionada i finalitzarà l'ordre de producció "
-"quan el total de les unitats sol·licitades s'han produït."
+"'Consume only' mode will only consume the products with the quantity selected.\n"
+"'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
+msgstr "El mode 'Només consumir' només es consumeixen els productes amb la quantitat seleccionada.\nEl mode 'Consum i Producció' es consumeixen i també es produeixen els productes amb la quantitat seleccionada i finalitzarà l'ordre de producció quan el total de les unitats sol·licitades s'han produït."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
@@ -67,8 +59,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a component to a bill of material.\n"
 "              </p><p>\n"
-"                Bills of materials components are components and by-"
-"products\n"
+"                Bills of materials components are components and by-products\n"
 "                used to create master bills of materials.  Use this menu to\n"
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
@@ -83,8 +74,7 @@ msgid ""
 "              </p><p>\n"
 "                Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as "
-"capacity\n"
+"                considered as units for task assignation as well as capacity\n"
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
@@ -96,10 +86,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a bill of material. \n"
 "              </p><p>\n"
-"                Bills of Materials allow you to define the list of required "
-"raw\n"
-"                materials used to make a finished product; through a "
-"manufacturing\n"
+"                Bills of Materials allow you to define the list of required raw\n"
+"                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products.\n"
 "              </p><p>\n"
 "                Odoo uses these BoMs to automatically propose manufacturing\n"
@@ -114,17 +102,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a group of properties.\n"
 "              </p><p>\n"
-"                Define specific property groups that can be assigned to "
-"your\n"
+"                Define specific property groups that can be assigned to your\n"
 "                bill of materials and sales orders. Properties allows Odoo\n"
-"                to automatically select the right bill of materials "
-"according\n"
+"                to automatically select the right bill of materials according\n"
 "                to properties selected in the sales order by salesperson.\n"
 "              </p><p>\n"
-"                For instance, in the property group \"Warranty\", you an "
-"have\n"
-"                two properties: 1 year warranty, 3 years warranty. "
-"Depending\n"
+"                For instance, in the property group \"Warranty\", you an have\n"
+"                two properties: 1 year warranty, 3 years warranty. Depending\n"
 "                on the propoerties selected in the sales order, Odoo will\n"
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
@@ -140,10 +124,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -156,12 +138,10 @@ msgid ""
 "                Click to create a new property.\n"
 "              </p><p>\n"
 "                The Properties in Odoo are used to select the right bill of\n"
-"                materials for manufacturing a product when you have "
-"different\n"
+"                materials for manufacturing a product when you have different\n"
 "                ways of building the same product.  You can assign several\n"
 "                properties to each bill of materials.  When a salesperson\n"
-"                creates a sales order, they can relate it to several "
-"properties\n"
+"                creates a sales order, they can relate it to several properties\n"
 "                and Odoo will automatically select the BoM to use according\n"
 "                the needs.\n"
 "              </p>\n"
@@ -175,8 +155,7 @@ msgid ""
 "                Click to create a routing.\n"
 "              </p><p>\n"
 "                Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers "
-"in\n"
+"                operations that should be followed within your work centers in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
@@ -192,10 +171,8 @@ msgid ""
 "                A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products.\n"
 "              </p><p>\n"
-"                Manufacturing orders are usually proposed automatically "
-"based\n"
-"                on customer requirements or automated rules like the "
-"minimum\n"
+"                Manufacturing orders are usually proposed automatically based\n"
+"                on customer requirements or automated rules like the minimum\n"
 "                stock rule.\n"
 "              </p>\n"
 "            "
@@ -209,12 +186,10 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr ""
-"Un factor de 0.9 indica una pèrdua del 10% en el procés de producció."
+msgstr "Un factor de 0.9 indica una pèrdua del 10% en el procés de producció."
 
 #. module: mrp
-#: field:mrp.bom,active:0
-#: field:mrp.routing,active:0
+#: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
 msgstr "Actiu"
 
@@ -228,8 +203,7 @@ msgstr ""
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra "
-"products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
 
 #. module: mrp
@@ -340,8 +314,7 @@ msgid "Bill Of Material"
 msgstr "Llista de Material"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
 msgstr "Llista de material"
@@ -490,7 +463,7 @@ msgstr "Canvia quantitat de productes"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr ""
+msgstr "Comprova disponibilitat"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -503,18 +476,15 @@ msgid "Companies"
 msgstr "Companyies"
 
 #. module: mrp
-#: field:mrp.bom,company_id:0
-#: field:mrp.production,company_id:0
-#: field:mrp.routing,company_id:0
-#: field:mrp.routing.workcenter,company_id:0
+#: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
+#: field:mrp.routing,company_id:0 field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 #: field:report.mrp.inout,company_id:0
 msgid "Company"
 msgstr "Companyia"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.mrp_bom_component_tree_view
 #: view:product.template:mrp.product_template_search_view_procurment
@@ -574,7 +544,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "Moviment consum"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -590,8 +560,7 @@ msgstr "Consumeix productes"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines2:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
 msgstr "Productes consumits"
 
@@ -629,46 +598,34 @@ msgid "Costing Information"
 msgstr "Informació de costos"
 
 #. module: mrp
-#: field:change.production.qty,create_uid:0
-#: field:mrp.bom,create_uid:0
-#: field:mrp.bom.line,create_uid:0
-#: field:mrp.config.settings,create_uid:0
+#: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
+#: field:mrp.bom.line,create_uid:0 field:mrp.config.settings,create_uid:0
 #: field:mrp.product.produce,create_uid:0
 #: field:mrp.product.produce.line,create_uid:0
-#: field:mrp.product_price,create_uid:0
-#: field:mrp.production,create_uid:0
+#: field:mrp.product_price,create_uid:0 field:mrp.production,create_uid:0
 #: field:mrp.production.product.line,create_uid:0
 #: field:mrp.production.workcenter.line,create_uid:0
-#: field:mrp.property,create_uid:0
-#: field:mrp.property.group,create_uid:0
-#: field:mrp.routing,create_uid:0
-#: field:mrp.routing.workcenter,create_uid:0
-#: field:mrp.workcenter,create_uid:0
-#: field:mrp.workcenter.load,create_uid:0
+#: field:mrp.property,create_uid:0 field:mrp.property.group,create_uid:0
+#: field:mrp.routing,create_uid:0 field:mrp.routing.workcenter,create_uid:0
+#: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat per"
 
 #. module: mrp
-#: field:change.production.qty,create_date:0
-#: field:mrp.bom,create_date:0
-#: field:mrp.bom.line,create_date:0
-#: field:mrp.config.settings,create_date:0
+#: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
+#: field:mrp.bom.line,create_date:0 field:mrp.config.settings,create_date:0
 #: field:mrp.product.produce,create_date:0
 #: field:mrp.product.produce.line,create_date:0
-#: field:mrp.product_price,create_date:0
-#: field:mrp.production,create_date:0
+#: field:mrp.product_price,create_date:0 field:mrp.production,create_date:0
 #: field:mrp.production.product.line,create_date:0
 #: field:mrp.production.workcenter.line,create_date:0
-#: field:mrp.property,create_date:0
-#: field:mrp.property.group,create_date:0
-#: field:mrp.routing,create_date:0
-#: field:mrp.routing.workcenter,create_date:0
-#: field:mrp.workcenter,create_date:0
-#: field:mrp.workcenter.load,create_date:0
+#: field:mrp.property,create_date:0 field:mrp.property.group,create_date:0
+#: field:mrp.routing,create_date:0 field:mrp.routing.workcenter,create_date:0
+#: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat el"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -682,8 +639,7 @@ msgid "Cycles Cost"
 msgstr "Cost cicles"
 
 #. module: mrp
-#: help:mrp.bom,message_last_post:0
-#: help:mrp.production,message_last_post:0
+#: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
 msgstr ""
@@ -697,7 +653,7 @@ msgstr "Dia por dia"
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Default Unit of Measure"
-msgstr ""
+msgstr "Unitat de mesura per defecte"
 
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
@@ -705,10 +661,8 @@ msgid "Define manufacturers on products "
 msgstr ""
 
 #. module: mrp
-#: field:mrp.property,description:0
-#: field:mrp.property.group,description:0
-#: field:mrp.routing,note:0
-#: field:mrp.routing.workcenter,note:0
+#: field:mrp.property,description:0 field:mrp.property.group,description:0
+#: field:mrp.routing,note:0 field:mrp.routing.workcenter,note:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "Descripció"
@@ -718,9 +672,7 @@ msgstr "Descripció"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
-"Descripció del centre de treball. Explicar aquí el que és un cicle d'acord "
-"amb aquest centre de treball."
+msgstr "Descripció del centre de treball. Explicar aquí el que és un cicle d'acord amb aquest centre de treball."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -743,14 +695,13 @@ msgid "End Date"
 msgstr "Data final"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:679
-#: code:addons/mrp/stock.py:183
+#: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
 #: code:addons/mrp/stock.py:259
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -814,9 +765,7 @@ msgstr "Informació general"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr ""
-"Indica l'ordre de seqüència quan es mostra una llista de llistes de "
-"materials."
+msgstr "Indica l'ordre de seqüència quan es mostra una llista de llistes de materials."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
@@ -827,8 +776,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
-"Indica l'ordre de seqüència quan es mostra una llista d'ordres de treball."
+msgstr "Indica l'ordre de seqüència quan es mostra una llista d'ordres de treball."
 
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
@@ -838,7 +786,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupa per"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -850,8 +798,7 @@ msgid "Group By..."
 msgstr "Agrupar per..."
 
 #. module: mrp
-#: help:mrp.bom,message_summary:0
-#: help:mrp.production,message_summary:0
+#: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
 #: help:mrp.production.workcenter.line,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -870,28 +817,18 @@ msgid "Hourly Cost"
 msgstr "Cost horari"
 
 #. module: mrp
-#: field:change.production.qty,id:0
-#: field:mrp.bom,id:0
-#: field:mrp.bom.line,id:0
-#: field:mrp.config.settings,id:0
-#: field:mrp.product.produce,id:0
-#: field:mrp.product.produce.line,id:0
-#: field:mrp.product_price,id:0
-#: field:mrp.production,id:0
-#: field:mrp.production.product.line,id:0
-#: field:mrp.production.workcenter.line,id:0
-#: field:mrp.property,id:0
-#: field:mrp.property.group,id:0
-#: field:mrp.routing,id:0
-#: field:mrp.routing.workcenter,id:0
-#: field:mrp.workcenter,id:0
-#: field:mrp.workcenter.load,id:0
-#: field:report.mrp.inout,id:0
+#: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
+#: field:mrp.config.settings,id:0 field:mrp.product.produce,id:0
+#: field:mrp.product.produce.line,id:0 field:mrp.product_price,id:0
+#: field:mrp.production,id:0 field:mrp.production.product.line,id:0
+#: field:mrp.production.workcenter.line,id:0 field:mrp.property,id:0
+#: field:mrp.property.group,id:0 field:mrp.routing,id:0
+#: field:mrp.routing.workcenter,id:0 field:mrp.workcenter,id:0
+#: field:mrp.workcenter.load,id:0 field:report.mrp.inout,id:0
 #: field:report.mrp.report_mrpbomstructure,id:0
-#: field:report.workcenter.load,id:0
-#: field:stock.move.consume,id:0
+#: field:report.workcenter.load,id:0 field:stock.move.consume,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mrp
 #: help:mrp.bom,product_id:0
@@ -900,8 +837,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
+#: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
@@ -911,17 +847,14 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
-"Si el camp actiu es desmarca, permet ocultar les llistes de material sense "
-"eliminar-les."
+msgstr "Si el camp actiu es desmarca, permet ocultar les llistes de material sense eliminar-les."
 
 #. module: mrp
 #: help:mrp.routing,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr ""
-"Si el camp actiu es desmarca, permet ocultar la ruta sense eliminar-la."
+msgstr "Si el camp actiu es desmarca, permet ocultar la ruta sense eliminar-la."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -940,8 +873,7 @@ msgid "Internal Reference"
 msgstr "Referència interna"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:289
-#: code:addons/mrp/mrp.py:315
+#: code:addons/mrp/mrp.py:289 code:addons/mrp/mrp.py:315
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
@@ -960,57 +892,40 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
-"Deixar-lo buit si es produeix en el mateix lloc en que els productes acabats "
-"són necessaris. Indiqueu una ubicació si es produeix en una ubicació fixa. "
-"Pot ser una ubicació d'una altra empresa si subcontracta les operacions de "
-"fabricació."
+msgstr "Deixar-lo buit si es produeix en el mateix lloc en que els productes acabats són necessaris. Indiqueu una ubicació si es produeix en una ubicació fixa. Pot ser una ubicació d'una altra empresa si subcontracta les operacions de fabricació."
 
 #. module: mrp
-#: field:mrp.bom,message_last_post:0
-#: field:mrp.production,message_last_post:0
+#: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
 #: field:mrp.production.workcenter.line,message_last_post:0
 msgid "Last Message Date"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,write_uid:0
-#: field:mrp.bom,write_uid:0
-#: field:mrp.bom.line,write_uid:0
-#: field:mrp.config.settings,write_uid:0
+#: field:change.production.qty,write_uid:0 field:mrp.bom,write_uid:0
+#: field:mrp.bom.line,write_uid:0 field:mrp.config.settings,write_uid:0
 #: field:mrp.product.produce,write_uid:0
 #: field:mrp.product.produce.line,write_uid:0
-#: field:mrp.product_price,write_uid:0
-#: field:mrp.production,write_uid:0
+#: field:mrp.product_price,write_uid:0 field:mrp.production,write_uid:0
 #: field:mrp.production.product.line,write_uid:0
 #: field:mrp.production.workcenter.line,write_uid:0
-#: field:mrp.property,write_uid:0
-#: field:mrp.property.group,write_uid:0
-#: field:mrp.routing,write_uid:0
-#: field:mrp.routing.workcenter,write_uid:0
-#: field:mrp.workcenter,write_uid:0
-#: field:mrp.workcenter.load,write_uid:0
+#: field:mrp.property,write_uid:0 field:mrp.property.group,write_uid:0
+#: field:mrp.routing,write_uid:0 field:mrp.routing.workcenter,write_uid:0
+#: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
 #. module: mrp
-#: field:change.production.qty,write_date:0
-#: field:mrp.bom,write_date:0
-#: field:mrp.bom.line,write_date:0
-#: field:mrp.config.settings,write_date:0
+#: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
+#: field:mrp.bom.line,write_date:0 field:mrp.config.settings,write_date:0
 #: field:mrp.product.produce,write_date:0
 #: field:mrp.product.produce.line,write_date:0
-#: field:mrp.product_price,write_date:0
-#: field:mrp.production,write_date:0
+#: field:mrp.product_price,write_date:0 field:mrp.production,write_date:0
 #: field:mrp.production.product.line,write_date:0
 #: field:mrp.production.workcenter.line,write_date:0
-#: field:mrp.property,write_date:0
-#: field:mrp.property.group,write_date:0
-#: field:mrp.routing,write_date:0
-#: field:mrp.routing.workcenter,write_date:0
-#: field:mrp.workcenter,write_date:0
-#: field:mrp.workcenter.load,write_date:0
+#: field:mrp.property,write_date:0 field:mrp.property.group,write_date:0
+#: field:mrp.routing,write_date:0 field:mrp.routing.workcenter,write_date:0
+#: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
 msgstr ""
@@ -1036,11 +951,10 @@ msgid "Location where the system will stock the finished products."
 msgstr "Ubicació on el sistema emmagatzemarà els productes finalitzats."
 
 #. module: mrp
-#: field:mrp.product.produce,lot_id:0
-#: field:mrp.product.produce.line,lot_id:0
+#: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr ""
+msgstr "Lot"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1060,11 +974,10 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "Director"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:33
-#: code:addons/mrp/stock.py:256
+#: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
 msgstr ""
@@ -1088,8 +1001,7 @@ msgid "Manufacturing"
 msgstr "Fabricació"
 
 #. module: mrp
-#: field:mrp.bom,product_efficiency:0
-#: field:mrp.bom.line,product_efficiency:0
+#: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
 msgid "Manufacturing Efficiency"
 msgstr "Eficiència de la producció"
 
@@ -1172,15 +1084,13 @@ msgid "Master Data"
 msgstr "Dades principals"
 
 #. module: mrp
-#: field:mrp.bom,message_ids:0
-#: field:mrp.production,message_ids:0
+#: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
 #: field:mrp.production.workcenter.line,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Missatges"
 
 #. module: mrp
-#: help:mrp.bom,message_ids:0
-#: help:mrp.production,message_ids:0
+#: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
 msgstr ""
@@ -1196,12 +1106,9 @@ msgid "Mrp Workcenter"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,name:0
-#: field:mrp.production.product.line,name:0
-#: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,name:0
-#: field:mrp.routing,name:0
-#: field:mrp.routing.workcenter,name:0
+#: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
+#: view:mrp.property:mrp.view_mrp_property_search field:mrp.property,name:0
+#: field:mrp.routing,name:0 field:mrp.routing.workcenter,name:0
 #: view:website:mrp.report_mrporder
 msgid "Name"
 msgstr "Nom"
@@ -1209,7 +1116,7 @@ msgstr "Nom"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr ""
+msgstr "Nou"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:127
@@ -1228,8 +1135,7 @@ msgid "No. Of Hours"
 msgstr "Núm. d'hores"
 
 #. module: mrp
-#: selection:mrp.bom,type:0
-#: selection:mrp.bom.line,type:0
+#: selection:mrp.bom,type:0 selection:mrp.bom.line,type:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
 msgstr "Normal"
@@ -1258,8 +1164,7 @@ msgstr "Número de cicles"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
-#: field:mrp.routing.workcenter,hour_nbr:0
-#: field:report.workcenter.load,hour:0
+#: field:mrp.routing.workcenter,hour_nbr:0 field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "Número d'hores"
 
@@ -1268,19 +1173,14 @@ msgstr "Número d'hores"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr ""
-"Número d'iteraccions que ha de realitzar aquest centre de producció en "
-"l'operació indicada de la ruta."
+msgstr "Número d'iteraccions que ha de realitzar aquest centre de producció en l'operació indicada de la ruta."
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
-"Número d'operacions d'aquest centre de treball es pot fer en paral·lel. Si "
-"aquest centre de treball representa un equip de 5 treballadors, la capacitat "
-"de cada cicle és de 5."
+msgstr "Número d'operacions d'aquest centre de treball es pot fer en paral·lel. Si aquest centre de treball representa un equip de 5 treballadors, la capacitat de cada cicle és de 5."
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
@@ -1290,12 +1190,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr ""
+msgstr "Operació"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Order"
-msgstr ""
+msgstr "Ordre"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
@@ -1413,16 +1313,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,product_tmpl_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,product_tmpl_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
-#: field:mrp.bom.line,product_id:0
-#: field:mrp.product.produce.line,product_id:0
+#: field:mrp.bom.line,product_id:0 field:mrp.product.produce.line,product_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
 #: field:mrp.production,product_id:0
 #: field:mrp.production.product.line,product_id:0
-#: field:stock.move.consume,product_id:0
-#: view:website:mrp.report_mrporder
+#: field:stock.move.consume,product_id:0 view:website:mrp.report_mrporder
 msgid "Product"
 msgstr "Producte"
 
@@ -1458,23 +1355,21 @@ msgid "Product Qty"
 msgstr "Qtat producte"
 
 #. module: mrp
-#: field:mrp.bom,product_qty:0
-#: field:mrp.bom.line,product_qty:0
+#: field:mrp.bom,product_qty:0 field:mrp.bom.line,product_qty:0
 #: field:mrp.production,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Quantity"
 msgstr "Quantitat producte"
 
 #. module: mrp
-#: field:mrp.bom,product_rounding:0
-#: field:mrp.bom.line,product_rounding:0
+#: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
 msgstr "Arrodoniment del producte"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Plantilla del producte"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
@@ -1487,9 +1382,7 @@ msgstr "UdV del producte"
 msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
-msgstr ""
-"UdV (Unitat de Venda) del producte és la unitat de mesura per la facturació "
-"i la promoció d'existències."
+msgstr "UdV (Unitat de Venda) del producte és la unitat de mesura per la facturació i la promoció d'existències."
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos_qty:0
@@ -1502,13 +1395,12 @@ msgid "Product UOS Quantity"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.bom.line,product_uom:0
+#: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitat de mesura del producte"
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
@@ -1523,7 +1415,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_id:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Variants de producte"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1598,7 +1490,7 @@ msgstr "Produccions"
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Products"
-msgstr ""
+msgstr "Productes"
 
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
@@ -1607,8 +1499,7 @@ msgstr ""
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
-#: field:mrp.production,move_lines:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
 msgstr "Productes a consumir"
 
@@ -1626,8 +1517,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,property_ids:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,property_ids:0
 #: field:mrp.bom.line,property_ids:0
 #: view:mrp.property:mrp.mrp_property_form_view
 #: view:mrp.property:mrp.mrp_property_tree_view
@@ -1653,8 +1543,7 @@ msgstr "Propietat"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
 #: view:mrp.property:mrp.view_mrp_property_search
-#: field:mrp.property,group_id:0
-#: field:mrp.property.group,name:0
+#: field:mrp.property,group_id:0 field:mrp.property.group,name:0
 msgid "Property Group"
 msgstr "Grup de propietat"
 
@@ -1665,13 +1554,11 @@ msgid "Property Groups"
 msgstr "Grups de propietats"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:141
-#: view:mrp.bom:mrp.mrp_bom_form_view
+#: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.product_price,number:0
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:stock.move.consume,product_qty:0
-#: view:website:mrp.report_mrpbomstructure
-#: view:website:mrp.report_mrporder
+#: view:website:mrp.report_mrpbomstructure view:website:mrp.report_mrporder
 #, python-format
 msgid "Quantity"
 msgstr "Quantitat"
@@ -1702,8 +1589,7 @@ msgid "Ready to Produce"
 msgstr "Llest per produir"
 
 #. module: mrp
-#: view:mrp.bom:mrp.mrp_bom_form_view
-#: field:mrp.bom,code:0
+#: view:mrp.bom:mrp.mrp_bom_form_view field:mrp.bom,code:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "Referència"
@@ -1717,9 +1603,7 @@ msgstr ""
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
-"Referència al document que va generar aquesta sol·licitud d'ordre de "
-"producció."
+msgstr "Referència al document que va generar aquesta sol·licitud d'ordre de producció."
 
 #. module: mrp
 #: help:mrp.bom,position:0
@@ -1744,18 +1628,16 @@ msgstr "Recursos"
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: mrp
-#: help:mrp.bom,product_rounding:0
-#: help:mrp.bom.line,product_rounding:0
+#: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
 msgstr "Arrodoniment aplicat sobre la quantitat de producte"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:mrp.view_mrp_bom_filter
-#: field:mrp.bom,routing_id:0
+#: view:mrp.bom:mrp.view_mrp_bom_filter field:mrp.bom,routing_id:0
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: field:mrp.bom.line,routing_id:0
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1776,13 +1658,9 @@ msgstr "Ruta de centres de producció"
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (Work Centers) "
-"will be automatically pre-completed."
-msgstr ""
-"Encaminament indica que tots els centres de treball utilitzats, per quant de "
-"temps i / o cycles.If enrutament s'indica a continuació, la fitxa de la "
-"tercera part d'una ordre de producció (centres de treball) seran "
-"automàticament pre-acabat."
+"Routing is indicated then,the third tab of a production order (Work Centers)"
+" will be automatically pre-completed."
+msgstr "Encaminament indica que tots els centres de treball utilitzats, per quant de temps i / o cycles.If enrutament s'indica a continuació, la fitxa de la tercera part d'una ordre de producció (centres de treball) seran automàticament pre-acabat."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -1797,11 +1675,7 @@ msgid ""
 "should be followed within your work centers in order to produce a product. "
 "They are attached to bills of materials that will define the required raw "
 "materials."
-msgstr ""
-"Les rutes li permeten crear i gestionar les operacions de fabricació a "
-"realitzar en els seus centres de producció per fabricar un producte. Estan "
-"relacionades amb les llistes de materials que definiran les matèries "
-"primeres necessàries."
+msgstr "Les rutes li permeten crear i gestionar les operacions de fabricació a realitzar en els seus centres de producció per fabricar un producte. Estan relacionades amb les llistes de materials que definiran les matèries primeres necessàries."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1886,11 +1760,9 @@ msgid "Select time unit"
 msgstr "Selecciona unitat de temps"
 
 #. module: mrp
-#: field:mrp.bom,sequence:0
-#: field:mrp.bom.line,sequence:0
+#: field:mrp.bom,sequence:0 field:mrp.bom.line,sequence:0
 #: field:mrp.production.workcenter.line,sequence:0
-#: field:mrp.routing.workcenter,sequence:0
-#: view:website:mrp.report_mrporder
+#: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
 msgstr "Seqüència"
 
@@ -1902,8 +1774,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
-"Set: When processing a sales order for this product, the delivery order will "
-"contain the raw materials, instead of the finished product."
+"Set: When processing a sales order for this product, the delivery order will"
+" contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -1936,9 +1808,7 @@ msgstr ""
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr ""
-"Indiqueu la quantitat de productes a produir o comprar. L'informe de "
-"l'estructura de costos es mostra basant-se en aquesta quantitat."
+msgstr "Indiqueu la quantitat de productes a produir o comprar. L'informe de l'estructura de costos es mostra basant-se en aquesta quantitat."
 
 #. module: mrp
 #: field:mrp.production,date_start:0
@@ -1970,11 +1840,10 @@ msgid "Stock value variation"
 msgstr "Variació del valor de l'estoc"
 
 #. module: mrp
-#: field:mrp.bom,message_summary:0
-#: field:mrp.production,message_summary:0
+#: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
 #: field:mrp.production.workcenter.line,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Resum"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -1988,8 +1857,7 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333
-#: code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2003,25 +1871,16 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr ""
-"Llista de les operacions (llista dels centres de treball) per produir els "
-"productes acabats. La ruta s'utilitza principalment per calcular els costos "
-"del centre de treball durant les operacions i planificar la càrrega en el "
-"futur en els centres de treball basada en la planificació de producció."
+msgstr "Llista de les operacions (llista dels centres de treball) per produir els productes acabats. La ruta s'utilitza principalment per calcular els costos del centre de treball durant les operacions i planificar la càrrega en el futur en els centres de treball basada en la planificació de producció."
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0
-#: help:mrp.bom.line,routing_id:0
+#: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
 msgid ""
 "The list of operations (list of work centers) to produce the finished "
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr ""
-"La llista d'operacions (llista dels centres de treball) per produir els "
-"productes acabats. La ruta s'utilitza principalment per calcular els costos "
-"del centre de treball durant les operacions de càrrega i planificar el futur "
-"en els centres de treball basat en la planificació de la producció."
+msgstr "La llista d'operacions (llista dels centres de treball) per produir els productes acabats. La ruta s'utilitza principalment per calcular els costos del centre de treball durant les operacions de càrrega i planificar el futur en els centres de treball basat en la planificació de la producció."
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_properties:0
@@ -2033,8 +1892,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"This allows to add state, date_start,date_stop in production order operation "
-"lines (in the \"Work Centers\" tab).\n"
+"This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
 msgstr ""
 
@@ -2082,8 +1940,8 @@ msgstr "Temps en hores per la configuració."
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
-"Time in hours for this Work Center to achieve the operation of the specified "
-"routing."
+"Time in hours for this Work Center to achieve the operation of the specified"
+" routing."
 msgstr ""
 
 #. module: mrp
@@ -2092,8 +1950,7 @@ msgid "To Consume"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:162
-#: code:addons/mrp/report/price.py:213
+#: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr ""
@@ -2118,7 +1975,7 @@ msgstr "Qtat. total"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "Lots seguiment de fabricació"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
@@ -2143,16 +2000,14 @@ msgid "Unit of Measure"
 msgstr "Unitat de mesura"
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0
-#: help:mrp.bom.line,product_uom:0
+#: help:mrp.bom,product_uom:0 help:mrp.bom.line,product_uom:0
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,message_unread:0
-#: field:mrp.production,message_unread:0
+#: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
 #: field:mrp.production.workcenter.line,message_unread:0
 msgid "Unread Messages"
 msgstr ""
@@ -2160,7 +2015,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr ""
+msgstr "Actualitza"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2170,11 +2025,10 @@ msgstr "Urgent"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "Usuari"
 
 #. module: mrp
-#: field:mrp.bom,date_start:0
-#: field:mrp.bom.line,date_start:0
+#: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
 msgstr "Vàlid des de"
 
@@ -2191,20 +2045,17 @@ msgid "Valid From Month"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,date_stop:0
-#: field:mrp.bom.line,date_stop:0
+#: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
 msgstr "Vàlid fins"
 
 #. module: mrp
-#: help:mrp.bom.line,date_start:0
-#: help:mrp.bom.line,date_stop:0
+#: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,date_start:0
-#: help:mrp.bom,date_stop:0
+#: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
 msgstr ""
 
@@ -2216,7 +2067,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr ""
+msgstr "Variant"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2229,20 +2080,17 @@ msgid "Warehouse"
 msgstr "Magatzem"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:333
-#: code:addons/mrp/mrp.py:421
+#: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avís"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:339
-#: code:addons/mrp/stock.py:42
-#: code:addons/mrp/stock.py:44
-#: code:addons/mrp/stock.py:169
+#: code:addons/mrp/mrp.py:339 code:addons/mrp/stock.py:42
+#: code:addons/mrp/stock.py:44 code:addons/mrp/stock.py:169
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avís!"
 
 #. module: mrp
 #: field:mrp.bom,website_message_ids:0
@@ -2274,15 +2122,15 @@ msgstr "Variació del valor de l'estoc setmanal"
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
 msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
-"linked to manufacturing activities, receipts of products and delivery orders."
+"linked to manufacturing activities, receipts of products and delivery "
+"orders."
 msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of "
-"the finished product."
+"                                will contain the raw materials, instead of the finished product."
 msgstr ""
 
 #. module: mrp
@@ -2295,14 +2143,10 @@ msgstr ""
 #: help:mrp.production,state:0
 msgid ""
 "When the production order is created the status is set to 'Draft'.\n"
-"                If the order is confirmed the status is set to 'Waiting "
-"Goods'.\n"
-"                If any exceptions are there, the status is set to 'Picking "
-"Exception'.\n"
-"                If the stock is available then the status is set to 'Ready "
-"to Produce'.\n"
-"                When the production gets started then the status is set to "
-"'In Production'.\n"
+"                If the order is confirmed the status is set to 'Waiting Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking Exception'.\n"
+"                If the stock is available then the status is set to 'Ready to Produce'.\n"
+"                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
 msgstr ""
 
@@ -2427,7 +2271,7 @@ msgstr ""
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
 msgid "days"
-msgstr ""
+msgstr "dies"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -2460,10 +2304,4 @@ msgstr "més"
 #: field:mrp.product.produce.line,track_production:0
 #: field:mrp.production,ready_production:0
 msgid "unknown"
-msgstr ""
-
-#~ msgid "Product Name"
-#~ msgstr "Nom producte"
-
-#~ msgid "BoM Hierarchy"
-#~ msgstr "Estructura LdM"
+msgstr "desconegut"

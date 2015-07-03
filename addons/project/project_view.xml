@@ -750,7 +750,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="project_grp" string="Projects">
-                        <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
+                        <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]"/>
                     </group>
                 </xpath>
             </field>

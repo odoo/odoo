@@ -396,8 +396,8 @@ class account_asset_depreciation_line(osv.osv):
             context.update({'date': depreciation_date})
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
-            asset_name = line.asset_id.name
-            reference = line.name
+            asset_name = "/"
+            reference = line.asset_id.name
             move_vals = {
                 'name': asset_name,
                 'date': depreciation_date,

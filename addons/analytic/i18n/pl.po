@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-10-20 19:52+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:28+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -81,9 +82,7 @@ msgstr "Saldo"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Obliczone jako iloczyn ilości i ceny kosztowej z Produktu. Wyrażone i "
-"walucie firmy."
+msgstr "Obliczone jako iloczyn ilości i ceny kosztowej z Produktu. Wyrażone i walucie firmy."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -240,14 +239,10 @@ msgstr "Pełna nazwa"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
-"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
-"kanban."
+msgstr "Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie jest bezpośrednio w formacie html, aby można je było stosować w widokach kanban."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -259,37 +254,19 @@ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Typ konta Widok oznacza, że nie zezwalasz na zapisy na tym koncie.\n"
-"Typ 'Konto analityczne' jest stosowany do zwykłych zapisów analitycznych.\n"
-"Jeśli wybierzesz \"Umowa' lub 'Projekt', to konta będą miały dodatkowe "
-"funkcjonalności\n"
-"zatwierdzania zapisów i fakturowania.\n"
-"Typ specjalny 'Szablon umowy' pozwala definiować szablon z ustawieniami "
-"domyślnymi do kopiowania w tworzonych umowach.."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "Typ konta Widok oznacza, że nie zezwalasz na zapisy na tym koncie.\nTyp 'Konto analityczne' jest stosowany do zwykłych zapisów analitycznych.\nJeśli wybierzesz \"Umowa' lub 'Projekt', to konta będą miały dodatkowe funkcjonalności\nzatwierdzania zapisów i fakturowania.\nTyp specjalny 'Szablon umowy' pozwala definiować szablon z ustawieniami domyślnymi do kopiowania w tworzonych umowach.."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
-msgstr ""
-"Jeśli ustawisz firmę, wybrana waluta musi być taka sama, jak waluta firmy.\n"
-"Możesz usunąć przypisaną firmę, a tym samym zmienić walutę, tylko na "
-"analitycznym koncie typu \"Widok\". To może być przykładowo bardzo przydatne "
-"dla celów konsolidacji kilku wykresów spółek w różnych walutach."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
+msgstr "Jeśli ustawisz firmę, wybrana waluta musi być taka sama, jak waluta firmy.\nMożesz usunąć przypisaną firmę, a tym samym zmienić walutę, tylko na analitycznym koncie typu \"Widok\". To może być przykładowo bardzo przydatne dla celów konsolidacji kilku wykresów spółek w różnych walutach."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -337,23 +314,12 @@ msgstr "Nowe"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
-"Kiedy nastąpi data końcowa umowy\n"
-"                                        lub zostanie osiągnięta maksymalna "
-"ilość\n"
-"                                        jednostek, to menedżer kontraktu "
-"jest\n"
-"                                        powiadamiany o konieczności "
-"odnowienia\n"
-"                                        umowy z klientem."
+msgstr "Kiedy nastąpi data końcowa umowy\n                                        lub zostanie osiągnięta maksymalna ilość\n                                        jednostek, to menedżer kontraktu jest\n                                        powiadamiany o konieczności odnowienia\n                                        umowy z klientem."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0

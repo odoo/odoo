@@ -1,25 +1,25 @@
-# Japanese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Japanese <ja@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:39+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "ファイル数"
 
@@ -31,11 +31,10 @@ msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s（コピー）"
 
 #. module: document
 #: model:ir.actions.act_window,help:document.action_document_file_form
@@ -43,8 +42,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
@@ -54,12 +52,8 @@ msgstr ""
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"項目を評価するためのPython表記\n"
-"ダイナミックフォルダの中の現在ディレクトには 'dir_id' を、現在レコードを参照するには 'res_id'、 'res_model' "
-"を使うことができます。"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "項目を評価するためのPython表記\nダイナミックフォルダの中の現在ディレクトには 'dir_id' を、現在レコードを参照するには 'res_id'、 'res_model' を使うことができます。"
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -108,18 +102,15 @@ msgstr "8月"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"ファイル名にレコード名を含めるのであれば、これをチェックして下さい。\n"
-"そうすると、ディレクトリはリソースディレクトリになります。"
+msgstr "ファイル名にレコード名を含めるのであれば、これをチェックして下さい。\nそうすると、ディレクトリはリソースディレクトリになります。"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
 msgstr "選択したオブジェクトと同じようなツリー構造を使うのであれば、これをチェックして下さい。"
 
 #. module: document
@@ -175,7 +166,7 @@ msgstr ""
 #: field:document.directory.dctx,create_date:0
 #: field:document.storage,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "作成日"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -271,8 +262,7 @@ msgid "Directory name contains special characters!"
 msgstr "ディレクトリ名に特殊文字が含まれています。"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "ディレクトリ名は固有でなければいけません。"
@@ -312,12 +302,10 @@ msgstr "ダイナミックな文脈"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"各ディレクトリは静的タイプを持つか、他のリソースに連係することができます。静的ディレクトリは，オペレーティングシステムのものと同じように、ファイル群のディ"
-"レクトリです。システムリソースに連係されたディレクトリは、親ディレクトリで定義されたリソースタイプのサブディレクトリを持ちます。"
+msgstr "各ディレクトリは静的タイプを持つか、他のリソースに連係することができます。静的ディレクトリは，オペレーティングシステムのものと同じように、ファイル群のディレクトリです。システムリソースに連係されたディレクトリは、親ディレクトリで定義されたリソースタイプのサブディレクトリを持ちます。"
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -438,7 +426,7 @@ msgstr "生成されたファイル"
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 msgid "Group By"
-msgstr ""
+msgstr "グループ化"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -446,16 +434,13 @@ msgid "Groups"
 msgstr "グループ"
 
 #. module: document
-#: field:document.configuration,id:0
-#: field:document.directory,id:0
+#: field:document.configuration,id:0 field:document.directory,id:0
 #: field:document.directory.content,id:0
 #: field:document.directory.content.type,id:0
-#: field:document.directory.dctx,id:0
-#: field:document.storage,id:0
-#: field:report.document.file,id:0
-#: field:report.document.user,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: document
 #: help:document.directory,resource_find_all:0
@@ -467,13 +452,11 @@ msgstr "そうであれば，このリソースに合致する全ての添付を
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"オブジェクトをここに置くと、これら全てのオブジェクトの下にディレクトリテンプレートが表示されます。そのディレクトリは特定のモデルあるいはレコードに添付され"
-"ます。親ディレクトを選んだ場合には、親ディレクトリを指定してはいけません。"
+msgstr "オブジェクトをここに置くと、これら全てのオブジェクトの下にディレクトリテンプレートが表示されます。そのディレクトリは特定のモデルあるいはレコードに添付されます。親ディレクトを選んだ場合には、親ディレクトリを指定してはいけません。"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -560,8 +543,7 @@ msgid "Modified Date"
 msgstr "変更日"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "月"
 
@@ -610,8 +592,7 @@ msgstr "これらのグループのメンバーだけがこのディレクトリ
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,user_id:0
 #: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "所有者"
 
@@ -764,8 +745,7 @@ msgid "Users File"
 msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #: code:addons/document/document.py:347
 #, python-format
 msgid "ValidateError"
@@ -779,8 +759,8 @@ msgstr "仮想ファイル"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
 msgstr "これを実行すると、インストールされているモジュールがディレクトリを自動的に作成します。"
 
 #. module: document
@@ -801,4 +781,4 @@ msgstr "res_config_contents"
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "不明"

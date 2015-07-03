@@ -15,6 +15,7 @@ from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
 from openerp.osv import orm
+from openerp.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
 

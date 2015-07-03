@@ -226,7 +226,7 @@ class ir_property(osv.osv):
         # retrieve the properties corresponding to the given record ids
         self._cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", (name, model))
         field_id = self._cr.fetchone()[0]
-        company_id = self.env['res.company']._company_default_get(model, field_id)
+        company_id = self.env.context.get('force_company') or self.env['res.company']._company_default_get(model, field_id)
         refs = {('%s,%s' % (model, id)): id for id in values}
         props = self.search([
             ('fields_id', '=', field_id),
@@ -260,6 +260,7 @@ class ir_property(osv.osv):
     def search_multi(self, name, model, operator, value):
         """ Return a domain for the records that match the given condition. """
         default_matches = False
+        include_zero = False
 
         field = self.env[model]._fields[name]
         if field.type == 'many2one':
@@ -281,6 +282,27 @@ class ir_property(osv.osv):
                 target_names = target.name_search(value, operator=operator, limit=None)
                 target_ids = map(itemgetter(0), target_names)
                 operator, value = 'in', map(makeref, target_ids)
+        elif field.type in ('integer', 'float'):
+            # No record is created in ir.property if the field's type is float or integer with a value
+            # equal to 0. Then to match with the records that are linked to a property field equal to 0,
+            # the negation of the operator must be taken  to compute the goods and the domain returned
+            # to match the searched records is just the opposite.
+            if value == 0 and operator == '=':
+                operator = '!='
+                include_zero = True
+            elif value <= 0 and operator == '>=':
+                operator = '<'
+                include_zero = True
+            elif value <= 0 and operator == '>':
+                operator = '<='
+                include_zero = True
+            elif value >= 0 and operator == '<=':
+                operator = '>'
+                include_zero = True
+            elif value >= 0 and operator == '<':
+                operator = '>='
+                include_zero = True
+
 
         # retrieve the properties that match the condition
         domain = self._get_domain(name, model)
@@ -297,7 +319,9 @@ class ir_property(osv.osv):
             else:
                 default_matches = True
 
-        if default_matches:
+        if include_zero:
+            return [('id', 'not in', good_ids)]
+        elif default_matches:
             # exclude all records with a property that does not match
             all_ids = []
             props = self.search(domain + [('res_id', '!=', False)])

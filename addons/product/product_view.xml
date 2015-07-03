@@ -72,7 +72,7 @@
                             <page string="Information">
                                 <group colspan="4">
                                     <group>
-                                        <field name="type"/>
+                                        <field name="type" on_change="onchange_type(type)"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
                                     </group>
@@ -107,8 +107,8 @@
                                     </group>
                                     <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
                                         <field digits="(14, 3)" name="volume"/>
-                                        <field digits="(14, 3)" name="weight"/>
-                                        <field digits="(14, 3)" name="weight_net"/>
+                                        <field name="weight"/>
+                                        <field name="weight_net"/>
                                     </group>
                                 </group>
                                 <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">

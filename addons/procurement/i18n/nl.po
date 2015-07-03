@@ -1,21 +1,22 @@
-# Dutch translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-04-02 09:19+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2015-06-01 17:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-03 06:07+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -24,51 +25,17 @@ msgid ""
 "                 Click to create a Procurement.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Procurement Orders</b> represent the need for a certain "
-"quantity of products, at a given time, in a given location.\n"
+"                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Sales Orders</b> are one typical source of Procurement "
-"Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product "
-"configuration, the procurement engine will attempt to satisfy the need by "
-"reserving products from stock, ordering products from a supplier, or passing "
-"a manufacturing order, etc...\n"
+"                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...\n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>Procurement Exception</b> occurs when the system cannot "
-"find a way to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message in the chatter).\n"
+"                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                 Klik om een verwerving aan te maken.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Verwervingsopdrachten</b> vertegenwoordigen een behoefte "
-"voor een zekere hoeveelheid product op een gegeven tijd en een gegeven "
-"locatie.\n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Verkooporders</b> zijn een typisch voorbeeld als een bron "
-"voor verwervingsorders (maar dit zijn verschillende documenten).  \n"
-"                 <br/>Afhankelijk van de parameters en de configuratie van "
-"het product, zal de verwervings planner proberen om de behoefte te voldoen "
-"door het reserveren van producten uit voorraad, het bestellen van de "
-"producten bij een leverancier, of het aanmaken van een productieorder, etc "
-"... \n"
-"              </p>\n"
-"              <p>\n"
-"                <b>Verwervinsfouten</b>  treden op wanneer het systeem een "
-"manier om een ​​verwerving te voldoen niet kan vinden. Enkele fouten zullen "
-"zichzelf automatisch op te lossen, maar anderen vragen om een handmatige "
-"interventie (die worden geïdentificeerd door een specifieke foutmelding in "
-"de chatter). \n"
-"\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Klik om een verwerving aan te maken.\n              </p>\n              <p>\n                <b>Verwervingsopdrachten</b> vertegenwoordigen een behoefte voor een zekere hoeveelheid product op een gegeven tijd en een gegeven locatie.\n              </p>\n              <p>\n                <b>Verkooporders</b> zijn een typisch voorbeeld als een bron voor verwervingsorders (maar dit zijn verschillende documenten).  \n                 <br/>Afhankelijk van de parameters en de configuratie van het product, zal de verwervings planner proberen om de behoefte te voldoen door het reserveren van producten uit voorraad, het bestellen van de producten bij een leverancier, of het aanmaken van een productieorder, etc ... \n              </p>\n              <p>\n                <b>Verwervinsfouten</b>  treden op wanneer het systeem een manier om een ​​verwerving te voldoen niet kan vinden. Enkele fouten zullen zichzelf automatisch op te lossen, maar anderen vragen om een handmatige interventie (die worden geïdentificeerd door een specifieke foutmelding in de chatter). \n\n              </p>\n            "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -77,40 +44,18 @@ msgid ""
 "                 Click to create a procurement order.  \n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>procurement order</b> is used to record a need for a "
-"specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>\n"
 "              </p>\n"
 "              <p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het aanmaken van een verwervingsopdracht. \n"
-"              </p><p>\n"
-"                Een verwervingsopdracht wordt gebruikt om een behoefte vast\n"
-"                te leggen voor een specifiek product op een specifieke "
-"locatie.\n"
-"                Een verwervingsopdracht wordt gewoonlijk automatisch "
-"gemaakt\n"
-"               vanuit de verkooporders, een logistieke pull regel of "
-"minimale voorraadregels. \n"
-"              </p><p>\n"
-"                Als de verwervingsopdracht is bevestigd maakt het "
-"automatisch de\n"
-"                noodzakelijke bewerkingen om de behoefte te vervullen: "
-"inkoopvoorstel, \n"
-"                productieorder, etc.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van een verwervingsopdracht. \n              </p><p>\n                Een verwervingsopdracht wordt gebruikt om een behoefte vast\n                te leggen voor een specifiek product op een specifieke locatie.\n                Een verwervingsopdracht wordt gewoonlijk automatisch gemaakt\n               vanuit de verkooporders, een logistieke pull regel of minimale voorraadregels. \n              </p><p>\n                Als de verwervingsopdracht is bevestigd maakt het automatisch de\n                noodzakelijke bewerkingen om de behoefte te vervullen: inkoopvoorstel, \n                productieorder, etc.\n              </p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -146,9 +91,7 @@ msgstr "Geannuleerd"
 #: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
-"Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de "
-"%s status bevindend"
+msgstr "Het is niet mogelijk om verwerving order(s) te verwijderen welke zich in de %s status bevindend"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -158,16 +101,13 @@ msgstr "Controleer verwerving"
 #. module: procurement
 #: help:procurement.order,rule_id:0
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
-msgstr ""
-"De gekozen regel voor de verwerving.Normaliter wordt dit automatisch "
-"ingesteld door het systeem, maar kan worden aangepast door de manager om "
-"abnormaal gedrag te forceren."
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr "De gekozen regel voor de verwerving.Normaliter wordt dit automatisch ingesteld door het systeem, maar kan worden aangepast door de manager om abnormaal gedrag te forceren."
 
 #. module: procurement
-#: field:procurement.order,company_id:0
-#: field:procurement.rule,company_id:0
+#: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
 
@@ -187,16 +127,14 @@ msgid "Confirmed"
 msgstr "Bevestigd"
 
 #. module: procurement
-#: field:procurement.group,create_uid:0
-#: field:procurement.order,create_uid:0
+#: field:procurement.group,create_uid:0 field:procurement.order,create_uid:0
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: procurement
-#: field:procurement.group,create_date:0
-#: field:procurement.order,create_date:0
+#: field:procurement.group,create_date:0 field:procurement.order,create_date:0
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
@@ -278,16 +216,11 @@ msgstr "Groepeer verwervingen"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
-"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
-"ingevoegd."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
 
 #. module: procurement
-#: field:procurement.group,id:0
-#: field:procurement.order,id:0
-#: field:procurement.order.compute.all,id:0
-#: field:procurement.rule,id:0
+#: field:procurement.group,id:0 field:procurement.order,id:0
+#: field:procurement.order.compute.all,id:0 field:procurement.rule,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -299,9 +232,7 @@ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
-"Indien uitgevinkt kunt u de groep verbergen, zonder deze te hoeven "
-"verwijderen."
+msgstr "Indien uitgevinkt kunt u de groep verbergen, zonder deze te hoeven verwijderen."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -320,16 +251,14 @@ msgid "Last Message Date"
 msgstr "Laatste bericht datum"
 
 #. module: procurement
-#: field:procurement.group,write_uid:0
-#: field:procurement.order,write_uid:0
+#: field:procurement.group,write_uid:0 field:procurement.order,write_uid:0
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
 msgstr "Laatst aangepast door"
 
 #. module: procurement
-#: field:procurement.group,write_date:0
-#: field:procurement.order,write_date:0
+#: field:procurement.group,write_date:0 field:procurement.order,write_date:0
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
@@ -512,9 +441,7 @@ msgstr "Referentie"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
-"Referentie van het document dat deze verwerving heeft aangemaakt.\n"
-"Dit wordt automatisch ingevuld door Odoo."
+msgstr "Referentie van het document dat deze verwerving heeft aangemaakt.\nDit wordt automatisch ingevuld door Odoo."
 
 #. module: procurement
 #: field:procurement.order,rule_id:0

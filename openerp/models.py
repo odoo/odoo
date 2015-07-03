@@ -393,21 +393,21 @@ class BaseModel(object):
         ir_model_fields_obj = self.pool.get('ir.model.fields')
 
         # sparse field should be created at the end, as it depends on its serialized field already existing
-        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        model_fields = sorted(self._fields.items(), key=lambda x: 1 if x[1].type == 'sparse' else 0)
         for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
-                'ttype': f._type,
-                'relation': f._obj or '',
-                'select_level': tools.ustr(int(f.select)),
+                'ttype': f.type,
+                'relation': f.comodel_name or '',
+                'select_level': tools.ustr(int(f.index)),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
-                'selectable': (f.selectable and 1) or 0,
-                'translate': (f.translate and 1) or 0,
-                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
+                'selectable': (f.search or f.store and 1) or 0,
+                'translate': (f.translate if hasattr(f,'translate') else False and 1) or 0,
+                'relation_field': f.inverse_name if hasattr(f, 'inverse_name') else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -2184,14 +2184,20 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        current_table = self
-        parent_alias = '"%s"' % current_table._table
-        while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_model_name = current_table._inherit_fields[field][0]
-            parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
-            current_table = parent_table
-        return '%s."%s"' % (parent_alias, field)
+        # INVARIANT: alias is the SQL alias of model._table in query
+        model, alias = self, self._table
+        while field in model._inherit_fields and field not in model._columns:
+            # retrieve the parent model where field is inherited from
+            parent_model_name = model._inherit_fields[field][0]
+            parent_model = self.pool[parent_model_name]
+            parent_field = model._inherits[parent_model_name]
+            # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
+            parent_alias, _ = query.add_join(
+                (alias, parent_model._table, parent_field, 'id', parent_field),
+                implicit=True,
+            )
+            model, alias = parent_model, parent_alias
+        return '"%s"."%s"' % (alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:

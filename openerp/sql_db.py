@@ -404,9 +404,7 @@ class Cursor(object):
 
     @property
     def closed(self):
-        # NOTE: we cannot use `__getattr__` delegation as we
-        #       should not `check` that the cursor is closed
-        return self._obj.closed
+        return self._closed
 
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across

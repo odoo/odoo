@@ -1,32 +1,30 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * gamification
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-26 15:40+0000\n"
-"Last-Translator: Monika Grzelak (OpenGLOBE.pl) "
-"<monika.grzelak@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:42+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_badge_received
 msgid ""
 "\n"
-"        <p>Congratulation, you have received the badge "
-"<strong>${object.badge_id.name}</strong> !\n"
+"        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
-"                This badge was granted by "
-"<strong>${object.sender_id.name}</strong>.\n"
+"                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
 "            % endif\n"
 "        </p>\n"
 "\n"
@@ -34,20 +32,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
-"\n"
-"        <p>Gratujacje, otrzymałeś/aś odznakę "
-"<strong>${object.badge_id.name}</strong> !\n"
-"            % if object.sender_id\n"
-"                Odznakę przyznał/a "
-"<strong>${object.sender_id.name}</strong>.\n"
-"            % endif\n"
-"        </p>\n"
-"\n"
-"        % if object.comment\n"
-"            <p><em>${object.comment}</em></p>\n"
-"        % endif\n"
-"        "
+msgstr "\n        <p>Gratujacje, otrzymałeś/aś odznakę <strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                Odznakę przyznał/a <strong>${object.sender_id.name}</strong>.\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -57,22 +42,9 @@ msgid ""
 "        <strong>Reminder ${object.name}</strong>\n"
 "    </header>\n"
 "    \n"
-"    <p>You have not updated your progress for the goal "
-"${object.definition_id.name} (currently reached at ${object.completeness}%) "
-"for at least ${object.remind_update_delay} days. Do not forget to do "
-"it.</p>\n"
+"    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr ""
-"\n"
-"    <header>\n"
-"        <strong>Przypomnienie ${object.name}</strong>\n"
-"    </header>\n"
-"    \n"
-"    <p>Nie uaktualniłeś/aś swoich postępów do celu "
-"${object.definition_id.name} (aktualny wypełniono ${object.completeness}%) "
-"przez co najmniej ${object.remind_update_delay} dni. Nie zapomnij tego "
-"zrobić.</p>\n"
-"            "
+msgstr "\n    <header>\n        <strong>Przypomnienie ${object.name}</strong>\n    </header>\n    \n    <p>Nie uaktualniłeś/aś swoich postępów do celu ${object.definition_id.name} (aktualny wypełniono ${object.completeness}%) przez co najmniej ${object.remind_update_delay} dni. Nie zapomnij tego zrobić.</p>\n            "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.simple_report_template
@@ -81,8 +53,7 @@ msgid ""
 "<header>\n"
 "    <strong>${object.name}</strong>\n"
 "</header>\n"
-"<p class=\"oe_grey\">The following message contains the current progress for "
-"the challenge ${object.name}</p>\n"
+"<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n"
 "\n"
 "% if object.visibility_mode == 'personal':\n"
 "    <table width=\"100%\" border=\"1\">\n"
@@ -161,17 +132,13 @@ msgstr "<="
 msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewared for this "
 "challenge."
-msgstr ""
-"<br/>Nikomu nie udało się osiągnąć wszystkich celów, za to wyzwanie nikt nie "
-"otrzymuje odznaki."
+msgstr "<br/>Nikomu nie udało się osiągnąć wszystkich celów, za to wyzwanie nikt nie otrzymuje odznaki."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
-"<br/>Nagroda (badge %s) dla każdego użytkownika, któremu się udało, została "
-"wysłana do %s."
+msgstr "<br/>Nagroda (badge %s) dla każdego użytkownika, któremu się udało, została wysłana do %s."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:763
@@ -179,10 +146,7 @@ msgstr ""
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr ""
-"<br/>Specjalne nagrody zostały wysłane do najlepszych użytkowników "
-"uczestniczących w rywalizacji. Ranking dla tego wyzwania przedstawia się "
-"następująco :"
+msgstr "<br/>Specjalne nagrody zostały wysłane do najlepszych użytkowników uczestniczących w rywalizacji. Ranking dla tego wyzwania przedstawia się następująco :"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -191,27 +155,12 @@ msgid ""
 "                    Click to create a badge. \n"
 "                </p>\n"
 "                <p>\n"
-"                    A badge is a symbolic token granted to a user as a sign "
-"of reward.\n"
-"                    It can be deserved automatically when some conditions "
-"are met or manually by users.\n"
-"                    Some badges are harder than others to get with specific "
-"conditions.\n"
+"                    A badge is a symbolic token granted to a user as a sign of reward.\n"
+"                    It can be deserved automatically when some conditions are met or manually by users.\n"
+"                    Some badges are harder than others to get with specific conditions.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknij, aby utworzyć odznakę. \n"
-"                </p>\n"
-"                <p>\n"
-"                    Odznaka jest symbolicznym znaczkiem, który użytkownik "
-"otrzymuje jako nagrodę.\n"
-"                    Można ją otrzymać automatycznie, kiedy spełni się "
-"warunki lub ręcznie z nadania użytkownika.\n"
-"                    Odznaki różnią się trudnością do uzyskania w zależności "
-"od warunków.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknij, aby utworzyć odznakę. \n                </p>\n                <p>\n                    Odznaka jest symbolicznym znaczkiem, który użytkownik otrzymuje jako nagrodę.\n                    Można ją otrzymać automatycznie, kiedy spełni się warunki lub ręcznie z nadania użytkownika.\n                    Odznaki różnią się trudnością do uzyskania w zależności od warunków.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.challenge_list_action
@@ -220,26 +169,12 @@ msgid ""
 "                    Click to create a challenge. \n"
 "                </p>\n"
 "                <p>\n"
-"                    Assign a list of goals to chosen users to evaluate "
-"them.\n"
-"                    The challenge can use a period (weekly, monthly...) for "
-"automatic creation of goals.\n"
-"                    The goals are created for the specified users or member "
-"of the group.\n"
+"                    Assign a list of goals to chosen users to evaluate them.\n"
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknij, aby stworzyć wyzwanie.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Przydziel listę celów do wypełnienia dla wybranych "
-"użytkowników.\n"
-"                    Wyzwanie może używać okresów (tygodniowych, "
-"miesięcznych) do automatycznego tworzenia celów.\n"
-"                    Cele tworzone są dla wybranej grupy lub użytkowników.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknij, aby stworzyć wyzwanie.\n                </p>\n                <p>\n                    Przydziel listę celów do wypełnienia dla wybranych użytkowników.\n                    Wyzwanie może używać okresów (tygodniowych, miesięcznych) do automatycznego tworzenia celów.\n                    Cele tworzone są dla wybranej grupy lub użytkowników.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -248,23 +183,11 @@ msgid ""
 "                    Click to create a goal definition. \n"
 "                </p>\n"
 "                <p>\n"
-"                    A goal definition is a technical model of goal defining "
-"a condition to reach.\n"
-"                    The dates, values to reach or users are defined in goal "
-"instance.\n"
+"                    A goal definition is a technical model of goal defining a condition to reach.\n"
+"                    The dates, values to reach or users are defined in goal instance.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknij, aby stworzyć definicję celu.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Definicja celu jest modelem technicznym warunków do "
-"spełnienia, aby osiągnąć cel.\n"
-"                    Daty, wartości do osiągnięcia i użytkownicy są "
-"definiowani w przypadku celu.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknij, aby stworzyć definicję celu.\n                </p>\n                <p>\n                    Definicja celu jest modelem technicznym warunków do spełnienia, aby osiągnąć cel.\n                    Daty, wartości do osiągnięcia i użytkownicy są definiowani w przypadku celu.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_list_action
@@ -277,35 +200,17 @@ msgid ""
 "                    Goals can be created automatically by using challenges.\n"
 "                </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                    Kliknij, aby utworzyć cel.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Cel jest definiowany przez użytkownika i definicję "
-"celu.\n"
-"                    Cele można tworzyć automatycznie przy użyciu wyzwań.\n"
-"                </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    Kliknij, aby utworzyć cel.\n                </p>\n                <p>\n                    Cel jest definiowany przez użytkownika i definicję celu.\n                    Cele można tworzyć automatycznie przy użyciu wyzwań.\n                </p>\n            "
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
 "<p>\n"
-"                There is no goals associated to this challenge matching your "
-"search.\n"
-"                Make sure that your challenge is active and assigned to at "
-"least one user.\n"
+"                There is no goals associated to this challenge matching your search.\n"
+"                Make sure that your challenge is active and assigned to at least one user.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                Nie znaleziono celów związanych z tym wyzwaniem pasujących "
-"do kryteriów wyszukiwania.\n"
-"                Upewnij się, że wyzwanie jest aktywne i przypisane do co "
-"najmniej jednego użytkownika.\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                Nie znaleziono celów związanych z tym wyzwaniem pasujących do kryteriów wyszukiwania.\n                Upewnij się, że wyzwanie jest aktywne i przypisane do co najmniej jednego użytkownika.\n              </p>\n            "
 
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
@@ -317,9 +222,7 @@ msgstr ">="
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
-msgstr ""
-"Cel jest uznany za wypełniony, kiedy aktualna wartość jest porównywana do "
-"wartości do osiągnięcia"
+msgstr "Cel jest uznany za wypełniony, kiedy aktualna wartość jest porównywana do wartości do osiągnięcia"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -388,8 +291,7 @@ msgstr "Automatyczne: suma w polu"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
-#: field:gamification.badge,name:0
-#: field:gamification.badge.user,badge_id:0
+#: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
 msgstr "Odznaka"
@@ -428,11 +330,7 @@ msgid ""
 "of a running period (eg: end of the month for a monthly challenge), at the "
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
-msgstr ""
-"Odznaki są przyznawane po zakończeniu wyzwania. Może to oznaczać zakończenie "
-"okresu działania (np. koniec miesiąca przy miesięcznym wyzwaniu), końcową "
-"datę wyzwania (jeśli okresowość nie została ustawiona) lub po ręcznym "
-"zamknięciu wyzwania."
+msgstr "Odznaki są przyznawane po zakończeniu wyzwania. Może to oznaczać zakończenie okresu działania (np. koniec miesiąca przy miesięcznym wyzwaniu), końcową datę wyzwania (jeśli okresowość nie została ustawiona) lub po ręcznym zamknięciu wyzwania."
 
 #. module: gamification
 #: field:gamification.goal.definition,batch_mode:0
@@ -509,9 +407,7 @@ msgstr "Wyzwanie zapoczątkowujące"
 msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
-msgstr ""
-"Wyzwanie, które wygenerowało cel, przypisz wyzwanie do użytkowników, aby "
-"wygenerować cele z wartością w tym polu."
+msgstr "Wyzwanie, które wygenerowało cel, przypisz wyzwanie do użytkowników, aby wygenerować cele z wartością w tym polu."
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_kanban
@@ -579,12 +475,7 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr ""
-"Twórz i zarządzaj użytkownikami, którzy będą się łączyć z systemem. "
-"Użytkownicy mogą zostać zdezaktywowani, jeśli pojawi się okres czasu, kiedy "
-"nie będą lub nie powinni łączyć się z systemem. Możesz przydzielić ich do "
-"grup, aby nadać im specyficzne uprawnienia do aplikacji, których potrzebują "
-"używać w systemie."
+msgstr "Twórz i zarządzaj użytkownikami, którzy będą się łączyć z systemem. Użytkownicy mogą zostać zdezaktywowani, jeśli pojawi się okres czasu, kiedy nie będą lub nie powinni łączyć się z systemem. Możesz przydzielić ich do grup, aby nadać im specyficzne uprawnienia do aplikacji, których potrzebują używać w systemie."
 
 #. module: gamification
 #: field:gamification.badge.user,create_date:0
@@ -660,9 +551,7 @@ msgstr "Definiuj widoczność wyzwania w menu"
 msgid ""
 "Defined how will be computed the goals. The result of the operation will be "
 "stored in the field 'Current'."
-msgstr ""
-"Zdefiniuj, jak cele będą obliczane. Wynik tej operacji będzie przechowywany "
-"w polu \"Bieżące\""
+msgstr "Zdefiniuj, jak cele będą obliczane. Wynik tej operacji będzie przechowywany w polu \"Bieżące\""
 
 #. module: gamification
 #: field:gamification.goal,definition_condition:0
@@ -677,16 +566,13 @@ msgstr "Opis definicji"
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Depending on the Display mode, reports will be individual or shared."
-msgstr ""
-"W zależności od trybu wyświetlania, raporty mogą być indywidualne lub "
-"dzielone."
+msgstr "W zależności od trybu wyświetlania, raporty mogą być indywidualne lub dzielone."
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid ""
 "Describe the challenge: what is does, who it targets, why it matters..."
-msgstr ""
-"Opisz wyzwanie: co robi, do kogo jest skierowane, dlaczego ma znaczenie..."
+msgstr "Opisz wyzwanie: co robi, do kogo jest skierowane, dlaczego ma znaczenie..."
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
@@ -764,9 +650,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "Even if the challenge is failed, best challengers will be rewarded"
-msgstr ""
-"Nawet jeśli wyzwanie zakończyło się porażką, najlepsi uczestnicy zostaną "
-"nagrodzeni"
+msgstr "Nawet jeśli wyzwanie zakończyło się porażką, najlepsi uczestnicy zostaną nagrodzeni"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1002,10 +886,7 @@ msgstr "Ukryte"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
-"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
-"kanban."
+msgstr "Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie jest bezpośrednio w formacie html, aby można je było stosować w widokach kanban."
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1013,14 +894,10 @@ msgid "How to compute the goal?"
 msgstr "Jak obliczyć cel?"
 
 #. module: gamification
-#: field:gamification.badge,id:0
-#: field:gamification.badge.user,id:0
-#: field:gamification.badge.user.wizard,id:0
-#: field:gamification.challenge,id:0
-#: field:gamification.challenge.line,id:0
-#: field:gamification.goal,id:0
-#: field:gamification.goal.definition,id:0
-#: field:gamification.goal.wizard,id:0
+#: field:gamification.badge,id:0 field:gamification.badge.user,id:0
+#: field:gamification.badge.user.wizard,id:0 field:gamification.challenge,id:0
+#: field:gamification.challenge.line,id:0 field:gamification.goal,id:0
+#: field:gamification.goal.definition,id:0 field:gamification.goal.wizard,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -1075,11 +952,7 @@ msgid ""
 "In case of manual goal, reminders are sent if the goal as not been updated "
 "for a while (defined in challenge). Ignored in case of non-manual goal or "
 "goal not linked to a challenge."
-msgstr ""
-"W przypadku ręcznie ustawionych celów, przypomnienia są wysyłane jeśli cel "
-"nie był uaktualniany przez pewien czas (zdefiniowany w wyzwaniu). Ignorowane "
-"w przypadku celów nie ustawianych ręcznie i celów nie powiązanych z "
-"wyzwaniem."
+msgstr "W przypadku ręcznie ustawionych celów, przypomnienia są wysyłane jeśli cel nie był uaktualniany przez pewien czas (zdefiniowany w wyzwaniu). Ignorowane w przypadku celów nie ustawianych ręcznie i celów nie powiązanych z wyzwaniem."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1282,8 +1155,7 @@ msgstr "Nigdy"
 #. module: gamification
 #: help:gamification.challenge,remind_update_delay:0
 msgid "Never reminded if no value or zero is specified."
-msgstr ""
-"Nigdy nie przypominać, jeśli nie wyszczególniono wartości lub wpisano zero."
+msgstr "Nigdy nie przypominać, jeśli nie wyszczególniono wartości lub wpisano zero."
 
 #. module: gamification
 #: field:gamification.challenge,next_report_date:0
@@ -1304,8 +1176,7 @@ msgstr "Nikt, przypisywane w wyzwaniach"
 #: code:addons/gamification/models/challenge.py:766
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
-msgstr ""
-"Nikt nie osiągnął wymaganych warunków, aby otrzymać specjalne odznaki."
+msgstr "Nikt nie osiągnął wymaganych warunków, aby otrzymać specjalne odznaki."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -1372,9 +1243,7 @@ msgstr "Okres"
 msgid ""
 "Period of automatic goal assigment. If none is selected, should be launched "
 "manually."
-msgstr ""
-"Okres automatycznego przypisywania celów. Jeśli żaden nie zostanie wybrany, "
-"będzie trzeba wystartować ręcznie."
+msgstr "Okres automatycznego przypisywania celów. Jeśli żaden nie zostanie wybrany, będzie trzeba wystartować ręcznie."
 
 #. module: gamification
 #: field:gamification.challenge,period:0
@@ -1401,10 +1270,7 @@ msgstr "Kod Python"
 msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
-msgstr ""
-"Kod w języku Python, który zostanie wykonany dla każdego użytkownika. "
-"\"Wynik\" powinien zawierać nową wartość aktualną. Do ewaluowanego "
-"użytkownika można dotrzeć przez object.user_id."
+msgstr "Kod w języku Python, który zostanie wykonany dla każdego użytkownika. \"Wynik\" powinien zawierać nową wartość aktualną. Do ewaluowanego użytkownika można dotrzeć przez object.user_id."
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -1490,8 +1356,7 @@ msgstr "Odpowiedzialny"
 #: code:addons/gamification/models/challenge.py:561
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
-msgstr ""
-"Odzyskiwanie postępu w wyzwaniu osobistym bez informacji o użytkowniku"
+msgstr "Odzyskiwanie postępu w wyzwaniu osobistym bez informacji o użytkowniku"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1559,9 +1424,7 @@ msgstr "Przeszukaj cele"
 msgid ""
 "Security rules to define who is allowed to manually grant badges. Not "
 "enforced for administrator."
-msgstr ""
-"Zasady bezpieczeństwa określające, kto może ręcznie przyznawać odznaki. "
-"Nienarzucone dla administratora."
+msgstr "Zasady bezpieczeństwa określające, kto może ręcznie przyznawać odznaki. Nienarzucone dla administratora."
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1717,20 +1580,14 @@ msgstr "Data do wykorzystania przy ewaluacji dla okresu"
 msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
-msgstr ""
-"Dzień, kiedy nowe wyzwanie zostanie automatycznie zamknięte. Jeśli "
-"okresowość nie została ustawiona, ta data zostanie użyta jako data końcowa "
-"celu."
+msgstr "Dzień, kiedy nowe wyzwanie zostanie automatycznie zamknięte. Jeśli okresowość nie została ustawiona, ta data zostanie użyta jako data końcowa celu."
 
 #. module: gamification
 #: help:gamification.challenge,start_date:0
 msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
-msgstr ""
-"Dzień, kiedy nowe wyzwanie zostanie automatycznie rozpoczęte. Jeśli "
-"okresowość nie została ustawiona, ta data zostanie użyta jako data "
-"początkowa celu."
+msgstr "Dzień, kiedy nowe wyzwanie zostanie automatycznie rozpoczęte. Jeśli okresowość nie została ustawiona, ta data zostanie użyta jako data początkowa celu."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:148
@@ -1739,10 +1596,7 @@ msgid ""
 "The domain for the definition %s seems incorrect, please check it.\n"
 "\n"
 "%s"
-msgstr ""
-"Dziedzina dla definicji %s wygląda na nieprawidłową, sprawdź to.\n"
-"\n"
-"%s"
+msgstr "Dziedzina dla definicji %s wygląda na nieprawidłową, sprawdź to.\n\n%s"
 
 #. module: gamification
 #: help:gamification.goal.definition,field_id:0
@@ -1754,9 +1608,7 @@ msgstr "Pole zawierające wartość do ewaluacji"
 msgid ""
 "The field name on the user profile (res.users) containing the value for "
 "res_id for action."
-msgstr ""
-"Nazwa pola w profilu użytkownika (res.users) zawierającego wartość res_id "
-"dla akcji."
+msgstr "Nazwa pola w profilu użytkownika (res.users) zawierającego wartość res_id dla akcji."
 
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
@@ -1782,9 +1634,7 @@ msgstr "Im niżej, tym lepiej"
 #: help:gamification.badge,rule_max_number:0
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
-msgstr ""
-"Maksymalna ilość razów w miesiącu, kiedy ta odznaka może zostać wysłana, na "
-"osobę."
+msgstr "Maksymalna ilość razów w miesiącu, kiedy ta odznaka może zostać wysłana, na osobę."
 
 #. module: gamification
 #: help:gamification.goal.definition,model_id:0
@@ -1796,17 +1646,13 @@ msgstr "Obiekt modelu dla pola do ewaluacji"
 msgid ""
 "The number of days after which the user assigned to a manual goal will be "
 "reminded. Never reminded if no value is specified."
-msgstr ""
-"Liczba dni, po których użytkownik przypisany do ustawionego ręcznie celu "
-"otrzyma przypomnienie. Jeśli wartość nie zostanie wpisana, przypomnienia nie "
-"będą wysyłane."
+msgstr "Liczba dni, po których użytkownik przypisany do ustawionego ręcznie celu otrzyma przypomnienie. Jeśli wartość nie zostanie wpisana, przypomnienia nie będą wysyłane."
 
 #. module: gamification
 #: help:gamification.badge,stat_my_this_month:0
 msgid ""
 "The number of time the current user has received this badge this month."
-msgstr ""
-"Liczba ile razy bieżący użytkownik otrzymał tę odznakę w tym miesiącu."
+msgstr "Liczba ile razy bieżący użytkownik otrzymał tę odznakę w tym miesiącu."
 
 #. module: gamification
 #: help:gamification.badge,stat_my:0
@@ -1821,8 +1667,7 @@ msgstr "Liczba ile razy bieżący użytkownik wysłał tę odznakę w tym miesi�
 #. module: gamification
 #: help:gamification.badge,stat_count_distinct:0
 msgid "The number of time this badge has been received by unique users."
-msgstr ""
-"Liczba ile razy ta odznaka została otrzymana przez unikalnych użytkowników."
+msgstr "Liczba ile razy ta odznaka została otrzymana przez unikalnych użytkowników."
 
 #. module: gamification
 #: help:gamification.badge,stat_this_month:0
@@ -1859,8 +1704,7 @@ msgstr "Użytkownik, który wysłał odznakę"
 msgid ""
 "The users that have succeeded theses goals will receive automatically the "
 "badge."
-msgstr ""
-"Użytkownicy, którzy osiągnęli te cele, automatycznie otrzymają odznakę."
+msgstr "Użytkownicy, którzy osiągnęli te cele, automatycznie otrzymają odznakę."
 
 #. module: gamification
 #: help:gamification.goal.definition,batch_user_expression:0
@@ -1868,10 +1712,7 @@ msgid ""
 "The value to compare with the distinctive field. The expression can contain "
 "reference to 'user' which is a browse record of the current user, e.g. "
 "user.id, user.partner_id.id..."
-msgstr ""
-"Wartość do porównania z konkretnym polem. Wyrażenie może zawierać odwołanie "
-"do \"użytkownika\", co oznacza przeszukanie rekordu dla bieżącego "
-"użytkownika, np. user.id, user.partner_id.id..."
+msgstr "Wartość do porównania z konkretnym polem. Wyrażenie może zawierać odwołanie do \"użytkownika\", co oznacza przeszukanie rekordu dla bieżącego użytkownika, np. user.id, user.partner_id.id..."
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -1892,8 +1733,7 @@ msgstr "Ta odznaka nie może być wysyłana przez użytkowników"
 #. module: gamification
 #: help:gamification.badge,image:0
 msgid "This field holds the image used for the badge, limited to 256x256"
-msgstr ""
-"To pole zawiera obrazek używany dla odznaki, rozmiar ograniczony do 256x256"
+msgstr "To pole zawiera obrazek używany dla odznaki, rozmiar ograniczony do 256x256"
 
 #. module: gamification
 #: field:gamification.goal,target_goal:0
@@ -1987,9 +1827,7 @@ msgstr "Kogo chciałbyś/abyś nagrodzić?"
 msgid ""
 "With this option enabled, a user can receive a badge only once. The top 3 "
 "badges are still rewarded only at the end of the challenge."
-msgstr ""
-"Przy włączonej tej opcji użytkownik może otrzymać daną odznakę tylko raz. "
-"Trzy najwyższe odznaki są przyznawane nadal tylko na końcu wyzwania."
+msgstr "Przy włączonej tej opcji użytkownik może otrzymać daną odznakę tylko raz. Trzy najwyższe odznaki są przyznawane nadal tylko na końcu wyzwania."
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -2050,13 +1888,10 @@ msgstr "np. dni"
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid ""
-"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
-"'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
+"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=',"
+" 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
 "count=True, context=context)"
-msgstr ""
-"np. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
-"'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
-"count=True, context=context)"
+msgstr "np. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -2080,7 +1915,7 @@ msgstr "więcej szczegółów..."
 #: view:gamification.challenge:gamification.view_challenge_wizard
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "or"
-msgstr ""
+msgstr "lub"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view

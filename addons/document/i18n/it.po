@@ -1,25 +1,25 @@
-# Italian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-03 07:11+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <nicola.riolini@gmail.com>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/projects/p/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:39+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: document
-#: field:report.document.file,nbr:0
-#: field:report.document.user,nbr:0
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
 msgid "# of Files"
 msgstr "Num. di files"
 
@@ -31,8 +31,7 @@ msgid "%s (%s)"
 msgstr "%s (%s)"
 
 #. module: document
-#: code:addons/document/document.py:117
-#: code:addons/document/document.py:307
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
@@ -43,31 +42,18 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to create a new document. \n"
 "          </p><p>\n"
-"            The Documents repository gives you access to all attachments, "
-"such\n"
+"            The Documents repository gives you access to all attachments, such\n"
 "            as mails, project documents, invoices etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Cliccare per creare un nuovo documento. \n"
-"          </p><p>\n"
-"            L'archivio Documenti permette l'accesso a tutti gli allegati, "
-"quali\n"
-"            email, documenti di progetto, fatture, ecc.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Cliccare per creare un nuovo documento. \n          </p><p>\n            L'archivio Documenti permette l'accesso a tutti gli allegati, quali\n            email, documenti di progetto, fatture, ecc.\n          </p>\n        "
 
 #. module: document
 #: help:document.directory.dctx,expr:0
 msgid ""
 "A python expression used to evaluate the field.\n"
-"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
-"to the current record, in dynamic folders"
-msgstr ""
-"Espressione python usata per interpretare il campo.\n"
-"E' possibile usare \"dir_id\" per dir. corrente, \"res_id\", \"res_model\" "
-"come riferimento al record corrente, nelle cartelle dinamiche."
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Espressione python usata per interpretare il campo.\nE' possibile usare \"dir_id\" per dir. corrente, \"res_id\", \"res_model\" come riferimento al record corrente, nelle cartelle dinamiche."
 
 #. module: document
 #: field:document.directory.content.type,active:0
@@ -89,9 +75,7 @@ msgstr "Tutti i files utenti"
 msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
-msgstr ""
-"Insieme con il Modello Superiore, questo ID attribuisce questa cartella ad "
-"uno specifico record del Modello Superiore."
+msgstr "Insieme con il Modello Superiore, questo ID attribuisce questa cartella ad uno specifico record del Modello Superiore."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -118,22 +102,16 @@ msgstr "Agosto"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
-"Check this field if you want that the name of the file to contain the record "
-"name.\n"
+"Check this field if you want that the name of the file to contain the record name.\n"
 "If set, the directory will have to be a resource one."
-msgstr ""
-"Selezionare questo campo se si desidera che il nome del file contenga il "
-"nome del record.\n"
-"Se impostata, la cartella dovrà essere una risorsa."
+msgstr "Selezionare questo campo se si desidera che il nome del file contenga il nome del record.\nSe impostata, la cartella dovrà essere una risorsa."
 
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Spunta se vuoi usare la stessa struttura ad albero come l'oggetto "
-"selezionato nel sistema"
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Spunta se vuoi usare la stessa struttura ad albero come l'oggetto selezionato nel sistema"
 
 #. module: document
 #: field:document.directory,child_ids:0
@@ -214,8 +192,7 @@ msgstr "Dicembre"
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
-"Definire parole nel contesto, per tutte le cartelle figlie e per i files"
+msgstr "Definire parole nel contesto, per tutte le cartelle figlie e per i files"
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -285,8 +262,7 @@ msgid "Directory name contains special characters!"
 msgstr "Il nome della cartella contiene caratteri speciali !"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Il nome della cartella deve essere univoco!"
@@ -326,15 +302,10 @@ msgstr "Contesto dinamico"
 msgid ""
 "Each directory can either have the type Static or be linked to another "
 "resource. A static directory, as with Operating Systems, is the classic "
-"directory that can contain a set of files. The directories linked to systems "
-"resources automatically possess sub-directories for each of resource types "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
-msgstr ""
-"Ogni cartella può avere il tipo statico o essere collegata ad altra risorsa. "
-"Una cartella statica, come per i sistemi operativi, è la classica cartella "
-"che può contenere un set di file. Le cartelle collegate ad una risorsa di "
-"sistema, possiedono automaticamente le sotto-cartelle per ogni tipo di "
-"risorsa definito nella cartella superiore."
+msgstr "Ogni cartella può avere il tipo statico o essere collegata ad altra risorsa. Una cartella statica, come per i sistemi operativi, è la classica cartella che può contenere un set di file. Le cartelle collegate ad una risorsa di sistema, possiedono automaticamente le sotto-cartelle per ogni tipo di risorsa definito nella cartella superiore."
 
 #. module: document
 #: code:addons/document/document.py:573
@@ -372,9 +343,7 @@ msgstr "Campo"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr ""
-"Campo da usare come nome sulle cartelle risorsa. Se vuoto verrà usato il "
-"campo \"nome\"."
+msgstr "Campo da usare come nome sulle cartelle risorsa. Se vuoto verrà usato il campo \"nome\"."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
@@ -465,14 +434,11 @@ msgid "Groups"
 msgstr "Gruppi"
 
 #. module: document
-#: field:document.configuration,id:0
-#: field:document.directory,id:0
+#: field:document.configuration,id:0 field:document.directory,id:0
 #: field:document.directory.content,id:0
 #: field:document.directory.content.type,id:0
-#: field:document.directory.dctx,id:0
-#: field:document.storage,id:0
-#: field:report.document.file,id:0
-#: field:report.document.user,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -481,22 +447,16 @@ msgstr "ID"
 msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
-msgstr ""
-"Se vero, tutti gli allegati che corrispondono a questa risorsa verranno "
-"collocati. Se falso, solo quelli che hanno questa come superiore."
+msgstr "Se vero, tutti gli allegati che corrispondono a questa risorsa verranno collocati. Se falso, solo quelli che hanno questa come superiore."
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Such directories are \"attached\" to the specific model or "
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
-msgstr ""
-"Se si inserisce un oggetto qui, questo modello di cartella apparirà sotto  "
-"tutti questi oggetti. Tali cartelle saranno \"collegate\" ad uno specifico "
-"modello o record, semplicemente come allegati. Non inserire una cartella "
-"superiore se si seleziona un modello superiore."
+msgstr "Se si inserisce un oggetto qui, questo modello di cartella apparirà sotto  tutti questi oggetti. Tali cartelle saranno \"collegate\" ad uno specifico modello o record, semplicemente come allegati. Non inserire una cartella superiore se si seleziona un modello superiore."
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -583,8 +543,7 @@ msgid "Modified Date"
 msgstr "Data modificata"
 
 #. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
+#: field:report.document.file,month:0 field:report.document.user,month:0
 msgid "Month"
 msgstr "Mese"
 
@@ -620,28 +579,20 @@ msgid ""
 "documents. The virtual folder of a document can be used to manage the files "
 "attached to the document, or to print and download any report. This tool "
 "will create directories automatically according to modules installed."
-msgstr ""
-"Il sistema gestione documentale di ODOO supporta la tracciatura delle "
-"cartelle con i documenti. Le cartelle virtuali dei documenti possono essere "
-"utlizzate per gestire i file collegato ai documenti oppure per stampare e "
-"scaricare alcuni report. Questo strumento creerà directory automaticamente "
-"in accordo con il modulo installato."
+msgstr "Il sistema gestione documentale di ODOO supporta la tracciatura delle cartelle con i documenti. Le cartelle virtuali dei documenti possono essere utlizzate per gestire i file collegato ai documenti oppure per stampare e scaricare alcuni report. Questo strumento creerà directory automaticamente in accordo con il modulo installato."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_form
 msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
-msgstr ""
-"Solo gli appartenenti a questi gruppi avranno accesso a questa cartella e ai "
-"suoi files."
+msgstr "Solo gli appartenenti a questi gruppi avranno accesso a questa cartella e ai suoi files."
 
 #. module: document
 #: view:document.directory:document.view_document_directory_filter
 #: field:document.directory,user_id:0
 #: view:ir.attachment:document.view_attach_filter_inherit2
-#: field:ir.attachment,user_id:0
-#: field:report.document.user,user_id:0
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
 msgid "Owner"
 msgstr "Proprietario"
 
@@ -712,9 +663,7 @@ msgstr "Sicurezza"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
-"Selezionare un oggetto qui e ci sarà una cartella per record di quella "
-"risorsa."
+msgstr "Selezionare un oggetto qui e ci sarà una cartella per record di quella risorsa."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -771,9 +720,7 @@ msgstr "Il nome del campo."
 msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
-msgstr ""
-"Questi gruppi, comunque, NON si applicano alle cartelle figlie, per le quali "
-"bisogna definire i loro gruppi."
+msgstr "Questi gruppi, comunque, NON si applicano alle cartelle figlie, per le quali bisogna definire i loro gruppi."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -790,8 +737,7 @@ msgstr "Tipo"
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
+msgstr "Usa un Dominio se vui applicare un filtro automatico sulle risorse visibili"
 
 #. module: document
 #: view:report.document.user:document.view_report_document_user_search
@@ -799,8 +745,7 @@ msgid "Users File"
 msgstr "File Utente"
 
 #. module: document
-#: code:addons/document/document.py:337
-#: code:addons/document/document.py:342
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
 #: code:addons/document/document.py:347
 #, python-format
 msgid "ValidateError"
@@ -814,11 +759,9 @@ msgstr "File Virtuali"
 #. module: document
 #: view:document.configuration:document.view_auto_config_form
 msgid ""
-"When executing this wizard, it will configure your directories automatically "
-"according to modules installed."
-msgstr ""
-"Eseguendo questa procedura, verranno configurate automaticamente le cartelle "
-"in conformità ai moduli installati."
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Eseguendo questa procedura, verranno configurate automaticamente le cartelle in conformità ai moduli installati."
 
 #. module: document
 #: field:report.document.user,name:0

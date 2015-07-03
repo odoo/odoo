@@ -212,6 +212,8 @@ class mrp_bom(osv.osv):
         @param properties: List of related properties.
         @return: False or BoM id.
         """
+        if not context:
+            context = {}
         if properties is None:
             properties = []
         if product_id:
@@ -229,6 +231,8 @@ class mrp_bom(osv.osv):
         else:
             # neither product nor template, makes no sense to search
             return False
+        if context.get('company_id'):
+            domain = domain + [('company_id', '=', context['company_id'])]
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without
@@ -953,7 +957,7 @@ class mrp_production(osv.osv):
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
                 remaining_qty = subproduct_factor * production_qty_uom - qty
-                if not float_is_zero(remaining_qty, precision_rounding=precision):
+                if not float_is_zero(remaining_qty, precision_digits=precision):
                     # In case you need to make more than planned
                     #consumed more in wizard than previously planned
                     extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
@@ -984,7 +988,7 @@ class mrp_production(osv.osv):
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
                                                  restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
                     remaining_qty -= consumed_qty
-                if not float_is_zero(remaining_qty, precision_rounding=precision):
+                if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)

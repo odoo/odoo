@@ -1,21 +1,22 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-23 13:24+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/odoo-8/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-24 06:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment
 #: help:account.config.settings,module_payment_adyen:0
@@ -93,8 +94,7 @@ msgid "Country"
 msgstr "Ország"
 
 #. module: payment
-#: field:payment.acquirer,create_uid:0
-#: field:payment.transaction,create_uid:0
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
 msgid "Created by"
 msgstr "Készítette"
 
@@ -152,14 +152,12 @@ msgstr "Díjak"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
-"Díjak mennyisége; a rendszer által beállítva, mivel az a lebonyolítótól függ"
+msgstr "Díjak mennyisége; a rendszer által beállítva, mivel az a lebonyolítótól függ"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
 msgid "Field used to store error and/or validation messages for information"
-msgstr ""
-"A mező a hiba és/vagy információ érvényesítési üzenet elmentésére szolgál"
+msgstr "A mező a hiba és/vagy információ érvényesítési üzenet elmentésére szolgál"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
@@ -196,14 +194,10 @@ msgstr "Csoportosítás"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"A társalgás összefoglalóját leállítja (üzenetek száma,...). Ez az "
-"összefoglaló direkt HTML formátumú, hogy beilleszthető legyen a kanban "
-"nézetekbe."
+msgstr "A társalgás összefoglalóját leállítja (üzenetek száma,...). Ez az összefoglaló direkt HTML formátumú, hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: payment
-#: field:payment.acquirer,id:0
-#: field:payment.transaction,id:0
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
 msgid "ID"
 msgstr "Azonosító ID"
 
@@ -228,14 +222,12 @@ msgid "Last Message Date"
 msgstr "Utolsó üzenet időpontja"
 
 #. module: payment
-#: field:payment.acquirer,write_uid:0
-#: field:payment.transaction,write_uid:0
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
 msgid "Last Updated by"
 msgstr "Utoljára frissítve, által"
 
 #. module: payment
-#: field:payment.acquirer,write_date:0
-#: field:payment.transaction,write_date:0
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
 msgid "Last Updated on"
 msgstr "Utoljára frissítve ekkor"
 
@@ -270,8 +262,7 @@ msgid "Manual"
 msgstr "Kézi"
 
 #. module: payment
-#: field:payment.acquirer,pre_msg:0
-#: field:payment.transaction,state_message:0
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
 msgid "Message"
 msgstr "Üzenet"
 
@@ -283,8 +274,7 @@ msgstr "A fizetési művelet végrehajtása után üzenetet jelez ki."
 #. module: payment
 #: help:payment.acquirer,pre_msg:0
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
-"Üzenentet jelez ki a fizetési művelet támogatásához és magyarázatához."
+msgstr "Üzenentet jelez ki a fizetési művelet támogatásához és magyarázatához."
 
 #. module: payment
 #: field:payment.transaction,message_ids:0
@@ -411,11 +401,8 @@ msgstr "Szervertől szerverhez"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
-msgid ""
-"Static payments are payments like transfer, that require manual steps."
-msgstr ""
-"Statikus kifizetések olyan fizetések mint utalás, mely kézi beavatkozást "
-"igényel."
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "Statikus kifizetések olyan fizetések mint utalás, mely kézi beavatkozást igényel."
 
 #. module: payment
 #: field:payment.transaction,state:0
@@ -446,13 +433,8 @@ msgstr "A kifizetés tranzakció hivatkozásának egyedinek kell lennie!"
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                    It is be rendered with qWeb with the "
-"following evaluation context:"
-msgstr ""
-"Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges "
-"értékeket.\n"
-"                                    Ez a qWeb használatával rendeli hozzá a "
-"következő értékelési összefüggésekkel:"
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "Ez a sablon a lebonyolító gombjaihoz hozzárendeli az összes szükséges értékeket.\n                                    Ez a qWeb használatával rendeli hozzá a következő értékelési összefüggésekkel:"
 
 #. module: payment
 #: field:payment.transaction,type:0
@@ -522,17 +504,14 @@ msgstr "pénznem: a tranzakció pénznemét böngésző rekord"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
-"partner: a vásárlói partner böngészési rekord, nem szükséges beállítani"
+msgstr "partner: a vásárlói partner böngészési rekord, nem szükséges beállítani"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr ""
-"partner_values: értéket határoz meg a vásárlóhoz, például egy küldemény "
-"űrlapjáról levett"
+msgstr "partner_values: értéket határoz meg a vásárlóhoz, például egy küldemény űrlapjáról levett"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form

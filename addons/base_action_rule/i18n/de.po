@@ -1,22 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-09-15 14:43+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:29+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -25,26 +25,13 @@ msgid ""
 "                Click to setup a new automated action rule. \n"
 "              </p><p>\n"
 "                Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"Klicken Sie zur Erstellung einer neuen automatischen Abfolgeregel.\n"
-"\n"
-"Benutzen Sie automatische Abfolgeregeln um diverse Vorgänge verschiedener "
-"Formulare \n"
-"für verschiedene Ansichten auszulösen. Zum Beispiel: Ein Interessent, der "
-"durch einen\n"
-"speziellen Benutzer angelegt wurde, wird einem bestimmten Team zugewiesen, "
-"oder ein Vorgang\n"
-"der nach 14 Tagen immer noch den Status Wiedervorlage ausweist, löst eine "
-"automatisch E-Mail-Erinnerung aus.\n"
-"            "
+msgstr "Klicken Sie zur Erstellung einer neuen automatischen Abfolgeregel.\n\nBenutzen Sie automatische Abfolgeregeln um diverse Vorgänge verschiedener Formulare \nfür verschiedene Ansichten auszulösen. Zum Beispiel: Ein Interessent, der durch einen\nspeziellen Benutzer angelegt wurde, wird einem bestimmten Team zugewiesen, oder ein Vorgang\nder nach 14 Tagen immer noch den Status Wiedervorlage ausweist, löst eine automatisch E-Mail-Erinnerung aus.\n            "
 
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
@@ -63,8 +50,7 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #. module: base_action_rule
-#: field:base.action.rule,active:0
-#: field:base.action.rule.lead.test,active:0
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
 msgid "Active"
 msgstr "Aktiv"
 
@@ -136,11 +122,7 @@ msgid ""
 "Delay after the trigger date.You can put a negative number if you need a "
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
-msgstr ""
-"Zeitliche Verzögerung nach Auslösedatum. Sie können hier auch einen "
-"negativen Wert eintragen, insofern Sie eine zeitliche Verzögerung vor dem "
-"Auslösedatum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert "
-"werden möchten."
+msgstr "Zeitliche Verzögerung nach Auslösedatum. Sie können hier auch einen negativen Wert eintragen, insofern Sie eine zeitliche Verzögerung vor dem Auslösedatum benötigen, z.B. wenn Sie 15 Minuten vor einem Treffen erinnert werden möchten."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -178,10 +160,7 @@ msgid ""
 "Go to your \"Related Document Model\" page and set the filter parameters in "
 "the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
-msgstr ""
-"Gehen Sie auf die Seite für das \"Verbundene Datenmodell' und setzen Sie "
-"Filterparameter in der Suchanzeige (Beispiel für einen Filter auf Basis von "
-"Chancen / Interessenten: Datum der Erstellung  am 01.01.2012)"
+msgstr "Gehen Sie auf die Seite für das \"Verbundene Datenmodell' und setzen Sie Filterparameter in der Suchanzeige (Beispiel für einen Filter auf Basis von Chancen / Interessenten: Datum der Erstellung  am 01.01.2012)"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -189,8 +168,7 @@ msgid "Hours"
 msgstr "Stunden"
 
 #. module: base_action_rule
-#: field:base.action.rule,id:0
-#: field:base.action.rule.lead.test,id:0
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -199,17 +177,14 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
-"Bei Verfügbarkeit muß diese Kondition vor Ausführung der Aktionsregel "
-"erfüllt sein."
+msgstr "Bei Verfügbarkeit muß diese Kondition vor Ausführung der Aktionsregel erfüllt sein."
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
-msgstr ""
-"Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes "
-"erfüllt werden."
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes erfüllt werden."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -224,13 +199,10 @@ msgstr "Mit dem Zweck einen neuen Filter zu erstellen:"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
-msgstr ""
-"Wählen Sie in In der gleichen 'Suche' Ansicht den Button 'Speichere "
-"aktuellen Filter', geben Sie eine Bezeichnung hierfür ein (z.B. 'Erstelle "
-"den 01.01.2012') und wählen Sie die Option \"Mit allen Benutzern teilen\"."
+msgstr "Wählen Sie in In der gleichen 'Suche' Ansicht den Button 'Speichere aktuellen Filter', geben Sie eine Bezeichnung hierfür ein (z.B. 'Erstelle den 01.01.2012') und wählen Sie die Option \"Mit allen Benutzern teilen\"."
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
@@ -317,10 +289,9 @@ msgstr "Regelbezeichnung"
 #. module: base_action_rule
 #: view:base.action.rule:base_action_rule.view_base_action_rule_form
 msgid ""
-"Select when the action must be run, and add filters and/or timing conditions."
-msgstr ""
-"Selektieren Sie die auszuführende Aktion, und ergänzen Sie einen Filter "
-"sowie weitere Zeitkonditionen."
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
+msgstr "Selektieren Sie die auszuführende Aktion, und ergänzen Sie einen Filter sowie weitere Zeitkonditionen."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -373,19 +344,14 @@ msgstr "Benutze Kalender"
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
-"Zur Berechnung Ihrer täglichen Terminrestriktionen, können Sie einen "
-"Kalender für die Terminberechnung auf Basis von Arbeitstagen nutzen."
+msgstr "Zur Berechnung Ihrer täglichen Terminrestriktionen, können Sie einen Kalender für die Terminberechnung auf Basis von Arbeitstagen nutzen."
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_id:0
 msgid ""
 "When should the condition be triggered. If present, will be checked by the "
 "scheduler. If empty, will be checked at creation and update."
-msgstr ""
-"Unter welcher Bedingung soll die Regel ausgelöst werden? Wenn eine Bedingung "
-"vorhanden, wird die Regel vom Scheduler ausgelöst, anderenfalls nur bei "
-"Anlage und bei Aktualisierung."
+msgstr "Unter welcher Bedingung soll die Regel ausgelöst werden? Wenn eine Bedingung vorhanden, wird die Regel vom Scheduler ausgelöst, anderenfalls nur bei Anlage und bei Aktualisierung."
 
 #. module: base_action_rule
 #: field:base.action.rule,kind:0
@@ -395,6 +361,4 @@ msgstr "Wann zu starten"
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
-"Wenn diese Option deaktiviert wurde, wird die Regel ausgeblendet und auch "
-"demnach nicht ausgeführt."
+msgstr "Wenn diese Option deaktiviert wurde, wird die Regel ausgeblendet und auch demnach nicht ausgeführt."

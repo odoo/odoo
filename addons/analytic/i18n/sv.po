@@ -1,21 +1,22 @@
-# Swedish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-03 08:46+0000\n"
-"Last-Translator: Christelle Wehbe <wehbechristelle@gmail.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Swedish (http://www.transifex.com/projects/p/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-04 07:20+0000\n"
-"X-Generator: Launchpad (build 17331)\n"
+"Content-Transfer-Encoding: \n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:278
@@ -81,9 +82,7 @@ msgstr "Balans"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
-"Beräknad genom multiplicering av kvantitet och priser från produktens "
-"kostpris. Alltid uttryckt i bolagets huvudvaluta."
+msgstr "Beräknad genom multiplicering av kvantitet och priser från produktens kostpris. Alltid uttryckt i bolagets huvudvaluta."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -240,13 +239,10 @@ msgstr "Fullständigt namn"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning "
-"presenteras i html-format för att kunna sättas in i kanban vyer."
+msgstr "Lagrar pladder-sammanfattning (antal meddelanden, ...). Denna sammanfattning presenteras i html-format för att kunna sättas in i kanban vyer."
 
 #. module: analytic
-#: field:account.analytic.account,id:0
-#: field:account.analytic.line,id:0
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -258,33 +254,18 @@ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
-"Om du väljer visa-Typ, betyder det att du inte kommer att kunna göra "
-"verifikat med det kontot.\n"
-"Typen \"objektkonto\" står för vanliga konton som du bara vill använda i "
-"redovisningen.\n"
-"Om du väljer avtal eller projekt, ger det dig möjlighet att hantera "
-"giltigheten och faktureringsalternativ för detta konto.\n"
-"Den speciella typen \"Avtalsmall\" kan du definiera en mall med "
-"standarduppgifter som är enkla att återanvända."
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "Om du väljer visa-Typ, betyder det att du inte kommer att kunna göra verifikat med det kontot.\nTypen \"objektkonto\" står för vanliga konton som du bara vill använda i redovisningen.\nOm du väljer avtal eller projekt, ger det dig möjlighet att hantera giltigheten och faktureringsalternativ för detta konto.\nDen speciella typen \"Avtalsmall\" kan du definiera en mall med standarduppgifter som är enkla att återanvända."
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really useful for consolidation "
-"purposes of several companies charts with different currencies, for example."
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -333,23 +314,12 @@ msgstr "Ny"
 #: view:account.analytic.account:analytic.view_account_analytic_account_form
 msgid ""
 "Once the end date of the contract is\n"
-"                                        passed or the maximum number of "
-"service\n"
+"                                        passed or the maximum number of service\n"
 "                                        units (e.g. support contract) is\n"
-"                                        reached, the account manager is "
-"notified \n"
-"                                        by email to renew the contract with "
-"the\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
 "                                        customer."
-msgstr ""
-"När slutdatum för avtalet passerats \n"
-"                                         eller det maximala antalet "
-"tjänsteenheter \n"
-"                                         enheter (t.ex. supportavtal) "
-"förbrukats, aviseras kundansvarig \n"
-"                                         via e-post för att förnya "
-"kontraktet med\n"
-"                                         kunden."
+msgstr "När slutdatum för avtalet passerats \n                                         eller det maximala antalet tjänsteenheter \n                                         enheter (t.ex. supportavtal) förbrukats, aviseras kundansvarig \n                                         via e-post för att förnya kontraktet med\n                                         kunden."
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
@@ -393,9 +363,7 @@ msgstr "Förnya"
 msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
-msgstr ""
-"Anger den högre gränsen för arbetstid på avtalet,  baserat på tidrapporten. "
-"(till exempel antal timmar i ett supportavtal med timbank.)"
+msgstr "Anger den högre gränsen för arbetstid på avtalet,  baserat på tidrapporten. (till exempel antal timmar i ett supportavtal med timbank.)"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0

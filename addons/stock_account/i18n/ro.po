@@ -1,21 +1,22 @@
-# Romanian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-04-21 13:57+0000\n"
-"Last-Translator: Dorin <dhongu@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-22 06:14+0000\n"
-"X-Generator: Launchpad (build 17430)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -52,9 +53,7 @@ msgstr "ID-ul activ nu este setat în Context."
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-"Permite configurarea evaluărilor de inventar ale produselor și ale "
-"categoriilor de produse."
+msgstr "Permite configurarea evaluărilor de inventar ale produselor și ale categoriilor de produse."
 
 #. module: stock_account
 #: selection:product.template,cost_method:0
@@ -93,28 +92,19 @@ msgstr "Alege o dată anume"
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
 msgstr ""
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
-msgstr ""
-"Alege data pentru care doriți afișarea stocului valoric pentru produse.\n"
-"\n"
-"                        Acesta va filtra operațiile de stoc în funcție de "
-"data selectată și va returna cantitatea \n"
-"                        pe de o parte și va da valoarea de inventar în acord "
-"cu prețul utilizat."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr "Alege data pentru care doriți afișarea stocului valoric pentru produse.\n\n                        Acesta va filtra operațiile de stoc în funcție de data selectată și va returna cantitatea \n                        pe de o parte și va da valoarea de inventar în acord cu prețul utilizat."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -166,9 +156,7 @@ msgstr "Creați factură furnizor"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
-"Creați și deschideți factura atunci când utilizatorul finalizează o comandă "
-"de livrare"
+msgstr "Creați și deschideți factura atunci când utilizatorul finalizează o comandă de livrare"
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
@@ -234,27 +222,17 @@ msgid "Group by partner"
 msgstr "Grupează după partener"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
-"Dacă prețul de cost crește, contul variației stocului va fi debitat, iar "
-"contul de ieșire din stoc va fi creditat cu valoarea = (diferența dintre "
-"sume * cantitatea). \n"
-"Dacă prețul de cost scade, contul variației stocului va fi creditat, iar "
-"contul de intrare al stocului va fi debitat."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Dacă prețul de cost crește, contul variației stocului va fi debitat, iar contul de ieșire din stoc va fi creditat cu valoarea = (diferența dintre sume * cantitatea). \nDacă prețul de cost scade, contul variației stocului va fi creditat, iar contul de intrare al stocului va fi debitat."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -265,16 +243,13 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
-"În cazul în care evaluarea în timp real este activată pentru un produs, "
-"sistemul va scrie automat intrările în jurnal corespunzătoare mișcărilor de "
-"stoc, cu prețul produsului în conformitate cu \"Metoda de cost\"."
+msgstr "În cazul în care evaluarea în timp real este activată pentru un produs, sistemul va scrie automat intrările în jurnal corespunzătoare mișcărilor de stoc, cu prețul produsului în conformitate cu \"Metoda de cost\"."
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
 msgstr ""
 
 #. module: stock_account
@@ -299,8 +274,7 @@ msgid "Inventory Value"
 msgstr "Valoare inventar"
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Control factură"
@@ -401,8 +375,7 @@ msgstr "Nu se aplică"
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
@@ -529,12 +502,9 @@ msgstr "Modificare preț standard"
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -598,8 +568,7 @@ msgstr "Stoc valoric la data"
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
 msgstr ""
 
@@ -630,12 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat "
-"pe o locatie virtuala (de tip non intern), acest cont va fi folosit pentru a "
-"mentine valoarea produselor care sunt mutate dintr-o locatie interna in "
-"aceasta locatie, in locul Contulul general pentru Iesirea Stocului setat pe "
-"produs. Acesta nu are niciun efect asupra locatiilor interne."
+msgstr "Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat pe o locatie virtuala (de tip non intern), acest cont va fi folosit pentru a mentine valoarea produselor care sunt mutate dintr-o locatie interna in aceasta locatie, in locul Contulul general pentru Iesirea Stocului setat pe produs. Acesta nu are niciun efect asupra locatiilor interne."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -645,12 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat "
-"pe o locatie virtuala (de tip non interna), acest cont va fi folosit pentru "
-"a pastra valoarea produselor care sunt mutate din aceasta locatie intr-o "
-"locatie interna, in loc de Contul general De Iesire a Stocului setat pentru "
-"produse. Acesta nu are niciun efect asupra locatiilor interne."
+msgstr "Folosit pentru evaluarea inventarului in timp-real. Atunci cand este setat pe o locatie virtuala (de tip non interna), acest cont va fi folosit pentru a pastra valoarea produselor care sunt mutate din aceasta locatie intr-o locatie interna, in loc de Contul general De Iesire a Stocului setat pentru produse. Acesta nu are niciun efect asupra locatiilor interne."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -669,15 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
-"Atunci când faceți evaluarea în timp real a inventarului, elementele "
-"omoloage de jurnal pentru toate mișcările de stoc care intră vor fi afișate "
-"în acest cont, doar dacă nu există un cont de evaluare anume setat pe "
-"locația sursă. Aceasta este valoarea implicita pentru toate produsele din "
-"aceasta categorie. Poate fi de asemenea setată direct pe fiecare produs în "
-"parte"
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Atunci când faceți evaluarea în timp real a inventarului, elementele omoloage de jurnal pentru toate mișcările de stoc care intră vor fi afișate în acest cont, doar dacă nu există un cont de evaluare anume setat pe locația sursă. Aceasta este valoarea implicita pentru toate produsele din aceasta categorie. Poate fi de asemenea setată direct pe fiecare produs în parte"
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -686,12 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
-"Atunci când faceți evaluarea în timp real a inventarului, elementele "
-"corespondente ale jurnalului pentru toate mișcările de stoc care intra vor "
-"fi postate în acest cont, doar dacă nu există un cont anume de evaluare "
-"setat pentru locația sursă. Atunci când nu este setat pentru produs, este "
-"folosit cel din categoria produsului."
+msgstr "Atunci când faceți evaluarea în timp real a inventarului, elementele corespondente ale jurnalului pentru toate mișcările de stoc care intra vor fi postate în acest cont, doar dacă nu există un cont anume de evaluare setat pentru locația sursă. Atunci când nu este setat pentru produs, este folosit cel din categoria produsului."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -699,15 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
-"Atunci când faceți evaluarea în timp-real a inventarului, elementele "
-"corespondente al jurnalului pentru toate mișcările de ieșire vor fi postate "
-"în acest cont, doar dacă nu există un cont anume de evaluare setat pentru "
-"locația destinație. Aceasta este valoarea predefinită pentru toate produsele "
-"din aceasta categorie. Poate fi de asemenea setată direct pentru fiecare "
-"produs"
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Atunci când faceți evaluarea în timp-real a inventarului, elementele corespondente al jurnalului pentru toate mișcările de ieșire vor fi postate în acest cont, doar dacă nu există un cont anume de evaluare setat pentru locația destinație. Aceasta este valoarea predefinită pentru toate produsele din aceasta categorie. Poate fi de asemenea setată direct pentru fiecare produs"
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -716,31 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
-"Atunci când faceți evaluarea în timp-real a inventarului, elementele "
-"corespondente ale jurnalului pentru toate mișcările de ieșire ale stocului "
-"vor fi postate în acest cont, doar dacă nu există un anumit cont de evaluare "
-"setat în locația destinație. Atunci când nu este setat pe produs, este "
-"folosit cel din categoria produsului."
+msgstr "Atunci când faceți evaluarea în timp-real a inventarului, elementele corespondente ale jurnalului pentru toate mișcările de ieșire ale stocului vor fi postate în acest cont, doar dacă nu există un anumit cont de evaluare setat în locația destinație. Atunci când nu este setat pe produs, este folosit cel din categoria produsului."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Atunci când faceți evaluarea inventarului în timp real, acesta este Jurnalul "
-"Contabil în care înregistrările vor fi postate automat atunci când sunt "
-"procesate mișcările stocului."
+msgstr "Atunci când faceți evaluarea inventarului în timp real, acesta este Jurnalul Contabil în care înregistrările vor fi postate automat atunci când sunt procesate mișcările stocului."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"Atunci când evaluarea inventarului în timp real este activată pentru un "
-"produs, acest cont va păstra valoarea curenta a produselor."
+msgstr "Atunci când evaluarea inventarului în timp real este activată pentru un produs, acest cont va păstra valoarea curenta a produselor."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history

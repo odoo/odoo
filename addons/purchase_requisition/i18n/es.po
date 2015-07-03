@@ -1,21 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-27 11:17+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-28 06:37+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -23,27 +24,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new Call for Bids process. \n"
 "          </p><p>\n"
-"            A Call for Bids is a procedure for generating competing offers "
-"from\n"
+"            A Call for Bids is a procedure for generating competing offers from\n"
 "            different bidders. In the call for bids, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            suppliers. Once the bids have been registered, you can review "
-"and\n"
+"            suppliers. Once the bids have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para iniciar un nuevo proceso de licitación de compra.\n"
-"</p><p>\n"
-"La licitación de compra es un procedimiento para generar ofertas \n"
-"competitivas desde diferentes licitadores. En esta licitación, puede\n"
-"grabar los productos que necesita comprar y gestionar la creación de\n"
-"las solicitudes de presupuesto (SdPs) a los proveedores. Una vez que\n"
-"las solicitudes se han registrado, puedes revisarlas y compararlas para\n"
-"validar algunas y cancelar otras.\n"
-"</p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para iniciar un nuevo proceso de licitación de compra.\n</p><p>\nLa licitación de compra es un procedimiento para generar ofertas \ncompetitivas desde diferentes licitadores. En esta licitación, puede\ngrabar los productos que necesita comprar y gestionar la creación de\nlas solicitudes de presupuesto (SdPs) a los proveedores. Una vez que\nlas solicitudes se han registrado, puedes revisarlas y compararlas para\nvalidar algunas y cancelar otras.\n</p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -150,8 +138,7 @@ msgstr "Cancelado"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr ""
-"Cancelado por la licitación asociada a esta solicitud de presupuesto."
+msgstr "Cancelado por la licitación asociada a esta solicitud de presupuesto."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
@@ -175,9 +162,7 @@ msgstr "Cambiar cantidad"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr ""
-"Marque esta casilla para generar licitaciones en lugar de generar "
-"solicitudes de abastecimiento desde los abastecimientos."
+msgstr "Marque esta casilla para generar licitaciones en lugar de generar solicitudes de abastecimiento desde los abastecimientos."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -233,16 +218,14 @@ msgid "Create Request for Quotation"
 msgstr "Crear solicitud de presupuesto"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_uid:0
-#: field:purchase.requisition,create_uid:0
+#: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_date:0
-#: field:purchase.requisition,create_date:0
+#: field:bid.line.qty,create_date:0 field:purchase.requisition,create_date:0
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
@@ -306,13 +289,10 @@ msgstr "Agrupar por"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene "
-"directamente en formato HTML para poder ser insertado en las vistas kanban."
+msgstr "Contiene el resumen del chatter (nº de mensajes, ...). Este resumen viene directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: purchase_requisition
-#: field:bid.line.qty,id:0
-#: field:purchase.requisition,id:0
+#: field:bid.line.qty,id:0 field:purchase.requisition,id:0
 #: field:purchase.requisition.line,id:0
 #: field:purchase.requisition.partner,id:0
 msgid "ID"
@@ -334,16 +314,14 @@ msgid "Last Message Date"
 msgstr "Fecha del último mensaje"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_uid:0
-#: field:purchase.requisition,write_uid:0
+#: field:bid.line.qty,write_uid:0 field:purchase.requisition,write_uid:0
 #: field:purchase.requisition.line,write_uid:0
 #: field:purchase.requisition.partner,write_uid:0
 msgid "Last Updated by"
 msgstr "Última actualización de"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_date:0
-#: field:purchase.requisition,write_date:0
+#: field:bid.line.qty,write_date:0 field:purchase.requisition,write_date:0
 #: field:purchase.requisition.line,write_date:0
 #: field:purchase.requisition.partner,write_date:0
 msgid "Last Updated on"
@@ -516,8 +494,7 @@ msgstr "Ctd."
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: field:bid.line.qty,qty:0
-#: field:purchase.requisition.line,product_qty:0
+#: field:bid.line.qty,qty:0 field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
 msgstr "Cantidad"
 
@@ -604,15 +581,9 @@ msgstr "Seleccionar sólo una SdP (exclusivo)"
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On "
-"confirmation of a purchase order it does not cancel the remaining orders"
-msgstr ""
-"Seleccionar sólo una SdP (exclusivo): En la confirmación de un pedido de "
-"compra, cancelar los demás.\n"
-"Seleccionar múltiples SdPs: Permite tener múltiples pedidos de compra "
-"confirmados. Al confirmar alguno, no cancela los demás."
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Seleccionar sólo una SdP (exclusivo): En la confirmación de un pedido de compra, cancelar los demás.\nSeleccionar múltiples SdPs: Permite tener múltiples pedidos de compra confirmados. Al confirmar alguno, no cancela los demás."
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -662,9 +633,7 @@ msgstr "Proveedor"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr ""
-"Campo técnico para no perder la información inicial sobre la cantidad "
-"licitada"
+msgstr "Campo técnico para no perder la información inicial sobre la cantidad licitada"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -674,9 +643,7 @@ msgstr "Términos y condiciones"
 #. module: purchase_requisition
 #: help:purchase.requisition,schedule_date:0
 msgid "The expected and scheduled date where all the products are received"
-msgstr ""
-"La fecha esperada y planificada en la que todos los productos estarán "
-"recepcionados"
+msgstr "La fecha esperada y planificada en la que todos los productos estarán recepcionados"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
@@ -743,9 +710,7 @@ msgstr "Ya ha generado lo(s) pedido(s) de compra."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Tiene ya un pedido de compra %s para esta empresa. Debe cancelar este pedido "
-"de compra para crear un nuevo presupuesto."
+msgstr "Tiene ya un pedido de compra %s para esta empresa. Debe cancelar este pedido de compra para crear un nuevo presupuesto."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249

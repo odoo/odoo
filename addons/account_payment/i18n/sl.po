@@ -1,23 +1,23 @@
-# Slovenian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-#
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014, 2015.
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
+"Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-03-24 16:05+0000\n"
-"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
-"Language-Team: Slovenian <translate@matmoz.si>\n"
+"PO-Revision-Date: 2015-06-04 05:30+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-25 06:08+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
 "Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -25,20 +25,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Ustvari plačilni nalog.\n"
-"              </p><p>\n"
-"                Plačilni nalog je zahtevek vaši družbi za plačilo  "
-"prejetega\n"
-"                računa ali izdanega dobropisa.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari plačilni nalog.\n              </p><p>\n                Plačilni nalog je zahtevek vaši družbi za plačilo  prejetega\n                računa ali izdanega dobropisa.\n              </p>\n            "
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -140,10 +131,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Izberite možnosti za plačilni nalog: 'Fiksno' za datum, ki ga sami "
-"določite.'Neposredno' za takojšne plačilo.'Valuta' za načrtovani datum "
-"izvedbe."
+msgstr "Izberite možnosti za plačilni nalog: 'Fiksno' za datum, ki ga sami določite.'Neposredno' za takojšne plačilo.'Valuta' za načrtovani datum izvedbe."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -161,8 +149,7 @@ msgid "Communication Type"
 msgstr "Vrsta komunikacije"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Družba"
@@ -196,18 +183,15 @@ msgstr "Ustvarjeno"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
 msgstr "Ustvaril"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
 msgstr "Ustvarjeno"
@@ -261,8 +245,7 @@ msgid "Draft"
 msgstr "Osnutek"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Datum zapadlosti"
 
@@ -340,10 +323,8 @@ msgstr "Združi po"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
@@ -354,9 +335,7 @@ msgstr "ID"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Če datum plačilnega naloga ni podan, ga bo banka takoj posredovala v "
-"plačilni sistem"
+msgstr "Če datum plačilnega naloga ni podan, ga bo banka takoj posredovala v plačilni sistem"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
@@ -413,20 +392,16 @@ msgstr "Postavke dnevnika"
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
 msgstr "Zadnjič posodobil"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
 msgstr "Zadnjič posodobljeno"
 
@@ -469,8 +444,7 @@ msgid "Owner Account"
 msgstr "Konto lastnika"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "Partner"
@@ -702,9 +676,7 @@ msgstr "Uporabljen konto:"
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Uporabljeno za sporočilo med kupcem in družbo. Prikaže: 'Kaj želite povedati "
-"prejemniku o tem nalogu?'"
+msgstr "Uporabljeno za sporočilo med kupcem in družbo. Prikaže: 'Kaj želite povedati prejemniku o tem nalogu?'"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -717,10 +689,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
-"Ko je nalog postavljen, je najprej v statusu \"Osnutek\"\n"
-" Ko ga banka potrdi preide v status \"Potrjeno\"\n"
-" Po plačilu preide v status \"Opravljeno\""
+msgstr "Ko je nalog postavljen, je najprej v statusu \"Osnutek\"\n Ko ga banka potrdi preide v status \"Potrjeno\"\n Po plačilu preide v status \"Opravljeno\""
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -733,9 +702,7 @@ msgstr "Da"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Ne morete preklicati računa, ki je že uvožen v bančni izpisek. Odstranite ga "
-"iz naslednjega plačilnega naloga: %s."
+msgstr "Ne morete preklicati računa, ki je že uvožen v bančni izpisek. Odstranite ga iz naslednjega plačilnega naloga: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0

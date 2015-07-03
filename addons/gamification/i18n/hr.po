@@ -1,31 +1,30 @@
-# Croatian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * gamification
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-09-01 11:05+0000\n"
-"Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
-"Language-Team: Croatian <hr@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Croatian (http://www.transifex.com/projects/p/odoo-8/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:42+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_badge_received
 msgid ""
 "\n"
-"        <p>Congratulation, you have received the badge "
-"<strong>${object.badge_id.name}</strong> !\n"
+"        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !\n"
 "            % if object.sender_id\n"
-"                This badge was granted by "
-"<strong>${object.sender_id.name}</strong>.\n"
+"                This badge was granted by <strong>${object.sender_id.name}</strong>.\n"
 "            % endif\n"
 "        </p>\n"
 "\n"
@@ -43,10 +42,7 @@ msgid ""
 "        <strong>Reminder ${object.name}</strong>\n"
 "    </header>\n"
 "    \n"
-"    <p>You have not updated your progress for the goal "
-"${object.definition_id.name} (currently reached at ${object.completeness}%) "
-"for at least ${object.remind_update_delay} days. Do not forget to do "
-"it.</p>\n"
+"    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
 
@@ -57,8 +53,7 @@ msgid ""
 "<header>\n"
 "    <strong>${object.name}</strong>\n"
 "</header>\n"
-"<p class=\"oe_grey\">The following message contains the current progress for "
-"the challenge ${object.name}</p>\n"
+"<p class=\"oe_grey\">The following message contains the current progress for the challenge ${object.name}</p>\n"
 "\n"
 "% if object.visibility_mode == 'personal':\n"
 "    <table width=\"100%\" border=\"1\">\n"
@@ -160,12 +155,9 @@ msgid ""
 "                    Click to create a badge. \n"
 "                </p>\n"
 "                <p>\n"
-"                    A badge is a symbolic token granted to a user as a sign "
-"of reward.\n"
-"                    It can be deserved automatically when some conditions "
-"are met or manually by users.\n"
-"                    Some badges are harder than others to get with specific "
-"conditions.\n"
+"                    A badge is a symbolic token granted to a user as a sign of reward.\n"
+"                    It can be deserved automatically when some conditions are met or manually by users.\n"
+"                    Some badges are harder than others to get with specific conditions.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -177,12 +169,9 @@ msgid ""
 "                    Click to create a challenge. \n"
 "                </p>\n"
 "                <p>\n"
-"                    Assign a list of goals to chosen users to evaluate "
-"them.\n"
-"                    The challenge can use a period (weekly, monthly...) for "
-"automatic creation of goals.\n"
-"                    The goals are created for the specified users or member "
-"of the group.\n"
+"                    Assign a list of goals to chosen users to evaluate them.\n"
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -194,10 +183,8 @@ msgid ""
 "                    Click to create a goal definition. \n"
 "                </p>\n"
 "                <p>\n"
-"                    A goal definition is a technical model of goal defining "
-"a condition to reach.\n"
-"                    The dates, values to reach or users are defined in goal "
-"instance.\n"
+"                    A goal definition is a technical model of goal defining a condition to reach.\n"
+"                    The dates, values to reach or users are defined in goal instance.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -219,10 +206,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:gamification.goals_from_challenge_act
 msgid ""
 "<p>\n"
-"                There is no goals associated to this challenge matching your "
-"search.\n"
-"                Make sure that your challenge is active and assigned to at "
-"least one user.\n"
+"                There is no goals associated to this challenge matching your search.\n"
+"                Make sure that your challenge is active and assigned to at least one user.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -230,7 +215,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.challenge.line,condition:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: gamification
 #: help:gamification.goal.definition,condition:0
@@ -306,8 +291,7 @@ msgstr ""
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
-#: field:gamification.badge,name:0
-#: field:gamification.badge.user,badge_id:0
+#: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
 msgstr ""
@@ -373,17 +357,17 @@ msgstr ""
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Cancel"
-msgstr ""
+msgstr "Odustani"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Otkazano"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -451,7 +435,7 @@ msgstr ""
 #: field:gamification.badge.user,comment:0
 #: field:gamification.badge.user.wizard,comment:0
 msgid "Comment"
-msgstr ""
+msgstr "Komentar"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
@@ -477,7 +461,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge.line,condition:0
 msgid "Condition"
-msgstr ""
+msgstr "Uvjet"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -491,12 +475,12 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr ""
+msgstr "Upravljanje korisnicima koji će se spajati na sustav. Korisnici mogu biti deaktivirani ako kaoko bi im se trajno ili provremeno ograničio pristup sistemu. Korisnicima možete dodijeliti grupe koje im daju prava pristupa aplikacijama koje su im potrebne."
 
 #. module: gamification
 #: field:gamification.badge.user,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "Kreiran"
 
 #. module: gamification
 #: field:gamification.badge,create_uid:0
@@ -507,7 +491,7 @@ msgstr ""
 #: field:gamification.goal.definition,create_uid:0
 #: field:gamification.goal.wizard,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: gamification
 #: field:gamification.badge,create_date:0
@@ -518,17 +502,17 @@ msgstr ""
 #: field:gamification.goal.definition,create_date:0
 #: field:gamification.goal.wizard,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Vrijeme kreiranja"
 
 #. module: gamification
 #: field:gamification.badge.user,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "Autor"
 
 #. module: gamification
 #: field:gamification.goal.wizard,current:0
 msgid "Current"
-msgstr ""
+msgstr "Trenutno"
 
 #. module: gamification
 #: field:gamification.goal,current:0
@@ -539,12 +523,12 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Daily"
-msgstr ""
+msgstr "Dnevno"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "Data"
-msgstr ""
+msgstr "Podaci"
 
 #. module: gamification
 #: field:gamification.goal.definition,field_date_id:0
@@ -555,7 +539,7 @@ msgstr ""
 #: help:gamification.badge,message_last_post:0
 #: help:gamification.challenge,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Datum zadnjeg zapisa"
 
 #. module: gamification
 #: help:gamification.challenge,category:0
@@ -599,7 +583,7 @@ msgstr ""
 #: field:gamification.badge,description:0
 #: field:gamification.challenge,description:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: gamification
 #: field:gamification.challenge,visibility_mode:0
@@ -629,21 +613,21 @@ msgstr ""
 #: selection:gamification.challenge,state:0
 #: view:gamification.goal:gamification.goal_search_view
 msgid "Done"
-msgstr ""
+msgstr "Završeno"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: view:gamification.goal:gamification.goal_search_view
 #: selection:gamification.goal,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. module: gamification
 #: field:gamification.challenge,end_date:0
 #: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal,end_date:0
 msgid "End Date"
-msgstr ""
+msgstr "Završni Datum"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:561
@@ -651,7 +635,7 @@ msgstr ""
 #: code:addons/gamification/models/goal.py:457
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Greška!"
 
 #. module: gamification
 #: help:gamification.goal.definition,batch_mode:0
@@ -681,7 +665,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Failed"
-msgstr ""
+msgstr "Neuspjelo"
 
 #. module: gamification
 #: field:gamification.goal.definition,field_id:0
@@ -697,7 +681,7 @@ msgstr ""
 #: field:gamification.badge,message_follower_ids:0
 #: field:gamification.challenge,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Pratitelji"
 
 #. module: gamification
 #: field:gamification.challenge,reward_first_id:0
@@ -727,7 +711,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_kanban_view
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. module: gamification
 #: field:gamification.goal.definition,full_suffix:0
@@ -879,7 +863,7 @@ msgstr ""
 #: view:gamification.goal:gamification.goal_search_view
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
 msgid "Group By"
-msgstr ""
+msgstr "Grupiraj po"
 
 #. module: gamification
 #: help:gamification.challenge,report_message_group_id:0
@@ -894,7 +878,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Skriven"
 
 #. module: gamification
 #: help:gamification.badge,message_summary:0
@@ -902,7 +886,7 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Sadrži sažetak konverzacije (broj poruka..). Ovaj sažetak je u html formatu da bi mogao biti ubačen u kanban pogled."
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -910,16 +894,12 @@ msgid "How to compute the goal?"
 msgstr ""
 
 #. module: gamification
-#: field:gamification.badge,id:0
-#: field:gamification.badge.user,id:0
-#: field:gamification.badge.user.wizard,id:0
-#: field:gamification.challenge,id:0
-#: field:gamification.challenge.line,id:0
-#: field:gamification.goal,id:0
-#: field:gamification.goal.definition,id:0
-#: field:gamification.goal.wizard,id:0
+#: field:gamification.badge,id:0 field:gamification.badge.user,id:0
+#: field:gamification.badge.user.wizard,id:0 field:gamification.challenge,id:0
+#: field:gamification.challenge.line,id:0 field:gamification.goal,id:0
+#: field:gamification.goal.definition,id:0 field:gamification.goal.wizard,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: gamification
 #: field:gamification.goal.definition,res_id_field:0
@@ -935,7 +915,7 @@ msgstr ""
 #: help:gamification.badge,message_unread:0
 #: help:gamification.challenge,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
 
 #. module: gamification
 #: help:gamification.badge.user,challenge_id:0
@@ -945,12 +925,12 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,image:0
 msgid "Image"
-msgstr ""
+msgstr "Slika"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "U tijeku"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -977,7 +957,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "In progress"
-msgstr ""
+msgstr "u tijeku"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1016,13 +996,13 @@ msgstr ""
 #: field:gamification.badge,message_is_follower:0
 #: field:gamification.challenge,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Je pratitelj"
 
 #. module: gamification
 #: field:gamification.badge,message_last_post:0
 #: field:gamification.challenge,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Datum zadnje poruke"
 
 #. module: gamification
 #: field:gamification.challenge,last_report_date:0
@@ -1044,7 +1024,7 @@ msgstr ""
 #: field:gamification.goal.definition,write_uid:0
 #: field:gamification.goal.wizard,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Promijenio"
 
 #. module: gamification
 #: field:gamification.badge,write_date:0
@@ -1056,7 +1036,7 @@ msgstr ""
 #: field:gamification.goal.definition,write_date:0
 #: field:gamification.goal.wizard,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Vrijeme promjene"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1076,7 +1056,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge,line_ids:0
 msgid "Lines"
-msgstr ""
+msgstr "Stavke"
 
 #. module: gamification
 #: help:gamification.challenge,line_ids:0
@@ -1096,25 +1076,25 @@ msgstr ""
 #. module: gamification
 #: model:res.groups,name:gamification.group_goal_manager
 msgid "Manager"
-msgstr ""
+msgstr "Voditelj"
 
 #. module: gamification
 #: field:gamification.badge,message_ids:0
 #: field:gamification.challenge,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Poruke"
 
 #. module: gamification
 #: help:gamification.badge,message_ids:0
 #: help:gamification.challenge,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Poruke i povijest komuniciranja"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
 #: field:gamification.goal.definition,model_id:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: gamification
 #: field:gamification.challenge.line,definition_monetary:0
@@ -1130,7 +1110,7 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Monthly"
-msgstr ""
+msgstr "Mjesečno"
 
 #. module: gamification
 #: field:gamification.badge,rule_max:0
@@ -1165,12 +1145,12 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge.line,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Never"
-msgstr ""
+msgstr "Nikada"
 
 #. module: gamification
 #: help:gamification.challenge,remind_update_delay:0
@@ -1256,7 +1236,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
 msgid "Period"
-msgstr ""
+msgstr "Period"
 
 #. module: gamification
 #: help:gamification.challenge,period:0
@@ -1283,7 +1263,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.goal.definition,compute_code:0
 msgid "Python Code"
-msgstr ""
+msgstr "Python kod"
 
 #. module: gamification
 #: help:gamification.goal.definition,compute_code:0
@@ -1310,7 +1290,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
 msgid "Reference"
-msgstr ""
+msgstr "Vezna oznaka"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1370,7 +1350,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge,manager_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odgovoran"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:561
@@ -1412,7 +1392,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_search_view
 msgid "Running"
-msgstr ""
+msgstr "Izvodi se"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -1464,7 +1444,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvenca"
 
 #. module: gamification
 #: help:gamification.challenge.line,sequence:0
@@ -1505,7 +1485,7 @@ msgstr ""
 #: field:gamification.challenge,start_date:0
 #: field:gamification.goal,start_date:0
 msgid "Start Date"
-msgstr ""
+msgstr "Početni datum"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -1518,24 +1498,24 @@ msgstr ""
 #: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal,state:0
 msgid "State"
-msgstr ""
+msgstr "Županija"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Statistics"
-msgstr ""
+msgstr "Statistike"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr ""
+msgstr "Pretplate"
 
 #. module: gamification
 #: field:gamification.challenge.line,definition_full_suffix:0
 #: field:gamification.goal,definition_suffix:0
 #: field:gamification.goal.definition,suffix:0
 msgid "Suffix"
-msgstr ""
+msgstr "Sufiks"
 
 #. module: gamification
 #: field:gamification.challenge,invited_user_ids:0
@@ -1546,7 +1526,7 @@ msgstr ""
 #: field:gamification.badge,message_summary:0
 #: field:gamification.challenge,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sažetak"
 
 #. module: gamification
 #: field:gamification.challenge.line,target_goal:0
@@ -1768,7 +1748,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_count:0
 msgid "Total"
-msgstr ""
+msgstr "Ukupno"
 
 #. module: gamification
 #: field:gamification.badge,unique_owner_ids:0
@@ -1778,18 +1758,18 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge.line,definition_suffix:0
 msgid "Unit"
-msgstr ""
+msgstr "Jedinica"
 
 #. module: gamification
 #: field:gamification.badge,message_unread:0
 #: field:gamification.challenge,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Nepročitane poruke"
 
 #. module: gamification
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr ""
+msgstr "Ažuriraj"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:491
@@ -1803,7 +1783,7 @@ msgstr ""
 #: view:gamification.goal:gamification.goal_search_view
 #: field:gamification.goal,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Korisnik"
 
 #. module: gamification
 #: field:gamification.challenge,user_domain:0
@@ -1814,7 +1794,7 @@ msgstr ""
 #: field:gamification.challenge,user_ids:0
 #: model:ir.model,name:gamification.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Korisnici"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:238
@@ -1824,13 +1804,13 @@ msgstr ""
 #: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Upozorenje!"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Weekly"
-msgstr ""
+msgstr "Tjedno"
 
 #. module: gamification
 #: help:gamification.badge,rule_auth:0
@@ -1853,7 +1833,7 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Yearly"
-msgstr ""
+msgstr "Godišnje"
 
 #. module: gamification
 #: code:addons/gamification/models/badge.py:240
@@ -1893,7 +1873,7 @@ msgstr ""
 #: view:gamification.challenge:gamification.challenge_form_view
 #: view:gamification.goal:gamification.goal_form_view
 msgid "days"
-msgstr ""
+msgstr "dana"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1908,8 +1888,8 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid ""
-"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', "
-"'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
+"e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=',"
+" 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], "
 "count=True, context=context)"
 msgstr ""
 
@@ -1935,7 +1915,7 @@ msgstr ""
 #: view:gamification.challenge:gamification.view_challenge_wizard
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "or"
-msgstr ""
+msgstr "ili"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view

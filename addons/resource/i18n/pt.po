@@ -1,21 +1,22 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-21 20:35+0000\n"
-"Last-Translator: Opencloud - PT <Unknown>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-8/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:17+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
 #: code:addons/resource/resource.py:685
@@ -33,16 +34,10 @@ msgstr "(vacation)"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Definir horas de trabalho e a tabela de tempo que pode ser "
-"programada para os membros do projecto\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Definir horas de trabalho e a tabela de tempo que pode ser programada para os membros do projecto\n              </p>\n            "
 
 #. module: resource
 #: field:resource.resource,active:0
@@ -142,10 +137,8 @@ msgid "Human"
 msgstr "Humano"
 
 #. module: resource
-#: field:resource.calendar,id:0
-#: field:resource.calendar.attendance,id:0
-#: field:resource.calendar.leaves,id:0
-#: field:resource.resource,id:0
+#: field:resource.calendar,id:0 field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0 field:resource.resource,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -154,18 +147,14 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr ""
-"Se vazio, este é um feriado genérico para a empresa. Se um recurso é "
-"definido, o feriado/licença é apenas para este recurso"
+msgstr "Se vazio, este é um feriado genérico para a empresa. Se um recurso é definido, o feriado/licença é apenas para este recurso"
 
 #. module: resource
 #: help:resource.resource,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Se o campo ativo é definido como Falso, ele permitirá que oculte o registo "
-"do recurso sem o remover."
+msgstr "Se o campo ativo é definido como Falso, ele permitirá que oculte o registo do recurso sem o remover."
 
 #. module: resource
 #: view:resource.resource:resource.view_resource_resource_search
@@ -209,9 +198,7 @@ msgstr "Ausências"
 #: code:addons/resource/resource.py:773
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
-msgstr ""
-"Assegure-se que o tempo de trabalho está configurado com os dias de semana "
-"apropriados!"
+msgstr "Assegure-se que o tempo de trabalho está configurado com os dias de semana apropriados!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -224,10 +211,8 @@ msgid "Monday"
 msgstr "Segunda-Feira"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "Nome"
 
@@ -241,8 +226,7 @@ msgstr "Razão"
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr ""
-"Nome do utilizador relacionado para o recurso para gerir o seu acesso."
+msgstr "Nome do utilizador relacionado para o recurso para gerir o seu acesso."
 
 #. module: resource
 #: model:ir.ui.menu,name:resource.menu_resource_config
@@ -298,10 +282,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
-"Recursos permitem criar e gerir os recursos que devem ser envolvidos numa "
-"fase do projeto específico. Também pode definir o nível de eficiência e "
-"carga de trabalho com base nas horas de trabalho semanais."
+msgstr "Recursos permitem criar e gerir os recursos que devem ser envolvidos numa fase do projeto específico. Também pode definir o nível de eficiência e carga de trabalho com base nas horas de trabalho semanais."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -353,14 +334,9 @@ msgstr "Domingo"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Este campo descreve a eficiência do recurso para completar tarefas. por "
-"exemplo, se os recursos forem colocados sozinhosn uma fase de 5 dias com 5 "
-"tarefas atribuídas a eles, terão uma carga de 100% para esta fase por "
-"padrão, mas se colocarmos uma eficiência de 200%, então a sua carga será "
-"apenas 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
+msgstr "Este campo descreve a eficiência do recurso para completar tarefas. por exemplo, se os recursos forem colocados sozinhosn uma fase de 5 dias com 5 tarefas atribuídas a eles, terão uma carga de 100% para esta fase por padrão, mas se colocarmos uma eficiência de 200%, então a sua carga será apenas 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

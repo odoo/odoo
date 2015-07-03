@@ -1,21 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-02-01 21:13+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-02 06:58+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_tree
@@ -52,9 +53,7 @@ msgstr "Aktuelle ID ist in diesem Kontext nicht definiert"
 #: help:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
-msgstr ""
-"Ermöglicht Einstellungen zur Bestandsbewertung bei Produkten oder "
-"Produktkategorien."
+msgstr "Ermöglicht Einstellungen zur Bestandsbewertung bei Produkten oder Produktkategorien."
 
 #. module: stock_account
 #: selection:product.template,cost_method:0
@@ -93,30 +92,19 @@ msgstr "Auswahl eines Datums"
 #. module: stock_account
 #: help:stock.inventory,period_id:0
 msgid ""
-"Choose the accounting period where you want to value the stock moves created "
-"by the inventory instead of the default one (chosen by the inventory end "
+"Choose the accounting period where you want to value the stock moves created"
+" by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
-"Wählen Sie die Periode für die Buchung der Inventur aus, ansonsten wird die "
-"Periode des  letzten Datums der Inventurpositionen gebucht."
+msgstr "Wählen Sie die Periode für die Buchung der Inventur aus, ansonsten wird die Periode des  letzten Datums der Inventurpositionen gebucht."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid ""
-"Choose the date for which you want to get the stock valuation of your "
-"products.\n"
+"Choose the date for which you want to get the stock valuation of your products.\n"
 "\n"
-"                        This will filter the stock operation that weren't "
-"done at the selected date, to retreive the quantity\n"
-"                        you had, and gives you the inventory value according "
-"to the standard price used at that time."
-msgstr ""
-"Wählen Sie das Datum für die Anzeige des Lagerbestands.\n"
-"\n"
-"                        Hierdurch können Sie die Bestandsbuchungen heraus "
-"filtern, die nicht zum gewählten Datum erfolgt sind, um\n"
-"                        dadurch den Bestand und Bestandswert mit dem "
-"seinerzeit aktuellen Anschaffungspreis zu erhalten."
+"                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
+"                        you had, and gives you the inventory value according to the standard price used at that time."
+msgstr "Wählen Sie das Datum für die Anzeige des Lagerbestands.\n\n                        Hierdurch können Sie die Bestandsbuchungen heraus filtern, die nicht zum gewählten Datum erfolgt sind, um\n                        dadurch den Bestand und Bestandswert mit dem seinerzeit aktuellen Anschaffungspreis zu erhalten."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -168,9 +156,7 @@ msgstr "Eingangsrechnung erstellen"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_invoice_directly:0
 msgid "Create and open the invoice when the user finish a delivery order"
-msgstr ""
-"Erstelle und öffne direkt eine neue Rechnung, sobald die Auslieferung "
-"bestätigt wird."
+msgstr "Erstelle und öffne direkt eine neue Rechnung, sobald die Auslieferung bestätigt wird."
 
 #. module: stock_account
 #: view:stock.invoice.onshipping:stock_account.view_stock_invoice_onshipping
@@ -236,29 +222,17 @@ msgid "Group by partner"
 msgstr "Gruppiert nach Partner"
 
 #. module: stock_account
-#: field:stock.change.standard.price,id:0
-#: field:stock.history,id:0
-#: field:stock.invoice.onshipping,id:0
-#: field:wizard.valuation.history,id:0
+#: field:stock.change.standard.price,id:0 field:stock.history,id:0
+#: field:stock.invoice.onshipping,id:0 field:wizard.valuation.history,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: stock_account
 #: help:stock.change.standard.price,new_price:0
 msgid ""
-"If cost price is increased, stock variation account will be debited and "
-"stock output account will be credited with the value = (difference of amount "
-"* quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and "
-"stock input account will be debited."
-msgstr ""
-"Wenn der Einstandspreis pro Mengeneinheit (ME) ansteigt, wird in folgender "
-"Weise das Bestandsveränderungskonto entlastet (Haben) sowie das Warenversand "
-"Konto belastet (Soll):\n"
-"Buchungsbetrag = (Preissteigerung * Bestand).\n"
-"Wenn der Einstandspreis pro Mengeneinheit sinkt, wird das "
-"Bestandsveränderungskonto belastet (Soll) sowie das Warenversand Konto "
-"entlastet (Haben)."
+"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+msgstr "Wenn der Einstandspreis pro Mengeneinheit (ME) ansteigt, wird in folgender Weise das Bestandsveränderungskonto entlastet (Haben) sowie das Warenversand Konto belastet (Soll):\nBuchungsbetrag = (Preissteigerung * Bestand).\nWenn der Einstandspreis pro Mengeneinheit sinkt, wird das Bestandsveränderungskonto belastet (Soll) sowie das Warenversand Konto entlastet (Haben)."
 
 #. module: stock_account
 #: help:product.template,valuation:0
@@ -269,23 +243,14 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
-"Bei Aktivierung der Echtzeitbewertung für ein Produkt, erstellt das System "
-"automatisch Buchungen mit dem Bewertungspreis auf Basis der beim Produkt "
-"hinterlegten Kalkulationsmethode. In der Produktkategorie repäsentiert das  "
-"Bestandsveränderungskonto den aktuellen Lagerbestandswert, wobei das "
-"Warenversand / Wareneingang Konto für die Gegenbuchung bei der Wareneingangs-"
-" und Warenausgangslieferung vorgesehen ist."
+msgstr "Bei Aktivierung der Echtzeitbewertung für ein Produkt, erstellt das System automatisch Buchungen mit dem Bewertungspreis auf Basis der beim Produkt hinterlegten Kalkulationsmethode. In der Produktkategorie repäsentiert das  Bestandsveränderungskonto den aktuellen Lagerbestandswert, wobei das Warenversand / Wareneingang Konto für die Gegenbuchung bei der Wareneingangs- und Warenausgangslieferung vorgesehen ist."
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split "
-"them onto the different products."
-msgstr ""
-"Hierdurch installieren Sie das Modul für die Erfassung und Verteilung von "
-"Anschaffungspreiserhöhungen / Anschaffungspreisminderungen zur Buchung von "
-"Bestandsbewertungen mit  Einstandspreisen."
+"Install the module that allows to affect landed costs on pickings, and split"
+" them onto the different products."
+msgstr "Hierdurch installieren Sie das Modul für die Erfassung und Verteilung von Anschaffungspreiserhöhungen / Anschaffungspreisminderungen zur Buchung von Bestandsbewertungen mit  Einstandspreisen."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -309,8 +274,7 @@ msgid "Inventory Value"
 msgstr "Inventurbestandswert"
 
 #. module: stock_account
-#: field:procurement.order,invoice_state:0
-#: field:stock.move,invoice_state:0
+#: field:procurement.order,invoice_state:0 field:stock.move,invoice_state:0
 #: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Rechnungserstellung"
@@ -411,23 +375,14 @@ msgstr "Nicht abzurechnen"
 #: code:addons/stock_account/product.py:83
 #, python-format
 msgid ""
-"One of the following information is missing on the product or product "
-"category and prevents the accounting valuation entries to be created:\n"
+"One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:\n"
 "    Product: %s\n"
 "    Stock Input Account: %s\n"
 "    Stock Output Account: %s\n"
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
-"Eine der folgenden Informationen fehlt noch bei Produkt / Kategorie zur "
-"Erstellung von Buchungen:\n"
-"    Produkt: %s\n"
-"    Bestandskonto Eingang: %s\n"
-"    Bestandskonto Ausgang: %s\n"
-"    Bestandsveränderung: %s\n"
-"    Lagerjournal: %s\n"
-"    "
+msgstr "Eine der folgenden Informationen fehlt noch bei Produkt / Kategorie zur Erstellung von Buchungen:\n    Produkt: %s\n    Bestandskonto Eingang: %s\n    Bestandskonto Ausgang: %s\n    Bestandsveränderung: %s\n    Lagerjournal: %s\n    "
 
 #. module: stock_account
 #: field:stock.history,date:0
@@ -520,8 +475,7 @@ msgstr "Abruf der Bestandsbewertung"
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Retrieve the stock valuation of your products at current day"
-msgstr ""
-"Erhalten Sie die Bestandsbewertung Ihrer Produkte zu einem bestimmten Tag"
+msgstr "Erhalten Sie die Bestandsbewertung Ihrer Produkte zu einem bestimmten Tag"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -548,20 +502,10 @@ msgstr "Geänderter Standardpreis"
 #. module: stock_account
 #: help:product.template,cost_method:0
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific "
-"period (usually every year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
-"last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
-"Standardpreis: Der Anschaffungspreis wird zum Ende einer Abrechnungsperiode "
-"automatisch aktualisiert (normalerweise jährlich).\n"
-"                      Durchschnittspreis: Der Anschaffungspreis wird bei "
-"jeder eingehenden Lieferung und Bewertung aktualisiert und genutzt.\n"
-"                      Tatsächlicher Preis: Der angezeigte Anschaffungspreis "
-"entspricht dem tatsächlichen Preis der letzten Auslieferung (z.B. für den "
-"Fall der Buchung von Bestandsverlust)"
+"Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
+"                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr "Standardpreis: Der Anschaffungspreis wird zum Ende einer Abrechnungsperiode automatisch aktualisiert (normalerweise jährlich).\n                      Durchschnittspreis: Der Anschaffungspreis wird bei jeder eingehenden Lieferung und Bewertung aktualisiert und genutzt.\n                      Tatsächlicher Preis: Der angezeigte Anschaffungspreis entspricht dem tatsächlichen Preis der letzten Auslieferung (z.B. für den Fall der Buchung von Bestandsverlust)"
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -624,13 +568,9 @@ msgstr "Lagerbestandshistorie"
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
-"This allows to automatically launch the invoicing wizard if the delivery is "
-"to be invoiced when you send or deliver goods.\n"
+"This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
-"Hierdurch kann automatisch von der Auslieferung zur Abrechnung gewechselt "
-"werden, wenn vom Lieferschein abgerechnet werden soll.\n"
-"- Es wird das Modul stock_invoice_directly installiert."
+msgstr "Hierdurch kann automatisch von der Auslieferung zur Abrechnung gewechselt werden, wenn vom Lieferschein abgerechnet werden soll.\n- Es wird das Modul stock_invoice_directly installiert."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -659,13 +599,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Dieses Konto wird für die Echtzeitbewertung von Beständen genutzt.  Wenn "
-"dies bei einen virtuellen Ort eingestellt wurde (nicht intern), wird diesem "
-"Konto der Wert der Produkte zugeschrieben, die bei Lagerbewegungen von einem "
-"internen Lager an diesen Ort erfolgen, anstelle des beim jeweiligen Produkt "
-"eingetragenen allgemeinen Warenversand Konto. Für rein interne "
-"Lagerbewegungen hat diese Einstellung keine Auswirkung."
+msgstr "Dieses Konto wird für die Echtzeitbewertung von Beständen genutzt.  Wenn dies bei einen virtuellen Ort eingestellt wurde (nicht intern), wird diesem Konto der Wert der Produkte zugeschrieben, die bei Lagerbewegungen von einem internen Lager an diesen Ort erfolgen, anstelle des beim jeweiligen Produkt eingetragenen allgemeinen Warenversand Konto. Für rein interne Lagerbewegungen hat diese Einstellung keine Auswirkung."
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -675,13 +609,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
-"Dieses Konto wird für die Echtzeitbewertung von Beständen genutzt.  Wenn "
-"dies bei einen virtuellen Ort eingestellt wurde (nicht intern), wird diesem "
-"Konto der Wert der Produkte zugeschrieben, die bei Lagerbewegungen von einem "
-"internen Lager an diesen Ort erfolgen, anstelle des beim jeweiligen Produkt "
-"eingetragenen allgemeinen Warenversand Konto. Für rein interne "
-"Lagerbewegungen hat diese Einstellung keine Auswirkung."
+msgstr "Dieses Konto wird für die Echtzeitbewertung von Beständen genutzt.  Wenn dies bei einen virtuellen Ort eingestellt wurde (nicht intern), wird diesem Konto der Wert der Produkte zugeschrieben, die bei Lagerbewegungen von einem internen Lager an diesen Ort erfolgen, anstelle des beim jeweiligen Produkt eingetragenen allgemeinen Warenversand Konto. Für rein interne Lagerbewegungen hat diese Einstellung keine Auswirkung."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -700,14 +628,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each "
-"product"
-msgstr ""
-"Bei der Lagerbestandsbewertung in Echtzeit werden Gegenbuchungen zu "
-"Lagerzugängen auf dieses Konto gebucht, es sei denn für das Herkunftslager "
-"wurde ein spezifisches Bestandskonto festgelegt. Dies ist die Vorgabe für "
-"alle Produkte dieser Kategorie. Dies kann auch für jedes Produkt individuell "
-"festgelegt werden."
+"value for all products in this category. It can also directly be set on each"
+" product"
+msgstr "Bei der Lagerbestandsbewertung in Echtzeit werden Gegenbuchungen zu Lagerzugängen auf dieses Konto gebucht, es sei denn für das Herkunftslager wurde ein spezifisches Bestandskonto festgelegt. Dies ist die Vorgabe für alle Produkte dieser Kategorie. Dies kann auch für jedes Produkt individuell festgelegt werden."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_input:0
@@ -716,11 +639,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
-"Bei der Lagerbestandsbewertung in Echtzeit werden Gegenbuchungen für alle "
-"Lagerzugänge wertmäßig diesem Konto zugeschrieben, es sei denn beim "
-"Herkunftslager wurde ein eigenes Konto festgelegt. Wenn beim Produkt nicht "
-"festgelegt, wird das bei der Produktkategorie festgelegte Konto verwendet."
+msgstr "Bei der Lagerbestandsbewertung in Echtzeit werden Gegenbuchungen für alle Lagerzugänge wertmäßig diesem Konto zugeschrieben, es sei denn beim Herkunftslager wurde ein eigenes Konto festgelegt. Wenn beim Produkt nicht festgelegt, wird das bei der Produktkategorie festgelegte Konto verwendet."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -728,13 +647,9 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set "
-"on each product"
-msgstr ""
-"Bei der Lagerbestandsbewertung in Echtzeit werden alle Gegenbuchungen für "
-"Lagerabgänge auf dieses Konto gebucht, es sei denn für das Ziel wurde ein "
-"individuelles Konto spezifiziert. Sofern nicht im Produkt festgelegt, wird "
-"das in der Produktkategorie eingestellte Konto verwendet."
+"default value for all products in this category. It can also directly be set"
+" on each product"
+msgstr "Bei der Lagerbestandsbewertung in Echtzeit werden alle Gegenbuchungen für Lagerabgänge auf dieses Konto gebucht, es sei denn für das Ziel wurde ein individuelles Konto spezifiziert. Sofern nicht im Produkt festgelegt, wird das in der Produktkategorie eingestellte Konto verwendet."
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -743,28 +658,21 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
-"Bei der Lagerbestandsbewertung in Echtzeit werden alle Gegenbuchungen für "
-"Lagerabgänge auf dieses Konto gebucht, es sei denn für das Ziel wurde ein "
-"individuelles Konto spezifiziert. Sofern nicht im Produkt festgelegt, wird "
-"das in der Produktkategorie eingestellte Konto verwendet."
+msgstr "Bei der Lagerbestandsbewertung in Echtzeit werden alle Gegenbuchungen für Lagerabgänge auf dieses Konto gebucht, es sei denn für das Ziel wurde ein individuelles Konto spezifiziert. Sofern nicht im Produkt festgelegt, wird das in der Produktkategorie eingestellte Konto verwendet."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Dies ist das Buchungsjournal für die Lagerbestandsbuchungen in Echtzeit."
+msgstr "Dies ist das Buchungsjournal für die Lagerbestandsbuchungen in Echtzeit."
 
 #. module: stock_account
 #: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"Wenn eine Echtzeit Bestandsbuchung für das Produkt aktiviert wird, enthält "
-"dieses Finanzkonto den aktuellen Bestandswert des Produkts."
+msgstr "Wenn eine Echtzeit Bestandsbuchung für das Produkt aktiviert wird, enthält dieses Finanzkonto den aktuellen Bestandswert des Produkts."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history

@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * purchase_requisition
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-11-08 12:31+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-23 13:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:16+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -23,32 +24,14 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "            Click to start a new Call for Bids process. \n"
 "          </p><p>\n"
-"            A Call for Bids is a procedure for generating competing offers "
-"from\n"
+"            A Call for Bids is a procedure for generating competing offers from\n"
 "            different bidders. In the call for bids, you can record the\n"
 "            products you need to buy and generate the creation of RfQs to\n"
-"            suppliers. Once the bids have been registered, you can review "
-"and\n"
+"            suppliers. Once the bids have been registered, you can review and\n"
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Кликнете да започнете нов процес за Повик за прибирање на "
-"понуди. \n"
-"          </p><p>\n"
-"            Повик за прибирање на понуди е процедура за генерирање на "
-"компетитивни понуди од\n"
-"            различни понудувачи. Во повикот за понуди, можете да ги "
-"забележите\n"
-"            производите што треба да ги купите и да генерирате креирање на "
-"барања за понуиди\n"
-"            до добавувачите. Откако понудите ќе бидат регистгрирани, можете "
-"да ги прегледате\n"
-"            и да ги споредите и можете да валидирате некои, а некои да ги "
-"откажете.\n"
-"          </p>\n"
-"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Кликнете да започнете нов процес за Повик за прибирање на понуди. \n          </p><p>\n            Повик за прибирање на понуди е процедура за генерирање на компетитивни понуди од\n            различни понудувачи. Во повикот за понуди, можете да ги забележите\n            производите што треба да ги купите и да генерирате креирање на барања за понуиди\n            до добавувачите. Откако понудите ќе бидат регистгрирани, можете да ги прегледате\n            и да ги споредите и можете да валидирате некои, а некои да ги откажете.\n          </p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -155,8 +138,7 @@ msgstr "Откажано"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr ""
-"Откажано од повикот за прибирање на понуди поврзан со оваа барање за понуда."
+msgstr "Откажано од повикот за прибирање на понуди поврзан со оваа барање за понуда."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
@@ -180,9 +162,7 @@ msgstr "Измени количина"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr ""
-"Означете го ова поле за да се генерира Повик за прибирање на понуди наместо "
-"да се генерира Барање за понуда од набавката."
+msgstr "Означете го ова поле за да се генерира Повик за прибирање на понуди наместо да се генерира Барање за понуда од набавката."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -238,16 +218,14 @@ msgid "Create Request for Quotation"
 msgstr "Креирај барање за прибирање понуди"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_uid:0
-#: field:purchase.requisition,create_uid:0
+#: field:bid.line.qty,create_uid:0 field:purchase.requisition,create_uid:0
 #: field:purchase.requisition.line,create_uid:0
 #: field:purchase.requisition.partner,create_uid:0
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,create_date:0
-#: field:purchase.requisition,create_date:0
+#: field:bid.line.qty,create_date:0 field:purchase.requisition,create_date:0
 #: field:purchase.requisition.line,create_date:0
 #: field:purchase.requisition.partner,create_date:0
 msgid "Created on"
@@ -267,9 +245,7 @@ msgstr "Датум на испраќање на последната порак�
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
-"Дефинирајте производ(и) што сакате да ги вклучите во повикот за прибирање на "
-"понуди."
+msgstr "Дефинирајте производ(и) што сакате да ги вклучите во повикот за прибирање на понуди."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0
@@ -313,13 +289,10 @@ msgstr "Групирање според"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
-"директно во html формат со цел да биде вметнато во kanban преглед."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: purchase_requisition
-#: field:bid.line.qty,id:0
-#: field:purchase.requisition,id:0
+#: field:bid.line.qty,id:0 field:purchase.requisition,id:0
 #: field:purchase.requisition.line,id:0
 #: field:purchase.requisition.partner,id:0
 msgid "ID"
@@ -341,16 +314,14 @@ msgid "Last Message Date"
 msgstr "Датум на последна порака"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_uid:0
-#: field:purchase.requisition,write_uid:0
+#: field:bid.line.qty,write_uid:0 field:purchase.requisition,write_uid:0
 #: field:purchase.requisition.line,write_uid:0
 #: field:purchase.requisition.partner,write_uid:0
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: purchase_requisition
-#: field:bid.line.qty,write_date:0
-#: field:purchase.requisition,write_date:0
+#: field:bid.line.qty,write_date:0 field:purchase.requisition,write_date:0
 #: field:purchase.requisition.line,write_date:0
 #: field:purchase.requisition.partner,write_date:0
 msgid "Last Updated on"
@@ -523,8 +494,7 @@ msgstr "Количина"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
-#: field:bid.line.qty,qty:0
-#: field:purchase.requisition.line,product_qty:0
+#: field:bid.line.qty,qty:0 field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
 msgstr "Количина"
 
@@ -611,16 +581,9 @@ msgstr "Избери само едно барање за прибирање по
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
 msgid ""
-"Select only one RFQ (exclusive):  On the confirmation of a purchase order, "
-"it cancels the remaining purchase order.\n"
-"Select multiple RFQ:  It allows to have multiple purchase orders.On "
-"confirmation of a purchase order it does not cancel the remaining orders"
-msgstr ""
-"Избери само едно барање за прибирање понуди (ексклузивно):  При потврда на "
-"налогот за нарачка, го откажува остатокот од налогот за нарачка.\n"
-"Избери повеќе барања за прибирање понуди:  Дозволува да имате повеќе налози "
-"за нарачка. При потврда на налог за нарачка не ги откажува останатите налози "
-"за нарачка"
+"Select only one RFQ (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\n"
+"Select multiple RFQ:  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"
+msgstr "Избери само едно барање за прибирање понуди (ексклузивно):  При потврда на налогот за нарачка, го откажува остатокот од налогот за нарачка.\nИзбери повеќе барања за прибирање понуди:  Дозволува да имате повеќе налози за нарачка. При потврда на налог за нарачка не ги откажува останатите налози за нарачка"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
@@ -670,9 +633,7 @@ msgstr "Добавувач"
 msgid ""
 "Technical field for not loosing the initial information about the quantity "
 "proposed in the bid"
-msgstr ""
-"Техничко поле за да не се изгуби иницијалната информација за количината "
-"предложена во понудата"
+msgstr "Техничко поле за да не се изгуби иницијалната информација за количината предложена во понудата"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -749,9 +710,7 @@ msgstr "Веќе генериравте налог(и) за нарачка(и)."
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
-msgstr ""
-"Имате веќе еден %s налог за набавка за овој партнер, мора да го откажете "
-"овој налог за набавка за да креирате понуда."
+msgstr "Имате веќе еден %s налог за набавка за овој партнер, мора да го откажете овој налог за набавка за да креирате понуда."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:249

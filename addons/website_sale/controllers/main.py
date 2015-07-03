@@ -277,7 +277,7 @@ class website_sale(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", website=True)
     def product_comment(self, product_template_id, **post):
         if not request.session.uid:
             return login_redirect()
@@ -289,7 +289,7 @@ class website_sale(http.Controller):
                 type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+        return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
@@ -330,6 +330,10 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            return {}
+
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
         if not display:
             return None
@@ -460,7 +464,7 @@ class website_sale(http.Controller):
         # set data
         if isinstance(data, dict):
             query = dict((prefix + field_name, data[prefix + field_name])
-                for field_name in all_fields if data.get(prefix + field_name))
+                for field_name in all_fields if prefix + field_name in data)
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
                 for field_name in all_fields if getattr(data, field_name))
@@ -478,7 +482,7 @@ class website_sale(http.Controller):
         if not remove_prefix:
             return query
 
-        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
+        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if prefix + field_name in data)
 
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -695,6 +699,7 @@ class website_sale(http.Controller):
             if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
                     'acquirer_id': acquirer_id,
+                    'amount': order.amount_total,
                 })
             tx_id = tx.id
         else:
@@ -934,11 +939,14 @@ class website_sale(http.Controller):
         return ret
 
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
-    def get_unit_price(self, product_ids, add_qty, **kw):
+    def get_unit_price(self, product_ids, add_qty, use_order_pricelist=False, **kw):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         products = pool['product.product'].browse(cr, uid, product_ids, context=context)
         partner = pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        if use_order_pricelist:
+            pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
+        else:
+            pricelist_id = partner.property_product_pricelist.id
         prices = pool['product.pricelist'].price_rule_get_multi(cr, uid, [], [(product, add_qty, partner) for product in products], context=context)
         return {product_id: prices[product_id][pricelist_id][0] for product_id in product_ids}
 

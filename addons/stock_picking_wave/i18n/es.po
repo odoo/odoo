@@ -1,21 +1,22 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_picking_wave
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-27 11:12+0000\n"
-"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-28 06:38+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
@@ -23,28 +24,13 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a Picking Wave. \n"
 "              </p><p>\n"
-"                The Goal of the picking waves is to group operations that "
-"may \n"
-"                (needs to) be done together in order to increase their "
-"efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) "
-"or\n"
-"                help the timing management of operations (tasks to be done "
-"at 1pm).\n"
+"                The Goal of the picking waves is to group operations that may \n"
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"Pulse para crear una agrupación de albaranes (picking wave).\n"
-"</p><p>\n"
-"La meta de las agrupaciones de albaranes es la de agrupar las operaciones\n"
-"que pueden ser realizadas juntas para incrementar la eficiencia.\n"
-"Puede ser también útil para asignar trabajos (una persona = una agrupación)\n"
-"o para ayudar a la gestión de tiempos de operaciones (tareas a ser "
-"realizadas\n"
-"a las 13:00, por ejemplo).\n"
-"</p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una agrupación de albaranes (picking wave).\n</p><p>\nLa meta de las agrupaciones de albaranes es la de agrupar las operaciones\nque pueden ser realizadas juntas para incrementar la eficiencia.\nPuede ser también útil para asignar trabajos (una persona = una agrupación)\no para ayudar a la gestión de tiempos de operaciones (tareas a ser realizadas\na las 13:00, por ejemplo).\n</p>\n            "
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -138,8 +124,7 @@ msgid "Group By"
 msgstr "Agrupar por"
 
 #. module: stock_picking_wave
-#: field:stock.picking.to.wave,id:0
-#: field:stock.picking.wave,id:0
+#: field:stock.picking.to.wave,id:0 field:stock.picking.wave,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -209,8 +194,7 @@ msgstr "Albarán"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
-#: field:stock.picking,wave_id:0
-#: field:stock.picking.to.wave,wave_id:0
+#: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
 #: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
 msgid "Picking Wave"
 msgstr "Agrupación de albaranes"
@@ -273,9 +257,7 @@ msgstr "Seleccione una agrupación"
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
-msgstr ""
-"Algunos albaranes aún están en espera de material. Compruebe por favor "
-"disponibilidad o fuércela antes de establecer esta agrupación a realizada."
+msgstr "Algunos albaranes aún están en espera de material. Compruebe por favor disponibilidad o fuércela antes de establecer esta agrupación a realizada."
 
 #. module: stock_picking_wave
 #: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template

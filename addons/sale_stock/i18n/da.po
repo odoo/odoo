@@ -1,21 +1,22 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-03-31 21:50+0000\n"
-"Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-04-01 05:35+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -34,10 +35,7 @@ msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
-msgstr ""
-"Her kan du oprette leveringsmåder på salgsordrer og følgesedler.\n"
-"Du kan oprette egne transportører og leveringsmatrixer med priser.\n"
-"- Dette installerer leveringsmodulet (Delivery)."
+msgstr "Her kan du oprette leveringsmåder på salgsordrer og følgesedler.\nDu kan oprette egne transportører og leveringsmatrixer med priser.\n- Dette installerer leveringsmodulet (Delivery)."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
@@ -143,9 +141,7 @@ msgstr "Incoterm"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Internationale leveringsbetingelser er en serie af foruddefinerede "
-"kommercielle vilkår, der anvendes i internationale transaktioner."
+msgstr "Internationale leveringsbetingelser er en serie af foruddefinerede kommercielle vilkår, der anvendes i internationale transaktioner."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -165,26 +161,17 @@ msgstr "Faktura baseret på salgsordrer"
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
-msgstr ""
-"Lader sig overføre indtastninger på projekt opgaver til tidsskema linier på "
-"en bestemt dato og bruger for at oprette, redigere og slette projekt opgaver "
-"fra disponerings linier.\n"
-"- Dette installerer modulet \"projekt_timesheet\" og \"sale-service\"."
+msgstr "Lader sig overføre indtastninger på projekt opgaver til tidsskema linier på en bestemt dato og bruger for at oprette, redigere og slette projekt opgaver fra disponerings linier.\n- Dette installerer modulet \"projekt_timesheet\" og \"sale-service\"."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
-msgstr ""
-"Respitdage for levering. Antal dage før lovet levering, varer foreslås "
-"indkøbt - for at forebygge forsinkelse i leverings-kæden."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr "Respitdage for levering. Antal dage før lovet levering, varer foreslås indkøbt - for at forebygge forsinkelse i leverings-kæden."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:347
@@ -212,8 +199,7 @@ msgstr "Pakning"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Vælg \"levér hver vare når den er på lager\" hvis du tillader delleveringer."
+msgstr "Vælg \"levér hver vare når den er på lager\" hvis du tillader delleveringer."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
@@ -302,10 +288,7 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
-"Salgsordre sættes til default at levere alle varer med det samme i stedet "
-"for at levere hver varer når den er på lager. Kan påvirke "
-"fragtomkostningerne."
+msgstr "Salgsordre sættes til default at levere alle varer med det samme i stedet for at levere hver varer når den er på lager. Kan påvirke fragtomkostningerne."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -318,8 +301,7 @@ msgid "Selectable on Sales Order Line"
 msgstr "Kan vælges på salgsordre linier"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Afsendt"
 
@@ -348,9 +330,7 @@ msgstr "Til fakturering"
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
-"Giver sælger mulighed for at fakturere leveringer via menuen \"Leveringer "
-"til fakturering\"."
+msgstr "Giver sælger mulighed for at fakturere leveringer via menuen \"Leveringer til fakturering\"."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -358,15 +338,13 @@ msgid "View Delivery Order"
 msgstr "Vis levering"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Lagersted"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "Du kan danne fakturaer ud fra salgsordrer eller leveringer."
 
 #. module: sale_stock
@@ -382,9 +360,7 @@ msgstr "Du må først annullere alle leveringer knyttet til denne salgsordre."
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Du vil sælge %.2f %s men du har kun %.2f %s på lager !\n"
-"Beholdningen er %.2f %s. (uden reservationer)"
+msgstr "Du vil sælge %.2f %s men du har kun %.2f %s på lager !\nBeholdningen er %.2f %s. (uden reservationer)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -394,11 +370,7 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Du har valgt et antal af  %d enheder.\n"
-"Dette er ikke kompatibelt med den valgte pakning.\n"
-"Her er et forslag til antal i pakningen:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
+msgstr "Du har valgt et antal af  %d enheder.\nDette er ikke kompatibelt med den valgte pakning.\nHer er et forslag til antal i pakningen:\nEAN: %s Quantity: %s Type of ul: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -407,7 +379,5 @@ msgstr "dage"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
+msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
 msgstr ""

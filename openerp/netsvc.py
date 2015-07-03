@@ -82,6 +82,7 @@ class PostgreSQLHandler(logging.Handler):
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('openerp.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
+            cr.autocommit(True)
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args

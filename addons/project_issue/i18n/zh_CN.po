@@ -1,21 +1,22 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-06-04 04:42+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:12+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_issue
 #: field:project.issue.report,email:0
@@ -44,8 +45,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to add a new version.\n"
 "              </p><p>\n"
-"                Define here the different versions of your products on "
-"which\n"
+"                Define here the different versions of your products on which\n"
 "                you can work on issues.\n"
 "              </p>\n"
 "            "
@@ -56,10 +56,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
 msgid ""
 "<p>\n"
-"                    The Odoo issues tacker allows you to efficiantly manage "
-"things\n"
-"                    like internal requests, software development bugs, "
-"customer\n"
+"                    The Odoo issues tacker allows you to efficiantly manage things\n"
+"                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc.\n"
 "                </p>\n"
 "            "
@@ -69,8 +67,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
 "<p>\n"
-"                The Odoo issues tacker allows you to efficiantly manage "
-"things\n"
+"                The Odoo issues tacker allows you to efficiantly manage things\n"
 "                like internal requests, software development bugs, customer\n"
 "                complaints, project troubles, material breakdowns, etc.\n"
 "            </p>\n"
@@ -83,20 +80,18 @@ msgid ""
 "A Issue's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
+" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,active:0
-#: field:project.issue.version,active:0
+#: field:project.issue,active:0 field:project.issue.version,active:0
 msgid "Active"
 msgstr "生效"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "Add an internal note..."
-msgstr ""
+msgstr "添加一个内部备注"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
@@ -146,7 +141,7 @@ msgstr "距开始日期小时数"
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "已封锁"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -159,8 +154,7 @@ msgid "Category:"
 msgstr "分类:"
 
 #. module: project_issue
-#: field:project.issue,channel:0
-#: field:project.issue.report,channel:0
+#: field:project.issue,channel:0 field:project.issue.report,channel:0
 msgid "Channel"
 msgstr "渠道"
 
@@ -208,8 +202,7 @@ msgid "Configure"
 msgstr "设置"
 
 #. module: project_issue
-#: field:project.issue,partner_id:0
-#: field:project.issue.report,partner_id:0
+#: field:project.issue,partner_id:0 field:project.issue.report,partner_id:0
 msgid "Contact"
 msgstr "联系方式"
 
@@ -218,7 +211,7 @@ msgstr "联系方式"
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 #: field:project.issue.report,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "创建时间"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -232,15 +225,14 @@ msgid "Create issues from an incoming email account "
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,create_uid:0
-#: field:project.issue.version,create_uid:0
+#: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: project_issue
 #: field:project.issue.version,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建"
 
 #. module: project_issue
 #: field:project.issue,create_date:0
@@ -251,13 +243,13 @@ msgstr "创建日期"
 #: code:addons/project_issue/project_issue.py:424
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:426
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "客户邮件"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -277,7 +269,7 @@ msgstr "距开始日期天数"
 #. module: project_issue
 #: help:project.issue,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布到记录上的最后信息的日期"
 
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
@@ -312,12 +304,12 @@ msgstr "致命错误"
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_delay
 msgid "Delay"
-msgstr ""
+msgstr "推延"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
@@ -378,7 +370,7 @@ msgstr "关注者"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr ""
+msgstr "分组"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -391,11 +383,10 @@ msgstr "高"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "保存聊天摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是HTML格式。"
 
 #. module: project_issue
-#: field:project.issue,id:0
-#: field:project.issue.report,id:0
+#: field:project.issue,id:0 field:project.issue.report,id:0
 #: field:project.issue.version,id:0
 msgid "ID"
 msgstr "ID"
@@ -523,7 +514,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最后信息日期"
 
 #. module: project_issue
 #: field:project.issue,date_last_stage_update:0
@@ -532,15 +523,14 @@ msgid "Last Stage Update"
 msgstr ""
 
 #. module: project_issue
-#: field:project.issue,write_uid:0
-#: field:project.issue.version,write_uid:0
+#: field:project.issue,write_uid:0 field:project.issue.version,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新"
 
 #. module: project_issue
 #: field:project.issue.version,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后一次更新"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
@@ -561,7 +551,7 @@ msgstr "消息"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信历史"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -578,7 +568,7 @@ msgstr "新建"
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "New Mail"
-msgstr ""
+msgstr "新邮件"
 
 #. module: project_issue
 #: field:project.issue,date_action_next:0
@@ -589,11 +579,10 @@ msgstr "下一动作"
 #: code:addons/project_issue/project_issue.py:440
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "无主题"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-#: selection:project.issue,priority:0
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "普通"
@@ -671,7 +660,7 @@ msgstr "项目:"
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "准备好下一个阶段"
 
 #. module: project_issue
 #: field:project.issue.report,reviewer_id:0
@@ -711,13 +700,13 @@ msgstr "阶段"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "阶段已改变"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "阶段已改变"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_form_view
@@ -773,7 +762,7 @@ msgstr "缺陷报表用于分析你的支持或售后服务的数量。报表自
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
-msgstr ""
+msgstr "未分配"
 
 #. module: project_issue
 #: field:project.issue,message_unread:0
@@ -791,8 +780,7 @@ msgid "User Email"
 msgstr "用户电子邮件"
 
 #. module: project_issue
-#: field:project.issue,version_id:0
-#: field:project.issue.report,version_id:0
+#: field:project.issue,version_id:0 field:project.issue.report,version_id:0
 msgid "Version"
 msgstr "版本"
 
@@ -834,9 +822,7 @@ msgstr ""
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr ""
-"不能升级此缺陷。\n"
-"所属项目没有配置相关项目。"
+msgstr "不能升级此缺陷。\n所属项目没有配置相关项目。"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:348
@@ -847,7 +833,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.project,issue_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "未知"
 
 #. module: project_issue
 #: view:project.project:project_issue.view_project_form_inherited
@@ -863,9 +849,3 @@ msgstr ""
 #: view:project.issue:project_issue.project_issue_form_view
 msgid "⇒ Escalate"
 msgstr ""
-
-#~ msgid "Responsible"
-#~ msgstr "负责人"
-
-#~ msgid "Creation Month"
-#~ msgstr "创建月份"
