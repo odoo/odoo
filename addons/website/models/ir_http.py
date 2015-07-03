@@ -59,7 +59,8 @@ class ir_http(orm.AbstractModel):
             return lang
 
         short = lang.split('_')[0]
-        for code, name in request.website.get_languages():
+        for lang_info in request.website.get_languages():
+            code = lang_info[0]
             if code.startswith(short):
                 return code
         return False
