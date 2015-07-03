@@ -41,7 +41,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:point_of_sale.view_pos_pos_form
 msgid "(update)"
-msgstr ""
+msgstr "(cập nhật)"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
@@ -51,7 +51,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Giao dịch"
 
 #. module: point_of_sale
 #. openerp-web
@@ -126,6 +126,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nhấp chuột để tạo sản phẩm mới.\n"
+"              </p><p>\n"
+"                Bạn phải định nghĩa một sản phẩm cho bất cứ thứ gì mà bạn bán\n"
+"                thông qua giao diện POS (Point Of Sale).\n"
+"              </p><p>\n"
+"                Do not forget to set the price and the point of sale category\n"
+"                in which it should appear. If a product has no point of sale\n"
+"                category, you can not sell it through the point of sale\n"
+"                interface.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -140,6 +152,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Nhấp chuột để tạo mới Phương thức thanh toán.\n"
+"              </p><p>\n"
+"                Các Phương thức thanh toán được định nghĩa bởi các sổ nhật ký kế toán có\n"
+"                trường <i>Phương thức thanh toán PoS</i> được đánh dấu chọn. In order to be useable\n"
+"                from the touchscreen interface, you must set the payment method\n"
+"                on the <i>Point of Sale</i> configuration.\n"
+"              </p>\n"
+"            "
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
@@ -886,21 +907,21 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "Tiếp tục Bán"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:829
 #, python-format
 msgid "Could Not Read Image"
-msgstr ""
+msgstr "Không đọc được ảnh"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/widgets.js:1239
 #, python-format
 msgid "Could not close the point of sale."
-msgstr ""
+msgstr "Không đóng được PoS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -917,7 +938,7 @@ msgstr "Quốc gia"
 #: field:pos.order,create_uid:0 field:pos.order.line,create_uid:0
 #: field:pos.session,create_uid:0 field:pos.session.opening,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Tạo bởi"
 
 #. module: point_of_sale
 #: field:pos.category,create_date:0 field:pos.config,create_date:0
@@ -927,7 +948,7 @@ msgstr ""
 #: field:pos.order,create_date:0 field:pos.session,create_date:0
 #: field:pos.session.opening,create_date:0
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Tạo vào"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -958,7 +979,7 @@ msgstr "Loại tiền tệ"
 #. module: point_of_sale
 #: field:pos.session,currency_id:0
 msgid "Currnecy"
-msgstr ""
+msgstr "Tiền tệ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -987,7 +1008,7 @@ msgstr "Hóa đơn khách hàng"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 msgid "Daily Operations"
-msgstr "Vận hành hàng ngày"
+msgstr "Các hoạt động hàng ngày"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,date_create:0
@@ -999,12 +1020,12 @@ msgstr "Ngày"
 #. module: point_of_sale
 #: field:pos.details,date_end:0
 msgid "Date End"
-msgstr ""
+msgstr "Ngày kết thúc"
 
 #. module: point_of_sale
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Ngày đặt hàng"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0
@@ -2543,17 +2564,17 @@ msgstr ""
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "Phương thức thanh toán PoS"
 
 #. module: point_of_sale
 #: field:pos.session.opening,pos_session_id:0
 msgid "PoS Session"
-msgstr ""
+msgstr "Phiên PoS"
 
 #. module: point_of_sale
 #: view:pos.session.opening:point_of_sale.pos_session_opening_form_view
 msgid "PoS Session Opening"
-msgstr ""
+msgstr "Phiên PoS Đang Mở"
 
 #. module: point_of_sale
 #: view:account.journal:point_of_sale.view_account_journal_pos_user_form
@@ -2572,22 +2593,22 @@ msgstr "Điểm bán hàng"
 #: view:report.pos.order:point_of_sale.view_report_pos_order_graph
 #: view:report.pos.order:point_of_sale.view_report_pos_order_search
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Phân tích Điểm bán Hàng"
 
 #. module: point_of_sale
 #: field:product.template,income_pdt:0
 msgid "Point of Sale Cash In"
-msgstr ""
+msgstr "Tiền mặt PoS vào"
 
 #. module: point_of_sale
 #: field:product.template,expense_pdt:0
 msgid "Point of Sale Cash Out"
-msgstr ""
+msgstr "Tiền mặt PoS ra"
 
 #. module: point_of_sale
 #: field:product.template,pos_categ_id:0
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Loại PoS"
 
 #. module: point_of_sale
 #: view:pos.config:point_of_sale.view_pos_config_search
@@ -3424,7 +3445,7 @@ msgstr "Tóm tắt"
 #. module: point_of_sale
 #: view:pos.session:point_of_sale.view_pos_session_form
 msgid "Summary by Payment Methods"
-msgstr ""
+msgstr "Tổng hợp theo Phương thức thanh toán"
 
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
