@@ -310,7 +310,8 @@ class test_m2o(CreatorCase):
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
         # Expecting the m2o target model name in the external id,
         # not this model's name
-        external_id = u'__export__.export_integer_%d' % integer_id
+        dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+        external_id = u'__export__.%s_export_integer_%d' % (dbuuid[:5], integer_id)
         self.assertEqual(
             self.export(integer_id, fields=['value/id']),
             [[external_id]])
