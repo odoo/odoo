@@ -5,7 +5,6 @@ try:
 except ImportError:
     import json
 import logging
-import pprint
 import werkzeug
 
 from openerp import http
@@ -36,7 +35,7 @@ class SipsController(http.Controller):
 
         sips = acquirer_obj.search([('provider', '=', 'sips')], limit=1)
 
-        security = acquirer_obj._sips_generate_shasign(sips, post)
+        security = sips._sips_generate_shasign(post)
         if security == post['Seal']:
             _logger.debug('Sips: validated data')
             res = tx_obj.sudo().form_feedback(post, 'sips')
