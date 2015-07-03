@@ -162,9 +162,9 @@ class sale_advance_payment_inv(osv.osv_memory):
             # open the list view of sales order lines to invoice
             res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
             res['context'] = {
-                'search_default_uninvoiced': 1,
-                'search_default_order_id': sale_ids and sale_ids[0] or False,
+                'search_default_uninvoiced': 1
             }
+            res['domain'] = [('order_id','=', sale_ids and sale_ids[0] or False)]
             return res
         assert wizard.advance_payment_method in ('fixed', 'percentage')
 
