@@ -1,4 +1,7 @@
-from openerp import api
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from openerp import api, SUPERUSER_ID
 from openerp.osv import fields, osv
 
 
@@ -14,6 +17,18 @@ class res_users(osv.Model):
     _columns = {
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
     }
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        result = super(res_users, self).write(cr, uid, ids, vals, context=context)
+        employee_obj = self.pool.get('hr.employee')
+        if vals.get('name'):
+            for user_id in ids:
+                if user_id == SUPERUSER_ID:
+                    employee_ids = employee_obj.search(cr, uid, [('user_id', '=', user_id)])
+                    employee_obj.write(cr, uid, employee_ids, {'name': vals['name']}, context=context)
+        return result
 
     def _message_post_get_eid(self, cr, uid, thread_id, context=None):
         assert thread_id, "res.users does not support posting global messages"

@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import models
+import hr_department
+import hr_employee
+import hr_job
+import res_config
+import res_users

@@ -13,7 +13,6 @@
         <menuitem id="menu_hr_reporting_timesheet" name="Reports" parent="menu_hr_root" sequence="99"/>
         <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root" sequence="100" groups="base.group_configuration,base.group_hr_manager"/>
 
-        <!-- Employee -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
@@ -310,102 +309,6 @@
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
             parent="menu_human_resources_configuration" sequence="1" groups="base.group_no_one"/>
 
-        <!-- hr.job -->
-        <record id="view_hr_job_form" model="ir.ui.view">
-            <field name="name">hr.job.form</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <form string="Job">
-                    <header>
-                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box"/>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <group name="employee_data">
-                            <group>
-                                <field name="department_id" class="oe_inline"/>
-                                <field name="no_of_recruitment" class="oe_inline"/>
-                            </group>
-                        </group>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="description"/>
-                            <field name="description"/>
-                        </div>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_hr_job_tree" model="ir.ui.view">
-            <field name="name">hr.job.tree</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <tree string="Job" decoration-bf="message_unread==True">
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="no_of_employee"/>
-                    <field name="no_of_recruitment"/>
-                    <field name="expected_employees"/>
-                    <field name="no_of_hired_employee"/>
-                    <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_job_filter" model="ir.ui.view">
-            <field name="name">Job</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <search string="Jobs">
-                    <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" string="In Position"/>
-                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
-                    <field name="department_id"/>
-                    <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_hr_job">
-            <field name="name">Job Positions</field>
-            <field name="res_model">hr.job</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_job_filter"/>
-            <field name="context">{"search_default_Current":1}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new job position.
-              </p><p>
-                Job Positions are used to define jobs and their requirements.
-                You can keep track of the number of employees you have per job
-                position and follow the evolution according to what you planned
-                for the future.
-              </p><p>
-                You can attach a survey to a job position. It will be used in
-                the recruitment process to evaluate the applicants for this job
-                position.
-              </p>
-            </field>
-        </record>
-
         <record model="ir.actions.act_window" id="act_employee_from_department">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
@@ -417,75 +320,6 @@
                 "default_department_id": active_id}
             </field>
         </record>
-
-        <!-- hr.department -->
-        <record id="view_department_form" model="ir.ui.view">
-            <field name="name">hr.department.form</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <form string="department">
-                    <sheet>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="manager_id"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-        <record id="view_department_tree" model="ir.ui.view">
-            <field name="name">hr.department.tree</field>
-            <field name="model">hr.department</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Companies">
-                    <field name="complete_name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="manager_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_department_filter" model="ir.ui.view">
-            <field name="name">Departments</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <search string="Departments">
-                    <field name="name" string="Department"/>
-                    <field name="manager_id" />
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
-                </search>
-             </field>
-        </record>
-        <record id="open_module_tree_department" model="ir.actions.act_window">
-            <field name="name">Departments</field>
-            <field name="res_model">hr.department</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="view_department_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a department.
-              </p><p>
-                Odoo's department structure is used to manage all documents
-                related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
-              </p>
-            </field>
-        </record>
-
-        <menuitem
-            action="open_module_tree_department"
-            id="menu_hr_department_tree"
-            parent="menu_hr_root"
-            sequence="1"
-            groups="base.group_hr_user"/>
 
     </data>
 </openerp>

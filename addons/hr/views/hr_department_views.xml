@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <form string="department">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="manager_id"/>
+                            <field name="parent_id"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">hr.department.tree</field>
+            <field name="model">hr.department</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="complete_name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="manager_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_department_filter" model="ir.ui.view">
+            <field name="name">Departments</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <search string="Departments">
+                    <field name="name" string="Department"/>
+                    <field name="manager_id" />
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                </search>
+             </field>
+        </record>
+        <record id="open_module_tree_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a department.
+              </p><p>
+                Odoo's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="hr.open_module_tree_department"
+            id="menu_hr_department_tree"
+            parent="hr.menu_hr_root"
+            sequence="1"
+            groups="base.group_hr_user"/>
+
+        <record model="ir.actions.act_window" id="view_department_form_installer">
+            <field name="name">Create Your Departments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr.view_department_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new department.
+              </p><p>
+                Your departments structure is used to manage all documents
+                related to employees by departments: expenses and timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</openerp>
