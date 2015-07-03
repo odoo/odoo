@@ -1193,9 +1193,6 @@ class stock_picking(models.Model):
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
-        #used to avoid recomputing the remaining quantities at each new pack operation created
-        ctx = context.copy()
-        ctx['no_recompute'] = True
 
         #get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
@@ -1219,7 +1216,7 @@ class stock_picking(models.Model):
                         forced_qties[move.product_id] = forced_qty
             for vals in self._prepare_pack_ops(cr, uid, picking, picking_quants, forced_qties, context=context):
                 vals['fresh_record'] = False
-                pack_operation_obj.create(cr, uid, vals, context=ctx)
+                pack_operation_obj.create(cr, uid, vals, context=context)
         #recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities(cr, uid, picking_ids, context=context)
         self.write(cr, uid, picking_ids, {'recompute_pack_op': False}, context=context)
@@ -4127,19 +4124,7 @@ class stock_pack_operation(osv.osv):
         vals['fresh_record'] = False
         context = context or {}
         res = super(stock_pack_operation, self).write(cr, uid, ids, vals, context=context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if not context.get("no_recompute"):
-            pickings = vals.get('picking_id') and [vals['picking_id']] or list(set([x.picking_id.id for x in self.browse(cr, uid, ids, context=context)]))
-            self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, pickings, context=context)
         return res
-
-    def create(self, cr, uid, vals, context=None):
-        context = context or {}
-        res_id = super(stock_pack_operation, self).create(cr, uid, vals, context=context)
-        if vals.get("picking_id") and not context.get("no_recompute"):
-            self.pool.get("stock.picking").do_recompute_remaining_quantities(cr, uid, [vals['picking_id']], context=context)
-        return res_id
 
     def unlink(self, cr, uid, ids, context=None):
         if any([x.state in ('done', 'cancel') for x in self.browse(cr, uid, ids, context=context)]):

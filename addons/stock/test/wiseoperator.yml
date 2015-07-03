@@ -64,7 +64,6 @@
   !python {model: stock.picking}: |
     self.action_confirm(cr, uid, [ref('delivery_order_wise1')], context=context)
     self.action_assign(cr, uid, [ref('delivery_order_wise1')])
-    self.do_prepare_partial(cr, uid, [ref('delivery_order_wise1')])
 - 
   Make a delivery order of 5 pieces to the customer
 - 
@@ -83,9 +82,8 @@
   !python {model: stock.picking}: |
     self.action_confirm(cr, uid, [ref('delivery_order_wise2')], context=context)
     self.action_assign(cr, uid, [ref('delivery_order_wise2')])
-    self.do_prepare_partial(cr, uid, [ref('delivery_order_wise2')])
 - 
-  The operator is a wise guy and decides to do the opposite as OpenERP proposes.  He uses the products reserved on picking 1 on picking 2 and vice versa 
+  The operator is a wise guy and decides to do the opposite of what Odoo proposes.  He uses the products reserved on picking 1 on picking 2 and vice versa
 - 
   !python {model: stock.picking}: |
     stock_pack = self.pool.get('stock.pack.operation')
@@ -95,13 +93,17 @@
     pack_ids2 = [x.id for x in picking2.pack_operation_ids]
     stock_pack.write(cr, uid, pack_ids1, {'picking_id': picking2.id})
     stock_pack.write(cr, uid, pack_ids2, {'picking_id': picking1.id})
+    link_obj = self.pool['stock.move.operation.link']
+    # The recompute remaining qtys does not take into account that pack operations change picking
+    links = link_obj.search(cr, uid, [('operation_id', 'in', pack_ids1 + pack_ids2)])
+    link_obj.unlink(cr, uid, links)
 - 
   Process this picking
 - 
   !python {model: stock.picking}: |
     self.do_transfer(cr, uid, [ref('delivery_order_wise1')], context=context)
 - 
-  Check a negative quant was created by this picking 
+  Check there was no negative quant created by this picking
 - 
   !python {model: stock.quant}: |
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product_wise')), ('qty', '<', 0.0)], context=context)
