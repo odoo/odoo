@@ -1068,10 +1068,10 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-        context = {'lang': lang, 'partner_id': partner_id}
         partner = partner_obj.browse(cr, uid, partner_id)
         lang = partner.lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+        context_partner = context.copy()
+        context_partner.update({'lang': lang, 'partner_id': partner_id})
 
         if not product:
             return {'value': {'th_weight': 0,
