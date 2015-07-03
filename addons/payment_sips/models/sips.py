@@ -11,6 +11,7 @@ import unicodedata
 
 from openerp.tools.float_utils import float_compare
 from openerp import models, fields, api
+from openerp.exceptions import ValidationError
 from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.addons.payment_sips.controllers.main import SipsController
 
@@ -65,35 +66,34 @@ class AcquirerSips(models.Model):
         providers.append(['sips', 'Sips'])
         return providers
 
-    def _sips_generate_shasign(self, acquirer, values):
+    def _sips_generate_shasign(self, values):
         """ Generate the shasign for incoming or outgoing communications.
-
-        :param browse acquirer: the payment.acquirer browse record. It should
-                                have a shakey in shaky out
         :param dict values: transaction values
-
         :return string: shasign
         """
-        assert acquirer.provider == 'sips'
+        if self.provider != 'sips':
+            raise ValidationError(_('Incorrect payment acquirer provider'))
         data = values['Data']
 
+        # Test key provided by Worldine
         key = u'002001000000001_KEY1'
-        if acquirer.environment == 'prod':
-            key = getattr(acquirer, 'sips_secret')
+
+        if self.environment == 'prod':
+            key = getattr(self, 'sips_secret')
 
         shasign = sha256(data + key)
         return shasign.hexdigest()
 
-    @api.model
+    @api.multi
     def sips_form_generate_values(self, partner_values, tx_values):
+        self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        acquirer = self.browse(id)
         #TODO: add currency code to currency object
         currency_code = '978'
         amount = int(tx_values.get('amount') * 100)
-        if acquirer.environment == 'prod':
+        if self.environment == 'prod':
             # For production environment, key version 2 is required
-            merchant_id = getattr(acquirer, 'sips_merchant_id')
+            merchant_id = getattr(self, 'sips_merchant_id')
             key_version = '2'
         else:
             # Test key provided by Atos Wordline works only with version 1
@@ -107,6 +107,7 @@ class AcquirerSips(models.Model):
                     u'merchantId=%s|' % merchant_id +
                     u'normalReturnUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
                     u'transactionReference=%s|' % tx_values['reference'] +
+                    u'statementReference=%s|' % tx_values['reference'] +
                     u'keyVersion=%s' % key_version,
             'InterfaceVersion': 'HP_2.3',
         })
@@ -117,11 +118,13 @@ class AcquirerSips(models.Model):
         return_context[u'reference'] = u'%s' % sips_tx_values['reference']
         sips_tx_values['Data'] += u'|returnContext=%s' % (json.dumps(return_context))
 
-        shasign = self._sips_generate_shasign(acquirer, sips_tx_values)
+        shasign = self._sips_generate_shasign(sips_tx_values)
         sips_tx_values['Seal'] = shasign
         return partner_values, sips_tx_values
 
+    @api.multi
     def sips_get_form_action_url(self):
+        self.ensure_one()
         return self._get_sips_urls(self.environment)['sips_form_url']
 
 
@@ -158,17 +161,17 @@ class TxSips(models.Model):
             custom = json.loads(data.pop('returnContext', False) or '{}')
             reference = custom.get('reference')
 
-        tx_ids = self.env['payment.transaction'].search([
-            ('reference', '=', reference), ])
-        if not tx_ids or len(tx_ids) > 1:
+        payment_tx = self.env['payment.transaction'].search([
+            ('reference', '=', reference)])
+        if not payment_tx or len(payment_tx) > 1:
             error_msg = 'Sips: received data for reference %s' % reference
-            if not tx_ids:
+            if not payment_tx:
                 error_msg += '; no order found'
             else:
                 error_msg += '; multiple order found'
             _logger.error(error_msg)
             raise ValidationError(error_msg)
-        return self.browse(tx_ids[0])
+        return payment_tx
 
     @api.model
     def _sips_form_get_invalid_parameters(self, tx, data):
