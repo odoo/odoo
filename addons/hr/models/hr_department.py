@@ -1,89 +1,74 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
+from openerp.exceptions import ValidationError
 
 
-class hr_department(osv.osv):
+class HrDepartment(models.Model):
     _name = "hr.department"
     _description = "HR Department"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
+    name = fields.Char(string='Department Name', required=True)
+    complete_name = fields.Char(compute='_compute_complete_name', string='Name')
+    company_id = fields.Many2one('res.company', string='Company', index=True, required=False,
+         default=lambda self: self.env['res.company']._company_default_get('hr.department'))
+    parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
+    child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
+    manager_id = fields.Many2one('hr.employee', string='Manager', track_visibility='onchange')
+    member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
+    jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
+    note = fields.Text()
+    color = fields.Integer(string='Color Index')
 
-    _columns = {
-        'name': fields.char('Department Name', required=True),
-        'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
-        'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
-        'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
-        'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
-        'manager_id': fields.many2one('hr.employee', 'Manager', track_visibility='onchange'),
-        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
-        'jobs_ids': fields.one2many('hr.job', 'department_id', 'Jobs'),
-        'note': fields.text('Note'),
-        'color': fields.integer('Color Index'),
-    }
+    @api.multi
+    def name_get(self):
+        result = []
+        for department in self:
+            name = department.name
+            if department.parent_id:
+                name = department.parent_id.name + ' / ' + name
+            result.append((department.id, name))
+        return result
 
-    _defaults = {
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
-    }
+    @api.one
+    def _compute_complete_name(self):
+        self.complete_name = self.name_get()[0][1]
 
-    _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive departments.'), ['parent_id'])
-    ]
+    @api.one
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error! You cannot create recursive departments.'))
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if context is None:
-            context = {}
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         # TDE note: auto-subscription of manager done by hand, because currently
         # the tracking allows to track+subscribe fields linked to a res.user record
         # An update of the limited behavior should come, but not currently done.
-        manager_id = vals.get("manager_id")
-        new_id = super(hr_department, self).create(cr, uid, vals, context=context)
-        if manager_id:
-            employee = self.pool.get('hr.employee').browse(cr, uid, manager_id, context=context)
+        department = super(HrDepartment, self).create(vals)
+        employee = self.env['hr.employee'].browse(vals.get("manager_id"))
+        if employee.user_id:
+            department.message_subscribe_users([employee.user_id.id])
+        return department
+
+    @api.multi
+    def write(self, vals):
+        # TDE note: auto-subscription of manager done by hand, because currently
+        # the tracking allows to track+subscribe fields linked to a res.user record
+        # An update of the limited behavior should come, but not currently done.
+        if vals.get('manager_id'):
+            Employee = employees = self.env['hr.employee']
+            manager_id = vals['manager_id']
+            employee = Employee.browse(manager_id)
             if employee.user_id:
-                self.message_subscribe_users(cr, uid, [new_id], user_ids=[employee.user_id.id], context=context)
-        return new_id
-
-    def write(self, cr, uid, ids, vals, context=None):
-        # TDE note: auto-subscription of manager done by hand, because currently
-        # the tracking allows to track+subscribe fields linked to a res.user record
-        # An update of the limited behavior should come, but not currently done.
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        employee_ids = []
-        if 'manager_id' in vals:
-            manager_id = vals.get("manager_id")
-            if manager_id:
-                employee = self.pool['hr.employee'].browse(cr, uid, manager_id, context=context)
-                if employee.user_id:
-                    self.message_subscribe_users(cr, uid, ids, user_ids=[employee.user_id.id], context=context)
-            for department in self.browse(cr, uid, ids, context=context):
-                employee_ids += self.pool['hr.employee'].search(
-                    cr, uid, [
+                self.message_subscribe_users(user_ids=[employee.user_id.id])
+            for department in self:
+                employees |= Employee.search(
+                    [
                         ('id', '!=', manager_id),
                         ('department_id', '=', department.id),
                         ('parent_id', '=', department.manager_id.id)
-                    ], context=context)
-            self.pool['hr.employee'].write(cr, uid, employee_ids, {'parent_id': manager_id}, context=context)
-        return super(hr_department, self).write(cr, uid, ids, vals, context=context)
+                    ])
+            employees.write({'parent_id': manager_id})
+        return super(HrDepartment, self).write(vals)

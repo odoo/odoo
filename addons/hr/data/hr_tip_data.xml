@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <record model="web.tip" id="hr_tip_1">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="hr_tip_1" model="web.tip">
             <field name="title"></field>
             <field name="description">Get all applications related to this job position.</field>
             <field name="action_id" ref="hr.action_hr_job"/>
@@ -12,7 +11,7 @@
             <field name="placement">bottom</field>
         </record>
 
-        <record model="web.tip" id="hr_tip_2">
+        <record id="hr_tip_2" model="web.tip">
             <field name="title"></field>
             <field name="description">Use the breadcrumb to easily go back to preceeding screens.</field>
             <field name="model">hr.applicant</field>
@@ -22,5 +21,4 @@
             <field name="placement">bottom</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

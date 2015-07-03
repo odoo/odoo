@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <record id="view_department_form" model="ir.ui.view">
             <field name="name">hr.department.form</field>
@@ -36,7 +35,7 @@
         </record>
 
         <record id="view_department_filter" model="ir.ui.view">
-            <field name="name">Departments</field>
+            <field name="name">hr.department.search</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
                 <search string="Departments">
@@ -88,5 +87,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
