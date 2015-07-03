@@ -55,18 +55,11 @@
                                 </div>
                                  <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
                                     <p>
-                                        <label string="Your alias domain is not configured yet, or is still 'localhost'"/>
+                                        <label string="To be able to set your Leads Email Alias, you need to fill your alias domain first."/>
                                         <button type="action" name="base_setup.action_general_configuration" string="Configure your domain alias" icon="gtk-execute" class="oe_inline oe_link"/>
                                     </p>
                                 </div>
                             </div>
-                        <div attrs="{'invisible': [('alias_domain', '!=', False)]}">
-                            <p>
-                                To be able to set your Leads Email Alias, you need to fill your alias domain first.
-                            </p>
-                            <button type="action" name="%(base_setup.action_general_configuration)d"
-                                string="Configure alias domain" class="oe_link" />
-                        </div>
                         </group>
                     </div>
 	            </div>
