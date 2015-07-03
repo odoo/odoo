@@ -120,7 +120,6 @@
          assert move.product_uos_qty == (order_line.product_uos and order_line.product_uos_qty or order_line.product_uom_qty), "Product UOS Quantity is not correspond."
          assert move.product_uos.id == (order_line.product_uos and order_line.product_uos.id or order_line.product_uom.id), "Product UOS is not correspond"
          assert move.product_packaging.id == order_line.product_packaging.id,"Product packaging is not correspond."
-         assert move.partner_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
          #assert move.location_id.id == location_id,"Source Location is not correspond."
 -
   Now, I dispatch delivery order.
