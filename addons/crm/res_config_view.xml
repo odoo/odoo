@@ -68,7 +68,10 @@
         </record>
 
         <menuitem id="base.menu_sale_config" name="Configuration" parent="base.menu_base_partner"
-            sequence="100" action="base_setup.action_sale_config" groups="base.group_configuration"/>
+            sequence="100" groups="base.group_configuration"/>
+        <menuitem id="base.menu_sale_general_settings" name="Settings" parent="base.menu_sale_config"
+            sequence="0" action="base_setup.action_sale_config"/>
+
 
     </data>
 </openerp>
