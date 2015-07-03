@@ -1172,7 +1172,6 @@ class product_packaging(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', string='Product'),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
-        'barcode' : fields.char('Barcode', help="The Barcode of the package unit."),
     }
     _defaults = {
         'sequence' : 1,
