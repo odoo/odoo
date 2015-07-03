@@ -484,7 +484,7 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
      */
     unlink: function(ids) {
         var self = this;
-        return this._model.call('unlink', [ids], {
+        return this._model.call('unlink_if_no_xml_id', [ids], {
             context: this.get_context()
         }).done(function () {
             self.trigger('dataset_changed', ids);

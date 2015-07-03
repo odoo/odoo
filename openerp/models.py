@@ -3558,6 +3558,26 @@ class BaseModel(object):
         self.invalidate_cache(cr, uid, context=context)
         return True
 
+    def unlink_if_no_xml_id(self, cr, uid, ids, context=None):
+        """ Deletes the record if there is no ir.model.data referencing it.
+
+        :raise UserError: if the record to be unlinked is referenced by ir.model.data
+        """
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        # do not allow deletion of objects with xml ids
+        imd = self.pool.get('ir.model.data')
+        imd_ids = imd.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+
+        for imd_id in imd.browse(cr, uid, imd_ids, context=context):
+            if imd_id.module != '__export__':
+                raise UserError(_("Cannot delete object. It is an integral part of the %s module." % self._module))
+
+        return self.unlink(cr, uid, ids, context)
+
     def unlink(self, cr, uid, ids, context=None):
         """ unlink()
 
