@@ -178,7 +178,7 @@ $(document).ready(function () {
       ev.preventDefault();
       ev.stopPropagation();
       var $form = $(ev.currentTarget).parents('form');
-      var acquirer_id = $(ev.currentTarget).parents('div.oe_quote_acquirer_button').first().data('id');
+      var acquirer_id = $(ev.currentTarget).parents('.oe_quote_acquirer_button').first().data('id');
       if (! acquirer_id) {
         return false;
       }
