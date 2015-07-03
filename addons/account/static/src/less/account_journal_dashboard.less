@@ -1,7 +1,10 @@
 .o_kanban_view.o_kanban_dashboard.o_account_kanban {
     .o_kanban_record {
-        min-width: 500px;
-        max-width: 650px;
+        min-width: 400px;
+
+        @media (max-width: @grid-float-breakpoint) {
+            min-width: inherit;
+        }
 
         .o_kanban_card_settings {
             padding: 8px;
@@ -91,6 +94,12 @@
                     }
                 }
             }
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_kanban_record {
+            min-width: inherit;
         }
     }
 }

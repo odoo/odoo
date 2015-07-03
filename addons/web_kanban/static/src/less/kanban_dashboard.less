@@ -12,50 +12,49 @@
         }
     }
 
-    &.o_kanban_dashboard.o_kanban_ungrouped {
+    .o_visible {
+        width: 100%;
 
-        .o_visible {
-            width: 100%;
-
-            /* This is a hack ; without this, a scrollbar appears
-             * to scroll horizontally because of inline-block and width: 100%,
-             * but they are both necessary.
-            */
-            overflow: hidden;
-        }
-
-        /* This is a hack but this is the least ugly way to do it:
-         * We want two blocks (a visible one and an invisible one)
-         * to be overlap but both height should be equal to the
-         * height of the biggest block. Solution : put 0 width for
-         * the invisible on. The 0 padding and margin is mandatory for
-         * the elements to use the same space in both state (visible
-         * and invisible).
+        /* This is a hack ; without this, a scrollbar appears
+         * to scroll horizontally because of inline-block and width: 100%,
+         * but they are both necessary.
         */
-        .o_invisible {
-            width: 0;
-            visibility: hidden;
+        overflow: hidden;
+    }
+
+    /* This is a hack but this is the least ugly way to do it:
+     * We want two blocks (a visible one and an invisible one)
+     * to be overlap but both height should be equal to the
+     * height of the biggest block. Solution : put 0 width for
+     * the invisible on. The 0 padding and margin is mandatory for
+     * the elements to use the same space in both state (visible
+     * and invisible).
+    */
+    .o_invisible {
+        width: 0;
+        visibility: hidden;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        overflow: hidden;
+
+        * {
             padding-left: 0px !important;
             padding-right: 0px !important;
             margin-left: 0px !important;
             margin-right: 0px !important;
-            overflow: hidden;
-            
-            * {
-                padding-left: 0px !important;
-                padding-right: 0px !important;
-                margin-left: 0px !important;
-                margin-right: 0px !important;
-            }
+        }
 
+        .oe_kanban_colorpicker {
 
-            .oe_kanban_colorpicker {
-
-                li {
-                    height: 0px;
-                }
+            li {
+                height: 0px;
             }
         }
+    }
+
+    &.o_kanban_dashboard.o_kanban_ungrouped, &.o_kanban_dashboard.o_kanban_grouped {
 
         // If invisible, elem will no take more than its original height
         a, span {
