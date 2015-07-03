@@ -22,7 +22,7 @@ from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
-import imp
+import importlib
 import logging
 from operator import attrgetter
 import os
@@ -353,15 +353,10 @@ class module(osv.osv):
         if not depends:
             return
         for pydep in depends.get('python', []):
-            parts = pydep.split('.')
-            parts.reverse()
-            path = None
-            while parts:
-                part = parts.pop()
-                try:
-                    _, path, _ = imp.find_module(part, path and [path] or None)
-                except ImportError:
-                    raise ImportError('No module named %s' % (pydep,))
+            try:
+                importlib.import_module(pydep)
+            except ImportError:
+                raise ImportError('No module named %s' % (pydep,))
 
         for binary in depends.get('bin', []):
             if tools.find_in_path(binary) is None:
