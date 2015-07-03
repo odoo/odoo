@@ -177,30 +177,6 @@ class product_uom(osv.osv):
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if 'category_id' in vals:
-            for uom in self.browse(cr, uid, ids, context=context):
-                if uom.category_id.id != vals['category_id']:
-                    raise UserError(_("Cannot change the category of existing Unit of Measure '%s'.") % (uom.name,))
-        return super(product_uom, self).write(cr, uid, ids, vals, context=context)
-
-
-
-class product_ul(osv.osv):
-    _name = "product.ul"
-    _description = "Logistic Unit"
-    _columns = {
-        'name' : fields.char('Name', select=True, required=True, translate=True),
-        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
-        'height': fields.float('Height', help='The height of the package'),
-        'width': fields.float('Width', help='The width of the package'),
-        'length': fields.float('Length', help='The length of the package'),
-        'weight': fields.float('Empty Package Weight'),
-    }
-
-
 #----------------------------------------------------------
 # Categories
 #----------------------------------------------------------
@@ -1189,54 +1165,18 @@ class product_product(osv.osv):
 class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
-    _rec_name = 'barcode'
     _order = 'sequence'
     _columns = {
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
-        'name' : fields.text('Description'),
+        'name' : fields.char('Packaging Type', required=True),
+        'sequence': fields.integer('Sequence', help="The first in the sequence is the default one."),
+        'product_tmpl_id': fields.many2one('product.template', string='Product'),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
-        'ul' : fields.many2one('product.ul', 'Package Logistic Unit', required=True),
-        'ul_qty' : fields.integer('Package by layer', help='The number of packages by layer'),
-        'ul_container': fields.many2one('product.ul', 'Pallet Logistic Unit'),
-        'rows' : fields.integer('Number of Layers', required=True,
-            help='The number of layers on a pallet or box'),
-        'product_tmpl_id' : fields.many2one('product.template', 'Product', select=1, ondelete='cascade', required=True),
-        'barcode' : fields.char('Barcode', help="The Barcode of the package unit.", oldname="ean"),
-        'code' : fields.char('Code', help="The code of the transport unit."),
-        'weight': fields.float('Total Package Weight',
-            help='The weight of a full package, pallet or box.'),
+        'barcode' : fields.char('Barcode', help="The Barcode of the package unit."),
     }
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        res = []
-        for pckg in self.browse(cr, uid, ids, context=context):
-            p_name = pckg.barcode and '[' + pckg.barcode + '] ' or ''
-            p_name += pckg.ul.name
-            res.append((pckg.id,p_name))
-        return res
-
-    def _get_1st_ul(self, cr, uid, context=None):
-        cr.execute('select id from product_ul order by id asc limit 1')
-        res = cr.fetchone()
-        return (res and res[0]) or False
-
     _defaults = {
-        'rows' : 3,
         'sequence' : 1,
-        'ul' : _get_1st_ul,
     }
-
-    def checksum(ean):
-        salt = '31' * 6 + '3'
-        sum = 0
-        for ean_part, salt_part in zip(ean, salt):
-            sum += int(ean_part) * int(salt_part)
-        return (10 - (sum % 10)) % 10
-    checksum = staticmethod(checksum)
-
 
 
 class product_supplierinfo(osv.osv):

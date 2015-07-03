@@ -114,7 +114,7 @@
                                     </group>
                                 </group>
                                 <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">
-                                    <field name="packaging_ids" string="Configurations" context="{'tree_view_ref':'product.product_packaging_tree_view_product', 'form_view_ref': 'product.product_packaging_form_view_without_product'}"/>
+                                    <field name="packaging_ids" nolabel="1"/>
                                 </group>
                             </page>
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
@@ -684,55 +684,6 @@
         </record>
         <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.prod_config_main" sequence="7" groups="base.group_no_one"/>
 
-        <record id="product_ul_form_view" model="ir.ui.view">
-            <field name="name">product.ul.form.view</field>
-            <field name="model">product.ul</field>
-            <field name="arch" type="xml">
-                <form string="Logistic Units">
-                    <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="type"/>
-                    </group>
-                    <group>
-                        <field name="height"/>
-                        <field name="width"/>
-                        <field name="length"/>
-                        <field name="weight"/>
-                    </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="product_ul_tree" model="ir.ui.view">
-            <field name="name">product.ul.tree</field>
-            <field name="model">product.ul</field>
-            <field name="arch" type="xml">
-                <tree string="Logistic Units">
-                    <field name="name"/>
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record>
-        <record id="product_ul_form_action" model="ir.actions.act_window">
-            <field name="name">Logistic Units</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">product.ul</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new Logistic Unit
-              </p><p>
-                The logistic unit defines the container used for the package.  
-                It has a type (e.g. pallet, box, ...) and you can specify its 
-                size. 
-              </p>
-            </field>
-        </record>
-        <menuitem
-            action="product_ul_form_action" groups="product.group_stock_packaging" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
-
         <record model="ir.actions.act_window" id="action_packaging_view">
             <field name="name">Packagings</field>
             <field name="res_model">product.packaging</field>
@@ -745,25 +696,8 @@
                 <tree string="Packaging">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="product_tmpl_id"/>
+                    <field name="qty"/>
                     <field name="barcode"/>
-                    <field name="qty"/>
-                    <field name="ul"/>
-                    <field name="ul_container"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="product_packaging_tree_view_product" model="ir.ui.view">
-            <field name="name">product.packaging.tree.view.product</field>
-            <field name="model">product.packaging</field>
-            <field name="arch" type="xml">
-                <tree string="Packaging">
-                    <field name="qty"/>
-                    <field name="ul"/>
-                    <field name="ul_qty"/>
-                    <field name="rows"/>
-                    <field name="ul_container"/>
                 </tree>
             </field>
         </record>
@@ -774,46 +708,19 @@
             <field name="arch" type="xml">
                 <form string="Packaging">
                     <sheet>
-                        <group col="4">
-                            <field name="product_tmpl_id"/>
-                            <newline/>
-                            <field name="barcode"/>
-                            <field name="sequence" invisible="1"/>
-                            <newline/>
-                            <field name="qty"/>
-                            <field name="ul"/>
-                            <separator colspan="4" string="Palletization"/>
-                            <field name="ul_qty"/>
-                            <field name="rows"/>
-                            <field name="ul_container"/>
-                            <field name="weight"/>
-                            <separator colspan="4" string="Other Info"/>
-                            <field colspan="4" name="name"/>
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="qty"/>
+                            </group>
+                            <group>
+                                <field name="barcode"/>
+                            </group>
                         </group>
                     </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record id="product_packaging_form_view_without_product" model="ir.ui.view">
-            <field name="name">product.packaging.form.view.without.product</field>
-            <field name="model">product.packaging</field>
-            <field name="arch" type="xml">
-                <form string="Packaging">
-                    <group col="4">
-                        <field name="barcode"/>
-                        <field name="sequence" invisible="1"/>
-                        <newline/>
-                        <field name="qty"/>
-                        <field name="ul"/>
-                        <separator colspan="4" string="Palletization"/>
-                        <field name="ul_qty"/>
-                        <field name="rows"/>
-                        <field name="ul_container"/>
-                        <field name="weight"/>
-                        <separator colspan="4" string="Other Info"/>
-                        <field colspan="4" name="name"/>
-                    </group>
                 </form>
             </field>
         </record>
