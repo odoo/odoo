@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Turkey - Accounting',
-    'version': '1.beta',
+    'version': '1.0',
     'category': 'Localization/Account Charts',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.
@@ -20,12 +20,10 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         'base_vat',
     ],
     'data': [
-        'account_code_template.xml',
         'account_tdhp_turkey.xml',
-        'account_chart_template.xml',
         'account_tax_template.xml',
-        'l10n_tr_wizard.xml',
+        'account_chart_template.yml',
     ],
     'demo': [],
-    'installable': False,
+    'installable': True,
 }
