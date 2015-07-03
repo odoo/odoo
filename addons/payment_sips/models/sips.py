@@ -33,6 +33,24 @@ UNORMALIZE_CHARS = {
     u"~": u"", u"–": u"-", u"’": u"'", u">": u" ", u"<": u" "
 }
 
+CURRENCY_CODES = {
+    'EUR': '978',
+    'USD': '840',
+    'CHF': '756',
+    'GBP': '826',
+    'CAD': '124',
+    'JPY': '392',
+    'MXN': '484',
+    'TRY': '949',
+    'AUD': '036',
+    'NZD': '554',
+    'NOK': '578',
+    'BRL': '986',
+    'ARS': '032',
+    'KHR': '116',
+    'TWD': '901',
+}
+
 
 def unormalize(text):
     if not text:
@@ -88,8 +106,10 @@ class AcquirerSips(models.Model):
     def sips_form_generate_values(self, partner_values, tx_values):
         self.ensure_one()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        #TODO: add currency code to currency object
-        currency_code = '978'
+        currency = self.env['res.currency'].sudo().browse(tx_values['currency_id'])
+        currency_code = CURRENCY_CODES.get(currency.name, False)
+        if not currency_code:
+            raise ValidationError(_('Currency not supported by Wordline'))
         amount = int(tx_values.get('amount') * 100)
         if self.environment == 'prod':
             # For production environment, key version 2 is required
@@ -106,6 +126,7 @@ class AcquirerSips(models.Model):
                     u'currencyCode=%s|' % currency_code +
                     u'merchantId=%s|' % merchant_id +
                     u'normalReturnUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
+                    u'automaticResponseUrl=%s|' % urlparse.urljoin(base_url, SipsController._return_url) +
                     u'transactionReference=%s|' % tx_values['reference'] +
                     u'statementReference=%s|' % tx_values['reference'] +
                     u'keyVersion=%s' % key_version,
@@ -195,45 +216,44 @@ class TxSips(models.Model):
         status = data.get('responseCode')
         data = {
             'acquirer_reference': data.get('transactionReference'),
-            'partner_reference': data.get('customerId')
+            'partner_reference': data.get('customerId'),
+            'date_validate': data.get('transactionDateTime',
+                                      fields.datetime.now())
         }
+        res = False
         if status in self._sips_valid_tx_status:
             msg = 'Payment for tx ref: %s, got response [%s], set as done.' % \
                   (tx.reference, status)
             _logger.info(msg)
             data.update(state='done', state_message=msg)
+            res = True
         elif status in self._sips_error_tx_status:
-            error = 'Payment for tx ref: %s, got response [%s], set as ' \
-                    'error.' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='error', state_message=error)
+            msg = 'Payment for tx ref: %s, got response [%s], set as ' \
+                  'error.' % (tx.reference, status)
+            data.update(state='error', state_message=msg)
         elif status in self._sips_wait_tx_status:
-            error = 'Received wait status for payment ref: %s, got response ' \
-                    '[%s], set as error.' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='error', state_message=error)
+            msg = 'Received wait status for payment ref: %s, got response ' \
+                  '[%s], set as error.' % (tx.reference, status)
+            data.update(state='error', state_message=msg)
         elif status in self._sips_refused_tx_status:
-            error = 'Received refused status for payment ref: %s, got response' \
-                    ' [%s], set as error.' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='error', state_message=error)
+            msg = 'Received refused status for payment ref: %s, got response' \
+                  ' [%s], set as error.' % (tx.reference, status)
+            data.update(state='error', state_message=msg)
         elif status in self._sips_pending_tx_status:
-            _logger.info('Payment ref: %s, got response [%s] set as pending.'
-                         % (tx.reference, status))
-            data.update(state='pending')
+            msg = 'Payment ref: %s, got response [%s] set as pending.' \
+                  % (tx.reference, status)
+            data.update(state='pending', state_message=msg)
         elif status in self._sips_cancel_tx_status:
-            error = 'Received notification for payment ref: %s, got response ' \
-                    '[%s], set as cancel.' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='cancel', state_message=error)
+            msg = 'Received notification for payment ref: %s, got response ' \
+                  '[%s], set as cancel.' % (tx.reference, status)
+            data.update(state='cancel', state_message=msg)
         else:
-            error = 'Received unrecognized status for payment ref: %s, got ' \
-                    'response [%s], set as error.' % (tx.reference, status)
-            _logger.info(error)
-            data.update(state='error', state_message=error)
-        data.update(date_validate=data.get('transactionDateTime',
-                                           fields.datetime.now()))
+            msg = 'Received unrecognized status for payment ref: %s, got ' \
+                  'response [%s], set as error.' % (tx.reference, status)
+            data.update(state='error', state_message=msg)
+
+        _logger.info(msg)
         tx.write(data)
-        return tx.id
+        return res
 
 
