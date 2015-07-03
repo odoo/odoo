@@ -7,7 +7,6 @@ from lxml import etree, objectify
 from openerp.tools.translate import _
 from pprint import pformat
 import time
-from datetime import datetime
 from urllib import urlencode
 import urllib2
 import urlparse
@@ -290,7 +289,7 @@ class PaymentTxOgone(osv.Model):
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
-                'date_validate': datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             })
             return True
