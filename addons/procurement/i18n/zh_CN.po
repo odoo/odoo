@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-29 03:09+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2015-07-04 06:58+0000\n"
+"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgid ""
 "                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class='oe_view_nocontent_create'>\n点击这里新建一个补货单\n</p>\n<p>\n<b>补货单</b>表示在特定时间和特定库位所需产品的确切数量。销售订单是补货单的典型来源（还包括其它不同的单据）。\n<br/>\n依据补货参数和产品配置，补货引擎将通过库存产品保留定，从供应商订购产品、生产单等单据来满足补货需要。\n</p>\n例如：当系统不能找到一个满足补货的方法时将产生补货意外。有些<b>补货异常</b>将被他们自行解决，但是有些要人工干预（通过识别不同的错误信息）才能解决。\n</p>"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -56,7 +57,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建需求订单 . \n</p><p>\n需求订单用来记录指定库位的指定产品的需要。需求订单通常是从 根据销售订单、拉式物流规则或者最小库存规则自动生成的。\n</p><p>\n当需求订单被确认时，他自动建立必须的业务操作来满足需要：采购单  ，生产单等等。\n</p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
