@@ -49,6 +49,7 @@ import pytz
 import re
 import time
 from collections import defaultdict, MutableMapping
+from hashlib import sha256
 from inspect import getmembers, currentframe
 
 import babel.dates
@@ -843,8 +844,8 @@ class BaseModel(object):
                 return data[0].name
         else:
             postfix = 0
-            dbuuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
-            name = '%s_%s_%s' % (dbuuid[:5], self._table, self.id)
+            dbuuid_hash = sha256(self.env['ir.config_parameter'].sudo().get_param('database.uuid')).hexdigest()
+            name = '%s_%s_%s' % (dbuuid_hash[:5], self._table, self.id)
             while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
                 postfix += 1
                 name = '%s_%s_%s' % (self._table, self.id, postfix)
