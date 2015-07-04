@@ -1,15 +1,14 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <!-- Merge Opportunities  -->
-        <record model="ir.ui.view" id="merge_opportunity_form">
+        <record id="merge_opportunity_form" model="ir.ui.view">
             <field name="name">crm.merge.opportunity.form</field>
             <field name="model">crm.merge.opportunity</field>
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
                     <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, team_id, context)"/>
+                        <field name="user_id" class="oe_inline"/>
                         <field name="team_id" class="oe_inline" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Select Leads/Opportunities">
@@ -17,7 +16,7 @@
                             <tree>
                                 <field name="create_date"/>
                                 <field name="name"/>
-                                <field name="type"/>
+                                <field name="lead_type"/>
                                 <field name="contact_name"/>
                                 <field name="email_from"/>
                                 <field name="phone"/>
@@ -37,7 +36,7 @@
         </record>
 
         <!--  Merge leads/opportunities action -->
-        <record model="ir.actions.act_window" id="merge_opportunity_act">
+        <record id="merge_opportunity_act" model="ir.actions.act_window">
             <field name="name">Merge leads/opportunities</field>
             <field name="res_model">crm.merge.opportunity</field>
             <field name="view_type">form</field>
@@ -54,5 +53,4 @@
             groups="base.group_sale_salesman"
             />
 
-    </data>
-</openerp>
+</odoo>

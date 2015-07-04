@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Leads by user and team Graph View -->
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
@@ -77,8 +76,8 @@
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <filter name="lead" string="Lead" domain="[('lead_type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
@@ -129,21 +128,20 @@
            <field name="domain">[]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
-       <record model="ir.actions.act_window.view" id="action_report_crm_lead_pivot">
+       <record id="action_report_crm_lead_pivot" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">pivot</field>
             <field name="view_id" ref="view_report_crm_lead_pivot"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
-       <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
+       <record id="action_report_crm_lead_graph" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_lead_graph"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
-       <menuitem name="Leads" id="menu_report_crm_leads_tree"
+       <menuitem id="menu_report_crm_leads_tree" name="Leads"
             groups="base.group_sale_manager"
             parent="base.menu_sale_report" action="action_report_crm_lead" sequence="1"/>
 
-    </data>
-</openerp>
+</odoo>

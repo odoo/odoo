@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
+<odoo>
 
         <!-- CRM lead search by Salesteams -->
 
-        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_lead">
+        <record id="crm_case_form_view_salesteams_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+            <field name="domain">['|', ('lead_type','=','lead'), ('lead_type','=',False)]</field>
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
-                    'default_type': 'lead',
+                    'default_lead_type': 'lead',
                     'stage_type': 'lead',
                 }
             </field>
@@ -33,18 +32,18 @@
 
         <!-- CRM opportunity search by Salesteams -->
 
-        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_opportunity">
+        <record id="crm_case_form_view_salesteams_opportunity" model="ir.actions.act_window">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,graph,form,calendar</field>
-            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="domain">[('lead_type','=','opportunity')]</field>
             <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="context">{
                     'search_default_team_id': [active_id],
                     'default_team_id': active_id,
                     'stage_type': 'opportunity',
-                    'default_type': 'opportunity',
+                    'default_lead_type': 'opportunity',
                     'default_user_id': uid,
                 }
             </field>
@@ -66,7 +65,7 @@
            <field name="context">{"search_default_month":1}</field>
            <field name="view_mode">graph</field>
            <field name="view_id" ref="crm.view_report_crm_lead_graph_two"/>
-           <field name="domain">[('type','=', 'lead'),('team_id', '=', active_id)]</field>
+           <field name="domain">[('lead_type','=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
 
@@ -75,11 +74,11 @@
             <field name="res_model">crm.opportunity.report</field>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="crm.view_report_crm_opportunity_graph"/>
-            <field name="domain">[('type','=', 'opportunity'), ('team_id', '=', active_id)]</field>
+            <field name="domain">[('lead_type','=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
-        <record model="ir.ui.view" id="sales_team_form_view_in_crm">
+        <record id="sales_team_form_view_in_crm" model="ir.ui.view">
                 <field name="name">crm.team.form</field>
                 <field name="model">crm.team</field>
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
@@ -114,21 +113,21 @@
             </record>
 
         <!-- Case Teams Action -->
-        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
+        <record id="action_crm_tag_kanban_view_salesteams_oppor11" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="crm_case_kanban_view_leads"/>
             <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_salesteams_oppor11">
+        <record id="action_crm_tag_tree_view_salesteams_oppor11" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="crm_case_tree_view_oppor"/>
             <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_salesteams_oppor11">
+        <record id="action_crm_tag_form_view_salesteams_oppor11" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_case_form_view_oppor"/>
@@ -142,5 +141,4 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>
-  </data>
-</openerp>
+</odoo>

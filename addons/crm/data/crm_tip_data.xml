@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <record model="web.tip" id="crm_tip_2">
+        <record id="crm_tip_2" model="web.tip">
             <field name="title"></field>
             <field name="description">Zoom to the opportunities related to this customer. You will be able to come back to the customer using the breadcrumb.</field>
             <field name="action_id" ref="base.action_partner_form"/>
@@ -13,7 +12,7 @@
             <field name="placement">bottom</field>
         </record>
 
-        <record model="web.tip" id="crm_tip_3">
+        <record id="crm_tip_3" model="web.tip">
             <field name="title"></field>
             <field name="description">Use the breadcrumb to go back to preceeding screens. This is super useful to navigate between documents.</field>
             <field name="model">crm.lead</field>
@@ -24,7 +23,7 @@
             <field name="placement">bottom</field>
         </record>
 
-        <record model="web.tip" id="crm_tip_4">
+        <record id="crm_tip_4" model="web.tip">
             <field name="title"></field>
             <field name="description"><![CDATA[You can change the stage of your opportunities by simply <b>drag and dropping</b> the opportunity into another column.]]></field>
             <field name="model">crm.lead</field>
@@ -35,5 +34,4 @@
             <field name="placement">auto top</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

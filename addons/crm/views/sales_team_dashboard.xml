@@ -5,19 +5,19 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
-        <field name="domain">[('type','=','opportunity')]</field>
+        <field name="domain">[('lead_type','=','opportunity')]</field>
         <field name="context">{
                 'search_default_team_id': [active_id],
                 'default_team_id': active_id,
                 'stage_type': 'opportunity',
-                'default_type': 'opportunity',
+                'default_lead_type': 'opportunity',
                 'default_user_id': uid,
         }
         </field>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
     </record>
 
-    <record model="ir.ui.view" id="crm_team_salesteams_view_kanban">
+    <record id="crm_team_salesteams_view_kanban" model="ir.ui.view">
         <field name="name">crm.team.kanban</field>
         <field name="model">crm.team</field>
         <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>

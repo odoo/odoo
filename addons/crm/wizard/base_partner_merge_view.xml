@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- the sequence of the configuration sub menu is 30 -->
 
-        <record model="ir.actions.act_window" id="base_partner_merge_automatic_act">
+        <record id="base_partner_merge_automatic_act" model="ir.actions.act_window">
             <field name="name">Deduplicate Contacts</field>
             <field name="res_model">base.partner.merge.automatic.wizard</field>
             <field name="view_type">form</field>
@@ -18,7 +17,7 @@
             parent='base.menu_config_address_book' 
             sequence='4'/>
 
-        <record model='ir.ui.view' id='base_partner_merge_automatic_wizard_form'>
+        <record id='base_partner_merge_automatic_wizard_form' model='ir.ui.view'>
             <field name='name'>base.partner.merge.automatic.wizard.form</field>
             <field name='model'>base.partner.merge.automatic.wizard</field>
             <field name='arch' type='xml'>
@@ -117,6 +116,5 @@
         <act_window id="action_partner_merge" res_model="base.partner.merge.automatic.wizard" src_model="res.partner"
             target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Merge"/>
 
-    </data>
 
-</openerp>
+</odoo>

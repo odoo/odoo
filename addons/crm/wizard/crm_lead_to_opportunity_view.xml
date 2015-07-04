@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
 
         <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
             <field name="name">crm.lead2opportunity.partner.form</field>
@@ -10,8 +9,8 @@
                     <group name="name">
                         <field name="name" widget="radio"/>
                     </group>
-                    <group string="Assign these opportunities to">
-                        <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
+                    <group string="Assign opportunities to">
+                        <field name="user_id"/>
                         <field name="team_id" groups="base.group_multi_salesteams"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
@@ -19,7 +18,7 @@
                             <tree>
                                 <field name="create_date"/>
                                 <field name="name"/>
-                                <field name="type"/>
+                                <field name="lead_type"/>
                                 <field name="contact_name"/>
                                 <field name="country_id" invisible="context.get('invisible_country', True)"/>
                                 <field name="email_from"/>
@@ -31,7 +30,7 @@
                         </field>
                     </group>
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
-                        <field name="action" nolabel="1" widget="radio" on_change="onchange_action(action, context)" />
+                        <field name="action" nolabel="1" widget="radio"/>
                         <group col="2">
                             <field name="partner_id" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                         </group>
@@ -52,7 +51,7 @@
                     <separator string="Conversion Options"/>
                     <group>
                         <field name="name" class="oe_inline" widget="radio"/>
-                        <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
+                        <field name="deduplicate" class="oe_inline"/>
                     </group>
                     <group string="Assign opportunities to">
                         <field name="team_id" groups="base.group_multi_salesteams"/>
@@ -66,7 +65,7 @@
                             <tree create="false" delete="false">
                                 <field name="create_date"/>
                                 <field name="name"/>
-                                <field name="type"/>
+                                <field name="lead_type"/>
                                 <field name="contact_name"/>
                                 <field name="country_id" invisible="context.get('invisible_country', True)"/>
                                 <field name="email_from"/>
@@ -113,5 +112,4 @@
             groups="base.group_sale_salesman"
         />
 
-    </data>
-</openerp>
+</odoo>

@@ -72,9 +72,9 @@ class crm_lead(osv.osv):
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner',track_visibility='onchange' , help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
-    def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
+    def merge_data(self, cr, uid, ids, fields, context=None):
         fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
-        return super(crm_lead, self)._merge_data(cr, uid, ids, oldest, fields, context=context)
+        return super(crm_lead, self).merge_data(cr, uid, ids, fields=fields, context=context)
 
     def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab

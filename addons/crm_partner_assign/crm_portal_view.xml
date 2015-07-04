@@ -106,7 +106,7 @@
                     <field name="title_action" readonly="1"/>
                     <field name="priority" string="Priority" readonly="1"/>
                     <newline/>
-                    <field name="type" invisible="1" readonly="1"/>
+                    <field name="lead_type" invisible="1" readonly="1"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
@@ -165,7 +165,7 @@
           <field name="res_model">crm.lead</field>
           <field name="view_mode">tree,form</field>
           <field name="view_id" ref="crm_lead_portal_tree"/>
-          <field name="domain">[('type','like','lead')]</field>
+          <field name="domain">[('lead_type','like','lead')]</field>
       </record>
 
       <record id="action_portal_lead_tree" model="ir.actions.act_window.view">
@@ -189,7 +189,7 @@
           <field name="res_model">crm.lead</field>
           <field name="view_mode">tree,form</field>
           <field name="view_id" ref="crm_opportunity_portal_tree"/>
-          <field name="domain">[('type','like','opportunity')]</field>
+          <field name="domain">[('lead_type','like','opportunity')]</field>
       </record>
 
       <record id="action_portal_opportunities_tree" model="ir.actions.act_window.view">

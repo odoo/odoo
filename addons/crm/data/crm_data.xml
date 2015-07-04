@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <!-- After installation of the module, open the related menu -->
@@ -13,7 +13,7 @@
             <field name="state">open</field>
         </record>
 
-        <record model="crm.team" id="sales_team.team_sales_department">
+        <record id="sales_team.team_sales_department" model="crm.team">
             <field name="use_leads">True</field>
             <field name="alias_name">sales</field>
         </record>
@@ -27,7 +27,7 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
+        <record id="module_install_notification" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="message_type">notification</field>
@@ -38,15 +38,15 @@
         </record>
 
         <!-- opportunities' lost causes -->
-        <record model="crm.lost.reason" id="lost_reason_1">
+        <record id="lost_reason_1" model="crm.lost.reason">
             <field name="name">Too expensive</field>
         </record>
-        <record model="crm.lost.reason" id="lost_reason_2">
+        <record id="lost_reason_2" model="crm.lost.reason">
             <field name="name">We don't have people/skills</field>
         </record>
-        <record model="crm.lost.reason" id="lost_reason_3">
+        <record id="lost_reason_3" model="crm.lost.reason">
             <field name="name">Not enough stock</field>
         </record>
     </data>
 
-</openerp>
+</odoo>
