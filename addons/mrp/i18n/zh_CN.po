@@ -6,13 +6,14 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
 # Shan Leiping <ccdos@163.com>, 2015
-# zhang hao <zhanghao@jointd.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
+# Talway <1473162392@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-29 03:09+0000\n"
+"PO-Revision-Date: 2015-07-04 06:58+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr "生产"
+msgstr "制造"
 
 #. module: mrp
 #: field:product.template,bom_count:0
@@ -35,7 +36,7 @@ msgstr "# 物料清单"
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
 msgid "# Manufacturing Orders"
-msgstr "# 生产订单"
+msgstr "# 制造订单"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:323
@@ -81,7 +82,7 @@ msgid ""
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n               单击增加一个工作中心\n              </p><p>\n                工作中心允许建立建立和关联一个生产单元。他们可以是工人和（或）机\n                 器，被作为任务分配以及能力和计划规划的单元\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               单击增加一个工作中心\n              </p><p>\n                工作中心允许建立建立并管理一个生产单元。他们可以是工人和（或）机\n                 器，被作为任务分配以及能力和计划规划的单元\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -97,7 +98,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建物料清单表（BoM）。 \n              </p><p>\n                物理清单表（BoM）让您设定生产一个成品需要的原料清单；\n                通过生产订单或\n                包装产品来完成。\n              </p><p>\n                Odoo 使用这些物料清单表（BoMs）自动生成\n                需要的生产订单。\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -189,12 +190,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr "指标值为0.9意味着生产过程中损耗了10%"
+msgstr "因子为0.9意味着生产过程中损耗了10%"
 
 #. module: mrp
 #: field:mrp.bom,active:0 field:mrp.routing,active:0
 msgid "Active"
-msgstr "生效"
+msgstr "有效"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:68
@@ -235,12 +236,12 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr "循环金额"
+msgstr "循环总额"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr "工时数"
+msgstr "工时总额"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -379,7 +380,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr "物料清单明细"
+msgstr "物料清单行"
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -440,28 +441,28 @@ msgstr "不能找到这个产品的BOM"
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Capacity Information"
-msgstr "能力信息"
+msgstr "产能信息"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr "每循环生产能力"
+msgstr "每循环产能"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
-msgstr "改变产品数量"
+msgstr "变更产品数量"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Change Quantity"
-msgstr "修改数量"
+msgstr "变更数量"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "修改产成品数量"
+msgstr "变更产成品数量"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -515,7 +516,7 @@ msgstr "计算数据"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "设置"
+msgstr "配置"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -526,7 +527,7 @@ msgstr "配置生产"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Confirm"
-msgstr "确定"
+msgstr "确认"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -552,7 +553,7 @@ msgstr "消耗品调拨"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr "投料"
+msgstr "仅投料"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
@@ -639,7 +640,7 @@ msgstr "循环科目"
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
-msgstr "按循环计算的成本"
+msgstr "循环成本"
 
 #. module: mrp
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
@@ -675,7 +676,7 @@ msgstr "说明"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "工作中心的描述。在这里输入这个工作中心的简介。"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -962,7 +963,7 @@ msgstr "批次"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "管理工艺路线"
+msgstr "管理工艺"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
@@ -972,7 +973,7 @@ msgstr "关联产品的修理 "
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr "管理工艺路线和工作中心 "
+msgstr "管理工艺和工作中心 "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -1130,7 +1131,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Cycles"
-msgstr "周期数"
+msgstr "循环数"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1163,7 +1164,7 @@ msgstr "备注"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 #: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
-msgstr "周期数"
+msgstr "循环数"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1176,7 +1177,7 @@ msgstr "工时数"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "工作中心完成这道工序需要执行的次数"
+msgstr "该工作中心必须要在工艺的指定操作上做的迭代次数"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -1218,7 +1219,7 @@ msgstr "上级物料清单"
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "上级工艺路线"
+msgstr "上级工艺"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1649,13 +1650,13 @@ msgstr "生产数量的小数位数"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.routing:mrp.mrp_routing_tree_view
 msgid "Routing"
-msgstr "工艺路线"
+msgstr "工艺"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr "工序所在工作中心"
+msgstr "工艺的工作中心"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -1669,7 +1670,7 @@ msgstr "工艺表示要用到的所有工作中心，需要多少时间或循环
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "工艺路线"
+msgstr "工艺"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
@@ -1923,12 +1924,12 @@ msgstr "生产准备时间"
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr "一个周期的时间(小时)"
+msgstr "一个循环的时间(小时)"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr "一个周期的工作小时数"
+msgstr "执行一个循环的小时数"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -1945,7 +1946,7 @@ msgstr "准备小时数"
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr "要完成特定工序在此工作中心上需要花费的小时数"
+msgstr "该工作中心要完成指定工艺的操作所花费的小时数"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -1962,7 +1963,7 @@ msgstr "总成本：%s %s"
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr "总周期"
+msgstr "总循环"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -2212,7 +2213,7 @@ msgstr "工作中心"
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr "工作中心效率"
+msgstr "工作中心利用率"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132

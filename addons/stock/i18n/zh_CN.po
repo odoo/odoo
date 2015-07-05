@@ -9,14 +9,15 @@
 # xtjie <xtjie@126.com>, 2015
 # youring <youring@gmail.com>, 2015
 # youring <youring@gmail.com>, 2015
-# zhang hao <zhanghao@jointd.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-29 03:46+0000\n"
-"Last-Translator: zhang hao <zhanghao@jointd.com>\n"
+"PO-Revision-Date: 2015-07-04 06:58+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,7 +212,7 @@ msgid ""
 "                physical, partner or virtual locations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击添加库位。\n              </p><p>\n                定义库位以反映您的仓库结构\n                和组织。Odoo 能够管理物理库 位\n                (仓库, 货架, 箱子,等等),  合作伙伴库位 (客户,\n                供应商) 以及虚拟库位用于对应\n                库存操作：诸如制造单消耗，\n                库存盘点等。\n              </p><p>  \n                在Odoo的每一个库存操作都是将产品从一个库位\n                移动到另一个库位。 例如,如果您从供应商\n                那里收到产品， Odoo将把产品从供应商库位\n                移动到库存库位。每一个报表都能从\n                物理库位，合作伙伴库位或虚拟库位执行。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -251,7 +252,7 @@ msgid ""
 "                if it should show the customer.  \n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建新的分拣类型。\n              </p><p>\n                分拣类型允许您为每个库存操作\n                定义一个特定的类型来警示。  \n                例如：在分拣类型里您可以定义是否需要默认包装。 \n                如果需要展示给客户。   \n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -277,7 +278,7 @@ msgid ""
 "                manual stock movements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个移库操作。 \n              </p><p>\n                大多数的操作Odoo是按您预设置的物流规则\n                自动准备的。不过您依然可以记录\n                手动的库存移动。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -302,7 +303,7 @@ msgid ""
 "                received using the buttons on the right of each line.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击登记一个产品入库单。\n              </p><p>\n                这里您能接收单个产品，不需要匹配采购单或者分拣单。\n                您能找出正在等待的产品列表，一旦您收到一个订单，您能基于\n                供应商名称或者采购单进行过滤.。然后您能使用每一行右侧的\n                按钮确认收到的产品。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receive_move
@@ -315,7 +316,7 @@ msgid ""
 "                from your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击为此产品登记一个收货单。\n              </p><p>\n                这里可以找到此产品相关的所有收货记录，\n                以及所有您正在等待的来自供应商的\n                尚未到达的收货单。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -337,7 +338,7 @@ msgid ""
 "<p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>包裹通常在转移时由产品打包而成，可以包含数个不同的产品。 您可以用这个包裹将它整体移动到某个地方，或是将它打包到一个更大的包裹。包裹也可以拆包，将其再还原拆分成单独的单元。\n                </p>\n            "
 
 #. module: stock
 #. openerp-web
@@ -350,7 +351,7 @@ msgstr "<p>找不到要显示的分拣。</p>"
 #: code:addons/stock/stock.py:2556
 #, python-format
 msgid "A Pack"
-msgstr ""
+msgstr "包裹"
 
 #. module: stock
 #: field:report.stock.lines.date,active:0 field:stock.incoterms,active:0
@@ -390,7 +391,7 @@ msgstr "地址"
 msgid ""
 "Adds a Claim link to the delivery order.\n"
 "-This installs the module claim_from_delivery."
-msgstr ""
+msgstr "为送货单添加一个索赔链接。\n-这会安装模块claim_from_delivery。"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -425,7 +426,7 @@ msgstr "所有退货移动"
 #: code:addons/stock/procurement.py:241
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
-msgstr ""
+msgstr "这个补货的所有库存移动都会被取消。"
 
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
@@ -455,7 +456,7 @@ msgstr "允许为产品选择和维护不同的计量单位"
 msgid ""
 "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
 "For instance, you can sell pieces of meat that you invoice based on their weight."
-msgstr ""
+msgstr "允许您以一个单位销售产品，但使用另一个单位开发票，例如：按片来销售食物，按重量开发票。"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -502,7 +503,7 @@ msgstr "指定所有者"
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Assigned Moves"
-msgstr ""
+msgstr "指定的移动"
 
 #. module: stock
 #: field:stock.location.path,auto:0 selection:stock.location.path,auto:0
@@ -586,7 +587,7 @@ msgstr "大供应商"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr ""
+msgstr "在运送之前将货物送到出货库位（分拣+运送）"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -600,7 +601,7 @@ msgstr "包含内容"
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
-msgstr ""
+msgstr "通过改变这里的数量，您确认新的完成数量: Odoo不会自动生成后续分批出库单。"
 
 #. module: stock
 #: help:stock.move,procure_method:0
@@ -610,7 +611,7 @@ msgid ""
 "directly create a procurement on the source location (and thus ignore its "
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
-msgstr ""
+msgstr "默认情况下，系统从源库位的库存中取货，并等待产品可用。另外一个可能是允许您在源库位上直接产生一个需求单(从而忽略它的当前库存)来获取产品。如果我们想把库存移动连接起来，并让库存移动等待上一个移动，您应该选择第二个选项。"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -622,7 +623,7 @@ msgstr "通过取消勾选有效字段，您能隐藏一个库位而不是删除
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
+msgstr "通过取消勾选有效字段，您能隐藏不再使用的INCOTERM。"
 
 #. module: stock
 #: view:stock.picking:stock.stock_picking_calendar
@@ -639,7 +640,7 @@ msgstr "找不到任何客户或供应商库位。"
 #: code:addons/stock/stock.py:3074
 #, python-format
 msgid "Can't find any generic Make To Order route."
-msgstr ""
+msgstr "无法找到任何按订单生成路线。"
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -680,7 +681,7 @@ msgstr "已取消"
 #: code:addons/stock/stock.py:1840
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr ""
+msgstr "不能解除一个已完成的移动"
 
 #. module: stock
 #: field:product.template,loc_case:0
@@ -738,7 +739,7 @@ msgstr "检查数量"
 #. module: stock
 #: help:stock.move,partially_available:0
 msgid "Checks if the move has some stock reserved"
-msgstr ""
+msgstr "检查移动是否有一些库存保留"
 
 #. module: stock
 #. openerp-web
@@ -976,7 +977,7 @@ msgstr "创建日期"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Creation Date, usually the time of the order"
-msgstr ""
+msgstr "创建日期,通常是订单的时间"
 
 #. module: stock
 #: code:addons/stock/stock.py:3392
@@ -987,7 +988,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,crossdock_route_id:0
 msgid "Crossdock Route"
-msgstr ""
+msgstr "交叉转运路线"
 
 #. module: stock
 #: field:stock.pack.operation,currency:0
@@ -1014,7 +1015,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "当前产品数量。 \n对库位来说，包括了此库位或其子库位的产品。 \n对仓库来说，包括了这个仓库库位或其子库位的产品。  \n另外，包括了所有'内部'类型库位的产品。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4263
@@ -1140,7 +1141,7 @@ msgstr "默认所有者"
 #. module: stock
 #: field:stock.warehouse,default_resupply_wh_id:0
 msgid "Default Resupply Warehouse"
-msgstr ""
+msgstr "默认补货仓库"
 
 #. module: stock
 #: field:stock.picking.type,default_location_src_id:0
@@ -1165,7 +1166,7 @@ msgstr ""
 #. module: stock
 #: help:stock.warehouse,route_ids:0
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "通过此仓库的默认路线"
 
 #. module: stock
 #: help:stock.location,putaway_strategy_id:0

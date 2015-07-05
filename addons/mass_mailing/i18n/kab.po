@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-28 23:51+0000\n"
+"PO-Revision-Date: 2015-07-04 17:38+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgid ""
 "                Click to create a recipient.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nSit dagi i tmerna n unarmis.\n</p>"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -134,7 +134,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/js/website_mass_mailing.editor.js:12
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr ""
+msgstr "Ad yernu taqeffalt n umulteɣ n izen n telɣut"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -194,7 +194,7 @@ msgstr ""
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "Change Newsletter"
-msgstr ""
+msgstr "Snifel izen n telɣut"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
@@ -234,7 +234,7 @@ msgstr "Inarmisen"
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,create_date:0
 msgid "Create Date"
-msgstr "Azemz n usilel"
+msgstr "Azemz n tmerna"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,create_uid:0
@@ -256,13 +256,13 @@ msgstr "Yerna-t"
 #: field:mail.mass_mailing.stage,create_date:0
 #: field:mail.mass_mailing.test,create_date:0
 msgid "Created on"
-msgstr "Ilul-ed di"
+msgstr "Yerna di"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,create_date:0
 #: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Creation Date"
-msgstr "Azemz  n usilel"
+msgstr "Azemz  n tmerna"
 
 #. module: mass_mailing
 #: help:mail.mail.statistics,exception:0
@@ -326,12 +326,12 @@ msgstr ""
 #. module: mass_mailing
 #: field:mail.mail.statistics,res_id:0
 msgid "Document ID"
-msgstr "Asulay n Isemli"
+msgstr "Asulay n warrat"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,model:0
 msgid "Document model"
-msgstr "Taneɣruft n Isemli"
+msgstr "Taneɣruft n warrat"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,mailing_domain:0
@@ -347,7 +347,7 @@ msgstr "Arewway"
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Duplicate"
-msgstr ""
+msgstr "Sleg"
 
 #. module: mass_mailing
 #: view:email.template:mass_mailing.view_email_template_kanban
@@ -362,12 +362,12 @@ msgstr "Ẓreg Taneɣruft"
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,email:0
 msgid "Email"
-msgstr "Email"
+msgstr "Imayl"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_mail_statistics
 msgid "Email Statistics"
-msgstr "Iddadanen n Email"
+msgstr "Iddadanen n Imayl"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mail_thread
@@ -382,12 +382,12 @@ msgstr "Assistant de composition de courriel"
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 msgid "Emails"
-msgstr "Emailen"
+msgstr "Imaylen"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing,statistics_ids:0
 msgid "Emails Statistics"
-msgstr "Iddadanen n Imailen"
+msgstr "Iddadanen n Imaylen"
 
 #. module: mass_mailing
 #: field:mail.mail.statistics,exception:0
@@ -421,6 +421,7 @@ msgid "From"
 msgstr "Si"
 
 #. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
 #: view:mail.mass_mailing.contact:mass_mailing.view_mail_mass_mailing_contact_search
@@ -471,7 +472,7 @@ msgstr ""
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
 msgid "In Document"
-msgstr "Deg Isemli"
+msgstr "Deg Arrat"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.contact,message_is_follower:0
@@ -720,11 +721,16 @@ msgstr "Isem"
 #: view:website:website.snippets
 #, python-format
 msgid "Newsletter"
-msgstr ""
+msgstr "Izen n telɣut"
 
 #. module: mass_mailing
 #: field:mail.mass_mailing.list,contact_nbr:0
 msgid "Number of Contacts"
+msgstr ""
+
+#. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
+msgid "Open Date"
 msgstr ""
 
 #. module: mass_mailing
@@ -739,6 +745,7 @@ msgid "Open with Visual Editor"
 msgstr ""
 
 #. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
 #: field:mail.mail.statistics,opened:0
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_kanban
@@ -794,6 +801,7 @@ msgid "Preview"
 msgstr "Timeẓriwt"
 
 #. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Received"
@@ -824,6 +832,7 @@ msgid "Related Mailing(s)"
 msgstr ""
 
 #. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
 #: field:mail.mail.statistics,replied:0
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_form
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_kanban
@@ -849,6 +858,11 @@ msgstr ""
 #. module: mass_mailing
 #: field:mail.mass_mailing,reply_to:0
 msgid "Reply To"
+msgstr ""
+
+#. module: mass_mailing
+#: view:mail.mail.statistics:mass_mailing.view_mail_mail_statistics_search
+msgid "Reply Date"
 msgstr ""
 
 #. module: mass_mailing
@@ -948,7 +962,7 @@ msgstr ""
 #. module: mass_mailing
 #: field:mail.mass_mailing.campaign,sent:0
 msgid "Sent Emails"
-msgstr "Emailen yuznen"
+msgstr "Imayl yuznen"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing:mass_mailing.view_mail_mass_mailing_search
@@ -968,7 +982,7 @@ msgstr "Tawila"
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
 msgid "Specified Email Address"
-msgstr ""
+msgstr "Tansa imayl"
 
 #. module: mass_mailing
 #: view:mail.mass_mailing.campaign:mass_mailing.view_mail_mass_mailing_campaign_search
@@ -1081,4 +1095,4 @@ msgstr "neɣ"
 #. module: mass_mailing
 #: view:website:website.snippets
 msgid "your email..."
-msgstr "email-inek..."
+msgstr "Imayl-inek..."

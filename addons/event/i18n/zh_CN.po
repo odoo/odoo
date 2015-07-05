@@ -3,14 +3,15 @@
 # * event
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# leangjia <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-04 04:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-07-04 06:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p> ${object.name},你好。</p>\n        <p>你报名参加的活动 ${object.event_id.name} 已确认。活动开始时间为 ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} ，结束时间为 ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}。\n        若您想了解本次活动的详细信息，烦请联系我们有关部门。</p>\n        <p>感谢您的参与!</p>\n        <p>敬祝安好</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration

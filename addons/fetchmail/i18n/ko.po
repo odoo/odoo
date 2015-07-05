@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 13:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-07-03 00:38+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,7 @@ msgstr "이메일 개수"
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "수신 메일에 실행할 동작"
+msgstr "받는 메일에 대해 수행할 동작"
 
 #. module: fetchmail
 #: field:fetchmail.server,active:0
@@ -47,23 +47,23 @@ msgstr "고급 옵션"
 #: view:fetchmail.server:fetchmail.view_email_server_form
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
-msgstr "구성"
+msgstr "환경 설정"
 
 #. module: fetchmail
 #: view:base.config.settings:fetchmail.inherit_view_general_configuration
 msgid "Configure the incoming email gateway"
-msgstr "수신 이메일 게이트웨이 구성"
+msgstr "받는 이메일 게이트웨이 구성"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Confirmed"
-msgstr "확정됨"
+msgstr "확인"
 
 #. module: fetchmail
 #: code:addons/fetchmail/fetchmail.py:163
 #, python-format
 msgid "Connection test failed!"
-msgstr "연결 시험에 실패함!"
+msgstr "연결 시험 실패!"
 
 #. module: fetchmail
 #: help:fetchmail.server,is_ssl:0
@@ -81,13 +81,13 @@ msgstr ""
 #: field:fetchmail.config.settings,create_uid:0
 #: field:fetchmail.server,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: fetchmail
 #: field:fetchmail.config.settings,create_date:0
 #: field:fetchmail.server,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: fetchmail
 #: help:fetchmail.server,priority:0
@@ -110,7 +110,7 @@ msgstr ""
 #. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
-msgstr "메일서버의 호스트이름 또는 IP"
+msgstr "메일 서버의 호스트 이름 또는 IP"
 
 #. module: fetchmail
 #: field:fetchmail.config.settings,id:0 field:fetchmail.server,id:0
@@ -135,19 +135,19 @@ msgstr "SSL이 필요할 경우."
 #. module: fetchmail
 #: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
-msgstr "수신메일서버"
+msgstr "받는 메일 서버"
 
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_form
 #: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "수신 메일 서버"
+msgstr "받는 메일 서버"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "수신 메일 서버"
+msgstr "받는 메일 서버"
 
 #. module: fetchmail
 #: field:fetchmail.server,attach:0
@@ -162,19 +162,19 @@ msgstr "원본 유지"
 #. module: fetchmail
 #: field:fetchmail.server,date:0
 msgid "Last Fetch Date"
-msgstr "마지막으로 가져온 날짜"
+msgstr "최근에 가져온 날짜"
 
 #. module: fetchmail
 #: field:fetchmail.config.settings,write_uid:0
 #: field:fetchmail.server,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: fetchmail
 #: field:fetchmail.config.settings,write_date:0
 #: field:fetchmail.server,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -200,7 +200,7 @@ msgstr "이름"
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
 msgid "Not Confirmed"
-msgstr "확정되지 않음"
+msgstr "확인안됨"
 
 #. module: fetchmail
 #: help:fetchmail.server,action_id:0
@@ -212,7 +212,7 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "발신 이메일"
+msgstr "보내는 이메일"
 
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_search
@@ -275,7 +275,7 @@ msgstr "스크립트"
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "수신메일서버 검색"
+msgstr "받는 메일 서버 검색"
 
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_form
@@ -325,7 +325,7 @@ msgstr "상태"
 #. module: fetchmail
 #: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Test & Confirm"
-msgstr "시험 & 확정"
+msgstr "시험 & 확인"
 
 #. module: fetchmail
 #: field:fetchmail.server,user:0
