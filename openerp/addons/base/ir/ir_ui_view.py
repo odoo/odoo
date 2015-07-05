@@ -835,7 +835,7 @@ class view(osv.osv):
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
-                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
+                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID', 'sortable': True}
             elif field in fields:
                 fields[field].update(fields_def[field])
             else:
