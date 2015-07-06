@@ -15,11 +15,6 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record model="ir.ui.menu" id="base.menu_definitions">
-        <field name="name">Configuration</field>
-        <field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
-    </record>
-
     <record id="group_tasks_work_on_tasks" model="res.groups">
         <field name="name">Task's Work on Tasks</field>
         <field name="category_id" ref="base.module_category_hidden"/>
