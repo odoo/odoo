@@ -795,7 +795,7 @@ class calendar_event(osv.Model):
         display_time = date.strftime(format_time)
 
         if zallday:
-            time = _("AllDay , %s") % (event_date)
+            time =  '%s, %s' % (event_date, _('All Day'))
         elif zduration < 24:
             duration = date + timedelta(hours=zduration)
             time = ("%s at (%s To %s) (%s)") % (event_date, display_time, duration.strftime(format_time), tz)
