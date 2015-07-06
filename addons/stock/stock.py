@@ -2332,7 +2332,7 @@ class stock_move(osv.osv):
                 if move.procurement_id:
                     # Does the same as procurement check, only eliminating a refresh
                     procs_to_check.append(move.procurement_id.id)
-                    
+
         res = self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False}, context=context)
         if procs_to_check:
             procurement_obj.check(cr, uid, procs_to_check, context=context)

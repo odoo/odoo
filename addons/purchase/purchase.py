@@ -354,10 +354,6 @@ class purchase_order(osv.osv):
                 order_line_ids += [po_line.id for po_line in order.order_line if po_line.state != 'cancel']
         if order_line_ids:
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
-        if order_line_ids and status == 'cancel':
-            procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', order_line_ids)], context=context)
-            if procs:
-                proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def button_dummy(self, cr, uid, ids, context=None):
@@ -708,12 +704,33 @@ class purchase_order(osv.osv):
         self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
 
     def action_cancel(self, cr, uid, ids, context=None):
+        context = context or {}
         for purchase in self.browse(cr, uid, ids, context=context):
             for pick in purchase.picking_ids:
-                for move in pick.move_lines:
-                    if pick.state == 'done':
-                        raise UserError(_('Unable to cancel the purchase order %s.') % (purchase.name) + _('You have already received some goods for it.  '))
+                if pick.state == 'done':
+                    raise UserError(_('Unable to cancel the purchase order %s.') % (purchase.name) + _('You have already received some goods for it.  '))
+            # Check action_cancel
             self.pool.get('stock.picking').action_cancel(cr, uid, [x.id for x in purchase.picking_ids if x.state != 'cancel'], context=context)
+            # Check procurements not related to stock move yet
+            if not context.get('cancel_procurement'):
+                cancel_procurements = []
+                cancel_moves = []
+                exception_procurements = []
+                for line in purchase.order_line:
+                    if line.procurement_ids:
+                        cancel_procurements += [x.id for x in line.procurement_ids if x.state not in ('cancel', 'exception') and x.rule_id.propagate]
+                        exception_procurements += [x.id for x in line.procurement_ids if x.state not in ('cancel', 'exception') and not x.rule_id.propagate]
+                        cancel_moves += [x.move_dest_id.id for x in line.procurement_ids if x.move_dest_id and x.move_dest_id.state!='cancel' and x.rule_id.propagate]
+                if cancel_moves:
+                    cancel_moves = list(set(cancel_moves))
+                    self.pool['stock.move'].action_cancel(cr, uid, cancel_moves, context=context)
+                if cancel_procurements:
+                    cancel_procurements = list(set(cancel_procurements))
+                    self.pool['procurement.order'].write(cr, uid, cancel_procurements, {'state': 'cancel'}, context=context)
+                if exception_procurements:
+                    exception_procurements = list(set(exception_procurements))
+                    self.pool['procurement.order'].write(cr, uid, exception_procurements, {'state': 'exception'}, context=context)
+
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order.") + " " + _("You must first cancel all invoices related to this purchase order."))
