@@ -116,7 +116,7 @@
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
-                            domain="['&amp;', '|', ('case_default', '=', True), ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>

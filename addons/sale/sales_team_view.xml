@@ -9,9 +9,11 @@
             <data>
                 <xpath expr="//div[@name='options_active']" position="inside">
                     <field name="use_quotations" class="oe_inline"/><label for="use_quotations"/>
+                    <field name="use_invoices" class="oe_inline" groups="account.group_account_invoice"/>
+                    <label for="use_invoices" groups="account.group_account_invoice"/>
                 </xpath>
-                <xpath expr="//group[@name='sales_team_more_info']" position="after">
-                    <group string="Invoicing">
+                <xpath expr="//group[@name='sales_team_more_info']" position="inside">
+                    <group string="Invoicing/Progression Ratio">
                         <field name="invoiced_target"/>
                         <field name="invoiced_forecast"/>
                     </group>

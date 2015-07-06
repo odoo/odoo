@@ -21,12 +21,7 @@ class crm_team(osv.Model):
         return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(crm_team, self)._auto_init,
             'crm.lead', self._columns['alias_id'], 'name', alias_prefix='Lead+', alias_defaults={}, context=context)
 
-    def _get_stage_common(self, cr, uid, context):
-        ids = self.pool.get('crm.stage').search(cr, uid, [('case_default', '=', 1)], context=context)
-        return ids
-
     _defaults = {
-        'stage_ids': _get_stage_common,
         'use_leads': True,
         'use_opportunities': True,
     }
