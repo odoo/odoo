@@ -740,7 +740,7 @@
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
     <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
-        <button type="button" name="delete" class="oe_i">d</button>
+        <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
 <t t-extend="ListView.buttons">

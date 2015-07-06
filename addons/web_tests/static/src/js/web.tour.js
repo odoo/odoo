@@ -246,12 +246,12 @@ Tour.register({
             title:      "remove b",
             waitNot:    '.modal',
             waitFor:    '.oe_list_field_text:contains(aaa)',
-            element:    'tr:has(.oe_list_field_cell:containsExact(bbb)) .oe_list_record_delete button'
+            element:    'tr:has(.oe_list_field_cell:containsExact(bbb)) .oe_list_record_delete'
         },
         {
             title:      "remove e",
             waitNot:    'tr:has(.oe_list_field_cell:containsExact(bbb))',
-            element:    'tr:has(.oe_list_field_cell:containsExact(e)) .oe_list_record_delete button'
+            element:    'tr:has(.oe_list_field_cell:containsExact(e)) .oe_list_record_delete'
         },
 
         // save
@@ -440,7 +440,7 @@ Tour.register({
 
         {
             title:      "delete the last item in the editable list",
-            element:    '.oe_list_record_delete button:visible:last',
+            element:    '.oe_list_record_delete:visible:last',
         },
         {
             title:      "test one2many onchange after delete",
