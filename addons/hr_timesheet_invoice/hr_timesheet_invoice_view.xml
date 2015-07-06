@@ -31,7 +31,7 @@
                 <field name="model">account.analytic.line</field>
                 <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
                 <field name="arch" type="xml">
-                    <xpath expr="//group[@string='Accounting']" position='after'>
+                    <xpath expr="//group[@name='accounting']" position='after'>
                         <group string="Invoicing">
                             <field name="to_invoice"/>
                             <field name="invoice_id" readonly="1"/>

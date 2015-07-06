@@ -170,7 +170,12 @@ class view(models.Model):
         for v in view_list:
             views = self.customize_template_get(v.id, full=True)
             views_ids += [v.get('id') for v in views if v.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        domain = [
+            ('type', '=', 'model'),
+            ('name', '=', 'ir.ui.view,arch_db'),
+            ('res_id', 'in', views_ids),
+            ('lang', '=', lang),
+        ]
         element_list = irt.search_read(self.env.cr, self.env.uid,
                                        domain, field, context=self.env.context)
         for element in element_list:

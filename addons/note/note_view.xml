@@ -146,7 +146,7 @@
       <field name="model">base.config.settings</field>
       <field name="inherit_id" ref="base_setup.view_general_configuration"/>
       <field name="arch" type="xml">
-        <xpath expr="//label[@string='Authentication']/.." position="after">
+        <xpath expr="//group[@name='authentication']" position="after">
           <group>
               <label for="id" string="Notes"/>
               <div name="note">

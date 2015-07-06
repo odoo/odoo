@@ -53,10 +53,15 @@
                                     <field name="state"/>
                                 </tree>
                                 <form string="Fields Description">
-                                    <group col="4">
-                                        <field name="name"/>
-                                        <field name="state"/>
-                                        <field name="field_description"/>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                        </group>
+                                        <group>
+                                            <field name="field_description"/>
+                                            <field name="help"/>
+                                        </group>
                                     </group>
                                     <group string="Properties">
                                         <group>
@@ -158,6 +163,7 @@
                         <group>
                             <field name="name" string="Field Name"/>
                             <field name="field_description"/>
+                            <field name="help"/>
                         </group>
                         <group>
                             <field name="state"/>

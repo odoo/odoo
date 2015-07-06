@@ -36,7 +36,7 @@
                     <newline/>
                     <field name="available_advice"/>
                 </xpath>
-                 <xpath expr="//button[@string='Set to Draft']" position="after">
+                 <xpath expr="//button[@name='draft_payslip_run']" position="after">
                     <button name="create_advice" string="Create Advice" type="object" states="close" />
                  </xpath>
             </data>
@@ -197,7 +197,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
             <data>
-                 <page string="Configuration" position="inside">
+                 <page name="configuration" position="inside">
                     <group name="rule" string="Payroll">
                         <field name="dearness_allowance"/>
                     </group>

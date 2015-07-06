@@ -74,7 +74,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Extra Info">
+                        <page name="extra" string="Extra Info">
                             <group string="General Information">
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="location_id" widget="selection" groups="stock.group_locations"/>
@@ -692,7 +692,7 @@
                                 <field name="type" />
                             </tree>
                         </field>
-                        <group string="Features" >
+                        <group name="features" string="Features" >
                             <group>
                                 <field name="iface_vkeyboard" />
                                 <field name="iface_invoicing" />
@@ -716,7 +716,7 @@
                             <field name="iface_electronic_scale" />
                             <field name="iface_cashdrawer" />
                         </group>
-                        <group string="Receipt" >
+                        <group name="receipt" string="Receipt" >
                             <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
                             <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                         </group>

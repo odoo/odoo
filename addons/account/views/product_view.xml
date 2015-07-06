@@ -7,7 +7,7 @@
             <field name="priority">5</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page string="Sales" position="after">
+                <page name="sales" position="after">
                     <page string="Accounting" groups="account.group_account_invoice">
                         <group>
                             <label for="categ_id" string="Internal Category"/>

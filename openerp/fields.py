@@ -514,28 +514,28 @@ class Field(object):
         if self.inherited and field.required:
             self.required = True
 
+    def traverse_related(self, record):
+        """ Traverse the fields of the related field `self` except for the last
+        one, and return it as a pair `(last_record, last_field)`. """
+        for name in self.related[:-1]:
+            record = record[name][:1]
+        return record, self.related_field
+
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
-            if not record.id:
-                # draft record, do not switch to another environment
-                other = record
-            # traverse the intermediate fields; follow the first record at each step
-            for name in self.related[:-1]:
-                other = other[name][:1]
-            record[self.name] = other[self.related[-1]]
+            # do not switch to another environment if record is a draft one
+            other, field = self.traverse_related(other if record.id else record)
+            record[self.name] = other[field.name]
 
     def _inverse_related(self, records):
         """ Inverse the related field `self` on `records`. """
         for record in records:
-            other = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                other = other[name][:1]
+            other, field = self.traverse_related(record)
             if other:
-                other[self.related[-1]] = record[self.name]
+                other[field.name] = record[self.name]
 
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field `self`. """
@@ -651,17 +651,16 @@ class Field(object):
 
     def _description_string(self, env):
         if self.string and env.lang:
-            field = self.base_field
-            name = "%s,%s" % (field.model_name, field.name)
-            trans = env['ir.translation']._get_source(name, 'field', env.lang)
-            return trans or self.string
+            model_name = self.base_field.model_name
+            field_string = env['ir.translation'].get_field_string(model_name)
+            return field_string.get(self.name) or self.string
         return self.string
 
     def _description_help(self, env):
         if self.help and env.lang:
-            name = "%s,%s" % (self.model_name, self.name)
-            trans = env['ir.translation']._get_source(name, 'help', env.lang)
-            return trans or self.help
+            model_name = self.base_field.model_name
+            field_help = env['ir.translation'].get_field_help(model_name)
+            return field_help.get(self.name) or self.help
         return self.help
 
     ############################################################################
@@ -1111,15 +1110,59 @@ class _String(Field):
 
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
-    _description_translate = property(attrgetter('translate'))
+
+    def _description_translate(self, env):
+        return bool(self.translate)
+
+    def get_trans_terms(self, value):
+        """ Return the sequence of terms to translate found in `value`. """
+        if not callable(self.translate):
+            return [value] if value else []
+        terms = []
+        self.translate(terms.append, value)
+        return terms
+
+    def get_trans_func(self, records):
+        """ Return a translation function `translate` for `self` on the given
+        records; the function call `translate(record_id, value)` translates the
+        field value to the language given by the environment of `records`.
+        """
+        if callable(self.translate):
+            rec_src_trans = records.env['ir.translation']._get_terms_translations(self, records)
+
+            def translate(record_id, value):
+                src_trans = rec_src_trans[record_id]
+                return self.translate(src_trans.get, value)
+
+        else:
+            rec_trans = records.env['ir.translation']._get_ids(
+                '%s,%s' % (self.model_name, self.name), 'model', records.env.lang, records.ids)
+
+            def translate(record_id, value):
+                return rec_trans.get(record_id) or value
+
+        return translate
+
+    def check_trans_value(self, value):
+        """ Check and possibly sanitize the translated term `value`. """
+        if callable(self.translate):
+            # do a "no-translation" to sanitize the value
+            callback = lambda term: None
+            return self.translate(callback, value)
+        else:
+            return value
 
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
-    single-line string in clients
+    single-line string in clients.
 
     :param int size: the maximum size of values stored for that field
-    :param bool translate: whether the values of this field can be translated
+
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'char'
     _slots = {
@@ -1144,7 +1187,10 @@ class Text(_String):
     """ Very similar to :class:`~.Char` but used for longer contents, does not
     have a size and usually displayed as a multiline text box.
 
-    :param translate: whether the value of this field can be translated
+    :param translate: enable the translation of the field's values; use
+        `translate=True` to translate field values as a whole; `translate` may
+        also be a callable such that `translate(callback, value)` translates
+        `value` by using `callback(term)` to retrieve the translation of terms.
     """
     type = 'text'
 
@@ -1702,11 +1748,8 @@ class _RelationalMulti(_Relational):
     def _compute_related(self, records):
         """ Compute the related field `self` on `records`. """
         for record in records:
-            value = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+            other, field = self.traverse_related(record)
+            record[self.name] = other[field.name]
 
 
 class One2many(_RelationalMulti):

@@ -51,7 +51,7 @@
                 <field name="priority" position="after">
                     <field name="score" />
                 </field>
-                <xpath expr="//group[@string='Misc']" position="after">
+                <xpath expr="//group[@name='misc']" position="after">
                     <group string="Scoring">
                         <field name="score_ids"
                             widget="many2many_tags"
@@ -84,7 +84,7 @@
                 <field name="user_id" position="after">
                     <field name="score" />
                 </field>
-                <xpath expr="//group[@string='References']" position="after">
+                <xpath expr="//group[@name='references']" position="after">
                     <group string="Scoring">
                         <field name="score_ids"
                             widget="many2many_tags"
@@ -169,7 +169,7 @@
                     </div>
                     <field name="min_for_assign" class="oe_inline"/>
                 </xpath>
-                <xpath expr="//page[@string='Team Members']" position="replace">
+                <xpath expr="//page[@name='members']" position="replace">
                     <page string="Assignation">
                         <field name="team_user_ids" widget="one2many" mode="kanban" context="{'default_team_id':active_id, 'ro_team':True}">
                             <kanban>

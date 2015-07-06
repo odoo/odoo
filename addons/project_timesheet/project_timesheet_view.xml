@@ -55,7 +55,7 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
-                <xpath expr='//filter[@string="Template"]' position='after'>
+                <xpath expr='//filter[@name="Template"]' position='after'>
                     <filter string="Billable" domain="[('to_invoice','!=', False)]"/>
                 </xpath>
             </field>

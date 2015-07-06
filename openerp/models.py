@@ -380,14 +380,15 @@ class BaseModel(object):
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
+                'help': f.help or False,
                 'ttype': f.type,
                 'relation': f.comodel_name or '',
                 'select_level': tools.ustr(int(f.index)),
-                'readonly': (f.readonly and 1) or 0,
-                'required': (f.required and 1) or 0,
-                'selectable': (f.search or f.store and 1) or 0,
-                'translate': (f.translate if hasattr(f,'translate') else False and 1) or 0,
-                'relation_field': f.inverse_name if hasattr(f, 'inverse_name') else '',
+                'readonly': bool(f.readonly),
+                'required': bool(f.required),
+                'selectable': bool(f.search or f.store),
+                'translate': bool(getattr(f, 'translate', False)),
+                'relation_field': getattr(f, 'inverse_name', ''),
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -409,16 +410,11 @@ class BaseModel(object):
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
                 vals['id'] = id
-                cr.execute("""INSERT INTO ir_model_fields (
-                    id, model_id, model, name, field_description, ttype,
-                    relation,state,select_level,relation_field, translate, serialization_field_id
-                ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
-                )""", (
-                    id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], 'base',
-                    vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
-                ))
+                query = "INSERT INTO ir_model_fields (%s) VALUES (%s)" % (
+                    ",".join(vals),
+                    ",".join("%%(%s)s" % name for name in vals),
+                )
+                cr.execute(query, vals)
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
                     cr.execute("select name from ir_model_data where name=%s", (name1,))
@@ -430,16 +426,11 @@ class BaseModel(object):
             else:
                 for key, val in vals.items():
                     if cols[k][key] != vals[key]:
-                        cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
-                        cr.execute("""UPDATE ir_model_fields SET
-                            model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
-                        WHERE
-                            model=%s AND name=%s""", (
-                                vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'],
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
-                            ))
+                        names = set(vals) - set(['model', 'name'])
+                        query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s and name=%%(name)s" % (
+                            ",".join("%s=%%(%s)s" % (name, name) for name in names),
+                        )
+                        cr.execute(query, vals)
                         break
         self.invalidate_cache(cr, SUPERUSER_ID)
 
@@ -1166,11 +1157,11 @@ class BaseModel(object):
         Converter = self.pool['ir.fields.converter']
         Translation = self.pool['ir.translation']
         fields = dict(self._fields)
-        field_names = dict(
-            (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
-                                         context.get('lang'))
-                 or field.string))
-            for f, field in fields.iteritems())
+        field_names = {name: field.string for name, field in fields.iteritems()}
+        if context.get('lang'):
+            field_names.update(
+                Translation.get_field_string(cr, uid, self._name, context=context)
+            )
 
         convert = Converter.for_model(cr, uid, self, context=context)
 
@@ -1714,46 +1705,6 @@ class BaseModel(object):
         res = self.name_get(cr, access_rights_uid, ids, context)
         return res
 
-    def read_string(self, cr, uid, id, langs, fields=None, context=None):
-        res = {}
-        res2 = {}
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'read')
-        if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
-        #FIXME: collect all calls to _get_source into one SQL call.
-        for lang in langs:
-            res[lang] = {'code': lang}
-            for f in fields:
-                if f in self._columns:
-                    res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
-                    if res_trans:
-                        res[lang][f] = res_trans
-                    else:
-                        res[lang][f] = self._columns[f].string
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), fields)
-            res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
-        for lang in res2:
-            if lang in res:
-                res[lang]['code'] = lang
-            for f in res2[lang]:
-                res[lang][f] = res2[lang][f]
-        return res
-
-    def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.translation').check_access_rights(cr, uid, 'write')
-        #FIXME: try to only call the translation in one SQL
-        for lang in langs:
-            for field in vals:
-                if field in self._columns:
-                    src = self._columns[field].string
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
-        for table in self._inherits:
-            cols = intersect(self._inherit_fields.keys(), vals)
-            if cols:
-                self.pool[table].write_string(cr, uid, id, langs, vals, context)
-        return True
-
     def _add_missing_default_values(self, cr, uid, values, context=None):
         # avoid overriding inherited values when parent is set
         avoid_tables = []
@@ -2184,7 +2135,8 @@ class BaseModel(object):
             )
             model, alias = parent_model, parent_alias
         # handle the case where the field is translated
-        if model._columns[field].translate:
+        translate = model._columns[field].translate
+        if translate and not callable(translate):
             return model._generate_translated_field(alias, field, query)
         else:
             return '"%s"."%s"' % (alias, field)
@@ -3271,6 +3223,7 @@ class BaseModel(object):
             field
             for field in fields
             if field.base_field.column._classic_write
+            if not (field.inherited and callable(field.base_field.column.translate))
         ]
 
         # the query may involve several tables: we need fully-qualified names
@@ -3303,8 +3256,18 @@ class BaseModel(object):
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
+        fetched = self.browse(ids)
 
         if ids:
+            # translate the fields if necessary
+            if context.get('lang'):
+                for field in fields_pre:
+                    if not field.inherited and callable(field.column.translate):
+                        f = field.name
+                        translate = field.get_trans_func(fetched)
+                        for vals in result:
+                            vals[f] = translate(vals['id'], vals[f])
+
             # apply the symbol_get functions of the fields we just read
             for field in fields_pre:
                 symbol_get = field.base_field.column._symbol_get
@@ -3361,7 +3324,6 @@ class BaseModel(object):
             record._cache.update(record._convert_to_cache(vals, validate=False))
 
         # store failed values in cache for the records that could not be read
-        fetched = self.browse(ids)
         missing = self - fetched
         if missing:
             extras = fetched - self
@@ -3844,7 +3806,7 @@ class BaseModel(object):
         upd_todo = []
         updend = []
         direct = []
-        totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
+        totranslate = context.get('lang') and context['lang'] != 'en_US'
         for field in vals:
             ffield = self._fields.get(field)
             if ffield and ffield.deprecated:
@@ -3854,7 +3816,12 @@ class BaseModel(object):
                 if hasattr(column, 'selection') and vals[field]:
                     self._check_selection_field_value(cr, user, field, vals[field], context=context)
                 if column._classic_write and not hasattr(column, '_fnct_inv'):
-                    if (not totranslate) or not column.translate:
+                    if totranslate and column.translate:
+                        # vals[field] is a translation: do not update the table
+                        if callable(column.translate):
+                            flabel = ffield.get_description(recs.env)['string']
+                            raise UserError(_("You cannot update the translated value of field '%s'") % flabel)
+                    else:
                         updates.append((field, '%s', column._symbol_set[1](vals[field])))
                     direct.append(field)
                 else:
@@ -3879,17 +3846,25 @@ class BaseModel(object):
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(_('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description)
 
-            if totranslate:
-                # TODO: optimize
-                for f in direct:
-                    if self._columns[f].translate:
-                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
-                        if not src_trans:
-                            src_trans = vals[f]
-                            # Inserting value to DB
-                            context_wo_lang = dict(context, lang=None)
-                            self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+            # TODO: optimize
+            for f in direct:
+                column = self._columns[f]
+                if callable(column.translate):
+                    # The English value of a field has been modified,
+                    # synchronize translated terms when possible.
+                    assert not totranslate
+                    self.pool['ir.translation']._sync_terms_translations(
+                        cr, user, self._fields[f], recs, context=context)
+
+                elif column.translate and totranslate:
+                    # The translated value of a field has been modified.
+                    src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
+                    if not src_trans:
+                        # Insert value to DB
+                        src_trans = vals[f]
+                        context_wo_lang = dict(context, lang=None)
+                        self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
+                    self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
@@ -4604,7 +4579,7 @@ class BaseModel(object):
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
-                        if order_column.translate:
+                        if order_column.translate and not callable(order_column.translate):
                             inner_clause = self._generate_translated_field(self._table, order_field, query)
                         else:
                             inner_clause = '"%s"."%s"' % (self._table, order_field)

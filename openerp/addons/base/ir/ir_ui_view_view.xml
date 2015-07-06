@@ -6,7 +6,7 @@
             <field name="model">ir.ui.view</field>
             <field name="arch" type="xml">
                 <form string="Views">
-                   <sheet>
+                  <sheet>
                     <group>
                         <group>
                             <field name="name"/>
@@ -25,7 +25,9 @@
                     </group>
                     <notebook>
                         <page string="Architecture">
-                            <field name="arch"/>
+                            <button type="object" name="open_translations"
+                                string="Edit Translations" class="oe_link oe_right"/>
+                            <field name="arch_base"/>
                         </page>
                         <page string="Groups">
                             <field name="groups_id"/>
