@@ -51,6 +51,10 @@ def _initialize_db(id, db_name, demo, lang, user_password):
             values = {'password': user_password, 'lang': lang}
             registry['res.users'].write(cr, SUPERUSER_ID, [SUPERUSER_ID], values)
 
+            lang_obj = registry['res.lang']
+            lang_ids = lang_obj.search(cr, SUPERUSER_ID, [('code', '!=', lang)])
+            lang_obj.write(cr, SUPERUSER_ID, lang_ids, {'active': False})
+
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()
     except Exception, e:

@@ -11,7 +11,8 @@
                     <field name="iso_code"/>
                     <field name="direction"/>
                     <field name="translatable"/>
-                    <field name="active"/>
+                    <field name="active" invisible="1"/>
+                    <button name="toggle_active" field_name="active" type="object" options='{"active": "Active", "inactive": "Deactive"}' widget="toggle_button" />
                     <button name="%(base.action_wizard_update_translations)d"
                     string="Update Terms" type="action" icon="gtk-ok" help="Update Languague Terms"/>
                 </tree>
@@ -36,7 +37,7 @@
                         <field name="decimal_point"/>
                         <field name="thousands_sep"/>
                         <newline/>
-                        <field name="active" />
+                         <field name="active" widget="toggle_button"/>
                         <field name="translatable"/>
                     </group>
                     <separator colspan="4" string="Legends for supported Date and Time Formats"/>

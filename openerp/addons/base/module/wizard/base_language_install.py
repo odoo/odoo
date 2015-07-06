@@ -24,7 +24,10 @@ class base_language_install(osv.osv_memory):
             context = {}
         language_obj = self.browse(cr, uid, ids)[0]
         lang = language_obj.lang
+        lang_model = self.pool['res.lang']
         if lang:
+            lang_ids = lang_model.search(cr, uid, [('code', '=', lang), ('active', '=', False)], context=context)
+            lang_model.write(cr, uid, lang_ids, {'active': True}, context=context)
             modobj = self.pool.get('ir.module.module')
             mids = modobj.search(cr, uid, [('state', '=', 'installed')])
             if language_obj.overwrite:
@@ -42,4 +45,10 @@ class base_language_install(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'res_id': ids and ids[0] or False,
+        }
+
+    def reload_lang(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
         }
