@@ -61,6 +61,13 @@ class TestNewFields(common.TransactionCase):
 
     def test_10_non_stored(self):
         """ test non-stored fields """
+        # a field declared with store=False should not have a column
+        field = self.env['test_new_api.category']._fields['dummy']
+        self.assertFalse(field.store)
+        self.assertFalse(field.compute)
+        self.assertFalse(field.inverse)
+        self.assertFalse(field.column)
+
         # find messages
         for message in self.env['test_new_api.message'].search([]):
             # check definition of field

@@ -671,7 +671,7 @@ class Field(object):
 
     def to_column(self):
         """ Return a column object corresponding to `self`, or ``None``. """
-        if not self.store and self.compute:
+        if not self.store and (self.compute or not self.column):
             # non-stored computed fields do not have a corresponding column
             self.column = None
             return None

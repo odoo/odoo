@@ -31,6 +31,7 @@ class Category(models.Model):
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.category')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
+    dummy = fields.Char(store=False)
 
     @api.one
     @api.depends('name', 'parent.display_name')     # this definition is recursive
