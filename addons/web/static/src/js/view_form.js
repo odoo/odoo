@@ -2689,7 +2689,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         });
 
         this.picker({
-            onClose: this.on_picker_select,
+            onClose: this.on_picker_close,
             onSelect: this.on_picker_select,
             changeMonth: true,
             changeYear: true,
@@ -2718,12 +2718,15 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     picker: function() {
         return $.fn[this.jqueryui_object].apply(this.$input_picker, arguments);
     },
+    on_picker_close: function (text, instance_) {
+        this.on_picker_select(text, instance_);
+        this.$input.focus();
+    },
     on_picker_select: function(text, instance_) {
         var date = this.picker('getDate');
         this.$input
             .val(date ? this.format_client(date) : '')
-            .change()
-            .focus();
+            .change();
     },
     set_value: function(value_) {
         this.set({'value': value_});
