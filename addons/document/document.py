@@ -120,7 +120,7 @@ class document_file(osv.osv):
         if limit and len(set_ids) < len(orig_ids):
             # search again with adapted offset+limit
             return result + self.search(
-                cr, uid, args, offset=offset+len(orig_ids),
+                cr, uid, args, offset=offset+limit,
                 limit=limit-len(set_ids), order=order, context=context,
                 count=count)
 

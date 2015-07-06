@@ -320,7 +320,7 @@ class ir_attachment(osv.osv):
         if limit and len(result) < len(orig_ids):
             # search again with adapted offset+limit
             return result + self._search(
-                cr, uid, args, offset=offset+len(orig_ids),
+                cr, uid, args, offset=offset+limit,
                 limit=limit-len(result), order=order, context=context,
                 count=count, access_rights_uid=access_rights_uid)
 
