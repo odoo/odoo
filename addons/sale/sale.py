@@ -196,6 +196,8 @@ class sale_order(osv.osv):
         for s in sale_orders:
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
+            elif s['state'] == 'sent':
+                raise UserError(_('In order to delete already sent quotation(s), you must cancel it before!'))
             else:
                 raise UserError(_('In order to delete a confirmed sales order, you must cancel it before!'))
 
