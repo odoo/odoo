@@ -508,6 +508,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
                 }
+                if(!options.hide_breadcrumb && self.breadcrumbs.length > 1)
+                {
+                    jQuery('.oe_breadcrumb_title').html(self.get_title());
+                    jQuery('.oe_view_manager_header .oe_header_row').each(function(i, row)
+                    {
+                        var $row = jQuery(row);
+                        if(!$row.hasClass('oe_header_row_top'))
+                        {
+                            $row.hide();
+                        }
+                    });
+                    jQuery('.oe_view_manager').show();
+                }
             }
         }, options);
     },
