@@ -1435,17 +1435,35 @@ class stock_production_lot(osv.osv):
 
     def _stock_search(self, cr, uid, obj, name, args, context=None):
         """ Searches Ids of products
+        
         @return: Ids of locations
         """
-        locations = self.pool.get('stock.location').search(cr, uid, [('usage', '=', 'internal')])
+        if context is None:
+            context = {}
+
+        if 'location_id' not in context:
+            locations = self.pool['stock.location'].search(
+                cr, uid, [('usage', '=', 'internal')], context=context)
+        else:
+            locations = context['location_id'] and [context['location_id']] or []
+
+        if 'product_id' not in context:
+            products = self.pool['product.product'].search(
+                cr, uid, [('active', '=', True)], context=context)
+        else:
+            products = context['product_id'] and [context['product_id']] or []
+
         cr.execute('''select
                 prodlot_id,
                 sum(qty)
             from
                 stock_report_prodlots
             where
-                location_id IN %s group by prodlot_id
-            having  sum(qty) '''+ str(args[0][1]) + str(args[0][2]),(tuple(locations),))
+                location_id in %s
+                and product_id in %s
+            group by prodlot_id
+            having sum(qty) ''' + str(args[0][1]) + str(args[0][2]),
+                   (tuple(locations), tuple(products),))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids
