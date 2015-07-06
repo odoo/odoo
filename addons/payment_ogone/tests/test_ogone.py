@@ -9,7 +9,9 @@ from openerp.addons.payment.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_ogone.controllers.main import OgoneController
 from openerp.tools import mute_logger
 
+import pytest
 
+@pytest.mark.skipif(reason="never imported (thus run) by previous runner")
 class OgonePayment(PaymentAcquirerCommon):
 
     def setUp(self):

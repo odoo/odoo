@@ -2,20 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
-import functools
 import imp
 import importlib
-import inspect
 import itertools
 import logging
 import os
 import pkg_resources
 import re
 import sys
-import time
 import types
-import unittest
-import threading
 from operator import itemgetter
 from os.path import join as opj
 
@@ -397,10 +392,10 @@ def get_modules():
                 name = name[:-4]
             return name
 
-        return [
+        return (
             clean(name) for name in os.listdir(directory)
             if os.path.isfile(opj(directory, name, MANIFEST))
-        ]
+        )
 
     initialize_sys_path()
     modules = itertools.chain.from_iterable(listdir(ad) for ad in ad_paths)
@@ -422,118 +417,3 @@ def adapt_version(version):
     if version == serie or not version.startswith(serie + '.'):
         version = '%s.%s' % (serie, version)
     return version
-
-def get_test_modules(module):
-    """ Return a list of module for the addons potentially containing tests to
-    feed unittest.TestLoader.loadTestsFromModule() """
-    # Try to import the module
-    modpath = 'openerp.addons.' + module
-    try:
-        mod = importlib.import_module('.tests', modpath)
-    except Exception, e:
-        # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
-            _logger.exception('Can not `import %s`.', module)
-        return []
-
-    if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
-        _logger.warn(
-            "Found deprecated fast_suite or checks attribute in test module "
-            "%s. These have no effect in or after version 8.0.",
-            mod.__name__)
-
-    result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
-              if name.startswith('test_')]
-    return result
-
-# Use a custom stream object to log the test executions.
-class TestStream(object):
-    def __init__(self, logger_name='openerp.tests'):
-        self.logger = logging.getLogger(logger_name)
-        self.r = re.compile(r'^-*$|^ *... *$|^ok$')
-    def flush(self):
-        pass
-    def write(self, s):
-        if self.r.match(s):
-            return
-        first = True
-        level = logging.ERROR if s.startswith(('ERROR', 'FAIL', 'Traceback')) else logging.INFO
-        for c in s.splitlines():
-            if not first:
-                c = '` ' + c
-            first = False
-            self.logger.log(level, c)
-
-current_test = None
-
-def runs_at(test, hook, default):
-    # by default, tests do not run post install
-    test_runs = getattr(test, hook, default)
-
-    # for a test suite, we're done
-    if not isinstance(test, unittest.TestCase):
-        return test_runs
-
-    # otherwise check the current test method to see it's been set to a
-    # different state
-    method = getattr(test, test._testMethodName)
-    return getattr(method, hook, test_runs)
-
-runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
-runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
-
-def run_unit_tests(module_name, dbname, position=runs_at_install):
-    """
-    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
-              if any of them failed.
-    :rtype: bool
-    """
-    global current_test
-    current_test = module_name
-    mods = get_test_modules(module_name)
-    threading.currentThread().testing = True
-    r = True
-    for m in mods:
-        tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(itertools.ifilter(position, tests))
-
-        if suite.countTestCases():
-            t0 = time.time()
-            t0_sql = openerp.sql_db.sql_counter
-            _logger.info('%s running tests.', m.__name__)
-            result = unittest.TextTestRunner(verbosity=2, stream=TestStream(m.__name__)).run(suite)
-            if time.time() - t0 > 5:
-                _logger.log(25, "%s tested in %.2fs, %s queries", m.__name__, time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
-            if not result.wasSuccessful():
-                r = False
-                _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
-
-    current_test = None
-    threading.currentThread().testing = False
-    return r
-
-def unwrap_suite(test):
-    """
-    Attempts to unpack testsuites (holding suites or cases) in order to
-    generate a single stream of terminals (either test cases or customized
-    test suites). These can then be checked for run/skip attributes
-    individually.
-
-    An alternative would be to use a variant of @unittest.skipIf with a state
-    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
-    but then things become weird with post_install as tests should *not* run
-    by default there
-    """
-    if isinstance(test, unittest.TestCase):
-        yield test
-        return
-
-    subtests = list(test)
-    # custom test suite (no test cases)
-    if not len(subtests):
-        yield test
-        return
-
-    for item in itertools.chain.from_iterable(
-            itertools.imap(unwrap_suite, subtests)):
-        yield item

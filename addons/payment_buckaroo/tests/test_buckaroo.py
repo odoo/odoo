@@ -9,9 +9,9 @@ from openerp.addons.payment.tests.common import PaymentAcquirerCommon
 from openerp.addons.payment_buckaroo.controllers.main import BuckarooController
 from openerp.tools import mute_logger
 
+import pytest
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(False)
+@pytest.mark.skipif(reason="at_install(False) and post_install(False) => never run")
 class BuckarooCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -22,9 +22,6 @@ class BuckarooCommon(PaymentAcquirerCommon):
         # get the buckaroo account
         model, self.buckaroo_id = self.registry('ir.model.data').get_object_reference(cr, uid, 'payment_buckaroo', 'payment_acquirer_buckaroo')
 
-
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(False)
 class BuckarooForm(BuckarooCommon):
 
     def test_10_Buckaroo_form_render(self):

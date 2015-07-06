@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 import unittest
 
-from openerp.tests.common import TransactionCase, can_import
+import pytest
+
+from openerp.tests.common import TransactionCase
 from openerp.modules.module import get_module_resource
 
 
@@ -256,8 +258,8 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
+        pytest.importorskip('xlrd')
 
         Import = self.registry('base_import.import')
         xls_file_path = get_module_resource('base_import', 'tests', 'test.xls')
@@ -288,8 +290,9 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
+        pytest.importorskip('xlrd.xlsx')
+
         Import = self.registry('base_import.import')
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
         file_content = open(xlsx_file_path, 'rb').read()
@@ -319,8 +322,9 @@ class test_preview(TransactionCase):
         # Ensure we only have the response fields we expect
         self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview'])
 
-    @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
+        pytest.importorskip("odf")
+
         Import = self.registry('base_import.import')
         ods_file_path = get_module_resource('base_import', 'tests', 'test.ods')
         file_content = open(ods_file_path, 'rb').read()
