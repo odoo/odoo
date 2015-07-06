@@ -624,20 +624,19 @@ class groups_implied(osv.osv):
         """
         if values.get('implied_ids'):
             implied_groups_map = dict(
-                [(group.id, set([implied_id.id
-                                 for implied_id in group.trans_implied_ids]))
-                 for group in self.browse(cr, uid, ids, context=context)])
+                (group.id, set(implied_id.id
+                               for implied_id in group.trans_implied_ids))
+                for group in self.browse(cr, uid, ids, context=context))
         if values.get('users'):
             users_map = dict(
-                [(group.id, set([user.id for user in group.users]))
-                 for group in self.browse(cr, uid, ids, context=context)])
+                (group.id, set(user.id for user in group.users))
+                for group in self.browse(cr, uid, ids, context=context))
         res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('implied_ids'):
             # add all implied groups (to all users of each group) if necessary
             for g in self.browse(cr, uid, ids, context=context):
-                if implied_groups_map[g.id] < set([
-                        implied_id.id
-                        for implied_id in g.trans_implied_ids]):
+                if implied_groups_map[g.id] < set(
+                        implied_id.id for implied_id in g.trans_implied_ids):
                     gids = map(int, g.trans_implied_ids)
                     vals = {'users': [(4, u.id) for u in g.users]}
                     super(groups_implied, self).write(cr, uid, gids, vals, context)
