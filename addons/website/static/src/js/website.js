@@ -353,13 +353,17 @@ function inject_tour() {
 dom_ready.then(function () {
     /* ----- PUBLISHING STUFF ---- */
     $(document).on('click', '.js_publish_management .js_publish_btn', function () {
-        var $data = $(this).parents(".js_publish_management:first");
+        var $data = $(this).parents(".js_publish_management:first"),
+            $btn = $data.find('.js_publish_btn');
+        $btn.button('loading');
         ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
             .then(function (result) {
                 $data.toggleClass("css_unpublished css_published");
                 $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
+                $btn.button('reset');
             }).fail(function (err, data) {
                 error(data, '/web#return_label=Website&model='+$data.data('object')+'&id='+$data.data('id'));
+                $btn.button('reset');
             });
         });
 
