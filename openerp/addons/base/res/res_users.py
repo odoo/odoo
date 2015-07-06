@@ -645,7 +645,7 @@ class groups_implied(osv.osv):
             # add all implied groups to the new users
             for g in self.browse(cr, uid, ids, context=context):
                 new_users = set([user.id for user in g.users])
-                if users_map[g.id] < set([user.id for user in g.users]):
+                if users_map[g.id] < new_users:
                     gids = map(int, g.trans_implied_ids)
                     vals = {'users': [(4, u.id) for u in (new_users - users_map[g.id])]}
                     super(groups_implied, self).write(cr, uid, gids, vals, context)
