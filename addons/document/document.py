@@ -117,11 +117,7 @@ class document_file(osv.osv):
             result = [id for id in orig_ids if id in set_ids]
 
         # if we got a limit and some ids were removed, search again
-        if limit and (len(set_ids) < len(orig_ids) or not orig_ids):
-            # make sure we don't try to search more records than exist
-            if not orig_ids and offset > self.search(
-                    cr, uid, args, order=order, context=context, count=True):
-                return result
+        if limit and len(set_ids) < len(orig_ids):
             # search again with adapted offset+limit
             return result + self.search(
                 cr, uid, args, offset=offset+len(orig_ids),

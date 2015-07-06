@@ -262,6 +262,8 @@ class ir_attachment(osv.osv):
                 raise except_orm(_('Access Denied'), _("Sorry, you are not allowed to access this document."))
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        # take care to have a stable order, this is crucial for limit+offset
+        order = (order + ',' if order else '') + 'id asc'
         ids = super(ir_attachment, self)._search(cr, uid, args, offset=offset,
                                                  limit=limit, order=order,
                                                  context=context, count=False,
@@ -315,11 +317,7 @@ class ir_attachment(osv.osv):
         result = len(result) if count else list(result)
 
         # if we got a limit and some ids were removed, search again
-        if limit and (len(result) < len(orig_ids) or not orig_ids):
-            # make sure we don't try to search more records than exist
-            if not orig_ids and offset > self.search(
-                    cr, uid, args, order=order, context=context, count=True):
-                return result
+        if limit and len(result) < len(orig_ids):
             # search again with adapted offset+limit
             return result + self._search(
                 cr, uid, args, offset=offset+len(orig_ids),
