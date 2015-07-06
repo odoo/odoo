@@ -92,9 +92,8 @@
                             </page>
                             <page string="More Info" groups="base.group_sale_manager">
                                 <group name="sales_team_more_info">
-                                    <group>
-                                        <field name="active"/>
-                                        <field name="company_id" groups="base.group_multi_company"
+                                    <group string="Company" groups="base.group_multi_company">
+                                        <field name="company_id" 
                                             options="{'no_create': True}"/>
                                     </group>
                                 </group>                                
