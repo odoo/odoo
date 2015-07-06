@@ -1,3 +1,5 @@
+:banner: banners/build_a_website.jpg
+
 .. queue:: website/series
 
 ==================
@@ -319,7 +321,7 @@ Administration and ERP integration
 A brief and incomplete introduction to the Odoo administration
 --------------------------------------------------------------
 
-The Odoo administration was briefly seen during the `website support` section.
+The Odoo administration was briefly seen during the `website support`_ section.
 We can go back to it using :menuselection:`Administrator --> Administrator` in
 the menu (or :guilabel:`Sign In` if you're signed out).
 

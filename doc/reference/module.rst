@@ -1,3 +1,5 @@
+:banner: banners/module.jpg
+
 =======
 Modules
 =======

@@ -1,3 +1,5 @@
+:banner: banners/odoo_guideline.jpg
+
 .. highlight:: python
 
 =================

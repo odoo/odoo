@@ -1,5 +1,6 @@
-.. highlight:: xml
+:banner: banners/views.jpg
 
+.. highlight:: xml
 .. _reference/views:
 
 =====
@@ -579,8 +580,8 @@ make them more visible and more easily accessible.
 .. image:: forms/header3.png
    :class: img-responsive
 
-Technically, the buttons are placed inside a <div> to group them as a block on
-the right-hand side of the sheet.
+Technically, the buttons are placed inside a ``<div>`` to group them as a
+block on the right-hand side of the sheet.
 
 ::
 
@@ -640,7 +641,7 @@ place inside the field, it *must not* be an example as they are often confused
 with filled data.
 
 One can also group fields together by rendering them "inline" inside an
-explicit block element like `<div>``. This allows grouping semantically
+explicit block element like ``<div>``. This allows grouping semantically
 related fields as if they were a single (composite) fields.
 
 The following example, taken from the *Leads* form, shows both placeholders and

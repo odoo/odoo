@@ -1,3 +1,5 @@
+:banner: banners/build_interface_ext.jpg
+
 =============================
 Building Interface Extensions
 =============================

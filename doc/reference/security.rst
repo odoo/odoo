@@ -1,3 +1,5 @@
+:banner: banners/security.jpg
+
 .. _reference/security:
 
 ================

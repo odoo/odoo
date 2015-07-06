@@ -55,13 +55,13 @@ class FailedValue(SpecialValue):
         raise self.exception
 
 def _check_value(value):
-    """ Return `value`, or call its getter if `value` is a :class:`SpecialValue`. """
+    """ Return ``value``, or call its getter if ``value`` is a :class:`SpecialValue`. """
     return value.get() if isinstance(value, SpecialValue) else value
 
 
 def resolve_all_mro(cls, name, reverse=False):
-    """ Return the (successively overridden) values of attribute `name` in `cls`
-        in mro order, or inverse mro order if `reverse` is true.
+    """ Return the (successively overridden) values of attribute ``name`` in ``cls``
+        in mro order, or inverse mro order if ``reverse`` is true.
     """
     klasses = reversed(cls.__mro__) if reverse else cls.__mro__
     for klass in klasses:
@@ -75,7 +75,7 @@ class MetaField(type):
 
     def __new__(meta, name, bases, attrs):
         """ Combine the ``_slots`` dict from parent classes, and determine
-        `__slots__` for them on the new class.
+        ``__slots__`` for them on the new class.
         """
         base_slots = {}
         for base in reversed(bases):
@@ -152,7 +152,7 @@ class Field(object):
         One can define a field whose value is computed instead of simply being
         read from the database. The attributes that are specific to computed
         fields are given below. To define such a field, simply provide a value
-        for the attribute `compute`.
+        for the attribute ``compute``.
 
         :param compute: name of a method that computes the field
 
@@ -166,7 +166,7 @@ class Field(object):
         :param compute_sudo: whether the field should be recomputed as superuser
             to bypass access rights (boolean, by default ``False``)
 
-        The methods given for `compute`, `inverse` and `search` are model
+        The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::
 
             upper = fields.Char(compute='_compute_upper',
@@ -210,7 +210,7 @@ class Field(object):
 
         The search method is invoked when processing domains before doing an
         actual search on the model. It must return a domain equivalent to the
-        condition: `field operator value`.
+        condition: ``field operator value``.
 
         .. _field-related:
 
@@ -223,10 +223,10 @@ class Field(object):
         :param related: sequence of field names
 
         Some field attributes are automatically copied from the source field if
-        they are not redefined: `string`, `help`, `readonly`, `required` (only
-        if all fields in the sequence are required), `groups`, `digits`, `size`,
-        `translate`, `sanitize`, `selection`, `comodel_name`, `domain`,
-        `context`. All semantic-free attributes are copied from the source
+        they are not redefined: ``string``, ``help``, ``readonly``, ``required`` (only
+        if all fields in the sequence are required), ``groups``, ``digits``, ``size``,
+        ``translate``, ``sanitize``, ``selection``, ``comodel_name``, ``domain``,
+        ``context``. All semantic-free attributes are copied from the source
         field.
 
         By default, the values of related fields are not stored to the database.
@@ -298,7 +298,7 @@ class Field(object):
         'search': None,                 # search(recs, operator, value) searches on self
         'related': None,                # sequence of field names, for related fields
         'related_sudo': True,           # whether related fields should be read as admin
-        'company_dependent': False,     # whether `self` is company-dependent (property field)
+        'company_dependent': False,     # whether ``self`` is company-dependent (property field)
         'default': None,                # default(recs) returns the default value
 
         'string': None,                 # field label
@@ -346,11 +346,11 @@ class Field(object):
             raise AttributeError(name)
 
     def new(self, **kwargs):
-        """ Return a field of the same type as `self`, with its own parameters. """
+        """ Return a field of the same type as ``self``, with its own parameters. """
         return type(self)(**kwargs)
 
     def set_class_name(self, cls, name):
-        """ Assign the model class and field name of `self`. """
+        """ Assign the model class and field name of ``self``. """
         self_attrs = self._attrs
         for attr, value in self._slots.iteritems():
             setattr(self, attr, value)
@@ -367,7 +367,7 @@ class Field(object):
                 attrs.clear()
         attrs.update(self_attrs)        # necessary in case self is not in cls
 
-        # initialize `self` with `attrs`
+        # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
             # by default, computed fields are not stored, not copied and readonly
             attrs['store'] = attrs.get('store', False)
@@ -393,8 +393,8 @@ class Field(object):
         self._determine_default(cls, name)
 
     def _determine_default(self, cls, name):
-        """ Retrieve the default value for `self` in the hierarchy of `cls`, and
-            determine `self.default` and `cls._defaults` accordingly.
+        """ Retrieve the default value for ``self`` in the hierarchy of ``cls``, and
+            determine ``self.default`` and ``cls._defaults`` accordingly.
         """
         self.default = None
 
@@ -447,7 +447,7 @@ class Field(object):
     #
 
     def setup(self, env):
-        """ Make sure that `self` is set up, except for recomputation triggers. """
+        """ Make sure that ``self`` is set up, except for recomputation triggers. """
         if not self.setup_done:
             if self.related:
                 self._setup_related(env)
@@ -534,7 +534,7 @@ class Field(object):
             self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
-        """ Compute the related field `self` on `records`. """
+        """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
@@ -547,7 +547,7 @@ class Field(object):
             record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
-        """ Inverse the related field `self` on `records`. """
+        """ Inverse the related field ``self`` on ``records``. """
         for record in records:
             other = record
             # traverse the intermediate fields, and keep at most one record
@@ -557,7 +557,7 @@ class Field(object):
                 other[self.related[-1]] = record[self.name]
 
     def _search_related(self, records, operator, value):
-        """ Determine the domain to search on field `self`. """
+        """ Determine the domain to search on field ``self``. """
         return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
@@ -569,33 +569,33 @@ class Field(object):
 
     @property
     def base_field(self):
-        """ Return the base field of an inherited field, or `self`. """
+        """ Return the base field of an inherited field, or ``self``. """
         return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
     #
     # The triggers is a collection of pairs (field, path) of computed fields
-    # that depend on `self`. When `self` is modified, it invalidates the cache
-    # of each `field`, and registers the records to recompute based on `path`.
-    # See method `modified` below for details.
+    # that depend on ``self``. When ``self`` is modified, it invalidates the cache
+    # of each ``field``, and registers the records to recompute based on ``path``.
+    # See method ``modified`` below for details.
     #
 
     def add_trigger(self, trigger):
-        """ Add a recomputation trigger on `self`. """
+        """ Add a recomputation trigger on ``self``. """
         if trigger not in self._triggers:
             self._triggers += (trigger,)
 
     def setup_triggers(self, env):
-        """ Add the necessary triggers to invalidate/recompute `self`. """
+        """ Add the necessary triggers to invalidate/recompute ``self``. """
         model = env[self.model_name]
         for path in self.depends:
             self._setup_dependency([], model, path.split('.'))
 
     def _setup_dependency(self, path0, model, path1):
-        """ Make `self` depend on `model`; `path0 + path1` is a dependency of
-            `self`, and `path0` is the sequence of field names from `self.model`
-            to `model`.
+        """ Make ``self`` depend on ``model``; `path0 + path1` is a dependency of
+            ``self``, and ``path0`` is the sequence of field names from ``self.model``
+            to ``model``.
         """
         env = model.env
         head, tail = path1[0], path1[1:]
@@ -627,7 +627,7 @@ class Field(object):
 
     @property
     def dependents(self):
-        """ Return the computed fields that depend on `self`. """
+        """ Return the computed fields that depend on ``self``. """
         return (field for field, path in self._triggers)
 
     ############################################################################
@@ -636,7 +636,7 @@ class Field(object):
     #
 
     def get_description(self, env):
-        """ Return a dictionary that describes the field `self`. """
+        """ Return a dictionary that describes the field ``self``. """
         desc = {'type': self.type}
         for attr, prop in self.description_attrs:
             value = getattr(self, prop)
@@ -689,7 +689,7 @@ class Field(object):
     #
 
     def to_column(self):
-        """ Return a column object corresponding to `self`, or ``None``. """
+        """ Return a column object corresponding to ``self``, or ``None``. """
         if not self.store and self.compute:
             # non-stored computed fields do not have a corresponding column
             self.column = None
@@ -740,19 +740,19 @@ class Field(object):
         return False
 
     def convert_to_cache(self, value, record, validate=True):
-        """ convert `value` to the cache level in `env`; `value` may come from
+        """ convert ``value`` to the cache level in ``env``; ``value`` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
 
             :param record: the target record for the assignment, or an empty recordset
 
             :param bool validate: when True, field-specific validation of
-                `value` will be performed
+                ``value`` will be performed
         """
         return value
 
     def convert_to_read(self, value, use_name_get=True):
-        """ convert `value` from the cache to a value as returned by method
+        """ convert ``value`` from the cache to a value as returned by method
             :meth:`BaseModel.read`
 
             :param bool use_name_get: when True, value's diplay name will
@@ -762,7 +762,7 @@ class Field(object):
         return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
-        """ convert `value` from the cache to a valid value for method
+        """ convert ``value`` from the cache to a valid value for method
             :meth:`BaseModel.write`.
 
             :param target: optional, the record to be modified with this value
@@ -772,21 +772,21 @@ class Field(object):
         return self.convert_to_read(value)
 
     def convert_to_onchange(self, value):
-        """ convert `value` from the cache to a valid value for an onchange
+        """ convert ``value`` from the cache to a valid value for an onchange
             method v7.
         """
         return self.convert_to_write(value)
 
     def convert_to_export(self, value, env):
-        """ convert `value` from the cache to a valid value for export. The
-            parameter `env` is given for managing translations.
+        """ convert ``value`` from the cache to a valid value for export. The
+            parameter ``env`` is given for managing translations.
         """
         if env.context.get('export_raw_data'):
             return value
         return bool(value) and ustr(value)
 
     def convert_to_display_name(self, value, record=None):
-        """ convert `value` from the cache to a suitable display name. """
+        """ convert ``value`` from the cache to a suitable display name. """
         return ustr(value)
 
     ############################################################################
@@ -795,7 +795,7 @@ class Field(object):
     #
 
     def __get__(self, record, owner):
-        """ return the value of field `self` on `record` """
+        """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
 
@@ -823,7 +823,7 @@ class Field(object):
         return record._cache[self]
 
     def __set__(self, record, value):
-        """ set the value of field `self` on `record` """
+        """ set the value of field ``self`` on ``record`` """
         env = record.env
 
         # only a single record may be updated
@@ -859,7 +859,7 @@ class Field(object):
     #
 
     def _compute_value(self, records):
-        """ Invoke the compute method on `records`. """
+        """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
             records._cache[field] = field.null(records.env)
@@ -869,7 +869,7 @@ class Field(object):
             records.env.computed[field].difference_update(records._ids)
 
     def compute_value(self, records):
-        """ Invoke the compute method on `records`; the results are in cache. """
+        """ Invoke the compute method on ``records``; the results are in cache. """
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
@@ -882,7 +882,7 @@ class Field(object):
                         record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
-        """ Determine the value of `self` for `record`. """
+        """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
         if self.column and not (self.depends and env.in_draft):
@@ -923,19 +923,19 @@ class Field(object):
             record._cache[self] = self.null(env)
 
     def determine_draft_value(self, record):
-        """ Determine the value of `self` for the given draft `record`. """
+        """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
 
     def determine_inverse(self, records):
-        """ Given the value of `self` on `records`, inverse the computation. """
+        """ Given the value of ``self`` on ``records``, inverse the computation. """
         if self.inverse:
             self.inverse(records)
 
     def determine_domain(self, records, operator, value):
-        """ Return a domain representing a condition on `self`. """
+        """ Return a domain representing a condition on ``self``. """
         if self.search:
             return self.search(records, operator, value)
         else:
@@ -947,7 +947,7 @@ class Field(object):
     #
 
     def modified(self, records):
-        """ Notify that field `self` has been modified on `records`: prepare the
+        """ Notify that field ``self`` has been modified on ``records``: prepare the
             fields/records to recompute, and return a spec indicating what to
             invalidate.
         """
@@ -977,7 +977,7 @@ class Field(object):
         env = records.env
 
         # invalidate the fields on the records in cache that depend on
-        # `records`, except fields currently being computed
+        # ``records``, except fields currently being computed
         spec = []
         for field, path in self._triggers:
             target = env[field.model_name]
@@ -1060,7 +1060,7 @@ class Float(Field):
             return self._digits
 
     def _setup_digits(self, env):
-        """ Setup the digits for `self` and its corresponding column """
+        """ Setup the digits for ``self`` and its corresponding column """
         pass
 
     def _setup_regular(self, env):
@@ -1191,7 +1191,7 @@ class Date(Field):
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM `value` into a :class:`date` value. """
+        """ Convert an ORM ``value`` into a :class:`date` value. """
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
@@ -1255,7 +1255,7 @@ class Datetime(Field):
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM `value` into a :class:`datetime` value. """
+        """ Convert an ORM ``value`` into a :class:`datetime` value. """
         value = value[:DATETIME_LENGTH]
         if len(value) == DATE_LENGTH:
             value += " 00:00:00"
@@ -1296,12 +1296,12 @@ class Binary(Field):
 class Selection(Field):
     """
     :param selection: specifies the possible values for this field.
-        It is given as either a list of pairs (`value`, `string`), or a
+        It is given as either a list of pairs (``value``, ``string``), or a
         model method, or a method name.
     :param selection_add: provides an extension of the selection in the case
-        of an overridden field. It is a list of pairs (`value`, `string`).
+        of an overridden field. It is a list of pairs (``value``, ``string``).
 
-    The attribute `selection` is mandatory except in the case of
+    The attribute ``selection`` is mandatory except in the case of
     :ref:`related fields <field-related>` or :ref:`field extensions
     <field-incremental-definition>`.
     """
@@ -1332,7 +1332,7 @@ class Selection(Field):
         for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
-                # because those attributes are overridden by `set_class_name`.
+                # because those attributes are overridden by ``set_class_name``.
                 if 'selection' in field._attrs:
                     self.selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
@@ -1503,7 +1503,7 @@ class Many2one(_Relational):
     :param delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
 
-    The attribute `comodel_name` is mandatory except in the case of related
+    The attribute ``comodel_name`` is mandatory except in the case of related
     fields or field extensions.
     """
     type = 'many2one'
@@ -1526,7 +1526,7 @@ class Many2one(_Relational):
     _column_auto_join = property(attrgetter('auto_join'))
 
     def _update(self, records, value):
-        """ Update the cached value of `self` for `records` with `value`. """
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
         records._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1593,7 +1593,7 @@ class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
-        """ Update the cached value of `self` for `records` with `value`. """
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
                 record._cache[self] = record[self.name] | value
@@ -1679,7 +1679,7 @@ class _RelationalMulti(_Relational):
         raise NotImplementedError()
 
     def _compute_related(self, records):
-        """ Compute the related field `self` on `records`. """
+        """ Compute the related field ``self`` on ``records``. """
         for record in records:
             value = record
             # traverse the intermediate fields, and keep at most one record
@@ -1690,13 +1690,13 @@ class _RelationalMulti(_Relational):
 
 class One2many(_RelationalMulti):
     """ One2many field; the value of such a field is the recordset of all the
-        records in `comodel_name` such that the field `inverse_name` is equal to
+        records in ``comodel_name`` such that the field ``inverse_name`` is equal to
         the current record.
 
         :param comodel_name: name of the target model (string)
 
-        :param inverse_name: name of the inverse `Many2one` field in
-            `comodel_name` (string)
+        :param inverse_name: name of the inverse ``Many2one`` field in
+            ``comodel_name`` (string)
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
@@ -1709,7 +1709,7 @@ class One2many(_RelationalMulti):
 
         :param limit: optional limit to use upon read (integer)
 
-        The attributes `comodel_name` and `inverse_name` are mandatory except in
+        The attributes ``comodel_name`` and ``inverse_name`` are mandatory except in
         the case of related fields or field extensions.
     """
     type = 'one2many'
@@ -1735,9 +1735,9 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = env[self.comodel_name]
             invf = comodel._fields[self.inverse_name]
-            # In some rare cases, a `One2many` field can link to `Int` field
+            # In some rare cases, a ``One2many`` field can link to ``Int`` field
             # (res_model/res_id pattern). Only inverse the field if this is
-            # a `Many2one` field.
+            # a ``Many2one`` field.
             if isinstance(invf, Many2one):
                 self.inverse_fields += (invf,)
                 invf.inverse_fields += (self,)
@@ -1754,21 +1754,21 @@ class Many2many(_RelationalMulti):
 
         :param comodel_name: name of the target model (string)
 
-        The attribute `comodel_name` is mandatory except in the case of related
+        The attribute ``comodel_name`` is mandatory except in the case of related
         fields or field extensions.
 
         :param relation: optional name of the table that stores the relation in
             the database (string)
 
         :param column1: optional name of the column referring to "these" records
-            in the table `relation` (string)
+            in the table ``relation`` (string)
 
         :param column2: optional name of the column referring to "those" records
-            in the table `relation` (string)
+            in the table ``relation`` (string)
 
-        The attributes `relation`, `column1` and `column2` are optional. If not
+        The attributes ``relation``, ``column1`` and ``column2`` are optional. If not
         given, names are automatically generated from model names, provided
-        `model_name` and `comodel_name` are different!
+        ``model_name`` and ``comodel_name`` are different!
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
