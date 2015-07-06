@@ -20,8 +20,10 @@
 .o_kanban_view {
     .o-flex-display();
     .o-align-content(stretch);
+    overflow-x: visible;
 
     @media (max-width: @grid-float-breakpoint) {
+        overflow-x: auto;
         padding: 0px;
     }
 
