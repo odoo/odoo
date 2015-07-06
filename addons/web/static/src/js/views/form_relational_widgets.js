@@ -477,7 +477,7 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.alter_ids(this.starting_ids.slice());
+            this.dataset.reset_ids([]);
             return this.send_commands(ids);
         }
         this.dataset.reset_ids(ids);
@@ -584,6 +584,7 @@ var AbstractManyField = common.AbstractField.extend({
 
         _.each(command_list, function(command) {
             mutex.exec(function() {
+                var id = command[1];
                 switch (command[0]) {
                     case COMMANDS.CREATE:
                         var data = _.clone(command[2]);
@@ -593,14 +594,19 @@ var AbstractManyField = common.AbstractField.extend({
                             res = id;
                         });
                     case COMMANDS.UPDATE:
-                        return dataset.write(command[1], command[2], options);
+                        return dataset.write(id, command[2], options).then(function () {
+                            if (dataset.ids.indexOf(id) === -1) {
+                                dataset.ids.push(id);
+                                res = id;
+                            }
+                        });
                     case COMMANDS.FORGET:
-                        return dataset.remove_ids([command[1]]);
+                        return dataset.unlink([id]);
                     case COMMANDS.DELETE:
-                        return dataset.unlink(command[1]);
+                        return dataset.unlink([id]);
                     case COMMANDS.LINK_TO:
-                        if (dataset.ids.indexOf(command[1]) === -1) {
-                            return dataset.add_ids([command[1]], options);
+                        if (dataset.ids.indexOf(id) === -1) {
+                            return dataset.add_ids([id], options);
                         }
                         return;
                     case COMMANDS.DELETE_ALL:
@@ -609,7 +615,8 @@ var AbstractManyField = common.AbstractField.extend({
                         dataset.ids = [];
                         return dataset.alter_ids(command[2], options);
                     default:
-                        throw new Error("send_commands to '"+self.name+"' receive a non command value.", command_list);
+                        throw new Error("send_commands to '"+self.name+"' receive a non command value." +
+                            "\n" + JSON.stringify(command_list));
                 }
             });
         });
@@ -666,7 +673,7 @@ var AbstractManyField = common.AbstractField.extend({
             if (is_one2many) {
                 command_list.push(COMMANDS.delete(id));
             } else if (is_one2many && !self.dataset.delete_all) {
-                command_list.push(COMMANDS.unlink(id));
+                command_list.push(COMMANDS.forget(id));
             }
         });
 
