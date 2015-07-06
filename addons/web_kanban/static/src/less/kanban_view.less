@@ -22,7 +22,7 @@
     .o-align-content(stretch);
     overflow-x: visible;
 
-    @media (max-width: @grid-float-breakpoint) {
+    @media (max-width: @screen-xs-max) {
         overflow-x: auto;
         padding: 0px;
     }
@@ -74,7 +74,7 @@
         }
 
         .o_dropdown_kanban {
-            @media (max-width: @grid-float-breakpoint) {
+            @media (max-width: @screen-xs-max) {
                 visibility: visible;
             }
         }
@@ -146,14 +146,14 @@
         .o-justify-content(flex-start);
         padding:  @o-kanban-record-margin @odoo-horizontal-padding - @o-kanban-record-margin;
 
-        @media (max-width: @grid-float-breakpoint) {
+        @media (max-width: @screen-xs-max) {
             padding: 0;
         }
 
         .o_kanban_record {
             .o-flex(1, 1, auto);
             width: @o-kanban-default-record-width;
-            @media (max-width: @grid-float-breakpoint) {
+            @media (max-width: @screen-xs-max) {
                 margin: 0 0 1px 0;
                 width: 100vw;
                 box-shadow: none;
