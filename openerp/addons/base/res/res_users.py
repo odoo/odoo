@@ -647,7 +647,7 @@ class groups_implied(osv.osv):
                 new_users = set([user.id for user in g.users])
                 if users_map[g.id] < new_users:
                     gids = map(int, g.trans_implied_ids)
-                    vals = {'users': [(4, u.id) for u in (new_users - users_map[g.id])]}
+                    vals = {'users': [(4, user_id) for user_id in (new_users - users_map[g.id])]}
                     super(groups_implied, self).write(cr, uid, gids, vals, context)
         return res
 
