@@ -3,11 +3,12 @@ odoo.define('website.snippets.animation', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var website = require('website.website');
+var base = require('web_editor.base');
+var animation = require('web_editor.snippets.animation');
 
-var readyAnimation = [];
+var qweb = core.qweb;
 
-var animationRegistry = Object.create(null);
+/*-------------------------------------------------------------------------*/
 
 function load_called_template () {
     var ids_or_xml_ids = _.uniq($("[data-oe-call]").map(function () {return $(this).data('oe-call');}).get());
@@ -25,17 +26,19 @@ function load_called_template () {
     }
 }
 
-$(document).ready(function () {
-    load_called_template(); // if asset is placed into head, move this call into $(document).ready
+/*-------------------------------------------------------------------------*/
 
+base.ready().then(function () {
+    load_called_template();
     if ($(".o_gallery:not(.oe_slideshow)").size()) {
         // load gallery modal template
-        website.add_template_file('/website/static/src/xml/website.gallery.xml');
+        ajax.loadXML('/website/static/src/xml/website.gallery.xml', qweb);
     }
 });
 
+/*-------------------------------------------------------------------------*/
 
-animationRegistry.slider = Animation.extend({
+animation.registry.slider = animation.Class.extend({
     selector: ".carousel",
     start: function () {
         this.$target.carousel();
@@ -46,7 +49,7 @@ animationRegistry.slider = Animation.extend({
     },
 });
 
-animationRegistry.parallax = Animation.extend({
+animation.registry.parallax = animation.Class.extend({
     selector: ".parallax",
     start: function () {
         var self = this;
@@ -99,7 +102,7 @@ animationRegistry.parallax = Animation.extend({
     }
 });
 
-animationRegistry.share = Animation.extend({
+animation.registry.share = animation.Class.extend({
     selector: ".oe_share",
     start: function () {
         var url = encodeURIComponent(window.location.href);
@@ -118,7 +121,7 @@ animationRegistry.share = Animation.extend({
     }
 });
 
-animationRegistry.media_video = Animation.extend({
+animation.registry.media_video = animation.Class.extend({
     selector: ".media_iframe_video",
     start: function () {
         if (!this.$target.has('.media_iframe_video_size')) {
@@ -129,9 +132,9 @@ animationRegistry.media_video = Animation.extend({
     },
 });
 
-animationRegistry.ul = Animation.extend({
+animation.registry.ul = animation.Class.extend({
     selector: "ul.o_ul_folded, ol.o_ul_folded",
-    start: function () {
+    start: function (editable_mode) {
         this.$('.o_ul_toggle_self').off('click').on('click', function (event) {
             $(this).toggleClass('o_open');
             $(this).closest('li').find('ul,ol').toggleClass('o_close');
@@ -152,12 +155,14 @@ Gallery Animation
 This ads a Modal window containing a slider when an image is clicked 
 inside a gallery 
 -------------------------------------------------------------------------*/
-animationRegistry.gallery = Animation.extend({
+animation.registry.gallery = animation.Class.extend({
     selector: ".o_gallery:not(.o_slideshow)",
     start: function() {
+        var self = this;
         this.$el.on("click", "img", this.click_handler);
     },
     click_handler : function(event) {
+        var self = this;
         var $cur = $(event.currentTarget);
         var edition_mode = ($cur.closest("[contenteditable='true']").size() !== 0);
         
@@ -185,14 +190,14 @@ animationRegistry.gallery = Animation.extend({
             idx = urls.indexOf($img.attr("src"));
 
             milliseconds = $cur.closest(".o_gallery").data("interval") || false;
-            params = {
+            var params = {
                 srcs : urls,
                 index: idx,
                 dim  : dimensions,
                 interval : milliseconds,
                 id: _.uniqueId("slideshow_")
             };
-            var $modal = $(core.qweb.render('website.gallery.slideshow.lightbox', params));
+            var $modal = $(qweb.render('website.gallery.slideshow.lightbox', params));
             $modal.modal({
                 keyboard : true,
                 backdrop : true
@@ -206,14 +211,15 @@ animationRegistry.gallery = Animation.extend({
             $modal.find(".modal-content, .modal-body.o_slideshow").css("height", "100%");
             $modal.appendTo(document.body);
 
-            this.carousel = new animationRegistry.gallery_slider($modal.find(".carousel").carousel());
+            this.carousel = new animation.registry.gallery_slider($modal.find(".carousel").carousel());
         }
     } // click_handler  
 });
-animationRegistry.gallery_slider = Animation.extend({
+animation.registry.gallery_slider = animation.Class.extend({
     selector: ".o_slideshow",
     start: function() {
         var $carousel = this.$target.is(".carousel") ? this.$target : this.$target.find(".carousel");
+        var self = this;
         var $indicator = $carousel.find('.carousel-indicators');
         var $lis = $indicator.find('li:not(.fa)');
         var $prev = $indicator.find('li.fa:first');

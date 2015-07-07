@@ -1,10 +1,10 @@
 odoo.define('report.editor', function (require) {
 "use strict";
 
-var base = require('web_editor.base');
+var editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 
-base.reload = function () {
+editor.reload = function () {
     location.hash = "scrollTop=" + window.document.body.scrollTop;
     window.location.reload();
 };

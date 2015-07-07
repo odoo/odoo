@@ -934,6 +934,7 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
 };
 $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
     var $editable = layoutInfo.editable();
+    $editable.data('NoteHistory').recordUndo($editable, 'tab');
     var r = range.create();
     var outdent = outdent || false;
 
@@ -946,7 +947,6 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             } else if (outdent && !dom.previousElementSibling(td) && !$(td.parentNode).text().match(/\S/)) {
                 $.summernote.pluginEvents.backspace(event, editor, layoutInfo);
             } else {
-                $editable.data('NoteHistory').splitNext();
                 editor.table.tab(r, outdent);
             }
             event.preventDefault();

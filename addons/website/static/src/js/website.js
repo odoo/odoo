@@ -331,6 +331,10 @@ var data = {
     form: form,
     if_dom_contains: if_dom_contains,
     TopBar: TopBar,
+    ready: function () {
+        console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
+        return base.ready();
+    }
 };
 return data;
 

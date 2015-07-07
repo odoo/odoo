@@ -64,21 +64,11 @@ function translations() {
         }).promise();
 }
 
-var reload = function () {
-    location.hash = "scrollTop=" + window.document.body.scrollTop;
-    if (location.search.indexOf("enable_editor") > -1) {
-        window.location.href = window.location.href.replace(/enable_editor(=[^&]*)?/g, '');
-    } else {
-        window.location.reload();
-    }
-};
-
 var data = {
     'get_context': get_context,
     'url_translations': '/web/webclient/translations',
     'dom_ready': dom_ready,
     'ready': ready,
-    'reload': reload
 };
 return data;
 

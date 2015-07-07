@@ -57,7 +57,7 @@ var FieldTextHtmlSimple = widget.extend({
             this.$textarea.summernote(this._config());
 
             if (this.field.translate && this.view) {
-                $(QWeb.render('web_editor.FieldTextHtml.button.translate', this))
+                $(QWeb.render('web_editor.FieldTextHtml.button.translate', {'widget': this}))
                     .appendTo(this.$('.note-toolbar'))
                     .on('click', this.on_translate);
             }

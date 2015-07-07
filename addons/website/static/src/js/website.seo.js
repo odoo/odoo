@@ -1,14 +1,18 @@
 odoo.define('website.seo', function (require) {
 'use strict';
 
+var core = require('web.core');
+var ajax = require('web.ajax');
 var Class = require('web.Class');
 var mixins = require('web.mixins');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.add_template_file('/website/static/src/xml/website.seo.xml');
+var qweb = core.qweb;
 
+ajax.loadXML('/website/static/src/xml/website.seo.xml', qweb);
 
     // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
     // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
@@ -348,7 +352,7 @@ var Configurator = Widget.extend({
         $modal.find('input[name=seo_page_title]').val(htmlPage.title());
         $modal.find('textarea[name=seo_page_description]').val(htmlPage.description());
         // self.suggestImprovements();
-        // self.imageList = new website.seo.ImageList(self, { page: htmlPage });
+        // self.imageList = new ImageList(self, { page: htmlPage });
         // if (htmlPage.images().length === 0) {
         //     $modal.find('.js_image_section').remove();
         // } else {
@@ -468,8 +472,7 @@ var Configurator = Widget.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
-            var model = new Model(obj.model);
-            model.call('read', [[obj.id], fields, website.get_context()]).then(function (data) {
+            var model = new Model(obj.model).call('read', [[obj.id], fields, base.get_context()]).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
                     meta.model = obj.model;
@@ -488,8 +491,7 @@ var Configurator = Widget.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            var model = new Model(obj.model);
-            return model.call('write', [[obj.id], data, website.get_context()]);
+            return new Model(obj.model).call('write', [[obj.id], data, base.get_context()]);
         }
     },
     titleChanged: function () {
@@ -524,10 +526,13 @@ var Configurator = Widget.extend({
     },
 });
 
-website.ready().done(function() {
-    $(document.body).on('click', 'a[data-action=promote-current-page]', function() {
-        new Configurator(this).appendTo($(document.body));
-    });
+website.TopBar.include({
+    start: function () {
+        this.$el.on('click', 'a[data-action=promote-current-page]', function() {
+            new Configurator(this).appendTo($(document.body));
+        });
+        return this._super();
+    }
 });
 
 return {

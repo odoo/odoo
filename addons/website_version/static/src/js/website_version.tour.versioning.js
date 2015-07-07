@@ -58,12 +58,6 @@ Tour.register({
             waitNot:   '.modal button.o_confirm',
         },
         {
-            title:     _t("Click on Edit"),
-            content:   _t("Every page of your website can be modified through the <i>Edit</i> button."),
-            waitFor:   'button[data-action="edit"]',
-            element:   'button[data-action="edit"]',
-        },
-        {
             snippet:   '#snippet_structure .oe_snippet:first',
             placement: 'bottom',
             title:     _t("Drag & Drop a Banner"),
@@ -111,7 +105,7 @@ Tour.register({
             popover:   { fixed: true },
         },
         {
-            waitFor:   'button[data-action=save]:not(:visible)',
+            waitNot:   'button[data-action=save]:visible',
             title:     _t("Good Job!"),
             content:   _t("Well done, you created a version of your homepage."),
             popover:   { next: _t("Continue") },

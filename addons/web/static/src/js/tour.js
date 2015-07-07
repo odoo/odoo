@@ -115,14 +115,14 @@ var Tour = {
             if (snippet) {
                 step.snippet = snippet[1];
             } else if (step.snippet) {
-                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
+                step.element = '#o_left_bar '+step.snippet+' .oe_snippet_thumbnail';
                 tour.steps.splice(index, 0, {
                     id: index,
                     waitNot: step.waitNot,
                     waitFor: step.waitFor,
                     title: _t("Move your mouse"),
                     content: _t("Move your mouse here to open the insert block"),
-                    element: '#oe_snippets',
+                    element: '#o_left_bar',
                     onend: function () {
                         $("#oe_snippets").addClass("o_open");
                     }
@@ -243,7 +243,7 @@ var Tour = {
             $("body").append('<div class="tour-backdrop"></div>');
         }
 
-        if (step.backdrop || $element.parents("#website-top-navbar, .oe_navbar, .modal").size()) {
+        if (step.backdrop || $element.parents("#web_editor-top-edit, .oe_navbar, .modal").size()) {
             $tip.css("z-index", 2010);
         }
 
@@ -694,9 +694,11 @@ var Tour = {
 /////////////////////////////////////////////////
 
 $(document).ready(function () {
-    if (Tour.autoRunning) {
-        Tour.running();
-    };
+    setTimeout(function () {
+        if (Tour.autoRunning) {
+            Tour.running();
+        }
+    }, 0);
 });
 
 return Tour;

@@ -2,11 +2,11 @@ odoo.define('website_sale.website_sale', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var session = require('web.session');
 var core = require('web.core');
 var _t = core._t;
+var base = require('web_editor.base');
 
-$(document).ready(function () {
+base.dom_ready.then(function () {
 
 $('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
     $(this).parent().siblings().find('.fa-chevron-down:first').click();
@@ -18,7 +18,6 @@ $('#o_shop_collapse_category').on('click', '.fa-chevron-down',function(){
     $(this).parent().find('ul:first').hide('normal');
     $(this).toggleClass('fa-chevron-down fa-chevron-right');
 });
-
 
 
 var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
@@ -207,11 +206,15 @@ $('.oe_website_sale').each(function () {
         return false;
     });
 
-    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function () {
-        $(this).closest('form').submit();
+    $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
+        if (!event.isDefaultPrevented()) {
+            $(this).closest('form').submit();
+        }
     });
-    $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function () {
-        $(this).closest("form").submit();
+    $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function (event) {
+        if (!event.isDefaultPrevented()) {
+            $(this).closest("form").submit();
+        }
     });
 
     // change price when they are variants
@@ -243,7 +246,7 @@ $('.oe_website_sale').each(function () {
         $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
 
         var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-        $img.attr("src", "/website/image/product.product/" + $(this).val() + "/image");
+        $img.attr("src", "/web_editor/image/product.product/" + $(this).val() + "/image");
     });
 
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function (ev) {
@@ -280,7 +283,7 @@ $('.oe_website_sale').each(function () {
 
         if (product_id) {
             var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-            $img.attr("src", "/website/image/product.product/" + product_id + "/image");
+            $img.attr("src", "/web_editor/image/product.product/" + product_id + "/image");
             $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                 .data('oe-model', 'product.product').data('oe-id', product_id);
         }
@@ -333,6 +336,7 @@ $('.oe_website_sale').each(function () {
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
 });
+
 });
 
 });

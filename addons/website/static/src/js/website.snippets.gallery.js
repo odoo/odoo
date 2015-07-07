@@ -1,17 +1,21 @@
-odoo.define('website.snippets.gallery', function (require) {
+odoo.define('website.snippets.editor.gallery', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
 var core = require('web.core');
-var snippets_editor = require('website.snippets.editor');
-var website = require('website.website');
+var base = require('web_editor.base');
+var widget = require('web_editor.widget');
+var animation = require('web_editor.snippets.animation');
+var options = require('web_editor.snippets.options');
+var snippet_editor = require('web_editor.snippet.editor');
 
 var _t = core._t;
-var QWeb = core.qweb;
+var qweb = core.qweb;
 
 /*--------------------------------------------------------------------------
  Template files to load
  --------------------------------------------------------------------------*/
-website.add_template_file('/website/static/src/xml/website.gallery.xml');
+ajax.loadXML('/website/static/src/xml/website.gallery.xml', qweb);
 
 /*--------------------------------------------------------------------------
   Gallery Snippet
@@ -19,7 +23,7 @@ website.add_template_file('/website/static/src/xml/website.gallery.xml');
   This is the snippet responsible for configuring the image galleries.
   Look at /website/views/snippets.xml for the available options
   ------------------------------------------------------------------------*/
-snippets_editor.options.gallery = snippets_editor.Option.extend({
+options.registry.gallery = options.Class.extend({
     start  : function() {
         this._super();
         this.bind_change();
@@ -203,7 +207,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
                 interval : this.$target.data("interval") || false,
                 id: "slideshow_" + (uuid+1)
             },
-            $slideshow = $(QWeb.render('website.gallery.slideshow', params));
+            $slideshow = $(qweb.render('website.gallery.slideshow', params));
         this.replace($slideshow);
         this.$target.find(".item img").each(function (index) {
             $(this).attr('data-index', index).data('index', index);
@@ -214,7 +218,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
         this.$target.off('slide.bs.carousel').off('slid.bs.carousel');
         this.$target.find('li.fa').off('click');
         if (this.$target.data("snippet-view", view)) {
-            var view = new website.snippet.animationRegistry.gallery_slider(this.$target, true);
+            var view = new animation.registry.gallery_slider(this.$target, true);
             this.$target.data("snippet-view", view);
         } else {
             this.$target.data("snippet-view").start(true);
@@ -231,7 +235,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
         if(type !== "click") return;
         var self = this;
         var $container = this.$target.find(".container:first");
-        var editor = new website.editor.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
+        var editor = new widget.MediaDialog(this.$target.closest('.o_editable'), null, {select_images: true});
         editor.appendTo(document.body);
         var index = Math.max(_.map(this.$target.find("img").get(), function (img) { return img.dataset.index | 0; })) + 1;
         editor.on('saved', this, function (attachments) {
@@ -244,7 +248,7 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
             }
             self.reapply(); // refresh the $target
             setTimeout(function () {
-                self.BuildingBlock.make_active(self.$target);
+                self.buildingBlock.make_active(self.$target);
             },0);
         });
     },
@@ -332,15 +336,15 @@ snippets_editor.options.gallery = snippets_editor.Option.extend({
             .parent().parent().toggle(["grid", "masonry"].indexOf(mode) !== -1);
         this.$el.find('[data-interval]:first').parent().parent().toggle(mode === "slideshow");
     },
-}); // website.snippet.Option.extend
+}); // options.Class.extend
 
 
-snippets_editor.options.gallery_img = snippets_editor.Option.extend({
+options.registry.gallery_img = options.Class.extend({
     position: function (type, value) {
         if (type !== "click") return;
 
         var $parent = this.$target.closest("section");
-        this.BuildingBlock.create_overlay($parent);
+        this.buildingBlock.create_overlay($parent);
         var editor = $parent.data('snippet-editor').styles.gallery;
         var imgs = $parent.find('img').get();
         imgs.sort(function (a,b) { return $(a).data('index')-$(b).data('index'); });
@@ -356,7 +360,7 @@ snippets_editor.options.gallery_img = snippets_editor.Option.extend({
 
         this.$target.data('index',index);
 
-        this.BuildingBlock.make_active(false);
+        this.buildingBlock.make_active(false);
         setTimeout(function () {
             editor.reapply();
         },0);
@@ -365,11 +369,11 @@ snippets_editor.options.gallery_img = snippets_editor.Option.extend({
         if (type !== "click") return;
 
         var self = this;
-        var $parent = snippets_editor.globalSelector.closest(this.$target.parent());
-        this.BuildingBlock.make_active(false);
+        var $parent = snippet_editor.globalSelector.closest(this.$target.parent());
+        this.buildingBlock.make_active(false);
         this.$target.remove();
         setTimeout(function () {
-            self.BuildingBlock.make_active($parent);
+            self.buildingBlock.make_active($parent);
             var gallery = $parent.data('snippet-editor').styles.gallery;
             gallery.reapply();
         }, 0);

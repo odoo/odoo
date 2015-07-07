@@ -4,6 +4,7 @@ odoo.define('website.theme', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 
 var QWeb = core.qweb;
@@ -11,7 +12,7 @@ var QWeb = core.qweb;
 ajax.jsonRpc('/web/dataset/call', 'call', {
         'model': 'ir.ui.view',
         'method': 'read_template',
-        'args': ['website.theme_customize', website.get_context()]
+        'args': ['website.theme_customize', base.get_context()]
     }).done(function (data) {
     QWeb.add_template(data);
 });
@@ -19,7 +20,7 @@ ajax.jsonRpc('/web/dataset/call', 'call', {
 ajax.jsonRpc('/web/dataset/call', 'call', {
         'model': 'ir.ui.view',
         'method': 'read_template',
-        'args': ['web_editor.colorpicker', website.get_context()]
+        'args': ['web_editor.colorpicker', base.get_context()]
     }).done(function (data) {
     QWeb.add_template(data);
 });
@@ -276,22 +277,25 @@ function themeError(message) {
     });
 }
 
-
-website.ready().done(function() {
-    function theme_customize() {
-        if (Theme.open && !Theme.open.isDestroyed()) return;
-        Theme.open = new Theme();
-        Theme.open.appendTo("body");
-        
-        var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
-        if (error && error !== 'none') {
-            themeError(eval(error));
-        }
+function theme_customize() {
+    if (Theme.open && !Theme.open.isDestroyed()) return;
+    Theme.open = new Theme();
+    Theme.open.appendTo("body");
+    
+    var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
+    if (error && error !== 'none') {
+        themeError(eval(error));
     }
-    $(document).on('click', "#theme_customize a",theme_customize);
-    if ((window.location.hash || "").indexOf("theme=true") !== -1) {
-        theme_customize();
-        window.location.hash = "";
+}
+
+website.TopBar.include({
+    start: function () {
+        this.$el.on('click', "#theme_customize a", theme_customize);
+        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+            theme_customize();
+            window.location.hash = "";
+        }
+        return this._super();
     }
 });
 

@@ -2,9 +2,10 @@ odoo.define('website_links.code_editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.ready().done(function() {
+base.ready().done(function() {
 website.if_dom_contains('.o_website_links_edit_code', function() {
 
     // Edit the short URL code

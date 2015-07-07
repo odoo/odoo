@@ -3,12 +3,11 @@ odoo.define('website.tour.banner', function (require) {
 
 var core = require('web.core');
 var Tour = require('web.Tour');
-var website = require('website.website');
-
+var base = require('web_editor.base');
 
 var _t = core._t;
 
-website.ready().done(function () {
+base.ready().done(function () {
 
     Tour.register({
         id:   'banner',
@@ -77,7 +76,7 @@ website.ready().done(function () {
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=save]:not(:visible)',
+                waitFor:   'button[data-action=edit]:visible',
                 title:     _t("Good Job!"),
                 content:   _t("Well done, you created your homepage."),
                 popover:   { next: _t("Continue") },

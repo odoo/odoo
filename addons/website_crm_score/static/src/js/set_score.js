@@ -1,18 +1,22 @@
 odoo.define('website_crm_score.set_score', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var Model = require('web.Model');
 var seo = require('website.seo');
-var website = require('website.website');
+var base = require('web_editor.base');
+var core = require('web.core');
 
-website.add_template_file('/website_crm_score/static/src/xml/track_page.xml');
+var qweb = core.qweb;
+
+ajax.loadXML('/website_crm_score/static/src/xml/track_page.xml', qweb);
 
 seo.Configurator.include({
     track: null,
     start: function() {
         this._super.apply(this, arguments);
         var self = this;
-        var obj = website.seo.Configurator.prototype.getMainObject();
+        var obj = seo.Configurator.prototype.getMainObject();
         // only display checkbox for website page
         if (obj && obj.model === 'ir.ui.view') {
             this.is_tracked().then(function(data){
@@ -33,7 +37,7 @@ seo.Configurator.include({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return new Model(obj.model).call('read', [[obj.id], ['track'], website.get_context()]);
+            return new Model(obj.model).call('read', [[obj.id], ['track'], base.get_context()]);
         }
     },
     update: function () {
@@ -54,7 +58,7 @@ seo.Configurator.include({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return new Model(obj.model).call('write', [[obj.id], { track: val }, website.get_context()]);
+            return new Model(obj.model).call('write', [[obj.id], { track: val }, base.get_context()]);
         }
     },
 });

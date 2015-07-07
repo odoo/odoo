@@ -54,19 +54,18 @@ var Translate = translate.Class.include({
     },
     edit: function () {
         $("#oe_main_menu_navbar").hide();
-        if (localStorage[nodialog]) {
-            return;
+        if (!localStorage[nodialog]) {
+            var dialog = new TranslatorDialog();
+            dialog.appendTo($(document.body));
+            dialog.on('activate', this, function () {
+                if (dialog.$('input[name=do_not_show]').prop('checked')) {
+                    localStorage.removeItem(nodialog);
+                } else {
+                    localStorage.setItem(nodialog, true);
+                }
+                dialog.$el.modal('hide');
+            });
         }
-        var dialog = new TranslatorDialog();
-        dialog.appendTo($(document.body));
-        dialog.on('activate', this, function () {
-            if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                localStorage.removeItem(nodialog);
-            } else {
-                localStorage.setItem(nodialog, true);
-            }
-            dialog.$el.modal('hide');
-        });
         return this._super();
     },
     cancel: function () {

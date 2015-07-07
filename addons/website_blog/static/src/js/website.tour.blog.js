@@ -3,12 +3,12 @@ odoo.define('website_blog.tour', function (require) {
 
 var core = require('web.core');
 var Tour = require('web.Tour');
-var website = require('website.website');
+var base = require('web_editor.base');
 
 var _t = core._t;
 
+base.ready().done(function () {
 
-website.ready().done(function () {
     Tour.register({
         id:   'blog',
         name: _t("Create a blog post"),
@@ -95,7 +95,7 @@ website.ready().done(function () {
                 popover:   { fixed: true },
             },
             {
-                waitFor:   'button[data-action=save]:not(:visible)',
+                waitNot:   'button[data-action=save]:visible',
                 element:   'a[data-action=show-mobile-preview]',
                 placement: 'bottom',
                 title:     _t("Mobile Preview"),

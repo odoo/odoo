@@ -393,7 +393,7 @@ options.registry["margin-y"] = options.registry.marginAndResize.extend({
     },
 });
 
-options.registry["margin-x"] = options.marginAndResize.extend(preventParentEmpty).extend({
+options.registry["margin-x"] = options.registry.marginAndResize.extend(preventParentEmpty).extend({
     getSize: function () {
         this.grid = this._super();
         var width = this.$target.parents(".row:first").first().outerWidth();
@@ -673,8 +673,7 @@ options.registry.ul = options.Class.extend({
     }
 });
 
-
-options.registry.collapse = Option.extend(preventParentEmpty).extend({
+options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
     start: function () {
         var self = this;
         this._super();
@@ -732,7 +731,6 @@ options.registry.collapse = Option.extend(preventParentEmpty).extend({
         }
     }
 });
-
 
 
 });

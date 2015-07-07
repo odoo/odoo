@@ -5,35 +5,30 @@ odoo.define('website_blog.InlineDiscussion', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var website = require('website.website');
-
+var base = require('web_editor.base');
 
 var qweb = core.qweb;
 
+ajax.loadXML('/website_blog/static/src/xml/website_blog.inline.discussion.xml', qweb);
+
+
 var InlineDiscussion = core.Class.extend({
     init: function(options) {
-        var self = this ;
-        self.discus_identifier;
         var defaults = {
             position: 'right',
             post_id: $('#blog_post_name').attr('data-blog-id'),
             content : false,
             public_user: false,
         };
-        self.settings = $.extend({}, defaults, options);
-
-        // TODO: bundlify qweb templates
-        website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml').then(function () {
-            self.do_render(self);
-        });
+        this.settings = $.extend({}, defaults, options);
     },
-    do_render: function() {
+    start: function() {
         var self = this;
-        if ($('#discussions_wrapper').length === 0 && self.settings.content.length > 0) {
+        if ($('#discussions_wrapper').length === 0 && this.settings.content.length > 0) {
             $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
         }
         // Attach a discussion to each paragraph.
-        self.discussions_handler(self.settings.content);
+        this.discussions_handler(this.settings.content);
 
         // Hide the discussion.
         $('html').click(function(event) {

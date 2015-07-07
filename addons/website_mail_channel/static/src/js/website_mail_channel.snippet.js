@@ -2,14 +2,14 @@ odoo.define('website_mail_channel.snippet', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
-var animation = require('website.snippets.animation');
+var base = require('web_editor.base');
+var animation = require('web_editor.snippets.animation');
 
-animation.registry.follow_alias = animation.Animation.extend({
+animation.registry.follow_alias = animation.Class.extend({
     selector: ".js_follow_alias",
     start: function (editable_mode) {
         var self = this;
         this.is_user = false;
-
         ajax.jsonRpc('/website_mail/is_follower', 'call', {
             model: this.$target.data('object'),
             id: this.$target.data('id'),
@@ -85,7 +85,8 @@ animation.registry.follow_alias = animation.Animation.extend({
     }
 });
 
-$(document).ready(function () {
+
+base.dom_ready.then(function () {
     $('.js_follow_btn').on('click', function (ev) {
         var email = $(ev.currentTarget).parents('.js_mg_follow_form').first().find('.js_follow_email').val();
         $(document).find('.js_follow_email').val(email);

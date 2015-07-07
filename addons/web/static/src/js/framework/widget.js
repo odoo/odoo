@@ -164,6 +164,18 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
         }, target);
     },
     /**
+     * Attach the current widget to a dom element
+     *
+     * @param target A jQuery object or a Widget instance.
+     */
+    attachTo: function(target) {
+        var self = this;
+        this.setElement(target.$el || target);
+        return this.willStart().then(function() {
+            return self.start();
+        });
+    },
+    /**
      * Renders the current widget and replaces the given jQuery object.
      *
      * @param target A jQuery object or a Widget instance.

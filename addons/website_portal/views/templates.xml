@@ -280,7 +280,7 @@
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
                             <div class="col-md-1 text-center">
-                                <img t-att-src="'/website/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                                <img t-att-src="'/web_editor/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
                             </div>
                             <div id='product_name' class="col-md-5">
                               <span t-esc="ol.product_id.name"/>
@@ -445,7 +445,7 @@
     </template>
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="website.layout">
-        <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'Logout')]" position="before">
+        <xpath expr="//li[@id='o_logout']" position="before">
             <li><a href="/my/home" role="menuitem">My Account</a></li>
         </xpath>
     </template>

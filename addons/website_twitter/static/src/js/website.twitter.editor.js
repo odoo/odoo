@@ -3,12 +3,12 @@ odoo.define('website_twitter.editor', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var snippet_editor = require('website.snippets.editor');
+var options = require('web_editor.snippets.options');
 
 var qweb = core.qweb;
 
 
-snippet_editor.options["twitter"] = snippet_editor.options.marginAndResize.extend({
+options.registry.twitter = options.registry.marginAndResize.extend({
     start: function(){
         this._super();
         this.make_hover_config();

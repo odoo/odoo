@@ -4,7 +4,7 @@ odoo.define('web_editor.snippets.animation', function (require) {
 var Class = require('web.Class');
 var base = require('web_editor.base');
 
-var registry = [];
+var registry = {};
 var ready = [];
 
 var Animation = Class.extend({
@@ -66,14 +66,14 @@ var stop = function () {
     });
 };
 
-base.ready(function () {
+base.ready().always(function () {
     setTimeout(function () {
         start();
     },0);
 });
 
 return {
-    'Class': Class,
+    'Class': Animation,
     'registry': registry,
     'start': start,
     'stop': stop

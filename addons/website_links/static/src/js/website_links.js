@@ -4,9 +4,11 @@ odoo.define('website_links.website_links', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 var Model = require('web.Model');
 
+var qweb = core.qweb;
 var _t = core._t;
 var ZeroClipboard = window.ZeroClipboard;
 
@@ -235,7 +237,9 @@ website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
         },
     });
 
-    website.ready().done(function() {
+    ajax.loadXML('/website_links/static/src/xml/recent_link.xml', qweb);
+
+    base.ready().done(function() {
 
         ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
 
@@ -250,28 +254,24 @@ website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
         source_select.start($("#source-select"), _t('e.g. Search Engine, Website page, ..'));
 
         // Recent Links Widgets
-        var recent_links;
-        website.add_template_file('/website_links/static/src/xml/recent_link.xml')
-            .then(function() {
-                recent_links = new RecentLinks();
-                recent_links.appendTo($("#o_website_links_recent_links"));
-                recent_links.get_recent_links('newest');
+        var recent_links = new RecentLinks();
+            recent_links.appendTo($("#o_website_links_recent_links"));
+            recent_links.get_recent_links('newest');
 
-                $('#filter-newest-links').click(function() {
-                    recent_links.remove_links();
-                    recent_links.get_recent_links('newest');
-                });
+        $('#filter-newest-links').click(function() {
+            recent_links.remove_links();
+            recent_links.get_recent_links('newest');
+        });
 
-                $('#filter-most-clicked-links').click(function() {
-                    recent_links.remove_links();
-                    recent_links.get_recent_links('most-clicked');
-                });
+        $('#filter-most-clicked-links').click(function() {
+            recent_links.remove_links();
+            recent_links.get_recent_links('most-clicked');
+        });
 
-                $('#filter-recently-used-links').click(function() {
-                    recent_links.remove_links();
-                    recent_links.get_recent_links('recently-used');
-                });
-            });
+        $('#filter-recently-used-links').click(function() {
+            recent_links.remove_links();
+            recent_links.get_recent_links('recently-used');
+        });
         
         // Clipboard Library
         var client = new ZeroClipboard($("#btn_shorten_url"));

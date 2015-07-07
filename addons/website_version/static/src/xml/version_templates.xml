@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="all_versions">
+    <t t-name="website_version.all_versions">
         <t t-foreach="versions" t-as="item">
             <li class="o_version_choice" t-att-data-version_id="item.id">
                 <a href="#" data-action="delete_version" style="position: absolute; right: 0px;" class="pull-right"><i class="fa fa-trash-o fa-fw"></i></a>
-                <t t-if="item.bold == 0 ">
-                    <a href="#" data-action="change_version" t-att-data-version_id="item.id"><t t-esc="item.name"></t> </a>
-                </t>
-                <t t-if="item.bold == 1 ">
-                    <a href="#" data-action="change_version" t-att-data-version_id="item.id"> <b><t t-esc="item.name"></t></b> </a>
-                </t>
+                <a href="#" data-action="change_version">
+                    <t t-if="item.bold == 0 "><t t-esc="item.name"></t></t>
+                    <t t-if="item.bold == 1 "><b><t t-esc="item.name"></t></b></t>
+                </a>
             </li>
         </t>
     </t>
 
-    <t t-extend="website.editorbar">
-        <t t-jquery=".navbar-header form button" t-operation="replace">
+    <t t-extend="web_editor.editorbar">
+        <t t-jquery=".navbar form button" t-operation="replace">
             <div class="btn-group">
                 <button type="button" data-action="save" class="btn btn-primary btn-xs">Save</button>
                 <button type="button" class="btn btn-primary btn-xs dropdown-toggle option_choice" data-toggle="dropdown">
@@ -33,7 +31,14 @@
         </t>
     </t>
 
-    <t t-name="experiment_menu">
+    <t t-name="website_version.all_options">    
+        <li class="o_second_choice">
+            <a href="#" id="save_and_publish" data-action="save_and_publish" 
+                class="btn btn-link btn-xs o_version"><t t-esc="version"></t></a>
+        </li>
+    </t>
+
+    <t t-name="website_version.experiment_menu">
         <li class="o_experiment"><a href="#" data-action="manage_experiment">Manage A/B tests</a></li>
         <li class="o_experiment"><a href="#" data-action="statistics">Statistics</a></li>
     </t>
