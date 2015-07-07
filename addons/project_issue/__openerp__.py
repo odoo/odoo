@@ -26,15 +26,14 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
-        'data/project_issue_data.xml',
+        'data/mail_message_data.xml',
+        'data/mail_message_subtype_data.xml',
         'views/project_dashboard.xml',
-     ],
-    'demo': ['data/project_issue_demo.xml'],
-    'test': [
-        'test/issue_users.yml',
-        'test/subscribe_issue.yml',
-        'test/issue_process.yml',
-        'test/issue_demo.yml'
+    ],
+    'demo': [
+        'data/project_tags_demo.xml',
+        'data/project_project_demo.xml',
+        'data/project_issue_demo.xml',
     ],
     'installable': True,
     'auto_install': False,
