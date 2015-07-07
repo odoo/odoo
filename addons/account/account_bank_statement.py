@@ -584,7 +584,11 @@ class account_bank_statement_line(osv.osv):
         # Look for a matching amount
         exact_match_amount_field = amount_field in ('debit', 'credit') and 'amount_residual' or 'amount_residual_currency'
         domain_exact_amount = domain + [(exact_match_amount_field, '=', float_round(amount, precision_digits=precision_digits))]
-        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+        domain_exact_amount_ref = domain_exact_amount + [('ref', '=', st_line.ref)]
+        match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount_ref)
+        if not match_id:
+            match_id = self.get_move_lines_for_reconciliation(cr, uid, st_line, excluded_ids=excluded_ids, offset=0, limit=2, additional_domain=domain_exact_amount)
+
         if match_id and len(match_id) == 1:
             return match_id
 

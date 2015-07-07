@@ -269,7 +269,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
         },{
             model: 'res.currency',
-            fields: ['symbol','position','rounding','accuracy'],
+            fields: ['name','symbol','position','rounding','accuracy'],
             ids:    function(self){ return [self.pricelist.currency_id[0]]; },
             loaded: function(self, currencies){
                 self.currency = currencies[0];

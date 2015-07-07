@@ -87,7 +87,7 @@ def py2exe_options():
                         'PIL',
                         'poplib',
                         'psutil',
-                        'python-chart',
+                        'pychart',
                         'pydot',
                         'pyparsing',
                         'pyPdf',

@@ -6,6 +6,7 @@ import werkzeug
 
 from openerp import tools
 from openerp.addons.web import http
+from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug, unslug
 from openerp.exceptions import UserError
@@ -271,7 +272,8 @@ class WebsiteBlog(http.Controller):
     @http.route(['/blog/post_comment'], type='http', auth="public", methods=['GET', 'POST'], website=True)
     def blog_post_comment(self, blog_post_id=0, **kw):
         cr, uid, context = request.cr, request.uid, request.context
-        redirect_url = request.httprequest.referrer + "#comments"
+        post = request.registry['blog.post'].browse(cr, uid, int(blog_post_id), context=context)
+        redirect_url = "/blog/%s/post/%s#comments" % (slug(post.blog_id), slug(post))
         if kw.get('comment'):
             if not request.session.uid: # if not logged, redirect to the login form, keeping the url to post the comment
                 kw['comment'] = kw.get('comment').encode('utf8') # avoid crash from urlencode if accent
@@ -282,7 +284,7 @@ class WebsiteBlog(http.Controller):
                 blog_post = request.registry['blog.post']
                 post = blog_post.browse(cr, uid, blog_post_id, context=context)
                 self._blog_post_message(blog_post_id, kw.get('comment'), **kw)
-                redirect_url = "/blog/%s/post/%s#comments" % (slug(post.blog_id), slug(post))
+                
         return werkzeug.utils.redirect(redirect_url)
 
 

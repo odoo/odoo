@@ -286,7 +286,7 @@ class mrp_repair(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
                 for line in o.operations:
-                    if line.product_id.track_production:
+                    if line.product_id.track_production and not line.lot_id:
                         raise UserError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True

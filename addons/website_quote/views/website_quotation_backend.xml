@@ -31,7 +31,7 @@
                         <field name="quote_viewed" invisible="1"/>
                         <field name="options">
                             <tree string="Sales Quotation Template Lines" editable="bottom">
-                                    <field name="product_id" on_change="on_change_product_id(product_id, uom_id)"/>
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, uom_id)"/>

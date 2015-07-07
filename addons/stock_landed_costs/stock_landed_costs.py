@@ -144,10 +144,12 @@ class stock_landed_cost(osv.osv):
         if qty_out > 0:
             debit_line = dict(debit_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
-                              quantity=qty_out)
+                              quantity=qty_out,
+                              account_id=already_out_account_id)
             credit_line = dict(credit_line,
                               name=(line.name + ": " + str(qty_out) + _(' already out')),
-                              quantity=qty_out)
+                              quantity=qty_out,
+                              account_id=debit_account_id)
             diff = diff * qty_out / line.quantity
             if diff > 0:
                 debit_line['debit'] = diff
