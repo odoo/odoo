@@ -162,9 +162,6 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self._file_read(cr, uid, attach.store_fname, bin_size)
             else:
                 result[attach.id] = attach.db_datas
-                if bin_size:
-                    result[attach.id] = int(result[attach.id] or 0)
-
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
