@@ -18,8 +18,8 @@ class TestIssueUsers(TransactionCase):
             'email': 'issuemanager@yourcompany.com',
             'groups_id': [(6, 0, [self.env.ref('project.group_project_manager').id])]})
 
-        # Create a user as 'Project user'
-        # I added groups for Project user.
+        # Create a user as 'Project User'
+        # I added groups for Project User.
         self.project_user = ResUsers.create({
             'name': 'Project User',
             'login': 'priu',

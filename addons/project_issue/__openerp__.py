@@ -36,6 +36,5 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'data/project_issue_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
 }
