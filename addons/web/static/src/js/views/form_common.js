@@ -979,7 +979,7 @@ var SelectCreateDialog = ViewDialog.extend({
             });
             this.setup(search_defaults);
         } else { // "form"
-            this.create_edit_record();
+            return this.create_edit_record();
         }
         return this;
     },
@@ -1056,8 +1056,9 @@ var SelectCreateDialog = ViewDialog.extend({
         this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', this.selected_ids.length <= 0);
     },
     create_edit_record: function() {
-        new FormViewDialog(this.getParent(), this.options).open();
+        var dialog = new FormViewDialog(this.getParent(), this.options).open();
         this.close();
+        return dialog;
     },
 });
 
