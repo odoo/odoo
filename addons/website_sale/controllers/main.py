@@ -7,7 +7,6 @@ from openerp import tools
 from openerp.http import request
 from openerp.tools.translate import _
 from openerp.addons.website.models.website import slug
-from openerp.addons.web.controllers.main import login_redirect
 
 PPG = 20 # Products Per Page
 PPR = 4  # Products Per Row
@@ -300,10 +299,8 @@ class website_sale(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", website=True)
+    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="user", methods=['POST'], website=True)
     def product_comment(self, product_template_id, **post):
-        if not request.session.uid:
-            return login_redirect()
         cr, uid, context = request.cr, request.uid, request.context
         if post.get('comment'):
             request.registry['product.template'].message_post(

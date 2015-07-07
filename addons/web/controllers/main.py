@@ -309,15 +309,6 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def login_redirect():
-    url = '/web/login?'
-    # built the redirect url, keeping all the query parameters of the url
-    redirect_url = '%s?%s' % (request.httprequest.base_url, werkzeug.urls.url_encode(request.params))
-    return """<html><head><script>
-        window.location = '%sredirect=' + encodeURIComponent("%s");
-    </script></head></html>
-    """ % (url, redirect_url)
-
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, request.context)
@@ -465,19 +456,14 @@ class Home(http.Controller):
     def index(self, s_action=None, db=None, **kw):
         return http.local_redirect('/web', query=request.params, keep_hash=True)
 
-    @http.route('/web', type='http', auth="none")
+    @http.route('/web', type='http', auth="user")
     def web_client(self, s_action=None, **kw):
         ensure_db()
-        if request.session.uid:
-            if kw.get('redirect'):
-                return werkzeug.utils.redirect(kw.get('redirect'), 303)
-            if not request.uid:
-                request.uid = request.session.uid
+        if kw.get('redirect'):
+            return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
-            menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
-            return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
-        else:
-            return login_redirect()
+        menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
