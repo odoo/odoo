@@ -151,7 +151,7 @@ Use the following pattern :
   lowercase string briefly explaining the action.
   This is used only if multiple actions are declared for the
   model.
-* For a group: :samp:`{<model_name>}_group_{<group_name>} where *group_name*
+* For a group: :samp:`{<model_name>}_group_{<group_name>}` where *group_name*
   is the name of the group, generally 'user', 'manager', ...
 * For a rule: :samp:`{<model_name>}_rule_{<concerned_group>}` where
   *concerned_group* is the short name of the concerned group ('user'
@@ -432,4 +432,3 @@ Then, in the message itself, specify the part of the code impacted by your chang
 
 .. note:: Use the long description to explain the *why* not the
           *what*, the *what* can be seen in the diff
-
