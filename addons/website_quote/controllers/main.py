@@ -85,7 +85,7 @@ class sale_quote(http.Controller):
                     order.pricelist_id.currency_id.id,
                     partner_id=order.partner_id.id,
                     tx_values={
-                        'return_url': '/quote/' + str(order_id) + '/confirm',
+                        'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                         'type': 'form',
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.')
                     },
@@ -242,8 +242,8 @@ class sale_quote(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
+                's2s_cb_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
-            request.session['sale_transaction_id'] = tx_id
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 
         # confirm the quotation
@@ -251,36 +251,3 @@ class sale_quote(http.Controller):
             request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
-
-    @http.route(['/quote/<int:order_id>/confirm'], type='http', auth="public", website=True)
-    def confirm(self, order_id):
-        cr, uid, context = request.cr, request.uid, request.context
-        transaction_obj = request.registry.get('payment.transaction')
-        sale_order_obj = request.registry.get('sale.order')
-        order = sale_order_obj.browse(cr, SUPERUSER_ID, order_id, context=context)
-
-        if not order or not order.order_line:
-            return request.redirect("/quote/%s" % (order_id))
-
-        # find  transaction
-        tx_id = transaction_obj.search(cr, SUPERUSER_ID, [('reference', '=', order.name)], context=context)
-        tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
-        # create draft invoice if transaction is ok
-        if tx and tx.state == 'pending':
-            sale_order_obj.action_button_confirm(cr, SUPERUSER_ID, [order_id], context=context)
-            sale_order_obj.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
-            message = _('Order payed by %s, waiting for payment confirmation') % (tx.partner_id.name,)
-            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
-        elif tx and tx.state == 'done':
-            sale_order_obj.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
-            invoice = order.invoice_ids
-            request.registry['account.invoice'].signal_workflow(cr, SUPERUSER_ID, [invoice.id], 'invoice_open', context=context)
-            period_id = request.registry['account.period'].find(cr, SUPERUSER_ID, time.strftime('%Y-%m-%d'), context=context)[0]
-            message = _('Order payed by %s') % (tx.partner_id.name,)
-            self.__message_post(message, order_id, type='comment', subtype='mt_comment')
-            # if website_sale is installed, we need to clean the sale_order linked to the website
-            # otherwise the system will mix transactions on the next SO
-            if hasattr(request.website, 'sale_reset'):
-                request.website.sale_reset()
-
-        return request.redirect("/quote/%s/%s" % (order.id, order.access_token))

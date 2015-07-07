@@ -292,6 +292,8 @@ class PaymentTxOgone(osv.Model):
                 'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             })
+            if tx.s2s_cb_eval:
+                safe_eval(tx.s2s_cb_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({

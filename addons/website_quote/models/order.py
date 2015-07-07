@@ -25,6 +25,9 @@ import time
 import datetime
 
 import openerp.addons.decimal_precision as dp
+from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
+
 
 class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
@@ -288,6 +291,19 @@ class sale_order(osv.osv):
                 })
 
         return action
+
+    def _confirm_online_quote(self, cr, uid, order_id, tx, context=None):
+        """ Payment callback: validate the order and write tx details in chatter """
+        order = self.browse(cr, uid, order_id, context=context)
+
+        # create draft invoice if transaction is ok
+        if tx and tx.state == 'done':
+            if order.state in ['draft', 'sent']:
+                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+            message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
+            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            return True
+        return False
 
 
 class sale_quote_option(osv.osv):
