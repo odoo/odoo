@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_pos_pos_form">
+            <field name="name">pos.order</field>
+            <field name="model">pos.order</field>
+            <field name="arch" type="xml">
+                <form string="Point of Sale Orders">
+                    <header>
+                        <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
+                        <button name="action_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
+                        <button name="refund" string="Return Products" type="object" 
+                            attrs="{'invisible':[('state','=','draft')]}"/>
+                        <button name="%(action_report_pos_receipt)d" string="Reprint" type="action" states="paid,done,invoiced"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" statusbar_colors='{"cancel":"red"}'/>
+                    </header>
+                    <sheet>
+                    <group col="4" colspan="4" name="order_fields">
+                        <field name="name"/>
+                        <field name="date_order"/>
+                        <field name="session_id" />
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Products">
+                            <field name="lines" colspan="4" nolabel="1">
+                                <tree string="Order lines" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                    <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                    <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="price_subtotal" widget="monetary"/>
+                                    <field name="price_subtotal_incl" widget="monetary"/>
+                                </tree>
+                                <form string="Order lines">
+                                    <group col="4">
+                                        <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                        <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
+                                        <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="price_subtotal" invisible="1" widget="monetary"/>
+                                        <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
+                                        <field name="notice"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
+                                <field name="amount_tax" widget="monetary"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                        <page string="Payments">
+                            <field name="statement_ids" colspan="4" nolabel="1">
+                                <tree editable="bottom" string="Statement lines">
+                                    <field name="journal_id"/>
+                                    <field name="statement_id"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="extra" string="Extra Info">
+                            <group string="General Information">
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="location_id" widget="selection" groups="stock.group_locations"/>
+                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
+                                <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
+                                <field name="picking_id" readonly="1"/>
+                                <field name="pos_reference"/>
+                            </group>
+                            <group string="Accounting Information">
+                                <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                <field name="invoice_id" readonly="1"
+                                    attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                <button name="%(pos_invoice_report)d" string="Re-Print"
+                                    icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                <field name="account_move" readonly="1"
+                                    attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
+                            </group>
+                        </page>
+                        <page string="Notes" >
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_pos_pos_form">
+            <field name="name">Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new order.
+              </p><p>
+                Use this menu to browse previous orders. To record new
+                orders, you may use the menu <i>Your Session</i> for
+                the touchscreen interface.
+              </p>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_pos_order_tree">
+            <field name="name">Orders</field>
+            <field name="model">pos.order</field>
+            <field name="arch" type="xml">
+                <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')">
+                    <field name="name"/>
+                    <field name="pos_reference"/>
+                    <field name="partner_id"/>
+                    <field name="date_order"/>
+                    <field name="user_id"/>
+                    <field name="invoice_id"/>
+                    <field name="amount_total" sum="Amount total" widget="monetary"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                    <field name="session_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <field name="name" string="Sales Order"/>
+                    <field name="date_order"/>
+                    <field name="pos_reference"/>
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
+                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <menuitem name="Orders" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
+        <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+
+        <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
+            <field name="name">POS Sales Lines</field>
+            <field name="model">pos.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="POS Orders lines">
+                    <field name="order_id" />
+                    <field name="create_date" />
+                    <field name="product_id" />
+                    <field name="qty" />
+                    <field name="price_unit" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+         <record model="ir.actions.act_window" id="action_pos_all_sales_lines">
+            <field name="name">All sales lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
+        </record>
+    </data>
+ </openerp>
