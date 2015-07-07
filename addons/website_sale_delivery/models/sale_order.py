@@ -13,7 +13,7 @@ class delivery_carrier(orm.Model):
         'website_description': fields.text('Description for Online Quotations'),
     }
     _defaults = {
-        'website_published': True
+        'website_published': False
     }
 
 
