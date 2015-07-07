@@ -692,10 +692,20 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     start: function() {
         this._super();
         this.on("change:value", this, function() {
-            if (! this.no_rerender)
+            if (!this.no_rerender) {
                 this.render_value();
+            }
+            this._toggle_label();
+        });
+        this.on("change:effective_readonly", this, function() {
+            this._toggle_label();
         });
         this.render_value();
+        this._toggle_label();
+    },
+    _toggle_label: function() {
+        var empty = this.get('effective_readonly') && this.is_false();
+        this.$el.toggleClass('o_form_field_empty', empty);
     },
     /**
      * Private. Do not use.
