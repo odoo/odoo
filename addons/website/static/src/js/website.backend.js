@@ -9,16 +9,14 @@ var form_widgets = require('web.form_widgets'); // required to guarantee that
 var WidgetWebsiteButton = form_common.AbstractField.extend({
     template: 'WidgetWebsiteButton',
     render_value: function() {
-        // Hack to replace false value by unpublished because falsy form fields
-        // have classname o_form_field_empty and are hidden
-        if (!this.get_value()) {
-            this.set_value('unpublished');
-        }
         this._super();
         this.$el.toggleClass("published", this.get_value() === true);
         if (this.node.attrs.class) {
             this.$el.addClass(this.node.attrs.class);
         }
+    },
+    is_false: function() {
+        return false;
     },
 });
 
