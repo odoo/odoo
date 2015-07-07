@@ -8,9 +8,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
-                        <group col="4" colspan="4">
-                            <field name="journal_user"/>
-                            <field name="amount_authorized_diff"/>
+                        <group col="4">
+                            <group col="2">
+                                <field name="journal_user"/>
+                                <field name="amount_authorized_diff"/>
+                            </group>
+                            <group col="2">
+                                <field name="pos_image" widget="image"/>
+                            </group>
                         </group>
                     </page>
                 </xpath>

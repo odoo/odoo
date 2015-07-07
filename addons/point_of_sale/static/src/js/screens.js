@@ -1757,6 +1757,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
         window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
+    journal_icon_url: function(id){
+        return '/web/binary/image?model=account.journal&id='+id+'&field=pos_image';
+    },
     // sets up listeners to watch for order changes
     watch_order_changes: function() {
         var self = this;
