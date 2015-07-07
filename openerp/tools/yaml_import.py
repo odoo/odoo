@@ -438,7 +438,7 @@ class YamlInterpreter(object):
                         result = recs.onchange(record_dict, field_name, onchange_spec)
 
                     else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
                         assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
                         # creating the context

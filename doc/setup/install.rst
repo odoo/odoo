@@ -1,3 +1,5 @@
+:banner: banners/installing_odoo.jpg
+
 .. _setup/install:
 
 ===============
