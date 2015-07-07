@@ -29,7 +29,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
-from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -1873,7 +1873,8 @@ class stock_move(osv.osv):
                 break
 
         if product_uos and product_uom and (product_uom != product_uos):
-            result['product_uos_qty'] = product_qty * uos_coeff['uos_coeff']
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UoS')
+            result['product_uos_qty'] = float_round(product_qty * uos_coeff['uos_coeff'], precision_digits=precision)
         else:
             result['product_uos_qty'] = product_qty
 
@@ -1903,7 +1904,8 @@ class stock_move(osv.osv):
         # The clients should call onchange_quantity too anyway
 
         if product_uos and product_uom and (product_uom != product_uos):
-            result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
+            result['product_qty'] = float_round(product_uos_qty / uos_coeff['uos_coeff'], precision_digits=precision)
         else:
             result['product_qty'] = product_uos_qty
         return {'value': result}
