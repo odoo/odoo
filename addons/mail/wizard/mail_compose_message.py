@@ -214,14 +214,20 @@ class MailComposer(models.TransientModel):
                 # template user_signature is added when generating body_html
                 # mass mailing: use template auto_delete value -> note, for emails mass mailing only
                 Mail = Mail.with_context(mail_notify_user_signature=False, mail_auto_delete=wizard.template_id.auto_delete, mail_server_id=wizard.template_id.mail_server_id.id)
-            if wizard.attachment_ids and wizard.composition_mode != 'mass_mail' and wizard.template_id:
-                new_attachment_ids = []
-                for attachment in wizard.attachment_ids:
-                    if attachment in wizard.template_id.attachment_ids:
-                        new_attachment_ids.append(attachment.copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
-                    else:
-                        new_attachment_ids.append(attachment.id)
-                    wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
+            if wizard.composition_mode != 'mass_mail' and wizard.template_id:
+                values = self.generate_email_for_composer(wizard.template_id.id, [wizard.res_id])[wizard.res_id]
+                Attachment = self.env['ir.attachment']
+                for attach_fname, attach_datas in values.pop('attachments', []):
+                    data_attach = {
+                        'name': attach_fname,
+                        'datas': attach_datas,
+                        'datas_fname': attach_fname,
+                        'res_model': wizard.model,
+                        'res_id': wizard.res_id,
+                        'type': 'binary',  # override default_type from context, possibly meant for another model!
+                    }
+                    new_attachments = Attachment.create(data_attach)
+                    wizard['attachment_ids'] = new_attachments.ids
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
@@ -354,19 +360,7 @@ class MailComposer(models.TransientModel):
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
         elif template_id:
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
-            # transform attachments into attachment_ids; not attached to the document because this will
-            # be done further in the posting process, allowing to clean database if email not send
-            Attachment = self.env['ir.attachment']
-            for attach_fname, attach_datas in values.pop('attachments', []):
-                data_attach = {
-                    'name': attach_fname,
-                    'datas': attach_datas,
-                    'datas_fname': attach_fname,
-                    'res_model': 'mail.compose.message',
-                    'res_id': 0,
-                    'type': 'binary',  # override default_type from context, possibly meant for another model!
-                }
-                values.setdefault('attachment_ids', list()).append(Attachment.create(data_attach).id)
+            attachments = values.pop('attachments', [])
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
