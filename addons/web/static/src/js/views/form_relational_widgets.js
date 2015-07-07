@@ -448,12 +448,14 @@ var AbstractManyField = common.AbstractField.extend({
         this.dataset.child_name = this.name;
         this.set('value', []);
         this.starting_ids = [];
+        this.mutex = new utils.Mutex();
         this.has_not_committed_changes = false;
         this.view.on("load_record", this, this._on_load_record);
         this.dataset.on('dataset_changed', this, function() {
             self.has_not_committed_changes = true;
+            // don't trigger changes if all commands are not resolved
             // the editable lists change the dataset without call AbstractManyField methods
-            if (!self.internal_dataset_changed) {
+            if (self.mutex.def.state() === "resolved" && !self.internal_dataset_changed) {
                 self.trigger("change:commands");
             }
         });
@@ -575,15 +577,12 @@ var AbstractManyField = common.AbstractField.extend({
     send_commands: function (command_list, options) {
         var self = this;
         var def = $.Deferred();
-        var mutex = new utils.Mutex();
         var dataset = this.dataset;
         var res = true;
         options = options || {};
-        var tmp = this.internal_dataset_changed;
-        this.internal_dataset_changed = true;
 
         _.each(command_list, function(command) {
-            mutex.exec(function() {
+            self.mutex.exec(function() {
                 var id = command[1];
                 switch (command[0]) {
                     case COMMANDS.CREATE:
@@ -621,10 +620,9 @@ var AbstractManyField = common.AbstractField.extend({
             });
         });
 
-        mutex.exec(function () {
-            def.resolve(res);
-            self.internal_dataset_changed = tmp;
+        this.mutex.def.then(function () {
             self.trigger("change:commands");
+            def.resolve(res);
         });
         return def;
     },
@@ -681,7 +679,7 @@ var AbstractManyField = common.AbstractField.extend({
     },
 
     is_valid: function () {
-        return !this.has_not_committed_changes && this._super();
+        return this.mutex.def.state() === "resolved" && !this.has_not_committed_changes && this._super();
     },
 
     is_false: function() {
