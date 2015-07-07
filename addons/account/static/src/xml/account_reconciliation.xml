@@ -37,7 +37,7 @@
 
     <t t-name="reconciliation_notification">
         <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
-            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span><span class="sr-only">Close</span></button>
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="fa fa-times"></span><span class="sr-only">Close</span></button>
             <t t-esc="message" />
             <t t-if="details !== undefined">
                 <a class="fa fa-external-link" rel="do_action" href="javascript:void(0)"
@@ -66,8 +66,8 @@
                     <div class="action_pane match">
                         <div class="match_controls">
                             <input type="text" class="filter" placeholder="Filter" value="" />
-                            <span class="pager_control_right pull-right glyphicon glyphicon-chevron-right"></span>
-                            <span class="pager_control_left pull-right glyphicon glyphicon-chevron-left"></span>
+                            <span class="pager_control_right pull-right fa fa-chevron-right"></span>
+                            <span class="pager_control_left pull-right fa fa-chevron-left"></span>
                         </div>
                         <table></table>
                     </div>
@@ -75,7 +75,7 @@
                         <div class="quick_add" t-att-style="(!presets ? 'display: none' : undefined)">
                             <div class="btn-group btn-group-sm presets_container"><t t-raw="presets" /></div>
                             <div class="dropdown presets_config">
-                                <a data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span></a>
+                                <a data-toggle="dropdown" href="#"><span class="fa fa-cog"></span></a>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="Presets config">
                                     <li><a class="presets_config_create" href="#">New preset</a></li>
                                     <li><a class="presets_config_edit" href="#">Modify presets</a></li>
@@ -125,13 +125,13 @@
 
     <t t-name="reconciliation_move_line">
         <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
+            <td class="cell_action"><span class="fa fa-add-remove"></span></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label"><t t-esc="line.q_label"/></td>
             <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.amount_str"/></t></td>
             <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.amount_str"/></t></td>
-            <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+            <td class="cell_info_popover"><span class="line_info_button fa fa-info-circle" t-att-data-content="line.q_popover"></span></td>
         </tr>
     </t>
 
@@ -157,7 +157,7 @@
 
     <t t-name="reconciliation_created_line">
         <tr class="created_line" tabindex="0" t-att-data-lineid="line.id">
-            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="line_remove_button glyphicon glyphicon-remove"></span></t></td>
+            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="line_remove_button fa fa-times"></span></t></td>
             <td class="cell_account_code"><t t-esc="line.account_num"/></td>
             <td class="cell_due_date"></td>
             <td class="cell_label"><t t-esc="line.label"/></td>
@@ -169,7 +169,7 @@
 
     <t t-name="reconciliation_line_open_balance">
         <tr class="line_open_balance" tabindex="0">
-            <td class="cell_action"><span class="toggle_create glyphicon glyphicon-play"></span></td>
+            <td class="cell_action"><span class="toggle_create fa fa-play"></span></td>
             <td class="cell_account_code"><t t-if="account_code" t-esc="account_code"/></td>
             <td class="cell_due_date"></td>
             <td class="cell_label"><t t-esc="label" /></td>
@@ -234,14 +234,14 @@
             <span class="tip_reconciliation_not_balanced">Select a partner or choose a counterpart</span>
             <span t-if="! line.has_no_partner" class="partner_name">
                 <t t-esc="line.partner_name"/>
-                <span class="change_partner glyphicon glyphicon-remove"></span>
+                <span class="change_partner fa fa-times"></span>
             </span>
             <div class="change_partner_container oe_form"></div>
         </t>
         <t t-jquery=".accounting_view caption" t-operation="after">
             <tbody class="tbody_initial_line">
                 <tr class="initial_line" tabindex="0">
-                    <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                    <td class="cell_action"><span class="toggle_match fa fa-cog"></span></td>
                     <td class="cell_account_code"><t t-esc="line.account_code"/></td>
                     <td class="cell_due_date"><t t-esc="line.date"/></td>
                     <td class="cell_label"><t t-if="line.name" t-esc="line.name"/>
@@ -250,7 +250,7 @@
                           <t t-esc="line.amount_str"/></t></td>
                     <td class="cell_credit"><t t-if="line.amount &lt; 0">
                           <t t-esc="line.amount_str"/></t></td>
-                    <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+                    <td class="cell_info_popover"><span class="line_info_button fa fa-info-circle" t-att-data-content="line.q_popover"></span></td>
                 </tr>
             </tbody>
         </t>
