@@ -39,6 +39,45 @@ class pos_config(osv.osv):
             result[pos_config.id] = currency_id
         return result
 
+    def _get_current_session(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
+
+        for record in self.browse(cr, uid, ids, context=context):
+            session_id = record.session_ids.filtered(lambda r: r.user_id.id == uid and not r.state == 'closed')
+            result[record.id] = {
+                'current_session_id': session_id,
+                'current_session_state': session_id.state,
+            }
+        return result
+
+    def _get_last_session(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
+
+        for record in self.browse(cr, uid, ids, context=context):
+            session_ids = self.pool['pos.session'].search_read(
+                cr, uid,
+                [('config_id', '=', record.id), ('state', '=', 'closed')],
+                ['cash_register_balance_end_real', 'stop_at'],
+                order="stop_at desc", limit=1, context=context)
+            if session_ids:
+                result[record.id] = {
+                    'last_session_closing_cash': session_ids[0]['cash_register_balance_end_real'],
+                    'last_session_closing_date': session_ids[0]['stop_at'],
+                }
+            else:
+                result[record.id] = {
+                    'last_session_closing_cash': 0,
+                    'last_session_closing_date': None,
+                }
+        return result
+
+    def _get_current_session_user(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
+
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = record.session_ids.filtered(lambda r: r.state == 'opened').user_id.name
+        return result
+
     _columns = {
         'name' : fields.char('Point of Sale Name', select=1,
              required=True, help="An internal identification of the point of sale"),
@@ -76,6 +115,11 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by Odoo but you can change it "\
                 "to customize the reference numbers of your orders.", copy=False),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
+        'current_session_id': fields.function(_get_current_session, multi="session", type="many2one", relation="pos.session", string="Current Session"),
+        'current_session_state': fields.function(_get_current_session, multi="session", type='char'),
+        'last_session_closing_cash': fields.function(_get_last_session, multi="last_session", type='float'),
+        'last_session_closing_date': fields.function(_get_last_session, multi="last_session", type='date'),
+        'pos_session_username': fields.function(_get_current_session_user, type='char'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
         'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -230,6 +274,62 @@ class pos_config(osv.osv):
             if obj.sequence_id:
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
+
+    # Methods to open the POS
+
+    def open_ui(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, "you can open only one session at a time"
+
+        record = self.browse(cr, uid, ids[0], context=context)
+        context = dict(context or {})
+        context['active_id'] = record.current_session_id.id
+        return {
+            'type': 'ir.actions.act_url',
+            'url':   '/pos/web/',
+            'target': 'self',
+        }
+
+    def open_existing_session_cb_close(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, "you can open only one session at a time"
+
+        record = self.browse(cr, uid, ids[0], context=context)
+        record.current_session_id.signal_workflow('cashbox_control')
+        return self.open_session_cb(cr, uid, ids, context)
+
+    def open_session_cb(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, "you can open only one session at a time"
+
+        proxy = self.pool.get('pos.session')
+        record = self.browse(cr, uid, ids[0], context=context)
+        current_session_id = record.current_session_id
+        if not current_session_id:
+            values = {
+                'user_id': uid,
+                'config_id': record.id,
+            }
+            session_id = proxy.create(cr, uid, values, context=context)
+            record.current_session_id = proxy.browse(cr, uid, session_id, context=context)
+            if record.current_session_id.state == 'opened':
+                return self.open_ui(cr, uid, ids, context=context)
+            return self._open_session(session_id)
+        return self._open_session(current_session_id.id)
+
+    def open_existing_session_cb(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, "you can open only one session at a time"
+
+        record = self.browse(cr, uid, ids[0], context=context)
+        return self._open_session(record.current_session_id.id)
+
+    def _open_session(self, session_id):
+        return {
+            'name': _('Session'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'pos.session',
+            'res_id': session_id,
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+        }
 
 class pos_session(osv.osv):
     _name = 'pos.session'
@@ -739,7 +839,7 @@ class pos_order(osv.osv):
                                         domain="[('state', '=', 'opened')]",
                                         states={'draft' : [('readonly', False)]},
                                         readonly=True),
-
+        'config_id': fields.related('session_id', 'config_id', string="Point of Sale", type='many2one'  , relation='pos.config'),
         'state': fields.selection([('draft', 'New'),
                                    ('cancel', 'Cancelled'),
                                    ('paid', 'Paid'),

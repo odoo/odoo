@@ -160,6 +160,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_pos_order_search">
+            <field name="name">pos.order.search.view</field>
+            <field name="model">pos.order</field>
+            <field name="arch" type="xml">
+                <search string="Point of Sale Orders">
+                    <field name="name"/>
+                    <field name="config_id"/>
+                </search>
+            </field>
+        </record>
+
         <menuitem name="Orders" id="menu_point_of_sale" parent="menu_point_root" sequence="10"/>
         <menuitem parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
 
@@ -943,7 +954,23 @@
             </field>
         </record>
 
-        <menuitem action="action_pos_session_opening"
+        <record model="ir.actions.act_window" id="action_pos_config_kanban">
+            <field name="name">Point of Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_pos_config_search" />
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new PoS config.
+              </p><p>
+                Configure at least one Point of Sale to be able to sell through the PoS interface.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_pos_config_kanban"
             parent="menu_point_root" name="Dashboard"
             id="menu_pos_dashboard" sequence="1"/>
 
