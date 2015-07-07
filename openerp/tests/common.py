@@ -286,7 +286,7 @@ class HttpCase(TransactionCase):
                 err, _ = e.args
                 if err == errno.EINTR:
                     continue
-                if err == 10038 and os.name == 'nt':
+                if err == errno.ENOTSOCK and os.name == 'nt':
                     # select.select dont work with file descriptors on windows, so skip this err
                     ready = 1
                 else:
