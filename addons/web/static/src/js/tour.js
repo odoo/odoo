@@ -6,25 +6,6 @@ var core = require('web.core');
 var _t = core._t;
 var qweb = core.qweb;
 
-// make this work
-// raise an error in test mode if openerp don't exist
-// if (typeof openerp === "undefined") {
-//     var error = "openerp is undefined"
-//                 + "\nhref: " + window.location.href
-//                 + "\nreferrer: " + document.referrer
-//                 + "\nlocalStorage: " + window.localStorage.getItem("tour");
-//     if (typeof $ !== "undefined") {
-//         error += '\n\n' + $("body").html();
-//     }
-//     throw new Error(error);
-// }
-
-
-// // don't rewrite T in test mode
-// if (typeof openerp.Tour !== "undefined") {
-//     return;
-// }
-
 /////////////////////////////////////////////////
 
 
@@ -78,7 +59,7 @@ var Tour = {
     defaultDelay: 50,
     autoRunning: true,
     retryRunningDelay: 1000,
-    errorDelay: 5000,
+    errorDelay: 10000,
     state: null,
     $element: null,
     timer: null,
@@ -700,7 +681,7 @@ var Tour = {
     },
     scrollIntoView: function ($element){
         // if element is not on window (screen) then it scroll down to get popup visible
-        if (!$element.is('body')){
+        if (!$element.is('body') && !$element.parents().filter(function () { return $(this).css("position") === "fixed";}).length){
             var element_top = $element.offset().top;
             var visible = ((element_top > $(window).scrollTop()) && (element_top < ($(window).scrollTop() + $(window).height())));
             if (!visible) {
@@ -709,7 +690,6 @@ var Tour = {
         }
     }
 };
-// openerp.Tour = Tour;
 
 /////////////////////////////////////////////////
 

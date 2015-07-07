@@ -63,7 +63,7 @@ class view(models.Model):
         return xml_id
 
     @tools.ormcache_context('uid', 'view_id',
-        keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id', 'version_id'))
+        keys=('lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id', 'version_id'))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)

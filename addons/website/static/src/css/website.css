@@ -1,158 +1,10 @@
-@charset "UTF-8";
+@charset "utf-8";
 /*       THIS CSS FILE IS FOR WEBSITE THEMING CUSTOMIZATION ONLY
  *
  * css for editor buttons, openerp widget included in the website and other
  * stuff must go to the editor.css
  *
  */
-/* ----- GENERIC LAYOUTING HELPERS ---- */
-/* Vertical Spacing */
-.mt128 {
-  margin-top: 128px !important;
-}
-
-.mt92 {
-  margin-top: 92px !important;
-}
-
-.mt64 {
-  margin-top: 64px !important;
-}
-
-.mt48 {
-  margin-top: 48px !important;
-}
-
-.mt32 {
-  margin-top: 32px !important;
-}
-
-.mt16 {
-  margin-top: 16px !important;
-}
-
-.mt8 {
-  margin-top: 8px !important;
-}
-
-.mt4 {
-  margin-top: 4px !important;
-}
-
-.mt0 {
-  margin-top: 0px !important;
-}
-
-.mb128 {
-  margin-bottom: 128px !important;
-}
-
-.mb92 {
-  margin-bottom: 92px !important;
-}
-
-.mb64 {
-  margin-bottom: 64px !important;
-}
-
-.mb48 {
-  margin-bottom: 48px !important;
-}
-
-.mb32 {
-  margin-bottom: 32px !important;
-}
-
-.mb16 {
-  margin-bottom: 16px !important;
-}
-
-.mb8 {
-  margin-bottom: 8px !important;
-}
-
-.mb4 {
-  margin-bottom: 4px !important;
-}
-
-.mb0 {
-  margin-bottom: 0px !important;
-}
-
-.ml8 {
-  margin-left: 8px !important;
-}
-
-.ml4 {
-  margin-left: 4px !important;
-}
-
-.ml0 {
-  margin-left: 0px !important;
-}
-
-.mr8 {
-  margin-right: 8px !important;
-}
-
-.mr4 {
-  margin-right: 4px !important;
-}
-
-.mr0 {
-  margin-right: 0px !important;
-}
-
-img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
-  padding: 4px;
-}
-img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
-  padding: 8px;
-}
-img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
-  padding: 16px;
-}
-img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
-  padding: 32px;
-}
-
-div.media_iframe_video.padding-small iframe {
-  padding: 4px;
-}
-div.media_iframe_video.padding-medium iframe {
-  padding: 8px;
-}
-div.media_iframe_video.padding-large iframe {
-  padding: 16px;
-}
-div.media_iframe_video.padding-xl iframe {
-  padding: 32px;
-}
-
-.fa-6x {
-  font-size: 6em;
-}
-
-.fa-7x {
-  font-size: 7em;
-}
-
-.fa-8x {
-  font-size: 8em;
-}
-
-.fa-9x {
-  font-size: 9em;
-}
-
-.fa-10x {
-  font-size: 10em;
-}
-
-.fa.center-block {
-  text-align: center;
-}
-
 ul {
   list-style-type: disc;
 }
@@ -247,12 +99,6 @@ font[style*='background'], font[class*='bg-'] {
 }
 
 /* Extra Styles */
-img.shadow {
-  -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
-}
-
 h1.text-muted, h2.text-muted, h3.text-muted {
   margin-top: 10px;
 }
@@ -269,19 +115,6 @@ hr {
   padding-bottom: 10px;
 }
 
-td {
-  min-width: 20px;
-}
-
-/* ----- Editor (for public user, like forum) ----- */
-.note-toolbar {
-  margin-left: 0 !important;
-}
-
-.note-popover .popover > .arrow {
-  display: none;
-}
-
 /* ----- Snippets Styles ----- */
 .para_large {
   font-size: 120%;
@@ -292,11 +125,6 @@ td {
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* ----- EDITOR ----- */
-.css_non_editable_mode_hidden {
-  display: none !important;
 }
 
 /* ----- BOOTSTRAP FIX ----- */
@@ -363,26 +191,6 @@ body > nav.navbar {
     width: 100%;
   }
 }
-/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
-.oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
-  position: static;
-}
-
-.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before {
-  content: " ";
-  text-align: center;
-  display: block;
-  min-height: 1em;
-  color: grey;
-  font-size: 24px;
-  padding-top: 160px;
-}
-
-.css_editable_display {
-  display: none;
-}
-
-/* ---- HACK FOR COVERING UP EDITOR BOGUS P INSERTION --- */
 .navbar .nav > li > p {
   margin-bottom: 0px;
 }
@@ -844,17 +652,6 @@ table.well tr td {
   color: white;
 }
 
-address .fa.fa-mobile-phone {
-  margin: 0 3px 0 2px;
-}
-address .fa.fa-file-text-o {
-  margin-right: 1px;
-}
-
-span[data-oe-type="monetary"] {
-  white-space: nowrap;
-}
-
 .oe_template_fallback {
   -moz-column-count: 3;
   -webkit-column-count: 3;
@@ -879,49 +676,6 @@ span[data-oe-type="monetary"] {
   text-align: center;
 }
 
-div.media_iframe_video {
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-div.media_iframe_video iframe {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  position: absolute;
-  margin: 0 auto;
-  margin-left: -50%;
-}
-div.media_iframe_video .media_iframe_video_size {
-  padding-bottom: 66.5%;
-  position: relative;
-  width: 100%;
-  height: 0;
-}
-div.media_iframe_video .css_editable_mode_display {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 2;
-}
-
-html[data-browser^="msie"] div.media_iframe_video iframe {
-  margin-left: 0;
-}
-
-/* Mobile view */
-@media (max-width: 768px) {
-  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
-    -webkit-transform: none !important;
-    -moz-transform: none !important;
-    -ms-transform: none !important;
-    -o-transform: none !important;
-    transform: none !important;
-  }
-}
-/* Fix: backward compatibility saas-3 */
 div.carousel .container > .carousel-caption {
   position: absolute;
   right: 50%;
@@ -1003,7 +757,6 @@ div.carousel .item.text_only .container > .carousel-image {
 .container nav#oe_main_menu_navbar {
   position: inherit;
 }
-
 .oe_search_clear {
   position: absolute;
   display:none;

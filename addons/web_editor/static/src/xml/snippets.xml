@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <!-- Snippet loader -->
-    <t t-name="website.snippets_style">
+    <t t-name="web_editor.snippets_style">
         <li class="navbar-form">
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -13,7 +13,7 @@
         </li>
     </t>
 
-    <t t-name="website.snippets">
+    <t t-name="web_editor.snippets">
         <div id='oe_snippets' class="hidden-xs o_open">
             <div id="o_arrow">
                 <span class="fa fa-angle-double-right fa-1x" style="top: 10px;"></span>
@@ -24,7 +24,7 @@
         </div>
     </t>
 
-    <t t-name="website.snippet_overlay">
+    <t t-name="web_editor.snippet_overlay">
         <div class="oe_overlay">
             <div class="oe_overlay_options" contentEditable="false">
                 <div class="btn-group">
@@ -51,13 +51,13 @@
         </div>
     </t>
 
-    <t t-name="website.snippet_manipulator">
+    <t t-name="web_editor.snippet_manipulator">
         <div class='oe_snippet_manipulator'></div>
     </t>
 
     <!-- t-field options -->
 
-    <t t-name="website.many2one.button">
+    <t t-name="web_editor.many2one.button">
         <div class="dropdown">
             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
             <ul class="dropdown-menu contact_menu" role="menu">
@@ -66,7 +66,7 @@
         </div>
     </t>
 
-    <t t-name="website.many2one.search">
+    <t t-name="web_editor.many2one.search">
         <t t-foreach="contacts" t-as="item">
             <li><a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
         </t>

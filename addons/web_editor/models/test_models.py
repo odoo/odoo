@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from openerp.osv import orm, fields
 
+
 class test_converter(orm.Model):
-    _name = 'website.converter.test'
+    _name = 'web_editor.converter.test'
 
     # disable translation export for those brilliant field labels and values
     _translate = False
@@ -12,7 +13,7 @@ class test_converter(orm.Model):
         'integer': fields.integer(),
         'float': fields.float(),
         'numeric': fields.float(digits=(16, 2)),
-        'many2one': fields.many2one('website.converter.test.sub'),
+        'many2one': fields.many2one('web_editor.converter.test.sub'),
         'binary': fields.binary(),
         'date': fields.date(),
         'datetime': fields.datetime(),
@@ -35,7 +36,7 @@ class test_converter(orm.Model):
 
 
 class test_converter_sub(orm.Model):
-    _name = 'website.converter.test.sub'
+    _name = 'web_editor.converter.test.sub'
 
     _columns = {
         'name': fields.char(),

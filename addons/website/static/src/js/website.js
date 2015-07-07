@@ -3,10 +3,14 @@ odoo.define('website.website', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var Widget = require('web.Widget');
 var session = require('web.session');
+var base = require('web_editor.base');
 var Tour = require('web.Tour');
 
+var qweb = core.qweb;
 var _t = core._t;
+base.url_translations = '/website/translations';
 
 /* --- Set the browser into the dom for css selectors --- */
 var browser;
@@ -18,66 +22,24 @@ else if ($.browser.mozilla) browser = "mozilla";
 browser += ","+$.browser.version;
 if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
 document.documentElement.setAttribute('data-browser', browser);
-/* ---------------------------------------------------- */
-
-
-var translatable = !!$('html').data('translatable');
-var data = {
-    id: undefined,
-    session: undefined,
-};
 
 /* ----------------------------------------------------
    Helpers
-   ---------------------------------------------------- */ 
-function get_context(dict) {
+   ---------------------------------------------------- */
+
+var get_context = base.get_context;
+base.get_context = base.get_context = function (dict) {
     var html = document.documentElement;
     return _.extend({
-        lang: html.getAttribute('lang').replace('-', '_'),
-        website_id: html.getAttribute('data-website-id')|0
-    }, dict);
-}
-
-function parseQS(qs) {
-    var match,
-        params = {},
-        pl     = /\+/g,  // Regex for replacing addition symbol with a space
-        search = /([^&=]+)=?([^&]*)/g;
-
-    while ((match = search.exec(qs))) {
-        var name = decodeURIComponent(match[1].replace(pl, " "));
-        var value = decodeURIComponent(match[2].replace(pl, " "));
-        params[name] = value;
-    }
-    return params;
-}
-
-var _parsedSearch;
-function parseSearch() {
-    if (!_parsedSearch) {
-        _parsedSearch = parseQS(window.location.search.substring(1));
-    }
-    return _parsedSearch;
-}
-
-function parseHash() {
-    return parseQS(window.location.hash.substring(1));
-}
-
-function reload() {
-    location.hash = "scrollTop=" + window.document.body.scrollTop;
-    if (location.search.indexOf("enable_editor") > -1) {
-        window.location.href = window.location.href.replace(/enable_editor(=[^&]*)?/g, '');
-    } else {
-        window.location.reload();
-    }
-}
+        'website_id': html.getAttribute('data-website-id')|0
+    }, get_context(dict), dict);
+};
 
 /* ----------------------------------------------------
    Widgets
    ---------------------------------------------------- */ 
 
-function prompt(options, qweb) {
+var prompt = function (options, _qweb) {
     /**
      * A bootstrapped version of prompt() albeit asynchronous
      * This was built to quickly prompt the user with a single field.
@@ -111,8 +73,8 @@ function prompt(options, qweb) {
             text: options
         };
     }
-    if (_.isUndefined(qweb)) {
-        qweb = 'website.prompt';
+    if (_.isUndefined(_qweb)) {
+        _qweb = 'website.prompt';
     }
     options = _.extend({
         window_title: '',
@@ -127,7 +89,7 @@ function prompt(options, qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = $.Deferred();
-    var dialog = $(core.qweb.render(qweb, options)).appendTo("body");
+    var dialog = $(qweb.render(_qweb, options)).appendTo("body");
     options.$dialog = dialog;
     var field = dialog.find(options.field_type).first();
     field.val(options['default']); // dict notation for IE<9
@@ -168,34 +130,34 @@ function prompt(options, qweb) {
         });
     }
     return def;
-}
+};
 
-function error(data, url) {
-    var $error = $(core.qweb.render('website.error_dialog', {
+var error = function(data, url) {
+    var $error = $(qweb.render('website.error_dialog', {
         'title': data.data ? data.data.arguments[0] : "",
         'message': data.data ? data.data.arguments[1] : data.statusText,
         'backend_url': url
     }));
     $error.appendTo("body");
     $error.modal('show');
-}
+};
 
-function form(url, method, params) {
-    var htmlform = document.createElement('form');
-    htmlform.setAttribute('action', url);
-    htmlform.setAttribute('method', method);
+var form = function (url, method, params) {
+    var form = document.createElement('form');
+    form.setAttribute('action', url);
+    form.setAttribute('method', method);
     _.each(params, function (v, k) {
         var param = document.createElement('input');
         param.setAttribute('type', 'hidden');
         param.setAttribute('name', k);
         param.setAttribute('value', v);
-        htmlform.appendChild(param);
+        form.appendChild(param);
     });
-    document.body.appendChild(htmlform);
-    htmlform.submit();
-}
+    document.body.appendChild(form);
+    form.submit();
+};
 
-function init_kanban($kanban) {
+var init_kanban = function ($kanban) {
     $('.js_kanban_col', $kanban).each(function () {
         var $col = $(this);
         var $pagination = $('.pagination', $col);
@@ -223,7 +185,7 @@ function init_kanban($kanban) {
             }
 
             var page = +$a.attr("href").split(",").pop().split('-')[1];
-            data.page = page;
+            data['page'] = page;
 
             $.post('/website/kanban', data, function (col) {
                 $col.find("> .thumbnail").remove();
@@ -250,43 +212,9 @@ function init_kanban($kanban) {
         });
 
     });
-}
+};
 
-/* ----------------------------------------------------
-   Async Ready and Template loading
-   ---------------------------------------------------- */ 
-var templates_def = $.Deferred().resolve();
-function add_template_file(template) {
-    var def = $.Deferred();
-    templates_def = templates_def.then(function() {
-        core.qweb.add_template(template, function(err) {
-            if (err) {
-                def.reject(err);
-            } else {
-                def.resolve();
-            }
-        });
-        return def;
-    });
-    return def;
-}
-
-add_template_file('/website/static/src/xml/website.xml');
-
-var dom_ready = $.Deferred();
-$(document).ready(function () {
-    dom_ready.resolve();
-    // fix for ie
-    if($.fn.placeholder) $('input, textarea').placeholder();
-    $(".oe_search_box").on('input', function() {
-        $(this).next('span').toggle(!!$(this).val());
-    });
-    $(".oe_search_clear").on('click', function() {
-        $(this).prev('input').val('').focus();
-        $(".oe_search_button").trigger("click");
-    });
-    $(".oe_search_clear").toggle(!!$('.oe_search_box').val());
-});
+ajax.loadXML('/website/static/src/xml/website.xml', qweb);
 
 /**
  * Execute a function if the dom contains at least one element matched
@@ -295,73 +223,38 @@ $(document).ready(function () {
  * @param {String} selector A jQuery selector used to match the element(s)
  * @param {Function} fn Callback to execute if at least one element has been matched
  */
-function if_dom_contains(selector, fn) {
-    dom_ready.then(function () {
+var if_dom_contains = function(selector, fn) {
+    base.dom_ready.then(function () {
         var elems = $(selector);
         if (elems.length) {
             fn(elems);
         }
     });
-}
+};
 
-var all_ready = null;
+/**
+ * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
+ */
+ 
+Tour.autoRunning = false;
+base.ready().then(function () {
+    data.topBar = new TopBar();
+    data.topBar.attachTo($("#oe_main_menu_navbar"))
+        .then(function () {
+            setTimeout(Tour.running,0);
+        });
+});
+
 /**
  * Returns a deferred resolved when the templates are loaded
  * and the Widgets can be instanciated.
  */
-function ready() {
-    if (!all_ready) {
-        all_ready = dom_ready.then(function () {
-            return templates_def;
-        }).then(function () {
-            odoo.init();
-            
-            // display button if they are at least one editable zone in the page (check the branding)
-            if ($('[data-oe-model]').size()) {
-                $("#oe_editzone").show();
-            }
-
-            if ($('html').data('website-id')) {
-                data.id = $('html').data('website-id');
-                data.session = session;
-
-                return ajax.jsonRpc('/website/translations', 'call', {'lang': get_context().lang})
-                .then(function(trans) {
-                    _t.database.set_bundle(trans);});
-            }
-        }).then(function () {
-            var templates = core.qweb.templates;
-            var keys = _.keys(templates);
-            for (var i = 0; i < keys.length; i++){
-                treat_node(templates[keys[i]]);
-            }
-        }).promise();
-    }
-    return all_ready;
-}
-
-function treat_node(node){
-    if(node.nodeType === 3) {
-        if(node.nodeValue.match(/\S/)){
-                var text_value = $.trim(node.nodeValue);
-                var spaces = node.nodeValue.split(text_value);
-                node.nodeValue = spaces[0] + _t(text_value) + spaces[1];
-        }
-    }
-    else if(node.nodeType === 1 && node.hasChildNodes()) {
-        _.each(node.childNodes, function(subnode) {treat_node(subnode);});
-    }
-};
-
-
-function inject_tour() {
-    // if a tour is active inject tour js
-}
-
-dom_ready.then(function () {
+ 
+base.dom_ready.then(function () {
     /* ----- PUBLISHING STUFF ---- */
     $(document).on('click', '.js_publish_management .js_publish_btn', function () {
         var $data = $(this).parents(".js_publish_management:first");
+        var self=this;
         ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
             .then(function (result) {
                 $data.toggleClass("css_unpublished css_published");
@@ -389,7 +282,7 @@ dom_ready.then(function () {
             // retrieve the hash before the redirect
             var redirect = {
                 lang: self.data('lang'),
-                url: self.attr('href'),
+                url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
                 hash: location.hash
             };
             location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
@@ -412,48 +305,37 @@ dom_ready.then(function () {
             window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
         }
     },0);
-
-    /* ----- WEBSITE TOP BAR ---- */
-    var $collapse = $('#oe_applications ul.dropdown-menu').clone()
-            .attr("id", "oe_applications_collapse")
-            .attr("class", "nav navbar-nav navbar-left navbar-collapse collapse");
-    $('#oe_applications').before($collapse);
-    $collapse.wrap('<div class="visible-xs"/>');
-    $('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
-    });
-
-    Tour.autoRunning = false;
-    ready().then(function () {
-        setTimeout(Tour.running,0);
 });
 
-return {
-    translatable: translatable,
-    get_context: get_context,
-    parseQS: parseQS,
-    parseSearch: parseSearch,
-    parseHash: parseHash,
-    reload: reload,
+
+/**
+ * Object who contains all method and bind for the top bar, the template is create server side.
+ */
+
+var TopBar = Widget.extend({
+    start: function () {
+        var $collapse = this.$('#oe_applications ul.dropdown-menu').clone()
+                .attr("id", "oe_applications_collapse")
+                .attr("class", "nav navbar-nav navbar-left navbar-collapse collapse");
+        this.$('#oe_applications').before($collapse);
+        $collapse.wrap('<div class="visible-xs"/>');
+        this.$('[data-target="#oe_applications"]').attr("data-target", "#oe_applications_collapse");
+
+        return this._super();
+    }
+});
+
+
+var data = {
     prompt: prompt,
-    error: error,
     form: form,
-    init_kanban: init_kanban,
-    add_template_file: add_template_file,
-    dom_ready: dom_ready,
     if_dom_contains: if_dom_contains,
-    ready: ready,
-    inject_tour: inject_tour,
-
-    data: data,
+    TopBar: TopBar,
 };
+return data;
 
 });
 
-odoo.define('web.session', function (require) {
-"use strict";
-
-var Session = require('web.Session');
-
-return new Session(null, null, {modules: ['website']});
-
+$(function () {
+    odoo.init();
 });

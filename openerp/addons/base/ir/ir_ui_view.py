@@ -901,7 +901,7 @@ class view(osv.osv):
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(not config['dev_mode'],
         tools.ormcache_context('uid', 'view_id',
-            keys=('lang', 'inherit_branding', 'editable', 'translatable')))
+            keys=('lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)

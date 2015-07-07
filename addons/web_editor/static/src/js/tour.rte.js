@@ -1,10 +1,14 @@
-odoo.define('website.tour.rte', function (require) {
+odoo.define('web_editor.tour', function (require) {
 'use strict';
 
 var core = require('web.core');
 var Tour = require('web.Tour');
+var base = require('web_editor.base');
+var snippet_editor = require('web_editor.snippet.editor');
 
 var _t = core._t;
+
+base.ready().done(function () {
 
 var click_event = function(el, type) {
     var evt = document.createEvent("MouseEvents");
@@ -13,47 +17,36 @@ var click_event = function(el, type) {
 };
 
 Tour.register({
-    id:   'website_rte',
-    name: "Test website RTE",
-    path: '/page/homepage',
+    id:   'rte',
+    name: "Test RTE",
     mode: 'test',
+    path: '/web_editor/field/html?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
     steps: [
         {
-            element:   'button[data-action=edit]',
-            title:     "Edit this page",
-            wait:      250
-        },
-        {
-            snippet:   '#snippet_structure .oe_snippet:has(.s_text_image)',
-            title:     "Drag & Drop a Text-Image Block",
-        },
-        {
-            element:   '.oe_overlay_options:visible .oe_options a:first',
-            title:     "Customize",
-            onload: function () {
-                $(".oe_overlay_options:visible .snippet-option-background > ul").show();
-            }
-        },
-        {
-            element:   '.oe_overlay_options:visible .snippet-option-background > ul li[data-background*="quote"]:first a',
-            title:     "Chose a background image",
-        },
-        {
             title:     "Change html for this test",
-            waitFor:   '#wrapwrap > main > div > section:first[style*="background-image"]',
-            element:   '#wrapwrap > main > div > section .row > div:first',
             onload: function () {
                 var $el = $(this.element);
-                var html = '<h1 id="text_title_id">Batnae municipium in Anthemusia</h1>     '+
-                    '\n     <p>Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad.</p>'+
-                    '\n     <p>    Quam <img style="width: 25%" src="/website/static/src/img/text_image.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>'+
-                    '\n     <p>Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix.</p>'+
-                    '<p>Harum trium sententiarum nulli prorsus assentior.</p>';
-                $el.html(html);
+                var html = '\n'+
+                    '<section>\n'+
+                    '    <div class="container">\n'+
+                    '        <div class="row">\n'+
+                    '            <div class="col-md-6 mt16">\n'+
+                    '<h1 id="text_title_id">Batnae municipium in Anthemusia</h1>     \n'+
+                    '     <p>Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad.</p>\n'+
+                    '     <p>    Quam <img style="width: 25%" src="/web_editor/static/src/img/drag_here.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>\n'+
+                    '     <p>Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix.</p>'+
+                    '<p>Harum trium sententiarum nulli prorsus assentior.</p>\n'+
+                    '        </div>\n'+
+                    '        <div class="col-md-6 mt16">\n'+
+                    '            <img class="img img-responsive shadow mb16" src="/web_editor/static/src/img/drag_here.png" alt="Odoo text and image block">\n'+
+                    '        </div>\n'+
+                    '    </div>\n'+
+                    '</section>\n';
+                $("#editable_area").html(html);
             }
         },
         {
-            element:   '#wrapwrap > main > div > section .row > div:first',
+            element:   '#editable_area > section .row > div:first',
             title:     "simulate triple click and change text bg-color",
             onload: function () {
                 var $el = $(this.element);
@@ -63,16 +56,16 @@ Tour.register({
             }
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first',
+            waitFor:   '#editable_area > section .row > div:first',
             element:   '.note-popover button[data-event="color"]:visible',
             title:     "change text bg-color after triple click",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font',
+            waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
             element:   '.note-color button.dropdown-toggle:visible',
             title:     "change selection to change text color",
             onload: function () {
-                var $el = $('#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1 font');
+                var $el = $('#editable_area > section .row > div:first:not(:has(p font)) h1 font');
                 $.summernote.core.range.create($el[0].firstChild, 5, $el[0].firstChild, 10).select();
                 click_event($el[0], 'mouseup');
             }
@@ -82,11 +75,11 @@ Tour.register({
             title:     "change text color",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(2)',
+            waitFor:   '#editable_area > section .row > div:first h1 font:eq(2)',
             element:   '.note-color button.dropdown-toggle:visible',
             title:     "change selection to change text bg-color again",
             onload: function () {
-                var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(2)');
+                var $el = $('#editable_area > section .row > div:first h1 font:eq(2)');
                 $.summernote.core.range.create($el.prev()[0].firstChild, 3, $el[0].firstChild, 10).select();
                 click_event($el.prev()[0], 'mouseup');
             }
@@ -96,11 +89,11 @@ Tour.register({
             title:     "change text backColor again",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first h1 font:eq(4)',
+            waitFor:   '#editable_area > section .row > div:first h1 font:eq(4)',
             element:   '.note-color button.dropdown-toggle:visible',
             title:     "change selection (h1 and p) to change text color with class",
             onload: function () {
-                var $el = $('#wrapwrap > main > div > section .row > div:first h1 font:eq(4)');
+                var $el = $('#editable_area > section .row > div:first h1 font:eq(4)');
                 $.summernote.core.range.create($el.prev()[0].firstChild, 3, $el.parent("h1").next("p")[0].firstChild, 30).select();
                 click_event($el.prev()[0], 'mouseup');
             }
@@ -110,13 +103,13 @@ Tour.register({
             title:     "change text foreColor again",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first p font',
+            waitFor:   '#editable_area > section .row > div:first p font',
             element:   '.o_editable.note-editable.o_dirty',
             title:     "delete selection",
             keydown:   46 // delete
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1',
+            waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1',
             element:   '.o_editable.note-editable.o_dirty',
             title:     "clean and delete (backspace) an other selection",
             onload: function () {
@@ -128,7 +121,7 @@ Tour.register({
             keydown:   8 // backspace
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:has( font:last:containsExact(i) ):has( p:first:containsRegex(/^uam/) ) h1',
+            waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(i) ):has( p:first:containsRegex(/^uam/) ) h1',
             element:   '.o_editable.note-editable.o_dirty',
             title:     "delete an other selection",
             onload: function () {
@@ -139,24 +132,24 @@ Tour.register({
             keydown:   46
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:has( font:last:containsExact(Bat) )',
-            element:   '.note-image-popover button[data-event="undo"]',
+            waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
+            element:   '.note-air-popover button[data-event="undo"]',
             title:     "undo",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:has( font:last:containsExact(i) )',
+            waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(i) )',
             element:   '.note-air-popover button[data-event="undo"]',
             title:     "undo adain",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:not(:has(p font)) h1',
+            waitFor:   '#editable_area > section .row > div:first:not(:has(p font)) h1',
             element:   '.o_editable.note-editable.o_dirty',
             title:     "delete (backspace) after undo",
             keydown:   8 // backspace
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first:has( font:last:containsExact(i) ):has( p:first:containsRegex(/^uam/) )',
-            element:   '#wrapwrap > main > div > section .row > div:first img[style*="25%"]',
+            waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(i) ):has( p:first:containsRegex(/^uam/) )',
+            element:   '#editable_area > section .row > div:first img[style*="25%"]',
             title:     "click on image",
         },
         {
@@ -164,7 +157,7 @@ Tour.register({
             title:     "Click on resize half",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first img[style*="50%"]',
+            waitFor:   '#editable_area > section .row > div:first img[style*="50%"]',
             element:   '.note-image-popover:visible button[data-event="showImageDialog"]',
             title:     "Click on edit picture",
         },
@@ -192,7 +185,7 @@ Tour.register({
             title:     "click on float right",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first span.fa.pull-right',
+            waitFor:   '#editable_area > section .row > div:first span.fa.pull-right',
             element:   '.note-image-popover:visible button[data-event="showLinkDialog"]',
             title:     "click on create link",
         },
@@ -205,25 +198,31 @@ Tour.register({
             element:   '.modal .dropdown ul label.btn-success',
             title:     "choose success style",
         },
+        // {
+        //     waitFor:   '.modal a#link-preview.btn:containsRegex(/^<span [^>]+><\\/span>$/)',
+        //     element:   '.modal .select2-container.url-source a.select2-choice',
+        //     title:     "click to choose an internal page",
+        // },
+        // {
+        //     element:   '.select2-drop:visible .select2-search input',
+        //     title:     "search 'contact'",
+        //     sampleText: "contact",
+        // },
+        // {
+        //     element:   '.select2-drop:visible .select2-results .select2-result div:contains(/page/)',
+        //     title:     "select /page/contactus",
+        // },
         {
-            waitFor:   '.modal a#link-preview.btn:containsRegex(/^<span [^>]+><\\/span>$/)',
-            element:   '.modal .select2-container.url-source a.select2-choice',
-            title:     "click to choose an internal page",
-        },
-        {
-            element:   '.select2-drop:visible .select2-search input',
-            title:     "search 'contact'",
-            sampleText: "contact",
-        },
-        {
-            element:   '.select2-drop:visible .select2-results .select2-result div:contains(/page/)',
-            title:     "select /page/contactus",
-        },
-        {
-            waitNot:   '.select2-drop:visible',
+        //    waitNot:   '.select2-drop:visible',
             element:   '#link-text',
             title:     "change text label",
             sampleText: "ABC[IMG] DEF",
+        },
+        {
+            waitFor:   '.modal a#link-preview.btn',
+            element:   '#link-external',
+            sampleText: "http://www.odoo.com",
+            title:     "insert a link url",
         },
         {
             waitFor:   '.modal a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
@@ -232,12 +231,12 @@ Tour.register({
         },
         {
             waitNot:   '#link-preview',
-            waitFor:   'a.btn[href^="/"]:has(span.fa.fa-3x.pull-right)',
-            element:   '#wrapwrap > main > div > section .row > div:last img',
+            waitFor:   'a.btn[href^="http://"]:has(span.fa.fa-3x.pull-right)',
+            element:   '#editable_area > section .row > div:last img',
             title:     "click on other picture",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first span.fa.pull-right',
+            waitFor:   '#editable_area > section .row > div:first span.fa.pull-right',
             element:   '.note-image-popover:visible button[data-event="showLinkDialog"]',
             title:     "click on create link again",
         },
@@ -263,8 +262,8 @@ Tour.register({
         },
         {
             waitNot:   '#link-preview',
-            waitFor:   '#wrapwrap > main > div > section .row > div:eq(1) > a > img',
-            element:   '#wrapwrap > main > div > section .row > div:first p:eq(2)',
+            waitFor:   '#editable_area > section .row > div:eq(1) > a > img',
+            element:   '#editable_area > section .row > div:first p:eq(2)',
             title:     "triple enter then double backspace",
             keydown:   [66, 13, 66, 13, 13, 8, 8], // B enter B enter enter backspace backspace
             onload: function () {
@@ -274,11 +273,11 @@ Tour.register({
             },
         },
         {
-            waitNot:   '#wrapwrap > main > div > section .row > div:first p:eq(4), #wrapwrap > main > div > section .row > div:eq(3)',
-            waitFor:   '#wrapwrap > main > div > section .row > div:first p:eq(3)',
+            waitNot:   '#editable_area > section .row > div:first p:eq(4), #editable_area > section .row > div:eq(3)',
+            waitFor:   '#editable_area > section .row > div:first p:eq(3)',
             title:     "add ul content",
             onload: function () {
-                var $el = $('#wrapwrap > main > div > section .row > div:first');
+                var $el = $('#editable_area > section .row > div:first');
                 var html = '  <ul>     '+
                     '\n     <li>   <p>Batnae municipium.  </p></li>'+
                     '\n     <li>    Seleucia praeter.</li>'+
@@ -291,7 +290,7 @@ Tour.register({
             }
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first ul li p:first',
+            waitFor:   '#editable_area > section .row > div:first ul li p:first',
             element:   '.note-air-popover .note-style button.dropdown-toggle',
             title:     "click on style dropdown",
         },
@@ -299,24 +298,24 @@ Tour.register({
             element:   '.note-air-popover .note-style ul:visible a[data-value="h3"]',
             title:     "select h3",
             onload: function () {
-                var node = $('#wrapwrap > main > div > section .row > div:first ul li p:last')[0].firstChild;
+                var node = $('#editable_area > section .row > div:first ul li p:last')[0].firstChild;
                 $.summernote.core.range.create(node, 0).select();
                 click_event(node, 'mouseup');
             }
         },
         {
-            element:   '#wrapwrap > main > div > section .row > div:first > ul > li > h3',
+            element:   '#editable_area > section .row > div:first > ul > li > h3',
             title:     "double tabulation",
             keydown:   [9, 9] // tabulation
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first ul > li > ul > li > ul > li > h3',
+            waitFor:   '#editable_area > section .row > div:first ul > li > ul > li > ul > li > h3',
             element:   '.note-air-popover button[data-event="insertOrderedList"]',
             title:     "click on order list",
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first ul > li > ul > li > ol > li > h3',
-            element:   '#wrapwrap > main > div > section .row > div:first ul li > p:last',
+            waitFor:   '#editable_area > section .row > div:first ul > li > ul > li > ol > li > h3',
+            element:   '#editable_area > section .row > div:first ul li > p:last',
             title:     "enter in ul",
             keydown:   [66, 13], // enter
             onload: function () {
@@ -326,15 +325,74 @@ Tour.register({
             }
         },
         {
-            element:   '#wrapwrap > main > div > section .row > div:first ul li > p:eq(1):containsRegex(/^municipium./)',
+            element:   '#editable_area > section .row > div:first ul li > p:eq(1):containsRegex(/^municipium./)',
             title:     "backspace in list",
             keydown:   8
         },
         {
-            waitFor:   '#wrapwrap > main > div > section .row > div:first ul li p:eq(1)',
+            waitFor:   '#editable_area > section .row > div:first ul li p:eq(1)',
             title:     "end",
         },
     ]
+});
+
+
+Tour.register({
+    id:   'rte_inline',
+    name: "Test RTE Inline",
+    mode: 'test',
+    path: '/web_editor/field/html/inline?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
+    steps: [
+        {
+            title:     "Change html for this test",
+            onload: function () {
+                var $el = $(this.element);
+                var html = '\n'+
+                    '<div>\n'+
+                    '  <table cellspacing="0" cellpadding="0" width="100%">\n'+
+                    '    <tbody>\n'+
+                    '      <tr>\n'+
+                    '        <td valign="center" width="270">\n'+
+                    '          <img src="/logo.png" alt="Your Logo" class="img-circle img-thumbnail">\n'+
+                    '        </td>\n'+
+                    '        <td valign="center" width="270">\n'+
+                    '          <a href="https://www.facebook.com/Odoo"><span class="fa fa-facebook-square fa-2x text-primary"></span></a>\n'+
+                    '          <span style="color: rgb(255, 0, 0);" class="fa fa-4x fa-google-plus-square pull-right"></span>\n'+
+                    '        </td>\n'+
+                    '      </tr>\n'+
+                    '    </tbody>\n'+
+                    '  </table>\n'+
+                    '</div>';
+                $("#editable_area").html(html);
+            }
+        },
+        {
+            title:     "call clean for save",
+            element:   '#wrapwrap table',
+            onload: function () {
+                snippet_editor.instance.clean_for_save();
+            }
+        },
+        {
+            waitFor:   '#wrapwrap img:first[style*="border-bottom-left-radius:50%"][style*="border-top-width"][style*="padding-top"]',
+            title:     "check the image style",
+        },
+        {
+            waitFor:   '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(66,139,202)/27"]',
+            title:     "check the font image src",
+        },
+        {
+            waitFor:   '#wrapwrap img:eq(1)[style*="height:2em"]',
+            title:     "check the font class to css",
+        },
+        {
+            waitFor:   '#wrapwrap img:eq(2)[style*="float:right"]',
+            title:     "check the second font class to css",
+        },
+    ]
+});
+
+
 });
 
 });

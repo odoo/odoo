@@ -884,7 +884,7 @@ define([
     this.removeLayout = function ($holder, layoutInfo, options) {
       if (options.airMode) {
         $holder.removeClass('note-air-editor note-editable')
-               .removeAttr('id contentEditable');
+               .removeAttr('contentEditable');
 
         layoutInfo.popover.remove();
         layoutInfo.handle.remove();

@@ -592,7 +592,7 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
-        if record._fields[field_name].readonly:
+        if field.readonly:
             data.append(('data-oe-readonly', 1))
         return data
 
@@ -645,7 +645,8 @@ class FieldConverter(osv.AbstractModel):
                 _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context)
+                    source_element, g_att, t_att, qweb_context,
+                    context=context)
             )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,

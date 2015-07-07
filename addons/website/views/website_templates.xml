@@ -4,72 +4,6 @@
 
 <!-- Assets -->
 
-<template id="summernote" name="Summernote">
-    <script type="text/javascript" src="/website/static/src/js/openerp.define.js"></script>
-    <script>odoo.enable_website_define();</script>
-    <script>odoo.website_next_define = 'summernote/core/async';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/async.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/func';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/func.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/agent';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/agent.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/list';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/list.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/dom';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/dom.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/key';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/key.js"></script>
-    <script>odoo.website_next_define = 'summernote/core/range';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/core/range.js"></script>
-
-    <script>odoo.website_next_define = 'summernote/editing/Bullet';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Bullet.js"></script>
-    <script>odoo.website_next_define = 'summernote/editing/History';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/History.js"></script>
-    <script>odoo.website_next_define = 'summernote/editing/Style';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Style.js"></script>
-    <script>odoo.website_next_define = 'summernote/editing/Table';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Table.js"></script>
-    <script>odoo.website_next_define = 'summernote/editing/Typing';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Typing.js"></script>
-    <script>odoo.website_next_define = 'summernote/editing/Editor';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/editing/Editor.js"></script>
-
-    <script>odoo.website_next_define = 'summernote/module/Button';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Button.js"></script>
-    <script>odoo.website_next_define = 'summernote/module/Dialog';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Dialog.js"></script>
-    <script>odoo.website_next_define = 'summernote/module/Handle';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Handle.js"></script>
-    <script>odoo.website_next_define = 'summernote/module/Popover';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Popover.js"></script>
-    <script>odoo.website_next_define = 'summernote/module/Toolbar';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/module/Toolbar.js"></script>
-
-    <script>odoo.website_next_define = 'summernote/Renderer';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/Renderer.js"></script>
-    <script>odoo.website_next_define = 'summernote/EventHandler';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/EventHandler.js"></script>
-
-    <script>odoo.website_next_define = 'summernote/settings';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/settings.js"></script>
-
-    <script>odoo.website_next_define = 'summernote/summernote';</script>
-    <script type="text/javascript" src="/website/static/lib/summernote/src/js/summernote.js"></script>
-    <script>odoo.website_next_define = 'summernote/openerp';</script>
-    <script type="text/javascript" src="/website/static/src/js/summernote.js"></script>
-    <script>odoo.disable_website_define();</script>
-
-    <!--link rel="stylesheet" href="/website/static/lib/summernote/src/less/summernote.less"/-->
-    <link rel="stylesheet" href="/website/static/lib/summernote/summernote.css"/>
-</template>
-
-<template id="assets_common" inherit_id="web.assets_common" name="Website common assets">
-    <xpath expr='.' position="inside">
-        <t t-call="website.summernote"/>
-    </xpath>
-</template>
-
 <template id="assets_frontend" name="Website assets">
     <link id="bootstrap_css" rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
 
@@ -82,7 +16,6 @@
     <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
 
     <t t-call="web.bootstrap"/>
-
 </template>
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
@@ -92,41 +25,27 @@
     </xpath>
 </template>
 
-<template id="editor" name="Editor">
-    <link rel='stylesheet' href='/website/static/src/css/snippets.css'/>
-    <link rel='stylesheet' href='/website/static/src/css/editor.css'/>
-    <link rel='stylesheet' href="/web/static/lib/jquery.ui/jquery-ui.css"/>
-    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
-    <t t-call="web.jqueryui_conflict">
-        <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
-    </t>
-    <script type="text/javascript" src='/website/static/lib/nearest/jquery.nearest.js'></script>
-
-    <!-- mutation observers shim backed by mutation events (8 < IE < 11, Safari < 6, FF < 14, Chrome < 17) -->
-    <script type="text/javascript" src="/website/static/lib/MutationObservers/test/sidetable.js"></script>
-    <script type="text/javascript" src="/website/static/lib/MutationObservers/MutationObserver.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js" />
-</template>
-
 <template id="assets_editor" name="Editor assets">
-    <t t-call="website.editor"/>
+    <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/ace.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/theme-monokai.js"></script>
     <script type="text/javascript" src="/website/static/lib/ace/mode-xml.js"></script>
     <script type="text/javascript" src="/website/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-    <script type="text/javascript" src="/website/static/lib//jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script> <!-- groups="base.group_website_designer" -->
+    <script type="text/javascript" src="/website/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.tour.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script> <!-- groups="base.group_website_designer" -->
-    <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
     <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
+    <link rel='stylesheet' href='/web_editor/static/src/css/web_editor.css'/>
+    <link rel="stylesheet" href="/website/static/src/css/website.editor.css"/>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
 </template>
 
 <!-- Layout -->
@@ -160,7 +79,8 @@
           t-att-data-website-id="website.id if editable and website else None"
           t-att-data-editable="'1' if editable else None"
           t-att-data-translatable="'1' if translatable else None"
-          t-att-data-view-xmlid="xmlid if editable else None"
+          t-att-data-edit_translations="'1' if edit_translations else None"
+          t-att-data-view-xmlid="xmlid if editable or translatable else None"
           t-att-data-main-object="repr(main_object) if editable else None"
           t-att-data-oe-company-name="res_company.name">
         <head>
@@ -236,7 +156,7 @@
                                             </b>
                                         </a>
                                         <ul class="dropdown-menu js_usermenu" role="menu">
-                                            <li><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                            <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -266,6 +186,10 @@
 </template>
 
 <template id="layout_editor" inherit_id="website.layout" name="Editor" groups="base.group_website_publisher,base.group_website_designer">
+    <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="before">
+        <t groups="base.group_website_designer" t-call-assets="web_editor.summernote"/>
+        <t groups="base.group_website_designer" t-call-assets="web_editor.editor"/>
+    </xpath>
     <xpath expr='//t[@t-call-assets="website.assets_frontend"][@t-css="false"]' position="after">
         <t t-call-assets="website.assets_editor" async="True"/>
     </xpath>
@@ -292,8 +216,6 @@
         </a>
     </xpath>
 </template>
-
-
 
 <!--
     Optional Bundle for PDFJS lib
@@ -368,7 +290,7 @@
     <script type="text/javascript" src="/website/static/lib/pdfjs/pdf.js"></script>
 </template>
 
-
+<!-- Features template -->
 
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
     <xpath expr="t" position="replace">
@@ -421,11 +343,11 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
+    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li t-foreach="languages" t-as="lg">
           <a
             t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-            t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None"
+            t-att-data-default-lang="(editable or translatable) and 'true' if website and lg[0] == website.default_lang_code else None"
             t-att-data-lang="lg[0]"
             class="js_change_lang"
           >
@@ -574,21 +496,6 @@
           </div>
       </div>
   </div>
-</template>
-
-<!-- color-picker -->
-<!-- HTML class to hide option for one mode : only-text, only-bg -->
-
-<template id="website.colorpicker" name="Color-Picker">
-    <table class="colorpicker">
-        <tr>
-            <td><button class="bg-primary" title="Primary Color"/></td>
-            <td><button class="bg-success" title="Success Color"/></td>
-            <td><button class="bg-info" title="Info Color"/></td>
-            <td><button class="bg-warning" title="Warning Color"/></td>
-            <td><button class="bg-danger" title="Danger Color"/></td>
-        </tr>
-    </table>
 </template>
 
 <template id="kanban">

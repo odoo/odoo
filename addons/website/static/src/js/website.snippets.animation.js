@@ -25,42 +25,6 @@ function load_called_template () {
     }
 }
 
-function start_animation(editable_mode, $target) {
-    for (var k in animationRegistry) {
-        var Animation = animationRegistry[k];
-        var selector = "";
-        if (Animation.prototype.selector) {
-            if (selector !== "") selector += ", ";
-            selector += Animation.prototype.selector;
-        }
-        if ($target) {
-            if ($target.is(selector)) selector = $target;
-            else continue;
-        }
-
-        $(selector).each(function () {
-            var $snipped_id = $(this);
-            if (    !$snipped_id.parents("#oe_snippets").length &&
-                    !$snipped_id.parent("body").length &&
-                    !$snipped_id.data("snippet-view")) {
-                readyAnimation.push($snipped_id);
-                $snipped_id.data("snippet-view", new Animation($snipped_id, editable_mode));
-            } else if ($snipped_id.data("snippet-view")) {
-                $snipped_id.data("snippet-view").start(editable_mode);
-            }
-        });
-    }
-}
-
-function stop_animation() {
-    $(readyAnimation).each(function() {
-        var $snipped_id = $(this);
-        if ($snipped_id.data("snippet-view")) {
-            $snipped_id.data("snippet-view").stop();
-        }
-    });
-}
-
 $(document).ready(function () {
     load_called_template(); // if asset is placed into head, move this call into $(document).ready
 
@@ -68,34 +32,8 @@ $(document).ready(function () {
         // load gallery modal template
         website.add_template_file('/website/static/src/xml/website.gallery.xml');
     }
-
-    start_animation();
 });
 
-
-
-var Animation = core.Class.extend({
-    selector: false,
-    $: function () {
-        return this.$el.find.apply(this.$el, arguments);
-    },
-    init: function (dom, editable_mode) {
-        this.$el = this.$target = $(dom);
-        this.start(editable_mode);
-    },
-    /*
-    *  start
-    *  This method is called after init
-    */
-    start: function () {
-    },
-    /*
-    *  stop
-    *  This method is called to stop the animation (e.g.: when rte is launch)
-    */
-    stop: function () {
-    },
-});
 
 animationRegistry.slider = Animation.extend({
     selector: ".carousel",
@@ -272,7 +210,6 @@ animationRegistry.gallery = Animation.extend({
         }
     } // click_handler  
 });
-
 animationRegistry.gallery_slider = Animation.extend({
     selector: ".o_slideshow",
     start: function() {
@@ -321,13 +258,4 @@ animationRegistry.gallery_slider = Animation.extend({
     }
 });
 
-return {
-    Animation: Animation,
-    readyAnimation: readyAnimation,
-    start_animation: start_animation,
-    stop_animation: stop_animation,
-    registry: animationRegistry,
-};
-
 });
-

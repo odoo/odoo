@@ -888,13 +888,13 @@
 </div>
 
 <div id="snippet_options" class="hidden">
-
     <t t-call="website.snippet_options"/>
-
 </div>
 </template>
 
 <template id="snippet_options">
+    
+    <t t-call="web_editor.snippet_options"/>
 
     <div data-js='blog-style'
         data-selector="section:not(.carousel):not(.parallax):not(.o_gallery)">
@@ -1018,11 +1018,6 @@
         <li data-remove="remove"><a>Remove from gallery</a></li>
     </div>
 
-    <div data-js='media'
-        data-selector="img, .media_iframe_video, span.fa, i.fa, .glyphicon">
-        <li data-edition="edition"><a>Change...</a></li>
-    </div>
-
     <div data-js='carousel'
         data-selector=":not(.o_gallery > .container) > .carousel">
         <li class="dropdown-submenu">
@@ -1123,14 +1118,6 @@
          data-selector='.panel-group > .panel:has(> .panel-collapse)'
          data-drop-in='.panel-group:has(> .panel > .panel-collapse)'>
     </div>
-
-    <!-- t-field -->
-
-    <div data-js='many2one'
-        data-selector="[data-oe-many2one-model]"
-        data-no-check="true">
-    </div>
-
 </template>
 
 

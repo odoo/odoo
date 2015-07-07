@@ -275,11 +275,45 @@ function get_file(options) {
 };
 
 
+var loadXML = (function () {
+    var loading = false;
+    var urls = [];
+    var qwebs = [];
+    var templates_def = $.Deferred();
+
+    var load = function loadXML(url, qweb) {
+        if (url) {
+            urls.push(url);
+            qwebs.push(qweb);
+        }
+
+        if (!loading && urls.length) {
+            if (templates_def.state() === "resolved") {
+                templates_def = $.Deferred();
+            }
+
+            loading = true;
+            qwebs.shift().add_template(urls.shift(), function () {
+                loading = false;
+                if (!urls.length) {
+                    templates_def.resolve();
+                }
+                load(null);
+            });
+        }
+
+        return templates_def;
+    };
+
+    return load;
+})();
+
 return {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
+    loadXML: loadXML,
     get_file: get_file,
 };
 
