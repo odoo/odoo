@@ -83,7 +83,7 @@ Generating HTML in Python isn't very pleasant.
 The usual solution is templates_, pseudo-documents with placeholders and
 display logic. Odoo allows any Python templating system, but provides its
 own :ref:`QWeb <reference/qweb>` templating system which integrates with other
-Odoo features.
+features.
 
 Create a template and ensure the template file is registered in the
 ``__openerp__.py`` manifest, and alter the controller to use our template:
