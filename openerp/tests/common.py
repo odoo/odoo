@@ -286,7 +286,11 @@ class HttpCase(TransactionCase):
                 err, _ = e.args
                 if err == errno.EINTR:
                     continue
-                raise
+                if err == 10038 and os.name == 'nt':
+                    # select.select dont work with file descriptors on windows, so skip this err
+                    ready = 1
+                else:
+                    raise
 
             if ready:
                 s = phantom.stdout.read(1)
@@ -295,8 +299,8 @@ class HttpCase(TransactionCase):
                 buf.append(s)
 
             # process lines
-            if '\n' in buf:
-                line, buf = buf.split('\n', 1)
+            if os.linesep in buf:
+                line, buf = buf.split(os.linesep, 1)
                 line = str(line)
 
                 # relay everything from console.log, even 'ok' or 'error...' lines
