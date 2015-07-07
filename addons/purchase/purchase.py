@@ -1366,7 +1366,7 @@ class procurement_order(osv.osv):
         #Passing partner_id to context for purchase order line integrity of Line name
         new_context = context.copy()
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
-        names = prod_obj.name_get(cr, uid, [x.product_id.id for x in procurements], context=context)
+        names = prod_obj.name_get(cr, uid, [x.product_id.id for x in procurements], context=new_context)
         names_dict = {}
         for id, name in names:
             names_dict[id] = name
@@ -1448,7 +1448,9 @@ class procurement_order(osv.osv):
                 LEFT JOIN procurement_group AS pg ON p.group_id = pg.id,
             product_supplierinfo AS psi, product_product AS pp
             WHERE
-             p.product_id = pp.id AND p.id in %s AND psi.product_tmpl_id = pp.product_tmpl_id
+             p.product_id = pp.id AND p.id in %s
+             AND (psi.product_id is NULL OR psi.product_id = p.product_id)
+             AND psi.product_tmpl_id = pp.product_tmpl_id
              AND (psi.company_id = p.company_id or psi.company_id IS NULL)
              ORDER BY psi.sequence,
                 psi.name, p.rule_id, p.location_id, p.company_id, p.partner_dest_id, p.group_id

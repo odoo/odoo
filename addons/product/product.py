@@ -535,7 +535,7 @@ class product_template(osv.osv):
             'product.packaging', 'product_tmpl_id', 'Logistical Units',
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
-        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Supplier'),
+        'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Suppliers'),
         'seller_delay': fields.related('seller_ids','delay', type='integer', string='Supplier Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_qty': fields.related('seller_ids','qty', type='float', string='Supplier Quantity',
@@ -915,6 +915,50 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
+    def _set_suppliers(self, cr, uid, product_id, field_name, field_value, args, context=None):
+        if not field_value:
+            return
+        product_tmpl = self.browse(cr, uid, product_id, context=context).product_tmpl_id
+        supplierinfo = self.pool['product.supplierinfo']
+        for value in field_value:
+            if value[0] == 0:
+                value[2].update(product_tmpl_id=product_tmpl.id, product_id=product_id)
+                supplierinfo.create(cr, uid, value[2], context=context)
+            elif value[0] == 1:
+                if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    raise UserError(_("Attributes of the general supplier(s) of the the product '%s' \
+                                        can be modified from the 'Products' menu.") % product_tmpl.name)
+                supplierinfo.write(cr, uid, [value[1]], value[2], context=context)
+            elif value[0] in [2, 3]:
+                if not supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    raise UserError(_("General supplier(s) of the product '%s' can be deleted \
+                                        from the 'Products' menu.") % product_tmpl.name)
+                supplierinfo.unlink(cr, uid, [value[1]], context=context)
+            elif value[0] == 4:
+                vals = {}
+                if supplierinfo.browse(cr, uid, value[1], context=context).product_id:
+                    vals = dict(product_id=product_id)
+                supplierinfo.write(cr, uid, [value[1]], dict(vals, product_tmpl_id=product_tmpl.id), context=context)
+            elif value[0] in [5, 6]:
+                old_ids = supplierinfo.search(cr, uid, [('product_id', '=', product_id)], context=context)
+                supplierinfo.unlink(cr, uid, old_ids, context=context)
+                if value[0] == 6:
+                    supplierinfo.write(cr, uid, value[2], dict(product_tmpl_id=product_tmpl.id, product_id=product_id), context=context)
+        return True
+
+    def _get_suppliers(self, cr, uid, ids, field_name, args, context=None):
+        res = dict()
+        supplierinfo = self.pool['product.supplierinfo']
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = supplierinfo.search(cr, uid,
+                       ['|',
+                            ('product_id', '=', product.id),
+                            '&',
+                                ('product_id', '=', False),
+                                ('product_tmpl_id', '=', product.product_tmpl_id.id)],
+                          context=context)
+        return res
+
     _columns = {
         'price': fields.function(_product_price, fnct_inv=_set_product_lst_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
         'price_extra': fields.function(_get_price_extra, type='float', string='Variant Extra Price', help="This is the sum of the extra price of all attributes", digits_compute=dp.get_precision('Product Price')),
@@ -925,6 +969,14 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
+        'seller_ids': fields.function(_get_suppliers, fnct_inv=_set_suppliers, string='Variant Suppliers', type='one2many', relation='product.supplierinfo'),
+        'seller_id': fields.related('seller_ids', 'name', type='many2one', relation='res.partner', string='Main Supplier',
+            help='Main Supplier who has highest priority in Supplier List.'),
+        'seller_delay': fields.related('seller_ids', 'delay', type='integer', string='Supplier Lead Time',
+            help='This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default supplier.\
+            It is used by the scheduler to order requests based on reordering delays.'),
+        'seller_qty': fields.related('seller_ids', 'qty', type='float', string='Supplier Quantity',
+            help='This is minimum quantity to purchase from Main Supplier.'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
@@ -1199,6 +1251,7 @@ class product_supplierinfo(osv.osv):
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
         'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
+        'product_id': fields.many2one('product.product', 'Product Variant', ondelete='cascade'),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist', copy=True),
         'company_id':fields.many2one('res.company', string='Company',select=1),
