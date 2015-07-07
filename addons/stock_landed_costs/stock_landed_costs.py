@@ -198,7 +198,7 @@ class stock_landed_cost(osv.osv):
             if cost.state != 'draft':
                 raise Warning(_('Only draft landed costs can be validated'))
             if not cost.valuation_adjustment_lines or not self._check_sum(cr, uid, cost, context=context):
-                raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation lines.'))
+                raise osv.except_osv(_('Error!'), _('You cannot validate a landed cost which has no valid valuation  adjustments lines. Did you click on Compute?'))
             move_id = self._create_account_move(cr, uid, cost, context=context)
             quant_dict = {}
             for line in cost.valuation_adjustment_lines:
