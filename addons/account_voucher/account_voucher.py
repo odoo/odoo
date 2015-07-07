@@ -226,8 +226,8 @@ class account_voucher(osv.osv):
         if not ids: return {}
         currency_obj = self.pool.get('res.currency')
         res = {}
-        debit = credit = 0.0
         for voucher in self.browse(cr, uid, ids, context=context):
+            debit = credit = 0.0
             sign = voucher.type == 'payment' and -1 or 1
             for l in voucher.line_dr_ids:
                 debit += l.amount

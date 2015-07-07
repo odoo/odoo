@@ -343,8 +343,8 @@ class account_invoice(models.Model):
 
         # adapt selection of field journal_id
         for field in res['fields']:
-            if field == 'journal_id' and type:
-                journal_select = self.env['account.journal']._name_search('', [('type', '=', type)], name_get_uid=1)
+            if field == 'journal_id' and context.get('journal_type'):
+                journal_select = self.env['account.journal']._name_search('', [('type', '=', context['journal_type'])], name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
         doc = etree.XML(res['arch'])
@@ -913,7 +913,10 @@ class account_invoice(models.Model):
                     i[2]['period_id'] = period.id
 
             ctx['invoice'] = inv
-            move = account_move.with_context(ctx).create(move_vals)
+            ctx_nolang = ctx.copy()
+            ctx_nolang.pop('lang', None)
+            move = account_move.with_context(ctx_nolang).create(move_vals)
+
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,
