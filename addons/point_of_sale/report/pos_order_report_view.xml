@@ -37,6 +37,7 @@
                     <filter string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS ordered created during current year"/>
                     <separator/>
                     <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                    <field name="config_id"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
