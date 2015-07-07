@@ -163,7 +163,7 @@ class ir_attachment(osv.osv):
             else:
                 result[attach.id] = attach.db_datas
                 if bin_size:
-                    result[attach.id] = int(result[attach.id])
+                    result[attach.id] = int(result[attach.id] or 0)
 
         return result
 

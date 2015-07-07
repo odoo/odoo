@@ -272,6 +272,8 @@ class account_analytic_account(osv.osv):
         raise osv.except_osv(_('Warning'), _("Quick account creation disallowed."))
 
     def copy(self, cr, uid, id, default=None, context=None):
+        """ executed only on the toplevel copied object of the hierarchy.
+        Subobject are actually copied with copy_data"""
         if not default:
             default = {}
         analytic = self.browse(cr, uid, id, context=context)
