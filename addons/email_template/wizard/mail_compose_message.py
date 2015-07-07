@@ -79,6 +79,11 @@ class mail_compose_message(osv.TransientModel):
                 wizard_context['mail_auto_delete'] = wizard.template_id.auto_delete  # mass mailing: use template auto_delete value -> note, for emails mass mailing only
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
+            template = wizard.template_id
+            # template specific outgoing mail server is lost in super send_mail
+            # store them in the context to avoid falling back to default values
+            if template.mail_server_id:
+                wizard_context['mail_server_id'] = template.mail_server_id.id
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
                 if attachment in wizard.template_id.attachment_ids:

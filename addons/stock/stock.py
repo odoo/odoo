@@ -29,7 +29,7 @@ from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import workflow
 from openerp import tools
-from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import float_compare, float_round, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -1430,7 +1430,15 @@ class stock_production_lot(osv.osv):
         """ Searches Ids of products
         @return: Ids of locations
         """
-        locations = self.pool.get('stock.location').search(cr, uid, [('usage', '=', 'internal')])
+        if context is None:
+            context = {}
+
+        if 'location_id' not in context:
+            locations = self.pool['stock.location'].search(
+                cr, uid, [('usage', '=', 'internal')], context=context)
+        else:
+            locations = context['location_id'] and [context['location_id']] or []
+
         cr.execute('''select
                 prodlot_id,
                 sum(qty)
@@ -1601,7 +1609,7 @@ class stock_move(osv.osv):
                 "the product reservation, and should be done with care."
         ),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True,states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
+        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoS'), states={'done': [('readonly', True)]}),
         'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
@@ -1856,7 +1864,8 @@ class stock_move(osv.osv):
                 break
 
         if product_uos and product_uom and (product_uom != product_uos):
-            result['product_uos_qty'] = product_qty * uos_coeff['uos_coeff']
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UoS')
+            result['product_uos_qty'] = float_round(product_qty * uos_coeff['uos_coeff'], precision_digits=precision)
         else:
             result['product_uos_qty'] = product_qty
 
@@ -1886,7 +1895,8 @@ class stock_move(osv.osv):
         # The clients should call onchange_quantity too anyway
 
         if product_uos and product_uom and (product_uom != product_uos):
-            result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
+            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
+            result['product_qty'] = float_round(product_uos_qty / uos_coeff['uos_coeff'], precision_digits=precision)
         else:
             result['product_qty'] = product_uos_qty
         return {'value': result}

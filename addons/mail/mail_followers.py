@@ -191,6 +191,8 @@ class mail_notification(osv.Model):
             'recipient_ids': [(4, id) for id in email_pids],
             'references': references,
         }
+        if 'mail_server_id' in context:
+            mail_values['mail_server_id'] = context['mail_server_id']
         email_notif_id = self.pool.get('mail.mail').create(cr, uid, mail_values, context=context)
         if force_send:
             self.pool.get('mail.mail').send(cr, uid, [email_notif_id], context=context)
