@@ -159,8 +159,6 @@ website.if_dom_contains('div.o_website_quote', function () {
 
 });
 
-});
-
 // dbo note: website_sale code for payment
 // if we standardize payment somehow, this should disappear
 $(document).ready(function () {
@@ -185,9 +183,10 @@ $(document).ready(function () {
       }
       var href = $(location).attr("href");
       var order_id = href.match(/quote\/([0-9]+)/)[1];
-      openerp.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id, 'call', {}).then(function (data) {
+      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id, 'call', {}).then(function (data) {
         $form.submit();
       });
    });
+});
 
 });

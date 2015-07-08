@@ -171,7 +171,7 @@ function prompt(options, qweb) {
 }
 
 function error(data, url) {
-    var $error = $(openerp.qweb.render('website.error_dialog', {
+    var $error = $(core.qweb.render('website.error_dialog', {
         'title': data.data ? data.data.arguments[0] : "",
         'message': data.data ? data.data.arguments[1] : data.statusText,
         'backend_url': url

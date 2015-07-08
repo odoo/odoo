@@ -87,7 +87,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                                 product_ids.push(values[0]);
                             });
                         });
-                        openerp.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids, 'add_qty': parseInt(qty)})
+                        ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids, 'add_qty': parseInt(qty)})
                         .then(function (data) {
                             for(var i=0; i < $products_dom.length; i++) {
                                 current = $products_dom[i].data("attribute_value_ids");
