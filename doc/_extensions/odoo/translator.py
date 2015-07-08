@@ -144,6 +144,13 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                                addnodes.versionmodified)):
             # Never compact paragraphs in document or compound.
             return False
+
+        for key, value in node.attlist():
+            # we can ignore a few specific classes, all other non-default
+            # attributes require that a <p> node remains
+            if key != 'classes' or value not in ([], ['first'], ['last'], ['first', 'last']):
+                return False
+
         first = isinstance(node.parent[0], nodes.label)
         for child in parent.children[first:]:
             # only first paragraph can be compact
@@ -363,6 +370,18 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.body.append(u'</h4>')
     def visit_legend(self, node): pass
     def depart_legend(self, node): pass
+
+    def visit_line(self, node):
+        self.body.append(self.starttag(node, 'div', CLASS='line'))
+        # ensure the line still takes the room it needs
+        if not len(node): self.body.append(u'<br />')
+    def depart_line(self, node):
+        self.body.append(u'</div>')
+
+    def visit_line_block(self, node):
+        self.body.append(self.starttag(node, 'div', CLASS='line-block'))
+    def depart_line_block(self, node):
+        self.body.append(u'</div>')
 
     def visit_table(self, node):
         self.body.append(self.starttag(node, 'table', CLASS='table'))
@@ -591,23 +610,31 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
 
             entries = [(title, ref)] if not toc else ((e[0], e[1]) for e in toc[0]['entries'])
             for subtitle, subref in entries:
+                baseuri = self.builder.get_target_uri(node['parent'])
+
                 if subref in env.metadata:
                     cover = env.metadata[subref].get('banner', conf.odoo_cover_default)
                 elif subref in conf.odoo_cover_external:
                     cover = conf.odoo_cover_external[subref]
                 else:
                     cover = conf.odoo_cover_default_external
-                banner = '_static/' + cover
-                base, ext = os.path.splitext(banner)
-                small = "{}.small{}".format(base, ext)
-                if os.path.isfile(urllib.url2pathname(small)):
-                    banner = small
-                baseuri = self.builder.get_target_uri(node['parent'])
+
+                if cover:
+                    banner = '_static/' + cover
+                    base, ext = os.path.splitext(banner)
+                    small = "{}.small{}".format(base, ext)
+                    if os.path.isfile(urllib.url2pathname(small)):
+                        banner = small
+                    style = u"background-image: url('{}')".format(
+                        util.relative_uri(baseuri, banner) or '#')
+                else:
+                    style = u''
+
                 self.body.append(u"""
                 <div class="col-sm-6 col-md-3">
                 <figure class="card">
                     <a href="{link}" class="card-img">
-                        <span style="background-image: url('{banner}')"></span>
+                        <span style="{style}"></span>
                         <figcaption>{title}</figcaption>
                     </a>
                 </figure>
@@ -615,7 +642,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                 """.format(
                     link=subref if util.url_re.match(subref) else util.relative_uri(
                         baseuri, self.builder.get_target_uri(subref)),
-                    banner=util.relative_uri(baseuri, banner) or '#',
+                    style=style,
                     title=subtitle if subtitle else util.nodes.clean_astext(env.titles[subref]),
                 ))
 

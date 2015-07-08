@@ -4925,6 +4925,10 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instan
 instance.web.form.Many2ManyDataSet = instance.web.DataSetStatic.extend({
     get_context: function() {
         this.context = this.m2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
         return this.context;
     }
 });

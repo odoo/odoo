@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from . import switcher
 from . import pygments_override
-import collections
+from . import switcher
+from . import translator
 
 import sphinx.environment
 import sphinx.builders.html
 from docutils import nodes
 def setup(app):
+    app.set_translator('html', translator.BootstrapTranslator)
+
     switcher.setup(app)
     app.add_config_value('odoo_cover_default', None, 'env')
     app.add_config_value('odoo_cover_external', {}, 'env')
