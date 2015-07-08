@@ -28,6 +28,11 @@ class make_procurement(osv.osv_memory):
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'date_planned': fields.date('Planned Date', required=True),
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_make_procurement',
+                                      'procurement_id', 'route_id', 'Preferred Routes',
+                                      help="Preferred route to be followed by the procurement order. "
+                                           "Usually copied from the generating document (SO) but could be "
+                                           "set up manually."),
     }
 
     _defaults = {
@@ -60,6 +65,7 @@ class make_procurement(osv.osv_memory):
                 'warehouse_id': proc.warehouse_id.id,
                 'location_id': wh.lot_stock_id.id,
                 'company_id': wh.company_id.id,
+                'route_ids': [(6, 0, proc.route_ids.ids)],
             })
             procurement_obj.signal_workflow(cr, uid, [procure_id], 'button_confirm')
 
