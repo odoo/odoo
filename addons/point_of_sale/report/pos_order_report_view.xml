@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record id="view_report_pos_order_pivot" model="ir.ui.view">
+<odoo>
+        <record id="report_pos_order_view_pivot" model="ir.ui.view">
             <field name="name">report.pos.order.pivot</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
@@ -14,7 +13,7 @@
             </field>
         </record>
 
-        <record id="view_report_pos_order_graph" model="ir.ui.view">
+        <record id="report_pos_order_view_graph" model="ir.ui.view">
             <field name="name">report.pos.order.graph</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
@@ -25,7 +24,7 @@
             </field>
         </record>
 
-        <record id="view_report_pos_order_search" model="ir.ui.view">
+        <record id="report_pos_order_view_search" model="ir.ui.view">
             <field name="name">report.pos.order.search</field>
             <field name="model">report.pos.order</field>
             <field name="arch" type="xml">
@@ -52,15 +51,14 @@
             </field>
         </record>
 
-        <record id="action_report_pos_order_all" model="ir.actions.act_window">
+        <record id="report_pos_order_action" model="ir.actions.act_window">
             <field name="name">Orders Analysis</field>
             <field name="res_model">report.pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
-            <field name="search_view_id" ref="view_report_pos_order_search"/>
+            <field name="search_view_id" ref="report_pos_order_view_search"/>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
-        <menuitem name="Orders" action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>
-    </data>
-</openerp>
+        <menuitem name="Orders" action="report_pos_order_action" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>
+</odoo>

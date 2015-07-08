@@ -1,24 +1,18 @@
-
-import math
-
-from openerp.osv import osv, fields
-
-import openerp.addons.product.product
+# -*- coding: utf-8 -*-
+from openerp import fields, api, models, _
+from openerp.exceptions import UserError
 
 
-class res_users(osv.osv):
+class ResUsers(models.Model):
     _inherit = 'res.users'
-    _columns = {
-        'pos_security_pin': fields.char('Security PIN',size=32, help='A Security PIN used to protect sensible functionality in the Point of Sale'),
-        'pos_config' : fields.many2one('pos.config', 'Default Point of Sale', domain=[('state', '=', 'active')]),
-    }
 
-    def _check_pin(self, cr, uid, ids, context=None):
-        for user in self.browse(cr, uid, ids, context=context):
-            if user.pos_security_pin and not user.pos_security_pin.isdigit():
-                return False
-        return True
+    pos_security_pin = fields.Char(
+        string='Security PIN', size=32, help='A Security PIN used to protect sensible functionality in the Point of Sale')
+    pos_config = fields.Many2one(
+        'pos.config', string='Default Point of Sale', domain=[('state', '=', 'active')])
 
-    _constraints = [
-        (_check_pin, "Security PIN can only contain digits",['pos_security_pin']),
-    ]
+    @api.constrains('pos_security_pin')
+    @api.one
+    def _check_pin(self):
+        if self.pos_security_pin and not self.pos_security_pin.isdigit():
+            raise UserError(_("Security PIN can only contain digits"))

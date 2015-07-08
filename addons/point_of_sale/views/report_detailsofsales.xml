@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_detailsofsales">
     <t t-call="report.html_container">
         <t t-call="report.internal_layout">
@@ -18,17 +17,17 @@
                     </div>
                     <div class="col-xs-3">
                         <strong>Print Date</strong>:<br/>
-                        <span t-esc="formatLang(time.strftime('%Y-%m-%d'),date=True)"/>
+                        <span t-esc="time.strftime('%Y-%m-%d')"/>
                     </div>
                 </div>
                 <div class="row mb32">
                     <div class="col-xs-3">
                         <strong>Start Period</strong>:<br/>
-                        <span t-esc="formatLang(data['form']['date_start'],date=True)"/> 
+                        <span t-esc="data['form']['date_start']"/>
                     </div>
                     <div class="col-xs-3">
                         <strong>End Period</strong>:<br/>
-                        <span t-esc="formatLang(data['form']['date_end'],date=True)"/> 
+                        <span t-esc="data['form']['date_end']"/>
                     </div>
                 </div>
 
@@ -45,7 +44,7 @@
                     <tbody>
                         <tr t-foreach="pos_sales_details(data['form'])" t-as="line_ids">
                             <td>
-                                <span t-esc="formatLang(line_ids['date_order'], date_time=True)"/>
+                                <span t-esc="line_ids['date_order']"/>
                             </td>
                             <td>
                                 <span t-esc="line_ids['pos_name']"/>
@@ -57,14 +56,14 @@
                                 <span t-esc="line_ids['name']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="formatLang(line_ids['price_unit'], dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                                <span t-esc="line_ids['price_unit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                             <td class="text-center">
-                                <span t-esc="formatLang(line_ids['qty'])"/>
+                                <span t-esc="line_ids['qty']"/>
                                 <span t-esc="line_ids['uom']"/>
                             </td>
                             <td class="text-center">
-                                <span t-esc="formatLang(line_ids['discount'], dp='Sale Price')"/>
+                                <span t-esc="line_ids['discount']"/>
                             </td>
                             <td class="text-center">
                                 <t t-if="line_ids['invoice_id']">
@@ -80,7 +79,7 @@
                     <tr t-foreach="gettaxamount(data['form'])" t-as="tax">
                         <td><span t-esc="tax['name']"/></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(tax['amount'], currency_obj = res_company.currency_id)"/>
+                             <strong t-esc="tax['amount']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
@@ -89,7 +88,7 @@
                     <tr t-foreach="getpayments(data['form'])" t-as="payment">
                         <td><span t-esc="payment['name']"/></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(payment['sum'], dp='Account', currency_obj=res_company.currency_id)"/>
+                            <strong t-esc="payment['sum']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
@@ -98,37 +97,37 @@
                     <tr>
                         <td><strong>Sales total(Revenue)</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(getsalestotal2(), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                            <strong t-esc="getsalestotal2()" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Qty of product</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(getqtytotal2())"/>
+                             <strong t-esc="getqtytotal2()"/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Total invoiced</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(getsuminvoice2(data['form']), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                            <strong t-esc="getsuminvoice2(data['form'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Total discount</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(getsumdisc(data['form']), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                            <strong t-esc="getsumdisc(data['form'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Total paid</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(getpaidtotal2(), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                            <strong t-esc="getpaidtotal2()" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                     <tr>
                         <td><strong>Total of the day</strong></td>
                         <td class="text-right">
-                            <strong t-esc="formatLang(gettotaloftheday(data['form']), dp='Sale Price', currency_obj = res_company.currency_id)"/>
+                            <strong t-esc="gettotaloftheday(data['form'])" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                     </tr>
                 </table>
@@ -136,5 +135,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

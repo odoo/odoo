@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_receipt">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -36,10 +35,11 @@
                             </td>
                             <td class="text-right">
                                 <t t-if="o.state != 'cancel' and o.statement_ids">
-                                    <span t-esc="formatLang(net(line.id), currency_obj=res_company.currency_id)"/>
+                                    <span t-esc="net(line.id)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </t>
                                 <t t-if="line.discount != 0.0">
-                                    <span t-esc="formatLang(line.discount, currency_obj=res_company.currency_id)"/>
+                                    <span t-esc="line.discount" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+
                                 </t>
                             </td>
                         </tr>
@@ -52,13 +52,13 @@
                             <tr class="border-black">
                                 <td><strong>Taxes</strong></td>
                                 <td class="text-right">
-                                    <strong t-esc="formatLang(o.amount_tax, currency_obj=res_company.currency_id)"/>
+                                      <strong t-esc="o.amount_tax" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                             </tr>
                             <tr>
                                 <td><strong>Total</strong></td>
                                 <td class="text-right">
-                                    <strong t-esc="formatLang(o.amount_total, currency_obj=res_company.currency_id)"/>
+                                    <strong t-esc="o.amount_total" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                             </tr>
                         </table>
@@ -78,7 +78,7 @@
                                 <span t-esc="d['name']"/>
                             </td>
                             <td>
-                                <span t-esc="formatLang(d['amt'], currency_obj=res_company.currency_id)"/>
+                                <span t-esc="d['amt']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                             </td>
                         </tr>
                     </tbody>
@@ -87,5 +87,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

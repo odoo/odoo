@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_usersproduct">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -19,20 +18,13 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Print Date</strong>:<br/>
-                            <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/>
+                            <span t-esc="time.strftime('%Y-%m-%d')"/>
                         </div>
                         <div class="col-xs-3">
                             <strong>Starting Date</strong>:<br/>
-                            <span t-esc="formatLang(o.date, date=True)"/>
+                            <span t-esc="o.date"/>
                         </div>
                     </div>
-
-                    <!-- <div class="row mb32" t-if="o.closing_date">
-                        <div class="col-xs-3">
-                            <strong>Ending Date</strong>:<br/>
-                            <span t-esc="formatLang(o.closing_date, date=True)"/>
-                        </div>
-                    </div> -->
 
                     <table class="table table-condensed">
                         <thead>
@@ -50,11 +42,11 @@
                                     <t t-esc="line_ids['name']" />
                                 </td>
                                 <td class="text-right">
-                                    <span t-esc="formatLang(line_ids['qty'])" />
+                                    <span t-esc="line_ids['qty']" />
                                     <span t-esc="line_ids['uom']"/>
                                 </td>
                                 <td class="text-right">
-                                    <t t-esc="formatLang(line_ids['amt'], currency_obj=res_company.currency_id)"/>
+                                    <t t-esc="line_ids['amt']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                                 </td>
                             </tr>
                         </tbody>
@@ -65,7 +57,7 @@
                             <table class="table table-condensed">
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
-                                    <td class="text-right"><span t-esc="formatLang(get_total(o), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="get_total(o)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                                 </tr>
                             </table>
                         </div>
@@ -75,5 +67,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

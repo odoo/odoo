@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp import tools
+from openerp import fields, models, tools
 
-class report_transaction_pos(osv.osv):
+
+class ReportTransactionPos(models.Model):
     _name = "report.transaction.pos"
     _description = "transaction for the pos"
     _auto = False
-    _columns = {
-        'date_create': fields.char('Date', size=16, readonly=True),
-        'journal_id': fields.many2one('account.journal', 'Sales Journal', readonly=True),
-        'jl_id': fields.many2one('account.journal', 'Cash Journals', readonly=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'no_trans': fields.float('Number of Transaction', readonly=True),
-        'amount': fields.float('Amount', readonly=True),
-        'invoice_id': fields.float('Nbr Invoice', readonly=True),
-        'invoice_am': fields.float('Invoice Amount', readonly=True),
-        'product_nb': fields.float('Product Nb.', readonly=True),
-        'disc': fields.float('Disc.', readonly=True),
-    }
+
+    date_create = fields.Char(string='Date', size=16, readonly=True)
+    journal_id = fields.Many2one('account.journal', string='Sales Journal', readonly=True)
+    jl_id = fields.Many2one('account.journal', string='Cash Journals', readonly=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    no_trans = fields.Float(string='Number of Transaction', readonly=True)
+    amount = fields.Float(readonly=True)
+    invoice_id = fields.Float(string='Nbr Invoice', readonly=True)
+    invoice_am = fields.Float(string='Invoice Amount', readonly=True)
+    product_nb = fields.Float(string='Product Nb.', readonly=True)
+    disc = fields.Float(readonly=True)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_transaction_pos')
@@ -47,7 +46,6 @@ class report_transaction_pos(osv.osv):
                     line.order_id=po.id and
                     line.product_id=p.id and
                     absl.statement_id=abs.id
-
                 group by
                     po.user_id,po.sale_journal, abs.journal_id,
                     to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text
@@ -56,16 +54,16 @@ class report_transaction_pos(osv.osv):
                     #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')
                     #to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
 
-class report_sales_by_user_pos(osv.osv):
+
+class ReportSalesByUserPos(models.Model):
     _name = "report.sales.by.user.pos"
     _description = "Sales by user"
     _auto = False
-    _columns = {
-        'date_order': fields.date('Order Date',required=True, select=True),
-        'amount': fields.float('Total', readonly=True, select=True),
-        'qty': fields.float('Quantity', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
-    }
+
+    date_order = fields.Date(string='Order Date', required=True, index=True)
+    amount = fields.Float('Total', readonly=True, index=True)
+    qty = fields.Float(string='Quantity', readonly=True, index=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True, index=True)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_sales_by_user_pos')
@@ -84,20 +82,19 @@ class report_sales_by_user_pos(osv.osv):
                group by
                     to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::text,
                     po.user_id
-
                 )
         """)
 
-class report_sales_by_user_pos_month(osv.osv):
+
+class ReportSalesByUserPosMonth(models.Model):
     _name = "report.sales.by.user.pos.month"
     _description = "Sales by user monthly"
     _auto = False
-    _columns = {
-        'date_order': fields.date('Order Date',required=True, select=True),
-        'amount': fields.float('Total', readonly=True, select=True),
-        'qty': fields.float('Quantity', readonly=True, select=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
-    }
+
+    date_order = fields.Date(string='Order Date', required=True, index=True)
+    amount = fields.Float(string='Total', readonly=True, index=True)
+    qty = fields.Float(string='Quantity', readonly=True, index=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True, index=True)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_sales_by_user_pos_month')
@@ -116,6 +113,5 @@ class report_sales_by_user_pos_month(osv.osv):
                group by
                     to_char(date_trunc('month',po.date_order),'YYYY-MM-DD')::text,
                     po.user_id
-
                 )
         """)

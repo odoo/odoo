@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <report
             id="report_user_label"
             model="res.users"
@@ -67,9 +66,9 @@
             file="point_of_sale.report_sessionsummary"
          />
 
-        <!-- report -->
+         <!-- report -->
 
-        <record model="ir.ui.view" id="view_pos_trans_user_form">
+        <record id="report_transaction_pos_view_form" model="ir.ui.view">
             <field name="name">report.trans.pos.user.form</field>
             <field name="model">report.transaction.pos</field>
             <field name="arch" type="xml">
@@ -88,7 +87,7 @@
         </record>
 
 
-        <record model="ir.ui.view" id="view_trans_pos_user_tree">
+        <record id="report_transaction_pos_view_tree" model="ir.ui.view">
             <field name="name">Sales by user</field>
             <field name="model">report.transaction.pos</field>
             <field name="arch" type="xml">
@@ -106,7 +105,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_report_transaction_pos_calendar">
+        <record id="report_transaction_pos_view_calendar" model="ir.ui.view">
             <field name="name">report.transaction.pos.calendar</field>
             <field name="model">report.transaction.pos</field>
             <field eval="2" name="priority"/>
@@ -118,7 +117,7 @@
             </field>
          </record>
 
-         <record model="ir.ui.view" id="view_report_transaction_pos_graph">
+         <record id="report_transaction_pos_view_graph" model="ir.ui.view">
             <field name="name">report.transaction.pos.graph</field>
             <field name="model">report.transaction.pos</field>
             <field eval="2" name="priority"/>
@@ -131,7 +130,7 @@
             </field>
          </record>
 
-        <record model="ir.actions.act_window" id="action_trans_pos_tree_today">
+        <record id="report_transaction_pos_action_tree_today" model="ir.actions.act_window">
             <field name="name">Sales by day</field>
             <field name="res_model">report.transaction.pos</field>
             <field name="view_type">form</field>
@@ -140,7 +139,7 @@
         </record>
 
 
-        <record model="ir.actions.act_window" id="action_trans_pos_tree_month">
+        <record id="report_transaction_pos_action_tree_month" model="ir.actions.act_window">
             <field name="name">Sales by month</field>
             <field name="res_model">report.transaction.pos</field>
             <field name="view_type">form</field>
@@ -149,16 +148,16 @@
         </record>
 
 
-        <record model="ir.actions.act_window" id="action_trans_pos_tree">
+        <record id="report_transaction_pos_action_tree" model="ir.actions.act_window">
             <field name="name">Sales by user</field>
             <field name="res_model">report.transaction.pos</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form,graph</field>
-            <field name="view_id" ref="view_trans_pos_user_tree"/>
+            <field name="view_id" ref="report_transaction_pos_view_tree"/>
         </record>
 
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_form">
+        <record id="report_sales_by_user_pos_view_form" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.form</field>
             <field name="model">report.sales.by.user.pos</field>
             <field name="arch" type="xml">
@@ -174,7 +173,7 @@
         </record>
 
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_tree">
+        <record id="report_sales_by_user_pos_view_tree" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.tree</field>
             <field name="model">report.sales.by.user.pos</field>
             <field name="arch" type="xml">
@@ -187,7 +186,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_calendar">
+        <record id="report_sales_by_user_pos_view_calendar" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.calendar</field>
             <field name="model">report.sales.by.user.pos</field>
             <field eval="2" name="priority"/>
@@ -199,7 +198,7 @@
             </field>
          </record>
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_graph">
+        <record id="report_sales_by_user_pos_view_graph" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.graph</field>
             <field name="model">report.sales.by.user.pos</field>
             <field eval="2" name="priority"/>
@@ -211,7 +210,7 @@
             </field>
          </record>
 
-         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_today">
+         <record id="report_sales_by_user_pos_action_today" model="ir.actions.act_window">
             <field name="name">Sales by User</field>
             <field name="res_model">report.sales.by.user.pos</field>
             <field name="view_type">form</field>
@@ -222,7 +221,7 @@
 
         <!-- Sales of user by month -->
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_form">
+        <record id="report_sales_by_user_pos_month_view_form" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.month.form</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="arch" type="xml">
@@ -238,7 +237,7 @@
         </record>
 
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_tree">
+        <record id="report_sales_by_user_pos_month_view_tree" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.month.tree</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="arch" type="xml">
@@ -251,7 +250,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_calendar">
+        <record id="report_sales_by_user_pos_month_view_calendar" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.month.calendar</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field eval="2" name="priority"/>
@@ -261,9 +260,9 @@
                     <field name="amount" />
                 </calendar>
             </field>
-         </record>
+        </record>
 
-        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_graph">
+        <record id="report_sales_by_user_pos_month_view_graph" model="ir.ui.view">
             <field name="name">report.sales.by.user.pos.month.graph</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field eval="2" name="priority"/>
@@ -273,10 +272,10 @@
                     <field name="amount"/>
                 </graph>
             </field>
-         </record>
+        </record>
 
 
-         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_month">
+        <record id="report_sales_by_user_pos_month_action" model="ir.actions.act_window">
             <field name="name">Sales by User Monthly</field>
             <field name="res_model">report.sales.by.user.pos.month</field>
             <field name="view_type">form</field>
@@ -284,5 +283,4 @@
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

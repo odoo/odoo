@@ -1,31 +1,25 @@
-
-import math
-
-from openerp.osv import osv, fields
-
-import openerp.addons.product.product
+# -*- coding: utf-8 -*-
+from openerp import fields, models
 
 
-class res_users(osv.osv):
+class ResPartner(models.Model):
     _inherit = 'res.partner'
-    _columns = {
-        'barcode' : fields.char('Barcode', help="BarCode", oldname='ean13'),
-    }
 
-    def create_from_ui(self, cr, uid, partner, context=None):
+    barcode = fields.Char(help="BarCode", oldname='ean13')
+
+    def create_from_ui(self, partner):
         """ create or modify a partner from the point of sale ui.
             partner contains the partner's fields. """
 
         #image is a dataurl, get the data after the comma
-        if partner.get('image',False):
-            img =  partner['image'].split(',')[1]
+        if partner.get('image', False):
+            img = partner['image'].split(',')[1]
             partner['image'] = img
 
-        if partner.get('id',False):  # Modifying existing partner
+        if partner.get('id', False):  # Modifying existing partner
             partner_id = partner['id']
             del partner['id']
-            self.write(cr, uid, [partner_id], partner, context=context)
+            self.write([partner_id], partner)
         else:
-            partner_id = self.create(cr, uid, partner, context=context)
-
+            partner_id = self.create(partner).id
         return partner_id

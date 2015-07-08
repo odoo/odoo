@@ -3,31 +3,19 @@
 
 # Copyright (C) 2004-2008 PC Solutions (<http://pcsol.be>). All Rights Reserved
 
-from openerp.osv import fields, osv
-
-class account_journal(osv.osv):
-    _inherit = 'account.journal'
-    _columns = {
-        'journal_user': fields.boolean('Active in Point of Sale', help="Check this box if this journal define a payment method that can be used in a point of sale."),
-
-        'amount_authorized_diff' : fields.float('Amount Authorized Difference', help="This field depicts the maximum difference allowed between the ending balance and the theorical cash when closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at the closing of his session saying that he needs to contact his manager."),
-    }
+from openerp import fields, models
 
 
-class account_bank_statement(osv.osv):
+class AccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'
-    _columns = {
-        'pos_session_id' : fields.many2one('pos.session', string="Session", copy=False),
-        'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', readonly=True),
-        'user_id': fields.many2one('res.users', 'User', readonly=True),
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c={}: uid
-    }
+    pos_session_id = fields.Many2one(
+        'pos.session', string="Session", copy=False)
+    account_id = fields.Many2one(
+        'account.account', related='journal_id.default_debit_account_id', readonly=True)
+    user_id = fields.Many2one('res.users', string='User', readonly=True, default=lambda self: self.env.uid)
 
 
-class account_bank_statement_line(osv.osv):
+class AccountBankStatementLline(models.Model):
     _inherit = 'account.bank.statement.line'
-    _columns= {
-        'pos_statement_id': fields.many2one('pos.order', string="POS statement", ondelete='cascade'),
-    }
+
+    pos_statement_id = fields.Many2one('pos.order', string="POS statement", ondelete='cascade')

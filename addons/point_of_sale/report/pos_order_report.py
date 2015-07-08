@@ -1,39 +1,43 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.osv import fields,osv
+from openerp import fields, models, tools
 
-class pos_order_report(osv.osv):
+
+class PosOrderReport(models.Model):
     _name = "report.pos.order"
     _description = "Point of Sale Orders Statistics"
     _auto = False
 
-    _columns = {
-        'date': fields.datetime('Date Order', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
-        'state': fields.selection([('draft', 'New'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
-                                  'Status'),
-        'user_id':fields.many2one('res.users', 'Salesperson', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True),
-        'price_sub_total':fields.float('Subtotal w/o discount', readonly=True),
-        'total_discount':fields.float('Total Discount', readonly=True),
-        'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
-        'location_id':fields.many2one('stock.location', 'Location', readonly=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
-        'product_qty':fields.integer('Product Quantity', readonly=True),
-        'journal_id': fields.many2one('account.journal', 'Journal'),
-        'delay_validation': fields.integer('Delay Validation'),
-        'product_categ_id': fields.many2one('product.category', 'Product Category', readonly=True),
-        'invoiced': fields.boolean('Invoiced', readonly=True),
-        'config_id' : fields.many2one('pos.config', 'Point of Sale', readonly=True),
-        'pos_categ_id': fields.many2one('pos.category','Public Category', readonly=True),
-        'stock_location_id': fields.many2one('stock.location', 'Warehouse', readonly=True),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
-    }
+    date = fields.Datetime(string='Date Order', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    product_id = fields.Many2one('product.product', string='Product', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template', readonly=True)
+    state = fields.Selection(
+        [('draft', 'New'), ('paid', 'Paid'),
+            ('done', 'Posted'),
+            ('invoiced', 'Invoiced'),
+            ('cancel', 'Cancelled')],
+        string='Status'
+    )
+    user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
+    price_total = fields.Float(string='Total Price', readonly=True)
+    price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
+    total_discount = fields.Float(string='Total Discount', readonly=True)
+    average_price = fields.Float(string='Average Price', readonly=True, group_operator="avg")
+    location_id = fields.Many2one('stock.location', string='Location', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    product_qty = fields.Integer(string='Product Quantity', readonly=True)
+    journal_id = fields.Many2one('account.journal', string='Journal')
+    delay_validation = fields.Integer(string='Delay Validation')
+    product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
+    invoiced = fields.Boolean(readonly=True)
+    config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
+    pos_categ_id = fields.Many2one('pos.category', string='Public Category', readonly=True)
+    stock_location_id = fields.Many2one('stock.location', string='Warehouse', readonly=True)
+    pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
+
     _order = 'date desc'
 
     def init(self, cr):

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_sale_config_settings_form_pos" model="ir.ui.view">
             <field name="name">pos.config.settings.form</field>
             <field name="model">pos.config.settings</field>
@@ -13,25 +12,25 @@
                     </header>
                     <separator string="Point of Sale"/>
                     <group>
-                    	<label for="id" string="Extensions"/>
+                        <label for="id" string="Extensions"/>
                         <div>
-                        	<div>
-	                            <field name="module_pos_restaurant" class="oe_inline"/>
-	                            <label for="module_pos_restaurant"/>
-                        	</div>
-                        	<div>
-	                            <field name="module_pos_loyalty" class="oe_inline"/>
-	                            <label for="module_pos_loyalty"/>
-                        	</div>
-                        	<div>
-	                            <field name="module_pos_discount" class="oe_inline"/>
-	                            <label for="module_pos_discount"/>
-                        	</div>
+                            <div>
+                                <field name="module_pos_restaurant" class="oe_inline"/>
+                                <label for="module_pos_restaurant"/>
+                            </div>
+                            <div>
+                                <field name="module_pos_loyalty" class="oe_inline"/>
+                                <label for="module_pos_loyalty"/>
+                            </div>
+                            <div>
+                                <field name="module_pos_discount" class="oe_inline"/>
+                                <label for="module_pos_discount"/>
+                            </div>
                         </div>
                     </group>
                 </form>
-			</field>
-		</record>            	
+            </field>
+        </record>               
         <record id="action_pos_configuration" model="ir.actions.act_window">
             <field name="name">Configure Point of Sale</field>
             <field name="res_model">pos.config.settings</field>
@@ -41,5 +40,4 @@
 
         <menuitem id="menu_pos_global_settings" name="Settings" 
             parent="menu_point_config_product" sequence="7" action="action_pos_configuration"/>
-	</data>
-</openerp>
+</odoo>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-
-        <record id="view_pos_payment" model="ir.ui.view">
+<odoo>
+        <record id="pos_make_payment_view_form" model="ir.ui.view">
             <field name="name">Pay Order</field>
             <field name="model">pos.make.payment</field>
             <field name="arch" type="xml">
@@ -20,7 +18,7 @@
             </form>
             </field>
         </record>
-        <record id="action_pos_payment" model="ir.actions.act_window">
+        <record id="pos_make_payment_action" model="ir.actions.act_window">
             <field name="name">Payment</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.make.payment</field>
@@ -28,6 +26,4 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-    </data>
-</openerp>
-
+</odoo>
