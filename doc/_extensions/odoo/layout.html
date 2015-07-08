@@ -46,7 +46,7 @@
 {%- block header -%}
   <header class="{{ ' '.join(classes) }}">
     <figure class="card top">
-      <span class="card-img" style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"></span>
+      <span class="card-img" {% if meta['banner'] %}style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"{% endif %}></span>
     </figure>
   </header>
   <nav id="main_navbar" class="navbar {{ ' '.join(classes) }}">
