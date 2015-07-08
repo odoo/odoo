@@ -380,7 +380,7 @@ class ir_translation(osv.osv):
     @api.model
     def _get_terms_query(self, field, records):
         """ Utility function that makes the query for field terms. """
-        query = """ SELECT id, res_id, src, value FROM ir_translation
+        query = """ SELECT * FROM ir_translation
                     WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
         name = "%s,%s" % (field.model_name, field.name)
         params = (records.env.lang, 'model', name, tuple(records.ids))
@@ -388,15 +388,10 @@ class ir_translation(osv.osv):
 
     @api.model
     def _get_terms_mapping(self, field, records):
-        """ Return a function mapping a (trans_id, source, value) to a value.
+        """ Return a function mapping a ir_translation row (dict) to a value.
         This method is called before querying the database for translations.
         """
-        if self._context.get('edit_translations'):
-            # TODO: this part should be moved to module web_editor
-            self.insert_missing(field, records)
-            return lambda tid, src, value: '<span data-oe-translation-id="%s">%s</span>' % (tid, value)
-        else:
-            return lambda tid, src, value: value
+        return lambda data: data['value']
 
     @api.model
     def _get_terms_translations(self, field, records):
@@ -409,8 +404,8 @@ class ir_translation(osv.osv):
             map_trans = self._get_terms_mapping(field, records)
             query, params = self._get_terms_query(field, records)
             self._cr.execute(query, params)
-            for trans_id, res_id, src, value in self._cr.fetchall():
-                result[res_id][src] = map_trans(trans_id, src, value)
+            for data in self._cr.dictfetchall():
+                result[data['res_id']][data['src']] = map_trans(data)
         return result
 
     @api.model
@@ -648,7 +643,7 @@ class ir_translation(osv.osv):
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
                 elif lang_code != 'en_US':
-                    _logger.warning('module %s: no translation for language %s', module_name, lang_code)
+                    _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = openerp.modules.get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
