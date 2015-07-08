@@ -1315,7 +1315,12 @@ class product_template(osv.Model):
             product_ids += [x.id for x in template.product_variant_ids]
         result = mod_obj.xmlid_to_res_id(cr, uid, 'sale.action_order_line_product_tree',raise_if_not_found=True)
         result = act_obj.read(cr, uid, [result], context=context)[0]
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, product_ids)) + "])]"
+        products = self._get_products(cr, uid, ids, context=context)
+        if len(ids) == 1 and len(products) == 1:
+            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
+        else:
+            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
+            result['context'] = "{}"
         return result
     
     
