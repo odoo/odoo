@@ -6,7 +6,7 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
-var ace_call = require('website.ace_call');
+var ace_call = require('web.ace_call');
 var website = require('website.website');
 
 var _t = core._t;

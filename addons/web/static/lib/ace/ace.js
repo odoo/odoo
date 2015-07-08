@@ -1,7 +1,7 @@
-odoo.define('website.ace_call', ['website.ace_mode_xml', 'website.ace_theme_monokai'], function (require) {
+odoo.define('web.ace_call', ['web.ace_mode_xml', 'web.ace_theme_monokai'], function (require) {
 
-var mode_xml = require('website.ace_mode_xml');
-var theme_monokai = require('website.ace_theme_monokai');
+var mode_xml = require('web.ace_mode_xml');
+var theme_monokai = require('web.ace_theme_monokai');
 
 function load() {
     if (typeof ace === "undefined")
