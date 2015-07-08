@@ -28,9 +28,8 @@ var Mention = Widget.extend({
         this.$dropdown = $("<div class='o_mail_mention_main'><ul></ul></div>");
         this.model_res_partner = new Model("res.partner");
         this.selected_partners = {};
-        this.search_keys = {};
         this.partners = {};
-        this.keyup_list = [40, 38, 13, 35, 33, 34, 27];
+        $.ui.keyCode.escape_keyup = [40, 38, 13, 35, 33, 34, 27];
         this.partner_limit = options['partner_limit'] || 8;
         this.typing_speed = options['typing_speed'] || 400;
         this.min_charactor = options['min_charactor'] || 4;
@@ -74,17 +73,17 @@ var Mention = Widget.extend({
         });
         this.clear_dropdown();
     },
-    show_dropdown: function(){
+    show_dropdown: function(result){
         var self = this;
         var highlight = function(description){
             if(description)
             return description.replace(new RegExp(self.search_string, "gi"), function(str) {return _.str.sprintf("<b><u>%s</u></b>",str);});};
 
-        var res = _.map(self.search_keys[self.search_string], function(id) {
+        var res = _.map(result, function(partner) {
                 return {
-                    "id": id, 
-                    "name": highlight(self.partners[id]["name"]), 
-                    "email": highlight(self.partners[id]["email"])
+                    "id": partner["id"], 
+                    "name": highlight(partner["name"]), 
+                    "email": highlight(partner["email"])
                     };
         });
         this.clear_dropdown();
@@ -100,20 +99,16 @@ var Mention = Widget.extend({
     
     search_n_store: function() {
         var self = this;
-        if(!this.search_keys[this.search_string] && this.recent_string) {
+        if(this.recent_string) {
             this.model_res_partner.call("search_read", {
                 domain: ['|', ['name', 'ilike', self.search_string], ['email', 'ilike', self.search_string]],
                 fields: ['name', 'email'],
                 limit: this.partner_limit
             }).done(function(res) {
                 if(!res.length) return;
-                _.each(res, function(r) {self.partners[r.id] = r;});
-                self.search_keys[self.search_string] = _.pluck(res, "id");
-                self.show_dropdown();
+                self.show_dropdown(res);
             });
-            return;
         }
-        self.show_dropdown();
     },
     find_n_test: function(){
         var self = this;
@@ -133,7 +128,7 @@ var Mention = Widget.extend({
     },
     textarea_keyup: function(e) {
         var self = this;
-        if(_.contains(this.keyup_list, e.which)) { return;}
+        if(_.contains($.ui.keyCode.escape_keyup, e.which)) { return;}
         
         this.recent_string = this.find_n_test();
         if(this.recent_string){
