@@ -2,7 +2,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Widget = require('web.Widget');

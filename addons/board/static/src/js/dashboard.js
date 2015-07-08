@@ -7,7 +7,7 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FavoriteMenu = require('web.FavoriteMenu');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 

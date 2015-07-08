@@ -3,7 +3,7 @@ odoo.define('base.apps', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');

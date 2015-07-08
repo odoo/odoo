@@ -6,7 +6,7 @@ odoo.define('im_chat.im_chat', function (require) {
 var bus = require('bus.bus');
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');

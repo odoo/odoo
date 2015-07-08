@@ -4,7 +4,7 @@ odoo.define('web.UserMenu', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 

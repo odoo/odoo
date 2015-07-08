@@ -385,7 +385,7 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
             });
     });
 
-    test('empty, context altered', ['web.Model'], function (assert, pyeval, session, Model) {
+    test('empty, context altered', ['web.DataModel'], function (assert, pyeval, session, Model) {
         assert.expect(3);
         var lang = new Model('res.lang');
         var users = new Model('res.users');

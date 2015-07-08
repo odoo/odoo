@@ -3,7 +3,7 @@ odoo.define('web_kanban.KanbanView', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Pager = require('web.Pager');

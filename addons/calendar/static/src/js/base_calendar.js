@@ -4,7 +4,7 @@ odoo.define('base_calendar.base_calendar', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var WebClient = require('web.WebClient');
 var CalendarView = require('web_calendar.CalendarView');
 var widgets = require('web_calendar.widgets');

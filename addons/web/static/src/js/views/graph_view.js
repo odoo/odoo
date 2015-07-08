@@ -6,7 +6,7 @@ odoo.define('web.GraphView', function (require) {
 
 var core = require('web.core');
 var GraphWidget = require('web.GraphWidget');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var View = require('web.View');
 
 var _lt = core._lt;

@@ -2,7 +2,7 @@ odoo.define('barcodes.BarcodeParser', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 // The BarcodeParser is used to detect what is the category
 // of a barcode (product, partner, ...) and extract an encoded value

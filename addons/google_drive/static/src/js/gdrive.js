@@ -2,7 +2,7 @@ odoo.define('google_drive.google_drive', function (require) {
 "use strict";
 
 var data = require('web.data');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var Sidebar = require('web.Sidebar');
 
 Sidebar.include({
