@@ -75,12 +75,7 @@ Main Features
     ],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/tests_before.xml',
-        'test/00_register_open.yml',
-        'test/01_order_to_payment.yml',
-        'test/02_order_to_invoice.yml',
-        'test/point_of_sale_report.yml',
-        'test/account_statement_reports.yml',
+        'tests/tests_before.xml',
     ],
     'installable': True,
     'application': True,
