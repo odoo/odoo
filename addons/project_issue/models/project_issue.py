@@ -136,6 +136,7 @@ class project_issue(models.Model):
     date_action_next = fields.Datetime('Next Action', readonly=True)
     can_escalate = fields.Boolean(compute='_can_escalate', string='Can Escalate')
 
+    @api.multi
     def _can_escalate(self):
         for issue in self:
             if issue.project_id.project_escalation_id and issue.analytic_account_id.type == 'contract':
@@ -366,6 +367,7 @@ class project(models.Model):
                                             states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]})
     issue_count = fields.Integer(compute='_issue_count', string="Issues")
 
+    @api.one
     def _issue_count(self):
         self.issue_count = len(self.issue_ids)
 
@@ -450,5 +452,6 @@ class res_partner(models.Model):
     """ Inherits partner and adds Issue information in the partner form """
     issue_count = fields.Integer(compute='_issue_count', string='# Issues')
 
+    @api.one
     def _issue_count(self):
         self.issue_count = self.env['project.issue'].search_count([('partner_id', '=', self.id)])
