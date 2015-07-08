@@ -1,3 +1,5 @@
+:banner: banners/security.jpg
+
 .. _reference/security:
 
 ================
@@ -22,12 +24,12 @@ Each access control has a model to which it grants permissions, the
 permissions it grants and optionally a group.
 
 Access controls are additive, for a given model a user has access all
-permissions granted to any of its groups: if the user belongs to group *A*
-which allows writing and group *B* which allows deleting, he can both write
+permissions granted to any of its groups: if the user belongs to one group
+which allows writing and another which allows deleting, they can both write
 and delete.
 
 If no group is specified, the access control applies to all users, otherwise
-it only applies to the users belonging to the specific group.
+it only applies to the members of the given group.
 
 Available permissions are creation (``perm_create``), searching and reading
 (``perm_read``), updating existing records (``perm_write``) and deleting

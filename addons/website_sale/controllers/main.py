@@ -914,17 +914,18 @@ class website_sale(http.Controller):
         for line in order_lines:
             ret.append({
                 'id': line.order_id and line.order_id.id,
-                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
                 'sku': line.product_id.id,
-                'quantity': line.product_uom_qty,
+                'name': line.product_id.name or '-',
+                'category': line.product_id.categ_id and line.product_id.categ_id.name or '-',
                 'price': line.price_unit,
+                'quantity': line.product_uom_qty,
             })
         return ret
 
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
         """ return data about order in JSON needed for google analytics"""
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, context = request.cr, request.context
         ret = {}
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:

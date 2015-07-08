@@ -44,7 +44,6 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
         var $input = $(this);
         if ($input.data('update_change')) {
-            console.log($input.val()+ "+++");
             return;
         }
         var value = parseInt($input.val(), 10);
@@ -81,7 +80,6 @@ $('.oe_website_sale').each(function () {
             .then(function (data) {
                 $input.data('update_change', false);
                 if (value !== parseInt($input.val(), 10)) {
-                    console.log($input.val()+ "***");
                     $input.trigger('change');
                     return;
                 }

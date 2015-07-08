@@ -56,15 +56,19 @@ class stock_history(osv.osv):
                 for product_id in ids:
                     line_ids.add(product_id)
             line_ids = list(line_ids)
-            cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
-            lines_rec = cr.dictfetchall()
+            lines_rec = {}
+            if line_ids:
+                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
+                lines_rec = cr.dictfetchall()
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
             products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'product_tmpl_id'], context=context)
             products_dict = dict((product['id'], product) for product in products_rec)
             cost_method_product_tmpl_ids = list(set(product['product_tmpl_id'][0] for product in products_rec if product['cost_method'] != 'real'))
-            cr.execute('SELECT DISTINCT ON (product_template_id, company_id) product_template_id, company_id, cost FROM product_price_history WHERE product_template_id in %s AND datetime <= %s ORDER BY product_template_id, company_id, datetime DESC', (tuple(cost_method_product_tmpl_ids), date))
-            histories = cr.dictfetchall()
+            histories = []
+            if cost_method_product_tmpl_ids:
+                cr.execute('SELECT DISTINCT ON (product_template_id, company_id) product_template_id, company_id, cost FROM product_price_history WHERE product_template_id in %s AND datetime <= %s ORDER BY product_template_id, company_id, datetime DESC', (tuple(cost_method_product_tmpl_ids), date))
+                histories = cr.dictfetchall()
             histories_dict = {}
             for history in histories:
                 histories_dict[(history['product_template_id'], history['company_id'])] = history['cost']

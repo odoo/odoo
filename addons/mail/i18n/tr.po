@@ -3,14 +3,15 @@
 # * mail
 # 
 # Translators:
+# Ediz Duman <neps1192@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-25 14:36+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgstr "<p class='oe_view_nocontent_create'>\n                            Yeni %
 msgid ""
 "<p class='oe_view_nocontent_create'>Click here to add new "
 "%(document)s</p>%(static_help)s"
-msgstr ""
+msgstr "<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_inbox_feeds
@@ -211,12 +212,12 @@ msgstr "Rumuz"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "E-posta kabul edilecek rumuz"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Diğer ad iletişim güvenliği"
 
 #. module: mail
 #: field:base.config.settings,alias_domain:0
@@ -254,7 +255,7 @@ msgstr "Tüm İletiler"
 msgid ""
 "All records matching your current search filter will be mailed,\n"
 "                                    not only the ids selected in the list view."
-msgstr ""
+msgstr "Geçerli arama süzgece uyan tüm kayıtları gönderilecektir, \n sadece kimlikleri liste görünümünde seçmiş."
 
 #. module: mail
 #. openerp-web
@@ -269,7 +270,7 @@ msgstr "Ve"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Cevaplar Orijinal belge üzerinde tartışma olarak gitmez. Bu oluşturulan ileti kimliği üzerinde bir etkisi vardır."
 
 #. module: mail
 #. openerp-web
@@ -809,7 +810,7 @@ msgstr "Gizli"
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "Alt tür takipçisi Seçenekleri gizle"
 
 #. module: mail
 #: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
@@ -833,7 +834,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "Takma tutan üst kayıt ID (örnek: proje görev oluşturma takma tutarak)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
@@ -851,27 +852,27 @@ msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr ""
+msgstr "Bu onay kutusu işaretlendiğinde, Ortaklar belgenin takipçileri eklenmiş bir e-posta uyarısı alırsınız."
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "Eğer alan adınıza gelen tüm emailleri catch-all tekniği ile Odoo'ya yönlendirmek istiyorsanız buraya bir alan adı girin."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
-msgstr ""
+msgstr "Eğer seçilen kimlikleri sadece çalışmak istiyorsanız,, liste başlık onay kutusunun işaretini kaldırın lütfen."
 
 #. module: mail
 #: code:addons/mail/mail_alias.py:144
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "Pasif E-Posta rumuzu"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
@@ -901,7 +902,7 @@ msgstr "Geçersiz ifade, bu tam bir python sözlük tanımı gibi olmalı \"{'fi
 #: code:addons/mail/wizard/invite.py:97
 #, python-format
 msgid "Invitation to follow %s: %s"
-msgstr ""
+msgstr "Şunu takip etmek için davet : %s: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -960,14 +961,14 @@ msgstr "Son Güncelleme"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "Bu belgenin izleyicisi olarak eklenecek iş ortakları."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "Bu belge için bir iç not yazın. Bilgilendirme maili gönderilmeyecek."
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
@@ -1001,7 +1002,7 @@ msgstr "Posta Yönlendirmesi (Belge / Gelen kutusu)"
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "Varolan bir mail.message halkı bilgilendirmek için posta oluşturuldu"
 
 #. module: mail
 #. openerp-web
@@ -1124,7 +1125,7 @@ msgstr "Mesajlaşma"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Messaging Alias"
-msgstr ""
+msgstr "Mesaj Rumuzları"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1206,7 +1207,7 @@ msgstr "Mesaj yok."
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "Cevaplar için hiçbir iş parçacığı yok"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1237,7 +1238,7 @@ msgstr "İzleyicileri bilgilendir"
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "Belgenin takipçilerini bildir (kütle yazı sadece)"
 
 #. module: mail
 #. openerp-web
@@ -1327,7 +1328,7 @@ msgstr "Ana Model"
 #. module: mail
 #: field:mail.alias,alias_parent_thread_id:0
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Üst kayıt iş parçacığı kimliği"
 
 #. module: mail
 #: help:mail.alias,alias_parent_model_id:0
@@ -1335,7 +1336,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr ""
+msgstr "Parent model holding the alias. The model holding the alias reference\nis not necessarily the model given by alias_model_id\n(example: project (parent_model) and task (model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
@@ -1398,7 +1399,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+msgstr "Mail gateway'i kullanarak gönderilecek mesajların kurallarını belirleyin:\n Herkes : Herkes eposta alır.\n İş Ortakları : Sadece yetkili iş ortakları. \nTakipçiler : Sadece ilgili doküman veya konunun takipçileri\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1406,7 +1407,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "Kişisel gelen kutusuna e-mail kabul etme kuralları:- Asla : E-Mail gönderilmeyecek- Tüm Mesajlar : Her bildirim otomatik olarak gönderilecek"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1442,7 +1443,7 @@ msgstr "Oku"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "Otomatik Email Bilgilendirmeleri"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1512,7 +1513,7 @@ msgstr "Cevapla"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "Yanıt e-posta adresi. Reply_to ayarı, otomatik iş parçacığı oluşturmayı atlar."
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1595,7 +1596,7 @@ msgstr "Gönderilmiş"
 #: code:addons/mail/mail_followers.py:155
 #, python-format
 msgid "Sent by %(company)s using %(odoo)s"
-msgstr ""
+msgstr "Sent by %(company)s using %(odoo)s"
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
@@ -1718,14 +1719,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "Bu diğer ad için karşılık gelen model (Odoo belge gibi). Varolan kayda yanıt değil gelen herhangi bir e-posta-ecek neden bu modelin (örneğin bir proje görevini) yeni kayıt oluşturma"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "Bir eposta için rumuz yazın. Bu daha sonra kolayca hatırlayacağınız bir tanım olacak."
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1758,7 +1759,7 @@ msgid ""
 "This group is visible by everyone,\n"
 "                                including your customers if you installed\n"
 "                                the portal module."
-msgstr ""
+msgstr "Bu grup herkes tarafından görülebilir, portal modülü yüklüyse müşterilerinizi dahil."
 
 #. module: mail
 #: help:mail.group,public:0
@@ -1859,12 +1860,12 @@ msgstr "Yükleme hatası"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "Kullanımı etkin etki alanı"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Alt-Türler"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1922,7 +1923,7 @@ msgstr "Uyarı! \n Bubelgede herhangi bir eposta veya tartışma ile bilgilendir
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "Mesaj bir iç notu olsun (comment modu)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1937,7 +1938,7 @@ msgid ""
 "You are currently composing a message, your message will be discarded.\n"
 "\n"
 "Are you sure you want to leave this page ?"
-msgstr ""
+msgstr "Sayfayı terk ederseniz bu yazışmadaki metni kaybedeceksiniz. Bunu yapmak istediğinize emin misiniz ?"
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
@@ -1945,7 +1946,7 @@ msgstr ""
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "Burada. \n yeni bir kullanıcı oluşturmak için yeni bir kullanıcı oluşturamazsınız lütfen yapılandırma Masası'na gidin."
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -1953,7 +1954,7 @@ msgstr ""
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "Bütün şirketin diğer modüller tarafından gerektiği şekilde bu gruplar silinemez."
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171
@@ -2043,7 +2044,7 @@ msgstr "daha çok."
 #. module: mail
 #: view:base.config.settings:mail.view_general_configuration_mail_alias_domain
 msgid "mycompany.odoo.com"
-msgstr ""
+msgstr "mycompany.Odoo.com"
 
 #. module: mail
 #. openerp-web
@@ -2105,7 +2106,7 @@ msgstr "bir ya da çok mesaj göster"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "the current search filter"
-msgstr ""
+msgstr "Geçerli arama filtresi"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form

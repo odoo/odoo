@@ -7,8 +7,8 @@ Asynchronous Operations
 
 As a language (and runtime), javascript is fundamentally
 single-threaded. This means any blocking request or computation will
-blocks the whole page (and, in older browsers, the software itself
-even preventing users from switching to an other tab): a javascript
+block the whole page (and, in older browsers, the software itself
+even preventing users from switching to another tab): a javascript
 environment can be seen as an event-based runloop where application
 developers have no control over the runloop itself.
 

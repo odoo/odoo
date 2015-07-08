@@ -120,7 +120,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
             pages = 0
             first_page = None
-            locs = request.website.enumerate_pages()
+            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
                 start = pages * LOC_PER_SITEMAP
                 values = {

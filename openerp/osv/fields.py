@@ -1069,6 +1069,8 @@ def get_nice_size(value):
         size = value
     elif value: # this is supposed to be a string
         size = len(value)
+        if size < 12:  # suppose human size
+            return value
     return tools.human_size(size)
 
 # See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
@@ -1591,6 +1593,8 @@ class sparse(function):
         """
 
         if self._type == 'many2many':
+            if not value:
+                return []
             assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
             return value[0][2]
 

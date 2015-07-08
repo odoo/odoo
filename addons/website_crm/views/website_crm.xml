@@ -14,7 +14,7 @@
             <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
                 <label class="col-md-3 col-sm-4 control-label" for="phone">Phone Number</label>
                 <div class="col-md-7 col-sm-8">
-                    <input type="text" class="form-control" name="phone" placeholder="e.g. (+32).81.81.37.00" t-attf-value="#{phone or ''}"/>
+                    <input type="text" class="form-control" name="phone" t-attf-value="#{phone or ''}"/>
                 </div>
             </div>
             <div name="email_from_container" t-attf-class="form-group #{error and 'email_from' in error and 'has-error' or ''}">

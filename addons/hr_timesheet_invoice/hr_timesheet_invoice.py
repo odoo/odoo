@@ -199,7 +199,7 @@ class account_analytic_line(osv.osv):
             unit_price = total_price*-1.0 / total_qty
 
         factor = self.pool['hr_timesheet_invoice.factor'].browse(cr, uid, factor_id, context=uom_context)
-        factor_name = factor.customer_name
+        factor_name = factor.customer_name or ''
         curr_invoice_line = {
             'price_unit': unit_price,
             'quantity': total_qty,
