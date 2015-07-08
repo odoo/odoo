@@ -32,16 +32,15 @@
                     </div>
                     <footer>
                         <button name="create_invoices" string="Create and View Invoice" type="object"
-                            context="{'open_invoices': True}" class="oe_highlight"
+                            context="{'open_invoices': True}" class="btn-primary"
                             attrs="{'invisible': [('advance_payment_method', '=', 'lines')]}"/>
                         <button name="create_invoices" string="Create Invoice" type="object"
-                            class="oe_highlight"
+                            class="btn-primary"
                             attrs="{'invisible': [('advance_payment_method', '=', 'lines')]}"/>
                         <button name="create_invoices" string="Show Lines to Invoice" type="object"
-                            class="oe_highlight"
+                            class="btn-primary"
                             attrs="{'invisible': [('advance_payment_method', '!=', 'lines')]}"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>
