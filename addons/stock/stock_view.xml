@@ -1753,7 +1753,7 @@
                     <group>
                         <field name="warehouse_id" on_change="change_warehouse_id(warehouse_id, context)"/>
                         <field name="location_id" domain="[('usage', '=', 'internal')]"/>
-                        <field name="route_ids" widget="many2many_tags"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                     </group>
                 </xpath>
                 <div name="button_box" position="inside">
