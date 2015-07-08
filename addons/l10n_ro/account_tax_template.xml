@@ -1,135 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data noupdate="0">
+
+    <record id="tax_tag_sale_tvac_00" model="account.account.tag">
+        <field name="name">TVA colectat 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_tvac_05" model="account.account.tag">
+        <field name="name">TVA colectat 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_tvac_09" model="account.account.tag">
+        <field name="name">TVA colectat 9%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_tvac_19" model="account.account.tag">
+        <field name="name">TVA colectat 19%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_tvac_24" model="account.account.tag">
+        <field name="name">TVA colectat 24%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_tvad_00" model="account.account.tag">
+        <field name="name">TVA deductibil 0%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_tvad_05" model="account.account.tag">
+        <field name="name">TVA deductibil 5%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_tvad_09" model="account.account.tag">
+        <field name="name">TVA deductibil 9%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_tvad_19" model="account.account.tag">
+        <field name="name">TVA deductibil 19%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_purchase_tvad_24" model="account.account.tag">
+        <field name="name">TVA deductibil 24%</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_sale_tvati" model="account.account.tag">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_tvatisc_sale" model="account.account.tag">
+        <field name="name">TVA Taxare Intracomunitara Scutita(sale)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_tvatisc_purchase" model="account.account.tag">
+        <field name="name">TVA Taxare Intracomunitara Scutita(purchase)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_tvatine_sale" model="account.account.tag">
+        <field name="name">TVA Taxare Intracomunitara Neimpozabila(sale)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tax_tag_tvatine_purchase" model="account.account.tag">
+        <field name="name">TVA Taxare Intracomunitara Neimpozabila(purchase)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <record id="tvac_00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="description">TVA colectat 0%</field>
         <field name="name">TVA colectat 0%</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4427"/>
+        <field name="refund_account_id" ref="pcg_4427"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvac_00')])]"/>
     </record>
     
     <record id="tvac_05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA colectat 5%</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="description">TVA colectat 5%</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4427"/>
+        <field name="refund_account_id" ref="pcg_4427"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvac_05')])]"/>
     </record>
     
     <record id="tvac_09" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA colectat 9%</field>
-        <field name="amount">0.090000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="description">TVA colectat 9%</field>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4427"/>
+        <field name="refund_account_id" ref="pcg_4427"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvac_09')])]"/>
     </record>
     
     <record id="tvac_19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA colectat 19%</field>
-        <field name="amount">0.190000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="description">TVA colectat 19%</field>
+        <field name="amount">19</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4427"/>
+        <field name="refund_account_id" ref="pcg_4427"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvac_19')])]"/>
     </record>
     
     <record id="tvac_24" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA colectat 24%</field>
-        <field name="amount">0.240000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4427"/>
-        <field name="account_paid_id" ref="pcg_4427"/>
+        <field name="description">TVA colectat 24%</field>
+        <field name="amount">24</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4427"/>
+        <field name="refund_account_id" ref="pcg_4427"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvac_24')])]"/>
     </record>
     
     <record id="tvad_00" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA deductibil 0%</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA deductibil 0%</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_tvad_00')])]"/>
     </record>
     
     <record id="tvad_05" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA deductibil 5%</field>
-        <field name="amount">0.050000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA deductibil 5%</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_tvad_05')])]"/>
     </record>
     
     <record id="tvad_09" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA deductibil 9%</field>
-        <field name="amount">0.090000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA deductibil 9%</field>
+        <field name="amount">9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_tvad_09')])]"/>
     </record>
     
     <record id="tvad_19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA deductibil 19%</field>
-        <field name="amount">0.190000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA deductibil 19%</field>
+        <field name="amount">19</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_tvad_19')])]"/>
     </record>
     
     <record id="tvad_24" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA deductibil 24%</field>
-        <field name="amount">0.240000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">purchase</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA deductibil 24%</field>
+        <field name="amount">24</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_purchase_tvad_24')])]"/>
     </record>
     
     <record id="tvati" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="name">TVA Taxare Inversa</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">sale</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="description">TVA Taxare Inversa</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_sale_tvati')])]"/>
     </record>
 
-    <record id="tvatisc" model="account.tax.template">
+    <record id="tvatisc_sale" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Taxare Intracomunitara Scutita</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">all</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="name">TVA Taxare Intracomunitara Scutita(sale)</field>
+        <field name="description">TVA Taxare Intracomunitara Scutita(sale)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_tvatisc_sale')])]"/>
     </record>
 
-    <record id="tvatine" model="account.tax.template">
+    <record id="tvatisc_purchase" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Taxare Intracomunitara Neimpozabila</field>
-        <field name="amount">0.000000</field>
-        <field name="type">percent</field>
-        <field name="type_tax_use">all</field>            
-        <field name="account_collected_id" ref="pcg_4426"/>
-        <field name="account_paid_id" ref="pcg_4426"/>
+        <field name="name">TVA Taxare Intracomunitara Scutita(purchase)</field>
+        <field name="description">TVA Taxare Intracomunitara Scutita(purchase)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_tvatisc_purchase')])]"/>
+    </record>
+
+    <record id="tvatine_sale" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Intracomunitara Neimpozabila(sale)</field>
+        <field name="description">TVA Taxare Intracomunitara Neimpozabila(sale)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_tvatine_sale')])]"/>
+    </record>
+
+    <record id="tvatine_purchase" model="account.tax.template">
+        <field name="chart_template_id" ref="ro_chart_template"/>
+        <field name="name">TVA Taxare Intracomunitara Neimpozabila(purchase)</field>
+        <field name="description">TVA Taxare Intracomunitara Neimpozabila(purchase)</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="pcg_4426"/>
+        <field name="refund_account_id" ref="pcg_4426"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_tvatine_purchase')])]"/>
     </record>
 
 </data>
-</openerp>
+</odoo>
