@@ -1104,8 +1104,12 @@ var ComposeMessage = Attachment.extend ({
         this.bind_events();
         // Initialize Mention widget if current user is from employee group and it's not log
         if(this.is_employee && !this.is_log) {
-            this.mail_mention = new Mention(this);
-            this.mail_mention.insertAfter(this.$el.find(".field_text"));
+            this.mail_mention = new Mention(this, this.$el.find(".field_text"), {
+                'partner_limit': 8, 
+                'typing_speed': 400,
+                'min_charactor': 4
+            });
+            this.mail_mention.insertAfter();
         }
     },
 

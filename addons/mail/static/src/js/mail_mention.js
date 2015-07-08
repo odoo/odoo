@@ -22,26 +22,26 @@ var QWeb = core.qweb;
  * Maximum number of partner in dropdown list is 8
  */
 var Mention = Widget.extend({
-    template: null,
-    init: function(parent) {
+    init: function(parent, $el, options) {
         this._super.apply(this, arguments);
-        this.$textarea = parent.$el.find(".field_text");
-        this.$dropdown = $("<div class='mention'><ul></ul></div>");
+        this.$textarea = $el;
+        this.$dropdown = $("<div class='o_mail_mention_main'><ul></ul></div>");
         this.model_res_partner = new Model("res.partner");
         this.selected_partners = {};
         this.search_keys = {};
         this.partners = {};
         this.keyup_list = [40, 38, 13, 35, 33, 34, 27];
-        this.partner_limit = 8;
-        this.typing_speed = 400;
-        this.min_charactor = 4;
+        this.partner_limit = options['partner_limit'] || 8;
+        this.typing_speed = options['typing_speed'] || 400;
+        this.min_charactor = options['min_charactor'] || 4;
         this.search_string = '';
         this.recent_string = '';
     },
 
     start: function() {
-        this._super.apply(this, arguments);
+        var return_value = this._super.apply(this, arguments);
         this.bind_events();
+        return return_value;
     },
     bind_events: function() {
         var self = this;
@@ -198,7 +198,7 @@ var Mention = Widget.extend({
     },
     get_cursor_position: function(ctrl) {
         var el = $(ctrl).get(0);
-        if(!el) return 0;
+        if(!el) {return 0};
         if('selectionStart' in el) {
             return el.selectionStart;
         } else if('selection' in document) {
@@ -210,10 +210,12 @@ var Mention = Widget.extend({
 
     set_cursor_position: function(ctrl, pos) {
         ctrl.each(function(index, elem) {
-            if (elem.setSelectionRange)
+            if (elem.setSelectionRange){
               elem.setSelectionRange(pos, pos);
-            else if (elem.createTextRange)
+            }
+            else if (elem.createTextRange){
               elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
+            }
           });
         return ctrl;
     }
