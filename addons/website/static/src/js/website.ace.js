@@ -224,6 +224,7 @@ var ViewEditor = Widget.extend({
             var editingSession = self.buffers[viewId] = new ace.EditSession(result[0].arch);
             editingSession.setMode("ace/mode/xml");
             editingSession.setUndoManager(new ace.UndoManager());
+            editingSession.setUseWorker(false);
             editingSession.on("change", function () {
                 setTimeout(function () {
                     var $option = self.$('#ace-view-list').find('[value='+viewId+']');

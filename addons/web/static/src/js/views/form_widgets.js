@@ -15,6 +15,7 @@ var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
+var ace_call = require('web.ace_call');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -1614,6 +1615,52 @@ var FieldToggleBoolean = common.AbstractField.extend({
     },
 });
 
+/**
+    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XMLs.
+*/
+var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
+    template: "AceEditor",
+    initialize_content: function () {
+        if (! this.get("effective_readonly")) {
+            ace_call.load();
+            this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
+            this.aceEditor.setTheme("ace/theme/monokai");
+        }
+    },
+    render_value: function() {
+        if (! this.get("effective_readonly")) {
+            var show_value = formats.format_value(this.get('value'), this, '');
+            //var show_value = this.get("value") || '';
+            this.display_view(show_value);
+        } else {
+            var txt = this.get("value") || '';
+            this.$(".oe_form_text_content").text(txt);
+        }
+    },
+    display_view: function (show_value) {
+        var self = this;
+        var editingSession = new ace.EditSession(show_value);
+        editingSession.setMode("ace/mode/xml");
+        editingSession.setUndoManager(new ace.UndoManager());
+        this.aceEditor.on("blur", function() {
+            self.save_value(editingSession);
+        });
+        this.aceEditor.setSession(editingSession);
+        //this.aceEditor.setOption("showInvisibles", true);
+
+        console.log("this.aceEditor.textInput is :::: ", this.aceEditor.textInput)
+        this.aceEditor.textInput.getElement().tabIndex = 2;
+    },
+    save_value: function(editingSession) {
+        if (editingSession.getUndoManager().hasUndo()) {
+            var value_ = editingSession.getValue()
+            this.set_value(value_);
+        }
+    },
+    focus: function() {
+        return this.aceEditor.focus();
+    },
+});
 
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
@@ -1650,7 +1697,8 @@ core.form_widget_registry
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)
-    .add('label_selection', LabelSelection);
+    .add('label_selection', LabelSelection)
+    .add('ace', AceEditor);
 
 
 /**
