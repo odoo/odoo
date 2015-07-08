@@ -582,8 +582,9 @@ class task(osv.osv):
         'write_date': fields.datetime('Last Modification Date', readonly=True, select=True), #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
         'date_start': fields.datetime('Starting Date', select=True, copy=False),
         'date_end': fields.datetime('Ending Date', select=True, copy=False),
+        'date_assign': fields.datetime('Assigning Date', select=True, copy=False, readonly=True),
         'date_deadline': fields.date('Deadline', select=True, copy=False),
-        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True, copy=False, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select=True, track_visibility='onchange', change_default=True),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -780,9 +781,9 @@ class task(osv.osv):
         # for default stage
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
-        # user_id change: update date_start
-        if vals.get('user_id') and not vals.get('date_start'):
-            vals['date_start'] = fields.datetime.now()
+        # user_id change: update date_assign
+        if vals.get('user_id'):
+            vals['date_assign'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -797,9 +798,9 @@ class task(osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        # user_id change: update date_start
-        if vals.get('user_id') and 'date_start' not in vals:
-            vals['date_start'] = fields.datetime.now()
+        # user_id change: update date_assign
+        if vals.get('user_id'):
+            vals['date_assign'] = fields.datetime.now()
 
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the task changes.

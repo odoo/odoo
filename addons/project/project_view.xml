@@ -292,10 +292,15 @@
                         </page>
                         <page string="Extra Info">
                             <group col="4">
-                                <field name="sequence" groups="base.group_no_one"/>
-                                <field name="partner_id"/>
-                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                <group col="2">
+                                    <field name="sequence" groups="base.group_no_one"/>
+                                    <field name="partner_id"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                                <group col="2">
+                                    <field name="date_assign" groups="base.group_no_one"/>
+                                    <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                </group>
                             </group>
                             <group>
                                 <group string="Gantt View">
