@@ -21,7 +21,7 @@
 
 import base64
 import hashlib
-import simplejson as json
+import json
 import logging
 import re
 import time

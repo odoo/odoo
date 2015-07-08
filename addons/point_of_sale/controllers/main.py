@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import simplejson
+import json
 import os
 import openerp
 import time
@@ -29,7 +29,7 @@ class PosController(http.Controller):
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_pos_session_opening')
         PosSession.login(cr,uid,pos_session_ids,context=context)
         
-        modules =  simplejson.dumps(module_boot(request.db))
+        modules =  json.dumps(module_boot(request.db))
         init =  """
                  var wc = new s.web.WebClient();
                  wc._title_changed = function() {}

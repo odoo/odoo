@@ -95,7 +95,6 @@ def py2exe_options():
                         'reportlab',
                         'requests',
                         'select',
-                        'simplejson',
                         'smtplib',
                         'uuid',
                         'vatnumber',
@@ -157,7 +156,6 @@ setup(
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
-        'simplejson',
         'unittest2',
         'vatnumber',
         'vobject',

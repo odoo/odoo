@@ -19,7 +19,7 @@
 ##############################################################################
 
 import cgi
-import simplejson
+import json
 import logging
 from lxml import etree
 import re
@@ -46,7 +46,7 @@ class config(osv.osv):
         display_fields = []
         for node in doc.xpath("//field"):
             if node.get('modifiers'):
-                modifiers = simplejson.loads(node.get('modifiers'))
+                modifiers = json.loads(node.get('modifiers'))
                 if not modifiers.get('invisible') and not modifiers.get('tree_invisible'):
                     display_fields.append(node.get('name'))
         fields = " ".join(display_fields)

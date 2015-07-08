@@ -13,7 +13,7 @@ import datetime
 import hashlib
 import os
 import re
-import simplejson
+import json
 import sys
 import time
 import urllib2
@@ -50,7 +50,7 @@ else:
     loader = jinja2.PackageLoader('openerp.addons.web', "views")
 
 env = jinja2.Environment(loader=loader, autoescape=True)
-env.filters["json"] = simplejson.dumps
+env.filters["json"] = json.dumps
 
 # 1 week cache for asset bundles as advised by Google Page Speed
 BUNDLE_MAXAGE = 60 * 60 * 24 * 7
@@ -76,7 +76,7 @@ def serialize_exception(f):
                 'message': "Odoo Server Error",
                 'data': se
             }
-            return werkzeug.exceptions.InternalServerError(simplejson.dumps(error))
+            return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
 
 def redirect_with_hash(*args, **kw):
@@ -678,7 +678,7 @@ class Database(http.Controller):
         # TODO: migrate the webclient's database manager to server side views
         request.session.logout()
         return env.get_template("database_manager.html").render({
-            'modules': simplejson.dumps(module_boot()),
+            'modules': json.dumps(module_boot()),
         })
 
     @http.route('/web/database/get_list', type='json', auth="none")
@@ -748,7 +748,7 @@ class Database(http.Controller):
             return response
         except Exception, e:
             _logger.exception('Database.backup')
-            return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
+            return json.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @http.route('/web/database/restore', type='http', auth="none")
     def restore(self, db_file, restore_pwd, new_db, mode):
@@ -1021,7 +1021,7 @@ class Binary(http.Controller):
         etag = request.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(request.session_id).hexdigest()
         retag = hashed_session
-        id = None if not id else simplejson.loads(id)
+        id = None if not id else json.loads(id)
         if type(id) is list:
             id = id[0] # m2o
         try:
@@ -1106,7 +1106,7 @@ class Binary(http.Controller):
     @http.route('/web/binary/saveas_ajax', type='http', auth="public")
     @serialize_exception
     def saveas_ajax(self, data, token):
-        jdata = simplejson.loads(data)
+        jdata = json.loads(data)
         model = jdata['model']
         field = jdata['field']
         data = jdata['data']
@@ -1151,7 +1151,7 @@ class Binary(http.Controller):
                     ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
@@ -1176,7 +1176,7 @@ class Binary(http.Controller):
         except Exception:
             args = {'error': "Something horrible happened"}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
-        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+        return out % (json.dumps(callback), json.dumps(args))
 
     @http.route([
         '/web/binary/company_logo',
@@ -1424,7 +1424,7 @@ class ExportFormat(object):
         raise NotImplementedError()
 
     def base(self, data, token):
-        params = simplejson.loads(data)
+        params = json.loads(data)
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
                                 'import_compat')(
@@ -1550,7 +1550,7 @@ class Reports(http.Controller):
     @http.route('/web/report', type='http', auth="user")
     @serialize_exception
     def index(self, action, token):
-        action = simplejson.loads(action)
+        action = json.loads(action)
 
         report_srv = request.session.proxy("report")
         context = dict(request.context)

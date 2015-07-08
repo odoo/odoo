@@ -3,7 +3,7 @@
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
-import simplejson
+import json
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -183,7 +183,7 @@ class WebsiteForum(http.Controller):
         if t == 'texttext':
             # old tag with texttext - Retro for V8 - #TODO Remove in master
             data = [tag['name'] for tag in data]
-        return simplejson.dumps(data)
+        return json.dumps(data)
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag'], type='http', auth="public", website=True)
     def tags(self, forum, page=1, **post):
@@ -385,7 +385,7 @@ class WebsiteForum(http.Controller):
                 tags += tag_name.name + ","
         elif tag_version == "select2":  # new version
             tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
-            tags = simplejson.dumps(tags)
+            tags = json.dumps(tags)
         values = self._prepare_forum_values(forum=forum)
 
         values.update({
