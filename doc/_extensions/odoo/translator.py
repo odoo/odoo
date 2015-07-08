@@ -144,6 +144,13 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                                addnodes.versionmodified)):
             # Never compact paragraphs in document or compound.
             return False
+
+        for key, value in node.attlist():
+            # we can ignore a few specific classes, all other non-default
+            # attributes require that a <p> node remains
+            if key != 'classes' or value not in ([], ['first'], ['last'], ['first', 'last']):
+                return False
+
         first = isinstance(node.parent[0], nodes.label)
         for child in parent.children[first:]:
             # only first paragraph can be compact
