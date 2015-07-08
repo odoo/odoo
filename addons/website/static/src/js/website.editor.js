@@ -111,8 +111,6 @@ define(['summernote/summernote'], function () {
             })).appendTo($resizefa);
         }
         var $colorfa = $airPopover.find('.note-color').clone();
-        $colorfa.find(".btn-group:first").remove();
-        $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
         $colorfa.find('button[data-event="color"]').attr('data-value', '{"foreColor": "#f00"}')
             .find("i").css({'background': '', 'color': '#f00'});
         $resizefa.after($colorfa);

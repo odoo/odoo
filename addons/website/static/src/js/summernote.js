@@ -1779,7 +1779,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         var startPoint = rng.getStartPoint();
         var endPoint = rng.getEndPoint();
 
-        if (rng.isCollapsed()) {
+        if (rng.isCollapsed() && !dom.isFont(rng.sc)) {
             return {
                 sc: startPoint.node,
                 so: startPoint.offset,
@@ -1827,6 +1827,11 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
         });
         nodes = list.unique(nodes);
 
+        // If ico fa
+        if (rng.isCollapsed()) {
+            node.push(startPoint.node);
+        }
+
         // apply font: foreColor, backColor, size (the color can be use a class text-... or bg-...)
         var node, font, $font, fonts = [], className;
         if (color || bgcolor || size) {
@@ -1850,7 +1855,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
             if (color) {
               for (var k=0; k<className.length; k++) {
-                if (!className[k].length && className[k].slice(0,5) === "text-") {
+                if (className[k].length && className[k].slice(0,5) === "text-") {
                   className.splice(k,1);
                   k--;
                 }
