@@ -174,7 +174,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'reception_to_invoice': fields.function(_get_to_invoice, type='boolean', string='Invoiceable on incoming shipment',
-               help='Does the picking contains some moves related to a purchase order invoiceable on the receipt?',
+               help='Does the picking contain some moves related to a purchase order invoiceable on the receipt?',
                store={
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
                }),
