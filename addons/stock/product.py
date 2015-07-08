@@ -285,7 +285,7 @@ class product_product(osv.osv):
             toolbar=toolbar, submenu=submenu)
         if context is None:
             context = {}
-        if ('location' in context) and context['location']:
+        if context.get('location') and isinstance(context['location'], int):
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:

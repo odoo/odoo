@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-06-25 14:36+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,27 +24,27 @@ msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
 "* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
 "* The 'Done' status is used when users timesheet is accepted by his/her senior."
-msgstr ""
+msgstr "* 'Taslak' durumu, kullanıcı bir doğrulanmamış ve yeni bir zaman çizelgesi kodlarken kullanılır.                 'Teyit' durum için zaman çizelgesini onaylamak için kullanılan kullanıcı tarafından \n*.                 \n* 'Bitti' durumu, kullanıcılar zaman çizelgesi seçtiğin bu kullanıcı kıdemli tarafından kabul edildiğinde kullanılır."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "ZamanÇizelgesi Sayısı"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
 msgid "# Total Attendance"
-msgstr ""
+msgstr "Toplam Katılımcı"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
 msgid "# Total Diff"
-msgstr ""
+msgstr "# Toplam fark"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "Toplam ZamanÇizelge"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -93,7 +93,7 @@ msgstr "Zaman çizelgeleri ve katılımcı (saat) arasında bir zaman farkı izi
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
+msgstr "Sign ın/out ve bir yaprak için zaman çizelgesi hesaplama arasındaki saat farkı girebilir. Bütün bunları herhangi bir denetim istiyorsanız 0."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -184,7 +184,7 @@ msgstr "Oluşturan"
 #: field:hr.timesheet.current.open,create_date:0
 #: field:hr_timesheet_sheet.sheet,create_date:0
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturma"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
@@ -205,7 +205,7 @@ msgstr "Başlangıç Tarihi"
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "Son mesaj gönderim kayıt tarihi."
+msgstr "Son mesajın tarih kayıt gönderildi."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date_to:0
@@ -270,7 +270,7 @@ msgstr "Personeller"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "Hata! Giriş (Çıkış) Çıkışı (Giriş) izlemelidir"
+msgstr "Hata! Oturum (RESP. birleştirilmiş oturum) oturumu kapat izlemeniz gerekir (RESP. birleştirilmiş oturum)"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -290,7 +290,7 @@ msgstr "Hata!"
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr ""
+msgstr "Dış zaman çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -300,7 +300,7 @@ msgstr "İzleyiciler"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Group By"
-msgstr "Grupla İle"
+msgstr "Grupla"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0
@@ -347,7 +347,7 @@ msgstr "Bu personel için bir zaman çizelgesi oluşturmak için, 'Zaman Çizelg
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
-msgstr ""
+msgstr "Bu çalışan için bir zaman çizelgesi oluşturmak için/onu bir kullanıcıya bağlamanız gerekir."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -368,7 +368,7 @@ msgstr "Bu çalışan için bir zaman çizelgesi oluşturmak için, bir ürün i
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
+msgstr "İç zaman çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -567,7 +567,7 @@ msgstr "Özet"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
+msgstr "İşareti eşit sayıda verilmediği zaman çizelgesini doğrulanamıyor ins ve işaret çıkışları."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -596,7 +596,7 @@ msgstr "ZamanÇizelge Dönem"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
+msgstr "Difference(hours) izin zaman çizelgesi"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -741,7 +741,7 @@ msgstr "Uyarı!"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,website_message_ids:0
 msgid "Website Messages"
-msgstr "Web Sitesi Mesajları"
+msgstr "Websitesi Mesajları"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,website_message_ids:0
@@ -765,7 +765,7 @@ msgstr "Hafta "
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "Geçerli zaman çizelgesi tarihleri dışındaki bir katılım tarihi giremezsiniz."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -773,7 +773,7 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
+msgstr "Bir seyirci gönderilen zaman çizelgesini giremezsiniz. Katılım eklemeden önce sıfırlamak için yöneticinize sorun."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
@@ -813,7 +813,7 @@ msgstr "Sen üst üste 2 zamançizelgelesi oluşturamazsın!\nBu sorunu önlemek
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
+msgstr "Üst üste 2 zaman çizelgeleri olamaz! \nYou, bu sorunu önlemek için Menü 'Çizelgem' kullanmalıdır."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
@@ -839,7 +839,7 @@ msgstr "Onaylamış ZamanÇizelgesi bir girişi değiştiremezsiniz."
 msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
-msgstr ""
+msgstr "Çalışma saat and\n faaliyetleri kayıt edebilecektir."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open

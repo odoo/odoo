@@ -1,3 +1,5 @@
+:banner: banners/deploying_odoo.jpg
+
 ==============
 Deploying Odoo
 ==============
@@ -40,14 +42,14 @@ connections (from "localhost", the same machine the PostgreSQL server is
 installed on).
 
 UNIX socket is fine if you want Odoo and PostgreSQL to execute on the same
-machine, and the default when no host is provided, but if you want Odoo and
+machine, and is the default when no host is provided, but if you want Odoo and
 PostgreSQL to execute on different machines [#different-machines]_ it will
 need to `listen to network interfaces`_ [#remote-socket]_, either:
 
 * only accept loopback connections and `use an SSH tunnel`_ between the
   machine on which Odoo runs and the one on which PostgreSQL runs, then
   configure Odoo to connect to its end of the tunnel
-* accept connections to the machine on which Odoo is installed, possibly with
+* accept connections to the machine on which Odoo is installed, possibly
   over ssl (see `PostgreSQL connection settings`_ for details), then configure
   Odoo to connect over the network
 
@@ -77,7 +79,7 @@ create a new user (``odoo``) and set it as the database user.
   to be completely non-functional, the user needs to be created with
   ``no-createdb`` and the database must be owned by a different user.
 
-  .. warning:: the user also needs to *not* be a superuser
+  .. warning:: the user *must not* be a superuser
 
 HTTPS
 =====
@@ -158,7 +160,7 @@ most HTTP connections are relatively short and quickly free up their worker
 process for the next request, LiveChat require a long-lived connection for
 each client in order to implement near-real-time notifications.
 
-This is in conflict with the process-based worker model, as it's going to tie
+This is in conflict with the process-based worker model, as it will tie
 up worker processes and prevent new users from accessing the system. However,
 those long-lived connections do very little and mostly stay parked waiting for
 notifications.
