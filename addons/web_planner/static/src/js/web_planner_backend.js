@@ -49,7 +49,6 @@ var PlannerLauncher = Widget.extend({
     on_menu_clicked: function(id, $clicked_menu) {
         var menu_id = $clicked_menu.parents('.oe_secondary_menu').data('menu-parent') || 0; // find top menu id
         if (_.contains(_.keys(this.planner_apps), menu_id.toString())) {
-            this.$el.show();
             this.setup(this.planner_apps[menu_id]);
             this.need_reflow = true;
         } else {
@@ -76,6 +75,12 @@ var PlannerLauncher = Widget.extend({
     },
     // event
     update_parent_progress_bar: function(percent) {
+        if (percent == 100) {
+            this.$(".progress").hide();
+        } else {
+            this.$(".progress").show();
+        }
+        this.$el.show();
         this.$(".progress-bar").css('width', percent+"%");
     },
     toggle_dialog: function() {
