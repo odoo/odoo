@@ -190,7 +190,7 @@ class account_move_line(osv.osv):
                 'journal_id': obj_line.journal_id.analytic_journal_id.id,
                 'ref': obj_line.ref,
                 'move_id': obj_line.id,
-                'user_id': uid,
+                'user_id': obj_line.invoice.user_id.id or uid,
                }
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
@@ -840,8 +840,7 @@ class account_move_line(osv.osv):
                     total_amount = debit or credit
                 else:
                     ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
+                    ctx.update({'date': line.date})
                     total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
                     actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
                     actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
@@ -954,7 +953,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         company_list = []
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in lines:
             if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)

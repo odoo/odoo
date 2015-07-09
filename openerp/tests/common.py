@@ -13,6 +13,7 @@ import select
 import subprocess
 import threading
 import time
+import itertools
 import unittest2
 import urllib2
 import xmlrpclib
@@ -31,15 +32,24 @@ _logger = logging.getLogger(__name__)
 ADDONS_PATH = openerp.tools.config['addons_path']
 HOST = '127.0.0.1'
 PORT = openerp.tools.config['xmlrpc_port']
-DB = openerp.tools.config['db_name']
-# If the database name is not provided on the command-line,
-# use the one on the thread (which means if it is provided on
-# the command-line, this will break when installing another
-# database from XML-RPC).
-if not DB and hasattr(threading.current_thread(), 'dbname'):
-    DB = threading.current_thread().dbname
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = openerp.SUPERUSER_ID
+
+
+def get_db_name():
+    db = openerp.tools.config['db_name']
+    # If the database name is not provided on the command-line,
+    # use the one on the thread (which means if it is provided on
+    # the command-line, this will break when installing another
+    # database from XML-RPC).
+    if not db and hasattr(threading.current_thread(), 'dbname'):
+        return threading.current_thread().dbname
+    return db
+
+
+# For backwards-compatibility - get_db_name() should be used instead
+DB = get_db_name()
+
 
 def at_install(flag):
     """ Sets the at-install state of a test, the flag is a boolean specifying
@@ -127,7 +137,7 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.registry = RegistryManager.get(DB)
+        self.registry = RegistryManager.get(get_db_name())
         #: current transaction's cursor
         self.cr = self.cursor()
         self.uid = openerp.SUPERUSER_ID
@@ -149,7 +159,7 @@ class SingleTransactionCase(BaseCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.registry = RegistryManager.get(DB)
+        cls.registry = RegistryManager.get(get_db_name())
         cls.cr = cls.registry.cursor()
         cls.uid = openerp.SUPERUSER_ID
         cls.env = api.Environment(cls.cr, cls.uid, {})
@@ -160,6 +170,27 @@ class SingleTransactionCase(BaseCase):
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+
+
+savepoint_seq = itertools.count()
+class SavepointCase(SingleTransactionCase):
+    """ Similar to :class:`SingleTransactionCase` in that all test methods
+    are run in a single transaction *but* each test case is run inside a
+    rollbacked savepoint (sub-transaction).
+
+    Useful for test cases containing fast tests but with significant database
+    setup common to all cases (complex in-db test data): :meth:`~.setUpClass`
+    can be used to generate db test data once, then all test cases use the
+    same data without influencing one another but without having to recreate
+    the test data either.
+    """
+    def setUp(self):
+        self._savepoint_id = next(savepoint_seq)
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+    def tearDown(self):
+        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self.env.clear()
+        self.registry.clear_caches()
 
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
@@ -200,7 +231,7 @@ class HttpCase(TransactionCase):
         # setup a magic session_id that will be rollbacked
         self.session = openerp.http.root.session_store.new()
         self.session_id = self.session.sid
-        self.session.db = DB
+        self.session.db = get_db_name()
         openerp.http.root.session_store.save(self.session)
         # setup an url opener helper
         self.opener = urllib2.OpenerDirector()
@@ -222,7 +253,7 @@ class HttpCase(TransactionCase):
 
     def authenticate(self, user, password):
         if user is not None:
-            url = '/login?%s' % werkzeug.urls.url_encode({'db': DB,'login': user, 'key': password})
+            url = '/login?%s' % werkzeug.urls.url_encode({'db': get_db_name(),'login': user, 'key': password})
             auth = self.url_open(url)
             assert auth.getcode() < 400, "Auth failure %d" % auth.getcode()
 
@@ -322,7 +353,7 @@ class HttpCase(TransactionCase):
         options = {
             'timeout' : timeout,
             'port': PORT,
-            'db': DB,
+            'db': get_db_name(),
             'session_id': self.session_id,
         }
         options.update(kw)
@@ -352,7 +383,7 @@ class HttpCase(TransactionCase):
         """
         options = {
             'port': PORT,
-            'db': DB,
+            'db': get_db_name(),
             'url_path': url_path,
             'code': code,
             'ready': ready,

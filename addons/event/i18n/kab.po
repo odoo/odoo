@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"PO-Revision-Date: 2015-07-04 17:38+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
 "Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n<p>Azul ${object.name},</p>\n<p>Tadyant ${object.event_id.name} Anda t multɣeḍ tentem. Ad teḍru si ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} ɣeṛ ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\nMa tesriḍ talɣut nniḍen, nermes agezdu nneɣ n tedaynt.</p>\n<p>Tanemmirt inek ɣef uţekki !</p>\n<p>Ar tufat;</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -44,7 +44,7 @@ msgstr ""
 #. module: event
 #: field:report.event.registration,confirm_state:0
 msgid " # No of Confirmed Registrations"
-msgstr ""
+msgstr "# Amḍan n imultaɣen intmen"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
@@ -716,7 +716,7 @@ msgstr ""
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Imḍiqen yellan"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -815,13 +815,13 @@ msgstr "Tamurt"
 #: field:event.confirm,create_uid:0 field:event.event,create_uid:0
 #: field:event.registration,create_uid:0 field:event.type,create_uid:0
 msgid "Created by"
-msgstr "Ilul-ed sɣuṛ"
+msgstr "Yerna-t"
 
 #. module: event
 #: field:event.confirm,create_date:0 field:event.event,create_date:0
 #: field:event.registration,create_date:0 field:event.type,create_date:0
 msgid "Created on"
-msgstr "Ilul-ed di"
+msgstr "Yerna di"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -874,7 +874,7 @@ msgstr "Arewway"
 #. module: event
 #: field:event.registration,email:0
 msgid "Email"
-msgstr "Email"
+msgstr "Imayl"
 
 #. module: event
 #: field:event.event,date_end:0
@@ -910,7 +910,7 @@ msgstr "Asentem n tedyant"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr "Email n usentem n tedyant"
+msgstr "Imayl n usentem n tedyant"
 
 #. module: event
 #: field:report.event.registration,event_date:0
@@ -1048,7 +1048,7 @@ msgstr "Sdukel s"
 #. module: event
 #: model:ir.module.category,description:event.module_category_event_management
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "Ak d-imudd tallalt i wesefrek n tedyanin-ik"
 
 #. module: event
 #: help:event.event,message_summary:0
@@ -1323,12 +1323,12 @@ msgstr ""
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "Ass n Umulteɣ"
 
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "Aggur n Umulteɣ"
 
 #. module: event
 #: field:report.event.registration,registration_state:0
@@ -1382,7 +1382,7 @@ msgstr "Aseqdac amasay"
 #. module: event
 #: view:event.registration:event.view_event_registration_form
 msgid "Send Email"
-msgstr "Azen Email"
+msgstr "Azen Imayl"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -1402,7 +1402,7 @@ msgstr ""
 #. module: event
 #: field:event.registration,origin:0
 msgid "Source Document"
-msgstr "Isemli aɣbalu"
+msgstr "Arrat aɣbalu"
 
 #. module: event
 #: field:res.partner,speaker:0
@@ -1430,7 +1430,7 @@ msgstr "Addad"
 #: view:event.event:event.view_event_kanban
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "Multeɣ"
 
 #. module: event
 #: view:event.event:event.view_event_kanban

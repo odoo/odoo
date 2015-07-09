@@ -567,6 +567,8 @@
   border-radius: 3px;
   background: #f0f0fa;
   color: #4C4C4C;
+  display: inline-block;
+  word-break: break-word;
 }
 .openerp .oe_tag_dark {
   background: #7C7BAD;
@@ -608,7 +610,8 @@
   width: 100% !important;
 }
 .openerp .oe_tags .text-core {
-  min-height: 22px;
+  height: initial !important;
+  word-break: break-word;
 }
 .openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;

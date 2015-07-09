@@ -516,6 +516,8 @@ $sheet-padding: 16px
         @include radius(3px)
         background: $tag-bg-light
         color: #4C4C4C
+        display: inline-block
+        word-break: break-word
     .oe_tag_dark
         background: $tag-bg-dark
         color: #eee
@@ -549,7 +551,8 @@ $sheet-padding: 16px
             textarea
                 width: 100% !important
         .text-core
-            min-height: 22px
+            height: initial !important
+            word-break: break-word
             .text-wrap .text-dropdown .text-list .text-suggestion em
                 font-style: italic
                 text-decoration: none
