@@ -8,11 +8,11 @@ class res_company(models.Model):
     _inherit = 'res.company'
 
     so_from_po = fields.Boolean(string="Create Sale Orders when buying to this company",
-        help="Generate a Sale Order when a Purchase Order with this company as supplier is created.\n The intercompany user must at least be Sale User.")
+        help="Generate a Sale Order when a Purchase Order with this company as vendor is created.\n The intercompany user must at least be Sale User.")
     po_from_so = fields.Boolean(string="Create Purchase Orders when selling to this company",
         help="Generate a Purchase Order when a Sale Order with this company as customer is created.\n The intercompany user must at least be Purchase User.")
     auto_generate_invoices = fields.Boolean(string="Create Invoices/Refunds when encoding invoices/refunds made to this company",
-        help="Generate Customer/Supplier Bills (and refunds) when encoding invoices (or refunds) made to this company.\n e.g: Generate a Customer Invoice when a Supplier Bill with this company as supplier is created.")
+        help="Generate Customer/Vendor Bills (and refunds) when encoding invoices (or refunds) made to this company.\n e.g: Generate a Customer Invoice when a Vendor Bill with this company as vendor is created.")
     auto_validation = fields.Boolean(string="Sale/Purchase Orders Auto Validation",
         help="When a Sale Order or a Purchase Order is created by a multi company rule for this company, it will automatically validate it")
     intercompany_user_id = fields.Many2one("res.users", string="Inter Company User", default=SUPERUSER_ID,

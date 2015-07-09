@@ -69,7 +69,7 @@ class AccountConfigSettings(models.TransientModel):
     period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
     fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
 
-    module_account_check_writing = fields.Boolean(string='Pay your suppliers by check',
+    module_account_check_writing = fields.Boolean(string='Pay your vendors by check',
         help='This allows you to check writing and printing.\n'
              '-This installs the module account_check_writing.')
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
@@ -107,7 +107,7 @@ class AccountConfigSettings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier bills',
+    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of vendor bills',
         implied_group="account.group_supplier_inv_check_total")
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',

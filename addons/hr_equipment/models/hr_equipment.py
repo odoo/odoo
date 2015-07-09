@@ -109,7 +109,7 @@ class HrEquipment(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
     category_id = fields.Many2one('hr.equipment.category', string='Equipment Category', track_visibility='onchange')
-    partner_id = fields.Many2one('res.partner', string='Supplier', domain="[('supplier', '=', 1)]")
+    partner_id = fields.Many2one('res.partner', string='Vendor', domain="[('supplier', '=', 1)]")
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
     assign_date = fields.Date('Assigned Date', track_visibility='onchange')

@@ -23,9 +23,9 @@ TYPE2JOURNAL = {
 # mapping invoice type to refund type
 TYPE2REFUND = {
     'out_invoice': 'out_refund',        # Customer Invoice
-    'in_invoice': 'in_refund',          # Supplier Bill
+    'in_invoice': 'in_refund',          # Vendor Bill
     'out_refund': 'out_invoice',        # Customer Refund
-    'in_refund': 'in_invoice',          # Supplier Refund
+    'in_refund': 'in_invoice',          # Vendor Refund
 }
 
 MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
@@ -185,9 +185,9 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
     type = fields.Selection([
             ('out_invoice','Customer Invoice'),
-            ('in_invoice','Supplier Bill'),
+            ('in_invoice','Vendor Bill'),
             ('out_refund','Customer Refund'),
-            ('in_refund','Supplier Refund'),
+            ('in_refund','Vendor Refund'),
         ], readonly=True, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
@@ -196,7 +196,7 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Supplier Reference',
+    reference = fields.Char(string='Vendor Reference',
         help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -281,7 +281,7 @@ class AccountInvoice(models.Model):
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
-        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Supplier Refund, otherwise a Partner bank account number.',
+        help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Refund, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]})
 
     residual = fields.Monetary(string='Amount Due',
@@ -802,9 +802,9 @@ class AccountInvoice(models.Model):
     def name_get(self):
         TYPES = {
             'out_invoice': _('Invoice'),
-            'in_invoice': _('Supplier Bill'),
+            'in_invoice': _('Vendor Bill'),
             'out_refund': _('Refund'),
-            'in_refund': _('Supplier Refund'),
+            'in_refund': _('Vendor Refund'),
         }
         result = []
         for inv in self:

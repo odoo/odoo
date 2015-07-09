@@ -397,8 +397,8 @@ class AccountMoveLine(models.Model):
             :param res_type: either 'partner' or 'account'
             :param res_ids: ids of the partners/accounts to reconcile, use None to fetch data indiscriminately
                 of the id, use [] to prevent from fetching any data at all.
-            :param account_type: if a partner is both customer and supplier, you can use 'payable' to reconcile
-                the supplier-related journal entries and 'receivable' for the customer-related entries.
+            :param account_type: if a partner is both customer and vendor, you can use 'payable' to reconcile
+                the vendor-related journal entries and 'receivable' for the customer-related entries.
         """
         if res_ids != None and len(res_ids) == 0:
             # Note : this short-circuiting is better for performances, but also required

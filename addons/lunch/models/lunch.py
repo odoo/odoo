@@ -138,7 +138,7 @@ class LunchOrderLine(models.Model):
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
                                   related='product_id.category_id', readonly=True, store=True)
     date = fields.Date(string='Date', related='order_id.date', readonly=True, store=True)
-    supplier = fields.Many2one('res.partner', string='Supplier', related='product_id.supplier',
+    supplier = fields.Many2one('res.partner', string='Vendor', related='product_id.supplier',
                                readonly=True, store=True)
     user_id = fields.Many2one('res.users', string='User', related='order_id.user_id',
                               readonly=True, store=True)
@@ -156,7 +156,7 @@ class LunchOrderLine(models.Model):
     @api.one
     def order(self):
         """
-        The order_line is ordered to the supplier but isn't received yet
+        The order_line is ordered to the vendor but isn't received yet
         """
         self.state = 'ordered'
 
@@ -187,7 +187,7 @@ class LunchOrderLine(models.Model):
 
 
 class LunchProduct(models.Model):
-    """ Products available to order. A product is linked to a specific supplier. """
+    """ Products available to order. A product is linked to a specific vendor. """
     _name = 'lunch.product'
     _description = 'lunch product'
 
@@ -195,7 +195,7 @@ class LunchProduct(models.Model):
     category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
     description = fields.Text('Description')
     price = fields.Float('Price', digits_compute=dp.get_precision('Account'))
-    supplier = fields.Many2one('res.partner', 'Supplier')
+    supplier = fields.Many2one('res.partner', 'Vendor')
 
 
 class LunchProductCategory(models.Model):

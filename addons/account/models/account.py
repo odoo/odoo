@@ -25,7 +25,7 @@ class AccountAccountType(models.Model):
     ], required=True, default='other',
         help="The 'Internal Type' is used for features available on "\
         "different types of accounts: liquidity type is for cash or bank accounts"\
-        ", payable/receivable is for supplier/customer accounts.")
+        ", payable/receivable is for vendor/customer accounts.")
     note = fields.Text(string='Description')
 
 
@@ -170,7 +170,7 @@ class AccountAccount(models.Model):
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)], limit=1)
         if partner_prop_acc:
-            raise UserError(_('You cannot remove/deactivate an account which is set on a customer or supplier.'))
+            raise UserError(_('You cannot remove/deactivate an account which is set on a customer or vendor.'))
         return super(AccountAccount, self).unlink()
 
     @api.multi
@@ -199,8 +199,8 @@ class AccountJournal(models.Model):
             ('general', 'Miscellaneous'),
         ], required=True,
         help="Select 'Sale' for customer invoices journals."\
-        " Select 'Purchase' for supplier bills journals."\
-        " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
+        " Select 'Purchase' for vendor bills journals."\
+        " Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments."\
         " Select 'General' for miscellaneous operations journals."\
         " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
     type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed (empty for no control)')

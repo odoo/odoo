@@ -358,7 +358,7 @@ class ResPartner(models.Model):
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")
     debit = fields.Monetary(compute='_credit_debit_get', search=_debit_search, string='Total Payable',
-        help="Total amount you have to pay to this supplier.")
+        help="Total amount you have to pay to this vendor.")
     debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice')
@@ -385,8 +385,8 @@ class ResPartner(models.Model):
         string ='Customer Payment Term',
         help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
-         string ='Supplier Payment Term',
-         help="This payment term will be used instead of the default one for purchase orders and supplier bills", oldname="property_supplier_payment_term")
+         string ='Vendor Payment Term',
+         help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner', oldname="ref_companies")
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',

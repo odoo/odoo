@@ -54,7 +54,7 @@ class purchase_order(models.Model):
             so_line_vals = self.sudo()._prepare_sale_order_line_data(line, company, sale_order.id)
             SaleOrderLine.sudo(intercompany_uid).create(so_line_vals)
 
-        # write supplier reference field on PO
+        # write vendor reference field on PO
         if not self.partner_ref:
             self.partner_ref = sale_order.name
 

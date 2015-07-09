@@ -23,7 +23,7 @@ class TestCheckWriting(AccountingTestCase):
         invoice = self.invoice_model.create({
             'partner_id': self.partner_axelor.id,
             'reference_type': 'none',
-            'name': is_refund and "Supplier Refund" or "Supplier Invoice",
+            'name': is_refund and "Vendor Refund" or "Vendor Invoice",
             'type': is_refund and "in_refund" or "in_invoice",
             'account_id': self.account_payable.id,
             'date_invoice': time.strftime('%Y') + '-06-26',

@@ -535,7 +535,7 @@ class _ValueWrapper(object):
     """
     This class represents a value, of a task attribute or
     a return value of a task method. It contains the value,
-    and the supplier of that value
+    and the vendor of that value
     """
     #@	@+others
     #@+node:__init__

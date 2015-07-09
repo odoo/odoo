@@ -11,7 +11,7 @@ class inter_company_rules_configuration(models.TransientModel):
         ('invoice_and_refunds', 'Create Invoice/Refunds when encoding invoice/refunds')],
         help='Select the type to setup inter company rules in selected company.')
     so_from_po = fields.Boolean(string='Create Sale Orders when buying to this company',
-        help='Generate a Sale Order when a Purchase Order with this company as supplier is created.')
+        help='Generate a Sale Order when a Purchase Order with this company as vendor is created.')
     po_from_so = fields.Boolean(string='Create Purchase Orders when selling to this company',
         help='Generate a Purchase Order when a Sale Order with this company as customer is created.')
     auto_validation = fields.Boolean(string='Sale/Purchase Orders Auto Validation',

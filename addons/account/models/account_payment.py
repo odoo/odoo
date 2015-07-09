@@ -35,7 +35,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment method selected.")
 
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')])
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
 
     amount = fields.Monetary(string='Payment Amount', required=True)
@@ -123,7 +123,7 @@ class account_register_payments(models.TransientModel):
         if any(inv.partner_id != invoices[0].partner_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must belong to the same partner."))
         if any(MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type] for inv in invoices):
-            raise UserError(_("You cannot mix customer and supplier invoices in a single payment."))
+            raise UserError(_("You cannot mix customer invoices and vendor bills in a single payment."))
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
@@ -461,9 +461,9 @@ class account_payment(models.Model):
                     name += _("Customer Refund")
             elif self.partner_type == 'supplier':
                 if self.payment_type == 'inbound':
-                    name += _("Supplier Refund")
+                    name += _("Vendor Refund")
                 elif self.payment_type == 'outbound':
-                    name += _("Supplier Payment")
+                    name += _("Vendor Payment")
             if invoice:
                 name += ': '
                 for inv in invoice:

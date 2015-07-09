@@ -236,7 +236,7 @@ class res_partner(osv.Model, format_address):
         'barcode': fields.char('Barcode', oldname='ean13'),
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
-        'supplier': fields.boolean('Is a Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'supplier': fields.boolean('Is a Vendor', help="Check this box if this contact is a vendor. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),

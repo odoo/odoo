@@ -35,7 +35,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         })
 
         # check that Initially supplier bill state is "Draft"
-        self.assertTrue((invoice.state == 'draft'), "Initially supplier bill state is Draft")
+        self.assertTrue((invoice.state == 'draft'), "Initially vendor bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
         invoice.signal_workflow('invoice_open')

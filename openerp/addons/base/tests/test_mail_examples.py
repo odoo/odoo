@@ -1116,7 +1116,7 @@ BUG3 = """<div class="oe_msg_body_long" style="/* display: none; */"><p>OpenERP 
 <p>Schedule your picking, packing, receptions and internal moves automatically with Odoo using
 your own routing rules. Define push and procurement rules to organize a warehouse or to manage
 product moves between several warehouses. Track in detail all stock moves, not only in your
-warehouse but wherever else it's taken as well (customers, suppliers or manufacturing
+warehouse but wherever else it's taken as well (customers, vendors or manufacturing
 locations).</p>
 </blockquote>
 </li>

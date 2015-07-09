@@ -24,7 +24,7 @@ class ProductTemplate(models.Model):
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', string='Customer Taxes',
         domain=[('type_tax_use', '=', 'sale')])
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Supplier Taxes',
+    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes',
         domain=[('type_tax_use', '=', 'purchase')])
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account", oldname="property_account_income",

@@ -46,7 +46,7 @@ class purchase_line_invoice(osv.osv_memory):
 
             def make_invoice_by_partner(partner, orders, lines_ids):
                 """
-                    create a new invoice for one supplier
+                    create a new invoice for one vendor
                     @param partner : The object partner
                     @param orders : The set of orders to add in the invoice
                     @param lines : The list of line's id
@@ -94,7 +94,7 @@ class purchase_line_invoice(osv.osv_memory):
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
-            'name': _('Supplier Bills'),
+            'name': _('Vendor Bills'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',

@@ -15,7 +15,7 @@ class purchase_report(osv.osv):
     _columns = {
         'date': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created"),  # TDE FIXME master: rename into date_order
         'state': fields.selection([('draft', 'Request for Quotation'),
-                                     ('confirmed', 'Waiting Supplier Ack'),
+                                     ('confirmed', 'Waiting Vendor Ack'),
                                       ('approved', 'Approved'),
                                       ('except_picking', 'Shipping Exception'),
                                       ('except_invoice', 'Invoice Exception'),
@@ -24,7 +24,7 @@ class purchase_report(osv.osv):
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'picking_type_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Vendor', readonly=True),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'date_approve':fields.date('Date Approved', readonly=True),
         'expected_date':fields.date('Expected Date', readonly=True),

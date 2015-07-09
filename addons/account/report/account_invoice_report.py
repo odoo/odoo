@@ -49,9 +49,9 @@ class AccountInvoiceReport(models.Model):
     nbr = fields.Integer(string='# of Invoices', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
-        ('in_invoice', 'Supplier Bill'),
+        ('in_invoice', 'Vendor Bill'),
         ('out_refund', 'Customer Refund'),
-        ('in_refund', 'Supplier Refund'),
+        ('in_refund', 'Vendor Refund'),
         ], readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
