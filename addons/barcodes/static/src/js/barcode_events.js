@@ -8,7 +8,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     timeout: null,
     key_pressed: {},
     buffered_key_events: [],
-    min_barcode_keys: 3, // minimum barcode length
+    // Regexp to match a barcode input and extract its payload
+    // Note: to build in init() if prefix/suffix can be configured
+    regexp: /(.{3,})[\n\r\t]+/,
     // By knowing the terminal character we can interpret buffered keys
     // as a barcode as soon as it's encountered (instead of waiting x ms)
     suffix: /[\n\r\t]+/,
@@ -29,20 +31,17 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     handle_buffered_keys: function() {
-        var code = "";
+        var str = _.reduce(this.buffered_key_events, function(memo, e) { return memo + String.fromCharCode(e.which) }, '');
+        var match = str.match(this.regexp);
 
-        if (this.buffered_key_events.length >= this.min_barcode_keys) {
-            for (var i = 0; i < this.buffered_key_events.length; i++) {
-                code += String.fromCharCode(this.buffered_key_events[i].which);
-            }
+        if (match) {
+            var barcode = match[1];
 
-            core.bus.trigger('barcode_scanned', code);
+            core.bus.trigger('barcode_scanned', barcode);
 
-            // Dispatch a barcode_scanned DOM event to elements that have
-            // barcode_events="true" set.
-            if (this.element_is_editable(this.buffered_key_events[0].target)) {
-                $(this.buffered_key_events[0].target).trigger('barcode_scanned', code);
-            }
+            // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
+            if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
+                $(this.buffered_key_events[0].target).trigger('barcode_scanned', barcode);
         } else {
             this.resend_buffered_keys();
         }
