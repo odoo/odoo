@@ -297,10 +297,18 @@ var KanbanView = View.extend({
         this.pager = new Pager(this, this.dataset.size(), 1, this.limit, options);
         this.pager.appendTo($node);
         this.pager.on('pager_changed', this, function (state) {
+            var limit_changed = (self.limit !== state.limit);
+
             self.limit = state.limit;
             self.load_records(state.current_min - 1)
                 .then(function (data) {
                     self.data = data;
+
+                    // Reset the scroll position to the top on page changed only
+                    if (!limit_changed) {
+                        self.scrollTop = 0;
+                        core.bus.trigger('scrollTop_updated');
+                    }
                 })
                 .done(this.proxy('render'));
         });
