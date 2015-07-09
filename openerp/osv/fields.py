@@ -187,7 +187,7 @@ class _column(object):
     def to_field(self):
         """ convert column `self` to a new-style field """
         from openerp.fields import Field
-        return Field.by_type[self._type](column=self, **self.to_field_args())
+        return Field.by_type[self._type](origin=self, **self.to_field_args())
 
     def to_field_args(self):
         """ return a dictionary with all the arguments to pass to the field """

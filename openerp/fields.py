@@ -262,6 +262,7 @@ class Field(object):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'origin': None,                 # the column from which the field was created
         'column': None,                 # the column corresponding to the field
         'setup_done': False,            # whether the field has been set up
 
@@ -362,7 +363,7 @@ class Field(object):
             attrs['copy'] = attrs.get('copy', False)
 
         # fix for function fields overridden by regular columns
-        if not isinstance(attrs.get('column'), (NoneType, fields.function)):
+        if not isinstance(attrs.get('origin'), (NoneType, fields.function)):
             attrs.pop('store', None)
 
         for attr, value in attrs.iteritems():
@@ -670,9 +671,11 @@ class Field(object):
 
     def to_column(self):
         """ Return a column object corresponding to ``self``, or ``None``. """
-        if not self.store and (self.compute or not self.column):
+        if self.column:
+            return self.column
+
+        if not self.store and (self.compute or not self.origin):
             # non-stored computed fields do not have a corresponding column
-            self.column = None
             return None
 
         # determine column parameters
@@ -688,9 +691,9 @@ class Field(object):
             args['type'] = self.type
             args['relation'] = self.comodel_name
             self.column = fields.property(**args)
-        elif self.column:
-            # let the column provide a valid column for the given parameters
-            self.column = self.column.new(_computed_field=bool(self.compute), **args)
+        elif self.origin:
+            # let the origin provide a valid column for the given parameters
+            self.column = self.origin.new(_computed_field=bool(self.compute), **args)
         else:
             # create a fresh new column of the right type
             self.column = getattr(fields, self.type)(**args)
