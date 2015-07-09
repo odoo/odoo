@@ -381,6 +381,40 @@ class mrp_bom(osv.osv):
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
                 result = result + res[0]
                 result2 = result2 + res[1]
+
+        # We merge the results for the same product. The reason is that action_produce does not
+        # support the case where the same product appears on multiple lines. To avoid major changes
+        # in a stable version, we do this simple hack at this point.
+        # Only for v7.0, do not use in v8.0
+        result_dict = {}
+        result_dup = False
+        for product_detail in result:
+            key = (
+                product_detail['name'],
+                product_detail['product_id'],
+                product_detail['product_uom'],
+                product_detail['product_uos_qty'],
+                product_detail['product_uos']
+            )
+            if key in result_dict:
+                result_dict[key] += product_detail['product_qty']
+                result_dup = True
+            else:
+                result_dict[key] = product_detail['product_qty']
+
+        if result_dup:
+            result = []
+            for key in result_dict.keys():
+                result.append(
+                {
+                    'name': key[0],
+                    'product_id': key[1],
+                    'product_qty': result_dict[key],
+                    'product_uom': key[2],
+                    'product_uos_qty': key[3],
+                    'product_uos': key[4],
+                })
+
         return result, result2
 
     def copy_data(self, cr, uid, id, default=None, context=None):
