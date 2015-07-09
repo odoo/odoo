@@ -35,6 +35,7 @@ var Mention = Widget.extend({
         this.min_charactor = options['min_charactor'] || 4;
         this.search_string = '';
         this.recent_string = '';
+        this.set('partners', [])
     },
 
     start: function() {
@@ -71,15 +72,15 @@ var Mention = Widget.extend({
         }).on('click', 'li', function(e){
             self.find_n_replace(parseInt($(e.currentTarget).find("span").attr("id")));
         });
+        this.on('change:partners', this, this.show_dropdown);
         this.clear_dropdown();
     },
-    show_dropdown: function(result){
+    show_dropdown: function(){
         var self = this;
         var highlight = function(description){
             if(description)
             return description.replace(new RegExp(self.search_string, "gi"), function(str) {return _.str.sprintf("<b><u>%s</u></b>",str);});};
-
-        var res = _.map(result, function(partner) {
+        var res = _.map(this.get('partners'), function(partner) {
                 return {
                     "id": partner["id"], 
                     "name": highlight(partner["name"]), 
@@ -106,7 +107,7 @@ var Mention = Widget.extend({
                 limit: this.partner_limit
             }).done(function(res) {
                 if(!res.length) return;
-                self.show_dropdown(res);
+                self.set('partners', res)
             });
         }
     },
@@ -176,8 +177,9 @@ var Mention = Widget.extend({
     },
     find_n_replace: function(id) {
         var self = this;
-        var partner = this.partners[id],
-            name = partner["name"], 
+        var partner = _.find(this.get('partners'), function(partner){return partner.id == id});
+        if (!partner){return false;}
+        var name = partner["name"], 
             email = partner["email"];
         
         this.show_form_popup(email).done(function() {
