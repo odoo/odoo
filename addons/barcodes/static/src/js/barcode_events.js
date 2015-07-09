@@ -9,7 +9,12 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     key_pressed: {},
     buffered_key_events: [],
     min_barcode_keys: 3, // minimum barcode length
-    max_time_between_keys_in_ms: 50, // max time between keys to be detected as a barcode
+    // By knowing the terminal character we can interpret buffered keys
+    // as a barcode as soon as it's encountered (instead of waiting x ms)
+    suffix: /[\n\r\t]+/,
+    // Keys from a barcode scanner are usually processed as quick as possible,
+    // but some scanners can use an intercharacter delay (we support <= 50 ms)
+    max_time_between_keys_in_ms: 55,
 
     init: function(parent) {
         mixins.PropertiesMixin.init.call(this);
@@ -125,7 +130,10 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 e.stopImmediatePropagation();
 
                 clearTimeout(this.timeout);
-                this.timeout = setTimeout(this.handle_buffered_keys.bind(this), this.max_time_between_keys_in_ms);
+                if (String.fromCharCode(e.which).match(this.suffix) !== null)
+                    this.handle_buffered_keys();
+                else
+                    this.timeout = setTimeout(this.handle_buffered_keys.bind(this), this.max_time_between_keys_in_ms);
             }
         }
     },
