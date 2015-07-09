@@ -38,21 +38,13 @@ class account_invoice_report(osv.osv):
         currency_rate_obj = self.pool.get('res.currency.rate')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         user_currency_id = user.company_id.currency_id.id
-        currency_rate_id = currency_rate_obj.search(
-            cr, uid, [
-                ('rate', '=', 1),
-                '|',
-                    ('currency_id.company_id', '=', user.company_id.id),
-                    ('currency_id.company_id', '=', False)
-                ], limit=1, context=context)[0]
-        base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
         res = {}
         ctx = context.copy()
         for item in self.browse(cr, uid, ids, context=context):
             ctx['date'] = item.date
-            price_total = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_total, context=ctx)
-            price_average = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_average, context=ctx)
-            residual = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.residual, context=ctx)
+            price_total = currency_obj.compute(cr, uid, item.currency_id.id, user_currency_id, item.price_total, context=ctx)
+            price_average = currency_obj.compute(cr, uid, item.currency_id.id, user_currency_id, item.price_average, context=ctx)
+            residual = currency_obj.compute(cr, uid, item.currency_id.id, user_currency_id, item.residual, context=ctx)
             res[item.id] = {
                 'user_currency_price_total': price_total,
                 'user_currency_price_average': price_average,
@@ -129,8 +121,8 @@ class account_invoice_report(osv.osv):
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
-                sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
-                cr.rate as currency_rate, sub.residual / cr.rate as residual, sub.commercial_partner_id as commercial_partner_id
+                sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
+                cr.rate as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
