@@ -684,38 +684,42 @@ class account_analytic_account(osv.osv):
         }
         return invoice
 
-    def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
-        fpos_obj = self.pool.get('account.fiscal.position')
-        fiscal_position = None
-        if fiscal_position_id:
-            fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
-        invoice_lines = []
-        for line in contract.recurring_invoice_line_ids:
+    def _prepare_invoice_line(self, cr, uid, line, fiscal_position, context=None):
+        fpos_obj = self.pool['account.fiscal.position']
+        product = line.product_id
+        account_id = product.property_account_income_id.id
+        if not account_id:
+            account_id = product.categ_id.property_account_income_categ_id.id
+        account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
 
-            res = line.product_id
-            account_id = res.property_account_income_id.id
-            if not account_id:
-                account_id = res.categ_id.property_account_income_categ_id.id
-            account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
-
-            taxes = res.taxes_id or False
-            tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
-
-            invoice_lines.append((0, 0, {
-                'name': line.name,
-                'account_id': account_id,
-                'account_analytic_id': contract.id,
-                'price_unit': line.price_unit or 0.0,
-                'quantity': line.quantity,
-                'uos_id': line.uom_id.id or False,
-                'product_id': line.product_id.id or False,
-                'invoice_line_tax_ids': [(6, 0, tax_id)],
-            }))
-        return invoice_lines
+        taxes = product.taxes_id or False
+        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
+        return {
+            'name': line.name,
+            'account_id': account_id,
+            'account_analytic_id': line.analytic_account_id.id,
+            'price_unit': line.price_unit or 0.0,
+            'quantity': line.quantity,
+            'uos_id': line.uom_id.id or False,
+            'product_id': line.product_id.id or False,
+            'invoice_line_tax_ids': [(6, 0, tax_id)],
+        }
 
     def _prepare_invoice(self, cr, uid, contract, context=None):
         invoice = self._prepare_invoice_data(cr, uid, contract, context=context)
-        invoice['invoice_line_ids'] = self._prepare_invoice_lines(cr, uid, contract, invoice['fiscal_position_id'], context=context)
+        fpos_obj = self.pool['account.fiscal.position']
+        fiscal_position = None
+        if invoice['fiscal_position_id']:
+            fiscal_position = fpos_obj.browse(cr, uid,
+                                              invoice['fiscal_position_id'],
+                                              context=context)
+        invoice_lines = []
+        for line in contract.recurring_invoice_line_ids:
+            values = self._prepare_invoice_line(cr, uid, line,
+                                                fiscal_position,
+                                                context=context)
+            invoice_lines.append((0, 0, values))
+        invoice['invoice_line_ids'] = invoice_lines
         return invoice
 
     def recurring_create_invoice(self, cr, uid, ids, context=None):
