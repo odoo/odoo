@@ -194,201 +194,52 @@
     }
 }
 
-/**************** PLANNER MODAL ****************/
-#PlannerModal {
-
+@o_planner_width: 480px;
+#PlannerDialog {
     font-family: "Lato", serif;
+    position: absolute;
+    top: 35px;
+    right: 5px;  // include box shadow
+    bottom: 5px;
+    width: @o_planner_width;
+    z-index: 1001; // z-index website + 1
+    padding-bottom: 80px;
 
-    a {
-        color: #2E917D
-    }
-    .btn-default {
-        background-color: transparent;
-        color: #7C7C7C;
-        line-height: 19px;
-    }
-    .btn-default:hover {
-        color: #333;
-    }
-    .btn-primary {
-        background: #21b799;
-        border-color: #26A38A;
-        color: white;
-    }
-    .btn-primary:hover {
-        background-color: #2E917D;
-        color: white;
-    }
-    .odoo_purple, a.btn.odoo_purple {
-        background-color: #A24689;
-        color: white;
-    }
-    .odoo_purple.btn:hover{
-        background: #a24689;
-        color: #fff;
+    .row { // website adds negative margins
+        margin-left: 0px;
+        margin-right: 0px;
     }
 
-    .o_planner_page{
-        display : none;
+    .box-shadow(@shadow) {
+        -webkit-box-shadow: @shadow; // iOS <4.3 & Android <4.1
+        box-shadow: @shadow;
     }
-    .o_planner_dialog {
-        width: 85%;
-        max-width: 1024px;
-        //overflow: hidden;
-        margin-left: auto;
-        margin-right: auto;
+    .box-shadow(0 3px 9px #666666);
+    background-color: white;
 
-        // button close
-        button.close {
-            line-height: 30px;
-            color: rgba(51, 51, 51, 0.54);
+    .o_planner_header {
+        padding: 5px 5px 5px 5px;
+    }
+
+    h1 {
+        font-size: 3.5em;
+        font-weight: 100;
+    }
+
+    .o_content_page {
+        padding-left:  15px;
+        padding-right: 15px;
+        height: 100%;
+        overflow: auto;
+
+        .marked:after {
             position: absolute;
-            right: 15px;
-            z-index:9999;
-        }
-        button.close:hover {
-            color:#222;
-        }
-
-        // modal core
-        .modal-content {
-            background: #f3f3f3;
-        }
-        .modal-body {
-            overflow-x: hidden;
-            max-height: inherit;
-            padding: 0;
-        }
-        .row.o_planner {
-            padding: 0 15px;
-        }
-        .o_planner_footer {
-            padding: 0;
-            height: auto;
-            overflow-y: visible;
-            overflow-x: initial;
-            display: block;
-            background: transparent;
-            position: fixed;
-            z-index: 99;
-            right: 0;
-            bottom: 0;
-            .shadow {
-                background: url("/web_planner/static/src/img/shadow.png") center center repeat-x;
-                height: 12px;
-                width: 100%;
-                display: block;
-                border-bottom: 1px solid #E5E5E5;
-                opacity: 0.3;
-            }
-            > div {
-                padding: 1em 15px;
-                background: #f7f7f7;
-                min-height: 60px;
-            }
-            .mark_as_done span{
-                font-family: Lato,serif;
-            }
-            // mark/uncheck button animation
-            button.fa-check-square-o {
-                left: 5em;
-                font-size: 2em;
-                border: none;
-                &:focus {outline:none}
-                &:hover:before{
-                    content: "\f096";
-                    color: #888;
-                    position: absolute;
-                    margin-left: 2px;
-                }
-                &:hover i:before{
-                    content: "\f00c";
-                    color: #CACACA;
-                }
-                span {display: none;}
-            }
-            button.fa-check-square-o:after {
-                color: #7C7C7C;
-                position: absolute;
-                font-size: .5em;
-                opacity: 0;
-                -webkit-transition: all 0.3s ease-in-out;
-                -moz-transition:    all 0.3s ease-in-out;
-                -ms-transition:     all 0.3s ease-in-out;
-                -o-transition:      all 0.3s ease-in-out;
-            }
-            button.fa-check-square-o:hover:after {
-                opacity: 1;
-                -webkit-transition: all 0.3s ease-in-out;
-                -moz-transition:    all 0.3s ease-in-out;
-                -ms-transition:     all 0.3s ease-in-out;
-                -o-transition:      all 0.3s ease-in-out;
-            }
-            .btn-next i {
-                margin-left: 10px;
-            }
-            .span-next {
-                position: absolute;
-                right: 9em;
-                top: 0.8em;
-                opacity: 0;
-                height: 1.3em;
-                font-size: 1em;
-                display: block;
-                -webkit-transition: all 0.3s ease-in-out;
-                -moz-transition: all 0.3s ease-in-out;
-                -ms-transition: all 0.3s ease-in-out;
-                -o-transition: all 0.3s ease-in-out;
-                transition: all 0.3s ease-in-out;
-            }
-            .next-block:hover .span-next {
-                right: 9.6em;
-                opacity: 1;
-            }
-        }
-        // PROGRESS
-        .o_planner_progress_container {
-            padding: 0;
-            .o_planner_progress_col {
-                border-right: 1px solid #E5E5E5;
-                background: #f7f7f7;
-                padding: 10px 12px 0 12px;
-                i.fa{
-                    font-size: 1.7em;
-                    padding-left: 0;
-                    margin-right: 0.2em;
-                    margin-top: 0.1em;
-                    color: #929292;
-                }
-                .o_planner_progress_counter {
-                    padding: 6px 0 0 8px;
-                    font-weight: bold;
-                    color: #727272;
-                }
-                .progress {
-                    background-color: #C4C4C4;
-                    height: 30px;
-                    padding: 3px;
-                }
-                .progress-bar {
-                    background: #A24689;
-                    border-radius: 4px;
-                    height: 95%;
-                    box-shadow: 0 1px 0 #7A3067;
-                }
-            }
-        }
-        // MARKED ANIMATION
-        .o_planner_page.marked:after {
-            position: absolute;
-            left: 0;
             top: 0;
+            left: 105px;
             font-size: 20em;
             font-family: "FontAwesome";
             content: "\f00c";
             color: #21b799;
-            vertical-align: middle;
-            padding: 0.3em 0.7em;
             animation: markAnim ease-in-out 1s;
             animation-iteration-count: 1;
             transform-origin: 50% 50%;
@@ -409,70 +260,6 @@
             -ms-animation-iteration-count: 1;
             -ms-transform-origin: 50% 50%;
             -ms-animation-fill-mode:forwards; /*IE 10+*/
-        }
-        // MENU MOBILE
-        .dropdown.mobile {
-            padding: 10px 12px 0 0px;
-            .dropdown-menu{
-                height: 250px;
-                overflow: auto;
-            }
-            .btn {
-                text-align: justify;
-            }
-            .dropdown-menu a {
-                color: #333;
-                padding: 3px;
-            }
-            .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
-                background-color: #F3F3F3;
-            }
-            .dropdown-menu h4 {
-                padding: 10px 15px 0;
-                border-top: 1px solid #EAEAEA;
-            }
-            .fa {
-                color: #21b799;
-                margin-right: 5px;
-            }
-        }
-        .o_planner_sidebar {
-            padding: 5px 5px 20px 10px;
-            border-right: 1px solid #E5E5E5;
-            background: #f7f7f7;
-            overflow-x: hidden;
-            overflow-y: auto;
-            .nav-stacked h4 {
-                font-size: 15px;
-                color: #444;
-                text-transform: uppercase;
-                font-weight: bold;
-                margin-top: 20px;
-            }
-            .nav-stacked h4 i {
-                margin-right: 8px;
-                color: #A24689;
-            }
-            .nav-stacked li a {
-                padding: 3px 0 3px 38px;
-                margin: auto -10px;
-                color: #444;
-                font-size: 13px;
-            }
-            .nav-stacked li a:hover, .nav-stacked li a:focus {
-                text-decoration: none;
-                background-color: transparent;
-                color: black;
-            }
-
-            .nav-stacked li.active a{
-                background-color: #EAEAEA;
-            }
-            .fa.fa-fw.fa-check {
-                color: #21b799;
-                margin-left: -5px;
-                margin-right: 5px;
-            }
         }
         //NOTEBOOK
         .o_planner_notebook_container {
@@ -581,26 +368,40 @@
             }
         }
     }
-    .o_planner_pages {
-        color: #444;
-        margin-top:-60px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        > div {
-            padding-top: 25px;
-            position: relative;
-            height: 100%;
-            > h1, > h2, > h3, > h4, > h5, > h6, > p, > strong, > i {
-                text-shadow:none;
-            }
-            h1 {
-                margin-top: 0;
-                font-size: 3.5em;
-                font-weight: 100;
-                margin-bottom: 0.5em;
-            }
-        }
+
+    a {
+        color: #2E917D
     }
+    .btn-default {
+        background-color: transparent;
+        color: #7C7C7C;
+        line-height: 19px;
+    }
+    .btn-default:hover {
+        color: #333;
+    }
+    .btn-primary {
+        background: #21b799;
+        border-color: #26A38A;
+        color: white;
+    }
+    .btn-primary:hover {
+        background-color: #2E917D;
+        color: white;
+    }
+    .odoo_purple, a.btn.odoo_purple {
+        background-color: #A24689;
+        color: white;
+    }
+    .odoo_purple.btn:hover {
+        background: #a24689;
+        color: #fff;
+    }
+
+    .o_planner_page {
+        display : none;
+    }
+
     // PARAGRAPHS
     .o_planner_paragraphs .icon {
         text-align: center;
@@ -612,41 +413,6 @@
     .o_planner_row_apps{
         .col-md-4{
             margin-top: 20px;
-        }
-    }
-}
-
-// XS size
-@media screen and (max-width: 768px) {
-    #PlannerModal .pages {
-        margin-top: 0px;
-    }
-    #PlannerModal .o_planner_progress_counter {
-        padding: 6px 0 0 5px;
-    }
-}
-// SM size
-@media screen and (min-width: 769px) {
-    #PlannerModal .o_planner_paragraphs {
-        div.col-md-10 {
-            margin-top:1em;
-        }
-        span {
-            transform: translateX(-8px);
-            position: relative;
-            display: block;
-        }
-    }
-}
-// MD size
-@media screen and (min-width: 992px) {
-    #PlannerModal .o_planner_paragraphs .icon {
-        font-size: 4em;
-        margin: 0.3em auto .5em;
-        span{
-            transform: translateX(0px);
-            position: relative;
-            display: block;
         }
     }
 }

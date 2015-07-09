@@ -13,54 +13,41 @@
         </li>
     </t>
 
-    <t t-name="PlannerFooter">
-        <div class="o_planner_footer col-sm-8 col-md-9 col-xs-12 hidden-print">
-            <span class="shadow" />
-
-            <div class="col-xs-6 text-left mark-block">
-                <t t-if="!start and !end">
-                    <button t-attf-id='mark_button#{current_page_id}'
-                        t-attf-data-pageid='#{current_page_id}'
-                        class='fa fa-square-o btn btn-primary mark_as_done'><i /> <span>Mark As Done</span>
+    <t t-name="PlannerDialog">
+        <div id="PlannerDialog" tabindex="-1">
+            <div class="row dropdown o_planner_menu">
+                <a class="col-xs-12 btn btn-default" data-toggle="dropdown" href="#" aria-expanded="false">Steps  <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"/>
+            </div>
+            <div class="row o_planner_header">
+                <div class="col-xs-4">
+                    <button class='fa fa-square-o btn btn-primary mark_as_done'>
+                        <i/>
+                        <span>Mark As Done</span>
                     </button>
-                </t>
-            </div>
-            <div class="col-xs-6 next-block">
-                <t t-if="!end">
-                    <a  t-attf-class="pull-right btn btn-#{start and 'primary' or 'default'} btn-next"
-                        t-attf-data-parent='#{current_page_id}'
-                        t-attf-href='##{next_page_id}'>Next step<i class="fa fa-angle-right"></i>
+                </div>
+                <div class="col-xs-4 text-center"><span class="help-block span-next o_planner_title"/></div>
+                <div class="col-xs-4">
+                    <a class="pull-right btn btn-next">
+                        Next step
+                        <i class="fa fa-angle-right"></i>
                     </a>
-                    <span class="help-block span-next"> <t t-esc="next_page_name"/></span>
-                </t>
+                </div>
             </div>
+            <div class="row o_content_page"/>
         </div>
     </t>
 
-    <t t-name="PlannerDialog">
-        <div>
-            <div class="modal fade odoo_colors" id="PlannerModal" tabindex="-1" role="dialog" aria-labelledby="PlannerModalLabel" aria-hidden="true">
-                <div class="modal-dialog o_planner_dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times"></i></button>
-                            <div>
-                                <div class="col-sm-12 col-xs-7 o_planner_progress_container">
-                                    <div class="col-sm-4 col-md-3 col-xs-12 o_planner_progress_col">
-                                        <i class="fa fa-question-circle col-xs-1"></i>
-                                        <div class="progress col-xs-9">
-                                            <div class="progress-bar" t-attf-style="width:0%;"></div>
-                                        </div>
-                                        <span class="o_planner_progress_counter col-xs-1"></span>
-                                    </div>
-                                </div>
-                                <div class="content_page"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <t t-name="PlannerMenu">
+        <li t-foreach="orphan_pages" t-as="orphan_page">
+            <a t-att-href="'#' + menu_item_page_map[orphan_page]"><span class="fa fa-fw"/><t t-esc="orphan_page"/></a>
+        </li>
+        <t t-foreach="menu_categories" t-as="menu_category">
+            <h4><i t-att-class="'fa ' + menu_category.classes"/><t t-esc="menu_category.name"/></h4>
+            <li t-foreach="menu_category.menu_items" t-as="menu_item">
+                <a t-att-href="'#' + menu_item_page_map[menu_item]"><span class="fa fa-fw"/><t t-esc="menu_item"/></a>
+            </li>
+        </t>
     </t>
 
 </templates>

@@ -1,205 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <template id="website_planner">
-
-        <!--Website Planner Page-->
-        <div class="row o_planner o_planner_website">
-
-            <!--Mobile Planner Menu-->
-            <div class="visible-xs-block col-xs-4">
-                <div class="dropdown mobile">
-                    <a class="col-xs-12 btn btn-default" data-toggle="dropdown" href="#">Steps&#32;&#32;<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li class="active">
-                            <a href="#planner_page1">
-                                <span class="fa fa-fw"/>Welcome
-                            </a>
-                        </li>
-                        <h4>Plan</h4>
-                        <li>
-                            <a href="#planner_page2">
-                                <span class="fa fa-fw"/>Your Objectives
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page3">
-                                <span class="fa fa-fw"/>Find Inspiration
-                            </a>
-                        </li>
-                        <h4>Design</h4>
-                        <li>
-                            <a href="#planner_page4">
-                                <span class="fa fa-fw"/>Theme selection
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page5">
-                                <span class="fa fa-fw"/>Install App
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page6">
-                                <span class="fa fa-fw"/>Your Homepage
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page7">
-                                <span class="fa fa-fw"/>Your Main Menu
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page8">
-                                <span class="fa fa-fw"/>Your Footer
-                            </a>
-                        </li>
-                        <span class="o_mbl_website_sale_planner"/>
-                        <h4>Launch</h4>
-                        <li>
-                            <a href="#planner_page13">
-                                <span class="fa fa-fw"/>Your Domain Name
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page14">
-                                <span class="fa fa-fw"/>Ready For Launch!
-                            </a>
-                        </li>
-                        <h4>Grow</h4>
-                        <li>
-                            <a href="#planner_page15">
-                                <span class="fa fa-fw"/>Promote
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page16">
-                                <span class="fa fa-fw"/>A/B Testing
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#planner_page17">
-                                <span class="fa fa-fw"/>Translate
-                            </a>
-                        </li>
-                        <span class="o_mobile_sell_more"/>
-                        <li>
-                            <a href="#planner_page19">
-                                <span class="fa fa-fw"/>Communicate
-                            </a>
-                        </li>
-                    </ul>
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <p><i>Congratulations on taking the leap and deciding to build your own website!</i></p>
+                <p><i>
+                    Whether you're a beginner or a pro, we have everything you need to plan, create,
+                publish and grow your site, blog or online store.</i></p>
+                <p><i>
+                This Planner will help you to think about your website and provide tips and ideas to inspire you. There are examples and explanations to guide you through the process of creating a top-notch, high quality site that meets all your needs.</i></p>
+                <p><i>
+                    The whole process may take a few hours, some discussions with your colleagues and
+                several cups of coffee to go through. But don't worry, you can return to this tool at any time.</i></p>
+                <p class="last"><i>We wish you a fun time!</i></p>
+                <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
+                <div class="pull-left" style="margin-left: 10px">
+                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                    <address>
+                        For the Odoo Team,<br/>
+                        Fabien Pinckaers, Founder
+                    </address>
                 </div>
-            </div>
+            </t>
 
-            <div class="col-sm-4 col-md-3 hidden-xs o_planner_sidebar">
-                <!--Planner Menu-->
-                <ul class="nav nav-pills nav-stacked">
-
-                    <li class="active">
-                        <a href="#planner_page1">
-                            <span class="fa fa-fw"/>Welcome
-                        </a>
-                    </li>
-                    <h4><i class="fa fa-bullseye"/>Plan</h4>
-                    <li>
-                        <a href="#planner_page2">
-                            <span class="fa fa-fw"/>Your Objectives
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page3">
-                            <span class="fa fa-fw"/>Find Inspiration
-                        </a>
-                    </li>
-                    <h4><i class="fa fa-image"/>Design</h4>
-                    <li>
-                        <a href="#planner_page4">
-                            <span class="fa fa-fw"/>Theme Selection
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page5">
-                            <span class="fa fa-fw"/>Install App
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page6">
-                            <span class="fa fa-fw"/>Your Homepage
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page7">
-                            <span class="fa fa-fw"/>Your Main Menu
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page8">
-                            <span class="fa fa-fw"/>Your Footer
-                        </a>
-                    </li>
-                    <span class="o_website_sale_planner"/>
-                    <h4><i class="fa fa-rocket"/>Launch</h4>
-                    <li>
-                        <a href="#planner_page13">
-                            <span class="fa fa-fw"/>Your Domain Name
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page14">
-                            <span class="fa fa-fw"/>Ready For Launch!
-                        </a>
-                    </li>
-                    <h4><i class="fa fa-bar-chart"/>Grow</h4>
-                    <li>
-                        <a href="#planner_page15">
-                            <span class="fa fa-fw"/>Promote
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page16">
-                            <span class="fa fa-fw"/>A/B Testing
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#planner_page17">
-                            <span class="fa fa-fw"/>Translate
-                        </a>
-                    </li>
-                    <span class="o_sell_more"/>
-                    <li>
-                        <a href="#planner_page19">
-                            <span class="fa fa-fw"/>Communicate
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!--Planner Pages-->
-            <div class="o_planner_pages col-sm-8 col-md-9 col-xs-12 ">
-
-                <div id="planner_page1" class="o_planner_page show">
-                    <h1>Welcome!</h1>
-                    <p><i>Congratulations on taking the leap and deciding to build your own website!</i></p>
-                    <p><i>
-                        Whether you're a beginner or a pro, we have everything you need to plan, create,
-                        publish and grow your site, blog or online store.</i></p>
-                    <p><i>
-                        This Planner will help you to think about your website and provide tips and ideas to inspire you. There are examples and explanations to guide you through the process of creating a top-notch, high quality site that meets all your needs.</i></p>
-                    <p><i>
-                        The whole process may take a few hours, some discussions with your colleagues and
-                        several cups of coffee to go through. But don't worry, you can return to this tool at any time.</i></p>
-                    <p class="last"><i>We wish you a fun time!</i></p>
-                    <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
-                    <div class="pull-left" style="margin-left: 10px">
-                        <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
-                        <address>
-                            For the Odoo Team,<br/>
-                            Fabien Pinckaers, Founder
-                        </address>
-                    </div>
-                </div>
-
-                <div id="planner_page2" class="o_planner_page">
-                    <h1>Your Objectives</h1>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Plan'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-bullseye'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Objectives'"/>
                     <p class="text-muted">
                         Being clear on why you're creating your site and your goals is an essential first step to ensure your content and structure meet business objectives.
                     </p>
@@ -260,10 +91,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page3" class="o_planner_page">
-                    <h1>Find Inspiration</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Find Inspiration'"/>
                     <p class="text-muted">
                         It's often much easier not to start with a blank page. Take a look at your competitors
                         and similar companies around the world. They probably have the same objectives and
@@ -314,10 +144,13 @@
                             After working on this step, you may want to go back and refine your objectives or modify your visitors interests. Those 3 first steps are essentially linked, and the more time your spend on polishing them, the better your website will be!
                         </p>
                     </div>
-                </div>
-
-                <div id="planner_page4" class="o_planner_page">
-                    <h1>Theme Selection</h1>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Design'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-image'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Theme Selection'"/>
                     <p class="text-muted">The theme you choose sets the tone for the overall look and feel of your site design.</p>
                     <div class="row">
                         <div class="col-md-6 col-xs-12">
@@ -373,10 +206,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page5" class="o_planner_page">
-                    <h1>Install Apps</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Install Apps'"/>
                     <p class="text-muted">
                         Before starting to work on your website, make sure you have all the right applications installed.
                         It will be much easier for you to organize and create your content if you have all the options activated from the start.
@@ -400,8 +232,8 @@
                                 <h3><strong>Community builder</strong></h3>
                                 <p>Build and engage with communities with forums, Q&amp;A, mailing lists.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_forum')"
-                                    class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Install now</a>
+                                   class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install now</a>
                             </div>
 
                             <div class="text-center col-md-4 col-xs-6">
@@ -435,10 +267,9 @@
                             <div class="clearfix hidden-xs mb16"></div>
                         </div>
                     </section>
-                </div>
-
-                <div id="planner_page6" class="o_planner_page">
-                    <h1>Your Homepage</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Homepage'"/>
                     <p class="text-muted">
                         Your homepage is the most important page of your website. This is where visitors get their first impressions of you. An excellent homepage will encourage them to stay on your site, guide them towards your content, reinforce your company's branding and more.<br/>
                         Here are some pointers to help you get started.
@@ -458,8 +289,8 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe087;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Find a catchy headline</strong><br/>
-                                    Make sure anyone who visits your site understands what it’s about without having to do a lot of reading.<br/>
-                                    To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For example, use pictures of your work, screenshots of your app, a short and catchy hook.
+                                Make sure anyone who visits your site understands what it’s about without having to do a lot of reading.<br/>
+                                To do that, the visible section of your homepage (above the fold) needs to be simple and straightforward. For example, use pictures of your work, screenshots of your app, a short and catchy hook.
                                 </p>
                                 <p>The Banner or Big Picture building blocks are good choices for that.</p>
                             </div>
@@ -467,10 +298,10 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe020;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Encourage to action</strong><br/>
-                                    Add  one, and only one, call-to-action on your homepage. Your homepage is
-                                    the page that gets the most visitors.<br/>
-                                    It's good practice to try to engage with your visitors on the homepage:
-                                    Contact Us, Subscribe to Get More Information, Check the Catalog, etc.
+                                Add  one, and only one, call-to-action on your homepage. Your homepage is
+                                the page that gets the most visitors.<br/>
+                                It's good practice to try to engage with your visitors on the homepage:
+                                Contact Us, Subscribe to Get More Information, Check the Catalog, etc.
                                 </p>
                                 <p>
                                     Use the Newsletter subscription (from mass mailing application) or the Big button building block for that.
@@ -480,9 +311,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe060;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Add features and content</strong><br/>
-                                    You can put more content in the intermediate section of your homepage (one
-                                    or two scrolls down from the visible section), but try to keep your
-                                    paragraphs easy to read and avoid 'walls of text'.
+                                You can put more content in the intermediate section of your homepage (one
+                                or two scrolls down from the visible section), but try to keep your
+                                paragraphs easy to read and avoid 'walls of text'.
                                 </p>
                                 <p>
                                     For example, use photos to help break up large areas of text by altering
@@ -493,9 +324,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe009;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Display social proof</strong><br/>
-                                    Below your main banner or call-to-action, it's a good practice to put
-                                    social proofs about your products or services; customer quotes, videos,
-                                    photos of your products in actions, twitter quotes, etc.
+                                Below your main banner or call-to-action, it's a good practice to put
+                                social proofs about your products or services; customer quotes, videos,
+                                photos of your products in actions, twitter quotes, etc.
                                 </p>
                                 <p>
                                     You have a lot of choices for that: the References, Quotes Slider, Twitter Scroller,...
@@ -503,10 +334,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page7" class="o_planner_page">
-                    <h1>Your Main Menu</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Main Menu'"/>
                     <p class="text-muted">
                         Creating your main menu is an important and difficult stage in building your website.<br/>
                         It needs to be organized, so that your visitors can see all the main content you offer at a glance.<br/>
@@ -599,9 +429,9 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-                <div id="planner_page8" class="o_planner_page">
-                    <h1>Your Footer</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Footer'"/>
                     <p class="text-muted">
                         A footer, as its name implies, is located at the very bottom of your website.
                         Because of that, your visitors won't see it immediately so it's very useful for linking
@@ -611,9 +441,9 @@
                     <div class="alert alert-info info_icon" role="alert">
                         <span class="fa fa-lightbulb-o fa-2x"></span>
                         <p>
-                           If you have a lot of pages in your website, you can create a small top-menu to focus
-                           on the main six pages and make all secondary pages accessible from a footer. You can
-                           have a look at the Odoo.com website, it's a great example of this type of structure.
+                            If you have a lot of pages in your website, you can create a small top-menu to focus
+                            on the main six pages and make all secondary pages accessible from a footer. You can
+                            have a look at the Odoo.com website, it's a great example of this type of structure.
                         </p>
                     </div>
                     <p><h4>Example of Good Footer <a data-toggle="collapse"  href="#o_planner_footer"><i class="fa fa-question-circle"></i></a></h4></p>
@@ -630,12 +460,12 @@
                                     <h5><strong>3. Your footer titles</strong> and 4. Your footer links:</h5>
                                 </li>
                                 <li class="row"><span>#1</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_0" type="text" placeholder="ex: About us"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_7" type="text" placeholder="ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"/>
-                                    </div>
+                                <div class="col-md-6">
+                                    <input id="input_element_footer_0" type="text" placeholder="ex: About us"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <textarea id="input_element_footer_7" type="text" placeholder="ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"/>
+                                </div>
                                 </li>
                                 <li class="row">
                                     <span>#2</span>
@@ -686,10 +516,13 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page13" class="o_planner_page">
-                    <h1>Your Domain Name</h1>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Launch'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-rocket'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Domain Name'"/>
                     <p class="text-muted">
                         You can set Odoo on a custom domain name (e.g. yourcompany.com) for both the website
                         and your emails. Because your website address is as important to your branding as the
@@ -722,10 +555,9 @@
                         <li>Then simply <a href="mailto:info@odoo.com?subject=Website%20customer%20domain%20request" target="_blank">Contact us</a> and we'll configure your website and/or email for you.</li>
                         <li>Please note that you'll need an Odoo Standard or Business subscriptions for that</li>
                     </div>
-                </div>
-
-                <div id="planner_page14" class="o_planner_page">
-                    <h1>Ready For Launch!</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Ready For Launch!'"/>
                     <p class="text-muted">
                         Launching your website is an important step.<br/>
                         Here is a checklist of actions to help you launch a new website efficiently:
@@ -735,10 +567,10 @@
                             <div class="col-sm-1 col-md-2 icon"><span  data-icon="&#xe087;" /></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Initial Teaser</strong><br/>
-                                    Before launching to the masses, it's good practice to tease around 100 of
-                                    your contacts. Start with your friends, colleagues and family. Whether or
-                                    not they're interested in your area of business, they will be ready to help
-                                    you with feedback if you engage in a personal discussion with them.
+                                Before launching to the masses, it's good practice to tease around 100 of
+                                your contacts. Start with your friends, colleagues and family. Whether or
+                                not they're interested in your area of business, they will be ready to help
+                                you with feedback if you engage in a personal discussion with them.
                                 </p>
                                 <p>
                                     Explain to them why you launched your new website and ask them for their
@@ -755,24 +587,28 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-rocket"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>The big launch</strong><br/>
-                                    <li>Send an email to all your contacts</li>
-                                    <li>Announce it on social media (and update your profiles): Twitter,Facebook, LinkedIn, Youtube, etc.</li>
-                                    <li> Update your internal documents: footer of sales order, contracts,invoices, business cards, etc.</li>
+                                <li>Send an email to all your contacts</li>
+                                <li>Announce it on social media (and update your profiles): Twitter,Facebook, LinkedIn, Youtube, etc.</li>
+                                <li> Update your internal documents: footer of sales order, contracts,invoices, business cards, etc.</li>
                                 </p>
                             </div>
                             <div class="col-sm-1 col-md-2 icon"><span  data-icon="&#xe009;" /></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Be announced on the Odoo Twitter account</strong><br/>
-                                    We like to hear from people using Odoo to build their website. Tweet us
-                                    <a href="https://twitter.com/odoo" target="_blank">@odoo</a> a reference to your new website. We will retweet it (we have 30,000 followers) and feature it in our different communications.
+                                We like to hear from people using Odoo to build their website. Tweet us
+                                <a href="https://twitter.com/odoo" target="_blank">@odoo</a> a reference to your new website. We will retweet it (we have 30,000 followers) and feature it in our different communications.
                                 </p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </t>
+            </t>
 
-                <div id="planner_page15" class="o_planner_page">
-                    <h1>Promote</h1>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Grow'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-bar-chart'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Promote'"/>
                     <p>Once you’ve launched your website, it’s time to grow your traffic.</p>
                     <p>
                         You can do this by optimizing your referencing by search engines like Google: it's
@@ -792,8 +628,8 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-pencil"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Optimize your content</strong><br/>
-                                    Writing content that includes frequently searched-for keywords and phrases
-                                    tends to increase  traffic to your website.
+                                Writing content that includes frequently searched-for keywords and phrases
+                                tends to increase  traffic to your website.
                                 </p>
                                 <p>
                                     With Odoo, you can automatically check which keywords are ranked best for a
@@ -808,9 +644,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-tags"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Add relevant keywords</strong><br/>
-                                    Adding relevant keywords to a web page's meta data, including the title tag
-                                    and meta description, will tend to improve the relevancy of a site's search
-                                    listings, also increasing your traffic.
+                                Adding relevant keywords to a web page's meta data, including the title tag
+                                and meta description, will tend to improve the relevancy of a site's search
+                                listings, also increasing your traffic.
                                 </p>
                                 <p>
                                     For example, you'll want your company name, your country/city and a few
@@ -824,10 +660,10 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe032;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Reference your images...</strong><br/>
-                                    If you are an artist or a photographer, you can potentially bring in a lot
-                                    of  visitors by referencing your images so they are displayed in image
-                                    search engines, like Google Images. To do that, simply add an 'Alt text'
-                                    containing descriptions and keywords for relevant pictures.
+                                If you are an artist or a photographer, you can potentially bring in a lot
+                                of  visitors by referencing your images so they are displayed in image
+                                search engines, like Google Images. To do that, simply add an 'Alt text'
+                                containing descriptions and keywords for relevant pictures.
                                 </p>
                             </div>
                         </div>
@@ -835,9 +671,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-map-marker"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>... and your location too!</strong><br/>
-                                    Millions of people use Google Maps everyday. Whether you are a restaurant
-                                    or a huge business, you have no excuse not to register your location in
-                                    <a href="https://www.google.com/business/" target="_blank">Google Business</a>.
+                                Millions of people use Google Maps everyday. Whether you are a restaurant
+                                or a huge business, you have no excuse not to register your location in
+                                <a href="https://www.google.com/business/" target="_blank">Google Business</a>.
                                 </p>
                             </div>
                         </div>
@@ -845,10 +681,10 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe060;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Start a blog</strong><br/>
-                                    Google loves websites which are updated often or ones where new content is
-                                    added regularly. This is why starting a blog is an excellent way of
-                                    improving your search ranking. If you have the time and dedication to write
-                                    good articles, <a href="https://www.odoo.com/page/blog-engine" target="_blank">check out our blog application</a> to get started.
+                                Google loves websites which are updated often or ones where new content is
+                                added regularly. This is why starting a blog is an excellent way of
+                                improving your search ranking. If you have the time and dedication to write
+                                good articles, <a href="https://www.odoo.com/page/blog-engine" target="_blank">check out our blog application</a> to get started.
                                 </p>
                             </div>
                         </div>
@@ -856,11 +692,11 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-link"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Be linked by trusted websites</strong><br/>
-                                    The more sites that link to your own site, the more Google trusts your site
-                                    to be worthwhile:
-                                    <li>Configure all your social media (Twitter, Facebook, LinkedIn) so that the address of your website appears on them.</li>
-                                    <li>Alternatively, you can write a good article about your business and publish it on an article database websites (ex: squidoo.com) or send it to a press website and your local newspapers.</li>
-                                    <li>Also, don't hesitate to post on other people blogs, forums, websites, but don't go overboard and post everywhere without considering whether it's a good place for you to be.</li>
+                                The more sites that link to your own site, the more Google trusts your site
+                                to be worthwhile:
+                                <li>Configure all your social media (Twitter, Facebook, LinkedIn) so that the address of your website appears on them.</li>
+                                <li>Alternatively, you can write a good article about your business and publish it on an article database websites (ex: squidoo.com) or send it to a press website and your local newspapers.</li>
+                                <li>Also, don't hesitate to post on other people blogs, forums, websites, but don't go overboard and post everywhere without considering whether it's a good place for you to be.</li>
                                 </p>
                             </div>
                         </div>
@@ -868,10 +704,10 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-bar-chart-o"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Use Google Webmaster</strong><br/>
-                                    This tool will help you understand your search traffic and learn how users
-                                    are finding your site and make optimizations to help Google better
-                                    understand and represent your site.
-                                    <a target="_blank" href="http://www.google.com/webmasters/tools/">http://www.google.com/webmasters/tools/</a>
+                                This tool will help you understand your search traffic and learn how users
+                                are finding your site and make optimizations to help Google better
+                                understand and represent your site.
+                                <a target="_blank" href="http://www.google.com/webmasters/tools/">http://www.google.com/webmasters/tools/</a>
                                 </p>
                             </div>
                         </div>
@@ -879,8 +715,8 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-bullhorn"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>Advertise to get the first visitors</strong><br/>
-                                    If you have a small budget to allocate to advertising (around $100), you
-                                    should start a Google Adwords campaign.
+                                If you have a small budget to allocate to advertising (around $100), you
+                                should start a Google Adwords campaign.
                                 </p>
                                 <p>
                                     Start by looking how often people search phrases related to your business,
@@ -892,14 +728,14 @@
                                 <p>
                                     There are three questions you should ask before deciding whether or not to advertise on a particular keyword:
                                     <li> Is the keyword searched for in Google? If there is no search volume,
-                                        then that tells you no one is typing that phrase into Google. There is no
-                                        point in advertising on keywords no one is searching for.</li>
+                                    then that tells you no one is typing that phrase into Google. There is no
+                                    point in advertising on keywords no one is searching for.</li>
                                     <li>Is the person searching with this keyword likely to buy my product or
-                                        service? Or is the person more likely to be just carrying out research
-                                        with no intention of making a purchase? In other words, what is the
-                                        intent of the keyword? When starting out, you’ll want to advertise on
-                                        what we call “buying intent” keywords - that is, ones where the person
-                                        is clearly looking to buy.</li>
+                                    service? Or is the person more likely to be just carrying out research
+                                    with no intention of making a purchase? In other words, what is the
+                                    intent of the keyword? When starting out, you’ll want to advertise on
+                                    what we call “buying intent” keywords - that is, ones where the person
+                                    is clearly looking to buy.</li>
                                     <li>Can I afford to advertise on the keyword?</li>
                                     If you answer yes to these 3 questions, then go ahead and position your website on these keywords.
                                 </p>
@@ -910,10 +746,9 @@
                             <span>You can retrieve a 75$ coupon code to start your campaign here: <a href="http://www.google.com/ads/adwords-coupon.html" target="_blank">http://www.google.com/ads/adwords-coupon.html</a></span>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page16" class="o_planner_page">
-                    <h1>A/B Testing</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'A/B Testing'"/>
                     <p class="text-muted">
                         A/B testing is the process of testing two versions of a page to see which one performs
                         better in reaching your business objectives. For example, imagine you have an existing
@@ -930,11 +765,11 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-bullseye"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>1. Define what to test</strong><br/>
-                                    Your choice of what to test will obviously depend on your goals, but should
-                                    always be linked to one of your business objectives (don't spend energy
-                                    improving something that brings you no ROI). Then, find the best page to
-                                    test and the variation you think will bring the best results.Here are a
-                                    few examples of good testing variables:
+                                Your choice of what to test will obviously depend on your goals, but should
+                                always be linked to one of your business objectives (don't spend energy
+                                improving something that brings you no ROI). Then, find the best page to
+                                test and the variation you think will bring the best results.Here are a
+                                few examples of good testing variables:
                                 </p>
                                 <li>The call to action’s (i.e. the button’s) wording, size, color and placement,</li>
                                 <li>Headline or product description,</li>
@@ -948,9 +783,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-files-o"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>2. Create the page variation</strong><br/>
-                                    Once you're clear on the measurable objective, the page and the variable
-                                    you want to test, duplicate the page in Odoo using the <strong>'Versions'</strong>
-                                    menu and apply the modification you decided.
+                                Once you're clear on the measurable objective, the page and the variable
+                                you want to test, duplicate the page in Odoo using the <strong>'Versions'</strong>
+                                menu and apply the modification you decided.
                                 </p>
                             </div>
                         </div>
@@ -958,7 +793,7 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-bar-chart-o"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>3. Configure a Google Analytics account</strong><br/>
-                                    This is necessary in order to record the statistics of your test.
+                                This is necessary in order to record the statistics of your test.
                                 </p>
                                 <ul>
                                     <li>Before starting, <a target="_blank" href="https://www.google.com/analytics/web/provision?et=&amp;authuser=#provision/SignUp/">create a Google Analytics account</a> if you don't have one yet.</li>
@@ -975,9 +810,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe085;"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p><strong>4. Create your campaign in Google Analytics</strong><br/>
-                                    Simply follow the wizard by creating a new experiment in the <strong>Behavior >
-                                    Experiments</strong> menu of <a href="http://www.google.com/analytics/" target="_blank">Google Analytics.</a>
-                                    To learn more, take a look at their <a href="https://support.google.com/analytics/answer/1745147?hl=en&amp;ref_topic=1745207&amp;rd=1" target="_blank">online help</a>.
+                                Simply follow the wizard by creating a new experiment in the <strong>Behavior >
+                                Experiments</strong> menu of <a href="http://www.google.com/analytics/" target="_blank">Google Analytics.</a>
+                                To learn more, take a look at their <a href="https://support.google.com/analytics/answer/1745147?hl=en&amp;ref_topic=1745207&amp;rd=1" target="_blank">online help</a>.
                                 </p>
                             </div>
                         </div>
@@ -1020,10 +855,9 @@
                         <span class="fa fa-lightbulb-o fa-2x"></span>
                         <span>Try to limit yourself to 1 testing variable, otherwise you won't be able to clearly interpret the results of your modifications.</span>
                     </div>
-                </div>
-
-                <div id="planner_page17" class="o_planner_page">
-                    <h1>Translate</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Translate'"/>
                     <p class="text-muted">
                         Translating your website into other languages is the best way to broaden its audience.
                         In Odoo, you can either manually translate your pages as they are displayed, use an
@@ -1035,9 +869,9 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-language"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p> 1. Add your <strong>desired languages</strong><br/>
-                                    Use the link in the footer of your website (when logged in) to add
-                                    languages from the available list. Also, you can change the
-                                    default language in <a t-att-href="prepare_backend_url('website.action_website_configuration')">Settings > Website</a>
+                                Use the link in the footer of your website (when logged in) to add
+                                languages from the available list. Also, you can change the
+                                default language in <a t-att-href="prepare_backend_url('website.action_website_configuration')">Settings > Website</a>
                                 </p>
                             </div>
                         </div>
@@ -1045,8 +879,8 @@
                             <div class="col-sm-1 col-md-2 icon"><span class="fa fa-cubes"/></div>
                             <div class="col-sm-11 col-md-10">
                                 <p> 2. <strong>Setup Gengo</strong><br/>
-                                    <li>Install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_gengo')">Gengo module</a> in Odoo</li>
-                                    <li>Follow <a t-att-href="prepare_backend_url('base.action_res_company_form', 'form')">these instructions</a> to configure your Gengo API key</li>
+                                <li>Install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_gengo')">Gengo module</a> in Odoo</li>
+                                <li>Follow <a t-att-href="prepare_backend_url('base.action_res_company_form', 'form')">these instructions</a> to configure your Gengo API key</li>
                                 </p>
                             </div>
                         </div>
@@ -1060,8 +894,8 @@
                                         <span class="fa fa-cogs"/>
                                         <strong>Machine translation</strong><br/>Free, but quality may vary
                                     </span>
-                                 </div>
-                                 <div class="panel-body">
+                                </div>
+                                <div class="panel-body">
                                     <li>Use a free, automatic machine translation (quality will vary depending on languages)</li>
                                 </div>
                             </div>
@@ -1092,10 +926,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div id="planner_page19" class="o_planner_page">
-                    <h1>Communicate</h1>
+                </t>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Communicate'"/>
                     <p class="text-muted">
                         Your website is an important part of your online business strategy, but it shouldn't be
                         the only one. There are so many ways to communicate with your customers, visitors and
@@ -1110,7 +943,7 @@
                                 <li>They allow a detailed qualification of the visitor, which is perfect to link them later to marketing campaigns.</li>
                                 <li>You will get your leads filled up automatically in our integrated CRM application.</li>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_crm')"
-                                    class="btn odoo_purple">
+                                   class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
@@ -1122,7 +955,7 @@
                                 <li>Meet your existing customers and encourage them to 'repeat buy'.</li>
                                 <li>Discuss with propects for a face-to-face sales pitch.</li>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_event')"
-                                    class="btn odoo_purple">
+                                   class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
@@ -1135,7 +968,7 @@
                                 <li>Provide fast, professional and accurate information to your visitors and customers.</li>
                                 <li>Reduce the time and resources spent on support.</li>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_forum')"
-                                    class="btn odoo_purple">
+                                   class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
@@ -1147,30 +980,33 @@
                                 <li>Improve your conversion from visitor to customer.</li>
                                 <li>Learn what your visitors are thinking, what question they have, what problems they encounter.</li>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_livechat')"
-                                    class="btn odoo_purple">
+                                   class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
                         </div>
                         <div class="clearfix hidden-xs mb16"></div>
                     </div>
-                </div>
+                </t>
+            </t>
 
-                <div id="planner_page20" class="o_planner_page">
-                    <h1 class="text-center o_planner_trophy" data-icon="&#xe006;"/>
-                    <div class="text-center">
-                        <h1>Congratulations, you're done !</h1>
-                        <h3>We hope this planner helped you to create your website.</h3>
-                        <h4>Don't hesitate to
-                            <a href="mailto:info@odoo.com?subject=Website%20Planner%20feeedback" target="_blank">send us an email</a> to describe
-                            <br/> your experience or to suggest improvements !
-                        </h4>
-                        <p>- The Odoo Team</p>
-                        <img src="/web_planner/static/src/img/odoo_logo.png"/>
-                    </div>
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="hide_from_menu" t-value="True"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <h1 class="text-center o_planner_trophy" data-icon="&#xe006;"/>
+                <div class="text-center">
+                    <h1>Congratulations, you're done !</h1>
+                    <h3>We hope this planner helped you to create your website.</h3>
+                    <h4>Don't hesitate to
+                    <a href="mailto:info@odoo.com?subject=Website%20Planner%20feeedback" target="_blank">send us an email</a> to describe
+                    <br/> your experience or to suggest improvements !
+                    </h4>
+                    <p>- The Odoo Team</p>
+                    <img src="/web_planner/static/src/img/odoo_logo.png"/>
                 </div>
-            </div>
-        </div>
+            </t>
+        </t>
     </template>
 
     <!--Planner Data-->
@@ -1181,10 +1017,9 @@
         <field name="progress">6</field>
         <field name="planner_application">planner_website</field>
         <field name="tooltip_planner"><![CDATA[
-            Plan your website strategy, design your pages, sell your products and grow your online business!
-            ]]>
+        Plan your website strategy, design your pages, sell your products and grow your online business!
+        ]]>
         </field>
     </record>
 
 </odoo>
-

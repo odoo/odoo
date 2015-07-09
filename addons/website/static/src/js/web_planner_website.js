@@ -8,7 +8,7 @@ var website = require('website.website');
 
 var PlannerDialog = planner.PlannerDialog;
 
-planner.WebistePlannerLauncher = Widget.extend({
+planner.WebsitePlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
     events: {
         'click .o_planner_progress': 'toggle_dialog'
@@ -40,24 +40,14 @@ planner.WebistePlannerLauncher = Widget.extend({
         this.$(".progress-bar").css('width', percent+"%");
     },
     toggle_dialog: function() {
-        this.dialog.$('#PlannerModal').modal('toggle');
+        this.dialog.$el.toggle();
     },
-});
-
-PlannerDialog.include({
-    prepare_planner_event: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        self.$el.on("click", ".o_planner a.o_planner_hide", function(ev) {
-            self.$('#PlannerModal').modal('hide');
-        });
-    }
 });
 
 website.ready().done(function() {
     if($('#oe_systray').length) {
         website.add_template_file('/web_planner/static/src/xml/web_planner.xml').then(function() {
-            new planner.WebistePlannerLauncher().prependTo($('#oe_systray'));
+            new planner.WebsitePlannerLauncher().prependTo($('#oe_systray'));
         });
     }
 });
