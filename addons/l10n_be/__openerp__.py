@@ -61,9 +61,6 @@ Wizards provided by this module:
         '../account/demo/account_invoice_demo.yml',
     ],
     'test': [
-        #'../account/test/account_bank_statement.yml',
-        #'../account/test/account_cash_statement.yml',
-        '../account/test/account_invoice_state.yml',
     ],
     'installable': True,
     'website': 'https://www.odoo.com/page/accounting',
