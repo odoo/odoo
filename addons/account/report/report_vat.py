@@ -41,10 +41,12 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                 }
             }
         self.period_ids = []
+        self.fiscalyear_id = False
         period_obj = self.pool.get('account.period')
         self.display_detail = data['form']['display_detail']
         res['periods'] = ''
         res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
+        self.fiscalyear_id = res['fiscalyear']
 
         if data['form'].get('period_from', False) and data['form'].get('period_to', False):
             self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
@@ -76,13 +78,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
 
     def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
         period_list = self.period_ids
+        fiscalyear_id = self.fiscalyear_id
         res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
-            self.cr.execute ("select id from account_fiscalyear")
-            fy = self.cr.fetchall()
-            self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
+            if not fiscalyear_id:
+                self.cr.execute("select id from account_fiscalyear where company_id = %s", (company_id,))
+                result = self.cr.fetchall()
+                fy = [x[0] for x in result]
+            else:
+                fy = [fiscalyear_id]
+            self.cr.execute("select id from account_period where fiscalyear_id = ANY(%s)", (fy,))
             periods = self.cr.fetchall()
             for p in periods:
                 period_list.append(p[0])
@@ -152,15 +159,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         account.name AS name,  \
                         account.code AS code \
                     FROM account_move_line AS line, \
-                        account_account AS account \
+                        account_account AS account, \
+                        account_move as move \
                     WHERE line.state <> %s \
+                        AND line.move_id = move.id \
                         AND line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND line.period_id IN %s\
                         AND account.active \
+                        AND move.state <> %s \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, periods_ids,))
+                        company_id, periods_ids, 'draft',))
         res = self.cr.dictfetchall()
 
         i = 0

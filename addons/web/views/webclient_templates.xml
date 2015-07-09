@@ -199,6 +199,7 @@
                 <t t-set="head">
                     <t t-call-assets="web.assets_common"/>
                     <t t-call-assets="web.assets_backend"/>
+                    &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
                     <script type="text/javascript">
                         $(function() {
                             var s = new openerp.init();

@@ -146,7 +146,7 @@ function openerp_pos_db(instance, module){
             for (var i = 0; i < packagings.length; i++) {
                 str += '|' + packagings[i].ean;
             }
-            str  = product.id + ':' + str.replace(':','') + '\n';
+            str  = product.id + ':' + str.replace(/:/g,'') + '\n';
             return str;
         },
         add_products: function(products){
@@ -362,7 +362,7 @@ function openerp_pos_db(instance, module){
         search_product_in_category: function(category_id, query){
             try {
                 query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
-                query = query.replace(' ','.+');
+                query = query.replace(/ /g,'.+');
                 var re = RegExp("([0-9]+):.*?"+query,"gi");
             }catch(e){
                 return [];

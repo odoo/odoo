@@ -178,28 +178,34 @@ class Scale(Thread):
                 if not self.device:
                     time.sleep(5)
 
-s = Scale()
-
-hw_proxy.drivers['scale'] = s
+scale_thread = None
+if serial:
+    scale_thread = Scale()
+    hw_proxy.drivers['scale'] = scale_thread
 
 class ScaleDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scale_read/', type='json', auth='none', cors='*')
     def scale_read(self):
-        return {'weight':s.get_weight(), 'unit':'kg', 'info':s.get_weight_info()}
+        if scale_thread:
+            return {'weight': scale_thread.get_weight(), 'unit':'kg', 'info': scale_thread.get_weight_info()}
+        return None
 
     @http.route('/hw_proxy/scale_zero/', type='json', auth='none', cors='*')
     def scale_zero(self):
-        s.set_zero()
+        if scale_thread:
+            scale_thread.set_zero()
         return True
 
     @http.route('/hw_proxy/scale_tare/', type='json', auth='none', cors='*')
     def scale_tare(self):
-        s.set_tare()
+        if scale_thread:
+            scale_thread.set_tare()
         return True
 
     @http.route('/hw_proxy/scale_clear_tare/', type='json', auth='none', cors='*')
     def scale_clear_tare(self):
-        s.clear_tare()
+        if scale_thread:
+            scale_thread.clear_tare()
         return True
         
         

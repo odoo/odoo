@@ -45,6 +45,7 @@ class WebsiteEmailDesigner(http.Controller):
             'email_from_field': email_from_field,
             'subject_field': subject_field,
             'body_field': body_field,
+            'return_action': kw.get('return_action', ''),
         }
 
         if getattr(record, body_field):

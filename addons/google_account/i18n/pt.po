@@ -1,111 +1,50 @@
-# Portuguese translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * google_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Portuguese <pt@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-27 12:42+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-8/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-08-15 07:09+0000\n"
-"X-Generator: Launchpad (build 17156)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: google_base_account
-#: field:res.users,gmail_user:0
-msgid "Username"
-msgstr "Nome de utilizador"
+#. module: google_account
+#: field:google.service,create_uid:0
+msgid "Created by"
+msgstr "Criada por"
 
-#. module: google_base_account
-#: model:ir.actions.act_window,name:google_base_account.act_google_login_form
-msgid "Google Login"
-msgstr "Login Google"
+#. module: google_account
+#: field:google.service,create_date:0
+msgid "Created on"
+msgstr "Fundado em"
 
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:29
+#. module: google_account
+#: field:google.service,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: google_account
+#: field:google.service,write_uid:0
+msgid "Last Updated by"
+msgstr "Últimamente Actualizado por"
+
+#. module: google_account
+#: field:google.service,write_date:0
+msgid "Last Updated on"
+msgstr "Última Actualização em"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:168
 #, python-format
-msgid "Google Contacts Import Error!"
-msgstr "Erro na importação dos contatos Google!"
-
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_res_users
-msgid "Users"
-msgstr "Utilizadores"
-
-#. module: google_base_account
-#: view:google.login:0
-msgid "or"
-msgstr "ou"
-
-#. module: google_base_account
-#: view:google.login:0
-msgid "Google login"
-msgstr "Login Google"
-
-#. module: google_base_account
-#: field:google.login,password:0
-msgid "Google Password"
-msgstr "Password Google"
-
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:77
-#, python-format
-msgid "Error!"
-msgstr "Erro!"
-
-#. module: google_base_account
-#: view:res.users:0
-msgid "Google Account"
-msgstr "Conta Google"
-
-#. module: google_base_account
-#: view:res.users:0
-msgid "Synchronization"
-msgstr "Sincronização"
-
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:77
-#, python-format
-msgid "Authentication failed. Check the user and password."
-msgstr "A autenticação falhou. Verifique o nome de utilizador e a senha."
-
-#. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:29
-#, python-format
-msgid ""
-"Please install gdata-python-client from http://code.google.com/p/gdata-"
-"python-client/downloads/list"
+msgid "Something went wrong with your request to google"
 msgstr ""
-"Por Favor instale gdata-python-client de http://code.google.com/p/gdata-"
-"python-client/downloads/list"
-
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_google_login
-msgid "Google Contact"
-msgstr "Contato Google"
-
-#. module: google_base_account
-#: view:google.login:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: google_base_account
-#: field:google.login,user:0
-msgid "Google Username"
-msgstr "Nome de Utilizador Google"
-
-#. module: google_base_account
-#: field:res.users,gmail_password:0
-msgid "Password"
-msgstr "Password"
-
-#. module: google_base_account
-#: view:google.login:0
-msgid "_Login"
-msgstr "_Login"

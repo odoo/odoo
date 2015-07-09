@@ -2,7 +2,8 @@
     'use strict';
 
     var _t = openerp._t;
-
+    var website = openerp.website;
+    website.ready().done(function() {
     openerp.Tour.register({
         id: 'shop',
         name: _t("Create a product"),
@@ -110,6 +111,7 @@
                 popover:   { next: _t("Close Tutorial") },
             },
         ]
+    });
     });
 
 }());

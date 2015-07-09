@@ -243,6 +243,8 @@ class BlogPost(osv.Model):
         return post_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if 'content' in vals:
             vals['content'] = self._postproces_content(cr, uid, ids[0], vals['content'], context=context)
         result = super(BlogPost, self).write(cr, uid, ids, vals, context)

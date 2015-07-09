@@ -28,6 +28,7 @@ class Website(Website):
     @route()
     def customize_template_get(self, xml_id, full=False):
         res = super(Website, self).customize_template_get(xml_id, full=full)
-        if full and request.session.get('report_view_ids'):
-            res += request.session['report_view_ids']
+        if full:
+            for r in request.session.get('report_view_ids', []):
+                res += super(Website, self).customize_template_get(r.get('xml_id'), full=full)
         return res

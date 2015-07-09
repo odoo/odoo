@@ -93,8 +93,15 @@ class stock_change_product_qty(osv.osv_memory):
             ctx = context.copy()
             ctx['location'] = data.location_id.id
             ctx['lot_id'] = data.lot_id.id
+            if data.product_id.id and data.lot_id.id:
+                filter = 'none'
+            elif data.product_id.id:
+                filter = 'product'
+            else:
+                filter = 'none'
             inventory_id = inventory_obj.create(cr, uid, {
                 'name': _('INV: %s') % tools.ustr(data.product_id.name),
+                'filter': filter,
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
@@ -112,5 +119,13 @@ class stock_change_product_qty(osv.osv_memory):
             inventory_line_obj.create(cr , uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
+
+    def onchange_location_id(self, cr, uid, ids, location_id, product_id, context=None):
+        if location_id:
+            qty_wh = 0.0
+            qty = self.pool.get('product.product')._product_available(cr, uid, [product_id], context=dict(context or {}, location=location_id))
+            if product_id in qty:
+                qty_wh = qty[product_id]['qty_available']
+            return { 'value': { 'new_quantity': qty_wh } }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

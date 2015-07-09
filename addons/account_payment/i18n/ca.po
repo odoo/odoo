@@ -1,21 +1,22 @@
-# Catalan translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Catalan (http://www.transifex.com/projects/p/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:25+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,8 +24,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
@@ -130,10 +130,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Seleccioneu una opció per l'ordre de pagament: 'Data fixa' per una data que "
-"heu especificat. 'Directament' per l'execució directa. 'Data venciment' per "
-"la data programada d'execució."
+msgstr "Seleccioneu una opció per l'ordre de pagament: 'Data fixa' per una data que heu especificat. 'Directament' per l'execució directa. 'Data venciment' per la data programada d'execució."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -151,8 +148,7 @@ msgid "Communication Type"
 msgstr "Tipus de comunicació"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Companyia"
@@ -186,26 +182,23 @@ msgstr "Creat"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat per"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat el"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Data de creació"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -251,8 +244,7 @@ msgid "Draft"
 msgstr "Esborrany"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Data venciment"
 
@@ -282,7 +274,7 @@ msgstr "Informació de l'assentament"
 #: code:addons/account_payment/wizard/account_payment_order.py:113
 #, python-format
 msgid "Entry Lines"
-msgstr ""
+msgstr "Apunts"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -294,12 +286,12 @@ msgstr "Apunt"
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Data d'execució"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -326,27 +318,23 @@ msgstr "Informació general"
 #: view:payment.mode:account_payment.view_payment_mode_search
 #: view:payment.order:account_payment.view_payment_order_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupa per"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_payment
 #: help:payment.line,date:0
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Si no s'indica data de pagament, el banc processarà aquesta línia de "
-"pagament directament"
+msgstr "Si no s'indica data de pagament, el banc processarà aquesta línia de pagament directament"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
@@ -387,7 +375,7 @@ msgstr "Ref. factura"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: account_payment
 #: view:payment.mode:account_payment.view_payment_mode_search
@@ -403,20 +391,16 @@ msgstr "Apunts comptables"
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
 msgstr ""
 
@@ -459,8 +443,7 @@ msgid "Owner Account"
 msgstr "Compte propietari"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "Empresa"
@@ -583,12 +566,12 @@ msgstr "Referència"
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Data prevista"
 
 #. module: account_payment
 #: view:payment.order.create:account_payment.view_create_payment_order
@@ -609,8 +592,7 @@ msgstr "Busca línies de pagament"
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Seleccioneu una data si heu seleccionat que la data preferida sigui fixa."
+msgstr "Seleccioneu una data si heu seleccionat que la data preferida sigui fixa."
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -626,7 +608,7 @@ msgstr "Canvia a esborrany"
 #: view:payment.order:account_payment.view_payment_order_search
 #: field:payment.order,state:0
 msgid "Status"
-msgstr ""
+msgstr "Estat"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -659,8 +641,7 @@ msgstr ""
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"﻿Aquesta línia d'entrada s'atribuirà per la informació del client que ordena."
+msgstr "﻿Aquesta línia d'entrada s'atribuirà per la informació del client que ordena."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -694,9 +675,7 @@ msgstr ""
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"S'utilitza com a missatge entre el client i la companyia actual. Què voleu "
-"dir al receptor sobre aquesta ordre?"
+msgstr "S'utilitza com a missatge entre el client i la companyia actual. Què voleu dir al receptor sobre aquesta ordre?"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder

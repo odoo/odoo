@@ -20,6 +20,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="mail.view_document_file_kanban"/>
             <field name="domain">[('res_model','=','hr.applicant')]</field>
+            <field name="context" eval="{'default_res_model': 'hr.applicant'}"/>
             <field name="help" type="html">
             <p>
              Search through resumes and motivation letters.

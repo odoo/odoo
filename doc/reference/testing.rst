@@ -1,4 +1,7 @@
+:banner: banners/testing_modules.jpg
+
 .. _reference/testing:
+
 
 ===============
 Testing Modules

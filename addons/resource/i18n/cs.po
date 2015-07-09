@@ -1,27 +1,28 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * resource
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:17+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/resource.py:685
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
@@ -33,8 +34,7 @@ msgstr "(dovolená)"
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Define working hours and time table that could be scheduled "
-"to your project members\n"
+"                Define working hours and time table that could be scheduled to your project members\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -75,7 +75,7 @@ msgstr "Chyba nastavení!"
 #: field:resource.calendar.leaves,create_uid:0
 #: field:resource.resource,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Vytvořil(a)"
 
 #. module: resource
 #: field:resource.calendar,create_date:0
@@ -83,7 +83,7 @@ msgstr ""
 #: field:resource.calendar.leaves,create_date:0
 #: field:resource.resource,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Vytvořeno"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -98,7 +98,7 @@ msgstr "Určit plánování zdroje"
 #. module: resource
 #: view:resource.calendar.leaves:resource.resource_calendar_leave_form
 msgid "Duration"
-msgstr ""
+msgstr "Trvání"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
@@ -113,8 +113,7 @@ msgstr "Datum ukončení"
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
-"Chyba! počáteční datum uvolnění musí být menší než konečné datum uvolnění"
+msgstr "Chyba! počáteční datum uvolnění musí být menší než konečné datum uvolnění"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -125,12 +124,12 @@ msgstr "Pátek"
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
 #: view:resource.resource:resource.view_resource_resource_search
 msgid "Group By"
-msgstr ""
+msgstr "Seskupit podle"
 
 #. module: resource
 #: view:resource.calendar.attendance:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr ""
+msgstr "Hodin"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -138,30 +137,24 @@ msgid "Human"
 msgstr "Člověk"
 
 #. module: resource
-#: field:resource.calendar,id:0
-#: field:resource.calendar.attendance,id:0
-#: field:resource.calendar.leaves,id:0
-#: field:resource.resource,id:0
+#: field:resource.calendar,id:0 field:resource.calendar.attendance,id:0
+#: field:resource.calendar.leaves,id:0 field:resource.resource,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr ""
-"Pokud je prázdné, jedná se o obecnou dovolenou společnosti. Pokud je zdroj "
-"nastaven, dovolená/uvolnění je pouze pro tento zdroj"
+msgstr "Pokud je prázdné, jedná se o obecnou dovolenou společnosti. Pokud je zdroj nastaven, dovolená/uvolnění je pouze pro tento zdroj"
 
 #. module: resource
 #: help:resource.resource,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam "
-"zdroje bez jeho odstranění."
+msgstr "Pokud je pole aktivní nastaveno na Nepravda, umožní vám to skrýt záznam zdroje bez jeho odstranění."
 
 #. module: resource
 #: view:resource.resource:resource.view_resource_resource_search
@@ -174,7 +167,7 @@ msgstr "Neaktivní"
 #: field:resource.calendar.leaves,write_uid:0
 #: field:resource.resource,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Naposled upraveno"
 
 #. module: resource
 #: field:resource.calendar,write_date:0
@@ -182,7 +175,7 @@ msgstr ""
 #: field:resource.calendar.leaves,write_date:0
 #: field:resource.resource,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Naposled upraveno"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -199,14 +192,13 @@ msgstr ""
 #. module: resource
 #: field:resource.calendar,leave_ids:0
 msgid "Leaves"
-msgstr ""
+msgstr "Uvolnění"
 
 #. module: resource
 #: code:addons/resource/resource.py:773
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
-msgstr ""
-"Ujistěte se, že pracovní doba byla nastavena se správnými dny v týdnu!"
+msgstr "Ujistěte se, že pracovní doba byla nastavena se správnými dny v týdnu!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -219,10 +211,8 @@ msgid "Monday"
 msgstr "Pondělí"
 
 #. module: resource
-#: field:resource.calendar,name:0
-#: field:resource.calendar.attendance,name:0
-#: field:resource.calendar.leaves,name:0
-#: field:resource.resource,name:0
+#: field:resource.calendar,name:0 field:resource.calendar.attendance,name:0
+#: field:resource.calendar.leaves,name:0 field:resource.resource,name:0
 msgid "Name"
 msgstr "Jméno"
 
@@ -292,10 +282,7 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr ""
-"Zdroje umožňují vytvořit a spravovat zdroje, které by měly být zapojené v "
-"určitých fázích projektu. Můžete také nastavit jejich úroveň účinnosti a "
-"základní zatížení na jejich týdeních pracovních hodinách."
+msgstr "Zdroje umožňují vytvořit a spravovat zdroje, které by měly být zapojené v určitých fázích projektu. Můžete také nastavit jejich úroveň účinnosti a základní zatížení na jejich týdeních pracovních hodinách."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -330,7 +317,7 @@ msgstr ""
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: resource
 #: view:resource.calendar.leaves:resource.view_resource_calendar_leaves_search
@@ -347,8 +334,8 @@ msgstr "Neděle"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of"
+" 200%, then his load will only be 50%."
 msgstr ""
 
 #. module: resource

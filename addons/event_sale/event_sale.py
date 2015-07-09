@@ -105,6 +105,8 @@ class sale_order_line(osv.osv):
         context = dict(context or {})
         registration_obj = self.pool.get('event.registration')
         for order_line in self.browse(cr, uid, ids, context=context):
+            if order_line.state == 'cancel':
+                continue
             if order_line.event_id:
                 dic = {
                     'name': order_line.order_id.partner_invoice_id.name,

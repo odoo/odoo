@@ -1,21 +1,22 @@
-# Polish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_expense
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-20 14:52+0000\n"
-"Last-Translator: Tobiasz Rozum (OpenGLOBE.pl) <tobiasz.rozum@openglobe.pl>\n"
-"Language-Team: Polish <pl@li.org>\n"
+"PO-Revision-Date: 2015-05-29 12:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:47+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -53,8 +54,7 @@ msgid ""
 "                Click to register new expenses. \n"
 "              </p><p>\n"
 "                Odoo will ensure the whole process is followed; the expense\n"
-"                sheet is validated by manager(s), the employee is "
-"reimbursed\n"
+"                sheet is validated by manager(s), the employee is reimbursed\n"
 "                from his expenses, some expenses must be re-invoiced to the\n"
 "                customers.\n"
 "              </p>\n"
@@ -163,14 +163,12 @@ msgid "Create Month"
 msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_uid:0
-#: field:hr.expense.line,create_uid:0
+#: field:hr.expense.expense,create_uid:0 field:hr.expense.line,create_uid:0
 msgid "Created by"
 msgstr "Utworzono przez"
 
 #. module: hr_expense
-#: field:hr.expense.expense,create_date:0
-#: field:hr.expense.line,create_date:0
+#: field:hr.expense.expense,create_date:0 field:hr.expense.line,create_date:0
 msgid "Created on"
 msgstr "Data utworzenia"
 
@@ -187,8 +185,7 @@ msgid "Currency"
 msgstr "Waluta"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date:0
-#: field:hr.expense.line,date_value:0
+#: field:hr.expense.expense,date:0 field:hr.expense.line,date_value:0
 #: view:website:hr_expense.report_expense
 msgid "Date"
 msgstr "Data"
@@ -203,18 +200,14 @@ msgstr "Data "
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr ""
-"Data akceptacji arkusza wydatków. To pole jest wypełniane po naciśnięciu "
-"przycisku Akceptuj."
+msgstr "Data akceptacji arkusza wydatków. To pole jest wypełniane po naciśnięciu przycisku Akceptuj."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
 msgid ""
 "Date of the confirmation of the sheet expense. It's filled when the button "
 "Confirm is pressed."
-msgstr ""
-"Data potwierdzenia karty wydatków. Jest wypełniana po naciśnięciu przycisku "
-"Potwierdź."
+msgstr "Data potwierdzenia karty wydatków. Jest wypełniana po naciśnięciu przycisku Potwierdź."
 
 #. module: hr_expense
 #: help:hr.expense.expense,message_last_post:0
@@ -234,12 +227,7 @@ msgid ""
 "rate, set a cost and a unit of measure on the product. If you reimburse "
 "based on real costs, set the cost at 0.00. The user will set the real price "
 "when recording his expense sheet."
-msgstr ""
-"Definiuj jeden produkt dla każdego typu wydatku dozwolonego dla pracowników "
-"(użycie samochodu, hotel, dieta, itp.). Jeśli refundujesz pracownikom "
-"wydatki według stałych stawek, to ustaw koszt i jednostkę miary w produkcie. "
-"Jeśli refundujesz rzeczywiste koszty, to ustaw koszt na 0,00. Użytkownik "
-"wprowadzi rzeczywiste ceny przy wypełnianiu arkusza wydatków."
+msgstr "Definiuj jeden produkt dla każdego typu wydatku dozwolonego dla pracowników (użycie samochodu, hotel, dieta, itp.). Jeśli refundujesz pracownikom wydatki według stałych stawek, to ustaw koszt i jednostkę miary w produkcie. Jeśli refundujesz rzeczywiste koszty, to ustaw koszt na 0,00. Użytkownik wprowadzi rzeczywiste ceny przy wypełnianiu arkusza wydatków."
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_confirm:0
@@ -261,8 +249,7 @@ msgstr "Dział"
 
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
-#: field:hr.expense.expense,name:0
-#: field:hr.expense.line,description:0
+#: field:hr.expense.expense,name:0 field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Opis"
 
@@ -424,8 +411,7 @@ msgid "Followers"
 msgstr "Obserwatorzy"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0
-#: field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Wymuś dziennik"
 
@@ -465,10 +451,7 @@ msgstr "Wydatki pracowników"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie "
-"jest bezpośrednio w formacie html, aby można je było stosować w widokach "
-"kanban."
+msgstr "Zawiera podsumowanie wypowiedzi (liczbę wiadomości, ...). To podsumowanie jest bezpośrednio w formacie html, aby można je było stosować w widokach kanban."
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.hotel_rent_product_template
@@ -476,8 +459,7 @@ msgid "Hotel Accommodation"
 msgstr "Nocleg"
 
 #. module: hr_expense
-#: field:hr.expense.expense,id:0
-#: field:hr.expense.line,id:0
+#: field:hr.expense.expense,id:0 field:hr.expense.line,id:0
 #: field:hr.expense.report,id:0
 msgid "ID"
 msgstr "ID"
@@ -503,14 +485,12 @@ msgid "Last Message Date"
 msgstr "Data ostatniej wiadomości"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_uid:0
-#: field:hr.expense.line,write_uid:0
+#: field:hr.expense.expense,write_uid:0 field:hr.expense.line,write_uid:0
 msgid "Last Updated by"
 msgstr "Ostatnio modyfikowano przez"
 
 #. module: hr_expense
-#: field:hr.expense.expense,write_date:0
-#: field:hr.expense.line,write_date:0
+#: field:hr.expense.expense,write_date:0 field:hr.expense.line,write_date:0
 msgid "Last Updated on"
 msgstr "Data ostatniej modyfikacji"
 
@@ -556,9 +536,7 @@ msgstr "Nowy Wydatek"
 msgid ""
 "No expense journal found. Please make sure you have a journal with type "
 "'purchase' configured."
-msgstr ""
-"Nie znaleziono dziennika wydatków. Prosimy upewnij się, że masz "
-"skonfigurowany dziennik o typie 'zakupy'."
+msgstr "Nie znaleziono dziennika wydatków. Prosimy upewnij się, że masz skonfigurowany dziennik o typie 'zakupy'."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:344
@@ -566,9 +544,7 @@ msgstr ""
 msgid ""
 "No purchase account found for the product %s (or for his category), please "
 "configure one."
-msgstr ""
-"Nie znaleziono konta zakupów dla produktu %s (lub dla jego kategorii), "
-"prosimy skonfuguruj konto."
+msgstr "Nie znaleziono konta zakupów dla produktu %s (lub dla jego kategorii), prosimy skonfuguruj konto."
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -596,9 +572,7 @@ msgstr "Zapłacono"
 msgid ""
 "Please configure Default Expense account for Product purchase: "
 "`property_account_expense_categ`."
-msgstr ""
-"Prosimy skonfiguruj domyślne konto wydatków dla zakupu produktów: "
-"'property_account_expense_categ'."
+msgstr "Prosimy skonfiguruj domyślne konto wydatków dla zakupu produktów: 'property_account_expense_categ'."
 
 #. module: hr_expense
 #: view:website:hr_expense.report_expense
@@ -615,7 +589,7 @@ msgstr "Produkt"
 #. module: hr_expense
 #: field:hr.expense.report,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Ilość produktu"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
@@ -668,11 +642,9 @@ msgstr "Przgląd produktów wydatkowych"
 #: code:addons/hr_expense/hr_expense.py:446
 #, python-format
 msgid ""
-"Selected Unit of Measure does not belong to the same category as the product "
-"Unit of Measure"
-msgstr ""
-"Wybrana jednostka miary nie należy do tej samej kategorii co jednostka miary "
-"produktu."
+"Selected Unit of Measure does not belong to the same category as the product"
+" Unit of Measure"
+msgstr "Wybrana jednostka miary nie należy do tej samej kategorii co jednostka miary produktu."
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -742,8 +714,7 @@ msgstr "Do zapłacenia"
 #. module: hr_expense
 #: view:hr.expense.expense:hr_expense.view_expenses_form
 #: view:hr.expense.line:hr_expense.view_expenses_line_tree
-#: field:hr.expense.line,total_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,total_amount:0 view:website:hr_expense.report_expense
 msgid "Total"
 msgstr "Suma"
 
@@ -759,8 +730,7 @@ msgid "Total Price"
 msgstr "Suma"
 
 #. module: hr_expense
-#: field:hr.expense.line,unit_amount:0
-#: view:website:hr_expense.report_expense
+#: field:hr.expense.line,unit_amount:0 view:website:hr_expense.report_expense
 msgid "Unit Price"
 msgstr "Cena jedn."
 
@@ -791,8 +761,7 @@ msgid "Validation By"
 msgstr "Zatwierdzone przez"
 
 #. module: hr_expense
-#: field:hr.expense.expense,date_valid:0
-#: field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Data zatwierdzenia"
 
@@ -848,11 +817,9 @@ msgstr "Historia rozmowy"
 #: help:hr.expense.expense,state:0
 msgid ""
 "When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
+" It is confirmed by the user and request is sent to admin, the status is 'Waiting Confirmation'.            \n"
 "If the admin accepts it, the status is 'Accepted'.\n"
-" If the accounting entries are made for the expense request, the status is "
-"'Waiting Payment'."
+" If the accounting entries are made for the expense request, the status is 'Waiting Payment'."
 msgstr ""
 
 #. module: hr_expense

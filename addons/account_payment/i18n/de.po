@@ -1,22 +1,22 @@
-# German translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-09-09 08:32+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/projects/p/odoo-8/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:25+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -24,21 +24,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Klicken Sie zur Erstellung einer Zahlungsanweisung.\n"
-"              </p><p>\n"
-"                 Eine Zahlungsanweisung ist eine Zahlungsaufforderung aus "
-"Ihrem Unternehmen zur Zahlung \n"
-"                 einer Lieferantenrechnung oder einer Rückerstattung bzw. "
-"Kundengutschrift.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klicken Sie zur Erstellung einer Zahlungsanweisung.\n              </p><p>\n                 Eine Zahlungsanweisung ist eine Zahlungsaufforderung aus Ihrem Unternehmen zur Zahlung \n                 einer Lieferantenrechnung oder einer Rückerstattung bzw. Kundengutschrift.\n              </p>\n            "
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -140,11 +130,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Wähle eine Option bei der Erstellung der Zahlungsanweisung: 'Fester Termin' "
-"steht für ein von Ihnen vorgegebenes Datum. 'Direkt' steht für eine "
-"sofortige Ausführung. 'Fälligkeitsdatum' steht für das fristgerechte, "
-"terminierte Begleichen (Wertstellung)."
+msgstr "Wähle eine Option bei der Erstellung der Zahlungsanweisung: 'Fester Termin' steht für ein von Ihnen vorgegebenes Datum. 'Direkt' steht für eine sofortige Ausführung. 'Fälligkeitsdatum' steht für das fristgerechte, terminierte Begleichen (Wertstellung)."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -162,8 +148,7 @@ msgid "Communication Type"
 msgstr "Kommunikationsart"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Unternehmen"
@@ -197,18 +182,15 @@ msgstr "Erzeugt"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
 msgstr "Erstellt am"
@@ -262,8 +244,7 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Fälligkeitsdatum"
 
@@ -341,10 +322,8 @@ msgstr "Gruppierung"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
@@ -355,8 +334,7 @@ msgstr "ID"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Wenn kein Zahlungsdatum vorgegeben ist, wird die Bank sofort überweisen."
+msgstr "Wenn kein Zahlungsdatum vorgegeben ist, wird die Bank sofort überweisen."
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
@@ -413,20 +391,16 @@ msgstr "Journaleinträge"
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
@@ -469,8 +443,7 @@ msgid "Owner Account"
 msgstr "Inhaber des Bankkontos"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "Partner"
@@ -668,8 +641,7 @@ msgstr "Es gibt keinen Partner als Zahlungsempfänger für diese Position."
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"Die Buchungszeile bezieht sich auf die Informationen des Auftraggebers."
+msgstr "Die Buchungszeile bezieht sich auf die Informationen des Auftraggebers."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -703,9 +675,7 @@ msgstr "Verwendetes Konto:"
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Wird als Mitteilungstext zwischen beauftragendem Kunden und der derzeitigen "
-"Firma genutzt. Was sollen Sie dem Empfänger über diesen Auftrag mitteilen?"
+msgstr "Wird als Mitteilungstext zwischen beauftragendem Kunden und der derzeitigen Firma genutzt. Was sollen Sie dem Empfänger über diesen Auftrag mitteilen?"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -718,11 +688,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
-"Wenn eine Zahlungsanweisung erstellt wird, ist der Status 'Entwurf'.\n"
-" Nach Prüfung und Bestätigung der Bankdaten wechselt der Status auf "
-"'Bestätigt'.\n"
-" Nach Zahlung wechselt der Status schließlich auf 'Erledigt'"
+msgstr "Wenn eine Zahlungsanweisung erstellt wird, ist der Status 'Entwurf'.\n Nach Prüfung und Bestätigung der Bankdaten wechselt der Status auf 'Bestätigt'.\n Nach Zahlung wechselt der Status schließlich auf 'Erledigt'"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -735,10 +701,7 @@ msgstr "Ja"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Sie können keine Rechnung stornieren, die Sie bereits in eine "
-"Zahlungsanweisung übernommen haben. Entfernen Sie die Rechnung vom "
-"Zahlungsauftrag: %s ."
+msgstr "Sie können keine Rechnung stornieren, die Sie bereits in eine Zahlungsanweisung übernommen haben. Entfernen Sie die Rechnung vom Zahlungsauftrag: %s ."
 
 #. module: account_payment
 #: field:payment.line,name:0

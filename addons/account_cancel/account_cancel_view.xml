@@ -39,6 +39,9 @@
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
+                <field name="line_ids" position="attributes">
+                    <attribute name="options">{'reload_on_button': true}</attribute>
+                </field>
                 <xpath expr="//field[@name='bank_account_id']" position="after">
                     <button name="cancel" attrs="{'invisible': [('journal_entry_id', '=', False)]}" string="Cancel" type="object" icon="gtk-undo"/>
                 </xpath>

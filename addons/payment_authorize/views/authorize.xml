@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="authorize_acquirer_button">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+                <input type='hidden' name='x_login' t-att-value='tx_values["x_login"]'/>
+                <input type='hidden' name='x_fp_hash' t-att-value='tx_values["x_fp_hash"]'/>
+                <input type='hidden' name='x_amount' t-att-value='tx_values["x_amount"] or "0.0"'/>
+                <input type='hidden' name='x_show_form' t-att-value="tx_values['x_show_form']"/>
+                <input type='hidden' name='x_type' t-att-value="tx_values['x_type']"/>
+                <input type='hidden' name='x_method' t-att-value="tx_values['x_method']"/>
+                <input type='hidden' name='x_fp_sequence' t-att-value='tx_values["x_fp_sequence"]'/>
+                <input type='hidden' name='x_version' t-att-value="tx_values['x_version']"/>
+                <input type="hidden" name="x_relay_response" t-att-value="tx_values['x_relay_response']"/>
+                <input type="hidden" name="x_relay_url" t-att-value="tx_values['x_relay_url']"/>
+                <input type='hidden' name="x_fp_timestamp" t-att-value="tx_values['x_fp_timestamp']"/>
+                <input type="hidden" name='return_url' t-att-value="tx_values['returndata']"/>
+                <input type="hidden" name='x_cancel_url' t-att-value="tx_values['x_cancel_url']"/>
+                <!--Order Information -->
+                <input type='hidden' name='x_invoice_num' t-att-value='tx_values["reference"]'/>
+                <input type='hidden' name='x_currency_code' t-att-value='tx_values["x_currency_code"]'/>
+                <!-- Billing Information-->
+                <input type='hidden' name='x_first_name' t-att-value="tx_values['first_name']"/>
+                <input type='hidden' name='x_last_name' t-att-value="tx_values['last_name']"/>
+                <input type='hidden' name='x_address' t-att-value="tx_values['address']"/>
+                <input type='hidden' name='x_city' t-att-value="tx_values['city']"/>
+                <input type='hidden' name='x_zip' t-att-value="tx_values['zip']"/>
+                <input type='hidden' name='x_country' t-att-value="tx_values['country']"/>
+                <input type='hidden' name='x_phone' t-att-value='tx_values["phone"]'/>
+                <input type='hidden' name='x_email' t-att-value="tx_values['email']"/>
+                <input type='hidden' name='x_state' t-att-value="tx_values['state']"/>
+                <!-- Submit-->
+                <button type="submit" width="100px" t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_authorize/static/src/img/authorize_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

@@ -559,7 +559,7 @@ class hr_employee(osv.osv):
     def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
         Holidays = self.pool['hr.holidays']
         return {
-            employee_id: Holidays.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context) 
+            employee_id: Holidays.search_count(cr,uid, [('employee_id', '=', employee_id), ('type', '=', 'remove')], context=context)
             for employee_id in ids
         }
 

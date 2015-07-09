@@ -42,7 +42,7 @@ signature is merged.
 
 ## If you work for a company
 
-1.  Read the [Corporate Contributor License Agreement](icla-1.0.md)
+1.  Read the [Corporate Contributor License Agreement](ccla-1.0.md)
 
 2.  Modify your current pull request, or make a new pull request on
     [odoo/odoo](/odoo/odoo), adding a new file `<lowercase-company-name>.md`

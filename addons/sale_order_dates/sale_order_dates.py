@@ -61,6 +61,8 @@ class sale_order_dates(osv.osv):
             dates_list = []
             order_datetime = datetime.strptime(order.date_order, DEFAULT_SERVER_DATETIME_FORMAT)
             for line in order.order_line:
+                if line.state == 'cancel':
+                    continue
                 dt = order_datetime + timedelta(days=line.delay or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 dates_list.append(dt_s)

@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-11-07 14:50+0000\n"
-"Last-Translator: Tome Barbov <tome.barbov@eskon.com.mk>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:25+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -23,20 +24,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a payment order.\n"
 "              </p><p>\n"
-"                A payment order is a payment request from your company to "
-"pay a\n"
+"                A payment order is a payment request from your company to pay a\n"
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Кликнете за да креирате налог за плаќање.\n"
-"              </p><p>\n"
-"                Налогот за плаќање е барање за плаќање од вашата компанија "
-"за \n"
-"                плаќање на фактура на добавувач или за поврат на купувач.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете за да креирате налог за плаќање.\n              </p><p>\n                Налогот за плаќање е барање за плаќање од вашата компанија за \n                плаќање на фактура на добавувач или за поврат на купувач.\n              </p>\n            "
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
@@ -138,10 +130,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr ""
-"Изберете опција за Налогот за плаќање: 'Фиксно' за датумот кој е назначен од "
-"Вас. 'Директно' за директно извршување. 'Краен датум' за закажаниот датум за "
-"извршување."
+msgstr "Изберете опција за Налогот за плаќање: 'Фиксно' за датумот кој е назначен од Вас. 'Директно' за директно извршување. 'Краен датум' за закажаниот датум за извршување."
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -159,8 +148,7 @@ msgid "Communication Type"
 msgstr "Тип на комуникација"
 
 #. module: account_payment
-#: field:payment.line,company_id:0
-#: field:payment.mode,company_id:0
+#: field:payment.line,company_id:0 field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Компанија"
@@ -194,18 +182,15 @@ msgstr "Креирано"
 #. module: account_payment
 #: field:account.payment.make.payment,create_uid:0
 #: field:account.payment.populate.statement,create_uid:0
-#: field:payment.line,create_uid:0
-#: field:payment.mode,create_uid:0
-#: field:payment.order,create_uid:0
-#: field:payment.order.create,create_uid:0
+#: field:payment.line,create_uid:0 field:payment.mode,create_uid:0
+#: field:payment.order,create_uid:0 field:payment.order.create,create_uid:0
 msgid "Created by"
 msgstr "Креирано од"
 
 #. module: account_payment
 #: field:account.payment.make.payment,create_date:0
 #: field:account.payment.populate.statement,create_date:0
-#: field:payment.mode,create_date:0
-#: field:payment.order,create_date:0
+#: field:payment.mode,create_date:0 field:payment.order,create_date:0
 #: field:payment.order.create,create_date:0
 msgid "Created on"
 msgstr "Креирано на"
@@ -259,8 +244,7 @@ msgid "Draft"
 msgstr "Нацрт"
 
 #. module: account_payment
-#: field:payment.line,ml_maturity_date:0
-#: field:payment.order.create,duedate:0
+#: field:payment.line,ml_maturity_date:0 field:payment.order.create,duedate:0
 msgid "Due Date"
 msgstr "Краен датум"
 
@@ -338,10 +322,8 @@ msgstr "Групирај според"
 
 #. module: account_payment
 #: field:account.payment.make.payment,id:0
-#: field:account.payment.populate.statement,id:0
-#: field:payment.line,id:0
-#: field:payment.mode,id:0
-#: field:payment.order,id:0
+#: field:account.payment.populate.statement,id:0 field:payment.line,id:0
+#: field:payment.mode,id:0 field:payment.order,id:0
 #: field:payment.order.create,id:0
 #: field:report.account_payment.report_paymentorder,id:0
 msgid "ID"
@@ -352,9 +334,7 @@ msgstr "ID"
 msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
-msgstr ""
-"Доколку не е назначен датум на плаќање, банката ќе ја третира оваа ставка за "
-"уплата директно"
+msgstr "Доколку не е назначен датум на плаќање, банката ќе ја третира оваа ставка за уплата директно"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
@@ -411,20 +391,16 @@ msgstr "Ставки во дневник"
 #. module: account_payment
 #: field:account.payment.make.payment,write_uid:0
 #: field:account.payment.populate.statement,write_uid:0
-#: field:payment.line,write_uid:0
-#: field:payment.mode,write_uid:0
-#: field:payment.order,write_uid:0
-#: field:payment.order.create,write_uid:0
+#: field:payment.line,write_uid:0 field:payment.mode,write_uid:0
+#: field:payment.order,write_uid:0 field:payment.order.create,write_uid:0
 msgid "Last Updated by"
 msgstr "Последно ажурирање од"
 
 #. module: account_payment
 #: field:account.payment.make.payment,write_date:0
 #: field:account.payment.populate.statement,write_date:0
-#: field:payment.line,write_date:0
-#: field:payment.mode,write_date:0
-#: field:payment.order,write_date:0
-#: field:payment.order.create,write_date:0
+#: field:payment.line,write_date:0 field:payment.mode,write_date:0
+#: field:payment.order,write_date:0 field:payment.order.create,write_date:0
 msgid "Last Updated on"
 msgstr "Последно ажурирање на"
 
@@ -467,8 +443,7 @@ msgid "Owner Account"
 msgstr "Сопственик на сметка"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: field:payment.mode,partner_id:0
+#: field:payment.line,partner_id:0 field:payment.mode,partner_id:0
 #: view:website:account_payment.report_paymentorder
 msgid "Partner"
 msgstr "Партнер"
@@ -617,8 +592,7 @@ msgstr "Барај ставки од уплата"
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Изберете датум доколку сте избрале Преферираниот датум да биде фиксен."
+msgstr "Изберете датум доколку сте избрале Преферираниот датум да биде фиксен."
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -667,8 +641,7 @@ msgstr "Нема дефинирано партнер за оваа ставка 
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr ""
-"Оваа ставка на внес ќе се види за информации за клиентот што нарачува."
+msgstr "Оваа ставка на внес ќе се види за информации за клиентот што нарачува."
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -715,10 +688,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
-"Кога налогот е поставен статусот е 'Нацрт'.\n"
-" Откако банката ќе го одобри стстусот се подесува на 'Потврдено'.\n"
-" Кога налогот е платен статусот е 'Завршено'."
+msgstr "Кога налогот е поставен статусот е 'Нацрт'.\n Откако банката ќе го одобри стстусот се подесува на 'Потврдено'.\n Кога налогот е платен статусот е 'Завршено'."
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -731,9 +701,7 @@ msgstr "Да"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
-"Не може да откажете фактура која е веќе импортирана во налог за плаќање.\n"
-"Отстранете ја од следниов налог за плаќање : %s."
+msgstr "Не може да откажете фактура која е веќе импортирана во налог за плаќање.\nОтстранете ја од следниов налог за плаќање : %s."
 
 #. module: account_payment
 #: field:payment.line,name:0

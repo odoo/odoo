@@ -14,6 +14,7 @@ import werkzeug.wrappers
 from PIL import Image
 
 import openerp
+from openerp.addons.web.controllers.main import WebClient
 from openerp.addons.web import http
 from openerp.http import request, STATIC_CACHE
 from openerp.tools import image_save_for_web
@@ -49,6 +50,15 @@ class Website(openerp.addons.web.controllers.main.Home):
     def web_login(self, *args, **kw):
         # TODO: can't we just put auth=public, ... in web client ?
         return super(Website, self).web_login(*args, **kw)
+
+    @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
+    def change_lang(self, lang, r='/', **kwargs):
+        if lang == 'default':
+            lang = request.website.default_lang_code
+            r = '/%s%s' % (lang, r or '/')
+        redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
+        redirect.set_cookie('website_lang', lang)
+        return redirect
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True)
     def page(self, page, **opt):
@@ -110,7 +120,7 @@ class Website(openerp.addons.web.controllers.main.Home):
 
             pages = 0
             first_page = None
-            locs = request.website.enumerate_pages()
+            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
                 start = pages * LOC_PER_SITEMAP
                 values = {
@@ -230,13 +240,11 @@ class Website(openerp.addons.web.controllers.main.Home):
         return request.registry["ir.ui.view"].customize_template_get(
             request.cr, request.uid, xml_id, full=full, context=request.context)
 
-
     @http.route('/website/get_view_translations', type='json', auth='public', website=True)
     def get_view_translations(self, xml_id, lang=None):
         lang = lang or request.context.get('lang')
         return request.registry["ir.ui.view"].get_view_translations(
             request.cr, request.uid, xml_id, lang=lang, context=request.context)
-
 
     @http.route('/website/set_translations', type='json', auth='public', website=True)
     def set_translations(self, data, lang):
@@ -276,6 +284,13 @@ class Website(openerp.addons.web.controllers.main.Home):
                     irt.create(request.cr, request.uid, new_trans)
         return True
 
+    @http.route('/website/translations', type='json', auth="public", website=True)
+    def get_website_translations(self, lang):
+        module_obj = request.registry['ir.module.module']
+        module_ids = module_obj.search(request.cr, request.uid, [('name', 'ilike', 'website'), ('state', '=', 'installed')], context=request.context)
+        modules = [x['name'] for x in module_obj.read(request.cr, request.uid, module_ids, ['name'], context=request.context)]
+        return WebClient().translations(mods=modules, lang=lang)
+
     @http.route('/website/attach', type='http', auth='user', methods=['POST'], website=True)
     def attach(self, func, upload=None, url=None, disable_optimization=None):
         Attachments = request.registry['ir.attachment']
@@ -285,7 +300,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             website_url = url
             name = url.split("/").pop()
             attachment_id = Attachments.create(request.cr, request.uid, {
-                'name':name,
+                'name': name,
                 'type': 'url',
                 'url': url,
                 'res_model': 'ir.ui.view',
@@ -395,7 +410,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
-    @http.route('/website/action/<path_or_xml_id_or_id>', type='http', auth="public", website=True)
+    @http.route([
+        '/website/action/<path_or_xml_id_or_id>',
+        '/website/action/<path_or_xml_id_or_id>/<path:path>',
+        ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         cr, uid, context = request.cr, request.uid, request.context
         res, action_id, action = None, None, None

@@ -800,7 +800,8 @@ openerp.mail = function (session) {
 
             _.each(messages, function (thread) {
                 if (thread.author_id && !thread.author_id[0] &&
-                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];})) {
+                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];}) &&
+                    _.some([thread.author_id[1], thread.author_id[2], thread.author_id[3]])) {
                     self.recipients.push({  'full_name': thread.author_id[1],
                                             'name': thread.author_id[2],
                                             'email_address': thread.author_id[3],
@@ -1815,10 +1816,9 @@ openerp.mail = function (session) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
-
             this.node.params = _.extend(this.node.params, {
                 'message_ids': this.get_value(),
-                'show_compose_message': this.view.is_action_enabled('edit'),
+                'show_compose_message': true,
             });
             this.node.context = {
                 'mail_read_set_read': true,  // set messages as read in Chatter

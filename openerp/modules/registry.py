@@ -73,6 +73,7 @@ class Registry(Mapping):
         self.base_registry_signaling_sequence = None
         self.base_cache_signaling_sequence = None
 
+        self.cache = LRU(8192)
         # Flag indicating if at least one model cache has been cleared.
         # Useful only in a multi-process context.
         self._any_cache_cleared = False
@@ -172,6 +173,8 @@ class Registry(Mapping):
 
             :param partial: ``True`` if all models have not been loaded yet.
         """
+        lazy_property.reset_all(self)
+
         # load custom models
         ir_model = self['ir.model']
         cr.execute('select model from ir_model where state=%s', ('manual',))
@@ -300,8 +303,9 @@ class RegistryManager(object):
                     # cannot specify the memory limit soft on windows...
                     size = 42
                 else:
-                    # On average, a clean registry take 25MB of memory + cache
-                    avgsz = 30 * 1024 * 1024
+                    # A registry takes 10MB of memory on average, so we reserve
+                    # 10Mb (registry) + 5Mb (working memory) per registry
+                    avgsz = 15 * 1024 * 1024
                     size = int(config['limit_memory_soft'] / avgsz)
 
             cls._registries = LRU(size)

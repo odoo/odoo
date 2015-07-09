@@ -1,21 +1,22 @@
-# Czech translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_expiry
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"PO-Revision-Date: 2015-05-21 16:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/odoo-8/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:09+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
@@ -81,7 +82,7 @@ msgstr "Čas odebrání výrobku"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Šablona výrobku"
 
 #. module: product_expiry
 #: field:product.template,use_time:0
@@ -94,8 +95,7 @@ msgid "Quants"
 msgstr ""
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0
-#: field:stock.quant,removal_date:0
+#: field:stock.production.lot,removal_date:0 field:stock.quant,removal_date:0
 msgid "Removal Date"
 msgstr "Datum odebrání"
 
@@ -104,67 +104,53 @@ msgstr "Datum odebrání"
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr ""
-"Datum, kdy by měl být uživatel upozorněn na zboží s tímto seriovým číslem."
+msgstr "Datum, kdy by měl být uživatel upozorněn na zboží s tímto seriovým číslem."
 
 #. module: product_expiry
 #: help:stock.production.lot,life_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr ""
-"Datum, kdy se zboží s tímto seriovým číslem může stát nebezpečným a nesmí "
-"být požíváno."
+msgstr "Datum, kdy se zboží s tímto seriovým číslem může stát nebezpečným a nesmí být požíváno."
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr ""
-"Datum, kdy by zboží s tímto seriovým číslem mělo být odebráno ze zásob."
+msgstr "Datum, kdy by zboží s tímto seriovým číslem mělo být odebráno ze zásob."
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr ""
-"Datum, kdy se zboží s tímto seriovým číslem začne kazit bez toho, aby ještě "
-"bylo nebezpečné."
+msgstr "Datum, kdy se zboží s tímto seriovým číslem začne kazit bez toho, aby ještě bylo nebezpečné."
 
 #. module: product_expiry
 #: help:product.template,alert_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než "
-"bude uživatel upozorněn."
+msgstr "Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než bude uživatel upozorněn."
 
 #. module: product_expiry
 #: help:product.template,life_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se "
-"zboží stane nebezpečným a nesmí být požíváno."
+msgstr "Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se zboží stane nebezpečným a nesmí být požíváno."
 
 #. module: product_expiry
 #: help:product.template,removal_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než by "
-"zboží mělo být odebráno ze zásob."
+msgstr "Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než by zboží mělo být odebráno ze zásob."
 
 #. module: product_expiry
 #: help:product.template,use_time:0
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se "
-"zboží začne kazit avšak bez toho, aby bylo zatím nebezpečné."
+msgstr "Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se zboží začne kazit avšak bez toho, aby bylo zatím nebezpečné."

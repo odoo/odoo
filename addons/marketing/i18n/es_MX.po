@@ -1,135 +1,115 @@
-# Spanish translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 23:07+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-27 13:45+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (Mexico) (http://www.transifex.com/projects/p/odoo-8/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:50+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: marketing
-#: model:ir.module.module,description:marketing.module_meta_information
-msgid "Menu for Marketing"
-msgstr "Menú para marqueting"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Apply"
+msgstr "Aplicar"
 
 #. module: marketing
-#: help:marketing.installer,marketing_campaign:0
-msgid ""
-"Helps you to manage marketing campaigns and automate actions and "
-"communication steps."
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: marketing
+#: model:ir.actions.act_window,name:marketing.action_marketing_configuration
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Configure Marketing"
 msgstr ""
-"Le ayuda a gestionar campañas de marketing y automatizar las acciones y "
-"pasos de la comunicación."
 
 #. module: marketing
-#: field:marketing.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso de la configuración"
-
-#. module: marketing
-#: view:marketing.installer:0
-msgid "title"
-msgstr "título"
-
-#. module: marketing
-#: field:marketing.installer,email_template:0
-msgid "Automated E-Mails"
-msgstr "Correos automatizados"
-
-#. module: marketing
-#: field:marketing.installer,config_logo:0
-msgid "Image"
-msgstr "Imagen"
-
-#. module: marketing
-#: view:marketing.installer:0
-msgid "Configure Your Marketing Application"
-msgstr "Configure su marqueting"
-
-#. module: marketing
-#: help:marketing.installer,email_template:0
-msgid ""
-"Helps you to design templates of emails and integrate them in your different "
-"processes."
+#: field:marketing.config.settings,create_uid:0
+msgid "Created by"
 msgstr ""
-"Le ayuda a diseñar las plantillas de mensajes de correo electrónico e "
-"integrarlas en sus distintos procesos."
 
 #. module: marketing
-#: model:ir.model,name:marketing.model_marketing_installer
-msgid "marketing.installer"
-msgstr "marketing.instalador"
+#: field:marketing.config.settings,create_date:0
+msgid "Created on"
+msgstr "Creado en"
 
 #. module: marketing
-#: model:ir.module.module,shortdesc:marketing.module_meta_information
+#: field:marketing.config.settings,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: marketing
+#: field:marketing.config.settings,write_uid:0
+msgid "Last Updated by"
+msgstr ""
+
+#. module: marketing
+#: field:marketing.config.settings,write_date:0
+msgid "Last Updated on"
+msgstr ""
+
+#. module: marketing
+#: model:res.groups,name:marketing.group_marketing_manager
+msgid "Manager"
+msgstr "Responsable"
+
+#. module: marketing
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
 msgid "Marketing"
 msgstr "Marketing"
 
 #. module: marketing
-#: field:marketing.installer,crm_profiling:0
-msgid "Profiling Tools"
-msgstr "Herramientas de perfiles"
-
-#. module: marketing
-#: view:marketing.installer:0
-msgid ""
-"OpenERP provides Addons to better manage your sales and marketing processes. "
-"Select the ones you would be interested in."
-msgstr ""
-"OpenERP permite extensiones para manejar sus ventas y procesos de "
-"marqueting. Seleccione el que usted le interese."
-
-#. module: marketing
-#: view:marketing.installer:0
-msgid "Marketing Application Configuration"
-msgstr "Configuración de marqueting"
-
-#. module: marketing
-#: model:ir.actions.act_window,name:marketing.action_marketing_installer
-msgid "Marketing Modules Installation"
-msgstr "Instalación de módulos de márqueting"
-
-#. module: marketing
-#: field:marketing.installer,marketing_campaign:0
+#: view:marketing.config.settings:marketing.view_marketing_configuration
 msgid "Marketing Campaigns"
 msgstr "Campañas de marketing"
 
 #. module: marketing
-#: help:marketing.installer,crm_profiling:0
-msgid ""
-"Helps you to perform segmentation of partners and design segmentation "
-"questionnaires"
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
 msgstr ""
-"Le ayuda a realizar segmentaciones de empresas y diseñar cuestionarios para "
-"las segmentaciones."
 
 #. module: marketing
-#: view:marketing.installer:0
-msgid "Configure"
-msgstr "Configurar"
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+#: field:marketing.config.settings,module_mass_mailing:0
+msgid "Mass Mailing"
+msgstr ""
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar por x_ y no contener ningún carácter "
-#~ "especial!"
+#. module: marketing
+#: help:marketing.config.settings,module_mass_mailing:0
+msgid ""
+"Provide a way to perform mass mailings.\n"
+"-This installs the module mass_mailing."
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML no válido para la estructura de la vista!"
+#. module: marketing
+#: help:marketing.config.settings,module_marketing_campaign:0
+msgid ""
+"Provides leads automation through marketing campaigns. Campaigns can in fact be defined on any resource, not just CRM leads.\n"
+"-This installs the module marketing_campaign."
+msgstr ""
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+#. module: marketing
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "Settings"
+msgstr "Configuración"
 
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "Configuración aplicaciones marketing"
+#. module: marketing
+#: model:res.groups,name:marketing.group_marketing_user
+msgid "User"
+msgstr "Usuario"
+
+#. module: marketing
+#: view:marketing.config.settings:marketing.view_marketing_configuration
+msgid "or"
+msgstr "o"

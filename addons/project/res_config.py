@@ -45,7 +45,8 @@ class project_configuration(osv.osv_memory):
             help='Provides management of issues/bugs in projects.\n'
                  '-This installs the module project_issue.'),
         'time_unit': fields.many2one('product.uom', 'Working time unit', required=True,
-            help="""This will set the unit of measure used in projects and tasks."""),
+            help='This will set the unit of measure used in projects and tasks.\n'
+                 'Changing the unit will only impact new entries.'),
         'module_project_issue_sheet': fields.boolean("Invoice working time on issues",
             help='Provides timesheet support for the issues/bugs management in project.\n'
                  '-This installs the module project_issue_sheet.'),

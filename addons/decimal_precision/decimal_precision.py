@@ -48,11 +48,6 @@ class decimal_precision(orm.Model):
     def clear_cache(self, cr):
         """clear cache and update models. Notify other workers to restart their registry."""
         self.precision_get.clear_cache(self)
-        env = openerp.api.Environment(cr, SUPERUSER_ID, {})
-        for model in self.pool.values():
-            for field in model._fields.values():
-                if field.type == 'float':
-                    field._setup_digits(env)
         RegistryManager.signal_registry_change(cr.dbname)
 
     def create(self, cr, uid, data, context=None):

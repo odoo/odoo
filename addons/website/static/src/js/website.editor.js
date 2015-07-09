@@ -927,6 +927,12 @@
         close: function () {
             this.$el.modal('hide');
         },
+        destroy: function () {
+            this.$el.modal('hide').remove();
+            if($(".modal.in").length>0){
+                $('body').addClass('modal-open');
+            }
+        },
     });
 
     website.editor.LinkDialog = website.editor.Dialog.extend({
@@ -1721,7 +1727,7 @@
             var final_classes = non_fa_classes.concat(this.get_fa_classes());
             this.media.$.className = final_classes.join(' ');
             this.media.renameNode("span");
-            this.media.$.attributes.style.textContent = style;
+            $(this.media.$).attr("style", style || null);
             this._super();
         },
         /**

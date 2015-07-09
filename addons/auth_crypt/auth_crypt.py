@@ -5,6 +5,8 @@ from passlib.context import CryptContext
 import openerp
 from openerp.osv import fields, osv
 
+openerp.addons.base.res.res_users.USER_PRIVATE_FIELDS.append('password_crypt')
+
 _logger = logging.getLogger(__name__)
 
 default_crypt_context = CryptContext(

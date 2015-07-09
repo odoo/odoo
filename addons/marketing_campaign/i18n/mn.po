@@ -1,21 +1,22 @@
-# Mongolian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Mongolian <mn@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:55+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -29,14 +30,11 @@ msgid ""
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
 "            Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
@@ -85,9 +83,7 @@ msgstr "Бүх бичлэг (давхардал үгүй)"
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
-"Сигналтай үйл ажиллагаа нь програмчлагдан дуудагдаж болно. Сигнал илгээх "
-"бүрт ажил үүсдэг тул болгоомжтой байгаарай."
+msgstr "Сигналтай үйл ажиллагаа нь програмчлагдан дуудагдаж болно. Сигнал илгээх бүрт ажил үүсдэг тул болгоомжтой байгаарай."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -115,9 +111,7 @@ msgstr "Автомат шилжилт"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
-"Энэ сонголтыг идэвхжүүлснээр нөхцөл биелээгүйн улмаас биелэгдээгүй ажлыг "
-"устгахын оронд цуцлагдсан гэж тэмдэглэдэг."
+msgstr "Энэ сонголтыг идэвхжүүлснээр нөхцөл биелээгүйн улмаас биелэгдээгүй ажлыг устгахын оронд цуцлагдсан гэж тэмдэглэдэг."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -202,8 +196,7 @@ msgid "Cancel Workitem"
 msgstr "Ажлыг цуцлах"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -259,7 +252,7 @@ msgstr "Улс"
 #: field:marketing.campaign.transition,create_uid:0
 #: field:marketing.campaign.workitem,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,create_date:0
@@ -268,7 +261,7 @@ msgstr ""
 #: field:marketing.campaign.transition,create_date:0
 #: field:marketing.campaign.workitem,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -285,8 +278,7 @@ msgstr "Огноо"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
-"Энэ сегмент хамгийн сүүлд ижилтгэл хийгдсэн огноо (автоматаар эсвэл гараар)"
+msgstr "Энэ сегмент хамгийн сүүлд ижилтгэл хийгдсэн огноо (автоматаар эсвэл гараар)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -315,14 +307,9 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
-msgstr ""
-"Аянд шинэ бичлэгүүдийг нэмэхээр шүүх үед хэрэглэх шүүлтүүрийн нэмэлт "
-"нөхцөлийг тодорхойлдог. \"Давхардал үгүй\" нь аянд урьд нь нэмэгдсэн "
-"бичлэгийг дахин сонгуулдаггүй. Хэрэв аян нь \"үл давцах талбар\"-тай бол "
-"\"давхардал үгүй\" нь өмнө нь аянд нэмэгдсэн бөгөөд давхацсан утгатай "
-"талбартай байвал тэдгээрийг сонгуулдаггүй."
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr "Аянд шинэ бичлэгүүдийг нэмэхээр шүүх үед хэрэглэх шүүлтүүрийн нэмэлт нөхцөлийг тодорхойлдог. \"Давхардал үгүй\" нь аянд урьд нь нэмэгдсэн бичлэгийг дахин сонгуулдаггүй. Хэрэв аян нь \"үл давцах талбар\"-тай бол \"давхардал үгүй\" нь өмнө нь аянд нэмэгдсэн бөгөөд давхацсан утгатай талбартай байвал тэдгээрийг сонгуулдаггүй."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -429,11 +416,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
-"Энэ сегментэд харъяалагдах нөөцийн бичлэгүүдийг сонгохдоо шүүнэ. Шинэ "
-"шүүтүүүр нь нөөцийн жагсаалт харагдац дээрх дэлгэрүүлсэн хайлтыг ашиглан "
-"үүсгэж, хадгалж болно. Хэрэв шүүлтүүр тохируулагдаагүй бол бүх бичлэг "
-"шүүтүүргүйгээр сонгогдоно. Мөн ижилтгэх горим нь шүүх нөхцөлийг нэмж болно."
+msgstr "Энэ сегментэд харъяалагдах нөөцийн бичлэгүүдийг сонгохдоо шүүнэ. Шинэ шүүтүүүр нь нөөцийн жагсаалт харагдац дээрх дэлгэрүүлсэн хайлтыг ашиглан үүсгэж, хадгалж болно. Хэрэв шүүлтүүр тохируулагдаагүй бол бүх бичлэг шүүтүүргүйгээр сонгогдоно. Мөн ижилтгэх горим нь шүүх нөхцөлийг нэмж болно."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -443,13 +426,10 @@ msgstr "Тогтмол Өртөг"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
-msgstr ""
-"Энэ аянг ажиллуулахад тогтмол өртөгтэй. Аяны үйл ажиллагаа бүр дээр хувьсах "
-"өртөг болон орлогыг зааж өгч болно. Өртөг болон Орлого нь Аяны тайлагналд "
-"агуулагддаг."
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr "Энэ аянг ажиллуулахад тогтмол өртөгтэй. Аяны үйл ажиллагаа бүр дээр хувьсах өртөг болон орлогыг зааж өгч болно. Өртөг болон Орлого нь Аяны тайлагналд агуулагддаг."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -462,29 +442,25 @@ msgstr "Мөшгөлт"
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 #: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
-msgstr ""
+msgstr "Бүлэглэх"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
-"Сайн байна уу? Таныг урьсан багцыг товчхоноор эмэйлээр та хүлээн авах болно."
+msgstr "Сайн байна уу? Таныг урьсан багцыг товчхоноор эмэйлээр та хүлээн авах болно."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
-msgstr ""
-"Сайн байна уу, Танд манай Алтан түнш болсныг дуулгахдаа бид таатай байна."
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
+msgstr "Сайн байна уу, Танд манай Алтан түнш болсныг дуулгахдаа бид таатай байна."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
-"Сайн байна уу? Өнөөдөр таныг манай Мөнгөн харилцагч болсныг мэдэгдэхэд "
-"таатай байна!"
+msgstr "Сайн байна уу? Өнөөдөр таныг манай Мөнгөн харилцагч болсныг мэдэгдэхэд таатай байна!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -497,14 +473,13 @@ msgid "How is the destination workitem triggered"
 msgstr "Зорилтот ажил яаж өдөөгдөх"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
 #: field:marketing.campaign.workitem,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
@@ -514,23 +489,15 @@ msgstr "Хэрэв огноог тохируулаагүй бол энэ ажи�
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr ""
-"Хэрэв сонгосон бол энэ талбар нь \"давхардал үгүй\" горимоор ажиллаж байгаа "
-"сегментүүдэд төстэй бичлэгийг хоёр дахин сонгохоос зайлсхийхэд тусладаг. "
-"Төстэй бичлэг гэдэг нь үл давхцах талбар дээрээ ижил утгатай бичлэгүүдийг "
-"хэлдэг. Тухайлбал \"email_from\" талбарыг CRM сэжимээс сонгосноор нэг аянг "
-"нэг хаяг руу дахин дахин эмэйлээр илгээхээс зайлсхийнэ. Хэрэв сонгоогүй бол "
-"\"давхардал үгүй\" аян нь ижил бичлэгийг дахин оруулахаас л зайлсхийнэ. "
-"Зөвхөн хялбархан харьцуулж болох текст, тоо, сонголт талбаруудыг л ашиглах "
-"боломжтой."
+msgstr "Хэрэв сонгосон бол энэ талбар нь \"давхардал үгүй\" горимоор ажиллаж байгаа сегментүүдэд төстэй бичлэгийг хоёр дахин сонгохоос зайлсхийхэд тусладаг. Төстэй бичлэг гэдэг нь үл давхцах талбар дээрээ ижил утгатай бичлэгүүдийг хэлдэг. Тухайлбал \"email_from\" талбарыг CRM сэжимээс сонгосноор нэг аянг нэг хаяг руу дахин дахин эмэйлээр илгээхээс зайлсхийнэ. Хэрэв сонгоогүй бол \"давхардал үгүй\" аян нь ижил бичлэгийг дахин оруулахаас л зайлсхийнэ. Зөвхөн хялбархан харьцуулж болох текст, тоо, сонголт талбаруудыг л ашиглах боломжтой."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
@@ -579,7 +546,7 @@ msgstr "Сүүлийн Ижилтгэл"
 #: field:marketing.campaign.transition,write_uid:0
 #: field:marketing.campaign.workitem,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,write_date:0
@@ -588,7 +555,7 @@ msgstr ""
 #: field:marketing.campaign.transition,write_date:0
 #: field:marketing.campaign.workitem,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_run:0
@@ -672,8 +639,7 @@ msgid "Month(s)"
 msgstr "Сар(ууд)"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -750,8 +716,7 @@ msgstr "Зөвхөн хамгийн сүүлийн ижилтгэлээс хой
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
-"Зөвхөн сүүлийн ижилтгэлээс хойш өөрчлөгдсөн бичлэгүүд(давхардал үгүй)"
+msgstr "Зөвхөн сүүлийн ижилтгэлээс хойш өөрчлөгдсөн бичлэгүүд(давхардал үгүй)"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
@@ -811,23 +776,13 @@ msgstr "Процесс"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr ""
-"Үйл ажиллагааг ажиллуулах эсэхийг шийдэхн Python илэрхийлэл, үгүй бол энэ "
-"устгагдах юмуу цуцлагдана. Илэрхийлэл нь дараах [тольдох] хувьсагчдийг "
-"хэрэглэх боломжтой:\n"
-"   - activity: аяны үйл ажиллагаа\n"
-"   - workitem: аяны ажил\n"
-"   - resource: энэ аяны илтгэж байгаа нөөцийн обьект\n"
-"   - transitions: энэ үйл ажиллагаанаас шилжсэн аяны шилжилтийн жагсаалт\n"
-"...- re: Python-н regular expression модуль"
+msgstr "Үйл ажиллагааг ажиллуулах эсэхийг шийдэхн Python илэрхийлэл, үгүй бол энэ устгагдах юмуу цуцлагдана. Илэрхийлэл нь дараах [тольдох] хувьсагчдийг хэрэглэх боломжтой:\n   - activity: аяны үйл ажиллагаа\n   - workitem: аяны ажил\n   - resource: энэ аяны илтгэж байгаа нөөцийн обьект\n   - transitions: энэ үйл ажиллагаанаас шилжсэн аяны шилжилтийн жагсаалт\n...- re: Python-н regular expression модуль"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -914,10 +869,7 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr ""
-"Хэрэв та аяны зүйл бүр нь энэ цэгт хүрээд тодорхой өртөгийг дагуулахаар "
-"бодож байгаа бол хувьсах өртөгийг тохируулна уу. Тайлан хэсгээс "
-"статистикуудыг харах боломжтой."
+msgstr "Хэрэв та аяны зүйл бүр нь энэ цэгт хүрээд тодорхой өртөгийг дагуулахаар бодож байгаа бол хувьсах өртөгийг тохируулна уу. Тайлан хэсгээс статистикуудыг харах боломжтой."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
@@ -925,10 +877,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr ""
-"Хэрэв та аяны зүйл бүр нь энэ цэгт хүрэхээрээ тодорхой оролго үүсгэдэг "
-"байхаар бодож байгаа бол таамагласан оролгыг тохируулна. Тайлан хэсэгт "
-"оролгын статистикийг харж болно."
+msgstr "Хэрэв та аяны зүйл бүр нь энэ цэгт хүрэхээрээ тодорхой оролго үүсгэдэг байхаар бодож байгаа бол таамагласан оролгыг тохируулна. Тайлан хэсэгт оролгын статистикийг харж болно."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -949,7 +898,7 @@ msgstr "Эхлэх"
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
 msgid "Statistics"
-msgstr ""
+msgstr "Статистик"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -971,14 +920,12 @@ msgstr "Ижилтгэх горим: бүх бичлэгүүд"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr ""
-"Ижилтгэх горим: Зөвхөн сүүлийн ижилтгэлээс хойш үүссэн бичлэгүүдийн хувьд"
+msgstr "Ижилтгэх горим: Зөвхөн сүүлийн ижилтгэлээс хойш үүссэн бичлэгүүдийн хувьд"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
-"Ижилтгэх горим: хамгийн сүүлчийн ижилтгэлээс хойшхи бичлэгүүд л шинэчлэгдэнэ"
+msgstr "Ижилтгэх горим: хамгийн сүүлчийн ижилтгэлээс хойшхи бичлэгүүд л шинэчлэгдэнэ"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
@@ -993,24 +940,11 @@ msgstr "Гараар Ижилтгэх"
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
-msgstr ""
-"Тест - Энэ нь бүх үйл ажиллагааг шууд үүсгэж боловсруүлдаг (шилжилтүүд даар "
-"огт хүлээдэггүй) боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй.\n"
-"Бодит хугацаанд тестлэх - Энэ нь бүх үйл ажиллагааг шууд үүсгэж "
-"боловсруүлдаг боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй..\n"
-"Гар баталгаажилттай - аян хэвийн явагдах боловч хэрэглэгч ажил бүрийг гараар "
-"баталгаажуулах шаардлагатай.\n"
-"Хэвийн - Аян хэвийн явагдах бөгөөд автоматаар бүх эмэйл болон тайланг "
-"илгээдэг (энэ горимыг хэрэглэхдээ маш болгоомжтой байх хэрэгтэй, учир нь "
-"бодит амьдрал дээр явагдана)"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr "Тест - Энэ нь бүх үйл ажиллагааг шууд үүсгэж боловсруүлдаг (шилжилтүүд даар огт хүлээдэггүй) боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй.\nБодит хугацаанд тестлэх - Энэ нь бүх үйл ажиллагааг шууд үүсгэж боловсруүлдаг боловч ямарч эмэйл илгээдэггүй, тайлан үүсгэдэггүй..\nГар баталгаажилттай - аян хэвийн явагдах боловч хэрэглэгч ажил бүрийг гараар баталгаажуулах шаардлагатай.\nХэвийн - Аян хэвийн явагдах бөгөөд автоматаар бүх эмэйл болон тайланг илгээдэг (энэ горимыг хэрэглэхдээ маш болгоомжтой байх хэрэгтэй, учир нь бодит амьдрал дээр явагдана)"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1049,9 +983,7 @@ msgstr "Бүх сегментүүдийг хаахаас өмнө аянг хи�
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
-"Аянг эхлүүлэх боломжгүй. Энэ нь эхлэлийн ямар ч үйл ажиллагаагүй байна. Аяны "
-"үйл явдлуудын нэгийг эхлэлийн цэг болгон тэмдэглэнэ үү."
+msgstr "Аянг эхлүүлэх боломжгүй. Энэ нь эхлэлийн ямар ч үйл ажиллагаагүй байна. Аяны үйл явдлуудын нэгийг эхлэлийн цэг болгон тэмдэглэнэ үү."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:111
@@ -1063,9 +995,7 @@ msgstr "Аян эхлэх боломжгүй. Дотор нь ямар ч үйл
 #: code:addons/marketing_campaign/marketing_campaign.py:800
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
-"Энэ зүйл дахь идэвхтэй алхам нь урьдчилан харах имэйл эсвэл тайлан байхгүй "
-"байна."
+msgstr "Энэ зүйл дахь идэвхтэй алхам нь урьдчилан харах имэйл эсвэл тайлан байхгүй байна."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
@@ -1075,14 +1005,11 @@ msgstr "Энэ үйл ажиллагаа идэвхжихэд илгээх эм�
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
-"Энэ ажлууд нь энэ бичлэгт холбогдсон харилцагчидад холбогдоно. Хэрэв энэ "
-"бичлэг нь өөрөө харилцагч бол энэ талбарыг хоосон үлдээ. Энэ нь Аяны "
-"шинжилгээ, Аяны мөшгөлт зэрэг харагдацаас тайланг харахад хэрэгтэй байдаг."
+msgstr "Энэ ажлууд нь энэ бичлэгт холбогдсон харилцагчидад холбогдоно. Хэрэв энэ бичлэг нь өөрөө харилцагч бол энэ талбарыг хоосон үлдээ. Энэ нь Аяны шинжилгээ, Аяны мөшгөлт зэрэг харагдацаас тайланг харахад хэрэгтэй байдаг."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1099,20 +1026,10 @@ msgstr "Энэ үйл ажиллагаа идэвхжихэд үүсэх тай�
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
-"Ямарваа зүйл энэ үйл ажиллагаанд орж ирэхэд хийгдэх үйлдлийн төрөл, "
-"тухайлбал:\n"
-"   - Эмэйл: Урьдчилан тодорхойлсон үлгэр ашиглан эмэйл илгээгдэнэ\n"
-"   - Тайлан: нөөц дээр тодорхойлогдсон тайлан хэвлэж түүнийгээ тодорхой "
-"директорт хадгалдаг\n"
-"   - Өөриймшүүлсэн Үйлдэл: урьдчилан тодорхойлсон үйлдлийг хэрэгжүүлнэ, ж: "
-"нөөцийн бичлэгүүдийг засварлах\n"
-"  "
+msgstr "Ямарваа зүйл энэ үйл ажиллагаанд орж ирэхэд хийгдэх үйлдлийн төрөл, тухайлбал:\n   - Эмэйл: Урьдчилан тодорхойлсон үлгэр ашиглан эмэйл илгээгдэнэ\n   - Тайлан: нөөц дээр тодорхойлогдсон тайлан хэвлэж түүнийгээ тодорхой директорт хадгалдаг\n   - Өөриймшүүлсэн Үйлдэл: урьдчилан тодорхойлсон үйлдлийг хэрэгжүүлнэ, ж: нөөцийн бичлэгүүдийг засварлах\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
@@ -1186,5 +1103,4 @@ msgstr "Жил(үүд)"
 #: code:addons/marketing_campaign/marketing_campaign.py:189
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
-"Та аянг хувилах боломжгүй, одоогоор хувилах үйлдэл дэмжигдээгүй байгаа."
+msgstr "Та аянг хувилах боломжгүй, одоогоор хувилах үйлдэл дэмжигдээгүй байгаа."

@@ -31,6 +31,13 @@ class account_followup_stat_by_partner(osv.osv):
     _description = "Follow-up Statistics by Partner"
     _rec_name = 'partner_id'
     _auto = False
+
+    def _get_invoice_partner_id(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            result[rec.id] = rec.partner_id.address_get(adr_pref=['invoice']).get('invoice', rec.partner_id.id)
+        return result
+
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'date_move':fields.date('First move', readonly=True),
@@ -40,6 +47,7 @@ class account_followup_stat_by_partner(osv.osv):
                                     'Max Follow Up Level', readonly=True, ondelete="cascade"),
         'balance':fields.float('Balance', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'invoice_partner_id': fields.function(_get_invoice_partner_id, type='many2one', relation='res.partner', string='Invoice Address')
     }
 
     _depends = {

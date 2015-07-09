@@ -38,6 +38,9 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         if not period_journal:
             raise osv.except_osv(_('Error!'), _("You have to set the 'End  of Year Entries Journal' for this Fiscal Year which is set after generating opening entries from 'Generate Opening Entries'."))
 
+        if period_journal.period_id.state == 'done':
+            raise osv.except_osv(_('Error!'), _("You can not cancel closing entries if the 'End of Year Entries Journal' period is closed."))
+
         ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))

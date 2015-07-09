@@ -322,6 +322,28 @@ class test_convert_import_data(TransactionCase):
             ('', '6'),
         ])
 
+    def test_empty_rows(self):
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': 'name,Some Value\n'
+                    'foo,1\n'
+                    '\n'
+                    'bar,2\n'
+                    '     \n'
+                    '\t \n'
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, fields = Import._convert_import_data(
+            record, ['name', 'somevalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(fields, ['name', 'somevalue'])
+        self.assertItemsEqual(data, [
+            ('foo', '1'),
+            ('bar', '2'),
+        ])
+
     def test_nofield(self):
         Import = self.registry('base_import.import')
 

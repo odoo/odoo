@@ -21,9 +21,10 @@
 
 import time
 import openerp.addons.decimal_precision as dp
+from collections import OrderedDict
 from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
 from openerp.addons.product import _common
@@ -95,6 +96,16 @@ class mrp_workcenter(osv.osv):
             cost = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
+
+    def _check_capacity_per_cycle(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.capacity_per_cycle <= 0.0:
+                return False
+        return True
+
+    _constraints = [
+        (_check_capacity_per_cycle, 'The capacity per cycle must be strictly positive.', ['capacity_per_cycle']),
+    ]
 
 class mrp_routing(osv.osv):
     """
@@ -193,6 +204,7 @@ class mrp_bom(osv.osv):
     }
     _order = "sequence"
 
+
     def _bom_find(self, cr, uid, product_tmpl_id=None, product_id=None, properties=None, context=None):
         """ Finds BoM for particular product and product uom.
         @param product_tmpl_id: Selected product.
@@ -200,6 +212,8 @@ class mrp_bom(osv.osv):
         @param properties: List of related properties.
         @return: False or BoM id.
         """
+        if not context:
+            context = {}
         if properties is None:
             properties = []
         if product_id:
@@ -217,20 +231,38 @@ class mrp_bom(osv.osv):
         else:
             # neither product nor template, makes no sense to search
             return False
+        if context.get('company_id'):
+            domain = domain + [('company_id', '=', context['company_id'])]
         domain = domain + [ '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT)),
                             '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT))]
         # order to prioritize bom with product_id over the one without
-        ids = self.search(cr, uid, domain, order='product_id', context=context)
+        ids = self.search(cr, uid, domain, order='sequence, product_id', context=context)
         # Search a BoM which has all properties specified, or if you can not find one, you could
-        # pass a BoM without any properties
+        # pass a BoM without any properties with the smallest sequence
         bom_empty_prop = False
         for bom in self.pool.get('mrp.bom').browse(cr, uid, ids, context=context):
             if not set(map(int, bom.property_ids or [])) - set(properties or []):
-                if properties and not bom.property_ids:
-                    bom_empty_prop = bom.id
-                else:
+                if not properties or bom.property_ids:
                     return bom.id
+                elif not bom_empty_prop:
+                    bom_empty_prop = bom.id
         return bom_empty_prop
+
+    def _skip_bom_line(self, cr, uid, line, product, context=None):
+        """ Control if a BoM line should be produce, can be inherited for add
+        custom control.
+        @param line: BoM line.
+        @param product: Selected product produced.
+        @return: True or False
+        """
+        if line.date_start and line.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
+            line.date_stop and line.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
+                return True
+        # all bom_line_id variant values must be in the product
+        if line.attribute_value_ids:
+            if not product or (set(map(int,line.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
+                return True
+        return False
 
     def _bom_explode(self, cr, uid, bom, product, factor, properties=None, level=0, routing_id=False, previous_products=None, master_bom=None, context=None):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
@@ -277,13 +309,10 @@ class mrp_bom(osv.osv):
                 })
 
         for bom_line_id in bom.bom_line_ids:
-            if bom_line_id.date_start and bom_line_id.date_start > time.strftime(DEFAULT_SERVER_DATE_FORMAT) or \
-                bom_line_id.date_stop and bom_line_id.date_stop < time.strftime(DEFAULT_SERVER_DATE_FORMAT):
-                    continue
-            # all bom_line_id variant values must be in the product
-            if bom_line_id.attribute_value_ids:
-                if not product or (set(map(int,bom_line_id.attribute_value_ids or [])) - set(map(int,product.attribute_value_ids))):
-                    continue
+            if self._skip_bom_line(cr, uid, bom_line_id, product, context=context):
+                continue
+            if set(map(int, bom_line_id.property_ids or [])) - set(properties or []):
+                continue
 
             if previous_products and bom_line_id.product_id.product_tmpl_id.id in previous_products:
                 raise osv.except_osv(_('Invalid Action!'), _('BoM "%s" contains a BoM line with a product recursion: "%s".') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
@@ -356,6 +385,7 @@ class mrp_bom(osv.osv):
 class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
     _order = "sequence"
+    _rec_name = "product_id"
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
         """If the BOM line refers to a BOM, return the ids of the child BOM lines"""
@@ -405,6 +435,7 @@ class mrp_bom_line(osv.osv):
         'product_rounding': lambda *a: 0.0,
         'type': lambda *a: 'normal',
         'product_uom': _get_uom_id,
+        'sequence': 1,
     }
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)', 'All product quantities must be greater than 0.\n' \
@@ -465,6 +496,12 @@ class mrp_production(osv.osv):
                 result[prod.id]['hour_total'] += wc.hour
                 result[prod.id]['cycle_total'] += wc.cycle
         return result
+
+    def _get_workcenter_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool['mrp.production.workcenter.line'].browse(cr, uid, ids, context=context):
+            result[line.production_id.id] = True
+        return result.keys()
 
     def _src_id_default(self, cr, uid, ids, context=None):
         try:
@@ -564,8 +601,14 @@ class mrp_production(osv.osv):
                 If the stock is available then the status is set to 'Ready to Produce'.\n\
                 When the production gets started then the status is set to 'In Production'.\n\
                 When the production is over, the status is set to 'Done'."),
-        'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
-        'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
+        'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store={
+            _name: (lambda self, cr, uid, ids, c={}: ids, ['workcenter_lines'], 40),
+            'mrp.production.workcenter.line': (_get_workcenter_line, ['hour', 'cycle'], 40),
+        }),
+        'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store={
+            _name: (lambda self, cr, uid, ids, c={}: ids, ['workcenter_lines'], 40),
+            'mrp.production.workcenter.line': (_get_workcenter_line, ['hour', 'cycle'], 40),
+        }),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'ready_production': fields.function(_moves_assigned, type='boolean', store={'stock.move': (_mrp_from_move, ['state'], 10)}),
@@ -577,7 +620,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty': lambda *a: 1.0,
         'user_id': lambda self, cr, uid, c: uid,
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
+        'name': lambda self, cr, uid, context: self.pool['ir.sequence'].get(cr, uid, 'mrp.production', context=context) or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
         'location_src_id': _src_id_default,
         'location_dest_id': _dest_id_default
@@ -711,7 +754,7 @@ class mrp_production(osv.osv):
             #reset workcenter_lines in production order
             for line in results2:
                 line['production_id'] = production.id
-                workcenter_line_obj.create(cr, uid, line)
+                workcenter_line_obj.create(cr, uid, line, context)
         return results
 
     def action_compute(self, cr, uid, ids, properties=None, context=None):
@@ -741,6 +784,7 @@ class mrp_production(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         procs = proc_obj.search(cr, uid, [('production_id', 'in', ids)], context=context)
         if procs:
+            proc_obj.message_post(cr, uid, procs, body=_('Manufacturing order cancelled.'), context=context)
             proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
@@ -835,7 +879,7 @@ class mrp_production(osv.osv):
             product_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id) - produced_qty
         production_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.product_id.uom_id.id)
 
-        scheduled_qty = {}
+        scheduled_qty = OrderedDict()
         for scheduled in production.product_lines:
             if scheduled.product_id.type == 'service':
                 continue
@@ -844,7 +888,7 @@ class mrp_production(osv.osv):
                 scheduled_qty[scheduled.product_id.id] += qty
             else:
                 scheduled_qty[scheduled.product_id.id] = qty
-        dicts = {}
+        dicts = OrderedDict()
         # Find product qty to be consumed and consume it
         for product_id in scheduled_qty.keys():
 
@@ -887,7 +931,7 @@ class mrp_production(osv.osv):
                         else:
                             dicts[product_id][lot_id] = quant_qty
                         qty -= quant_qty
-            if qty > 0:
+            if float_compare(qty, 0, self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')) == 1:
                 if dicts[product_id].get(False):
                     dicts[product_id][False] += qty
                 else:
@@ -914,6 +958,7 @@ class mrp_production(osv.osv):
         uom_obj = self.pool.get("product.uom")
         production = self.browse(cr, uid, production_id, context=context)
         production_qty_uom = uom_obj._compute_qty(cr, uid, production.product_uom.id, production_qty, production.product_id.uom_id.id)
+        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')
 
         main_production_move = False
         if production_mode == 'consume_produce':
@@ -925,7 +970,6 @@ class mrp_production(osv.osv):
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
                 produced_products[produced_product.product_id.id] += produced_product.product_qty
-
             for produce_product in production.move_created_ids:
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 lot_id = False
@@ -936,13 +980,13 @@ class mrp_production(osv.osv):
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
                 remaining_qty = subproduct_factor * production_qty_uom - qty
-                if remaining_qty: # In case you need to make more than planned
+                if not float_is_zero(remaining_qty, precision_digits=precision):
+                    # In case you need to make more than planned
                     #consumed more in wizard than previously planned
-                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'state': 'confirmed',
-                                                                                             'product_uom_qty': remaining_qty,
+                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
                                                                                              'production_id': production_id}, context=context)
-                    if extra_move_id:
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
                 if produce_product.product_id.id == production.product_id.id:
                     main_production_move = produce_product.id
@@ -957,6 +1001,8 @@ class mrp_production(osv.osv):
             for consume in consume_lines:
                 remaining_qty = consume['product_qty']
                 for raw_material_line in production.move_lines:
+                    if raw_material_line.state in ('done', 'cancel'):
+                        continue
                     if remaining_qty <= 0:
                         break
                     if consume['product_id'] != raw_material_line.product_id.id:
@@ -965,16 +1011,20 @@ class mrp_production(osv.osv):
                     stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
                                                  restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
                     remaining_qty -= consumed_qty
-                if remaining_qty:
+                if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
                     extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
-                    if extra_move_id:
-                        if consume['lot_id']:
-                            stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id']}, context=context)
-                        stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
+                                                                    'consumed_for': main_production_move}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
+
+        # Remove remaining products to consume if no more products to produce
+        if not production.move_created_ids and production.move_lines:
+            stock_mov_obj.action_cancel(cr, uid, [x.id for x in production.move_lines], context=context)
+
         self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
         return True
 
@@ -1076,14 +1126,27 @@ class mrp_production(osv.osv):
         #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
-    def _get_raw_material_procure_method(self, cr, uid, product, context=None):
-        '''This method returns the procure_method to use when creating the stock move for the production raw materials'''
+    def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):
+        '''This method returns the procure_method to use when creating the stock move for the production raw materials
+        Besides the standard configuration of looking if the product or product category has the MTO route,
+        you can also define a rule e.g. from Stock to Production (which might be used in the future like the sale orders)
+        '''
         warehouse_obj = self.pool['stock.warehouse']
+        routes = product.route_ids + product.categ_id.total_route_ids
+
+        if location_id and location_dest_id:
+            pull_obj = self.pool['procurement.rule']
+            pulls = pull_obj.search(cr, uid, [('route_id', 'in', [x.id for x in routes]),
+                                            ('location_id', '=', location_dest_id),
+                                            ('location_src_id', '=', location_id)], limit=1, context=context)
+            if pulls:
+                return pull_obj.browse(cr, uid, pulls[0], context=context).procure_method
+
         try:
             mto_route = warehouse_obj._get_mto_route(cr, uid, context=context)
         except:
             return "make_to_stock"
-        routes = product.route_ids + product.categ_id.total_route_ids
+
         if mto_route in [x.id for x in routes]:
             return "make_to_order"
         return "make_to_stock"
@@ -1115,7 +1178,8 @@ class mrp_production(osv.osv):
         move = stock_move.copy(cr, uid, move_id, default = {
             'location_id': source_location_id,
             'location_dest_id': dest_location_id,
-            'procure_method': self._get_raw_material_procure_method(cr, uid, product, context=context),
+            'procure_method': self._get_raw_material_procure_method(cr, uid, product, location_id=source_location_id,
+                                                                    location_dest_id=dest_location_id, context=context),
             'raw_material_production_id': False, 
             'move_dest_id': move_id,
             'picking_type_id': types and types[0] or False,
@@ -1148,7 +1212,8 @@ class mrp_production(osv.osv):
             'location_id': source_location_id,
             'location_dest_id': destination_location_id,
             'company_id': production.company_id.id,
-            'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, context=context), #Make_to_stock avoids creating procurement
+            'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, location_id=source_location_id,
+                                                                                                     location_dest_id=destination_location_id, context=context), #Make_to_stock avoids creating procurement
             'raw_material_production_id': production.id,
             #this saves us a browse in create()
             'price_unit': product.standard_price,
@@ -1189,6 +1254,8 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
         """
+        user_lang = self.pool.get('res.users').browse(cr, uid, [uid]).partner_id.lang
+        context = dict(context, lang=user_lang)
         uncompute_ids = filter(lambda x: x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
