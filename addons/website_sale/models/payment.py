@@ -23,6 +23,6 @@ class PaymentTransaction(orm.Model):
         if hasattr(self, tx_find_method_name):
             tx = getattr(self, tx_find_method_name)(cr, uid, data, context=context)
         if tx and tx.state == 'done' and tx.sale_order_id and tx.sale_order_id.state in ['draft', 'sent']:
-            self.pool['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=context)
+            self.pool['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [tx.sale_order_id.id], context=dict(context, send_email=True))
 
         return res
