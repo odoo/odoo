@@ -310,9 +310,12 @@ class account_analytic_account(osv.osv):
                 dom = []
                 for name2 in name.split('/'):
                     name = name2.strip()
-                    account_ids = self.search(cr, uid, dom + [('name', operator, name)] + args, limit=limit, context=context)
+                    account_ids = self.search(cr, uid, dom + [('name', operator, name)], limit=limit, context=context)
                     if not account_ids: break
                     dom = [('parent_id','in',account_ids)]
+                if account_ids and args:
+                    # final filtering according to domain (args)
+                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
         else:
             account_ids = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account_ids, context=context)
