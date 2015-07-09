@@ -57,7 +57,7 @@ function PhantomTest() {
         phantom.exit(1);
     };
     this.page.onConsoleMessage = function(message) {
-        console.log(message);
+        console.log('<phantomLog>'+message+'</phantomLog>');
     };
     this.page.onLoadFinished = function(status) {
         if (status === "success") {
@@ -92,7 +92,7 @@ function PhantomTest() {
             var message = ("Timeout\nhref: " + window.location.href +
                            "\nreferrer: " + document.referrer +
                            "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
-            console.log('error', message);
+            console.log('<phantomLog>error ' + message + '</phantomLog>');
             phantom.exit(1);
         });
     }, self.timeout);
