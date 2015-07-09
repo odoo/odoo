@@ -79,8 +79,16 @@ var Mention = Widget.extend({
         var self = this;
         var highlight = function(description){
             if(description)
-            return description.replace(new RegExp(self.search_string, "gi"), function(str) {return _.str.sprintf("<b><u>%s</u></b>",str);});};
-        var res = _.map(this.get('partners'), function(partner) {
+            return description.replace(new RegExp(self.search_string, "gi"), 
+                    function(str) {return _.str.sprintf("<b><u>%s</u></b>",str);});},
+
+            escape_ids = _.keys(this.selected_partners),
+
+            list_of_partner = _.filter(this.get('partners'), function(part){
+                                return !_.contains(escape_ids, part.id.toString())
+                            });
+
+        var res = _.map(list_of_partner, function(partner) {
                 return {
                     "id": partner["id"], 
                     "name": highlight(partner["name"]), 
