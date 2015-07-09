@@ -15,7 +15,7 @@ as well as a procurement route that allow configuring Drop
 Shipping products and orders.
 
 When drop shipping is used the goods are directly transferred
-from suppliers to customers (direct delivery) without
+from vendors to customers (direct delivery) without
 going through the retailer's warehouse. In this case no
 internal transfer document is needed.
 

@@ -9,7 +9,7 @@ class sale_order_line(models.Model):
 
     @api.multi
     def _check_routing(self, product, warehouse):
-        """ skip stock verification if the route goes from supplier to customer
+        """ skip stock verification if the route goes from vendor to customer
             As the product never goes in stock, no need to verify it's availibility
         """
         res = super(sale_order_line, self)._check_routing(product, warehouse)

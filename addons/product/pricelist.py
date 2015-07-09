@@ -467,7 +467,7 @@ class product_pricelist_item(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, 
                                     size=-1, # here use size=-1 to store the values as integers
-                                    help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Supplier Section on Product or Cost Price : The base price will be the supplier price if it is set, otherwise it will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
+                                    help='Base price for computation. \n Public Price: The base price will be the Sale/public Price. \n Vendor Section on Product or Cost Price : The base price will be the vendor price if it is set, otherwise it will be the cost price. \n Other Pricelist : Computation of the base price based on another Pricelist.'),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',

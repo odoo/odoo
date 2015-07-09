@@ -11,7 +11,7 @@ Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
 
 The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins.
-The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories.
+The double entry inventory system allows you to manage customers, vendors as well as manufacturing inventories.
 
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 

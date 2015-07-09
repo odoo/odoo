@@ -90,7 +90,7 @@ class stock_location(osv.osv):
         'name': fields.char('Location Name', required=True, translate=True),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a location without deleting it."),
         'usage': fields.selection([
-                        ('supplier', 'Supplier Location'),
+                        ('supplier', 'Vendor Location'),
                         ('view', 'View'),
                         ('internal', 'Internal Location'),
                         ('customer', 'Customer Location'),
@@ -99,12 +99,12 @@ class stock_location(osv.osv):
                         ('production', 'Production'),
                         ('transit', 'Transit Location')],
                 'Location Type', required=True,
-                help="""* Supplier Location: Virtual location representing the source location for products coming from your suppliers
+                help="""* Vendor Location: Virtual location representing the source location for products coming from your vendors
                        \n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products
                        \n* Internal Location: Physical locations inside your own warehouses,
                        \n* Customer Location: Virtual location representing the destination location for products sent to your customers
                        \n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)
-                       \n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (supplier or production) is not known yet. This location should be empty when the procurement scheduler has finished running.
+                       \n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running.
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                        \n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations
                       """, select=True),
@@ -204,7 +204,7 @@ class stock_location_route(osv.osv):
         'product_categ_selectable': fields.boolean('Applicable on Product Category'),
         'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
-        'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplier Warehouse'),
+        'supplier_wh_id': fields.many2one('stock.warehouse', 'Vendor Warehouse'),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this route is shared between all companies'),
     }
 

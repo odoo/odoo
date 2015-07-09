@@ -114,7 +114,7 @@ class purchase_order(osv.osv):
             invoice['incoterm_id'] = order.incoterm_id.id
         #Try to determine products origin
         if order.partner_id.country_id:
-            #It comes from supplier
+            #It comes from vendor
             invoice['intrastat_country_id'] = order.partner_id.country_id.id
 
         return invoice

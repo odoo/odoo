@@ -29,5 +29,5 @@ class res_partner(osv.osv):
           string="Purchase Pricelist", 
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
         'purchase_order_count': fields.function(_purchase_invoice_count, string='# of Purchase Order', type='integer', multi="count"),
-        'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Supplier Bills', type='integer', multi="count"),
+        'supplier_invoice_count': fields.function(_purchase_invoice_count, string='# Vendor Bills', type='integer', multi="count"),
     }

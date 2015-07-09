@@ -527,7 +527,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'price_per_liter': fields.float('Price Per Liter'),
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference', size=64),
-        'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
+        'vendor_id': fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
@@ -567,7 +567,7 @@ class fleet_vehicle_log_services(osv.Model):
     _columns = {
         'purchaser_id': fields.many2one('res.partner', 'Purchaser', domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref': fields.char('Invoice Reference'),
-        'vendor_id': fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
+        'vendor_id': fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
         'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
         'notes': fields.text('Notes'),
         'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
@@ -759,7 +759,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
         'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
-        'insurer_id' :fields.many2one('res.partner', 'Supplier'),
+        'insurer_id' :fields.many2one('res.partner', 'Vendor'),
         'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
         'ins_ref': fields.char('Contract Reference', size=64, copy=False),
         'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],

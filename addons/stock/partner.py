@@ -14,6 +14,6 @@ class res_partner(osv.osv):
         'property_stock_supplier': fields.property(
           type='many2one',
           relation='stock.location',
-          string="Supplier Location",
+          string="Vendor Location",
           help="This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"),
     }

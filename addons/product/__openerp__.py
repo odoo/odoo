@@ -17,7 +17,7 @@
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================
 
-Products support variants, different pricing methods, suppliers information,
+Products support variants, different pricing methods, vendors information,
 make to stock/order, different unit of measures, packaging and properties.
 
 Pricelists support:
@@ -27,7 +27,7 @@ Pricelists support:
         * Other pricelist
         * Cost price
         * List price
-        * Supplier price
+        * Vendor price
 
 Pricelists preferences by product and/or partners.
 

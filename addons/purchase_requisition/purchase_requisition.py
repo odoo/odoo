@@ -31,7 +31,7 @@ class purchase_requisition(osv.osv):
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
-        'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
+        'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by vendor'),
         'line_ids': fields.one2many('purchase.requisition.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}, copy=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null', copy=False),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
@@ -40,7 +40,7 @@ class purchase_requisition(osv.osv):
                                    ('cancel', 'Cancelled')],
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
-        'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
+        'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
@@ -88,7 +88,7 @@ class purchase_requisition(osv.osv):
 
     def open_product_line(self, cr, uid, ids, context=None):
         """ This opens product line view to view all lines from the different quotations, groupby default by product and partner to show comparaison
-            between supplier price
+            between vendor price
             @return: the product line tree view
         """
         if context is None:
@@ -160,10 +160,10 @@ class purchase_requisition(osv.osv):
 
     def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
         """
-        Create New RFQ for Supplier
+        Create New RFQ for Vendor
         """
         context = dict(context or {})
-        assert partner_id, 'Supplier should be specified'
+        assert partner_id, 'Vendor should be specified'
         purchase_order = self.pool.get('purchase.order')
         purchase_order_line = self.pool.get('purchase.order.line')
         res_partner = self.pool.get('res.partner')

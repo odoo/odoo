@@ -16,7 +16,7 @@ class procurement_order(osv.osv):
         'next_delivery_date': fields.datetime('Next Delivery Date',
                                               help="The date of the next delivery for this procurement group, when this group is on the purchase calendar of the orderpoint"),
         'next_purchase_date': fields.datetime('Next Purchase Date',
-                                              help="The date the next purchase order should be sent to the supplier"),
+                                              help="The date the next purchase order should be sent to the vendor"),
         }
 
     def assign_group_date(self, cr, uid, ids, context=None):

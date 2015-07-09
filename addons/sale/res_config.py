@@ -39,7 +39,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help='Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n'
                  'Example: Product: this product is deprecated, do not purchase more than 5.\n'
-                 'Supplier: don\'t forget to ask for an express delivery.'),
+                 'Vendor: don\'t forget to ask for an express delivery.'),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'

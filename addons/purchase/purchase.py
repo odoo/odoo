@@ -199,35 +199,35 @@ class purchase_order(osv.osv):
         'origin': fields.char('Source Document', copy=False,
                               help="Reference of the document that generated this purchase order "
                                    "request; a sales order or an internal procurement request."),
-        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)],
+        'partner_ref': fields.char('Vendor Reference', states={'confirmed':[('readonly',True)],
                                                                  'approved':[('readonly',True)],
                                                                  'done':[('readonly',True)]},
                                    copy=False,
-                                   help="Reference of the sales order or bid sent by your supplier. "
+                                   help="Reference of the sales order or bid sent by your vendor. "
                                         "It's mainly used to do the matching when you receive the "
                                         "products as this reference is usually written on the "
-                                        "delivery order sent by your supplier."),
+                                        "delivery order sent by your vendor."),
         'date_order':fields.datetime('Order Date', required=True, states={'confirmed':[('readonly',True)],
                                                                       'approved':[('readonly',True)]},
                                  select=True, help="Depicts the date where the Quotation should be validated and converted into a Purchase Order, by default it's the creation date.",
                                  copy=False),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, copy=False,
                                    help="Date on which purchase order has been approved"),
-        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states=READONLY_STATES,
+        'partner_id':fields.many2one('res.partner', 'Vendor', required=True, states=READONLY_STATES,
             change_default=True, track_visibility='always'),
         'dest_address_id':fields.many2one('res.partner', 'Customer Address (Direct Delivery)',
             states=READONLY_STATES,
-            help="Put an address if you want to deliver directly from the supplier to the customer. " \
+            help="Put an address if you want to deliver directly from the vendor to the customer. " \
                 "Otherwise, keep empty to deliver to your own company."
         ),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states=READONLY_STATES),
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states=READONLY_STATES, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states=READONLY_STATES, help="The pricelist sets the currency used for this purchase order. It also computes the vendor price for the selected products/quantities."),
         'currency_id': fields.many2one('res.currency','Currency', required=True, states=READONLY_STATES),
         'state': fields.selection(STATE_SELECTION, 'Status', readonly=True,
                                   help="The status of the purchase order or the quotation request. "
                                        "A request for quotation is a purchase order in a 'Draft' status. "
                                        "Then the order has to be confirmed by the user, the status switch "
-                                       "to 'Confirmed'. Then the supplier must confirm the order to change "
+                                       "to 'Confirmed'. Then the vendor must confirm the order to change "
                                        "the status to 'Approved'. When the purchase order is paid and "
                                        "received, the status becomes 'Done'. If a cancel action occurs in "
                                        "the invoice or in the receipt of goods, the status becomes "
@@ -450,7 +450,7 @@ class purchase_order(osv.osv):
         res_id = res and res[1] or False
 
         return {
-            'name': _('Supplier Bills'),
+            'name': _('Vendor Bills'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],
@@ -1158,7 +1158,7 @@ class purchase_order_line(osv.osv):
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
                 if float_compare(min_qty , qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
                     if qty:
-                        res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
+                        res['warning'] = {'title': _('Warning!'), 'message': _('The selected vendor has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
         dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         qty = qty or 1.0
@@ -1264,21 +1264,21 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _check_supplier_info(self, cr, uid, ids, context=None):
-        ''' Check the supplier info field of a product and write an error message on the procurement if needed.
+        ''' Check the vendor info field of a product and write an error message on the procurement if needed.
         Returns True if all needed information is there, False if some configuration mistake is detected.
         '''
         partner_obj = self.pool.get('res.partner')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
             message = ''
-            partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
+            partner = procurement.product_id.seller_id #Taken Main Vendor of Product of Procurement.
 
             if not procurement.product_id.seller_ids:
-                message = _('No supplier defined for this product !')
+                message = _('No vendor defined for this product !')
             elif not partner:
-                message = _('No default supplier defined for this product')
+                message = _('No default vendor defined for this product')
             elif not partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']:
-                message = _('No address defined for the supplier')
+                message = _('No address defined for the vendor')
 
             if message:
                 if procurement.message != message:
@@ -1335,7 +1335,7 @@ class procurement_order(osv.osv):
         return schedule_date - relativedelta(days=seller_delay)
 
     def _get_product_supplier(self, cr, uid, procurement, context=None):
-        ''' returns the main supplier of the procurement's product given as argument'''
+        ''' returns the main vendor of the procurement's product given as argument'''
         supplierinfo = self.pool['product.supplierinfo']
         company_supplier = supplierinfo.search(cr, uid,
             [('product_tmpl_id', '=', procurement.product_id.product_tmpl_id.id), ('company_id', '=', procurement.company_id.id)], limit=1, context=context)
@@ -1606,7 +1606,7 @@ class procurement_order(osv.osv):
             other_procs = self.browse(cr, uid, other_proc_ids, context=context)
             for procurement in other_procs:
                 res[procurement.id] = False
-                self.message_post(cr, uid, [procurement.id], _('There is no supplier associated to product %s') % (procurement.product_id.name))
+                self.message_post(cr, uid, [procurement.id], _('There is no vendor associated to product %s') % (procurement.product_id.name))
         return res
 
 
