@@ -46,7 +46,7 @@ class account_partner_ledger(osv.osv_memory):
         res = super(account_partner_ledger, self).onchange_filter(cr, uid, ids, filter=filter, fiscalyear_id=fiscalyear_id, context=context)
         if filter in ['filter_no', 'unreconciled']:
             if filter  == 'unreconciled':
-                 res['value'].update({'fiscalyear_id': False})
+                res['value'].update({'fiscalyear_id': False})
             res['value'].update({'initial_balance': False, 'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False})
         return res
 

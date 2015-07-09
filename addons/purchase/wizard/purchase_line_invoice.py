@@ -48,19 +48,18 @@ class purchase_line_invoice(osv.osv_memory):
         if record_ids:
             res = False
             invoices = {}
-            invoice_obj=self.pool.get('account.invoice')
-            purchase_line_obj=self.pool.get('purchase.order.line')
-            property_obj=self.pool.get('ir.property')
-            account_fiscal_obj=self.pool.get('account.fiscal.position')
-            invoice_line_obj=self.pool.get('account.invoice.line')
-            account_jrnl_obj=self.pool.get('account.journal')
+            invoice_obj = self.pool.get('account.invoice')
+            purchase_line_obj = self.pool.get('purchase.order.line')
+            property_obj = self.pool.get('ir.property')
+            account_fiscal_obj = self.pool.get('account.fiscal.position')
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            account_jrnl_obj = self.pool.get('account.journal')
 
             def multiple_order_invoice_notes(orders):
                 notes = ""
                 for order in orders:
                     notes += "%s \n" % order.notes
                 return notes
-
 
 
             def make_invoice_by_partner(partner, orders, lines_ids):
@@ -99,8 +98,8 @@ class purchase_line_invoice(osv.osv_memory):
                     order.write({'invoice_ids': [(4, inv_id)]})
                 return inv_id
 
-            for line in purchase_line_obj.browse(cr,uid,record_ids):
-                if (not line.invoiced) and (line.state not in ('draft','cancel')):
+            for line in purchase_line_obj.browse(cr, uid, record_ids):
+                if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                     if not line.partner_id.id in invoices:
                         invoices[line.partner_id.id] = []
                     if line.product_id:

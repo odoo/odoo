@@ -39,7 +39,7 @@ The whole workflow is implemented:
 
 This module also uses the analytic accounting and is compatible with
 the invoice on timesheet module so that you will be able to automatically
-re-invoice your customer's expenses if your work by project.
+re-invoice your customer's expenses if you work by project.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

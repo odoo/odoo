@@ -115,7 +115,7 @@ class account_cash_statement(osv.osv):
         for statement in self.browse(cr, uid, ids, context=context):
             encoding_total=0.0
             for line in statement.line_ids:
-               encoding_total += line.amount
+                encoding_total += line.amount
             res2[statement.id] = encoding_total
         return res2
 
@@ -218,8 +218,8 @@ class account_cash_statement(osv.osv):
                 for start in starting_details_ids:
                     dict_val = start[2] or {}
                     for end in open_close['end']:
-                       if end[2]['pieces'] == dict_val.get('pieces', 0.0):
-                           end[2]['number'] += dict_val.get('number', 0.0)
+                        if end[2]['pieces'] == dict_val.get('pieces', 0.0):
+                            end[2]['number'] += dict_val.get('number', 0.0)
             vals.update({
 #                'ending_details_ids': open_close['start'],
                 'starting_details_ids': open_close['end']
