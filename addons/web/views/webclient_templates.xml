@@ -127,6 +127,7 @@
                     <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
                     <link rel="stylesheet" href="/web/static/src/css/full.css" />
                     <t t-raw="head or ''"/>
+                    <script t-if="env.registry.test_cr" src="/web/static/src/js/test.js"/>
                 </head>
                 <body t-att-class="body_classname">
                     <t t-raw="0"/>

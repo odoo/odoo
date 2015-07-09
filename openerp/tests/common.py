@@ -9,12 +9,14 @@ import glob
 import json
 import logging
 import os
+import re
 import select
 import subprocess
 import threading
 import time
 import itertools
 import unittest2
+import urllib
 import urllib2
 import xmlrpclib
 from contextlib import contextmanager
@@ -304,6 +306,9 @@ class HttpCase(TransactionCase):
 
                 if line == "ok":
                     break
+                if re.search(' "ok",',line):
+                    break
+
                 if line.startswith("error"):
                     line_ = line[6:]
                     # when error occurs the execution stack may be sent as as JSON
@@ -396,6 +401,49 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+
+    def chrome_js(self, url_path, code, ready='window', login=None, timeout=60, **kw):
+        options = {
+            'port': PORT,
+            'db': get_db_name(),
+            'url_path': url_path,
+            'code': code,
+            'ready': ready,
+            'timeout' : timeout,
+            'login' : login,
+            'session_id': self.session_id,
+        }
+        url = 'http://localhost:%s%s#test=%s' % (PORT, url_path, urllib.quote(json.dumps(options)))
+        cmd = [
+            'xvfb-run',
+            'google-chrome',
+            '--enable-logging=stderr',
+            # TODO python temp dir 
+            '--user-data-dir=/tmp/test',
+            '--no-default-browser-check',
+            '--no-first-run',
+            '--ignore-certificate-errors',
+            url
+        ]
+        try:
+            print cmd
+            print "killall Xvfb"
+            phantom = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        except OSError:
+            raise unittest2.SkipTest("PhantomJS not found")
+        try:
+            self.phantom_poll(phantom, timeout)
+        finally:
+            # kill phantomjs if phantom.exit() wasn't called in the test
+            pgrp = os.getpgid(phantom.pid)
+            print "PID", phantom.pid, "PRGRP", pgrp
+            #os.kill(os.getpgid(p.pid), 15)
+            #phantom.terminate()
+            os.killpg(pgrp, 15)
+            self._wait_remaining_requests()
+            _logger.info("phantom_run execution finished")
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

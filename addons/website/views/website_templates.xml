@@ -94,6 +94,7 @@
             <t t-call-assets="website.assets_frontend" t-js="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
+
         </head>
         <body>
             <div id="wrapwrap">
@@ -153,6 +154,7 @@
                 ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
                 ga('send','pageview');
             </script>
+            <script t-if="env.registry.test_cr" src="/web/static/src/js/test.js"/>
         </body>
     </html>
 </template>
