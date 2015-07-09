@@ -14,6 +14,10 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     init: function(parent) {
         mixins.PropertiesMixin.init.call(this);
         this.setParent(parent);
+        // Keep a reference of the handler functions to use when adding and removing event listeners
+        this.__keydown_handler = _.bind(this.keydown_handler, this);
+        this.__keyup_handler = _.bind(this.keyup_handler, this);
+        this.__handler = _.bind(this.handler, this);
         // Bind event handler once the DOM is loaded
         // TODO: find a way to be active only when there are listeners on the bus
         $(this.start.bind(this));
@@ -127,15 +131,15 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     start: function(){
-        document.body.addEventListener('keydown', this.keydown_handler.bind(this), true);
-        document.body.addEventListener('keyup', this.keyup_handler.bind(this), true);
-        document.body.addEventListener('keypress', this.handler.bind(this), true);
+        document.body.addEventListener('keypress', this.__handler, true);
+        document.body.addEventListener('keydown', this.__keydown_handler, true);
+        document.body.addEventListener('keyup', this.__keyup_handler, true);
     },
 
     stop: function(){
-        document.body.removeEventListener('keydown', this.keydown_handler.bind(this), true);
-        document.body.removeEventListener('keyup', this.keyup_handler.bind(this), true);
-        document.body.removeEventListener('keypress', this.handler.bind(this), true);
+        document.body.removeEventListener('keypress', this.__handler, true);
+        document.body.removeEventListener('keydown', this.__keydown_handler, true);
+        document.body.removeEventListener('keyup', this.__keyup_handler, true);
     },
 });
 
