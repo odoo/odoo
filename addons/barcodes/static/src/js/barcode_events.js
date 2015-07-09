@@ -130,10 +130,12 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         }
     },
 
-    start: function(){
+    start: function(prevent_key_repeat){
         document.body.addEventListener('keypress', this.__handler, true);
-        document.body.addEventListener('keydown', this.__keydown_handler, true);
-        document.body.addEventListener('keyup', this.__keyup_handler, true);
+        if (prevent_key_repeat === true) {
+            document.body.addEventListener('keydown', this.__keydown_handler, true);
+            document.body.addEventListener('keyup', this.__keyup_handler, true);
+        }
     },
 
     stop: function(){
