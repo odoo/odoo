@@ -23,8 +23,6 @@ This is the base module to manage the accounting chart for Dominican Republic.
     'depends': ['account', 'base_iban'],
     'data': [
         # basic accounting data
-        'data/ir_sequence.xml',
-        'data/account_journal.xml',
         'data/account_chart_template.xml',
         'data/account.account.template.csv',
         'data/set_account_on_chart_template.xml',
