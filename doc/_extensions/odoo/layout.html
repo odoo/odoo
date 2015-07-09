@@ -9,10 +9,11 @@
 
 {% set classes = [] %}
 {% if pagename == master_doc %}
-{% set classes = classes + ['index'] %}
+  {% set classes = classes + ['index'] %}
 {% endif %}
+
 {% if 'code-column' in meta %}
-{% set classes = classes + ['has_code_col'] %}
+  {% set classes = classes + ['has_code_col'] %}
 {% endif %}
 
 {%- block doctype -%}
@@ -46,7 +47,7 @@
 {%- block header -%}
   <header class="{{ ' '.join(classes) }}">
     <figure class="card top">
-      <span class="card-img" style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"></span>
+      <span class="card-img" {% if meta['banner'] %}style="background-image: url('{{ pathto('_static/' + meta['banner'], True) }}');"{% endif %}></span>
     </figure>
   </header>
   <nav id="main_navbar" class="navbar {{ ' '.join(classes) }}">
@@ -90,7 +91,12 @@
 {%- endblock -%}
 
 {%- block content -%}
-  <main class="container {{ ' '.join(classes) }}">
+  {% if 'code-column' in meta %}
+    {% set container = 'container-fluid' %}
+  {% else %}
+    {% set container = 'container' %}
+  {% endif %}
+  <main class="{{ container }} {{ ' '.join(classes) }}">
     {% if pagename != master_doc %}
     <div class="row">
       <aside>

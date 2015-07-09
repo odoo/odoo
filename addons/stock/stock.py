@@ -211,7 +211,7 @@ class stock_location_route(osv.osv):
     _order = 'sequence'
 
     _columns = {
-        'name': fields.char('Route Name', required=True),
+        'name': fields.char('Route Name', required=True, translate=True),
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules', copy=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
