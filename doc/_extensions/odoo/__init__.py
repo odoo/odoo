@@ -49,6 +49,27 @@ def navbarify(node, navbar=None):
             link.attributes['data-toggle'] = 'dropdown'
             # list_item.bullet_list
             list_item.children[1]['classes'].append('dropdown-menu')
+    elif navbar is None:
+        for n in node.traverse(nodes.reference):
+            # list_item
+            #   compact_paragraph
+            #       reference <- starting point
+            #   bullet_list
+            #       list_item+
+            # if the current list item (GP of current node) has bullet list
+            # children, unref it
+            list_item = n.parent.parent
+            # only has a reference -> ignore
+            if len(list_item.children) < 2:
+                continue
+            # no subrefs -> ignore
+            if not list_item.children[1].children:
+                continue
+            # otherwise replace reference node by its own children
+            para = n.parent
+            para.remove(n)
+            para.extend(n.children)
+
 
 def resolve_content_toctree(
         environment, docname, builder, toctree, prune=True, maxdepth=0,
