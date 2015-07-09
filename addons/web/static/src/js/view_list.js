@@ -2324,6 +2324,10 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
                     row_data[this.filename].value, {type: 'char'}));
             filename = row_data[this.filename].value;
+        } else if (row_data['name']) {
+            text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+                    row_data['name'].value, {type: 'char'}));
+            filename = row_data['name'].value;
         }
         return _.template('<a download="<%-download%>" href="<%-href%>"><%-text%></a> (<%-size%>)', {
             text: text,
