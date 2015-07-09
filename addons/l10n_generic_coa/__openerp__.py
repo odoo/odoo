@@ -21,7 +21,7 @@ Install some generic chart of accounts.
     ],
     'test': [
         '../account/test/account_bank_statement.yml',
-        '../account/test/account_cash_statement.yml',
+        #'../account/test/account_cash_statement.yml',
         '../account/test/account_invoice_state.yml',
     ],
     'installable': True,

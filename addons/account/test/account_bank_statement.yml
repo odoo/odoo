@@ -39,6 +39,18 @@
     }
     self.create(cr, uid, vals)
 -
+  I process the bank statement line
+-
+  !python {model: account.bank.statement}: |
+    account_id = self.pool.get('account.account').create(cr, uid, {'name': 'toto', 'code': 'bidule', 'user_type_id': self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'account.data_account_type_fixed_assets')})
+    statement = self.browse(cr, uid, [ref("account_bank_statement_0")])
+    statement.line_ids[0].process_reconciliation(new_aml_dicts=[{
+        'credit': 1000,
+        'debit': 0,
+        'name': 'toto',
+        'account_id': account_id,
+    }])
+-
   I modify the bank statement and set the Closing Balance.
 -
   !record {model: account.bank.statement, id: account_bank_statement_0}:
