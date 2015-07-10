@@ -42,14 +42,41 @@ def _check_value(value):
     return value.get() if isinstance(value, SpecialValue) else value
 
 
-def resolve_all_mro(cls, name, reverse=False):
-    """ Return the (successively overridden) values of attribute ``name`` in ``cls``
-        in mro order, or inverse mro order if ``reverse`` is true.
+def resolve_all_mro(model, name, reverse=False):
+    """ Return the (successively overridden) values of attribute ``name`` in the
+        class of ``model`` in mro order (or inverse order if ``reverse``).
     """
-    klasses = reversed(cls.__mro__) if reverse else cls.__mro__
+    klasses = reversed(type(model).__mro__) if reverse else type(model).__mro__
     for klass in klasses:
         if name in klass.__dict__:
             yield klass.__dict__[name]
+
+
+def default_new_to_new(field, value):
+    """ Convert the new-API default ``value`` to a callable. """
+    return value if callable(value) else lambda model: value
+
+def default_new_to_old(field, value):
+    """ Convert the new-API default ``value`` to the old API. """
+    if callable(value):
+        from openerp import api
+        return api.model(lambda model: field.convert_to_write(value(model)))
+    else:
+        return value
+
+def default_old_to_new(field, value):
+    """ Convert the old-API default ``value`` to the new API. """
+    if callable(value):
+        return lambda model: field.convert_to_cache(
+            value(model._model, model._cr, model._uid, model._context),
+            model, validate=False,
+        )
+    else:
+        return lambda model: field.convert_to_cache(value, model, validate=False)
+
+def default_old_to_old(field, value):
+    """ Convert the old-API default ``value`` to the old API. """
+    return value
 
 
 class MetaField(type):
@@ -258,12 +285,12 @@ class Field(object):
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
+        'setup_full_done': False,       # whether the field has been fully setup
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
         'origin': None,                 # the column from which the field was created
         'column': None,                 # the column corresponding to the field
-        'setup_done': False,            # whether the field has been set up
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -304,6 +331,10 @@ class Field(object):
         args = {key: val for key, val in kwargs.iteritems() if val is not None}
         self.args = args or EMPTY_DICT
 
+    def new(self, **kwargs):
+        """ Return a field of the same type as ``self``, with its own parameters. """
+        return type(self)(**kwargs)
+
     def __getattr__(self, name):
         """ Access non-slot field attribute. """
         try:
@@ -337,23 +368,38 @@ class Field(object):
         except KeyError:
             raise AttributeError(name)
 
-    def new(self, **kwargs):
-        """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
+    def __str__(self):
+        return "%s.%s" % (self.model_name, self.name)
 
-    def set_class_name(self, cls, name):
-        """ Assign the model class and field name of ``self``. """
+    def __repr__(self):
+        return "%s.%s" % (self.model_name, self.name)
+
+    ############################################################################
+    #
+    # Base field setup: things that do not depend on other models/fields
+    #
+
+    def setup_base(self, model, name):
+        """ Base setup: things that do not depend on other models/fields. """
+        self._setup_attrs(model, name)
+
+    #
+    # Setup field parameter attributes
+    #
+
+    def _setup_attrs(self, model, name):
+        """ Determine field parameter attributes. """
         # determine all inherited field attributes
         attrs = {}
-        for field in resolve_all_mro(cls, name, reverse=True):
+        for field in resolve_all_mro(model, name, reverse=True):
             if isinstance(field, type(self)):
                 attrs.update(field.args)
             else:
                 attrs.clear()
-        attrs.update(self.args)         # necessary in case self is not in cls
+        attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
-        attrs['model_name'] = cls._name
+        attrs['model_name'] = model._name
         attrs['name'] = name
 
         # initialize ``self`` with ``attrs``
@@ -377,18 +423,16 @@ class Field(object):
             # related fields get their string from their parent field
             self.string = name.replace('_', ' ').capitalize()
 
-        # determine self.default and cls._defaults in a consistent way
-        self._determine_default(cls, name)
+        self._setup_default(model, name)
 
-    def _determine_default(self, cls, name):
-        """ Retrieve the default value for ``self`` in the hierarchy of ``cls``, and
-            determine ``self.default`` and ``cls._defaults`` accordingly.
-        """
+    def _setup_default(self, model, name):
+        """ Determine ``self.default`` and the corresponding ``model._defaults``. """
         self.default = None
+        model._defaults.pop(name, None)
 
         # traverse the class hierarchy upwards, and take the first field
         # definition with a default or _defaults for self
-        for klass in cls.__mro__:
+        for klass in type(model).__mro__:
             if name in klass.__dict__:
                 field = klass.__dict__[name]
                 if not isinstance(field, type(self)):
@@ -396,96 +440,75 @@ class Field(object):
                     return
 
                 if 'default' in field.args:
-                    # take the default in field, and adapt it for cls._defaults
+                    # take the value, and adapt it for model._defaults
                     value = field.args['default']
-                    if callable(value):
-                        from openerp import api
-                        self.default = value
-                        cls._defaults[name] = api.model(
-                            lambda recs: self.convert_to_write(value(recs))
-                        )
-                    else:
-                        self.default = lambda recs: value
-                        cls._defaults[name] = value
+                    self.default = default_new_to_new(self, value)
+                    model._defaults[name] = default_new_to_old(self, value)
                     return
 
             defaults = klass.__dict__.get('_defaults') or {}
             if name in defaults:
                 # take the value from _defaults, and adapt it for self.default
                 value = defaults[name]
-                if callable(value):
-                    func = lambda recs: value(recs._model, recs._cr, recs._uid, recs._context)
-                else:
-                    func = lambda recs: value
-                self.default = lambda recs: self.convert_to_cache(
-                    func(recs), recs, validate=False,
-                )
-                cls._defaults[name] = value
+                self.default = default_old_to_new(self, value)
+                model._defaults[name] = default_old_to_old(self, value)
                 return
-
-    def __str__(self):
-        return "%s.%s" % (self.model_name, self.name)
-
-    def __repr__(self):
-        return "%s.%s" % (self.model_name, self.name)
 
     ############################################################################
     #
-    # Field setup
+    # Full field setup: everything else, except recomputation triggers
     #
 
-    def setup(self, env):
-        """ Make sure that ``self`` is set up, except for recomputation triggers. """
-        if not self.setup_done:
-            if self.related:
-                self._setup_related(env)
+    def setup_full(self, model):
+        """ Full setup: everything else, except recomputation triggers. """
+        if not self.setup_full_done:
+            if not self.related:
+                self._setup_regular(model)
             else:
-                self._setup_regular(env)
-            self.setup_done = True
+                self._setup_related(model)
+            self.setup_full_done = True
 
     #
     # Setup of non-related fields
     #
 
-    def _setup_regular(self, env):
+    def _setup_regular(self, model):
         """ Setup the attributes of a non-related field. """
-        recs = env[self.model_name]
-
         def make_depends(deps):
-            return tuple(deps(recs) if callable(deps) else deps)
+            return tuple(deps(model) if callable(deps) else deps)
 
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
-            for method in resolve_all_mro(type(recs), self.compute, reverse=True):
+            for method in resolve_all_mro(model, self.compute, reverse=True):
                 self.depends += make_depends(getattr(method, '_depends', ()))
-            self.compute = getattr(type(recs), self.compute)
+            self.compute = getattr(type(model), self.compute)
         else:
             self.depends = make_depends(getattr(self.compute, '_depends', ()))
 
         # convert inverse and search into callables
         if isinstance(self.inverse, basestring):
-            self.inverse = getattr(type(recs), self.inverse)
+            self.inverse = getattr(type(model), self.inverse)
         if isinstance(self.search, basestring):
-            self.search = getattr(type(recs), self.search)
+            self.search = getattr(type(model), self.search)
 
     #
     # Setup of related fields
     #
 
-    def _setup_related(self, env):
+    def _setup_related(self, model):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
         if isinstance(self.related, basestring):
             self.related = tuple(self.related.split('.'))
 
         # determine the chain of fields, and make sure they are all set up
-        recs = env[self.model_name]
+        target = model
         for name in self.related:
-            field = recs._fields[name]
-            field.setup(env)
-            recs = recs[name]
+            field = target._fields[name]
+            field.setup_full(target)
+            target = target[name]
 
         self.related_field = field
 
@@ -1051,13 +1074,13 @@ class Float(Field):
         else:
             return self._digits
 
-    def _setup_digits(self, env):
+    def _setup_digits(self, model):
         """ Setup the digits for ``self`` and its corresponding column """
         pass
 
-    def _setup_regular(self, env):
-        super(Float, self)._setup_regular(env)
-        self._setup_digits(env)
+    def _setup_regular(self, model):
+        super(Float, self)._setup_regular(model)
+        self._setup_digits(model)
 
     _related__digits = property(attrgetter('_digits'))
     _related_group_operator = property(attrgetter('group_operator'))
@@ -1098,11 +1121,11 @@ class Monetary(Field):
     _related_currency_field = property(attrgetter('currency_field'))
     _description_currency_field = property(attrgetter('currency_field'))
 
-    def _setup_regular(self, env):
-        super(Monetary, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(Monetary, self)._setup_regular(model)
         if not self.currency_field:
             self.currency_field = 'currency_id'
-        assert self.currency_field in env[self.model_name]._fields, \
+        assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
     def convert_to_write(self, value, target=None, fnames=None):
@@ -1190,8 +1213,8 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def _setup_regular(self, env):
-        super(Char, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(Char, self)._setup_regular(model)
         assert isinstance(self.size, (NoneType, int)), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -1399,23 +1422,23 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup_regular(self, env):
-        super(Selection, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(Selection, self)._setup_regular(model)
         assert self.selection is not None, "Field %s without selection" % self
 
-    def _setup_related(self, env):
-        super(Selection, self)._setup_related(env)
+    def _setup_related(self, model):
+        super(Selection, self)._setup_related(model)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
-    def set_class_name(self, cls, name):
-        super(Selection, self).set_class_name(cls, name)
+    def _setup_attrs(self, model, name):
+        super(Selection, self)._setup_attrs(model, name)
         # determine selection (applying 'selection_add' extensions)
-        for field in resolve_all_mro(cls, name, reverse=True):
+        for field in resolve_all_mro(model, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
-                # because those attributes are overridden by ``set_class_name``.
+                # because those attributes are overridden by ``_setup_attrs``.
                 if 'selection' in field.args:
                     self.selection = field.args['selection']
                 if 'selection_add' in field.args:
@@ -1489,8 +1512,8 @@ class Reference(Selection):
     _related_size = property(attrgetter('size'))
     _column_size = property(attrgetter('size'))
 
-    def _setup_regular(self, env):
-        super(Reference, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(Reference, self)._setup_regular(model)
         assert isinstance(self.size, (NoneType, int)), \
             "Reference field %s with non-integer size %r" % (self, self.size)
 
@@ -1524,11 +1547,10 @@ class _Relational(Field):
         'context': {},                  # context for searching values
     }
 
-    def _setup_regular(self, env):
-        super(_Relational, self)._setup_regular(env)
-        if self.comodel_name not in env.registry:
-            _logger.warning("Field %s with unknown comodel_name %r"
-                            % (self, self.comodel_name))
+    def _setup_regular(self, model):
+        super(_Relational, self)._setup_regular(model)
+        if self.comodel_name not in model.pool:
+            _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
 
     @property
@@ -1599,11 +1621,11 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def set_class_name(self, cls, name):
-        super(Many2one, self).set_class_name(cls, name)
+    def _setup_attrs(self, model, name):
+        super(Many2one, self)._setup_attrs(model, name)
         # determine self.delegate
         if not self.delegate:
-            self.delegate = name in cls._inherits.values()
+            self.delegate = name in model._inherits.values()
 
     _column_ondelete = property(attrgetter('ondelete'))
     _column_auto_join = property(attrgetter('auto_join'))
@@ -1808,12 +1830,12 @@ class One2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular(self, env):
-        super(One2many, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(One2many, self)._setup_regular(model)
 
         if self.inverse_name:
             # link self to its inverse field and vice-versa
-            comodel = env[self.comodel_name]
+            comodel = model.env[self.comodel_name]
             invf = comodel._fields[self.inverse_name]
             # In some rare cases, a ``One2many`` field can link to ``Int`` field
             # (res_model/res_id pattern). Only inverse the field if this is
@@ -1878,18 +1900,17 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular(self, env):
-        super(Many2many, self)._setup_regular(env)
+    def _setup_regular(self, model):
+        super(Many2many, self)._setup_regular(model)
 
         if not self.relation and self.store:
             # retrieve self.relation from the corresponding column
             column = self.to_column()
             if isinstance(column, fields.many2many):
-                self.relation, self.column1, self.column2 = \
-                    column._sql_names(env[self.model_name])
+                self.relation, self.column1, self.column2 = column._sql_names(model)
 
         if self.relation:
-            m2m = env.registry._m2m
+            m2m = model.pool._m2m
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:

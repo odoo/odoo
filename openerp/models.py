@@ -446,9 +446,9 @@ class BaseModel(object):
         cls._fields[name] = field
 
         # basic setup of field
-        field.set_class_name(cls, name)
+        field.setup_base(self, name)
 
-        # cls._columns will be updated once fields are set up
+        # cls._columns will be updated once fields are fully set up
 
     @api.model
     def _pop_field(self, name):
@@ -2962,7 +2962,7 @@ class BaseModel(object):
         # set up fields, and determine their corresponding column
         cls._columns = {}
         for name, field in cls._fields.iteritems():
-            field.setup(self.env)
+            field.setup_full(self)
             column = field.to_column()
             if column:
                 cls._columns[name] = column
@@ -3039,8 +3039,6 @@ class BaseModel(object):
         res = {}
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
-                continue
-            if not field.setup_done:
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
