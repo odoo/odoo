@@ -4,15 +4,14 @@ odoo.define('barcodes.FormViewBarcodeHandler', function(require) {
 var core = require('web.core');
 var utils = require('web.utils');
 var common = require('web.form_common');
+var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 
 var _t = core._t;
 
-var FormViewBarcodeHandler = common.AbstractField.extend({
-
+var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     start: function() {
         this._super();
         this.form_view = this.field_manager;
-        core.bus.on('barcode_scanned', this, this.on_barcode_scanned);
         // Hardcoded barcode actions
         this.map_barcode_method = {
             'O-CMD.NEW': _.bind(this.form_view.on_button_new, this.form_view),
