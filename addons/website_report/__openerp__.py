@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Website Report',
     'category': 'Website',
@@ -6,10 +8,10 @@
     'description': """
 Use the website editor to customize your reports.
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'depends': ['base', 'website', 'report'],
     'data': [
-        'views/layouts.xml',
+        'views/report_templates.xml'
     ],
     'installable': True,
     'auto_install': True,

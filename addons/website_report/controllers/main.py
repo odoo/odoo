@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.website.controllers.main import Website
 from openerp.http import request, route
+from openerp.addons.website.controllers.main import Website
 
 
 class Website(Website):
