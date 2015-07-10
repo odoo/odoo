@@ -491,7 +491,7 @@ class ir_model_fields(osv.osv):
                 for field_name, field_patches in model_patches.iteritems():
                     # update field properties, and adapt corresponding column
                     field = obj._fields[field_name]
-                    attrs = dict(field._attrs, **field_patches)
+                    attrs = dict(field.args, **field_patches)
                     obj._add_field(field_name, field.new(**attrs))
 
                 # update database schema

@@ -256,9 +256,8 @@ class Field(object):
     relational = False                  # whether the field is a relational one
 
     _slots = {
-        '_attrs': EMPTY_DICT,           # dictionary of field attributes; it contains:
-                                        #  - all attributes after __init__()
-                                        #  - free attributes only after set_class_name()
+        'args': EMPTY_DICT,             # the parameters given to __init__()
+        '_attrs': EMPTY_DICT,           # the field's non-slot attributes
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
@@ -302,8 +301,8 @@ class Field(object):
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
-        attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        self._attrs = attrs or EMPTY_DICT
+        args = {key: val for key, val in kwargs.iteritems() if val is not None}
+        self.args = args or EMPTY_DICT
 
     def __getattr__(self, name):
         """ Access non-slot field attribute. """
@@ -322,6 +321,15 @@ class Field(object):
             else:
                 self._attrs = {name: value}     # replace EMPTY_DICT
 
+    def set_all_attrs(self, attrs):
+        """ Set all field attributes at once (with slot defaults). """
+        # optimization: we assign slots only
+        assign = object.__setattr__
+        for key, val in self._slots.iteritems():
+            assign(self, key, attrs.pop(key, val))
+        if attrs:
+            assign(self, '_attrs', attrs)
+
     def __delattr__(self, name):
         """ Remove non-slot field attribute. """
         try:
@@ -335,21 +343,18 @@ class Field(object):
 
     def set_class_name(self, cls, name):
         """ Assign the model class and field name of ``self``. """
-        self_attrs = self._attrs
-        for attr, value in self._slots.iteritems():
-            setattr(self, attr, value)
-
-        self.model_name = cls._name
-        self.name = name
-
         # determine all inherited field attributes
         attrs = {}
         for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
-                attrs.update(field._attrs)
+                attrs.update(field.args)
             else:
                 attrs.clear()
-        attrs.update(self_attrs)        # necessary in case self is not in cls
+        attrs.update(self.args)         # necessary in case self is not in cls
+
+        attrs['args'] = self.args
+        attrs['model_name'] = cls._name
+        attrs['name'] = name
 
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
@@ -366,8 +371,7 @@ class Field(object):
         if not isinstance(attrs.get('origin'), (NoneType, fields.function)):
             attrs.pop('store', None)
 
-        for attr, value in attrs.iteritems():
-            setattr(self, attr, value)
+        self.set_all_attrs(attrs)
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
@@ -391,9 +395,9 @@ class Field(object):
                     # klass contains another value overridden by self
                     return
 
-                if 'default' in field._attrs:
+                if 'default' in field.args:
                     # take the default in field, and adapt it for cls._defaults
-                    value = field._attrs['default']
+                    value = field.args['default']
                     if callable(value):
                         from openerp import api
                         self.default = value
@@ -1412,11 +1416,11 @@ class Selection(Field):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
                 # because those attributes are overridden by ``set_class_name``.
-                if 'selection' in field._attrs:
-                    self.selection = field._attrs['selection']
-                if 'selection_add' in field._attrs:
+                if 'selection' in field.args:
+                    self.selection = field.args['selection']
+                if 'selection_add' in field.args:
                     # use an OrderedDict to update existing values
-                    selection_add = field._attrs['selection_add']
+                    selection_add = field.args['selection_add']
                     self.selection = OrderedDict(self.selection + selection_add).items()
             else:
                 self.selection = None
