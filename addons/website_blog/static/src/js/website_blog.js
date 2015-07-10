@@ -35,13 +35,17 @@ $(document).ready(function() {
         if (content) {
             ajax.jsonRpc("/blog/get_user/", 'call', {}).then(function(data){
                 $('#discussions_wrapper').empty();
-                new InlineDiscussion({'content' : content, 'public_user':data[0]});
+                new InlineDiscussion({'content' : content, 'public_user':data[0]}).start();
             });
         }
 
         $(".js_tweet").share({'author_name': $('#blog_author').text()});
         $('.cover_footer').on('click', page_transist);
         $('a[href^="#blog_content"]').on('click', animate);
+
+        if ($('#js_blogcover').length) {
+            $('#js_blogcover[style*="background-image: url"]').css('min-height', $(window).height()-$('#js_blogcover').offset().top);
+        }
     }
 
 });

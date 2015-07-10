@@ -4,7 +4,7 @@ odoo.define('account.move_line_quickadd', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var ListView = require('web.ListView');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 var QWeb = core.qweb;
 

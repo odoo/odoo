@@ -2,7 +2,7 @@ odoo.define('purchase_requisition.purchase_requisition', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var ListView = require('web.ListView');
 
 var QWeb = core.qweb;

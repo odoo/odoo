@@ -3,7 +3,7 @@ odoo.define('web_tip.web_tip', function (require) {
 
 var core = require('web.core');
 var form_widgets = require('web.form_widgets');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var utils = require('web.utils');
 var WebClient = require('web.WebClient');
 

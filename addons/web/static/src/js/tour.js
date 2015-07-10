@@ -6,25 +6,6 @@ var core = require('web.core');
 var _t = core._t;
 var qweb = core.qweb;
 
-// make this work
-// raise an error in test mode if openerp don't exist
-// if (typeof openerp === "undefined") {
-//     var error = "openerp is undefined"
-//                 + "\nhref: " + window.location.href
-//                 + "\nreferrer: " + document.referrer
-//                 + "\nlocalStorage: " + window.localStorage.getItem("tour");
-//     if (typeof $ !== "undefined") {
-//         error += '\n\n' + $("body").html();
-//     }
-//     throw new Error(error);
-// }
-
-
-// // don't rewrite T in test mode
-// if (typeof openerp.Tour !== "undefined") {
-//     return;
-// }
-
 /////////////////////////////////////////////////
 
 
@@ -60,14 +41,65 @@ $.extend($.expr[':'],{
         return $(element).prop("value") && $(element).prop("value").indexOf(matches[3]) !== -1;
     },
 });
-$.ajaxSetup({
-    beforeSend:function(){
-        $.ajaxBusy = ($.ajaxBusy|0) + 1;
-    },
-    complete:function(){
-        $.ajaxBusy--;
-    }
-});
+
+$.fn.getHandlers = function () {
+    var results = [];
+
+    var $elementsToWatch = $(this).add($(this).parents());
+    var $allElements = $("*").add(document);
+
+    var addEventHandlerInfo = function (element, event, $elementsCovered) {
+        var extendedEvent = event;
+        if ($elementsCovered !== void 0 && $elementsCovered !== null) {
+            $.extend(extendedEvent, { targets: $elementsCovered.toArray() });
+        }
+        var eventInfo;
+        var eventsInfo = $.grep(results, function (evInfo, index) {
+            return element === evInfo.element;
+        });
+
+        if (eventsInfo.length === 0) {
+            eventInfo = {
+                element: element
+            };
+            eventInfo[extendedEvent.type] = [extendedEvent];
+            results.push(eventInfo);
+        } else {
+            eventInfo = eventsInfo[0];
+            if (!eventInfo[extendedEvent.type]) {
+                eventInfo[extendedEvent.type] = [];
+            }
+            eventInfo[extendedEvent.type].push(extendedEvent);
+        }
+    };
+
+    var checkEventHandler = function (element, ElementEvents) {
+        $.each(ElementEvents, function(i, event){
+            var isDelegateEvent = event.selector !== void 0 && event.selector !== null;
+            var $elementsCovered;
+            if (isDelegateEvent) {
+                $elementsCovered = $(event.selector, element); //only look at children of the element, since those are the only ones the handler covers
+            } else {
+                $elementsCovered = $(element); //just itself
+            }
+
+            if (_.intersection($elementsCovered, $elementsToWatch).length) {
+                addEventHandlerInfo(element, event, $elementsCovered);
+            }
+        });
+    };
+
+    $.each($allElements, function (elementIndex, element) {
+        var allElementEvents = $._data(element, "events");
+        if (allElementEvents) {
+            _.each(allElementEvents, function (ElementEvents) {
+                checkEventHandler(element, ElementEvents);
+            });
+        }
+    });
+
+    return results;
+};
 
 /////////////////////////////////////////////////
 
@@ -78,7 +110,7 @@ var Tour = {
     defaultDelay: 50,
     autoRunning: true,
     retryRunningDelay: 1000,
-    errorDelay: 5000,
+    errorDelay: 10000,
     state: null,
     $element: null,
     timer: null,
@@ -88,7 +120,13 @@ var Tour = {
         if (tour.mode !== "test") tour.mode = "tutorial";
         Tour.tours[tour.id] = tour;
     },
-    run: function (tour_id, mode) {
+    /*
+     * tour_id: string
+     * mode:    test or tutorial
+     * log:     null (alone log who display the html content)
+     *          'events' (add log for event handlers)
+     */
+    run: function (tour_id, mode, log) {
         var tour = Tour.tours[tour_id];
         if (!tour) {
             return Tour.error(null, "Can't run '"+tour_id+"' (tour undefined)");
@@ -105,11 +143,11 @@ var Tour = {
         this.time = new Date().getTime();
         if (tour.path && !window.location.href.match(new RegExp("("+Tour.getLang()+")?"+tour.path+"#?$", "i"))) {
             var href = Tour.getLang()+tour.path;
-            Tour.saveState(tour.id, mode || tour.mode, -1, 0);
+            Tour.saveState(tour.id, mode || tour.mode, -1, 0, 0, log || null);
             $(document).one("ajaxStop", Tour.running);
             window.location.href = href;
         } else {
-            Tour.saveState(tour.id, mode || tour.mode, 0, 0);
+            Tour.saveState(tour.id, mode || tour.mode, 0, 0, 0, log || null);
             Tour.running();
         }
     },
@@ -134,14 +172,14 @@ var Tour = {
             if (snippet) {
                 step.snippet = snippet[1];
             } else if (step.snippet) {
-                step.element = '#oe_snippets '+step.snippet+' .oe_snippet_thumbnail';
+                step.element = '#o_left_bar '+step.snippet+' .oe_snippet_thumbnail';
                 tour.steps.splice(index, 0, {
                     id: index,
                     waitNot: step.waitNot,
                     waitFor: step.waitFor,
                     title: _t("Move your mouse"),
                     content: _t("Move your mouse here to open the insert block"),
-                    element: '#oe_snippets',
+                    element: '#o_left_bar',
                     onend: function () {
                         $("#oe_snippets").addClass("o_open");
                     }
@@ -262,7 +300,7 @@ var Tour = {
             $("body").append('<div class="tour-backdrop"></div>');
         }
 
-        if (step.backdrop || $element.parents("#website-top-navbar, .oe_navbar, .modal").size()) {
+        if (step.backdrop || $element.parents("#web_editor-top-edit, .oe_navbar, .modal").size()) {
             $tip.css("z-index", 2010);
         }
 
@@ -360,7 +398,7 @@ var Tour = {
             };
             window.location.hash = "";
             Tour.log("Tour '"+state.id+"' Begin from url hash");
-            Tour.saveState(state.id, state.mode, state.step_id, 0);
+            Tour.saveState(state.id, state.mode, state.step_id, 0, state.log);
         }
         if (!state.id) {
             return;
@@ -379,7 +417,6 @@ var Tour = {
     },
     logError: function (step, message, all) {
         var state = Tour.getState();
-        console.log(state.tour.steps.slice());
         message += '\ntour: ' + state.id
             + (step ? '\nstep: ' + step.id + ": '" + (step._title || step.title) + "'" : '' )
             + (all ? '\nhref: ' + window.location.href : '' )
@@ -391,7 +428,7 @@ var Tour = {
             + (step ? '\nwaitFor: ' + ((!step.waitFor || $(step.waitFor).size()) ? 'true ' : 'false') : '' )
                 + (step && step.waitFor ? "   "+JSON.stringify(step.waitFor) : "")
             + (all ? "\nlocalStorage: " + JSON.stringify(localStorage) : '' )
-            + (all ? '\n\n' + $("body").html() : '' );
+            + (all && !state.log ? '\n\n' + $("body").html() : '' );
         Tour.log(message, true);
     },
     error: function (step, message) {
@@ -406,14 +443,15 @@ var Tour = {
         }
         return tour_ids;
     },
-    saveState: function (tour_id, mode, step_id, number, wait) {
+    saveState: function (tour_id, mode, step_id, number, wait, log) {
         localStorage.setItem("tour", JSON.stringify({
             "id":tour_id,
             "mode":mode,
             "step_id":step_id || 0,
             "time": this.time,
             "number": number+1,
-            "wait": wait || 0
+            "wait": wait || 0,
+            "log": log
         }));
     },
     reset: function () {
@@ -444,7 +482,7 @@ var Tour = {
             if (state.mode === "test" && state.wait >= 10) {
                 return Tour.error(state.step, "Tour '"+state.id+"' undefined");
             }
-            Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1);
+            Tour.saveState(state.id, state.mode, state.step_id, state.number-1, state.wait+1, state.log);
             //Tour.log("Tour '"+state.id+"' wait for running (tour undefined)");
             setTimeout(Tour.running, Tour.retryRunningDelay);
         }
@@ -477,7 +515,7 @@ var Tour = {
 
                 clearTimeout(Tour.currentTimer);
                 // use an other timeout for cke dom loading
-                Tour.saveState(state.id, state.mode, state.step.id, 0);
+                Tour.saveState(state.id, state.mode, state.step.id, 0, 0, state.log);
                 setTimeout(function () {
                     if (state.step.onend) {
                         try {
@@ -537,7 +575,7 @@ var Tour = {
         if (!state) return true;
         if (id_or_title === undefined) return false;
         var step = Tour.search_step(id_or_title);
-        Tour.saveState(state.id, state.mode, step.id, 0);
+        Tour.saveState(state.id, state.mode, step.id, 0, 0, state.log);
         Tour.nextStep(Tour.getState().step);
         return true;
     },
@@ -555,7 +593,7 @@ var Tour = {
             return Tour.error(next, "Cycling. Can't reach the next step");
         }
         
-        Tour.saveState(state.id, state.mode, step.id, state.number);
+        Tour.saveState(state.id, state.mode, step.id, state.number, 0, state.log);
 
         if (state.number === 1) {
             Tour.log("Tour '"+state.id+"' Step: '" + (step._title || step.title) + "' (" + (new Date().getTime() - this.time) + "ms)");
@@ -576,7 +614,7 @@ var Tour = {
 
         if (state.mode === "test") {
             setTimeout(function () {
-                Tour.autoNextStep(state.tour, step);
+                Tour.autoNextStep(state.tour, step, state);
                 if (next && Tour.getState()) {
                     Tour.waitNextStep();
                 }
@@ -600,7 +638,7 @@ var Tour = {
             Tour.log('error');
         }
     },
-    autoNextStep: function (tour, step) {
+    autoNextStep: function (tour, step, state) {
         clearTimeout(Tour.testtimer);
 
         function autoStep () {
@@ -616,6 +654,7 @@ var Tour = {
 
             var $element = $(step.element);
             if (!$element.size()) return;
+            if (state.log === "events") console.log("Event handlers:", $element[0], $element.getHandlers());
 
             var click_event = function(type) {
                 var evt = document.createEvent("MouseEvents");
@@ -700,7 +739,7 @@ var Tour = {
     },
     scrollIntoView: function ($element){
         // if element is not on window (screen) then it scroll down to get popup visible
-        if (!$element.is('body')){
+        if (!$element.is('body') && !$element.parents().filter(function () { return $(this).css("position") === "fixed";}).length){
             var element_top = $element.offset().top;
             var visible = ((element_top > $(window).scrollTop()) && (element_top < ($(window).scrollTop() + $(window).height())));
             if (!visible) {
@@ -709,14 +748,15 @@ var Tour = {
         }
     }
 };
-// openerp.Tour = Tour;
 
 /////////////////////////////////////////////////
 
 $(document).ready(function () {
-    if (Tour.autoRunning) {
-        Tour.running();
-    };
+    setTimeout(function () {
+        if (Tour.autoRunning) {
+            Tour.running();
+        }
+    }, 0);
 });
 
 return Tour;

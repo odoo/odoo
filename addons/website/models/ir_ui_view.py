@@ -104,54 +104,6 @@ class view(osv.osv):
                     result.append(r)
         return result
 
-    def extract_embedded_fields(self, cr, uid, arch, context=None):
-        return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
-
-    def save_embedded_field(self, cr, uid, el, context=None):
-        Model = self.pool[el.get('data-oe-model')]
-        field = el.get('data-oe-field')
-
-        converter = self.pool['website.qweb'].get_converter_for(el.get('data-oe-type'))
-        value = converter.from_html(cr, uid, Model, Model._fields[field], el)
-
-        if value is not None:
-            # TODO: batch writes?
-            Model.write(cr, uid, [int(el.get('data-oe-id'))], {
-                field: value
-            }, context=context)
-
-    def to_field_ref(self, cr, uid, el, context=None):
-        # filter out meta-information inserted in the document
-        attributes = dict((k, v) for k, v in el.items()
-                          if not k.startswith('data-oe-'))
-        attributes['t-field'] = el.get('data-oe-expression')
-
-        out = html.html_parser.makeelement(el.tag, attrib=attributes)
-        out.tail = el.tail
-        return out
-
-    def replace_arch_section(self, cr, uid, view_id, section_xpath, replacement, context=None):
-        # the root of the arch section shouldn't actually be replaced as it's
-        # not really editable itself, only the content truly is editable.
-
-        [view] = self.browse(cr, uid, [view_id], context=context)
-        arch = etree.fromstring(view.arch.encode('utf-8'))
-        # => get the replacement root
-        if not section_xpath:
-            root = arch
-        else:
-            # ensure there's only one match
-            [root] = arch.xpath(section_xpath)
-
-        root.text = replacement.text
-        root.tail = replacement.tail
-        # replace all children
-        del root[:]
-        for child in replacement:
-            root.append(copy.deepcopy(child))
-
-        return arch
-
     @tools.ormcache_context('uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, cr, uid, xml_id, context=None):
         if context and 'website_id' in context and not isinstance(xml_id, (int, long)):
@@ -163,29 +115,10 @@ class view(osv.osv):
             view_id = super(view, self).get_view_id(cr, uid, xml_id, context=context)
         return view_id
 
-    def _prepare_qcontext(self, cr, uid, context=None):
-        if not context:
-            context = {}
-
-        company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
-
-        qcontext = dict(
-            context.copy(),
-            website=request.website,
-            url_for=website.url_for,
-            slug=website.slug,
-            res_company=company,
-            user_id=self.pool.get("res.users").browse(cr, uid, uid),
-            translatable=context.get('lang') != request.website.default_lang_code,
-            editable=request.website.is_publisher(),
-            menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
-        )
-        return qcontext
-
     @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
-            engine = 'website.qweb'
+            engine = 'ir.qweb'
 
             if isinstance(id_or_xml_id, list):
                 id_or_xml_id = id_or_xml_id[0]
@@ -197,10 +130,11 @@ class view(osv.osv):
                 qcontext.update(values)
 
             # in edit mode ir.ui.view will tag nodes
-            if qcontext.get('editable'):
-                context = dict(context, inherit_branding=True)
-            elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-                context = dict(context, inherit_branding_auto=True)
+            if not qcontext.get('translatable'):
+                if qcontext.get('editable'):
+                    context = dict(context, inherit_branding=True)
+                elif request.registry['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
+                    context = dict(context, inherit_branding_auto=True)
 
             view_obj = request.website.get_template(id_or_xml_id)
             if 'main_object' not in qcontext:
@@ -210,49 +144,30 @@ class view(osv.osv):
 
         return super(view, self).render(cr, uid, id_or_xml_id, values=values, engine=engine, context=context)
 
-    def _pretty_arch(self, arch):
-        # remove_blank_string does not seem to work on HTMLParser, and
-        # pretty-printing with lxml more or less requires stripping
-        # whitespace: http://lxml.de/FAQ.html#why-doesn-t-the-pretty-print-option-reformat-my-xml-output
-        # so serialize to XML, parse as XML (remove whitespace) then serialize
-        # as XML (pretty print)
-        arch_no_whitespace = etree.fromstring(
-            etree.tostring(arch, encoding='utf-8'),
-            parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
-        return etree.tostring(
-            arch_no_whitespace, encoding='unicode', pretty_print=True)
+    def _prepare_qcontext(self, cr, uid, context=None):
+        if not context:
+            context = {}
 
-    def save(self, cr, uid, res_id, value, xpath=None, context=None):
-        """ Update a view section. The view section may embed fields to write
+        company = self.pool['res.company'].browse(cr, SUPERUSER_ID, request.website.company_id.id, context=context)
 
-        :param str model:
-        :param int res_id:
-        :param str xpath: valid xpath to the tag to replace
-        """
-        res_id = int(res_id)
+        editable = request.website.is_publisher()
+        translatable = editable and context.get('lang') != request.website.default_lang_code
+        editable = not translatable and editable
 
-        arch_section = html.fromstring(
-            value, parser=html.HTMLParser(encoding='utf-8'))
-
-        if xpath is None:
-            # value is an embedded field on its own, not a view section
-            self.save_embedded_field(cr, uid, arch_section, context=context)
-            return
-
-        for el in self.extract_embedded_fields(cr, uid, arch_section, context=context):
-            self.save_embedded_field(cr, uid, el, context=context)
-
-            # transform embedded field back to t-field
-            el.getparent().replace(el, self.to_field_ref(cr, uid, el, context=context))
-
-        arch = self.replace_arch_section(cr, uid, res_id, xpath, arch_section, context=context)
-        self.write(cr, uid, res_id, {
-            'arch': self._pretty_arch(arch)
-        }, context=context)
-
-        view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
-        if view.model_data_id:
-            view.model_data_id.write({'noupdate': True})
+        qcontext = dict(
+            context.copy(),
+            website=request.website,
+            url_for=website.url_for,
+            slug=website.slug,
+            res_company=company,
+            user_id=self.pool.get("res.users").browse(cr, uid, uid),
+            default_lang_code=request.website.default_lang_code,
+            languages=request.website.get_languages(),
+            translatable=translatable,
+            editable=editable,
+            menu_data=self.pool['ir.ui.menu'].load_menus_root(cr, uid, context=context) if request.website.is_user() else None,
+        )
+        return qcontext
 
     def customize_template_get(self, cr, uid, key, full=False, bundles=False, context=None):
         """ Get inherit view's informations of the template ``key``. By default, only
@@ -292,10 +207,3 @@ class view(osv.osv):
                     'active': v.active,
                 })
         return result
-
-    def get_view_translations(self, cr, uid, xml_id, lang, field=['id', 'res_id', 'value', 'state', 'gengo_translation'], context=None):
-        views = self.customize_template_get(cr, uid, xml_id, full=True, context=context)
-        views_ids = [view.get('id') for view in views if view.get('active')]
-        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
-        return self.pool['ir.translation'].search_read(cr, uid, domain, field, context=context)
-

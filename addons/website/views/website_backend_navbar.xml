@@ -35,8 +35,10 @@
             </li>
         </ul>
 
-        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px; display: none;" groups="base.group_website_publisher">
-            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs">Edit</button></li>
+        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px;" groups="base.group_website_publisher">
+            <li t-if="not translatable"><button type="button" data-action="edit" class="btn btn-primary btn-xs">Edit</button></li>
+            <li t-if="translatable"><button type="button" data-action="translate" class="btn btn-primary btn-xs">Translate</button></li>
+            <li t-if="translatable"><a class="btn btn-link" data-action="edit_master" href="#"> or Edit Master</a></li>
         </ul>
 
         <ul id="oe_systray" class="nav navbar-nav navbar-right pull-right hidden-xs">
@@ -68,7 +70,7 @@
             </li>
 
             <!-- Content -->
-            <li class="dropdown" groups="base.group_website_publisher">
+            <li class="dropdown" groups="base.group_website_publisher" t-if="editable">
                 <a id="content-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
                     Content <span class="caret"></span>
                 </a>

@@ -258,7 +258,7 @@ class website_slides(http.Controller):
 
         def slide_mapped_dict(slide):
             return {
-                'img_src': '/website/image/slide.slide/%s/image_thumb' % (slide.id),
+                'img_src': '/web_editor/image/slide.slide/%s/image_thumb' % (slide.id),
                 'caption': slide.name,
                 'url': slide.website_url
             }

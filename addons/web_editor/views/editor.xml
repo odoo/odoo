@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+<template id="summernote" name="Summernote">
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            odoo.define('jquery', function () {return $;});
+
+            var uniqId = 0;
+            odoo.__define__ = window.define;
+            window.define = function (id) {
+                var args = Array.prototype.slice.call(arguments);
+                var factorie = args.pop();
+                var id = args[0];
+                
+                if (id instanceof Array) {
+                    var name = "summernote_factorie_" + (++uniqId);
+                    odoo[name] = factorie;
+
+                    var head = '';
+                    var fn = 'var fn = odoo.'+name+';\ndelete odoo.'+name+';\n';
+                    fn += 'return fn(';
+                    for (var k=0; k&lt;id.length; k++) {
+                        head += 'var a'+(++uniqId)+' = require("'+id[k]+'");\n';
+                        fn += 'a'+uniqId+', ';
+                    }
+                    fn += 'null);';
+
+                    odoo.define(odoo.website_next_define, new Function('require', head + fn));
+                } else {
+                    odoo.define(id, factorie);
+                }
+            };
+        })();
+    </script>
+    <script>odoo.website_next_define = 'summernote/core/async';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/async.js" />
+    <script>odoo.website_next_define = 'summernote/core/func';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/func.js" />
+    <script>odoo.website_next_define = 'summernote/core/agent';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/agent.js" />
+    <script>odoo.website_next_define = 'summernote/core/list';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/list.js" />
+    <script>odoo.website_next_define = 'summernote/core/dom';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/dom.js" />
+    <script>odoo.website_next_define = 'summernote/core/key';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/key.js" />
+    <script>odoo.website_next_define = 'summernote/core/range';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/core/range.js" />
+
+    <script>odoo.website_next_define = 'summernote/editing/Bullet';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Bullet.js" />
+    <script>odoo.website_next_define = 'summernote/editing/History';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/History.js" />
+    <script>odoo.website_next_define = 'summernote/editing/Style';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Style.js" />
+    <script>odoo.website_next_define = 'summernote/editing/Table';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Table.js" />
+    <script>odoo.website_next_define = 'summernote/editing/Typing';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Typing.js" />
+    <script>odoo.website_next_define = 'summernote/editing/Editor';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/editing/Editor.js" />
+
+    <script>odoo.website_next_define = 'summernote/module/Button';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Button.js" />
+    <script>odoo.website_next_define = 'summernote/module/Dialog';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Dialog.js" />
+    <script>odoo.website_next_define = 'summernote/module/Handle';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Handle.js" />
+    <script>odoo.website_next_define = 'summernote/module/Popover';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Popover.js" />
+    <script>odoo.website_next_define = 'summernote/module/Toolbar';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/module/Toolbar.js" />
+
+    <script>odoo.website_next_define = 'summernote/Renderer';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/Renderer.js" />
+    <script>odoo.website_next_define = 'summernote/EventHandler';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/EventHandler.js" />
+
+    <script>odoo.website_next_define = 'summernote/settings';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/settings.js" />
+
+    <script>odoo.website_next_define = 'summernote/summernote';</script>
+    <script type="text/javascript" src="/web_editor/static/lib/summernote/src/js/summernote.js" />
+    
+    <script type="text/javascript" src="/web_editor/static/src/js/summernote.js" />
+    <script type="text/javascript">
+        window.define = odoo.__define__;
+        delete odoo.__define__;
+        delete odoo.website_next_define;
+    </script>
+
+    <!--link rel="stylesheet" href="/web_editor/static/lib/summernote/src/less/summernote.less"/-->
+    <link rel="stylesheet" href="/web_editor/static/lib/summernote/summernote.css"/>
+</template>
+
+<template id="editor" name="Editor">
+    <link rel='stylesheet' href='/web_editor/static/src/css/snippets.css'/>
+    <link rel="stylesheet" href='/web_editor/static/src/css/editor.css'/>
+    <script type="text/javascript" src='/web_editor/static/lib/nearest/jquery.nearest.js' />
+    <script type="text/javascript" src="/web_editor/static/src/js/editor.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/rte.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/rte.summernote.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/widgets.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/snippets.editor.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/snippets.options.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/tour.rte.js" />
+    <script type="text/javascript" src="/web_editor/static/src/js/transcoder.js"></script>
+    <script type="text/javascript" src="/web_editor/static/src/js/translator.js"></script>
+</template>
+
+<template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" href='/web_editor/static/src/css/web_editor.css'/>
+        <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
+    </xpath>
+</template>
+
+<template id="assets_editor" name="web_editor assets for editor">
+    <t t-call="web.assets_common"/>
+    <t t-call="web.bootstrap"/>
+    <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+    <t t-call="web_editor.summernote"/>
+    <t t-call="web_editor.editor"/>
+</template>
+
+<template id="assets_backend" name="web_editor assets for backend" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <t t-call="web_editor.summernote"/>
+        <t t-call="web_editor.editor"/>
+        <link rel="stylesheet" href="/web_editor/static/src/css/backend.css"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/backend.js" />
+    </xpath>
+</template>
+
+<!-- color-picker -->
+<!-- HTML class to hide option for one mode : only-text, only-bg -->
+
+<template id="web_editor.colorpicker" name="Color-Picker">
+    <table class="colorpicker">
+        <tr>
+            <td><button class="bg-primary" title="Primary Color"/></td>
+            <td><button class="bg-success" title="Success Color"/></td>
+            <td><button class="bg-info" title="Info Color"/></td>
+            <td><button class="bg-warning" title="Warning Color"/></td>
+            <td><button class="bg-danger" title="Danger Color"/></td>
+        </tr>
+    </table>
+</template>
+
+</openerp>

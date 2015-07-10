@@ -85,7 +85,8 @@
                         <td><span t-field="view.type"/></td>
                         <td colspan="4"><span t-field="view.name"/></td>
                         <td colspan="6"><span t-field="view.xml_id"/></td>
-                        <td colspan="8"><span t-esc="view.inherit_id.xml_id or view.inherit_id.name"/></td>
+                        <td colspan="8" t-if="view.inherit_id.xml_id"><span t-field="view.inherit_id.xml_id"/></td>
+                        <td colspan="8" t-if="not view.inherit_id.xml_id"><span t-field="view.inherit_id.name"/></td>
                     </tr>
                 </table>
             </div>

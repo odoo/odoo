@@ -1,32 +1,32 @@
 odoo.define('website.contentMenu', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
+var ajax = require('web.ajax');
 var Widget = require('web.Widget');
-var editor = require('website.editor');
+var base = require('web_editor.base');
+var editor = require('web_editor.editor');
+var widget = require('web_editor.widget');
 var website = require('website.website');
 
 var _t = core._t;
-var QWeb = core.qweb;
+var qweb = core.qweb;
 
-website.add_template_file('/website/static/src/xml/website.contentMenu.xml');
+ajax.loadXML('/website/static/src/xml/website.contentMenu.xml', qweb);
 
-var EditorBarContent = Widget.extend({
+var TopBarContent = Widget.extend({
     start: function() {
         var self = this;
         self.$el.on('click', 'a[data-action]', function(ev) {
             ev.preventDefault();
             var $content_item = $(this);
-            var data_action = self[$content_item.data('action')];
-            if (data_action) {
-                data_action();
-            }
+            self[$content_item.data('action')]();
         });
         return this._super();
     },
     edit_menu: function() {
-        var context = website.get_context();
+        var self = this;
+        var context = base.get_context();
         var def = $.Deferred();
         if ($("[data-content_menu_id]").length) {
             var select = new SelectEditMenuDialog();
@@ -114,7 +114,7 @@ var EditorBarContent = Widget.extend({
         },
     delete_page: function() {
         var self = this;
-        var context = website.get_context();
+        var context = base.get_context();
         self.mo_id = self.getMainObject().id;
 
         ajax.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -161,7 +161,15 @@ var EditorBarContent = Widget.extend({
     }
 });
 
-var SelectEditMenuDialog = editor.Dialog.extend({
+website.TopBar.include({
+    start: function () {
+        this.content_menu = new TopBarContent();
+        var def = this.content_menu.attachTo($('.oe_content_menu'));
+        return $.when(this._super(), def);
+    }
+});
+
+var SelectEditMenuDialog = widget.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
     init: function () {
         var self = this;
@@ -177,9 +185,9 @@ var SelectEditMenuDialog = editor.Dialog.extend({
     }
 });
 
-var EditMenuDialog = editor.Dialog.extend({
+var EditMenuDialog = widget.Dialog.extend({
     template: 'website.contentMenu.dialog.edit',
-    events: _.extend({}, editor.Dialog.prototype.events, {
+    events: _.extend({}, widget.Dialog.prototype.events, {
         'click a.js_add_menu': 'add_menu',
         'click button.js_edit_menu': 'edit_menu',
         'click button.js_delete_menu': 'delete_menu',
@@ -232,7 +240,7 @@ var EditMenuDialog = editor.Dialog.extend({
             };
             self.flat[new_menu.id] = new_menu;
             self.$('.oe_menu_editor').append(
-                QWeb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
+                qweb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
         });
         dialog.appendTo(document.body);
     },
@@ -272,7 +280,7 @@ var EditMenuDialog = editor.Dialog.extend({
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
         var data = [];
-        var context = website.get_context();
+        var context = base.get_context();
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
             if (menu.item_id) {
@@ -293,12 +301,12 @@ var EditMenuDialog = editor.Dialog.extend({
             },
         }).then(function (menu) {
             self.close();
-            website.reload();
+            editor.reload();
         });
     },
 });
 
-var MenuEntryDialog = editor.LinkDialog.extend({
+var MenuEntryDialog = widget.LinkDialog.extend({
     template: 'website.contentMenu.dialog.add',
     init: function (editor, data) {
         data.text = data.name || '';
@@ -336,14 +344,8 @@ var MenuEntryDialog = editor.LinkDialog.extend({
     },
 });
 
-$(document).ready(function() {
-    var content = new EditorBarContent();
-    content.setElement($('.oe_content_menu'));
-    content.start();
-});
-
 return {
-    EditorBarContent: EditorBarContent,
+    'TopBar': TopBarContent,
 };
 
 });

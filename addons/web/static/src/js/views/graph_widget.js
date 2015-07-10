@@ -2,7 +2,7 @@ odoo.define('web.GraphWidget', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var Widget = require('web.Widget');
 
 var _t = core._t;

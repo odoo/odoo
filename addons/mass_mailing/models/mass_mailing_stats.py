@@ -78,7 +78,7 @@ class MailMailStats(osv.Model):
         'opened': fields.datetime('Opened', help='Date when the email has been opened the first time'),
         'replied': fields.datetime('Replied', help='Date when this email has been replied for the first time.'),
         'bounced': fields.datetime('Bounced', help='Date when this email has bounced.'),
-        'links_click_ids': fields.one2many('website.links.click', 'mail_stat_id', 'Links click'),
+        'links_click_ids': fields.one2many('link.tracker.click', 'mail_stat_id', 'Links click'),
         'state': fields.function(_compute_state, string='State', type="selection", multi="state",
                                  selection=[('outgoing', 'Outgoing'),
                                             ('exception', 'Exception'),

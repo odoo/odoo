@@ -5,13 +5,13 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Model = require('web.Model');
 var contentMenu = require('website.contentMenu');
-var snippet_editor = require('website.snippets.editor');
+var options = require('web_editor.snippets.options');
+
 var website = require('website.website');
 
 var _t = core._t;
 
-
-contentMenu.EditorBarContent.include({
+contentMenu.TopBar.include({
     new_product: function() {
         website.prompt({
             id: "editor_new_product",
@@ -25,7 +25,7 @@ contentMenu.EditorBarContent.include({
     },
 });
 
-snippet_editor.options.website_sale = snippet_editor.Option.extend({
+options.registry.website_sale = options.Class.extend({
     start: function () {
         var self = this;
         this.product_tmpl_id = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));

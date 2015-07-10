@@ -7,7 +7,7 @@ odoo.define('web_gantt.GanttView', function (require) {
 var core = require('web.core');
 var form_common = require('web.form_common');
 var formats = require('web.formats');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var time = require('web.time');
 var View = require('web.View');
 

@@ -2,9 +2,10 @@ odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.ready().done(function () {
+base.ready().done(function () {
     Tour.register({
         id:   'event_buy_tickets',
         name: "Buy tickets for the Conference on Business Apps",

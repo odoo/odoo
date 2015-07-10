@@ -2,14 +2,13 @@ odoo.define('website_mail.follow', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
-var animation = require('website.snippets.animation');
+var animation = require('web_editor.snippets.animation');
 
-animation.registry.follow = animation.Animation.extend({
+animation.registry.follow = animation.Class.extend({
     selector: ".js_follow",
     start: function (editable_mode) {
         var self = this;
         this.is_user = false;
-
         ajax.jsonRpc('/website_mail/is_follower', 'call', {
             model: this.$target.data('object'),
             id: this.$target.data('id'),

@@ -4,7 +4,7 @@ odoo.define('gamification.gamification', function(require) {
 var mail = require('mail.mail');
 var core = require('web.core');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 

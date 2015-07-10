@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web_editor.translator">
+    <div id="web_editor-top-edit" class="o_css_editor o_translate navbar navbar-inverse navbar-fixed-top hidden-xs">
+        <form class="navbar-form text-muted">
+            <button type="button" data-action="save" class="btn btn-primary btn-xs">Save</button>
+            <span>or</span>
+            <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
+        </form>
+    </div>
+</t>
+
+<t t-name="web_editor.translator.attributes">
+    <div class="modal web_editor-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h3 class="modal-title">Translate Attribute</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary save">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

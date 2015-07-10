@@ -303,7 +303,7 @@ Tour.register({
         },
         {
             title:      "select demo user",
-            element:    '.modal li a:contains(Demo User)',
+            element:    '.modal li:contains(Demo User)',
         },
         {
             title:      "test one2many's line onchange after many2one",
@@ -399,7 +399,7 @@ Tour.register({
         },
         {
             title:      "select an other user",
-            element:    '.oe_application li a:contains(Demo User)',
+            element:    '.ui-autocomplete li:contains(Demo User)',
         },
         {
             title:      "test one2many's line onchange after many2one",
@@ -433,7 +433,7 @@ Tour.register({
         },
         {
             title:      "add a tag",
-            element:    '.ui-autocomplete a:first',
+            element:    '.ui-autocomplete li:first',
         },
 
         // remove record

@@ -3,12 +3,13 @@ odoo.define('website_event.tour', function (require) {
 
 var core = require('web.core');
 var Tour = require('web.Tour');
+var base = require('web_editor.base');
 var website = require('website.website');
 
 
 var _t = core._t;
 
-website.ready().done(function () {
+base.ready().done(function () {
     Tour.register({
         id:   'event',
         name: _t("Create an event"),

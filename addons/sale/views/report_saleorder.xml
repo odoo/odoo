@@ -44,11 +44,11 @@
                 </div>
                 <div t-if="doc.user_id.name" class="col-xs-3">
                     <strong>Salesperson:</strong>
-                    <p t-field="doc.user_id.name"/>
+                    <p t-field="doc.user_id"/>
                 </div>
                 <div name="payment_term" t-if="doc.payment_term_id" class="col-xs-3">
                     <strong>Payment Term:</strong>
-                    <p t-field="doc.payment_term_id.name"/>
+                    <p t-field="doc.payment_term_id"/>
                 </div>
             </div>
 

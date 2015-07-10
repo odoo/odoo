@@ -264,7 +264,7 @@
                         </div>
                         <notebook>
                             <page string="Popup Content">
-                                <field name="popup_content" options="{'editor_url': '/website_mass_mailing/field/popup_content'}" widget="html_frame"/>
+                                <field name="popup_content" widget="html_frame" options="{'editor_url': '/website_mass_mailing/field/popup_content'}"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -329,8 +329,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_links_tree">
-            <field name="name">website.links.tree</field>
-            <field name="model">website.links</field>
+            <field name="name">link.tracker.tree</field>
+            <field name="model">link.tracker</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Mailing Statistics of Clicks">
@@ -342,9 +342,9 @@
         </record>
         
         <record model="ir.ui.view" id="view_mail_mass_mailing_links_search">
-            <field name="name">website.links.search</field>
-            <field name="model">website.links</field>
-            <field name="inherit_id" ref="website_links.view_website_links_filter"/>
+            <field name="name">link.tracker.search</field>
+            <field name="model">link.tracker</field>
+            <field name="inherit_id" ref="link_tracker.view_link_tracker_filter"/>
             <field name="arch" type="xml">
                <search string="Tracked Link">
                     <field name="mass_mailing_id"/>
@@ -355,7 +355,7 @@
 
         <record model="ir.actions.act_window" id="action_view_mass_mailing_links_statistics">
             <field name="name">Statistics of Clicks</field>
-            <field name="res_model">website.links</field>
+            <field name="res_model">link.tracker</field>
             <field name="view_mode">tree</field>
             <field name="context">{'search_default_mass_mailing_id': active_id}</field>
         </record>
@@ -444,7 +444,7 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <field name="body_html" options="{'editor_url': '/website_mail/field/email_template'}"  widget="html_frame"/>
+                                <field name="body_html" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
                                 <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
                             </page>
                             <page string="Options">
@@ -709,7 +709,7 @@
 
         <record model="ir.actions.act_window" id="dropdb snipp">
             <field name="name">Statistics of Clicks</field>
-            <field name="res_model">website.links</field>
+            <field name="res_model">link.tracker</field>
             <field name="view_mode">tree</field>
             <field name="context">{'search_default_mass_mailing_campaign_id': active_id}</field>
         </record>

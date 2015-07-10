@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options">
+
+    <t t-raw="0"/>
+
+    <div data-js='width-x'
+        data-selector="img, .mv, .col_mv">
+    </div>
+
+    <div data-js='table_row'
+        data-selector=".row"
+        data-drop-near=".row">
+    </div>
+
+    <div data-js='table_column'
+        data-selector=".col>td, .col>th"
+        data-drop-near=".col>td, .col>th">
+    </div>
+
+    <div data-js='table_column_mv'
+        data-selector=".col_mv"
+        data-drop-near=".col_mv">
+    </div>
+
+    <div data-js='content' class="hidden"
+        data-selector="[data-oe-field='body_html'] > div, .oe_snippet_body"
+        data-drop-near="[data-oe-field='body_html'] > *"
+        data-drop-in="[data-oe-field='body_html']">
+    </div>
+
+    <div data-js='resize'
+        data-selector="div.snippet_row"
+        data-drop-in=".oe_structure, [data-oe-type=html]">
+    </div>
+    
+    <div data-js='background'
+        data-selector="div.snippet_row">
+        <li data-choose_image="choose_image" data-background=""><a>Choose a background image</a></li>
+        <li data-background=""><a>No background image</a></li>
+    </div>
+
+</template>
+
+</odoo>

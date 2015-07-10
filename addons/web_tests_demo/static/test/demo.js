@@ -44,7 +44,7 @@ odoo.define_section('basic section', [], function (test, mock) {
     });
 
 
-    test('XML-RPC', ['web.Model'], function (assert, Model) {
+    test('XML-RPC', ['web.DataModel'], function (assert, Model) {
         assert.expect(3);
 
         mock.add('people.famous:name_search', function (args, kwargs) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
 
 <template id="assets_backend" name="website assets for backend" inherit_id="web.assets_backend">
     <xpath expr="." position="inside">
@@ -9,68 +8,4 @@
     </xpath>
 </template>
 
-<template id="assets_backend_editor" name="assets for backend editor">
-    <t t-call="web.assets_common"/>
-    <script type="text/javascript" src="/web/static/src/js/watch.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-    <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
-    <link rel="stylesheet" href='/website/static/src/css/website.css'/>
-    <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-    <t t-call="website.summernote"/>
-    <t t-call="website.editor"/>
-    <script type="text/javascript" src="/website/static/src/js/website.backend.iframe.js"></script>
-    <style>.note-popover .popover { left: 5px !important; }</style>
-</template>
-
-<template id="editor_layout" name="Editor layout">&lt;!DOCTYPE html&gt;
-    <html t-att-lang="lang and lang.replace('_', '-')"
-          t-att-data-website-id="website.id if editable and website else None"
-          t-att-data-editable="1"
-          t-att-data-translatable="'1' if translatable else None"
-          t-att-data-main-object="repr(main_object) if editable else None"
-          t-att-data-oe-company-name="res_company.name">
-        <head>
-            <meta charset="utf-8" />
-            <title>Odoo Editor layout</title>
-            <meta name="viewport" content="initial-scale=1"/>
-            <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
-                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
-                </t>
-            </t>
-            <script>
-                var snippets_url = '<t t-esc="snippets or ''"/>';
-                var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
-                window.top.odoo[callback+"_set_value"] = function (value, fields_values) {
-                    var editable = document.getElementsByClassName("o_editable")[0];
-                    if (value !== editable.innerHTML) {
-                        editable.innerHTML = value;
-                    }
-                };
-            </script>
-            <t t-if="not dont_load_assets">
-                <t t-call-assets="website.assets_backend_editor"/>
-            </t>
-            <t t-raw="head or ''"/>
-        </head>
-        <body onload="window.top.odoo[callback+'_content']();">
-            <div id="wrapwrap">
-                <main>
-                    <t t-raw="0"/>
-                </main>
-            </div>
-            <t t-raw="add_html or ''"/>
-        </body>
-    </html>
-</template>
-
-<template id="FieldTextHtml" name="Editor layout">
-    <t t-call="website.editor_layout">
-        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
-    </t>
-</template>
-
-    </data>
 </openerp>

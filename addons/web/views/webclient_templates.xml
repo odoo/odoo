@@ -10,6 +10,8 @@
 
             <!-- jQuery stuff -->
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
@@ -49,31 +51,7 @@
             <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
         </template>
 
-        <template id="jqueryui_conflict" name="jquery.ui.conflict">
-            <!-- TODO: get rid of this hack once jQuery.ui is removed -->
-            <script type="text/javascript" charset="utf-8">
-                $.fn.bstooltip = $.fn.tooltip;
-                $.fn.bsbutton = $.fn.button;
-            </script>
-            <t t-raw="0"/>
-            <script type="text/javascript" charset="utf-8">
-                $.fn.tooltip = $.fn.bstooltip;
-                $.fn.button = $.fn.bsbutton;
-            </script>
-        </template>
-
-        <template id="web.assets_backend">
-            <!-- jQuery addons -->
-            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
-            <script type="text/javascript" src="/web/static/lib/autosize/autosize.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
-
-            <link rel="stylesheet" href="/web/static/lib/cleditor/jquery.cleditor.css"/>
-            <script type="text/javascript" src="/web/static/lib/cleditor/jquery.cleditor.js"></script>
-
-            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
-
+        <template id="web.bootstrap">
             <script src="/web/static/lib/bootstrap/js/affix.js"></script>
             <script src="/web/static/lib/bootstrap/js/alert.js"></script>
             <script src="/web/static/lib/bootstrap/js/button.js"></script>
@@ -86,13 +64,18 @@
             <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
             <script src="/web/static/lib/bootstrap/js/tab.js"></script>
             <script src="/web/static/lib/bootstrap/js/transition.js"></script>
+        </template>
 
-            <!-- jQuery ui -->
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+        <template id="web.assets_backend">
+            <!-- jQuery addons -->
+            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
+            <script type="text/javascript" src="/web/static/lib/autosize/autosize.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
 
-            <t t-call="web.jqueryui_conflict">
-                <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
-            </t>
+            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
+
+            <t t-call="web.bootstrap"/>
 
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
@@ -123,6 +106,7 @@
             <!-- Special case: core.js declares $.browser needed by ba-bbq -->
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
+            <script type="text/javascript" src="/web/static/src/js/framework/data_model.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>

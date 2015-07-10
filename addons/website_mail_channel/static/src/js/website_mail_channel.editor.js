@@ -3,14 +3,15 @@ odoo.define('website_mail_channel.editor', function (require) {
 
 var core = require('web.core');
 var Model = require('web.Model');
-var snippet_editor = require('website.snippets.editor');
+var base = require('web_editor.base');
+var options = require('web_editor.snippets.options');
+var snippet_editor = require('web_editor.snippet.editor');
 var website = require('website.website');
 
 var _t = core._t;
 
-
-snippet_editor.options.subscribe = snippet_editor.Option.extend({
-    choose_mailing_list: function (type, value) {
+options.subscribe = options.Class.extend({
+    select_mailing_list: function (type, value) {
         var self = this;
         if (type !== "click") return;
         return website.prompt({
@@ -19,7 +20,7 @@ snippet_editor.options.subscribe = snippet_editor.Option.extend({
             select: _t("Discussion List"),
             init: function (field) {
                 return new Model('mail.channel')
-                        .call('name_search', ['', [['public','=','public']]], { context: website.get_context() });
+                        .call('name_search', ['', [['public','=','public']]], { context: base.get_context() });
             },
         }).then(function (mail_channel_id) {
             self.$target.attr("data-id", mail_channel_id);
@@ -28,7 +29,7 @@ snippet_editor.options.subscribe = snippet_editor.Option.extend({
     drop_and_build_snippet: function() {
         var self = this;
         this._super();
-        this.choose_mailing_list("click").fail(function () {
+        this.select_mailing_list("click").fail(function () {
             self.editor.on_remove();
         });
     },
@@ -36,4 +37,5 @@ snippet_editor.options.subscribe = snippet_editor.Option.extend({
         this.$target.addClass("hidden");
     },
 });
+
 });

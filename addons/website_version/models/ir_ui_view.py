@@ -63,7 +63,7 @@ class view(models.Model):
         return xml_id
 
     @tools.ormcache_context('uid', 'view_id',
-        keys=('lang', 'inherit_branding', 'editable', 'translatable', 'website_id', 'version_id'))
+        keys=('lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations', 'website_id', 'version_id'))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -158,27 +158,3 @@ class view(models.Model):
                 check.append(data['name'])
                 res.append(data)
         return res
-
-    @api.model
-    def get_view_translations(self, xml_id, lang,
-                              field=['id', 'res_id', 'value', 'state', 'gengo_translation']):
-        irt = self.pool['ir.translation']
-        view = self.browse(xml_id)
-        view_list = self.search([('key', '=', view.key),
-                                 '|', ('website_id', '=', view.website_id.id), ('website_id', '=', False)])
-        views_ids = []
-        for v in view_list:
-            views = self.customize_template_get(v.id, full=True)
-            views_ids += [v.get('id') for v in views if v.get('active')]
-        domain = [
-            ('type', '=', 'model'),
-            ('name', '=', 'ir.ui.view,arch_db'),
-            ('res_id', 'in', views_ids),
-            ('lang', '=', lang),
-        ]
-        element_list = irt.search_read(self.env.cr, self.env.uid,
-                                       domain, field, context=self.env.context)
-        for element in element_list:
-            if element['res_id'] in view_list.ids:
-                element['res_id'] = xml_id
-        return element_list

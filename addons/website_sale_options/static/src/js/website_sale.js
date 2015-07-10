@@ -3,11 +3,10 @@ odoo.define('website_sale_options.website_sale', function(require) {
 
 var ajax = require('web.ajax');
 var website = require('website.website');
+var base = require('web_editor.base');
 
-$(document).ready(function () {
-    if(! $("ul.js_add_cart_variants[data-attribute_value_ids]").length){
-        return;
-    }
+website.if_dom_contains("ul.js_add_cart_variants[data-attribute_value_ids]", function () {
+
 $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
     .off('click')
     .removeClass('a-submit')
@@ -18,13 +17,13 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
         event.preventDefault();
         ajax.jsonRpc("/shop/modal", 'call', {
                 'product_id': product_id,
-                kwargs: {
-                   context: _.extend({'quantity': quantity}, website.get_context())
+                'kwargs': {
+                   'context': _.extend({'quantity': quantity}, base.get_context())
                 },
             }).then(function (modal) {
                 var $modal = $(modal);
 
-                $modal.find('img:first').attr("src", "/website/image/product.product/" + product_id + "/image_medium");
+                $modal.find('img:first').attr("src", "/web_editor/image/product.product/" + product_id + "/image_medium");
 
                 $modal.appendTo($form)
                     .modal()
@@ -36,7 +35,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                     var $a = $(this);
                     $form.ajaxSubmit({
                         url:  '/shop/cart/update_option',
-                        data: {lang: website.get_context().lang},
+                        data: {lang: base.get_context().lang},
                         success: function (quantity) {
                             if (!$a.hasClass('js_goto_shop')) {
                                 window.location.href = window.location.href.replace(/shop([\/?].*)?$/, "shop/cart");
@@ -113,6 +112,7 @@ $('#cart_products input.js_quantity').change(function () {
         $next = $next.next('.optional_product');
     }
 });
+
 });
 
 });

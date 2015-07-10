@@ -52,10 +52,11 @@ ActionManager.include({
             // particular: query string of action.data.form and context
             if (!('data' in action) || !(action.data)) {
                 if ('active_ids' in action.context) {
-                    report_url += "/" + action.context.active_ids.join(',');
+                    report_url += "/" + action.context.active_ids.join(',') + "?enable_editor=1";
                 }
             } else {
-                report_url += "?options=" + encodeURIComponent(JSON.stringify(action.data));
+                report_url += "?enable_editor=1";
+                report_url += "&options=" + encodeURIComponent(JSON.stringify(action.data));
                 report_url += "&context=" + encodeURIComponent(JSON.stringify(action.context));
             }
 

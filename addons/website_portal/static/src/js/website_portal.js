@@ -1,9 +1,9 @@
 odoo.define('website_portal', function(require) {
     'use strict';
 
-    var website = require('website.website');
+    var base = require('web_editor.base');
     var qweb = require('qweb');
-    website.ready().done(function() {
+    base.ready().done(function() {
 
         $('.oe_website_portal').on('change', "select[name='country_id']", function () {
             var $select = $("select[name='state_id']");

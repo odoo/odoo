@@ -12,7 +12,7 @@ from openerp import models
 class QWeb(models.AbstractModel):
     """ QWeb object for rendering stuff in the website context
     """
-    _inherit = 'website.qweb'
+    _inherit = 'ir.qweb'
 
     def render(self, cr, uid, id_or_xml_id, qwebcontext=None, loader=None, context=None):
         if context is None:
@@ -31,12 +31,13 @@ class QWeb(models.AbstractModel):
                     if version_id:
                         context['version_id'] = int(version_id)
 
-            if 'version_id' in context:
-                version_id = context.get('version_id')
-                if version_id:
-                    id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('version_id', '=', False), ('version_id', '=', version_id), '|', ('website_id', '=', website_id), ('website_id', '=', False)], order='website_id, version_id', limit=1, context=context)[0]
-                else:
-                    id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), ('version_id', '=', False), '|', ('website_id', '=', website_id), ('website_id', '=', False)], order='website_id', limit=1, context=context)[0]
-            else:
-                id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, [('key', '=', id_or_xml_id), '|', ('website_id', '=', website_id), ('website_id', '=', False), ('version_id', '=', False)], order='website_id', limit=1, context=context)[0]
+            if isinstance(id_or_xml_id, (int, long)):
+                id_or_xml_id = self.pool["ir.ui.view"].browse(cr, uid, id_or_xml_id, context=context).key
+
+            domain = [('key', '=', id_or_xml_id), '|', ('website_id', '=', website_id), ('website_id', '=', False)]
+            version_id = context.get('version_id')
+            domain += version_id and ['|', ('version_id', '=', False), ('version_id', '=', version_id)] or [('version_id', '=', False)]
+
+            id_or_xml_id = self.pool["ir.ui.view"].search(cr, uid, domain, order='website_id, version_id', limit=1, context=context)[0]
+
         return super(QWeb, self).render(cr, uid, id_or_xml_id, qwebcontext, loader=loader, context=context)

@@ -1,10 +1,13 @@
 odoo.define('website.mobile', function (require) {
 'use strict';
 
+var core = require('web.core');
+var ajax = require('web.ajax');
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.add_template_file('/website/static/src/xml/website.xml');
+var qweb = core.qweb;
 
 var MobilePreview = Widget.extend({
     template: 'website.mobile_preview',
@@ -24,10 +27,13 @@ var MobilePreview = Widget.extend({
     },
 });
 
-website.ready().done(function() {
-    $(document.body).on('click', 'a[data-action=show-mobile-preview]', function() {
-        new MobilePreview().appendTo($(document.body));
-    });
+website.TopBar.include({
+    start: function () {
+        this.$el.on('click', 'a[data-action=show-mobile-preview]', function() {
+            new MobilePreview().appendTo($(document.body));
+        });
+        return this._super();
+    }
 });
 
 });

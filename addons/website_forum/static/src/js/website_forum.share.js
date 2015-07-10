@@ -3,12 +3,13 @@ odoo.define('website_forum.share', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var base = require('web_editor.base');
 var SocialShare = require('website.share');
 var website = require('website.website');
 website.if_dom_contains('.website_forum', function () {
 
 var qweb = core.qweb;
-website.add_template_file('/website_forum/static/src/xml/website_forum_share_templates.xml');
+ajax.loadXML('/website_forum/static/src/xml/website_forum_share_templates.xml', qweb);
 
 var ForumShare = SocialShare.extend({
     init: function (parent, target_type) {
@@ -39,7 +40,7 @@ var ForumShare = SocialShare.extend({
     }
 });
 
-website.ready().done(function() {
+base.ready().done(function() {
 
     // Store social share data to display modal on next page
     $(document.body).on('click', ':not(.karma_required).oe_social_share_call', function() {

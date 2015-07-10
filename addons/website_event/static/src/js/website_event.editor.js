@@ -7,7 +7,7 @@ var website = require('website.website');
 
 var _t = core._t;
 
-contentMenu.EditorBarContent.include({
+contentMenu.TopBar.include({
     new_event: function() {
         website.prompt({
             id: "editor_new_event",

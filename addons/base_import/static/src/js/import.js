@@ -3,7 +3,7 @@ odoo.define('base_import.import', function (require) {
 
 var core = require('web.core');
 var ListView = require('web.ListView');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 

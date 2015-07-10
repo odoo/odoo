@@ -7,7 +7,7 @@ var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 var QWeb = core.qweb;
 var _t = core._t;

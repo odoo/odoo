@@ -2,7 +2,7 @@ odoo.define('mail.announcement', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var WebClient = require('web.WebClient');
 

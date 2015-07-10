@@ -4,7 +4,7 @@ odoo.define('mail.many2manytags', function (require) {
 var core = require('web.core');
 var form_common = require('web.form_common');
 var form_relational = require('web.form_relational');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 var _t = core._t;
 

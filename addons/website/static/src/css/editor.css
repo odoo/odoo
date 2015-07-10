@@ -85,11 +85,13 @@
 .editor_enable [data-oe-readonly]:hover {
   cursor: default;
 }
+
 /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
 .o_editable[placeholder]:empty:not(:focus):before {
-    content: attr(placeholder);
-    opacity: 0.3;
+  content: attr(placeholder);
+  opacity: 0.3;
 }
+
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
   -moz-user-select: none;
@@ -269,41 +271,6 @@ table.editorbar-panel td.selected {
 }
 .link-style .col-sm-2 > * {
   line-height: 2em;
-}
-
-/* ---- TRANSLATIONS ---- {{{ */
-.oe_translate_or {
-  color: white;
-  padding: 0 0 0 1em;
-}
-
-.oe_translate_examples li {
-  margin: 10px;
-  padding: 4px;
-}
-
-.oe_translatable_text {
-  outline: 1px solid black;
-}
-
-.oe_translatable_field {
-  outline: 1px dashed black;
-}
-
-.oe_translatable_text.oe_dirty, .oe_translatable_field.oe_dirty {
-  outline-color: red;
-}
-
-.oe_translatable_text.oe_dirty:empty {
-  padding: 0 10px;
-}
-
-.oe_translatable_todo {
-  background: #ffffb6;
-}
-.oe_translatable_todo:hover {
-  background: inherit;
-  cursor: text;
 }
 
 /* ---- MENU ---- {{{ */
@@ -636,7 +603,7 @@ ul.oe_menu_editor .disclose {
 }
 .oe_ace_view_editor.oe_ace_closed {
   z-index: -1000;
-  display: none
+  display: none;
 }
 
 .oe_include_bundles {
@@ -651,7 +618,6 @@ ul.oe_menu_editor .disclose {
 
 #theme_customize_modal {
   overflow: visible;
-  overflow-y: auto;
   z-index: 1020;
   background: transparent;
   display: block;

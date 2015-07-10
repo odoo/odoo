@@ -297,8 +297,12 @@ class HttpCase(TransactionCase):
                 buf.append(s)
 
             # process lines
-            if '\n' in buf:
-                line, buf = buf.split('\n', 1)
+            if '\n' in buf and (not buf.startswith('<phantomLog>') or '</phantomLog>' in buf):
+                if buf.startswith('<phantomLog>'):
+                    line = buf[12:buf.index('</phantomLog>')]
+                    buf = bytearray()
+                else:
+                    line, buf = buf.split('\n', 1)
                 line = str(line)
 
                 # relay everything from console.log, even 'ok' or 'error...' lines

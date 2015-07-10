@@ -3,14 +3,15 @@ odoo.define('website_twitter.animation', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var animation = require('website.snippets.animation');
+var base = require('web_editor.base');
+var animation = require('web_editor.snippets.animation');
 var website = require('website.website');
 
 var qweb = core.qweb;
 
-website.add_template_file('/website_twitter/static/src/xml/website.twitter.xml');
+ajax.loadXML('/website_twitter/static/src/xml/website.twitter.xml', qweb);
 
-animation.registry.twitter = animation.Animation.extend({
+animation.registry.twitter = animation.Class.extend({
     selector: ".twitter",
     start: function () {
         var self = this;

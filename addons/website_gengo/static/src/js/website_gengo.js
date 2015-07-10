@@ -4,20 +4,22 @@ odoo.define('website_gengo.website_gengo', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
-var editor = require('website.editor');
+var base = require('web_editor.base');
+var editor = require('web_editor.editor');
+var translate = require('web_editor.translate');
 var website = require('website.website');
 
 var qweb = core.qweb;
 
-if (!website.translatable) {
+if (!translate.edit_translations) {
     // Temporary hack until the editor bar is moved to the web client
     return;
 }
 
-website.add_template_file('/website_gengo/static/src/xml/website.gengo.xml');
+ajax.loadXML('/website_gengo/static/src/xml/website.gengo.xml', qweb);
 
-editor.EditorBar.include({
-    events: _.extend({}, website.EditorBar.prototype.events, {
+website.TopBar.include({
+    events: _.extend({}, website.TopBar.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
         'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
     }),
@@ -26,7 +28,7 @@ editor.EditorBar.include({
         this._super.apply(this, arguments);
         var self = this;
         var gengo_langs = ["ar_SY","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR","pt_BR","th_TH","nb_NO","ro_RO","tr_TR","bg_BG","da_DK","en_GB","el_GR","vi_VN","he_IL","hu_HU","fi_FI"];
-        if (gengo_langs.indexOf(website.get_context()['lang']) !== -1){
+        if (gengo_langs.indexOf(base.get_context()['lang']) !== -1){
             self.$('.gengo_post,.gengo_wait,.gengo_inprogress,.gengo_info').remove();
             self.$('button[data-action=save]')
             .after(qweb.render('website.ButtonGengoTranslator'));
@@ -34,7 +36,7 @@ editor.EditorBar.include({
     },
     translation_gengo_display:function(){
         var self = this;
-        if($('.oe_translatable_todo').length === 0){
+        if($('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').length === 0){
             self.$el.find('.gengo_post').addClass("hidden");
             self.$el.find('.gengo_inprogress').removeClass("hidden");
         }
@@ -42,7 +44,7 @@ editor.EditorBar.include({
     translation_gengo_post: function () {
         var self = this;
         this.new_words =  0;
-        $('.oe_translatable_todo').each(function () {
+        $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
             self.new_words += $(this).text().trim().replace(/ +/g," ").split(" ").length;
         });
         ajax.jsonRpc('/website/check_gengo_set', 'call', {
@@ -56,7 +58,7 @@ editor.EditorBar.include({
                     self.$el.find('.gengo_post').addClass("hidden");
                     self.$el.find('.gengo_wait').removeClass("hidden");
                     var trans ={}
-                    $('.oe_translatable_todo').each(function () {
+                    $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
                         var data = $node.data();
                         if (!trans[data.oeTranslationViewId]) {
@@ -72,9 +74,8 @@ editor.EditorBar.include({
                     });
                     ajax.jsonRpc('/website/set_translations', 'call', {
                         'data': trans,
-                        'lang': website.get_context()['lang'],
+                        'lang': base.get_context()['lang'],
                     }).then(function () {
-                        $('.oe_translatable_todo').addClass('oe_translatable_inprogress').removeClass('oe_translatable_todo');
                         self.$el.find('.gengo_wait').addClass("hidden");
                         self.$el.find('.gengo_inprogress,.gengo_discard').removeClass("hidden");
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
@@ -91,7 +92,6 @@ editor.EditorBar.include({
                 });
             }
         });
-
     },
     translation_gengo_info: function () {
         var repr =  $(document.documentElement).data('mainObject');
@@ -101,7 +101,7 @@ editor.EditorBar.include({
         });
         ajax.jsonRpc('/website/get_translated_length', 'call', {
             'translated_ids': translated_ids,
-            'lang': website.get_context()['lang'],
+            'lang': base.get_context()['lang'],
         }).done(function(res){
             var dialog = new GengoTranslatorStatisticDialog(res);
             dialog.appendTo($(document.body));
@@ -111,7 +111,7 @@ editor.EditorBar.include({
 });
 
 var GengoTranslatorPostDialog = Widget.extend({
-    events: _.extend({}, editor.EditorBar.prototype.events, {
+    events: _.extend({}, website.TopBar.prototype.events, {
         'hidden.bs.modal': 'destroy',
         'click button[data-action=service_level]': function () {
             this.trigger('service_level');
@@ -128,7 +128,7 @@ var GengoTranslatorPostDialog = Widget.extend({
 });
 
 var GengoTranslatorStatisticDialog = Widget.extend({
-    events: _.extend({}, editor.EditorBar.prototype.events, {
+    events: _.extend({}, website.TopBar.prototype.events, {
         'hidden.bs.modal': 'destroy',
     }),
     template: 'website.GengoTranslatorStatisticDialog',
@@ -137,10 +137,10 @@ var GengoTranslatorStatisticDialog = Widget.extend({
         this.inprogess =  0;
         this.new_words =  0;
         this.done =  res.done;
-        $('.oe_translatable_todo').each(function () {
+        $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
             self.new_words += $(this).text().trim().replace(/ +/g," ").split(" ").length;
         });
-        $('.oe_translatable_inprogress').each(function () {
+        $('[data-oe-translation-state="inprogress"]').each(function () {
             self.inprogess += $(this).text().trim().replace(/ +/g," ").split(" ").length;
         });
         this.total = this.done + this.inprogess;
@@ -152,7 +152,7 @@ var GengoTranslatorStatisticDialog = Widget.extend({
 });
 
 var GengoApiConfigDialog = Widget.extend({
-    events: _.extend({}, editor.EditorBar.prototype.events, {
+    events: _.extend({}, website.TopBar.prototype.events, {
         'hidden.bs.modal': 'destroy',
         'click button[data-action=set_config]': 'set_config'
     }),

@@ -1,10 +1,14 @@
 odoo.define('web.planner.website', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
+var core = require('web.core');
 var Model = require('web.Model');
 var Widget = require('web.Widget');
 var planner = require('web.planner.common');
-var website = require('website.website');
+var base = require('web_editor.base');
+
+var qweb = core.qweb;
 
 var PlannerDialog = planner.PlannerDialog;
 
@@ -54,9 +58,9 @@ PlannerDialog.include({
     }
 });
 
-website.ready().done(function() {
+base.dom_ready.done(function() {
     if($('#oe_systray').length) {
-        website.add_template_file('/web_planner/static/src/xml/web_planner.xml').then(function() {
+        ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
             new planner.WebistePlannerLauncher().prependTo($('#oe_systray'));
         });
     }
