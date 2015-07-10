@@ -18,20 +18,19 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     // but some scanners can use an intercharacter delay (we support <= 50 ms)
     max_time_between_keys_in_ms: 55,
 
-    init: function(parent) {
+    init: function() {
         mixins.PropertiesMixin.init.call(this);
-        this.setParent(parent);
         // Keep a reference of the handler functions to use when adding and removing event listeners
-        this.__keydown_handler = _.bind(this.keydown_handler, this);
-        this.__keyup_handler = _.bind(this.keyup_handler, this);
-        this.__handler = _.bind(this.handler, this);
+        this.__keydown_handler = this.keydown_handler.bind(this);
+        this.__keyup_handler = this.keyup_handler.bind(this);
+        this.__handler = this.handler.bind(this);
         // Bind event handler once the DOM is loaded
         // TODO: find a way to be active only when there are listeners on the bus
         $(this.start.bind(this));
     },
 
     handle_buffered_keys: function() {
-        var str = _.reduce(this.buffered_key_events, function(memo, e) { return memo + String.fromCharCode(e.which) }, '');
+        var str = this.buffered_key_events.reduce(function(memo, e) { return memo + String.fromCharCode(e.which) }, '');
         var match = str.match(this.regexp);
 
         if (match) {
@@ -50,8 +49,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     resend_buffered_keys: function() {
+        var old_event, new_event;
         for(var i = 0; i < this.buffered_key_events.length; i++) {
-            var old_event = this.buffered_key_events[i];
+            old_event = this.buffered_key_events[i];
 
             if(old_event.which !== 13) { // ignore returns
                 // We do not create a 'real' keypress event through
@@ -61,7 +61,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 // bug for the longest time that causes keyCode and
                 // charCode to not be set for events created this way:
                 // https://bugs.webkit.org/show_bug.cgi?id=16735
-                var new_event = new Event("keypress", {
+                new_event = new Event("keypress", {
                     'bubbles': old_event.bubbles,
                     'cancelable': old_event.cancelable,
                 });
@@ -129,17 +129,18 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 e.stopImmediatePropagation();
 
                 clearTimeout(this.timeout);
-                if (String.fromCharCode(e.which).match(this.suffix) !== null)
+                if (String.fromCharCode(e.which).match(this.suffix) !== null) {
                     this.handle_buffered_keys();
-                else
+                } else {
                     this.timeout = setTimeout(this.handle_buffered_keys.bind(this), this.max_time_between_keys_in_ms);
+                }
             }
         }
     },
 
     start: function(prevent_key_repeat){
         document.body.addEventListener('keypress', this.__handler, true);
-        if (prevent_key_repeat === true) {
+        if (prevent_key_repeat) {
             document.body.addEventListener('keydown', this.__keydown_handler, true);
             document.body.addEventListener('keyup', this.__keyup_handler, true);
         }
@@ -152,8 +153,6 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 });
 
-return {
-    BarcodeEvents: new BarcodeEvents(),
-};
+return new BarcodeEvents();
 
 });
