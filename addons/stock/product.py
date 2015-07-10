@@ -279,7 +279,7 @@ class product_product(osv.osv):
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Stock')
+                        res['fields']['virtual_available']['string'] = _('Forecasted Quantity')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
