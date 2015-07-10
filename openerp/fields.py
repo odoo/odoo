@@ -1092,6 +1092,11 @@ class _String(Field):
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
     _description_translate = property(attrgetter('translate'))
+    
+    def convert_to_export(self, value, env):
+        if env.context.get('export_raw_data'):
+            return value if value else None
+        return bool(value) and ustr(value)
 
 
 class Char(_String):
@@ -1212,7 +1217,7 @@ class Date(Field):
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
-            return self.from_string(value)
+            return self.from_string(value) or None
         return bool(value) and ustr(value)
 
 
@@ -1281,7 +1286,7 @@ class Datetime(Field):
 
     def convert_to_export(self, value, env):
         if value and env.context.get('export_raw_data'):
-            return self.from_string(value)
+            return self.from_string(value) or None
         return bool(value) and ustr(value)
 
     def convert_to_display_name(self, value, record=None):
@@ -1390,7 +1395,7 @@ class Selection(Field):
     def convert_to_export(self, value, env):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
-            return value
+            return value or None
         for item in self._description_selection(env):
             if item[0] == value:
                 return item[1]
@@ -1427,7 +1432,7 @@ class Reference(Selection):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value, env):
-        return bool(value) and value.name_get()[0][1]
+        return value.name_get()[0][1] if value else None
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value and value.display_name)
@@ -1567,7 +1572,7 @@ class Many2one(_Relational):
         return value.id
 
     def convert_to_export(self, value, env):
-        return bool(value) and value.name_get()[0][1]
+        return value.name_get()[0][1] if value else None
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
@@ -1673,7 +1678,7 @@ class _RelationalMulti(_Relational):
         return result
 
     def convert_to_export(self, value, env):
-        return bool(value) and ','.join(name for id, name in value.name_get())
+        return ','.join(name for id, name in value.name_get()) if value else None
 
     def convert_to_display_name(self, value, record=None):
         raise NotImplementedError()

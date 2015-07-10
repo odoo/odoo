@@ -50,6 +50,7 @@ import re
 import time
 from collections import defaultdict, MutableMapping
 from inspect import getmembers, currentframe
+from operator import itemgetter
 
 import babel.dates
 import dateutil.relativedelta
@@ -5401,7 +5402,7 @@ class BaseModel(object):
             recs = self.search([('id', 'in', self.ids)])
             return self.browse(reversed(recs._ids)) if reverse else recs
         else:
-            return self.browse(map(int, sorted(self, key=key, reverse=reverse)))
+            return self.browse(map(itemgetter('id'), sorted(self, key=key, reverse=reverse)))
 
     def update(self, values):
         """ Update record `self[0]` with ``values``. """

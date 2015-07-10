@@ -92,7 +92,6 @@ pygments_style = 'odoo'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'odoo'
-html_translator_class = 'odoo.translator.BootstrapTranslator'
 
 odoo_cover_default = 'banners/installing_odoo.jpg'
 odoo_cover_external = {
