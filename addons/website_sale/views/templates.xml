@@ -511,7 +511,7 @@
   </ul>
 </template>
 
-<template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
+<template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Suggested Products">
   <xpath expr="//div[@id='product_full_description']" position="after">
       <div class="container mt32" t-if="product.alternative_product_ids">
           <h3>Suggested alternatives:</h3>
