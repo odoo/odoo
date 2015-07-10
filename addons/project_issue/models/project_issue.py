@@ -123,6 +123,14 @@ class project_issue(osv.Model):
 
         return res
 
+    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            esc_proj = issue.project_id.project_escalation_id
+            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
+                res[issue.id] = True
+        return res
+
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -188,6 +196,7 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
     }
 
     _defaults = {
@@ -302,6 +311,22 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
+    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
+        for issue in self.browse(cr, uid, ids, context=context):
+            data = {}
+            esc_proj = issue.project_id.project_escalation_id
+            if not esc_proj:
+                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+
+            data['project_id'] = esc_proj.id
+            if esc_proj.user_id:
+                data['user_id'] = esc_proj.user_id.id
+            issue.write(data)
+
+            if issue.task_id:
+                issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
+        return True
+
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
@@ -370,103 +395,3 @@ class project_issue(osv.Model):
         if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res
-
-
-class project(osv.Model):
-    _inherit = "project.project"
-
-    def _get_alias_models(self, cr, uid, context=None):
-        return [('project.task', "Tasks"), ("project.issue", "Issues")]
-
-    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        Issue = self.pool['project.issue']
-        return {
-            project_id: Issue.search_count(cr,uid, [('project_id', '=', project_id), ('stage_id.fold', '=', False)], context=context)
-            for project_id in ids
-        }
-
-    _columns = {
-        'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
-        'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
-                                    domain=[('stage_id.fold', '=', False)]),
-    }
-
-
-class account_analytic_account(osv.Model):
-    _inherit = 'account.analytic.account'
-    _description = 'Analytic Account'
-
-    _columns = {
-        'use_issues': fields.boolean('Issues', help="Check this box to manage customer activities through this project"),
-    }
-
-    def on_change_template(self, cr, uid, ids, template_id, date_start=False, context=None):
-        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, date_start=date_start, context=context)
-        if template_id and 'value' in res:
-            template = self.browse(cr, uid, template_id, context=context)
-            res['value']['use_issues'] = template.use_issues
-        return res
-
-    def _trigger_project_creation(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
-
-    def unlink(self, cr, uid, ids, context=None):
-        proj_ids = self.pool['project.project'].search(cr, uid, [('analytic_account_id', 'in', ids)])
-        has_issues = self.pool['project.issue'].search(cr, uid, [('project_id', 'in', proj_ids)], count=True, context=context)
-        if has_issues:
-            raise UserError(_('Please remove existing issues in the project linked to the accounts you want to delete.'))
-        return super(account_analytic_account, self).unlink(cr, uid, ids, context=context)
-
-
-class project_project(osv.Model):
-    _inherit = 'project.project'
-
-    _columns = {
-        'label_issues': fields.char('Use Issues as', help="Customize the issues label, for example to call them cases."),
-    }
-
-    _defaults = {
-        'use_issues': True,
-        'label_issues': 'Issues',
-    }
-
-    def _check_create_write_values(self, cr, uid, vals, context=None):
-        """ Perform some check on values given to create or write. """
-        # Handle use_tasks / use_issues: if only one is checked, alias should take the same model
-        if vals.get('use_tasks') and not vals.get('use_issues'):
-            vals['alias_model'] = 'project.task'
-        elif vals.get('use_issues') and not vals.get('use_tasks'):
-            vals['alias_model'] = 'project.issue'
-
-    def on_change_use_tasks_or_issues(self, cr, uid, ids, use_tasks, use_issues, context=None):
-        values = {}
-        if use_tasks and not use_issues:
-            values['alias_model'] = 'project.task'
-        elif not use_tasks and use_issues:
-            values['alias_model'] = 'project.issue'
-        return {'value': values}
-
-    def create(self, cr, uid, vals, context=None):
-        self._check_create_write_values(cr, uid, vals, context=context)
-        return super(project_project, self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        self._check_create_write_values(cr, uid, vals, context=context)
-        return super(project_project, self).write(cr, uid, ids, vals, context=context)
-
-class res_partner(osv.osv):
-    def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
-        Issue = self.pool['project.issue']
-        return {
-            partner_id: Issue.search_count(cr,uid, [('partner_id', '=', partner_id)])
-            for partner_id in ids
-        }
-
-    """ Inherits partner and adds Issue information in the partner form """
-    _inherit = 'res.partner'
-    _columns = {
-        'issue_count': fields.function(_issue_count, string='# Issues', type='integer'),
-    }
