@@ -36,14 +36,14 @@
         <menuitem id="res_partner_activation_config_mi" parent="base.menu_localisation" action="res_partner_activation_act" groups="base.group_no_one"
             sequence="6"/>
 
-    <!--Partner Grade -->
+    <!--Partner Level -->
 
 
     <record id="view_partner_grade_tree" model="ir.ui.view">
         <field name="name">res.partner.grade.tree</field>
         <field name="model">res.partner.grade</field>
         <field name="arch" type="xml">
-            <tree string="Partner Grade">
+            <tree string="Partner Level">
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
             </tree>
@@ -53,8 +53,8 @@
         <field name="name">res.partner.grade.form</field>
         <field name="model">res.partner.grade</field>
         <field name="arch" type="xml">
-            <form string="Partner Grade">
-                <sheet string="Grade">
+            <form string="Partner Level">
+                <sheet string="Level">
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -70,7 +70,7 @@
         </field>
     </record>
     <record id="res_partner_grade_action" model="ir.actions.act_window">
-        <field name="name">Partner Grade</field>
+        <field name="name">Partner Level</field>
         <field name="res_model">res.partner.grade</field>
         <field name="view_type">form</field>
     </record>

@@ -14,8 +14,8 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Grade Name'),
-        'partner_weight': fields.integer('Grade Weight',
+        'name': fields.char('Level Name'),
+        'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
     _defaults = {
@@ -36,9 +36,9 @@ class res_partner_activation(osv.osv):
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'partner_weight': fields.integer('Grade Weight',
+        'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
-        'grade_id': fields.many2one('res.partner.grade', 'Grade'),
+        'grade_id': fields.many2one('res.partner.grade', 'Level'),
         'activation' : fields.many2one('res.partner.activation', 'Activation', select=1),
         'date_partnership' : fields.date('Partnership Date'),
         'date_review' : fields.date('Latest Partner Review'),
