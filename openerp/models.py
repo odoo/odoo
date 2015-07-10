@@ -2932,20 +2932,30 @@ class BaseModel(object):
 
         # 1. determine the proper fields of the model; duplicate them on cls to
         # avoid clashes with inheritance between different models
-        for name in getattr(cls, '_fields', {}):
-            delattr(cls, name)
+        proper_fields = getattr(cls, '_proper_fields', None)
+        if proper_fields is None:
+            # retrieve fields from parent classes, and add magic fields
+            cls._fields = {}
+            cls._defaults = {}
+            for name, field in getmembers(cls, Field.__instancecheck__):
+                self._add_field(name, field.new())
+            self._add_magic_fields()
+            cls._proper_fields = set(cls._fields)
 
-        # retrieve fields from parent classes
-        cls._fields = {}
-        cls._defaults = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
-            self._add_field(attr, field.new())
+        else:
+            # redo base setup on proper fields, and remove other fields
+            for name in set(cls._fields) - proper_fields:
+                delattr(cls, name)
+                del cls._fields[name]
+                cls._defaults.pop(name, None)
+            for name, field in cls._fields.iteritems():
+                field.setup_base(self, name)
+            assert proper_fields == set(cls._fields)
 
-        # add magic and custom fields
-        self._add_magic_fields()
+        # 2. add custom fields
         self._add_manual_fields(partial)
 
-        # 2. make sure that parent models determine their own fields, then add
+        # 3. make sure that parent models determine their own fields, then add
         # inherited fields to cls
         self._inherits_check()
         for parent in self._inherits:
