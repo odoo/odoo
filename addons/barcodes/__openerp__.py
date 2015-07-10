@@ -8,11 +8,13 @@ This module adds support for barcode scanning and parsing.
 
 Scanning
 --------
-Use an USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.
+Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.
 The scanner must be configured to use no prefix and a carriage return or tab as suffix.
 The delay between each character input must be less than or equal to 50 milliseconds.
-This is how most barcode scanners will work out of the box.
+Most barcode scanners will work out of the box.
 However, make sure the scanner uses the same keyboard layout as the device it's plugged in.
+Either by setting the device's keyboard layout to US QWERTY (default value for most readers)
+or by changing the scanner's keyboard layout (check the manual).
 
 Parsing
 -------
