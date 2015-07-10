@@ -1153,6 +1153,12 @@ class project_work(osv.osv):
     }
 
     _order = "date desc"
+    _sql_constraints = [(
+        'work_unique',
+        'UNIQUE (task_id, user_id, date)',
+        "Can't create duplicate lines for the same date and time!"
+    )]
+
     def create(self, cr, uid, vals, context=None):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
