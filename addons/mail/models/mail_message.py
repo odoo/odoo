@@ -47,7 +47,7 @@ class Message(models.Model):
 
     @api.model
     def _get_default_author(self):
-        return self.env.user.partner_id.id
+        return self.env.user.partner_id
 
     # content
     subject = fields.Char('Subject')

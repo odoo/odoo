@@ -1467,7 +1467,7 @@ class MailThread(models.AbstractModel):
         # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
         if author_id is None:  # keep False values
-            author_id = self.env['mail.message']._get_default_author()
+            author_id = self.env['mail.message']._get_default_author().id
 
         # 1: Handle content subtype: if plaintext, converto into HTML
         if content_subtype == 'plaintext':
