@@ -4,7 +4,7 @@
 import os
 import re
 import openerp
-from openerp import SUPERUSER_ID, tools
+from openerp import SUPERUSER_ID, tools, api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
@@ -203,6 +203,7 @@ class res_company(osv.osv):
             args = (args or []) + [('id', 'in', cmp_ids)]
         return super(res_company, self).name_search(cr, uid, name=name, args=args, operator=operator, context=context, limit=limit)
 
+    @api.returns('self')
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """
         Check if the object for this company have a default value
