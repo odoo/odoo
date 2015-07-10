@@ -68,10 +68,10 @@ return Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$save_name.toggle(is_open);
-        if (this.$save_search.hasClass('open-menu')) {
+        if (this.$save_search.hasClass('o_open_menu')) {
             this.$save_name.find('input').first().focus();
         }
     },
@@ -320,10 +320,10 @@ return Widget.extend({
     },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$add_filter_menu.toggle(is_open);
-        if (this.$add_filter.hasClass('closed-menu') && (!this.propositions.length)) {
+        if (this.$add_filter.hasClass('o_closed_menu') && (!this.propositions.length)) {
             this.append_proposition();
         }
         this.$('.oe-filter-condition').toggle(is_open);
@@ -428,10 +428,10 @@ return Widget.extend({
     },
     toggle_add_menu: function (is_open) {
         this.$add_group
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$add_group_menu.toggle(is_open);
-        if (this.$add_group.hasClass('open-menu')) {
+        if (this.$add_group.hasClass('o_open_menu')) {
             this.$group_selector.focus();
         }
     },

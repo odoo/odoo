@@ -34,7 +34,7 @@ FavoriteMenu.include({
         });
         if (am && am.get_inner_widget() instanceof ViewManager) {
             this.view_manager = am.get_inner_widget();
-            this.$('.favorites-menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
+            this.$('.o_favorites_menu').append(QWeb.render('SearchView.addtogooglespreadsheet'));
             this.$('.add-to-spreadsheet').click(this.add_to_spreadsheet.bind(this));
         }
     },
