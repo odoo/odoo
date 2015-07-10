@@ -371,12 +371,10 @@ define(['summernote/summernote'], function () {
             linkInfo.range.select();
             $editable.data('range', linkInfo.range);
             def.resolve(linkInfo);
-            $editable.data('NoteHistory').popUndo();
             $('.note-popover .note-link-popover').show();
         });
         editor.on("cancel", this, function () {
             def.reject();
-            $editable.data('NoteHistory').popUndo();
         });
         return def;
     };
@@ -854,11 +852,6 @@ define(['summernote/summernote'], function () {
         };
         this.hasRedo = function () {
             return aUndo.length > pos+1;
-        };
-
-        this.popUndo = function () {
-            pos--;
-            aUndo.pop();
         };
 
         var last;
