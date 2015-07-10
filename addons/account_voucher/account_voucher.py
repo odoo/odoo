@@ -898,7 +898,7 @@ class account_voucher(osv.osv):
         else:
             currency_id = journal.company_id.currency_id.id
 
-        period_ids = self.pool['account.period'].find(cr, uid, context=dict(context, company_id=company_id))
+        period_ids = self.pool['account.period'].find(cr, uid, dt=date, context=dict(context, company_id=company_id))
         vals['value'].update({
             'currency_id': currency_id,
             'payment_rate_currency_id': currency_id,

@@ -166,6 +166,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'test/account_validate_account_move.yml',
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
+        'test/analytic_hierarchy.yml',
         'test/account_fiscalyear_close.yml', #last test, as it will definitively close the demo fiscalyear
     ],
     'installable': True,

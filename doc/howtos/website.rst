@@ -1,3 +1,5 @@
+:banner: banners/build_a_website.jpg
+
 .. queue:: website/series
 
 ==================
@@ -20,7 +22,7 @@ behaviors or by altering existing ones (including behaviors added by other
 modules).
 
 :ref:`Odoo's scaffolding <reference/cmdline/scaffold>` can setup a basic
-module to quickly get started, simply invoke:
+module. To quickly get started simply invoke:
 
 .. code-block:: console
 
@@ -28,7 +30,7 @@ module to quickly get started, simply invoke:
 
 This will automatically create a ``my-modules`` *module directory* with an
 ``academy`` module inside. The directory can be an existing module directory
-if you want, but the module name must be unique for the directory.
+if you want, but the module name must be unique within the directory.
 
 .. patch::
     :hidden:
@@ -38,7 +40,7 @@ A demonstration module
 
 We have a "complete" module ready for installation.
 
-Although it does absolutely nothing yet we can install it:
+Although it does absolutely nothing we can install it:
 
 * start the Odoo server
 
@@ -83,7 +85,7 @@ Generating HTML in Python isn't very pleasant.
 The usual solution is templates_, pseudo-documents with placeholders and
 display logic. Odoo allows any Python templating system, but provides its
 own :ref:`QWeb <reference/qweb>` templating system which integrates with other
-Odoo features.
+features.
 
 Create a template and ensure the template file is registered in the
 ``__openerp__.py`` manifest, and alter the controller to use our template:
@@ -116,8 +118,8 @@ Storing data in Odoo
 :ref:`Odoo models <reference/orm/model>` map to database tables.
 
 In the previous section we just displayed a list of string entered statically
-in the Python code. This doesn't allow modifications and persistent storage
-thereof, so we're now going to move our data to the database.
+in the Python code. This doesn't allow modifications or persistent storage
+so we'll now move our data to the database.
 
 Defining the data model
 -----------------------
@@ -137,13 +139,13 @@ left empty).
 
 .. note::
 
-    :ref:`Data files <reference/data>` (XML or CSV) have to be added to the
+    :ref:`Data files <reference/data>` (XML or CSV) must be added to the
     module manifest, Python files (models or controllers) don't but have to
     be imported from ``__init__.py`` (directly or indirectly)
 
 .. warning::
 
-    the administrator user bypasses access control, he has access to all
+    the administrator user bypasses access control, they have access to all
     models even if not given access
 
 Demonstration data
@@ -180,9 +182,9 @@ The last step is to alter model and template to use our demonstration data:
 
 Restart the server and update the module (in order to update the manifest
 and templates and load the demo file) then navigate to
-http://localhost:8069/academy/academy/. The page should look little different:
-names should simply be prefixed by a number (the database identifier for the
-teacher).
+http://localhost:8069/academy/academy/. The page should look slightly
+different: names should simply be prefixed by a number (the database
+identifier for the teacher).
 
 Website support
 ===============
@@ -319,7 +321,7 @@ Administration and ERP integration
 A brief and incomplete introduction to the Odoo administration
 --------------------------------------------------------------
 
-The Odoo administration was briefly seen during the `website support` section.
+The Odoo administration was briefly seen during the `website support`_ section.
 We can go back to it using :menuselection:`Administrator --> Administrator` in
 the menu (or :guilabel:`Sign In` if you're signed out).
 
@@ -381,7 +383,7 @@ let's also add views so we can see and edit a course's teacher:
 .. patch::
 
 It should also be possible to create new courses directly from a teacher's
-page, or to see all the courses a teacher gives, so add
+page, or to see all the courses they teach, so add
 :class:`the inverse relationship <openerp.fields.One2many>` to the *teachers*
 model:
 
@@ -390,8 +392,8 @@ model:
 Discussions and notifications
 -----------------------------
 
-Odoo provides technical models, which don't fulfill business needs in and of
-themselves but add capabilities to business objects without having to build
+Odoo provides technical models, which don't directly fulfill business needs
+but which add capabilities to business objects without having to build
 them by hand.
 
 One of these is the *Chatter* system, part of Odoo's email and messaging

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-29 02:49+0000\n"
+"PO-Revision-Date: 2015-07-04 05:36+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -206,7 +206,7 @@ msgid ""
 "                physical, partner or virtual locations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adaugă o locație.\n              </p><p>\n                Definiți-vă locațiile pentru a reflecta structura și organizarea depozitului dumneavoastră. Odoo poate gestiona locațiile fizice                (depozite, rafturi, containere, etc), locațiile partenere (clienți,                furnizori) și locațiile virtuale care sunt omoloagele operațiunilor de stoc precum comenzile de producție,  consumul, inventarele, etc.\n              </p><p>  \n                Fiecare operațiune a stocului în Odoo se muta produsele dintr-o  locație în alta. De exemplu, dacă primiți produse de la un furnizor, Odoo va muta produsele de la locația furnizorului în locația stocului. Fiecare raport poate fi efectuat pe locațiile fizice, partenere sau virtuale.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -215,7 +215,7 @@ msgid ""
 "                Click to add a reordering rule.\n"
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Click pentru a adăuga o nou regulă de reaprovizionare.\n              </p><p>Puteți defini reguli de stoc minim și Odoo va crea automat comenzi de producție sau cereri de ofertă pentru a crete stocul. Odată ce stocul virtual a unui produs (= stoc disponibil minus toate comenzile confirmate și rezervările) scade de cantitatea minimă, Odoo va genera necesar de aprovizionat pentru a crește stocul la cantitatea maximă.</p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -232,7 +232,7 @@ msgid ""
 "                customers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clic pentru a adauga un numar de serie.\n              </p><p>\n                Aceasta este lista cu toate loturile de producție pe care le-ați înregistrat. Atunci când  selectați un lot, puteți să obțineți trasabilitatea                în sus sau în jos a produsului conținut în lot. Implicit, lista este filtrata pentru numerele de serie care sunt disponibile în depozitul dumneavoastră, dar puteți să deselectați butonul 'Disponibil' pentru a obține toate loturile produse, primite sau livrate clienților.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_form
@@ -617,7 +617,7 @@ msgstr "Daca debifati campul activ, puteti ascunde o locatie fara a o sterge."
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
+msgstr "Lăsând câmpul activ nebifat, puteți ascunde un INCOTERM fără să-l ștergeți."
 
 #. module: stock
 #: view:stock.picking:stock.stock_picking_calendar
@@ -685,7 +685,7 @@ msgstr "Boxa"
 #. module: stock
 #: field:stock.return.picking,move_dest_exists:0
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "Există mișcări înlănțuite"
 
 #. module: stock
 #. openerp-web
@@ -787,7 +787,7 @@ msgstr "Companie"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_orderpoint_compute
 msgid "Compute Minimum Stock Rules"
-msgstr ""
+msgstr "Calculați Stocul"
 
 #. module: stock
 #: view:procurement.orderpoint.compute:stock.view_procurement_compute_wizard
@@ -1097,7 +1097,7 @@ msgstr "Datele Inventarelor"
 #: view:report.stock.lines.date:stock.report_stock_lines_date_form
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Dates of Inventories & Moves"
-msgstr ""
+msgstr "Date de inventariere și mișcări"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -1115,7 +1115,7 @@ msgid ""
 "\n"
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
-msgstr "Stimate Domn/Doamna,\n\nInregistrarile noastre indica faptul ca aveti unele plati inca scadente. Gasiti toate detaliile mai jos.\nDaca suma a fost deja platita, va rugam sa ignorati acest aviz. In cazul contrar, va rugam sa efectuati plata restanta descrisa mai jos.\nDaca aveti intrebari in legatura cu contul dumneavoastra, va rugam sa ne contactati.\n\nVa multumim anticipat pentru cooperarea dumneavoastra.\nCu stima,"
+msgstr "Stimate Domn/Doamnă,\n\nÎnregistrările noastre indică faptul ca aveți unele plăți încă scadente. Găsiți toate detaliile mai jos.\nDacă suma a fost deja plătită, vă rugam sa ignorați acest aviz. În cazul contrar, vă rugam să efectuați plata restantă descrisa mai jos.\nDacă aveți întrebări în legătură cu contul dumneavoastră, vă rugam să ne contactați.\n\nVa mulțumim anticipat pentru cooperarea dumneavoastră.\nCu stima,"
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1400,7 +1400,7 @@ msgstr "Data de expirare pe numerele de serie"
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "Extra Move: "
-msgstr ""
+msgstr "Mișcări extra:"
 
 #. module: stock
 #: help:product.removal,method:0
@@ -1698,7 +1698,7 @@ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
 msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
-msgstr ""
+msgstr "Dacă este bifat, atunci când mișcarea anterioară este anulată sau împărțită, se va face la fel și cu mișcarea generată."
 
 #. module: stock
 #: help:procurement.rule,propagate:0
@@ -1706,7 +1706,7 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr ""
+msgstr "Dacă este bifat, atunci când mișcarea anterioară mișcării (ce a fost generată de o aprovizionare) este anulată sau împărțită, se va face la fel și cu mișcarea generată."
 
 #. module: stock
 #: help:stock.move,propagate:0
@@ -2193,7 +2193,7 @@ msgstr "Operații asociate"
 #. module: stock
 #: field:stock.quant,propagated_from_id:0
 msgid "Linked Quant"
-msgstr ""
+msgstr "Poziție de stoc atribuită"
 
 #. module: stock
 #: view:stock.location:stock.view_location_form
@@ -2349,7 +2349,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr ""
+msgstr "Gestionare proprietari stoc"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -2369,7 +2369,7 @@ msgstr "Gestionare pachete"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr ""
+msgstr "Gestionare procese de tragere și împingere stoc"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_adv_location:0
@@ -2394,7 +2394,7 @@ msgstr "Gestionați locații și depozite multiple"
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_owner:0
 msgid "Manage owner on stock"
-msgstr ""
+msgstr "Gestionare proprietari de stoc"
 
 #. module: stock
 #: field:stock.config.settings,module_stock_picking_wave:0
@@ -2500,7 +2500,7 @@ msgstr "Mută din altă locație"
 #. module: stock
 #: field:stock.quant,negative_move_id:0
 msgid "Move Negative Quant"
-msgstr ""
+msgstr "Mișcare poziție de stoc negativă"
 
 #. module: stock
 #: field:stock.move,split_from:0
@@ -2527,7 +2527,7 @@ msgstr "Mișcarea ce a determinat această aprovizionare."
 #. module: stock
 #: field:stock.move,quant_ids:0
 msgid "Moved Quants"
-msgstr ""
+msgstr "Poziții de stoc mutate"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -2560,7 +2560,7 @@ msgstr ""
 msgid ""
 "Moves impacted by this operation for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "Mișcări de stoc afectate de acestă operație pentru calculul cantității rămase"
 
 #. module: stock
 #: help:stock.quant,history_ids:0
@@ -2614,7 +2614,7 @@ msgstr "Nu"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Inventory yet"
-msgstr ""
+msgstr "Neinventariat încă"
 
 #. module: stock
 #. openerp-web
@@ -2626,7 +2626,7 @@ msgstr "Nu sunt ridicări disponibile"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Stock Move yet"
-msgstr ""
+msgstr "Nu sunt mișcări de stoc încă"
 
 #. module: stock
 #. openerp-web
@@ -2804,7 +2804,7 @@ msgstr "Opțional: următoarea mișcare a stocului când se face înlănțuirea"
 #. module: stock
 #: help:stock.move,move_orig_ids:0
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "Opțional: mișcare de stoc anterioară când se face înlănțuirea"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -3468,7 +3468,7 @@ msgstr "Eroare programare!"
 #: field:procurement.rule,propagate:0 field:stock.location.path,propagate:0
 #: field:stock.move,propagate:0
 msgid "Propagate cancel and split"
-msgstr ""
+msgstr "Propagare anulare și împărțire"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -3631,7 +3631,7 @@ msgstr "Cantitatea în unitatea de măsură implicită a produsului"
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr ""
+msgstr "Cantitatea de produs din acestă poziție de stoc în unitatea de măsură a produsului."
 
 #. module: stock
 #: help:product.product,incoming_qty:0
@@ -3675,7 +3675,7 @@ msgstr ""
 #: view:stock.quant:stock.view_stock_quant_tree
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "Quants"
-msgstr ""
+msgstr "Poziții de stoc"
 
 #. module: stock
 #. openerp-web
@@ -3885,13 +3885,13 @@ msgstr "Caută reguli reaprovizionare"
 #. module: stock
 #: field:stock.move.operation.link,reserved_quant_id:0
 msgid "Reserved Quant"
-msgstr ""
+msgstr "Poziție de stoc rezervată"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
 #: view:stock.move:stock.view_move_picking_form
 msgid "Reserved Quants"
-msgstr ""
+msgstr "Poziții de stoc rezervate"
 
 #. module: stock
 #: field:stock.quant,reservation_id:0
@@ -3901,7 +3901,7 @@ msgstr "Rezervat pentru mișcarea"
 #. module: stock
 #: field:stock.move,reserved_quant_ids:0
 msgid "Reserved quants"
-msgstr ""
+msgstr "Poziții de stoc rezervate"
 
 #. module: stock
 #: field:stock.warehouse,resupply_from_wh:0
@@ -4442,7 +4442,7 @@ msgstr "Rezumat"
 #. module: stock
 #: field:stock.location.route,supplied_wh_id:0
 msgid "Supplied Warehouse"
-msgstr ""
+msgstr "Depozit aprovizionat"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -4469,7 +4469,7 @@ msgstr "Locații Furnizori"
 #. module: stock
 #: field:stock.location.route,supplier_wh_id:0
 msgid "Supplier Warehouse"
-msgstr ""
+msgstr "Furnizor depozit"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -4630,7 +4630,7 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,reservation_id:0
 msgid "The move the quant is reserved for"
-msgstr ""
+msgstr "Mișcarea poziției de stoc este rezervată pentru"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -4721,7 +4721,7 @@ msgstr ""
 #. module: stock
 #: help:procurement.rule,warehouse_id:0
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Depozitul pentru care este această regulă"
 
 #. module: stock
 #: help:procurement.rule,propagate_warehouse_id:0
@@ -4778,7 +4778,7 @@ msgstr ""
 #. module: stock
 #: help:stock.quant,owner_id:0
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "Acesta este proprietarul poziției de stoc"
 
 #. module: stock
 #: help:stock.location.path,picking_type_id:0
@@ -5114,7 +5114,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking.type,sequence:0
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "Utilizat pentru a ordona ”Toate operațiile” în vizualizarea kanban."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -5368,7 +5368,7 @@ msgstr "Puteti sterge doar miscari in starea ciorna."
 #: code:addons/stock/stock.py:2244
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "Nu puteți anula o mișcare de stoc su starea Efectuată."
 
 #. module: stock
 #: code:addons/stock/stock.py:638
