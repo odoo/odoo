@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-04 22:38+0000\n"
+"PO-Revision-Date: 2015-07-11 13:30+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
+"Language-Team: Kabyle (http://www.transifex.com/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -114,7 +114,7 @@ msgstr "%s %s %s has been <b>moved to</b> scrap."
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Zigeẓ afaris si %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
@@ -130,7 +130,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* Nouveau : Quand le mouvement est crée mais pas encore confirmé.\n* Attente d'un autre mouvement : Cet état est visible quand un mouvement est en attente d'au autre, par exemple pour des transferts qui s'enchainent.\n* En attente de disponibilité : Cet état est atteint lorsque la résolution de l'approvisionnement n'est pas finie. Le lancement du planificateur peut être nécessaire, ou la fabrication d'un composant...\n* Disponible : Quand les produits sont disponibles, l'état est 'Disponible'.\n* Terminé : Quand le bon d'expédition est traité, l'état est 'Terminé'."
+msgstr ""
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -430,14 +430,14 @@ msgstr "Sireg asmetter ɣef isawaḍen"
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
 msgid "Allow to define several packaging methods on products"
-msgstr "Permet de définir plusieurs méthodes de conditionnement sur les articles"
+msgstr "Ak yeǧǧ ad tesbaduḍ deqs n tarrayin n tnagalt ɣef ifarisen"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want"
 " to be maintained in your system."
-msgstr "Vous permet de créer et de gérer les dimensions et types d'emballage que vous voulez utiliser dans votre système."
+msgstr "Ak yeǧǧ ad ternuḍ w-ad sfrekeḍ tisektiwin ed tewsitin n tnagalt a tesqedceḍ deg unagraw inek."
 
 #. module: stock
 #: help:stock.config.settings,group_uom:0
@@ -1885,12 +1885,12 @@ msgstr "Tamsisɣelt tagensant"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "Iṣawaḍen igensanen"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "Adeg n isawaḍen igensanen"
 
 #. module: stock
 #: field:stock.warehouse,int_type_id:0
@@ -2142,17 +2142,17 @@ msgstr "Aleqqem aneggaru di"
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 #, python-format
 msgid "Late"
-msgstr "Yeɛṭel"
+msgstr "igellel"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr ""
+msgstr "igellel (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "Isawaḍen igellelen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2275,12 +2275,12 @@ msgstr "Logistique"
 #. module: stock
 #: field:stock.quant.package,ul_id:0
 msgid "Logistic Unit"
-msgstr ""
+msgstr "Aferdis alujistikan"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 msgid "Logistic Units"
-msgstr ""
+msgstr "Iferdisen ilujistikanen"
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -2652,7 +2652,7 @@ msgstr "Ulac Asun Aɣbalu!"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
-msgstr ""
+msgstr "Imsaɣen mačči  n  Uṛup"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -2976,7 +2976,7 @@ msgstr ""
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,packaging_id:0
 msgid "Packaging"
-msgstr "Azdem"
+msgstr "Tanagalt"
 
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
@@ -3203,7 +3203,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,product_packaging:0
 msgid "Prefered Packaging"
-msgstr ""
+msgstr "Tanagalt tasmenyaft"
 
 #. module: stock
 #: field:procurement.order,route_ids:0
@@ -4981,7 +4981,7 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "Tawsit n tnagalt"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0

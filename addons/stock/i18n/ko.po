@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-06 09:15+0000\n"
-"Last-Translator: Goh Gangtai <gangtai.goh@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-07-09 02:20+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/p/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,26 +36,26 @@ msgid ""
 "                * Transferred: has been processed, can't be modified or cancelled anymore\n"
 "\n"
 "                * Cancelled: has been cancelled, can't be confirmed anymore"
-msgstr ""
+msgstr "\n                * 초기: 승인이 안되고 승인까지 일정계획이 없을 것이다.\n\n                * 다른 작업 대기중: 다른 이동 처리를 자동으로 가능하기 전에 대기하고 있다 (예. 주문제작 흐름에서)\n\n                * 가능여부 대기중: 제품이 가능할 때까지 아직 대기중\n\n                * 일부만 가능: 몇몇 제품은 가능하고 보류중이다.\n\n                * 출하 준비됨: 제품이 준비되어 승인을 대기중이다\n\n                * 출하함: 진행중으로 수정이나 취소할 수 없다.\n\n                * 취소함: 취소되어서 승인할 수 없다."
 
 #. module: stock
 #: help:stock.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\n직송 경로와 복합 테스트를 생성합니다-stock_dropshipping 모듈을 설치합니다."
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
 #, python-format
 msgid " (%s reserved)"
-msgstr ""
+msgstr " (%s 보류함)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
-msgstr ""
+msgstr " (보류함)"
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -73,36 +73,36 @@ msgstr " 보유량"
 #: code:addons/stock/stock.py:3224 code:addons/stock/stock.py:3498
 #, python-format
 msgid " Sequence in"
-msgstr ""
+msgstr "순서데로"
 
 #. module: stock
 #: code:addons/stock/stock.py:3228 code:addons/stock/stock.py:3502
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr "내부 순서"
 
 #. module: stock
 #: code:addons/stock/stock.py:3225 code:addons/stock/stock.py:3499
 #, python-format
 msgid " Sequence out"
-msgstr ""
+msgstr "순서없이"
 
 #. module: stock
 #: code:addons/stock/stock.py:3226 code:addons/stock/stock.py:3500
 #, python-format
 msgid " Sequence packing"
-msgstr ""
+msgstr "묶음 순서"
 
 #. module: stock
 #: code:addons/stock/stock.py:3227 code:addons/stock/stock.py:3501
 #, python-format
 msgid " Sequence picking"
-msgstr ""
+msgstr "선출 순서"
 
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr ""
+msgstr "재고 이도이 있는지?"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -332,7 +332,7 @@ msgid ""
 "<p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "패키지는 출하에서 묶음 작업을 해서 생성하고 다른 제품을 포함할 수 있다. 이 패키지 내역 전체를 재사용해서 다른 곳에 이동하거나 다른 큰 패키지에 넣을 수 있다. 한 패키지를 풀수도 있고, 이전 내역을 하나의 단위로 다시 처분할 수 있다."
 
 #. module: stock
 #. openerp-web
@@ -358,7 +358,7 @@ msgstr "활성"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "내부 메모 넣기..."
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
@@ -764,7 +764,7 @@ msgstr "색상"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Commitment Date"
-msgstr ""
+msgstr "약속 날짜"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
@@ -1352,7 +1352,7 @@ msgstr "편집..."
 #: code:addons/stock/wizard/stock_transfer_details.py:115
 #, python-format
 msgid "Enter transfer details"
-msgstr ""
+msgstr "출하 세부내역을 입력하세요"
 
 #. module: stock
 #: code:addons/stock/stock.py:638 code:addons/stock/stock.py:2353
@@ -1599,7 +1599,7 @@ msgstr "분류 기준"
 #: view:stock.quant:stock.quant_search_view
 #: view:stock.quant.package:stock.quant_package_search_view
 msgid "Group by..."
-msgstr ""
+msgstr "그룹화"
 
 #. module: stock
 #: view:procurement.order:stock.view_procurement_form_stock_inherit
@@ -1762,7 +1762,7 @@ msgstr ""
 #. module: stock
 #: help:stock.location.path,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "선택을 해제하면 삭제하지 않고 규칙을 숨길 수 있습니다."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -3019,7 +3019,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "부분"
 
 #. module: stock
 #: field:stock.move,partially_available:0 selection:stock.picking,state:0
@@ -3280,7 +3280,7 @@ msgstr "조달"
 #: view:stock.picking:stock.view_picking_internal_search
 #: field:stock.picking,group_id:0 field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "조달 그룹"
 
 #. module: stock
 #: field:procurement.order,location_id:0 field:procurement.rule,location_id:0
@@ -3302,12 +3302,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "조달 요청"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule field:stock.move,rule_id:0
 msgid "Procurement Rule"
-msgstr ""
+msgstr "조달 규칙"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_procurement_rules
@@ -3480,7 +3480,7 @@ msgstr "반송 상품의 수량을 제공"
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,pull_ids:0
 msgid "Pull Rules"
-msgstr ""
+msgstr "당김 규칙"
 
 #. module: stock
 #: field:stock.move,push_rule_id:0
@@ -3699,12 +3699,12 @@ msgstr "준비"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 msgid "Ready Transfers"
-msgstr ""
+msgstr "출하 준비"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr ""
+msgstr "출하 준비됨"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -3952,7 +3952,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "역 출하"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -4009,7 +4009,7 @@ msgstr "규칙"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_proc_schedulers
 msgid "Run Schedulers"
-msgstr ""
+msgstr "예약 실행"
 
 #. module: stock
 #. openerp-web
@@ -4897,7 +4897,7 @@ msgstr "과제"
 #. module: stock
 #: view:website:stock.report_inventory
 msgid "Total Quantity"
-msgstr ""
+msgstr "총 수량"
 
 #. module: stock
 #: field:product.category,total_route_ids:0
@@ -4944,22 +4944,22 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_form
 #: field:stock.transfer_details_items,transfer_id:0
 msgid "Transfer"
-msgstr ""
+msgstr "출하"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Transfer details"
-msgstr ""
+msgstr "출하 세부내역"
 
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Transferred"
-msgstr ""
+msgstr "출하함"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
 msgid "Transfers"
-msgstr ""
+msgstr "출하"
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -5125,7 +5125,7 @@ msgstr "사용자"
 #: code:addons/stock/stock.py:2400
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "사용자 오류!"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -5182,7 +5182,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Waiting Another Operation"
-msgstr ""
+msgstr "다른 작업을 대기중"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -5190,12 +5190,12 @@ msgstr ""
 #: selection:stock.picking,state:0
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Waiting Availability"
-msgstr ""
+msgstr "가능여부 대기중"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Availability Transfers"
-msgstr ""
+msgstr "출하 가능 대기중"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search

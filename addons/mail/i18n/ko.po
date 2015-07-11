@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-03 00:37+0000\n"
+"PO-Revision-Date: 2015-07-09 02:21+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"Language-Team: Korean (http://www.transifex.com/p/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -122,7 +122,7 @@ msgid ""
 "                    message will be sent by email if it's an internal contact.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\n                    아직 보낸 메시지가 없거나 메시지를 발견하지 못했습니다.\n                </p><p>\n                    메시지를 작성하려면 오른쪽 상단 아이콘을 클릭합니다.\n                    저장된 연락처는 이메일로 메시지를 보냅니다.message.\n                </p>\n            "
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_group_feeds
@@ -138,7 +138,7 @@ msgstr "<p>\n                    이 그룹에 메시지가 없습니다.\n     
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "이 별칭에 대해 새 레코드를 만들 때 제공한 기본값을 파이썬 사전으로 평가합니다."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:763
@@ -211,7 +211,7 @@ msgstr "별칭"
 #. module: mail
 #: view:res.users:mail.view_users_form_mail
 msgid "Alias Accepts Emails From"
-msgstr ""
+msgstr "이메일에 별칭 허용"
 
 #. module: mail
 #: field:mail.alias,alias_contact:0
@@ -236,7 +236,7 @@ msgstr "도메인 별칭"
 #. module: mail
 #: field:mail.alias,alias_model_id:0
 msgid "Aliased Model"
-msgstr ""
+msgstr "별칭 모델"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
@@ -254,7 +254,7 @@ msgstr "모든 메시지"
 msgid ""
 "All records matching your current search filter will be mailed,\n"
 "                                    not only the ids selected in the list view."
-msgstr ""
+msgstr "현재 검색된 모든 레코드를 메일로 보내거나 목록 보기에서\n                                    선택한 ID에게만 보낼 수 있습니다."
 
 #. module: mail
 #. openerp-web
@@ -269,7 +269,7 @@ msgstr "그리고"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "답변은 원본 문서의 토론 게시물로 가지 않습니다. 이것은 생성된 메시지-ID에 영향을 미칩니다."
 
 #. module: mail
 #. openerp-web
@@ -524,7 +524,7 @@ msgstr "설명"
 msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
-msgstr ""
+msgstr "이 하위유형으로 게시된 메시지에 추가되는 설명입니다. 비워두면 이름이 대신 추가됩니다."
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_group_feeds
@@ -610,7 +610,7 @@ msgstr "이메일 스레드"
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr ""
+msgstr "내부적으로 이 사용자와 연결된 이메일 주소입니다. 메일을 받으면 사용자에게 알림을 표시해 줍니다."
 
 #. module: mail
 #: help:mail.compose.message,email_from:0 help:mail.message,email_from:0
@@ -662,7 +662,7 @@ msgstr "발행자 보증 서버와 통신 중 오류가 발생했습니다."
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "오류! 파트너에게 같은 제목으로 두번 보낼 수는 없습니다."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -685,7 +685,7 @@ msgid ""
 "Field used to link the related model to the subtype model when using "
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
-msgstr ""
+msgstr "관련 문서 자동 구독을 사용한 경우에 하위 모델에 관련된 모델을 연결하는 데 사용하는 필드. 이 필드는 getattr(related_document.relation_field)를 계산하는 데 이용됩니다."
 
 #. module: mail
 #: field:ir.attachment,file_type_icon:0
@@ -833,12 +833,12 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "별칭을 담고 있는 상위 레코드의 ID (예 : 별칭을 생성한 작업을 담고 있는 프로젝트)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
 msgid "Id of the followed resource"
-msgstr ""
+msgstr "다음 자원의 아이디"
 
 #. module: mail
 #: help:mail.group,message_unread:0 help:mail.thread,message_unread:0
@@ -851,21 +851,21 @@ msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니�
 msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
-msgstr ""
+msgstr "선택하면 문서의 팔로워로 추가된 파트너에게 이메일 경고를 보냅니다."
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "Odoo 서버로 리디렉션되는 도메인에 모든 이메일을 수집하도록 설정한 경우 여기에 도메인 이름을 입력합니다."
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
-msgstr ""
+msgstr "선택한 id로만 작업하고자 할 경우에는 머리말 목록 확인란의\n                                선택을 취소하십시오."
 
 #. module: mail
 #: code:addons/mail/mail_alias.py:144
@@ -895,7 +895,7 @@ msgstr "잘못된 동작!"
 msgid ""
 "Invalid expression, it must be a literal python dictionary definition e.g. "
 "\"{'field': 'value'}\""
-msgstr ""
+msgstr "잘못된 표현. 문자 그대로 파이썬 사전에 정의되어야 합니다. 예. \"{'field': 'value'}\""
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:97
@@ -960,14 +960,14 @@ msgstr "최근 갱신 날짜"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "현재 문서에 팔로워로 추가할 수 있는 파트너 목록"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "이 문서에 대한 메모 기록. 알림 메시지가 전송되지 않습니다"
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
@@ -1001,7 +1001,7 @@ msgstr "메일 전달(문서/편지함)"
 #. module: mail
 #: help:mail.mail,notification:0
 msgid "Mail has been created to notify people of an existing mail.message"
-msgstr ""
+msgstr "기존 mail.message 사용자에게 메일로 알림을 작성했습니다."
 
 #. module: mail
 #. openerp-web
@@ -1021,14 +1021,14 @@ msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr ""
+msgstr "그룹을 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식 화면 또는 다른 칸반 화면에 이 필드를 이용합니다."
 
 #. module: mail
 #: help:mail.group,group_ids:0
 msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
-msgstr ""
+msgstr "해당 그룹의 구성원은 자동으로 팔로워로 추가됩니다. 필요한 경우 수동으로 구독을 관리할 수 있습니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1055,7 +1055,7 @@ msgstr "메시지 수신자 (이메일)"
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "이전 메시지 식별자 같은 메시지 참조"
 
 #. module: mail
 #: help:mail.message.subtype,name:0
@@ -1065,7 +1065,7 @@ msgid ""
 " record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
-msgstr ""
+msgstr "메시지 하위유형은 특히 시스템 알림 메시지에 대해 보다 정확한 유형을 제공합니다. 예를 들어 새로운 레코드(신규)에 관련해서 통지하거나 진행 중에 단계가 변경되는 것(단계 변경) 등입니다. 메시지 하위유형을 통해서 사용자가 받기 원하는 알림을 정확하게 조정할 수 있습니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -1077,7 +1077,7 @@ msgstr "메시지 하위유형"
 msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
-msgstr ""
+msgstr "팔로우하는 메시지 하위유형. 하위유형의 의미는 사용자에게 푸쉬해 주는 것입니다."
 
 #. module: mail
 #: help:mail.compose.message,type:0 help:mail.message,type:0
@@ -1135,13 +1135,13 @@ msgstr "모델"
 #. module: mail
 #: help:mail.followers,res_model:0 help:mail.wizard.invite,res_model:0
 msgid "Model of the followed resource"
-msgstr ""
+msgstr "다음 자원의 모델"
 
 #. module: mail
 #: help:mail.message.subtype,res_model:0
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
-msgstr ""
+msgstr "모델에 적용되는 하위유형. False인 경우 이 하위유형의 모든 모델에 적용됩니다."
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1206,7 +1206,7 @@ msgstr "메시지가 없음."
 #: field:mail.compose.message,no_auto_thread:0
 #: field:mail.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "답변에 대한 스레드가 없음"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1251,7 +1251,7 @@ msgstr "한 명의 팔로워"
 msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
-msgstr ""
+msgstr "초대한 팔로워들만 이 그룹의\n                                토론을 읽을 수 있습니다."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
@@ -1273,7 +1273,7 @@ msgstr "상위 문서 열기"
 #: code:addons/mail/static/src/xml/mail.xml:29
 #, python-format
 msgid "Open the full mail composer"
-msgstr ""
+msgstr "메일 작성기 전체 기능 열기"
 
 #. module: mail
 #: help:mail.alias,alias_force_thread_id:0
@@ -1281,7 +1281,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
+msgstr "회신하지 않은 것까지 모든 받는 메시지를 첨부할 스레드(레코드) ID (옵션). 설정하면 완벽하게 새로운 레코드의 생성을 억제합니다."
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_my_stuff
@@ -1335,12 +1335,12 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr ""
+msgstr "별칭을 담고 있는 상위 모델. 별칭을 담고 있는 모델 참조가\nalias_model_id로 주어진 모델일 필요는 없습니다\n(예 : 프로젝트(parent_model)와 작업(model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
 msgid "Parent subtype, used for automatic subscription."
-msgstr ""
+msgstr "하위유형의 상위유형. 자동 구독에 사용됩니다."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1363,7 +1363,7 @@ msgstr "편지함에 이 메시지가 푸시될 때 알림을 받는 파트너"
 #. module: mail
 #: help:mail.mail,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
-msgstr ""
+msgstr "공간을 절약하기 위해 이메일을 전송한 후에 영구 삭제합니다"
 
 #. module: mail
 #: field:mail.group,image:0
@@ -1375,21 +1375,21 @@ msgstr "사진"
 #: code:addons/mail/static/src/js/mail.js:621
 #, python-format
 msgid "Please complete partner's informations"
-msgstr ""
+msgstr "파트너의 정보를 작성하십시오"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:63
 #, python-format
 msgid "Please complete partner's informations and Email"
-msgstr ""
+msgstr "파트너의 정보 및 이메일을 작성하십시오"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:224
 #, python-format
 msgid "Please, wait while the file is uploading."
-msgstr ""
+msgstr "파일을 업로드 하는 동안 기다려 주십시오."
 
 #. module: mail
 #: help:mail.alias,alias_contact:0
@@ -1398,7 +1398,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+msgstr "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n- 모두 : 모두다 메시지 게시 가능\n- 파트너 : 인증된 파트너만 가능\n- 팔로워 : 관련 문서의 팔로워만 가능\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1406,7 +1406,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "새로운 메시지를 개인 편지함으로 받기 위한 수신 메일 정책 :\n- 안함 : 보내는 메일이 없습니다\n- 모든 메시지 : 모든 알림을 받은 편지함으로 수신"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1442,7 +1442,7 @@ msgstr "읽음"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "이메일을 이용해서 받은 편지함 알림 수신"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1458,7 +1458,7 @@ msgstr "받는 사람"
 #. module: mail
 #: field:mail.alias,alias_force_thread_id:0
 msgid "Record Thread ID"
-msgstr ""
+msgstr "레코드 스레드 ID"
 
 #. module: mail
 #: field:mail.mail,references:0
@@ -1512,7 +1512,7 @@ msgstr "회신"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "회신 이메일 주소. reply_to를 설정하면 자동 스레드 생성을 무시합니다."
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1579,7 +1579,7 @@ msgstr "메시지 보내기"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "문서의 모든 팔로워에게 메시지 보내기"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1595,7 +1595,7 @@ msgstr "보냄"
 #: code:addons/mail/mail_followers.py:155
 #, python-format
 msgid "Sent by %(company)s using %(odoo)s"
-msgstr ""
+msgstr "%(odoo)s 사용하는 %(company)s에서 보내기"
 
 #. module: mail
 #: field:mail.message.subtype,sequence:0
@@ -1607,7 +1607,7 @@ msgstr "순서"
 #: code:addons/mail/static/src/xml/mail.xml:254
 #, python-format
 msgid "Set back to Todo"
-msgstr ""
+msgstr "할 일로 재설정"
 
 #. module: mail
 #. openerp-web
@@ -1632,7 +1632,7 @@ msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr ""
+msgstr "그룹을 나타내는 작은 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 64x64픽셀 이미지로 크기가 조정됩니다. 어디서나 작은 이미지가 필요할 때는 이 필드를 이용합니다."
 
 #. module: mail
 #: field:mail.compose.message,starred:0 field:mail.message,starred:0
@@ -1679,7 +1679,7 @@ msgstr "하위유형"
 #: code:addons/mail/static/src/xml/suggestions.xml:16
 #, python-format
 msgid "Suggested Groups"
-msgstr ""
+msgstr "추천 그룹"
 
 #. module: mail
 #: field:mail.group,message_summary:0 field:mail.thread,message_summary:0
@@ -1710,7 +1710,7 @@ msgstr "메시지 알림을 포함한 기술적 필드. notified_partner_id를 �
 msgid ""
 "The email address associated with this group. New emails received will "
 "automatically create new topics."
-msgstr ""
+msgstr "이 그룹과 관련된 이메일 주소. 새 이메일을 받으면 자동으로 새로운 주제를 생성합니다."
 
 #. module: mail
 #: help:mail.alias,alias_model_id:0
@@ -1718,14 +1718,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "이 별칭에 해당하는 모델(Odoo 문서 종류)입니다. 모든 받는 메일은 기존 레코드로 기록되지 않고 이 모델의 새 레코드로 작성됩니다. (예. 프로젝트 작업)"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "이메일 별칭 이름. <jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 'jobs'라고 적습니다."
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1734,7 +1734,7 @@ msgid ""
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
-msgstr ""
+msgstr "이 별칭으로 이메일을 받을 때 생성되는 레코드의 소유자. 이 필드를 시스템에 설정하지 않으면 보낸 사람 주소를 기준으로 올바른 소유자를 찾기 위해 시도하거나 주소에서 해당하는 사용자를 찾지 못한 경우 관리자 계정을 사용합니다."
 
 #. module: mail
 #: code:addons/mail/mail_message.py:764
@@ -1743,14 +1743,14 @@ msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
-msgstr ""
+msgstr "요청한 작업은 보안 제한으로 인해 완료할 수 없습니다. 시스템 관리자에게 문의해 주십시오.\n\n(문서 유형 : %s, 작업 : %s)"
 
 #. module: mail
 #: help:mail.group,image:0
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
-msgstr ""
+msgstr "이 필드는 1024x1024px로 제한된 그룹에 대한 사진으로 사용하는 이미지를 포함합니다."
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1758,14 +1758,14 @@ msgid ""
 "This group is visible by everyone,\n"
 "                                including your customers if you installed\n"
 "                                the portal module."
-msgstr ""
+msgstr "포탈 모듈을 설치한 경우에\n                                고객을 포함하여 모든 사람들이 이 그룹을\n                                볼 수 있습니다."
 
 #. module: mail
 #: help:mail.group,public:0
 msgid ""
 "This group is visible by non members.             Invisible groups can add "
 "members through the invite button."
-msgstr ""
+msgstr "이 그룹의 구성원이 아니면 볼 수 없습니다. 초대 버튼을 이용해서 구성원을 추가할 수 있습니다."
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search
@@ -1785,7 +1785,7 @@ msgstr "받는 사람 (파트너)"
 #. module: mail
 #: view:mail.message:mail.view_message_search
 msgid "To Read"
-msgstr ""
+msgstr "읽기"
 
 #. module: mail
 #: field:mail.compose.message,to_read:0 field:mail.message,to_read:0
@@ -1796,7 +1796,7 @@ msgstr "읽기"
 #: model:ir.actions.client,name:mail.action_mail_star_feeds
 #: model:ir.ui.menu,name:mail.mail_starfeeds
 msgid "To-do"
-msgstr "할 일 메시지"
+msgstr "할일 메시지"
 
 #. module: mail
 #. openerp-web
@@ -1814,7 +1814,7 @@ msgstr "개인 메시지"
 #. module: mail
 #: view:mail.group:mail.view_group_form
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "이 그룹에서 논의할 주제 ..."
 
 #. module: mail
 #: field:mail.compose.message,type:0
@@ -1827,7 +1827,7 @@ msgstr "유형"
 #, python-format
 msgid ""
 "Unable to send email, please configure the sender's email address or alias."
-msgstr ""
+msgstr "이메일을 보낼 수 없으면 보낸 사람의 이메일 주소 또는 별칭을 확인해 주십시오."
 
 #. module: mail
 #. openerp-web
@@ -1841,7 +1841,7 @@ msgstr "팔로우 취소"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr ""
+msgstr "이 이메일 별칭이 이미 사용되었습니다. 이메일 별칭은 고유해야 합니다."
 
 #. module: mail
 #: field:mail.group,message_unread:0 field:mail.thread,message_unread:0
@@ -1864,7 +1864,7 @@ msgstr "사용 중인 도메인 사용"
 #. module: mail
 #: help:mail.message.subtype,sequence:0
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "하위유형 순서 사용하기."
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1908,7 +1908,7 @@ msgstr "경고!"
 msgid ""
 "Warning! \n"
 " %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
-msgstr ""
+msgstr "경고! \n %s이(가) 이 문서에 대한 어떠한 이메일이나 토론도 통지받지 못합니다. 팔로우에서 제거하시겠습니까?"
 
 #. module: mail
 #. openerp-web
@@ -1917,12 +1917,12 @@ msgstr ""
 msgid ""
 "Warning! \n"
 "You won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"
-msgstr ""
+msgstr "경고! \n이 문서에 대한 어떠한 이메일이나 토론도 통지받지 못합니다. 이 문서의 팔로우를 취소하시겠습니까?"
 
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "메시지가 내부용 노트인지 여부 (의견 모드에만 해당)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1937,7 +1937,7 @@ msgid ""
 "You are currently composing a message, your message will be discarded.\n"
 "\n"
 "Are you sure you want to leave this page ?"
-msgstr ""
+msgstr "현재 메시지를 작성 중이라면 작성 중인 메시지가 삭제됩니다.\n\n이 페이지를 벗어나시겠습니까?"
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
@@ -1945,7 +1945,7 @@ msgstr ""
 msgid ""
 "You cannot create a new user from here.\n"
 " To create new user please go to configuration panel."
-msgstr ""
+msgstr "이곳에서는 사용자를 생성할 수 없습니다.\n 환경 설정 패널에서 사용자를 생성해 주시기 바랍니다."
 
 #. module: mail
 #: code:addons/mail/mail_group.py:174
@@ -1953,7 +1953,7 @@ msgstr ""
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "회사 전체 그룹은 다른 모듈에 필요하기 때문에 삭제할 수 없습니다."
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171
@@ -1971,13 +1971,13 @@ msgstr "한 개의 읽지 않은 메시지가 있습니다"
 #: code:addons/mail/mail_mail.py:160
 #, python-format
 msgid "about"
-msgstr ""
+msgstr "정보"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:160
 #, python-format
 msgid "access"
-msgstr ""
+msgstr "접근"
 
 #. module: mail
 #. openerp-web
@@ -1985,12 +1985,12 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:310
 #, python-format
 msgid "and"
-msgstr ""
+msgstr "그리고"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_form
 msgid "by"
-msgstr ""
+msgstr "작성자"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:115
@@ -2079,7 +2079,7 @@ msgstr "기타..."
 #: code:addons/mail/static/src/xml/mail.xml:273
 #, python-format
 msgid "read less"
-msgstr ""
+msgstr "조금 읽기"
 
 #. module: mail
 #. openerp-web
@@ -2110,7 +2110,7 @@ msgstr "현재 검색 필터"
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "the selected records"
-msgstr ""
+msgstr "선택된 레코드"
 
 #. module: mail
 #. openerp-web
@@ -2145,4 +2145,4 @@ msgstr "업로드하는 중"
 #: code:addons/mail/mail_mail.py:162
 #, python-format
 msgid "your messages"
-msgstr ""
+msgstr "귀하의 메시지"

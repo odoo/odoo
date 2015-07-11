@@ -5,17 +5,18 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
+# likaiyuan2006 <likaiyuan2006@gmail.com>, 2015
 # Shan Leiping <ccdos@163.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
-# Talway <1473162392@qq.com>, 2015
+# Talway <9010446@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-04 06:58+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-07-10 03:44+0000\n"
+"Last-Translator: likaiyuan2006 <likaiyuan2006@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -370,12 +371,12 @@ msgstr ""
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
 "any BoM defined."
-msgstr ""
+msgstr "BoM \"%s\" 包含一个虚拟BoM的产品,但产品 \"%s\" 没有定义BoM。"
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "BoM 行类型"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
@@ -391,7 +392,7 @@ msgstr "物料清单类型"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "未找到工艺路线"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -542,7 +543,7 @@ msgstr "投料并产出"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "投料明细"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -785,7 +786,7 @@ msgstr "输入序号用于显示工作中心列表"
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "用于显示顺序"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -1244,7 +1245,7 @@ msgstr "每周"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "虚件"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1252,7 +1253,7 @@ msgid ""
 "Phantom: this product line will not appear in the raw materials of "
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
+msgstr "虚项：产品不会出现在生产单的消耗产品中,而是直接用它的BOM物料替代,不会触发额外生产订单."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1451,12 +1452,12 @@ msgstr "生产单号:"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "产成品的生产订单"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "原料投到的生产单"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1481,7 +1482,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr "未准时开始生产"
+msgstr "延迟开始的生产"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_production_gantt
@@ -1499,7 +1500,7 @@ msgstr "产品"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "产品消耗"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1741,7 +1742,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr "搜索产品"
+msgstr "搜索生产"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
@@ -1951,7 +1952,7 @@ msgstr "该工作中心要完成指定工艺的操作所花费的小时数"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "消耗"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
@@ -2141,7 +2142,7 @@ msgstr "当处理该产品的销售单时，发运单将以原料来替代成品
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "当产品为制造品,由此仓库生产."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2264,13 +2265,13 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "正在生产中的物料清单不可删除,请先关闭或取消生产单."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "您必须为该产品%s分配一个序列号"
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited
