@@ -184,10 +184,10 @@ class AccountJournal(models.Model):
     _order = 'sequence, type, code'
 
     def _default_inbound_payment_methods(self):
-        return [(4, self.env.ref('account.account_payment_method_manual_in').id)]
+        return self.env.ref('account.account_payment_method_manual_in')
 
     def _default_outbound_payment_methods(self):
-        return [(4, self.env.ref('account.account_payment_method_manual_out').id)]
+        return self.env.ref('account.account_payment_method_manual_out')
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Name', size=5, required=True, help="The code will be displayed on reports.")

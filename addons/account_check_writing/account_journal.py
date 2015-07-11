@@ -59,8 +59,8 @@ class AccountJournal(models.Model):
         })
 
     def _default_outbound_payment_methods(self):
-        vals = super(AccountJournal, self)._default_outbound_payment_methods()
-        return vals + [(4, self.env.ref('account_check_writing.account_payment_method_check_writing').id, None)]
+        methods = super(AccountJournal, self)._default_outbound_payment_methods()
+        return methods + self.env.ref('account_check_writing.account_payment_method_check_writing')
 
     @api.model
     def _enable_check_writing_on_bank_journals(self):
