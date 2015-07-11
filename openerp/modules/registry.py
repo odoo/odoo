@@ -184,8 +184,8 @@ class Registry(Mapping):
             model = cls._build_model(self, cr)
             key = model.__class__.__mro__
             print "Load", model._name
-            #if key in modelscache:
-            #    model = modelscache[key]
+            if key in modelscache:
+                model = modelscache[key]
 
             if model._name not in models_to_load:
                 # avoid double-loading models whose declaration is split
@@ -216,8 +216,13 @@ class Registry(Mapping):
             ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
 
         # only process new models
-        models = self.models.itervalues()
-        models = [m for m in models if not m._fields_done]
+        models = []
+        for m in self.models.itervalues():
+            # skip inherits temproraly
+            if m._inherits:
+                models.append(m)
+            elif not m._fields_done:
+                models.append(m)
 
         logt('prepare')
         # prepare the setup on all models
@@ -242,7 +247,7 @@ class Registry(Mapping):
         # Alawys setup complete for triggers on registry
         for model in self.models.itervalues():
             model._setup_complete(cr, SUPERUSER_ID)
-            #model._fields_done = True
+            model._fields_done = True
             modelscache[model.__class__.__mro__] = model
         logt('complete')
 
