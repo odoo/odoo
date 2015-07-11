@@ -17,7 +17,7 @@ class HrEmployee(models.Model):
     @api.model
     def _get_default_employee_product(self):
         # We need the "or ..." because we need an empty recordset of the right type, 'False' is not enough.
-        return self.env.ref('product.product_product_consultant', raise_if_not_found=False) or self.env['account.analytic.journal']
+        return self.env.ref('product.product_product_consultant', raise_if_not_found=False) or self.env['product.product']
 
     product_id = fields.Many2one('product.product', 'Product', help="If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job.", default=_get_default_employee_product)
     journal_id = fields.Many2one('account.analytic.journal', 'Analytic Journal', default=_get_default_analytic_journal)
