@@ -183,8 +183,8 @@ class Registry(Mapping):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
             key = model.__class__.__mro__
-            if key in modelscache:
-                model = modelscache[key]
+            #if key in modelscache:
+            #    model = modelscache[key]
 
             if model._name not in models_to_load:
                 # avoid double-loading models whose declaration is split
