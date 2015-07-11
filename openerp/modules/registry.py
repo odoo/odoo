@@ -183,6 +183,7 @@ class Registry(Mapping):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
             key = model.__class__.__mro__
+            print "Load", model._name
             #if key in modelscache:
             #    model = modelscache[key]
 
@@ -241,7 +242,7 @@ class Registry(Mapping):
         # Alawys setup complete for triggers on registry
         for model in self.models.itervalues():
             model._setup_complete(cr, SUPERUSER_ID)
-            model._fields_done = True
+            #model._fields_done = True
             modelscache[model.__class__.__mro__] = model
         logt('complete')
 
