@@ -48,7 +48,6 @@ from module import runs_post_install
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
-
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
