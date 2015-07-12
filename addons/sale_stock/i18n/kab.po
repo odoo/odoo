@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-01 21:13+0000\n"
-"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
+"PO-Revision-Date: 2015-07-11 09:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/p/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -115,22 +115,22 @@ msgstr "Isawaḍen i ufetar"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Rmed afeter yersen ɣef tludna n usiweḍ"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Rmed i bardan ɣef izirigen n tladna n tiɣin"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Sirew tifaturin  si ludna n siweḍ."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Eǧǧ ugur"
 
 #. module: sale_stock
 #: field:sale.order,incoterm:0
@@ -157,7 +157,7 @@ msgstr "Feter ɣef usiweḍ"
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Afeter yers ɣef tludna n usiweḍ"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -194,13 +194,13 @@ msgstr "Ala anebdal i g-zemren a d-isnifel tawila."
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Tanagalt"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
+msgstr "Fren \"Siweḍ yal afaris ticki yella\" ma tebɣiḍ isawaḍen ibruyanen."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
@@ -221,7 +221,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Sirew tifaturin yersen ɣef yermuden n twuri"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -346,14 +346,14 @@ msgstr "Agadir"
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "T zemreḍ ad sireweḍ tifaturin yersen ɣef tludna n uznuzu neɣ yersen ɣef isawaḍen."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
+msgstr "Issefk send ad tesfesxeḍ akkw tiludna n usiweḍ icudden ɣer tladna yagi n uznuzu."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
@@ -361,7 +361,7 @@ msgstr ""
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
+msgstr "Tɛerḍeḍ ad t-zenzeḍ  %.2f %s acut ɣure-k kan %.2f %s yellan !\nAselɣas ilaw %.2f %s. (war aḥaṛṛi)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -371,14 +371,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
+msgstr "Tferneḍ tanecta n %d n iferdisen.\nAcut kan ur teqqin ara ed tnagaglt ifernen.\nAyagi d asumer n tnecta ibuḍen ɣef tnaaglt :\nTanalt n ufaris : %s - Tanecta : %s - tawsit n uferdis : %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "Ussan"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
-msgstr "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
