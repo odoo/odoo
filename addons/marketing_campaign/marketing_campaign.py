@@ -383,8 +383,6 @@ class marketing_campaign_activity(osv.osv):
   """),
         'email_template_id': fields.many2one('mail.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
-        'report_directory_id': fields.many2one('document.directory','Directory',
-                                help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
                                 help= "The action to perform when this activity is activated"),
         'to_ids': fields.one2many('marketing.campaign.transition',
@@ -428,9 +426,7 @@ class marketing_campaign_activity(osv.osv):
                                 activity.name,workitem.partner_id.name),
             'datas_fname': '%s.%s'%(activity.report_id.report_name,
                                         activity.report_id.report_type),
-            'parent_id': activity.report_directory_id.id,
             'datas': base64.encodestring(report_data),
-            'file_type': format
         }
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True
