@@ -330,6 +330,7 @@ class Field(object):
         kwargs['string'] = string
         args = {key: val for key, val in kwargs.iteritems() if val is not None}
         self.args = args or EMPTY_DICT
+        self.setup_full_done = False
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
@@ -381,7 +382,17 @@ class Field(object):
 
     def setup_base(self, model, name):
         """ Base setup: things that do not depend on other models/fields. """
-        self._setup_attrs(model, name)
+        if self.setup_full_done and not self.related:
+            # optimization for regular fields: keep the base setup
+            self.setup_full_done = False
+            self.inverse_fields = ()
+            self.computed_fields = ()
+            self._triggers = ()
+        else:
+            # do the base setup from scratch
+            self._setup_attrs(model, name)
+            if not self.related:
+                self._setup_regular_base(model)
 
     #
     # Setup field parameter attributes
@@ -463,16 +474,16 @@ class Field(object):
         """ Full setup: everything else, except recomputation triggers. """
         if not self.setup_full_done:
             if not self.related:
-                self._setup_regular(model)
+                self._setup_regular_full(model)
             else:
-                self._setup_related(model)
+                self._setup_related_full(model)
             self.setup_full_done = True
 
     #
     # Setup of non-related fields
     #
 
-    def _setup_regular(self, model):
+    def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
         def make_depends(deps):
             return tuple(deps(model) if callable(deps) else deps)
@@ -493,11 +504,15 @@ class Field(object):
         if isinstance(self.search, basestring):
             self.search = getattr(type(model), self.search)
 
+    def _setup_regular_full(self, model):
+        """ Setup the inverse field(s) of ``self``. """
+        pass
+
     #
     # Setup of related fields
     #
 
-    def _setup_related(self, model):
+    def _setup_related_full(self, model):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
         if isinstance(self.related, basestring):
@@ -569,7 +584,7 @@ class Field(object):
         """ Determine the domain to search on field ``self``. """
         return [('.'.join(self.related), operator, value)]
 
-    # properties used by _setup_related() to copy values from related field
+    # properties used by _setup_related_full() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
@@ -1074,14 +1089,6 @@ class Float(Field):
         else:
             return self._digits
 
-    def _setup_digits(self, model):
-        """ Setup the digits for ``self`` and its corresponding column """
-        pass
-
-    def _setup_regular(self, model):
-        super(Float, self)._setup_regular(model)
-        self._setup_digits(model)
-
     _related__digits = property(attrgetter('_digits'))
     _related_group_operator = property(attrgetter('group_operator'))
 
@@ -1121,10 +1128,13 @@ class Monetary(Field):
     _related_currency_field = property(attrgetter('currency_field'))
     _description_currency_field = property(attrgetter('currency_field'))
 
-    def _setup_regular(self, model):
-        super(Monetary, self)._setup_regular(model)
+    def _setup_regular_base(self, model):
+        super(Monetary, self)._setup_regular_base(model)
         if not self.currency_field:
             self.currency_field = 'currency_id'
+
+    def _setup_regular_full(self, model):
+        super(Monetary, self)._setup_regular_full(model)
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
@@ -1213,8 +1223,8 @@ class Char(_String):
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
-    def _setup_regular(self, model):
-        super(Char, self)._setup_regular(model)
+    def _setup_regular_base(self, model):
+        super(Char, self)._setup_regular_base(model)
         assert isinstance(self.size, (NoneType, int)), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
@@ -1422,12 +1432,12 @@ class Selection(Field):
             selection = api.expected(api.model, selection)
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup_regular(self, model):
-        super(Selection, self)._setup_regular(model)
+    def _setup_regular_base(self, model):
+        super(Selection, self)._setup_regular_base(model)
         assert self.selection is not None, "Field %s without selection" % self
 
-    def _setup_related(self, model):
-        super(Selection, self)._setup_related(model)
+    def _setup_related_full(self, model):
+        super(Selection, self)._setup_related_full(model)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
@@ -1512,8 +1522,8 @@ class Reference(Selection):
     _related_size = property(attrgetter('size'))
     _column_size = property(attrgetter('size'))
 
-    def _setup_regular(self, model):
-        super(Reference, self)._setup_regular(model)
+    def _setup_regular_base(self, model):
+        super(Reference, self)._setup_regular_base(model)
         assert isinstance(self.size, (NoneType, int)), \
             "Reference field %s with non-integer size %r" % (self, self.size)
 
@@ -1547,8 +1557,8 @@ class _Relational(Field):
         'context': {},                  # context for searching values
     }
 
-    def _setup_regular(self, model):
-        super(_Relational, self)._setup_regular(model)
+    def _setup_regular_base(self, model):
+        super(_Relational, self)._setup_regular_base(model)
         if self.comodel_name not in model.pool:
             _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
@@ -1830,9 +1840,8 @@ class One2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular(self, model):
-        super(One2many, self)._setup_regular(model)
-
+    def _setup_regular_full(self, model):
+        super(One2many, self)._setup_regular_full(model)
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
@@ -1900,15 +1909,16 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular(self, model):
-        super(Many2many, self)._setup_regular(model)
-
+    def _setup_regular_base(self, model):
+        super(Many2many, self)._setup_regular_base(model)
         if not self.relation and self.store:
             # retrieve self.relation from the corresponding column
             column = self.to_column()
             if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
 
+    def _setup_regular_full(self, model):
+        super(Many2many, self)._setup_regular_full(model)
         if self.relation:
             m2m = model.pool._m2m
             # if inverse field has already been setup, it is present in m2m
