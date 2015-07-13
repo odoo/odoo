@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv, api
-from openerp.tools.translate import _
+from openerp import api
+from openerp.osv import fields, osv
 from openerp.exceptions import UserError
 
 LANG_CODE_MAPPING = {
