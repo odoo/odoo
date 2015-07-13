@@ -814,10 +814,10 @@ class website_published_mixin(osv.AbstractModel):
         return dict.fromkeys(ids, '#')
 
     def website_publish_button(self, cr, uid, ids, context=None):
-        if self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-            return self.open_website_url(cr, uid, ids, context)
-        for r in self.browse(cr, uid, ids, context=context):
-            r.write({'website_published': not r.website_published})
+        for i in self.browse(cr, uid, ids, context):
+            if self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher') and i.website_url != '#':
+                return self.open_website_url(cr, uid, ids, context)
+            i.write({'website_published': not i.website_published})
         return True
 
     def open_website_url(self, cr, uid, ids, context=None):
