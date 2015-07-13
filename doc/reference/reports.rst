@@ -221,7 +221,7 @@ Useful Remarks
 
 .. _reference/reports/paper_formats:
 
-.. note:: Take care about the fact that there is a known design issue which is being solved for `v9.0 and probably for v8.0 here<https://github.com/odoo/odoo/issues/4359>`_.
+.. note:: Take care about the fact that there is a known design issue which is being solved for `v9.0 and probably for v8.0 here <https://github.com/odoo/odoo/issues/4359>`_.
 
 Paper Format
 ============
