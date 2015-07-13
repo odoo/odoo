@@ -857,7 +857,7 @@ var MailThread = Attachment.extend ({
      * Convert span tag into link, To make link of partner
      */
     convert_into_link: function(msg) {
-        var re = /@<span data-oe-model="([^"]*)"\s+data-oe-id="([^"]*)">(.*?)\<\/span>/g; 
+        var re = /@<span data-oe-model="([^"]*)"\s+data-oe-id="([^"]*)">(.*?)\<\/span>/g;
         var subst = "<a href='#model=$1&id=$2' class='o_timeline_action_author' data-partner='$2'>$3</a>";
         return msg.replace(re, subst);
     },
@@ -1105,7 +1105,7 @@ var ComposeMessage = Attachment.extend ({
         // Initialize Mention widget if current user is from employee group and it's not log
         if(this.is_employee && !this.is_log) {
             this.mail_mention = new Mention(this, this.$el.find(".field_text"), {
-                'partner_limit': 8, 
+                'partner_limit': 8,
                 'typing_speed': 400,
                 'min_charactor': 4
             });
@@ -1205,26 +1205,8 @@ var ComposeMessage = Attachment.extend ({
 
         return suggested_partners;
     },
-    /**
-     * preprocess_message_post: Used for @ mention functionality
-     * If mention partner remove from textarea we don't send mail to those partner.
-     * Make <span> for mentioned parners that is convert into link at read time.
-     */
-    preprocess_message_post: function() {
-        var self = this;
-        this.mail_body = self.$('textarea').val();
-        this.selected_partners = this.mail_mention ? this.mail_mention.selected_partners : [];
-        _.each(this.selected_partners, function(value, key){
-            var word = _.str.sprintf("@%s", value);
-            if(self.mail_body.indexOf(word) != -1) {
-                self.mail_body = self.mail_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", key, value));
-               return;
-            }
-            delete self.selected_partners[key];
-        });
-    },
+
     on_message_post: function (event) {
-        this.preprocess_message_post();
         if (this.flag_post){
             return;
         }
@@ -1246,10 +1228,18 @@ var ComposeMessage = Attachment.extend ({
      * post a message and fetch the message
      */
     do_send_message_post: function (partner_ids, log) {
-        var self = this, selected_partners_ids = _.keys(this.selected_partners);
+        var self = this,
+            post_body = this.$('textarea').val(),
+            selected_partners_ids = [];
 
+        if(this.mail_mention){
+            this.mail_mention.preprocess_mention_post(post_body, function(processed_body, mention_partners){
+                post_body = processed_body;
+                selected_partners_ids = _.keys(mention_partners);
+            });
+        }
         var values = {
-            'body': this.mail_body,
+            'body': post_body,
             'subject': false,
             'parent_id': this.parent_id || this.id,
             'partner_ids': _.uniq(partner_ids.concat(selected_partners_ids)),
@@ -1258,8 +1248,7 @@ var ComposeMessage = Attachment.extend ({
                 'mail_post_autofollow': true,
                 'mail_post_autofollow_partner_ids': partner_ids,
             }),
-            'message_type': 'comment',
-            'content_subtype': 'html',
+            'message_type': 'comment'
         };
 
         if (log) {

@@ -28,14 +28,20 @@ var Mention = Widget.extend({
         this.$dropdown = $("<div class='o_mail_mention_main'><ul></ul></div>");
         this.model_res_partner = new Model("res.partner");
         this.selected_partners = {};
-        this.partners = {};
-        $.ui.keyCode.escape_keyup = [40, 38, 13, 35, 33, 34, 27];
         this.partner_limit = options['partner_limit'] || 8;
         this.typing_speed = options['typing_speed'] || 400;
         this.min_charactor = options['min_charactor'] || 4;
         this.search_string = '';
         this.recent_string = '';
-        this.set('partners', [])
+        this.set('partners', []);
+        var keycode = $.ui.keyCode;
+        this.escape_keys = [keycode.DOWN,
+                            keycode.UP,
+                            keycode.ENTER,
+                            keycode.END,
+                            keycode.PAGE_UP,
+                            keycode.PAGE_DOWN,
+                            keycode.ESCAPE];
     },
 
     start: function() {
@@ -46,31 +52,29 @@ var Mention = Widget.extend({
     bind_events: function() {
         var self = this;
         this.$dropdown.insertAfter(this.$textarea);
-        
-        //textear event binding
         this.$textarea.on('keyup', this.proxy('textarea_keyup'))
-        .on('click', function(e){ self.clear_dropdown(); })
+        .on('click', function(){ self.clear_dropdown(); })
         .on('keydown', function(e){
             var $active = self.$dropdown.find("li.active");
             if(self.recent_string){
-                if (e.keyCode == 40) {
-                    $active.next().trigger("mouseover");
-                    return false;
-                } else if (e.keyCode == 38) {
-                    $active.prev().trigger("mouseover");
-                    return false;
-                } else if(e.keyCode == 13){
-                    self.find_n_replace(parseInt($active.find("span").attr("id")));
-                    return false;
+                switch(e.keyCode) {
+                    case $.ui.keyCode.DOWN:
+                        $active.next().addClass('active').siblings().removeClass();
+                        break;
+                    case $.ui.keyCode.UP:
+                        $active.prev().addClass('active').siblings().removeClass();
+                        break;
+                    case $.ui.keyCode.ENTER:
+                        self.replace_partner_text($active.find("span").data("id"));
+                        break;
                 }
             }
         });
-        
-        //dropdown event binding
+
         this.$dropdown.on('mouseover', 'li', function(e) {
             $(e.currentTarget).addClass('active').siblings().removeClass();
         }).on('click', 'li', function(e){
-            self.find_n_replace(parseInt($(e.currentTarget).find("span").attr("id")));
+            self.replace_partner_text($(e.currentTarget).find("span").data("id"));
         });
         this.on('change:partners', this, this.show_dropdown);
         this.clear_dropdown();
@@ -78,35 +82,31 @@ var Mention = Widget.extend({
     show_dropdown: function(){
         var self = this;
         var highlight = function(description){
-            if(description)
-            return description.replace(new RegExp(self.search_string, "gi"), 
-                    function(str) {return _.str.sprintf("<b><u>%s</u></b>",str);});},
-
-            escape_ids = _.keys(this.selected_partners),
-
-            list_of_partner = _.filter(this.get('partners'), function(part){
-                                return !_.contains(escape_ids, part.id.toString())
-                            });
-
-        var res = _.map(list_of_partner, function(partner) {
-                return {
-                    "id": partner["id"], 
-                    "name": highlight(partner["name"]), 
-                    "email": highlight(partner["email"])
-                    };
+                if(description){
+                    return description.replace(new RegExp(self.search_string, "gi"), function(str){
+                        return _.str.sprintf("<b><u>%s</u></b>", str);
+                    });
+                }
+            },
+        escape_ids = _.keys(this.selected_partners),
+        partners = _.filter(this.get('partners'), function(partner){
+                            return !_.contains(escape_ids, partner.id.toString());
+                        });
+        var res = _.map(partners, function(partner) {
+            return {
+                "id": partner["id"],
+                "name": highlight(partner["name"]),
+                "email": highlight(partner["email"])
+            };
         });
         this.clear_dropdown();
-        this.$dropdown.find("ul").append(QWeb.render('Mention', {"result": res}));
+        this.$dropdown.find("ul").append(QWeb.render('Mention', {"partners": res})).show();
         this.$dropdown.find("li:first").addClass("active");
-        this.$dropdown.find("ul").show();
     },
-
     clear_dropdown: function() {
-        this.$dropdown.find("ul").hide();
-        this.$dropdown.find("ul").empty();
+        this.$dropdown.find("ul").empty().hide();
     },
-    
-    search_n_store: function() {
+    set_partners: function() {
         var self = this;
         if(this.recent_string) {
             this.model_res_partner.call("search_read", {
@@ -115,19 +115,19 @@ var Mention = Widget.extend({
                 limit: this.partner_limit
             }).done(function(res) {
                 if(!res.length) return;
-                self.set('partners', res)
+                self.set('partners', res);
             });
         }
     },
-    find_n_test: function(){
+    detect_at_keyword: function(){
         var self = this;
         var test_string = function(search_str){
-             var pattern = /(^@|(^\s@))/g;
-             var regex_start = new RegExp(pattern);
-             if (regex_start.test(search_str) && search_str.length >= self.min_charactor ){
-                 search_str = _.str.ltrim(search_str.replace(pattern, ''));
-                 return search_str.indexOf(' ') < 0 &&  _.isNull(/\r|\n/.exec(search_str))? search_str:'';
-             }
+            var pattern = /(^@|(^\s@))/g;
+            var regex_start = new RegExp(pattern);
+            if (regex_start.test(search_str) && search_str.length >= self.min_charactor ){
+                search_str = _.str.ltrim(search_str.replace(pattern, ''));
+                return search_str.indexOf(' ') < 0 &&  _.isNull(/\r|\n/.exec(search_str))? search_str:'';
+            }
             return '';
         };
         var desctiption = this.$textarea.val(),
@@ -137,73 +137,85 @@ var Mention = Widget.extend({
     },
     textarea_keyup: function(e) {
         var self = this;
-        if(_.contains($.ui.keyCode.escape_keyup, e.which)) { return;}
-        
-        this.recent_string = this.find_n_test();
+        if(_.contains(this.escape_keys, e.which)) {
+            return ;
+        }
+        this.recent_string = this.detect_at_keyword();
         if(this.recent_string){
             this.search_string = this.recent_string;
             clearTimeout(this.timer);
             this.timer = setTimeout(function() {
-                self.search_n_store();
+                self.set_partners();
             }, this.typing_speed);
         }else if(this.$dropdown.find("li")){
             this.clear_dropdown();
         }
     },
-
-    show_form_popup: function(email){
-        var deferred = $.Deferred();
-        if(email){
-            deferred.resolve();
+    preprocess_mention_post: function(post_body, mention_callback){
+        var self = this;
+        _.each(this.selected_partners, function(value, key){
+            var word = _.str.sprintf("@%s", value);
+            if(post_body.indexOf(word) != -1) {
+                post_body = post_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", key, value));
+                return;
+            }
+            delete self.selected_partners[key];
+        });
+        mention_callback(post_body, self.selected_partners);
+    },
+    validate_partner_email: function(partner){
+        var self = this,
+            deferred = $.Deferred();
+        if(partner.email){
+            deferred.resolve(partner);
             return deferred;
         }
-        var partner_form_popup = new form_common.FormOpenPopup(this);
-            partner_form_popup.show_element(
-                'res.partner',
-                id,
-                {
+        var form_pop = new form_common.FormViewDialog(self, {
+                res_model: 'res.partner',
+                res_id: partner.id,
+                context: {
                     'force_email': true,
                     'ref': "compound_context",
-                    'default_name': name
+                    'default_name': partner.name,
                 },
-                {
-                    title: _t("Please complete partner's informations"),
-                    write_function: function(id, data, options) {
-                        return this._super(id, data, options).done(function() {
-                            if(data.name)
-                                self.partners[id]['name'] = data.name;
-                            self.partners[id]['email'] = data.email;
-                            deferred.resolve();
-                        });
-                    },
-                }
-            );
-            partner_form_popup.on('closed', self, function() {
-                self.$textarea.focus();
-            });
+                title: _t("Please provide partner email address"),
+                write_function: function(id, data, options) {
+                    return this._super(id, data, options).done(function() {
+                        if(data.email){
+                            partner.email = data.email;
+                        }
+                        deferred.resolve(partner);
+                    });
+                },
+            }).open();
+        form_pop.on('closed', self, function() {
+            self.$textarea.focus();
+        });
         return deferred;
     },
-    find_n_replace: function(id) {
+    replace_partner_text: function(partner_id) {
         var self = this;
-        var partner = _.find(this.get('partners'), function(partner){return partner.id == id});
-        if (!partner){return false;}
-        var name = partner["name"], 
-            email = partner["email"];
-        
-        this.show_form_popup(email).done(function() {
+        var partner = _.find(this.get('partners'), function(partner){return partner.id == partner_id;});
+        if (!partner){
+            return false;
+        }
+        this.validate_partner_email(partner).done(function(partner) {
             self.clear_dropdown();
-            self.selected_partners[id] = name;
-            var index = self.get_cursor_position(self.$textarea), value = self.$textarea.val();
-            self.$textarea.val(_.str.sprintf("%s%s%s", 
-                    value.substring(0, index - self.search_string.length), 
-                    name, 
+            self.selected_partners[partner_id] = partner.name;
+            var index = self.get_cursor_position(self.$textarea),
+                value = self.$textarea.val();
+            self.$textarea.val(_.str.sprintf("%s%s%s",
+                    value.substring(0, index - self.search_string.length),
+                    partner.name,
                     value.substring(index, value.length)));
             self.set_cursor_position(self.$textarea, index - self.search_string.length + name.length);
         });
     },
     get_cursor_position: function(ctrl) {
         var el = $(ctrl).get(0);
-        if(!el) {return 0};
+        if(!el){
+            return 0;
+        }
         if('selectionStart' in el) {
             return el.selectionStart;
         } else if('selection' in document) {

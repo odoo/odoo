@@ -94,14 +94,14 @@
           class="oe_placeholder_compose"></span>
 </t>
 <t t-name="Mention">
-    <t t-if="result">
-        <t t-foreach="result" t-as='res'>
+    <t t-if="partners">
+        <t t-foreach="partners" t-as='partner'>
             <li>
-                <img class="list_img" t-attf-src='/web/binary/image?model=res.partner&amp;field=image_small&amp;id=#{res.id}' /> 
-                <span t-attf-id='#{res.id}'>
-                    <t t-raw='res.name' />
+                <img class="list_img" t-attf-src='/web/binary/image?model=res.partner&amp;field=image_small&amp;id=#{partner.id}' /> 
+                <span t-attf-data-id='#{partner.id}'>
+                    <t t-raw='partner.name' />
                 </span> 
-                (<i><t t-raw='res.email' /></i>)
+                (<i><t t-raw='partner.email' /></i>)
             </li>
          </t>
     </t>
