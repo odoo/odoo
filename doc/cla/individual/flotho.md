@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Florent THOMAS florent.thomas@mind-and-go.com https://github.com/flotho
+Florent THOMAS mailinglist@mind-and-go.com https://github.com/flotho
