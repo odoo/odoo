@@ -997,6 +997,16 @@ class view(osv.osv):
 
         if values is None:
             values = dict()
+
+        # if no website object is provided it will be added to the values dictionary to ensure the availability
+        # of the current website object in all templates
+        if not 'website' in values:
+            w_obj = self.pool.get('website')
+            if w_obj:
+                current_website = w_obj.get_current_website(cr, uid, context=context)
+                if current_website:
+                    values['website'] = current_website
+
         qcontext = dict(
             env=api.Environment(cr, uid, context),
             keep_query=keep_query,
