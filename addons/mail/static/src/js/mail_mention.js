@@ -66,6 +66,7 @@ var Mention = Widget.extend({
                         break;
                     case $.ui.keyCode.ENTER:
                         self.replace_partner_text($active.find("span").data("id"));
+                        e.preventDefault();
                         break;
                 }
             }
@@ -204,15 +205,15 @@ var Mention = Widget.extend({
             self.selected_partners[partner_id] = partner.name;
             var index = self.get_cursor_position(self.$textarea),
                 value = self.$textarea.val();
-            self.$textarea.val(_.str.sprintf("%s%s%s",
+            self.$textarea.val(_.str.sprintf("%s%s%s ",
                     value.substring(0, index - self.search_string.length),
                     partner.name,
                     value.substring(index, value.length)));
-            self.set_cursor_position(self.$textarea, index - self.search_string.length + name.length);
+            self.set_cursor_position(self.$textarea, index - self.search_string.length + partner.name.length + 1);
         });
     },
-    get_cursor_position: function(ctrl) {
-        var el = $(ctrl).get(0);
+    get_cursor_position: function($el) {
+        var el = $el.get(0);
         if(!el){
             return 0;
         }
@@ -225,16 +226,15 @@ var Mention = Widget.extend({
         return 0;
     },
 
-    set_cursor_position: function(ctrl, pos) {
-        ctrl.each(function(index, elem) {
+    set_cursor_position: function($el, pos) {
+        $el.each(function(index, elem) {
             if (elem.setSelectionRange){
-              elem.setSelectionRange(pos, pos);
+                elem.setSelectionRange(pos, pos);
             }
             else if (elem.createTextRange){
-              elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
+                elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
             }
-          });
-        return ctrl;
+        });
     }
 });
 
