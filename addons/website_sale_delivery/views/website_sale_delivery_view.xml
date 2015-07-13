@@ -17,7 +17,6 @@
             </xpath>
             <xpath expr="//group[@name='general']" position="after">
                 <group name="website">
-                    <field name="website_published"/>
                     <field name="website_description" attrs="{'invisible':[('website_published', '=', False)]}"/>
                 </group>
             </xpath>
