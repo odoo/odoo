@@ -49,7 +49,7 @@
     <t t-if="o and 'company_id' in o">
         <t t-set="company" t-value="o.company_id"></t>
     </t>
-    <t t-if="not o or not 'company_id' in o">
+    <t t-if="o and 'company_id' in o and 'o.company_id'">
         <t t-set="company" t-value="res_company"></t>
     </t>
 
