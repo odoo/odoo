@@ -30,14 +30,3 @@
     assert stage_id == stage['id'], "Default stage of opportunity is incorrect!"
 -
   Now I change the stage of opportunity to won.
--
-  !python {model: crm.lead}: |
-    self.case_mark_won(cr, uid, [ref("test_crm_lead_new")])
--
-  I check statge of opp should won, after change stage.
--
-  !python {model: crm.lead}: |
-    opp = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [opp], opp.team_id.id or False,[('probability','=',100.0)], context)
-    assert stage_id == opp.stage_id.id, "Stage of opportunity is incorrect!"
-

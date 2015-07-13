@@ -341,44 +341,6 @@ class crm_lead(format_address, osv.osv):
             return stage_ids[0]
         return False
 
-    def case_mark_lost(self, cr, uid, ids, context=None):
-        """ Mark the case as lost: state=cancel and probability=0
-        """
-        stages_leads = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            stage_id = self.stage_find(cr, uid, [lead], lead.team_id.id or False, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)], context=context)
-            if stage_id:
-                if stages_leads.get(stage_id):
-                    stages_leads[stage_id].append(lead.id)
-                else:
-                    stages_leads[stage_id] = [lead.id]
-            else:
-                raise UserError(_('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
-                                    'probability = 0 %, select "Change Probability Automatically".\n'
-                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
-        for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
-        return True
-
-    def case_mark_won(self, cr, uid, ids, context=None):
-        """ Mark the case as won: state=done and probability=100
-        """
-        stages_leads = {}
-        for lead in self.browse(cr, uid, ids, context=context):
-            stage_id = self.stage_find(cr, uid, [lead], lead.team_id.id or False, [('probability', '=', 100.0), ('on_change', '=', True)], context=context)
-            if stage_id:
-                if stages_leads.get(stage_id):
-                    stages_leads[stage_id].append(lead.id)
-                else:
-                    stages_leads[stage_id] = [lead.id]
-            else:
-                raise UserError(_('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
-                                    'probability = 100 % and select "Change Probability Automatically".\n'
-                                    'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
-        for stage_id, lead_ids in stages_leads.items():
-            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
-        return True
-
     def log_next_activity_1(self, cr, uid, ids, context=None):
         return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
 

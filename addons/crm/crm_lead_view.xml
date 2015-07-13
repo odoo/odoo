@@ -380,8 +380,6 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
@@ -637,23 +635,6 @@
             allowing to have a well formed email template (context action considered as set). -->
         <record id="email_template_opportunity_mail" model="mail.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
-        </record>
-
-        <record id="action_mark_as_lost" model="ir.actions.server">
-            <field name="name">Mark As Lost</field>
-            <field name="model_id" ref="model_crm_lead"/>
-            <field name="state">code</field>
-            <field name="code">
-                if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
-                    self.case_mark_lost(cr, uid, context['active_ids'], context=context)
-            </field>
-        </record>
-
-        <record id="ir_mark_as_lost" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'crm.lead'" name="model"/>
-            <field name="name">Mark As Lost</field>
-            <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 
     </data>
