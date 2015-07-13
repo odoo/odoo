@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -21,16 +21,17 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'project',
     ],
     'data': [
-        'views/project_issue_views.xml',
-        'views/project_issue_menu.xml',
+        'data/mail_message_data.xml',
+        'data/mail_message_subtype_data.xml',
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
+        'views/project_issue_views.xml',
+        'views/project_issue_menu.xml',
         'views/account_analytic_account_views.xml',
         'views/res_partner_views.xml',
         'views/project_project_views.xml',
-        'data/mail_message_data.xml',
-        'data/mail_message_subtype_data.xml',
+        'views/project_dashboard.xml',
     ],
     'demo': [
         'data/project_tags_demo.xml',
@@ -44,6 +45,5 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'test/issue_demo.yml'
     ],
     'installable': True,
-    'auto_install': False,
     'application': True,
 }

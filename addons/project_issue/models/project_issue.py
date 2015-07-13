@@ -1,49 +1,157 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import calendar
-from datetime import datetime,date
-from dateutil import relativedelta
-import json
-import time
-from openerp import api
-from openerp import SUPERUSER_ID
-from openerp import tools
-from openerp.osv import fields, osv, orm
+from datetime import datetime
+from openerp import api, fields, models
+from openerp.exceptions import AccessError, UserError
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools import html2plaintext
 from openerp.tools.translate import _
-from openerp.exceptions import UserError, AccessError
 
 
-class project_issue(osv.Model):
+class ProjectIssue(models.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority desc, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _order = "priority desc, create_date desc"
     _mail_post_access = 'read'
 
-    def _get_default_partner(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if 'default_project_id' in context:
-            project = self.pool.get('project.project').browse(cr, uid, context['default_project_id'], context=context)
+    def _get_default_partner(self):
+        if 'default_project_id' in self.env.context:
+            project = self.env['project.project'].browse(self.env.context['default_project_id'])
             if project and project.partner_id:
                 return project.partner_id.id
         return False
 
-    def _get_default_stage_id(self, cr, uid, context=None):
+    def _get_default_stage_id(self):
         """ Gives default stage_id """
-        if context is None:
-            context = {}
-        return self.stage_find(cr, uid, [], context.get('default_project_id'), [('fold', '=', False)], context=context)
+        return self.stage_find(self.env.context.get('default_project_id'), [('fold', '=', False)])
 
-    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        if context is None:
-            context = {}
-        access_rights_uid = access_rights_uid or uid
-        stage_obj = self.pool.get('project.task.type')
-        order = stage_obj._order
+    name = fields.Char('Issue', required=True)
+    active = fields.Boolean(required=False, default=True)
+    create_date = fields.Datetime('Creation Date', readonly=True, index=True)
+    write_date = fields.Datetime('Update Date', readonly=True)
+    days_since_creation = fields.Integer(compute='_compute_days_since_creation', string='Days since creation date',
+                                         help="Difference in days between creation date and current date")
+
+    @api.depends('date_closed', 'date_open')
+    def _compute_days_since_creation(self):
+        for issue in self:
+            if(issue.create_date):
+                dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                issue.days_since_creation = (datetime.today() - dt_create_date).days
+
+    date_deadline = fields.Date('Deadline')
+    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', index=True, help="""Sales team to which Case belongs to.
+                              Define Responsible user and Email account for mail gateway.""",
+                              default=lambda self: self.env['crm.team']._get_default_team_id())
+    partner_id = fields.Many2one('res.partner', 'Contact', index=True)
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('crm.helpdesk'))
+    description = fields.Text('Private Note')
+    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State',
+                                    track_visibility='onchange',
+                                    help="""A Issue's kanban state indicates special situations affecting it:\n
+                                           * Normal is the default situation\n
+                                           * Blocked indicates something is preventing the progress of this issue\n
+                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage""",
+                                    required=True, default='normal')
+    email_from = fields.Char('Email', help="These people will receive email.", index=True)
+    email_cc = fields.Char('Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
+        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
+    date_open = fields.Datetime('Assigned', readonly=True, index=True)
+    # Project Issue fields
+    date_closed = fields.Datetime('Closed', readonly=True, index=True)
+    date = fields.Datetime()
+    date_last_stage_update = fields.Datetime('Last Stage Update', index=True, default=lambda self: datetime.now())
+    channel = fields.Char('Channel', help="Communication channel.")
+    tag_ids = fields.Many2many('project.tags', string='Tags')
+    priority = fields.Selection([('0', 'Low'), ('1', 'Normal'), ('2', 'High')], 'Priority', index=True, default='0')
+    stage_id = fields.Many2one('project.task.type', 'Stage', track_visibility='onchange', index=True,
+                               domain="[('project_ids', '=', project_id)]", copy=False,
+                               default=lambda self: self._get_default_stage_id())
+    project_id = fields.Many2one('project.project', 'Project', track_visibility='onchange', index=True)
+    duration = fields.Float()
+    task_id = fields.Many2one('project.task', 'Task', domain="[('project_id','=',project_id)]",
+                              help="You can link this issue to an existing task or directly create a new one from here")
+    day_open = fields.Float(compute='_compute_day_open', string='Days to Assign', store=True)
+
+    @api.depends('date_open', 'date_closed')
+    def _compute_day_open(self):
+        for issue in self:
+            if issue.date_open and issue.create_date:
+                dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                dt_date_open = datetime.strptime(issue.date_open, DEFAULT_SERVER_DATETIME_FORMAT)
+                issue.day_open = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
+
+    day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
+
+    @api.depends('date_closed', 'date_open')
+    def _compute_day_close(self):
+        for issue in self:
+            if issue.date_closed and issue.create_date:
+                dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                dt_date_closed = datetime.strptime(issue.date_closed, DEFAULT_SERVER_DATETIME_FORMAT)
+                issue.day_close = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
+
+    user_id = fields.Many2one('res.users', 'Assigned to', index=True, track_visibility='onchange', default=lambda self: self.env.uid)
+    working_hours_open = fields.Float(compute='_compute_working_hours_open', string='Working Hours to assign the Issue', store=True)
+
+    @api.depends('date_open', 'date_closed')
+    def _compute_working_hours_open(self):
+        for issue in self:
+            if issue.date_open and issue.create_date:
+                ResourceCalendar = self.pool['resource.calendar']
+                dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                dt_date_open = datetime.strptime(issue.date_open, DEFAULT_SERVER_DATETIME_FORMAT)
+
+                issue.working_hours_open = ResourceCalendar._interval_hours_get(self.env.cr, self.env.uid, None, dt_create_date, dt_date_open,
+                                                                                timezone_from_uid=self.user_id.id or self.env.uid, resource_id=False,
+                                                                                exclude_leaves=False, context=self.env.context)
+
+    working_hours_close = fields.Float(compute='_compute_working_hours_close', string='Working Hours to close the Issue', store=True)
+
+    @api.depends('date_closed')
+    def _compute_working_hours_close(self):
+        for issue in self:
+            if issue.date_closed and issue.create_date:
+                ResourceCalendar = self.pool['resource.calendar']
+                dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+                dt_date_closed = datetime.strptime(issue.date_closed, DEFAULT_SERVER_DATETIME_FORMAT)
+
+                issue.working_hours_close = ResourceCalendar._interval_hours_get(self.env.cr, self.env.uid, None, dt_create_date, dt_date_closed,
+                                                                                 timezone_from_uid=self.user_id.id or self.env.uid, resource_id=False,
+                                                                                 exclude_leaves=False, context=self.env.context)
+
+    inactivity_days = fields.Integer(compute='_compute_day_inactivity_days', string='Days since last action',
+                                     help="Difference in days between last action and current date")
+
+    @api.depends('date_open', 'create_date')
+    def _compute_day_inactivity_days(self):
+        for issue in self:
+            if issue.date_action_last:
+                inactivity_days = datetime.today() - datetime.strptime(issue.date_action_last, DEFAULT_SERVER_DATETIME_FORMAT)
+            elif issue.date_last_stage_update:
+                inactivity_days = datetime.today() - datetime.strptime(issue.date_last_stage_update, DEFAULT_SERVER_DATETIME_FORMAT)
+            else:
+                inactivity_days = datetime.today() - datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            issue.inactivity_days = inactivity_days.days
+
+    color = fields.Integer('Color Index')
+    user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
+    date_action_last = fields.Datetime('Last Action', readonly=True)
+    date_action_next = fields.Datetime('Next Action', readonly=True)
+    can_escalate = fields.Boolean(compute='_can_escalate', string='Can Escalate')
+
+    @api.multi
+    def _can_escalate(self):
+        for issue in self:
+            esc_proj = issue.project_id.project_escalation_id
+            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
+                issue.can_escalate = True
+
+    @api.multi
+    def _read_group_stage_ids(self, domain, read_group_order=None, access_rights_uid=None):
+        ProjectTaskType = self.env['project.task.type']
+        order = ProjectTaskType._order
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
@@ -52,85 +160,21 @@ class project_issue(osv.Model):
         # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
         # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
-        if 'default_project_id' in context:
-            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
+        if 'default_project_id' in self.env.context:
+            search_domain += ['|', ('project_ids', '=', self.env.context['default_project_id']), ('id', 'in', self.ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain += ['|', ('id', 'in', self.ids), ('case_default', '=', True)]
         # perform search
-        stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
-        result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
-            fold[stage.id] = stage.fold or False
+        project_task_types = ProjectTaskType.sudo().search(search_domain, order=order)
+        result = project_task_types.name_get()
+        fold = {project_task_type.id: project_task_type.fold for project_task_type in project_task_types}
         return result, fold
 
-    def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
-        @return: difference between current date and log date
-        @param context: A standard dictionary for contextual values
-        """
-        Calendar = self.pool['resource.calendar']
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
 
-        res = dict((res_id, {}) for res_id in ids)
-        for issue in self.browse(cr, uid, ids, context=context):
-            values = {
-                'day_open': 0.0, 'day_close': 0.0,
-                'working_hours_open': 0.0, 'working_hours_close': 0.0,
-                'days_since_creation': 0.0, 'inactivity_days': 0.0,
-            }
-            # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
-            calendar_id = None
-            if issue.project_id and issue.project_id.resource_calendar_id:
-                calendar_id = issue.project_id.resource_calendar_id.id
-
-            dt_create_date = datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
-
-            if issue.date_open:
-                dt_date_open = datetime.strptime(issue.date_open, DEFAULT_SERVER_DATETIME_FORMAT)
-                values['day_open'] = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
-                values['working_hours_open'] = Calendar._interval_hours_get(
-                    cr, uid, calendar_id, dt_create_date, dt_date_open,
-                    timezone_from_uid=issue.user_id.id or uid,
-                    exclude_leaves=False, context=context)
-
-            if issue.date_closed:
-                dt_date_closed = datetime.strptime(issue.date_closed, DEFAULT_SERVER_DATETIME_FORMAT)
-                values['day_close'] = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
-                values['working_hours_close'] = Calendar._interval_hours_get(
-                    cr, uid, calendar_id, dt_create_date, dt_date_closed,
-                    timezone_from_uid=issue.user_id.id or uid,
-                    exclude_leaves=False, context=context)
-
-            days_since_creation = datetime.today() - dt_create_date
-            values['days_since_creation'] = days_since_creation.days
-            if issue.date_action_last:
-                inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, DEFAULT_SERVER_DATETIME_FORMAT)
-            elif issue.date_last_stage_update:
-                inactive_days = datetime.today() - datetime.strptime(issue.date_last_stage_update, DEFAULT_SERVER_DATETIME_FORMAT)
-            else:
-                inactive_days = datetime.today() - datetime.strptime(issue.create_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            values['inactivity_days'] = inactive_days.days
-
-            # filter only required values
-            for field in fields:
-                res[issue.id][field] = values[field]
-
-        return res
-
-    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            esc_proj = issue.project_id.project_escalation_id
-            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
-                res[issue.id] = True
-        return res
-
+    @api.v7
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -138,164 +182,89 @@ class project_issue(osv.Model):
                 return {'value': {'partner_id': project.partner_id.id}}
         return {'value': {'partner_id': False}}
 
-    _columns = {
-        'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Issue', required=True),
-        'active': fields.boolean('Active', required=False),
-        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
-        'write_date': fields.datetime('Update Date', readonly=True),
-        'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
-                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
-        'date_deadline': fields.date('Deadline'),
-        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id',\
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
-        'partner_id': fields.many2one('res.partner', 'Contact', select=1),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'description': fields.text('Private Note'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
-                                         track_visibility='onchange',
-                                         help="A Issue's kanban state indicates special situations affecting it:\n"
-                                              " * Normal is the default situation\n"
-                                              " * Blocked indicates something is preventing the progress of this issue\n"
-                                              " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
-                                         required=True),
-        'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
-        'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-        'date_open': fields.datetime('Assigned', readonly=True, select=True),
-        # Project Issue fields
-        'date_closed': fields.datetime('Closed', readonly=True, select=True),
-        'date': fields.datetime('Date'),
-        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
-        'channel': fields.char('Channel', help="Communication channel."),
-        'tag_ids': fields.many2many('project.tags', string='Tags'),
-        'priority': fields.selection([('0','Low'), ('1','Normal'), ('2','High')], 'Priority', select=True),
-        'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility='onchange', select=True,
-                        domain="[('project_ids', '=', project_id)]", copy=False),
-        'project_id': fields.many2one('project.project', 'Project', track_visibility='onchange', select=True),
-        'duration': fields.float('Duration'),
-        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]",
-            help="You can link this issue to an existing task or directly create a new one from here"),
-        'day_open': fields.function(_compute_day, string='Days to Assign',
-                                    multi='compute_day', type="float",
-                                    store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
-        'day_close': fields.function(_compute_day, string='Days to Close',
-                                     multi='compute_day', type="float",
-                                     store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
-        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1, track_visibility='onchange'),
-        'working_hours_open': fields.function(_compute_day, string='Working Hours to assign the Issue',
-                                              multi='compute_day', type="float",
-                                              store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_open'], 10)}),
-        'working_hours_close': fields.function(_compute_day, string='Working Hours to close the Issue',
-                                               multi='compute_day', type="float",
-                                               store={'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['date_closed'], 10)}),
-        'inactivity_days': fields.function(_compute_day, string='Days since last action',
-                                           multi='compute_day', type="integer", help="Difference in days between last action and current date"),
-        'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
-        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
-    }
+    @api.v8
+    @api.onchange('project_id')
+    def on_change_project(self):
+        if self.project_id:
+            self.partner_id = self.project_id.partner_id.id
+        else:
+            self.partner_id = False
 
-    _defaults = {
-        'active': 1,
-        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
-        'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': '0',
-        'kanban_state': 'normal',
-        'date_last_stage_update': fields.datetime.now,
-        'user_id': lambda obj, cr, uid, context: uid,
-    }
+    @api.onchange('task_id')
+    def onchange_task_id(self):
+        if self.task_id:
+            self.user_id = self.task_id.user_id.id
+        else:
+            self.user_id = False
 
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        """ This function returns value of partner email address based on partner
+            :param part: Partner's id
+        """
+        if self.partner_id:
+            self.email_from = self.partner_id.email
+        else:
+            self.email_from = False
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        issue = self.read(cr, uid, [id], ['name'], context=context)[0]
-        if not default:
-            default = {}
-        default = default.copy()
-        default.update(name=_('%s (copy)') % (issue['name']))
-        return super(project_issue, self).copy(cr, uid, id, default=default, context=context)
+    @api.multi
+    def copy(self, default={}):
+        default.update(name=_('%s (copy)') % (self.name or ""))
+        return super(ProjectIssue, self).copy(default=default)
 
-    def create(self, cr, uid, vals, context=None):
-        context = dict(context or {})
+    @api.model
+    def create(self, vals):
+        context = dict()
         if vals.get('project_id') and not context.get('default_project_id'):
             context['default_project_id'] = vals.get('project_id')
         if vals.get('user_id'):
             vals['date_open'] = fields.datetime.now()
         if 'stage_id' in vals:
-            vals.update(self.onchange_stage_id(cr, uid, None, vals.get('stage_id'), context=context)['value'])
+            project_task_type = self.env['project.task.type'].browse(vals['stage_id'])
+            if project_task_type.fold:
+                vals['date_closed'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
-        create_context = dict(context, mail_create_nolog=True)
-        return super(project_issue, self).create(cr, uid, vals, context=create_context)
+        context['mail_create_nolog'] = True
+        return super(ProjectIssue, self.with_context(context)).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    @api.multi
+    def write(self, vals):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
-            vals.update(self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value'])
             vals['date_last_stage_update'] = fields.datetime.now()
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
+            project_task_type = self.env['project.task.type'].browse(vals['stage_id'])
+            if project_task_type.fold:
+                vals['date_closed'] = fields.datetime.now()
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_open'] = fields.datetime.now()
+        return super(ProjectIssue, self).write(vals)
 
-        return super(project_issue, self).write(cr, uid, ids, vals, context)
-
-    def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        if not task_id:
-            return {'value': {}}
-        task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
-        return {'value': {'user_id': task.user_id.id, }}
-
-    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
-        """ This function returns value of partner email address based on partner
-            :param part: Partner's id
-        """
-        if partner_id:
-            partner = self.pool['res.partner'].browse(cr, uid, partner_id, context)
-            return {'value': {'email_from': partner.email}}
-        return {'value': {'email_from': False}}
-
-    def get_empty_list_help(self, cr, uid, help, context=None):
-        context = dict(context or {})
+    @api.model
+    def get_empty_list_help(self, help):
+        context = dict()
         context['empty_list_help_model'] = 'project.project'
-        context['empty_list_help_id'] = context.get('default_project_id')
+        context['empty_list_help_id'] = self.env.context.get('default_project_id')
         context['empty_list_help_document_name'] = _("issues")
-        return super(project_issue, self).get_empty_list_help(cr, uid, help, context=context)
+        return super(ProjectIssue, self.with_context(context)).get_empty_list_help(help)
 
     # -------------------------------------------------------
     # Stage management
     # -------------------------------------------------------
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
-        if not stage_id:
-            return {'value': {}}
-        stage = self.pool['project.task.type'].browse(cr, uid, stage_id, context=context)
-        if stage.fold:
-            return {'value': {'date_closed': fields.datetime.now()}}
-        return {'value': {'date_closed': False}}
-
-    def stage_find(self, cr, uid, cases, team_id, domain=[], order='sequence', context=None):
+    def stage_find(self, team_id, domain, order='sequence'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the issue:
-            - type: stage type must be the same or 'both'
             - team_id: if set, stages must belong to this team or
               be a default case
         """
-        if isinstance(cases, (int, long)):
-            cases = self.browse(cr, uid, cases, context=context)
-        # collect all team_ids
         team_ids = []
         if team_id:
             team_ids.append(team_id)
-        for task in cases:
+        for task in self.ids:
             if task.project_id:
                 team_ids.append(task.project_id.id)
         # OR all team_ids and OR with case_default
@@ -306,23 +275,22 @@ class project_issue(osv.Model):
                 search_domain.append(('project_ids', '=', team_id))
         search_domain += list(domain)
         # perform search, return the first found
-        stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
-        if stage_ids:
-            return stage_ids[0]
+        project_task_type = self.env['project.task.type'].search(search_domain, order=order, limit=1)
+        if project_task_type:
+            return project_task_type.id
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
-        for issue in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def case_escalate(self):  # FIXME rename this method to issue_escalate
+        for issue in self:
             data = {}
             esc_proj = issue.project_id.project_escalation_id
             if not esc_proj:
                 raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-
             data['project_id'] = esc_proj.id
             if esc_proj.user_id:
                 data['user_id'] = esc_proj.user_id.id
             issue.write(data)
-
             if issue.task_id:
                 issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
         return True
@@ -331,32 +299,34 @@ class project_issue(osv.Model):
     # Mail gateway
     # -------------------------------------------------------
 
-    def _track_subtype(self, cr, uid, ids, init_values, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        if 'kanban_state' in init_values and record.kanban_state == 'blocked':
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'kanban_state' in init_values and self.kanban_state == 'blocked':
             return 'project_issue.mt_issue_blocked'
-        elif 'kanban_state' in init_values and record.kanban_state == 'done':
+        elif 'kanban_state' in init_values and self.kanban_state == 'done':
             return 'project_issue.mt_issue_ready'
-        elif 'user_id' in init_values and record.user_id:  # assigned -> new
+        elif 'user_id' in init_values and self.user_id:  # assigned -> new
             return 'project_issue.mt_issue_new'
-        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:  # start stage -> new
+        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project_issue.mt_issue_new'
         elif 'stage_id' in init_values:
             return 'project_issue.mt_issue_stage'
-        return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
+        return super(ProjectIssue, self)._track_subtype(init_values)
 
-    @api.cr_uid_context
-    def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
+    @api.model
+    def message_get_reply_to(self, res_ids=[], default=None):
         """ Override to get the reply_to of the parent project. """
-        issues = self.browse(cr, SUPERUSER_ID, ids, context=context)
+        issues = self.browse(res_ids)
         project_ids = set([issue.project_id.id for issue in issues if issue.project_id])
-        aliases = self.pool['project.project'].message_get_reply_to(cr, uid, list(project_ids), default=default, context=context)
+        aliases = self.env['project.project'].message_get_reply_to(list(project_ids), default=default)
         return dict((issue.id, aliases.get(issue.project_id and issue.project_id.id or 0, False)) for issue in issues)
 
-    def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
+    @api.multi
+    def message_get_suggested_recipients(self):
+        recipients = super(ProjectIssue, self).message_get_suggested_recipients()
         try:
-            for issue in self.browse(cr, uid, ids, context=context):
+            for issue in self:
                 if issue.partner_id:
                     issue._message_add_suggested_recipient(recipients, partner=issue.partner_id, reason=_('Customer'))
                 elif issue.email_from:
@@ -365,14 +335,13 @@ class project_issue(osv.Model):
             pass
         return recipients
 
-    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+    def message_new(self, msg, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
         """
-        if custom_values is None:
-            custom_values = {}
-        context = dict(context or {}, state_to='draft')
+        context = dict()
+        context['state_to'] = 'draft'
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
@@ -380,18 +349,15 @@ class project_issue(osv.Model):
             'partner_id': msg.get('author_id', False),
             'user_id': False,
         }
-        defaults.update(custom_values)
-        res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-        return res_id
+        if custom_values:
+            defaults.update(custom_values)
+        return super(ProjectIssue, self.with_context(context)).message_new(msg, custom_values=defaults)
 
-    @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
+    @api.multi
+    def message_post(self, subtype=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
         """
-        if context is None:
-            context = {}
-        res = super(project_issue, self).message_post(cr, uid, thread_id, subtype=subtype, context=context, **kwargs)
-        if thread_id and subtype:
-            self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
-        return res
+        if self.id and subtype:
+            self.sudo().write({'date_action_last': fields.datetime.now()})
+        return super(ProjectIssue, self).message_post(subtype=subtype, **kwargs).id
