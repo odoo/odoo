@@ -375,6 +375,8 @@ class Report(osv.Model):
         :returns: Content of the pdf as a string
         """
         command_args = []
+        if wkhtmltopdf_state == "ok":
+            command_args.extend(['--viewport-size', '1024x768'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         try:

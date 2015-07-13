@@ -89,7 +89,7 @@
                 }
             },
             {
-                element:   'div[data-target-event="backColor"] .colorpicker button[data-event="backColor"]:first',
+                element:   'div[data-target-event="backColor"]:visible .colorpicker button[data-event="backColor"]:first',
                 title:     "change text backColor again",
             },
             {
