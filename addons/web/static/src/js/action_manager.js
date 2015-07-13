@@ -44,6 +44,18 @@ var Action = core.Class.extend({
         this.on_reverse_breadcrumb = on_reverse_breadcrumb;
     },
     /**
+     * Stores the DOM fragment of the action
+     * @param {jQuery} [fragment] the DOM fragment
+     */
+    set_fragment: function($fragment) {
+        this.$fragment = $fragment;
+    },
+    /**
+     * Not implemented for client actions
+     */
+    set_is_in_DOM: function() {
+    },
+    /**
      * @return {Object} the description of the action
      */
     get_action_descr: function() {
@@ -60,6 +72,12 @@ var Action = core.Class.extend({
      */
     get_nb_views: function() {
         return 0;
+    },
+    /**
+     * @return {jQuery} the DOM fragment of the action
+     */
+    get_fragment: function() {
+        return this.$fragment;
     },
 });
 /**
@@ -107,6 +125,13 @@ var ViewManagerAction = WidgetAction.extend({
         return this.widget.select_view(view_index).then(function() {
             _super.call(self);
         });
+    },
+    /**
+     * Sets is_in_DOM on this.widget
+     * @param {Boolean} [is_in_DOM] true iff the widget is attached in the DOM
+     */
+    set_is_in_DOM: function(is_in_DOM) {
+        this.widget.is_in_DOM = is_in_DOM;
     },
     /**
      * @return {Array} array of Objects that will be interpreted to display the breadcrumbs
@@ -215,7 +240,15 @@ var ActionManager = Widget.extend({
         // document only when it's ready
         var new_widget_fragment = document.createDocumentFragment();
         return $.when(this.inner_widget.appendTo(new_widget_fragment)).done(function() {
-            self.$el.append(new_widget_fragment);
+            // Detach the fragment of the previous action and store it within the action
+            if (old_action) {
+                old_action.set_fragment(old_widget.$el.detach());
+                old_action.set_is_in_DOM(false);
+            }
+
+            framework.append(self.$el, new_widget_fragment, true);
+            self.inner_action.set_is_in_DOM(true);
+
             // Hide the old_widget as it will be removed from the DOM when it
             // is destroyed
             if (old_widget) {
@@ -269,17 +302,28 @@ var ActionManager = Widget.extend({
     select_action: function(action, index) {
         var self = this;
         return this.webclient.clear_uncommitted_changes().then(function() {
-            // Set the new inner_widget and clear the action_stack
-            self.inner_widget = action.widget;
+            // Set the new inner_action/widget and update the action stack
+            var old_action = self.inner_action;
             var action_index = self.action_stack.indexOf(action);
-            self.clear_action_stack(self.action_stack.splice(action_index + 1));
+            var to_destroy = self.action_stack.splice(action_index + 1);
+            self.inner_action = action;
+            self.inner_widget = action.widget;
 
             // Hide the ControlPanel if the widget doesn't use it
             if (!self.inner_widget.need_control_panel) {
                 self.main_control_panel.do_hide();
             }
 
-            return action.restore(index);
+            return $.when(action.restore(index)).done(function() {
+                if (action !== old_action) {
+                    // Clear the action stack (this also removes the current action from the DOM)
+                    self.clear_action_stack(to_destroy);
+
+                    // Append the fragment of the action to restore to self.$el
+                    framework.append(self.$el, action.get_fragment(), true);
+                    self.inner_action.set_is_in_DOM(true);
+                }
+            });
         }).fail(function() {
             return $.Deferred().reject();
         });

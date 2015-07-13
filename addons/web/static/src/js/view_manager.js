@@ -4,6 +4,7 @@ odoo.define('web.ViewManager', function (require) {
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
+var framework = require('web.framework');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
@@ -45,6 +46,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         this.active_view = null;
         this.registry = core.view_registry;
         this.title = this.action && this.action.name;
+        this.is_in_DOM = false; // used to know if the view manager is attached in the DOM
         _.each(views, function (view) {
             var view_type = view[1] || view.view_type;
             var View = core.view_registry.get(view_type, true);
@@ -120,6 +122,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     switch_mode: function(view_type, no_store, view_options) {
         var self = this;
         var view = this.views[view_type];
+        var old_view = this.active_view;
+        var switched = $.Deferred();
 
         if (!view) {
             return $.Deferred().reject();
@@ -153,19 +157,23 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 self.searchview.do_search();
             });
         }
-        return $.when(view.created, this.active_search).done(function () {
-            self._display_view(view_options);
-            self.trigger('switch_mode', view_type, no_store, view_options);
+        $.when(view.created, this.active_search).done(function () {
+            self._display_view(view_options, old_view).done(function() {
+                self.trigger('switch_mode', view_type, no_store, view_options);
+                switched.resolve();
+            });
         });
+        return switched;
     },
-    _display_view: function (view_options) {
+    _display_view: function (view_options, old_view) {
         var self = this;
         var view_controller = this.active_view.controller;
+        var view_fragment = this.active_view.$fragment;
         var view_control_elements = this.render_view_control_elements();
 
         // Show the view
         this.active_view.$container.show();
-        $.when(view_controller.do_show(view_options)).done(function () {
+        return $.when(view_controller.do_show(view_options)).done(function () {
             // Prepare the ControlPanel content and update it
             var cp_status = {
                 active_view_selector: '.oe-cp-switch-' + self.active_view.type,
@@ -176,6 +184,15 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 search_view_hidden: view_controller.searchable === false,
             };
             self.update_control_panel(cp_status);
+
+            // Detach the old view but not ui-autocomplete elements to let
+            // jquery-ui garbage-collect them
+            if (old_view) {
+                old_view.$container.contents().not('.ui-autocomplete').detach();
+            }
+
+            // Append the view fragment to its $container
+            framework.append(self.active_view.$container, view_fragment, self.is_in_DOM);
         });
     },
     create_view: function(view, view_options) {
@@ -189,11 +206,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             options.initial_mode = options.initial_mode || 'edit';
         }
         var controller = new View(this, this.dataset, view.view_id, options);
-        var $container = view.$container;
-
-        $container.hide();
         view.controller = controller;
-        view.$container = $container;
+        view.$fragment = $('<div>');
 
         if (view.embedded_view) {
             controller.set_embedded_view(view.embedded_view);
@@ -211,10 +225,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         controller.on('view_loaded', this, function () {
             view_loaded.resolve();
         });
-        return $.when(controller.appendTo($container), view_loaded)
-                .done(function () {
-                    self.trigger("controller_inited", view.type, controller);
-                });
+
+        // render the view in a fragment so that it is appended in the view's
+        // $container only when it's ready
+        return $.when(controller.appendTo(view.$fragment), view_loaded).done(function () {
+            // Remove the unnecessary outer div
+            view.$fragment = view.$fragment.contents();
+            self.trigger("controller_inited", view.type, controller);
+        });
     },
     select_view: function (index) {
         var view_type = this.view_stack[index].type;

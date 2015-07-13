@@ -166,17 +166,8 @@ var View = Widget.extend({
         this.embedded_view = embedded_view;
     },
     do_show: function () {
-        var self = this;
-        this.$el.show();
-        setTimeout(function () {
-            self.$el.parent().addClass('in');
-        }, 0);
-
+        this._super();
         core.bus.trigger('view_shown', this);
-    },
-    do_hide: function () {
-        this.$el.parent().removeClass('in');
-        this.$el.hide();
     },
     is_active: function () {
         return this.ViewManager.active_view.controller === this;
