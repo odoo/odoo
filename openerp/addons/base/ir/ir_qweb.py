@@ -616,7 +616,7 @@ class FieldConverter(osv.AbstractModel):
                 _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context)
+                    source_element, g_att, t_att, qweb_context, context=context)
             )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
