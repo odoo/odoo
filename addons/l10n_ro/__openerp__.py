@@ -24,26 +24,15 @@
 {
     "name" : "Romania - Accounting",
     "version" : "1.0",
-    "author" : "ERPsystems Solutions, Fekete Mihai, Tatár Attila",
+    "author" : "ERPsystems Solutions",
     "website": "http://www.erpsystems.ro",
     "category" : "Localization/Account Charts",
     "depends" : ['account','account_chart','base_vat'],
     "description": """
-Localization - Accounting base for Romania
-------------------------------------------
-
-Main features include:
-    - Accounting chart, taxes
-    - VAT structure 
-    - Registration Number from Chamber of Commerce and Industry
-    - Fiscal positions    
-
-    **~*~**
-Modulul conţine planul de conturi, cote TVA, poziţii fiscale. 
-Pentru a vă ajuta la instalare, sunt salvate screen-shot-uri cu setări în directorul 'inst_guide_images'.
-
-**Important**, pentru a avea funcţionalitatea contabilă completă, mai sunt necesare alte câteva module.
-
+This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
+It also adds the Registration Number for Romania in OpenERP.
+================================================================================================================
+Romanian accounting chart and localization.
     """,
     "demo" : [],
     "data" : ['partner_view.xml',

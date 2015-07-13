@@ -16,9 +16,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-04 06:58+0000\n"
+"PO-Revision-Date: 2015-07-10 02:21+0000\n"
 "Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -49,7 +49,7 @@ msgstr "\n                * 草稿：即未确认状态，直到确认前不会�
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr "\n创建从供应商采购直接发到客户的直运dropship库移路由，增加更加复杂的测试，需安装 stock_dropshipping模块。"
+msgstr "\n创建从供应商直接发到客户的直运dropship路线，增加更加复杂的测试-这会安装 stock_dropshipping模块。"
 
 #. module: stock
 #: code:addons/stock/stock.py:1662
@@ -1151,17 +1151,17 @@ msgstr "默认源库位"
 #. module: stock
 #: help:stock.warehouse,reception_steps:0
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "默认进货路线"
 
 #. module: stock
 #: help:stock.warehouse,delivery_steps:0
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "默认出货路线"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Default: Take From Stock"
-msgstr ""
+msgstr "默认:从库存获取"
 
 #. module: stock
 #: help:stock.warehouse,route_ids:0
@@ -1175,7 +1175,7 @@ msgid ""
 "where to store the products. This method can be enforced at the product "
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
-msgstr ""
+msgstr "定义储存产品的确切位置(层)的默认方法。这个方法可被用于产品类别，如果上级库位没有设置也可以延伸到其上级库位。"
 
 #. module: stock
 #: help:stock.location,removal_strategy_id:0
@@ -1184,7 +1184,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr ""
+msgstr "定义此库位提取产品的确切位置(层)的默认方法，这个方法可被用于产品类别，如果上级库位没有设置也可以延伸到其上级库位。"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -1223,7 +1223,7 @@ msgstr "交货"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Delivery Address:"
-msgstr ""
+msgstr "送货地址："
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1248,7 +1248,7 @@ msgstr "交货路线"
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
-msgstr ""
+msgstr "基于此安装的模块。能够定义的产品路线：产品是否是购买的制造的还是MTO/MTS(按订单生产/按库存生产),等等..."
 
 #. module: stock
 #: field:stock.move,name:0
@@ -1301,7 +1301,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr ""
+msgstr "确定要生成的库存移动的补货方法：是从源库位的可用库存中提取产品还是忽略其库存直接创建补货单。"
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -1317,7 +1317,7 @@ msgid ""
 "product is controlled at least once a year. This also lets you find out "
 "which products have seen little move lately and may deserve special measures"
 " (discounted sale, quality control...)"
-msgstr ""
+msgstr "显示您产品的最后盘点和完成的移动，还可以方便的使用特定的筛选规则去排序。如果您经常操作移库及部分盘点，您需要每年至少一次用这报表来控制您的产品库存。这也让您更容易发现哪些产品很少移动，从而采用特定的措施(销售折扣、质量控制...)"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search view:stock.move:stock.view_move_tree
@@ -1335,7 +1335,7 @@ msgstr "已完成的转移"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr ""
+msgstr "已完成的转移，按日期"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1358,7 +1358,7 @@ msgstr "编辑..."
 #: code:addons/stock/wizard/stock_transfer_details.py:115
 #, python-format
 msgid "Enter transfer details"
-msgstr ""
+msgstr "输入转移细节"
 
 #. module: stock
 #: code:addons/stock/stock.py:638 code:addons/stock/stock.py:2353
@@ -1389,7 +1389,7 @@ msgstr "包裹里面的东西应该在同一个库位"
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Exhausted Stock"
-msgstr ""
+msgstr "耗尽的库存"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -1406,19 +1406,19 @@ msgstr "序列号的过期日期"
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "Extra Move: "
-msgstr ""
+msgstr "额外调拨： "
 
 #. module: stock
 #: help:product.removal,method:0
 msgid "FIFO, LIFO..."
-msgstr ""
+msgstr "FIFO, LIFO..."
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:101
 #, python-format
 msgid "Filter by location..."
-msgstr ""
+msgstr "按位置筛选..."
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -1450,7 +1450,7 @@ msgstr "强制可用"
 #. module: stock
 #: field:product.category,removal_strategy_id:0
 msgid "Force Removal Strategy"
-msgstr ""
+msgstr "强制下架策略"
 
 #. module: stock
 #: help:product.template,track_incoming:0
@@ -1471,22 +1471,22 @@ msgstr "强制给所有包含将要进入客户库位的这个产品的移动指
 msgid ""
 "Forces to specify a Serial Number on each and every operation related to "
 "this product"
-msgstr ""
+msgstr "对此产品的每一个相关操作强制使用序列号"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Available Products"
-msgstr ""
+msgstr "预测的可用产品"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Exhausted Stock"
-msgstr ""
+msgstr "预测的耗尽库存"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
 msgid "Forecast Negative Stock"
-msgstr ""
+msgstr "预测的负数库存"
 
 #. module: stock
 #: field:product.product,virtual_available:0
@@ -1500,7 +1500,7 @@ msgid ""
 "In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
-msgstr ""
+msgstr "预测数量(计算方法：在手数量-将要出库的数量+将要入库的数量) \n对于一个库位来说，这包括了将要到达此库位或其子库位的产品。\n对于一个仓库来说，这包括了将要到达这个仓库的库位,或其子库位的产品。\n另外，这包括了要到达所有“内部”类型的库位的产品。"
 
 #. module: stock
 #: view:product.template:stock.product_template_kanban_stock_view
@@ -1585,7 +1585,7 @@ msgstr "一般IT供应商"
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr ""
+msgstr "给予更专业的分类，更高的优先级让他们显示在列表的顶部。"
 
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
@@ -1679,7 +1679,7 @@ msgid ""
 "squrounds) from supermarkets and grocery stores, in smaller quantities from "
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
-msgstr ""
+msgstr "冰淇淋可以被批量生产并且广泛存在于发展中国家。大纸盒(有纸板间隔)的冰淇淋可从超市和杂货店采购。较少数量可从冰淇淋店，便利店及牛奶吧购买。个人份可以从购物车或公共场所的冰淇淋连锁零售车购买。"
 
 #. module: stock
 #: field:stock.quant,name:0
@@ -1691,7 +1691,7 @@ msgstr "标识"
 msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
-msgstr ""
+msgstr "如果产品没有在正确的位置上，设置检查数量为0，并用正确的位置创建一条新的记录。"
 
 #. module: stock
 #: help:stock.picking,message_unread:0
@@ -1704,7 +1704,7 @@ msgstr "查看是否有需要留意的新信息。"
 msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
-msgstr ""
+msgstr "如果选中这里。当之前移动取消或被分割，此移动产生的相关移动也会被取消或分割"
 
 #. module: stock
 #: help:procurement.rule,propagate:0
@@ -1712,7 +1712,7 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr ""
+msgstr "如果选中这里。当(从下一个需求单生成的)移动的前一个移动被取消或分割，此移动产生的相关移动也会被取消或分割"
 
 #. module: stock
 #: help:stock.move,propagate:0
@@ -1722,12 +1722,12 @@ msgstr "如果选中，在取消本移动时也取消相关移动。"
 #. module: stock
 #: help:procurement.rule,route_id:0
 msgid "If route_id is False, the rule is global"
-msgstr ""
+msgstr "如果route_id设置为假，则该规则是全局的"
 
 #. module: stock
 #: help:stock.pack.operation,result_package_id:0
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "如果设置，此操作即包装在这个包裹内"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,active:0
@@ -1741,7 +1741,7 @@ msgstr "如果没有选中“可用”字段，那么将隐藏订货单记录且
 msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
-msgstr ""
+msgstr "如果active字段设置为假，允许您在不删除它的情况下隐藏它。"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -1749,14 +1749,14 @@ msgid ""
 "If there is no product but a source package, this means the source package "
 "was moved entirely.  If there is a product and a source package, the product"
 " was taken from the source package."
-msgstr ""
+msgstr "如果没有产品只有一个源包装，这意味着源包装是被整个移除的。如果有一个产品和一个源包装，该产品是从源包装取得的。"
 
 #. module: stock
 #: help:stock.quant,negative_move_id:0
 msgid ""
 "If this is a negative quant, this will be the move that caused this negative"
 " quant."
-msgstr ""
+msgstr "如果这是一个负的份。将会因这个负的份被移动。"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1768,7 +1768,7 @@ msgstr "如果这个装运单被分割，该字段将连接到包括了已经处
 #. module: stock
 #: help:stock.location.path,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "如果不选中，允许您隐藏规则而无需删除"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1785,7 +1785,7 @@ msgstr ""
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr ""
+msgstr "当采用供应商直接出货时，我们要更精确的了解目的地地址"
 
 #. module: stock
 #: field:product.product,incoming_qty:0 field:product.template,incoming_qty:0
@@ -1800,7 +1800,7 @@ msgstr "入库产品"
 #. module: stock
 #: field:stock.quant,in_date:0
 msgid "Incoming Date"
-msgstr ""
+msgstr "入库日期"
 
 #. module: stock
 #: field:stock.warehouse,reception_steps:0
@@ -1852,12 +1852,12 @@ msgstr "接收库位"
 msgid ""
 "Install the picking wave module which will help you grouping your pickings "
 "and processing them in batch"
-msgstr ""
+msgstr "安装stock_picking_wave模块，会帮助您分组分拣的货物并批量处理它们。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
 msgid "Inter Company Transit"
-msgstr ""
+msgstr "公司内部运输"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -2020,7 +2020,7 @@ msgstr "盘存参考"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "库存路径"
 
 #. module: stock
 #: field:stock.quant,inventory_value:0
@@ -2079,7 +2079,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Last 10 Done Operations"
-msgstr ""
+msgstr "最近10笔已完成的操作"
 
 #. module: stock
 #: field:stock.picking.type,last_done_picking:0
@@ -2153,12 +2153,12 @@ msgstr "延迟"
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr ""
+msgstr "延迟 (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "延迟转移"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2179,12 +2179,12 @@ msgstr "如果这个库位是公司间共享的，则此字段留空"
 #. module: stock
 #: help:stock.location.route,company_id:0
 msgid "Let this field empty if this route is shared between all companies"
-msgstr ""
+msgstr "如果路线需共享给所有公司这里请留空"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
 msgid "Link between stock moves and pack operations"
-msgstr ""
+msgstr "将库存调拨和包装操作关联"
 
 #. module: stock
 #: field:stock.pack.operation,linked_move_operation_ids:0

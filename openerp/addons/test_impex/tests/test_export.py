@@ -265,7 +265,7 @@ class test_selection_function(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [[None]])
 
     def test_value(self):
         # FIXME: selection functions export the *value* itself
@@ -278,7 +278,7 @@ class test_selection_function(CreatorCase):
         # fucking hell
         self.assertEqual(
             self.export(0),
-            [[False]])
+            [[None]])
 
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'

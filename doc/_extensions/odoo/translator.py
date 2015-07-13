@@ -356,6 +356,19 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         attrs = {'src': uri, 'class': 'img-responsive'}
         if 'alt' in node:
             attrs['alt'] = node['alt']
+        if 'align' in node:
+            if node['align'] == 'center':
+                attrs['class'] += ' center-block'
+            else:
+                doc = None
+                if node.source:
+                    doc = node.source
+                    if node.line:
+                        doc += ':%d' % node.line
+                self.builder.app.warn(
+                    "Unsupported alignment value \"%s\"" % node['align'],
+                    location=doc
+                )
         # todo: explicit width/height/scale?
         self.body.append(self.starttag(node, 'img', **attrs))
     def depart_image(self, node): pass
@@ -661,3 +674,6 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                 self.body.append('</%s>' % t)
         # Keep non-HTML raw text out of output:
         raise nodes.SkipNode
+
+    # internal node
+    def visit_substitution_definition(self, node): raise nodes.SkipNode

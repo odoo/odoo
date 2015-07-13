@@ -421,7 +421,7 @@
                 <search string="Search Sales Order">
                     <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sales Order Lines ready to be invoiced"/>
                     <separator/>
-                    <filter string="Confirmed" domain="[('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done'])]" name="confirmed"/>
+                    <filter string="Confirmed" domain="[('state', 'in', ['confirmed', 'done'])]" name="confirmed"/>
                     <separator/>
                     <filter string="My Sales Order Lines" icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     <field name="order_id"/>
