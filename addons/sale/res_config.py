@@ -16,13 +16,13 @@ class sale_configuration(osv.TransientModel):
         'timesheet': fields.boolean('Prepare invoices based on timesheets',
             help='For modifying account analytic view to show important data to project manager of services companies.'
                  'You can also view the report of account analytic summary user-wise as well as month wise.\n'
-                 '-This installs the module account_analytic_analysis.'),
-        'module_account_analytic_analysis': fields.boolean('Use contracts management',
+                 '-This installs the module sale_contract.'),
+        'module_sale_contract': fields.boolean('Use contracts management',
             help='Allows to define your customer contracts conditions: invoicing '
                  'method (fixed price, on timesheet, advance invoice), the exact pricing '
                  '(650€/day for a developer), the duration (one year support contract).\n'
                  'You will be able to follow the progress of the contract and invoice automatically.\n'
-                 '-It installs the account_analytic_analysis module.'),
+                 '-It installs the sale_contract module.'),
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
@@ -79,7 +79,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
     def onchange_timesheet(self, cr, uid, ids, timesheet, context=None):
         return {'value': {
             'timesheet': timesheet,
-            'module_account_analytic_analysis': timesheet,
+            'module_sale_contract': timesheet,
         }}
 
 class account_config_settings(osv.osv_memory):

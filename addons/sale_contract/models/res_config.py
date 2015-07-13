@@ -10,7 +10,7 @@ class sale_configuration(osv.osv_memory):
 
     _columns = {
         'group_template_required': fields.boolean("Mandatory use of templates.",
-            implied_group='account_analytic_analysis.group_template_required',
+            implied_group='sale_contract.group_template_required',
             help="Allows you to set the template field as required when creating an analytic account or a contract."),
         'time_unit': fields.many2one('product.uom', 'The default working time unit.'),
     }
@@ -25,7 +25,7 @@ class sale_configuration(osv.osv_memory):
             product = ir_model_data.xmlid_to_object(cr, uid, 'product.product_product_consultant')
             if product and product.exists():
                 res['time_unit'] = product.uom_id.id
-        res['timesheet'] = res.get('module_account_analytic_analysis')
+        res['timesheet'] = res.get('module_sale_contract')
         return res
 
     def set_sale_defaults(self, cr, uid, ids, context=None):

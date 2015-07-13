@@ -5,7 +5,7 @@
             <field name="name">account.analytic.account.form.expense.inherit</field>
             <field name="model">account.analytic.account</field>
             <field eval="60" name="priority"/>
-            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
+            <field name="inherit_id" ref="sale_contract.account_analytic_account_form_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="total"]' position='before'>
                     <tr>

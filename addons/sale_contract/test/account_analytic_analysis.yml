@@ -19,14 +19,14 @@
 -
   !record {model: account.analytic.account, id: contract_main}:
     partner_id: base.main_partner
-    template_id: account_analytic_analysis.contract_template
+    template_id: sale_contract.contract_template
     type: contract
 -
   I check that the contract inherited from data of the template
 -
   !python {model: account.analytic.account}: |
-    contract = self.browse(cr, uid, ref('account_analytic_analysis.contract_main'))
-    template = self.browse(cr, uid, ref('account_analytic_analysis.contract_template'))
+    contract = self.browse(cr, uid, ref('sale_contract.contract_main'))
+    template = self.browse(cr, uid, ref('sale_contract.contract_template'))
     assert template.recurring_interval == contract.recurring_interval, "The recurring interval of the contract does not match with the contract template"
     assert template.recurring_invoices == contract.recurring_invoices, "Invoice method of contract does not match with the contract template"
 -
@@ -39,8 +39,8 @@
 -
   !python {model: account.invoice}: |
     from openerp.tools import float_compare
-    aid = ref('account_analytic_analysis.contract_main')
-    ids = self.search(cr, uid, [('invoice_line_ids.account_analytic_id','=',aid)], context=context)
+    aid = ref('sale_contract.contract_main')
+    ids = self.search(cr, uid, [('invoice_line.analytic_account_id','=',aid)], context=context)
     assert len(ids)>=1, 'No invoice created for the contract'
     for invoice in self.browse(cr, uid, ids,context=context):
         assert float_compare(invoice.amount_untaxed, 150.0, precision_digits=2) == 0, "The invoice total is different than 150!"
