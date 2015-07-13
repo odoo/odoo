@@ -4,11 +4,13 @@ import openerp
 from openerp.exceptions import AccessError
 from openerp.osv import osv
 from lxml import etree, html
+from openerp import api
 
 
 class view(osv.osv):
     _inherit = 'ir.ui.view'
 
+    @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if not values:
             values = {}
