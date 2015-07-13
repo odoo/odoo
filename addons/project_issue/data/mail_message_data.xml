@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
         <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
+        <record id="module_install_notification" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="message_type">notification</field>
@@ -14,4 +14,4 @@ You can record issues, assign them to a responsible person, and keep track of th
 Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</p>]]></field>
         </record>
     </data>
-</openerp>
+</odoo>

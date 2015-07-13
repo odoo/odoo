@@ -1,10 +1,8 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- res.partner -->
-        <record model="ir.ui.view" id="res_partner_issues_button_view">
-            <field name="name">res.partner.issues.button.view</field>
+        <record id="res_partner_issues_button_view" model="ir.ui.view">
+            <field name="name">res.partner.issues.button.view.inherited</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="priority" eval="50"/>
@@ -21,5 +19,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>
