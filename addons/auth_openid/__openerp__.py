@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'OpenID Authentification',
+    'name': 'OpenID Authentication',
     'version': '2.0',
     'category': 'Tools',
     'description': """

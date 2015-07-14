@@ -105,4 +105,4 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
         request.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
         uid = request.session.authenticate(db, login, password)
         if not uid:
-            raise SignupError(_('Authentification Failed.'))
+            raise SignupError(_('Authentication Failed.'))
