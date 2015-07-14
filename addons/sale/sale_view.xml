@@ -295,7 +295,7 @@
                             <group>
                                 <group string="Sales Information" name="sales_person" groups="base.group_user">
                                     <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice', 'base.group_sale_salesman_all_leads']}"/>
-                                    <field name="team_id" options="{'no_create': True}" groups="base.group_multi_salesteams"/>
+                                    <field name="team_id" options="{'no_create': True}"/>
                                     <field name="client_order_ref"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
@@ -341,7 +341,7 @@
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
-                    <field name="team_id" string="Sales Team" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" string="Sales Team"/>
                     <field name="project_id"/>
                     <field name="product_id"/>
                     <filter string="My" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
@@ -638,10 +638,10 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"/>
                 </xpath>
                 <xpath expr="//group/filter[@name='status']" position="after">
-                    <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
             </field>
         </record>
@@ -654,7 +654,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id"/>
                     </xpath>
                 </data>
             </field>

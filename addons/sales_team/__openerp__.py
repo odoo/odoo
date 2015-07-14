@@ -14,7 +14,6 @@ Using this application you can manage Sales Team  with CRM and/or Sales
     'depends': ['base','mail'],
     'data': ['security/sales_team_security.xml',
              'security/ir.model.access.csv',
-             'res_config_view.xml',
              'sales_team_data.xml',
              'sales_team.xml',
              'sales_team_dashboard.xml',

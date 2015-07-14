@@ -12,7 +12,7 @@
                     </group>
                     <group string="Assign these opportunities to">
                         <field name="user_id" on_change="on_change_user(user_id, team_id, context)"/>
-                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id"/>
                     </group>
                     <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" nolabel="1">
@@ -26,7 +26,7 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="team_id" groups="base.group_multi_salesteams"/>
+                                <field name="team_id"/>
                             </tree>
                         </field>
                     </group>
@@ -55,7 +55,7 @@
                         <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
                     </group>
                     <group string="Assign opportunities to">
-                        <field name="team_id" groups="base.group_multi_salesteams"/>
+                        <field name="team_id"/>
                         <field name="user_ids" widget="many2many_tags"/>
                         <!-- Uncomment me in trunk -->
                         <!-- <field name="force_assignation" /> -->
@@ -73,7 +73,7 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="team_id" groups="base.group_multi_salesteams"/>
+                                <field name="team_id"/>
                             </tree>
                         </field>
                     </group>

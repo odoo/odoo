@@ -12,7 +12,7 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="team_id" groups="base.group_multi_salesteams"/>
+                <field name="team_id"/>
                 <field name="category2_id"/>
                 <field name="stage_id"/>
                 <field name="amount_revenue"/>
@@ -34,8 +34,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="user_id"/>
-                    <field name="team_id" widget="selection"
-                            groups="base.group_multi_salesteams"/>
+                    <field name="team_id" widget="selection"/>
                     <field name="category2_id" />
                     <field name="stage_id"/>
                     <field name="amount_revenue"/>
@@ -56,8 +55,7 @@
             <graph string="Cases by Teams and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
                 <field name="amount_revenue" operator="+"/>
-                <field name="team_id" group="True"
-                        groups="base.group_multi_salesteams"/>
+                <field name="team_id" group="True"/>
             </graph>
         </field>
     </record>
@@ -73,7 +71,7 @@
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"/>
                     <field name="category2_id"/>
                </search>
             </field>
@@ -99,7 +97,7 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="team_id" groups="base.group_multi_salesteams"/>
+                <field name="team_id"/>
                 <field name="stage_id"/>
                 <field name="amount_revenue"/>
                 <field name="nbr"/>
@@ -120,8 +118,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="user_id"/>
-                    <field name="team_id" widget="selection"
-                            groups="base.group_multi_salesteams"/>
+                    <field name="team_id" widget="selection"/>
                     <field name="stage_id"/>
                     <field name="amount_revenue"/>
                     <field name="nbr" />
@@ -141,7 +138,7 @@
             <graph string="Cases by Team and Stage" type="bar" orientation="horizontal">
                 <field name="stage_id"/>
                 <field name="amount_revenue" operator="+"/>
-                <field name="team_id" group="True" groups="base.group_multi_salesteams"/>
+                <field name="team_id" group="True"/>
             </graph>
         </field>
     </record>
@@ -157,7 +154,7 @@
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"/>
                </search>
             </field>
         </record>
@@ -182,7 +179,7 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="team_id" groups="base.group_multi_salesteams"/>
+                <field name="team_id"/>
                 <field name="categ_id"/>
                 <field name="stage_id"/>
                 <field name="nbr"/>
@@ -203,7 +200,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="user_id"/>
-                    <field name="team_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" widget="selection"/>
                     <field name="categ_id"/>
                     <field name="stage_id"/>
                     <field name="nbr" />
@@ -225,7 +222,7 @@
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"/>
                </search>
             </field>
         </record>
@@ -239,7 +236,7 @@
             <graph string="Cases by Team, Category and Stage" type="bar" orientation="horizontal">
                 <field name="categ_id"/>
                 <field name="nbr" operator="+"/>
-                <field name="team_id" group="True" groups="base.group_multi_salesteams"/>
+                <field name="team_id" group="True"/>
             </graph>
         </field>
     </record>
@@ -264,7 +261,7 @@
                 <field name="name"/>
                 <field name="month"/>
                 <field name="user_id"/>
-                <field name="team_id" groups="base.group_multi_salesteams"/>
+                <field name="team_id"/>
                 <field name="categ_id"/>
                 <field name="category2_id"/>
                 <field name="stage_id"/>
@@ -286,7 +283,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="user_id"/>
-                    <field name="team_id"  widget="selection" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"  widget="selection"/>
                     <field name="categ_id"/>
                     <field name="category2_id"/>
                     <field name="stage_id"/>
@@ -309,7 +306,7 @@
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
-                    <field name="team_id" groups="base.group_multi_salesteams"/>
+                    <field name="team_id"/>
                </search>
             </field>
     </record>
@@ -323,7 +320,7 @@
             <graph string="Cases by Team, Category and Type" type="bar" orientation="horizontal">
                 <field name="category2_id"/>
                 <field name="nbr" operator="+"/>
-                <field name="team_id" group="True" groups="base.group_multi_salesteams"/>
+                <field name="team_id" group="True"/>
             </graph>
         </field>
     </record>
