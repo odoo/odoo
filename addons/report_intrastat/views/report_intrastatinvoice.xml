@@ -3,6 +3,7 @@
 <data>
 <template id="report_intrastatinvoice_document">
     <t t-call="report.external_layout">
+        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
@@ -143,8 +144,8 @@
 
 <template id="report_intrastatinvoice">
     <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'report_intrastat.report_intrastatinvoice_document')"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report_intrastat.report_intrastatinvoice_document" t-lang="o.partner_id.lang"/>
         </t>
     </t>
 </template>

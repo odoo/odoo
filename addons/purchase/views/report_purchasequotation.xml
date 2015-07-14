@@ -3,6 +3,7 @@
 <data>
 <template id="report_purchasequotation_document">
     <t t-call="report.external_layout">
+        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
         <div class="page">
             <div class="oe_structure"/>
 
@@ -61,8 +62,8 @@
 
 <template id="report_purchasequotation">
     <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'purchase.report_purchasequotation_document')"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="purchase.report_purchasequotation_document" t-lang="o.partner_id.lang"/>
         </t>
     </t>
 </template>
