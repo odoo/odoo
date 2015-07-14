@@ -229,10 +229,12 @@ class task(osv.osv):
     def onchange_project(self, cr, uid, ids, project_id, context=None):
         result = super(task, self).onchange_project(cr, uid, ids, project_id, context=context)
         if not project_id:
+            result['value']['analytic_account_id'] = False
             return result
         if 'value' not in result:
             result['value'] = {}
         project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
+        result['value']['analytic_account_id'] = project.analytic_account_id.id
         result['value']['contract_state'] = project.analytic_account_id.state
         return result
 
@@ -252,3 +254,8 @@ class account_analytic_line(osv.osv):
     _columns = {
         'task_id' : fields.many2one('project.task', 'Task'),
     }
+
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0, is_timesheet=False, context=None):
+        if not context.get('default_account_id') and context.get('field_parent') in ['task_id', 'issue_id']:
+            raise UserError(_('To fill a Timesheet you need to select a Project .'))
+        return super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, unit_amount, is_timesheet, context)

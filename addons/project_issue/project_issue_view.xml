@@ -32,8 +32,9 @@
                             <field name="priority" groups="base.group_user" widget="priority"/>
                         </group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                            <field name="email_from"/>
+                            <field name="project_type" invisible="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" attrs="{'invisible':[('project_type','=', 'internal')]}"/>
+                            <field name="email_from" attrs="{'invisible':[('project_type','=', 'internal')]}"/>
                             <label for="project_id"/>
                             <div name="project">
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>

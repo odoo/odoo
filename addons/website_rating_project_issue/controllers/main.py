@@ -9,11 +9,11 @@ class WebsiteRatingProject(http.Controller):
 
     @http.route(['/project/rating/'], type='http', auth="public", website=True)
     def index(self, **kw):
-        projects = request.env['project.project'].search([('is_visible_happy_customer', '=', 1)])
+        projects = request.env['project.project'].search([('published', '=', 1)])
         values = {'projects' : projects}
         return request.website.render('website_rating_project_issue.index', values)
 
-    @http.route(['''/project/rating/<model("project.project", "[('is_visible_happy_customer','=',1)]"):project>'''], type='http', auth="public", website=True)
+    @http.route(['''/project/rating/<model("project.project", "[('published','=',1)]"):project>'''], type='http', auth="public", website=True)
     def page(self, project=None, **kw):
         # create domain for rating
         issues = request.env['project.issue'].search([('project_id', '=', project.id)])

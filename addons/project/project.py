@@ -113,6 +113,12 @@ class project(osv.osv):
         """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
 
+    def action_open_analytic_accounts(self, cr, uid, ids, context=None):
+        action_analytic_account = self.pool['ir.actions.act_window'].for_xml_id(
+            cr, uid, 'analytic', 'action_account_analytic_account_form', context=context)
+        action_analytic_account['domain'] = [('id', '=', self.browse(cr, uid, ids[0], context=context).analytic_account_id.id)]
+        return action_analytic_account
+
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
         return [('public', _('Public project')),
@@ -137,7 +143,6 @@ class project(osv.osv):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
-
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
@@ -152,8 +157,8 @@ class project(osv.osv):
             ondelete="cascade", required=True, auto_join=True),
         'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
-        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
         'task_count': fields.function(_task_count, type='integer', string="Tasks",),
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=[('stage_id.fold', '=', False)]),
@@ -174,16 +179,16 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('template', 'Template'),
-                                   ('draft','New'),
-                                   ('open','In Progress'),
-                                   ('cancelled', 'Cancelled'),
-                                   ('pending','Pending'),
-                                   ('close','Closed')],
-                                  'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
-        )
+        ),
+        'project_type': fields.selection([('internal', 'Internal'),
+                                        ('single_customer','Single Customer'),
+                                        ('multi_customers','Multi Customers'),],
+                                        'Project Type', required=True, help="Hold the type of project\n"
+                                        "- Internal : No invoice management\n"
+                                        "- Single Customer : select a customer on the project\n"
+                                        "- Multi Customers : select a customer on related tasks or issues"),
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -197,11 +202,11 @@ class project(osv.osv):
         'active': True,
         'type': 'contract',
         'label_tasks': 'Tasks',
-        'state': 'open',
         'sequence': 10,
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'employees',
+        'project_type': 'internal',
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -215,12 +220,6 @@ class project(osv.osv):
     _constraints = [
         (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
     ]
-
-    def set_template(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=False, context=context)
-
-    def reset_project(self, cr, uid, ids, context=None):
-        return self.setActive(cr, uid, ids, value=True, context=context)
 
     def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
         """ copy and map tasks from old to new project """
@@ -247,61 +246,20 @@ class project(osv.osv):
         if not default.get('name'):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
-        self.map_tasks(cr, uid, id, res, context=context)
         return res
 
-    def duplicate_template(self, cr, uid, ids, context=None):
-        context = dict(context or {})
-        data_obj = self.pool.get('ir.model.data')
-        result = []
-        for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False)
-            context.update({'analytic_project_copy': True})
-            new_date_start = time.strftime('%Y-%m-%d')
-            new_date_end = False
-            if proj.date_start and proj.date:
-                start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
-                end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
-                new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
-            context.update({'copy':True})
-            new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name':_("%s (copy)") % (proj.name),
-                                    'state':'open',
-                                    'date_start':new_date_start,
-                                    'date':new_date_end,
-                                    'parent_id':parent_id}, context=context)
-            result.append(new_id)
-
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
-            parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
-            if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
-
-        if result and len(result):
-            res_id = result[0]
-            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
-            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
-            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project')
-            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
-            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
-            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
-            return {
-                'name': _('Projects'),
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'project.project',
-                'view_id': False,
-                'res_id': res_id,
-                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': search_view['res_id'],
-            }
+    def copy_with_task(self, cr, uid, ids, default=None, context=None):
+        res =[]
+        for id in ids:
+            project = self.copy(cr, uid, id, default, context)
+            self.map_tasks(cr, uid, id, project, context=context)
+            res.append(project)
+        return res
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
         task_obj = self.pool.get('project.task')
         for proj in self.browse(cr, uid, ids, context=None):
-            self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
@@ -396,11 +354,14 @@ class task(osv.osv):
         return {'value': {'remaining_hours': planned - effective}}
 
     def onchange_project(self, cr, uid, id, project_id, context=None):
+        vals = {'partner_id': False}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
-            if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+            vals.update({
+                'project_type': project.project_type,
+                'partner_id': project.partner_id and project.partner_id.id
+            })
+        return {'value': vals}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}
@@ -430,7 +391,7 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = True
             if task.project_id:
-                if task.project_id.active == False or task.project_id.state == 'template':
+                if task.project_id.active == False:
                     res[task.id] = False
         return res
 
@@ -478,6 +439,7 @@ class task(osv.osv):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
         'displayed_image_id': fields.function(_compute_displayed_image, relation='ir.attachment', type="many2one", string='Attachment'),
+        'project_type': fields.related('project_id', 'project_type', type='char', string='Project Type'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,

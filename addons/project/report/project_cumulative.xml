@@ -64,7 +64,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
             <field name="filter" eval="False"/>
-            <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
+            <field name="context">{"search_default_this_month": 1}</field>
             <field name="view_id"></field>  <!-- force empty -->
         </record>
         <record id="action_view_task_history_cumulative_filter" model="ir.actions.act_window">
@@ -74,7 +74,6 @@
             <field name="view_mode">pivot,graph</field>
             <field name="filter" eval="False"/>
             <field name="context">{
-                'search_default_open':1,
                 'search_default_this_month': 1,
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,

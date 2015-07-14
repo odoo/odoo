@@ -25,7 +25,8 @@ class project_issue(osv.osv):
                 'project.task': (_get_issue_task, ['progress'], 10),
             }),
         'timesheet_ids': fields.one2many('account.analytic.line', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'), 
+        'analytic_account_id': fields.related('project_id', 'analytic_account_id',
+            type='many2one', relation='account.analytic.account', string='Analytic Account', store=True),
         'contract_state': fields.related('analytic_account_id', 'state', string='Contract Status', type='selection', selection=analytic.ANALYTIC_ACCOUNT_STATE), 
     }
     
