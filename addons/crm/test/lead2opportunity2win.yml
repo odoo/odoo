@@ -64,6 +64,17 @@
     assert opp.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert opp.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
+  I loose the second opportunity
+-
+  !python {model: crm.lead}: |
+    self.case_mark_lost(cr, uid, [ref("crm_case_2")])
+-
+  I check details of the opportunity after the loose
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_2'))
+    assert (lead.probability == 0.0) and not lead.active, "Revenue probability should be 0.0!"
+-
   I confirm review needs meeting.
 -
   !python {model: calendar.event}: |

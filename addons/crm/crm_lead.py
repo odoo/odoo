@@ -163,7 +163,7 @@ class crm_lead(format_address, osv.osv):
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Opportunity', required=True, select=1),
-        'active': fields.boolean('Active', required=False),
+        'active': fields.boolean('Archived', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
@@ -179,7 +179,7 @@ class crm_lead(format_address, osv.osv):
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities", required=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
@@ -261,8 +261,6 @@ class crm_lead(format_address, osv.osv):
         if not stage.on_change:
             return {'value': {}}
         vals = {'probability': stage.probability}
-        if stage.on_change and (stage.probability >= 100 or (stage.probability == 0 and stage.sequence > 1)):
-            vals['date_closed'] = fields.datetime.now()
         return {'value': vals}
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -291,7 +289,7 @@ class crm_lead(format_address, osv.osv):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, user_id=user_id, context=context)
-        if user_id and not team_id and self.pool['res.users'].has_group(cr, uid, 'base.group_multi_salesteams'):
+        if user_id and not team_id:
             team_ids = self.pool.get('crm.team').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if team_ids:
                 team_id = team_ids[0]
@@ -340,6 +338,30 @@ class crm_lead(format_address, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
+
+    def case_mark_lost(self, cr, uid, ids, context=None):
+        """ Mark the case as lost: probability=0 and not active
+        """
+        return self.write(cr, uid, ids, {'probability': 0, 'active': False}, context=context)
+
+    def case_mark_active(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'active': True}, context=context)
+
+    def case_mark_won(self, cr, uid, ids, context=None):
+        """ Mark the case as won: probability=100
+        """
+        stages_leads = {}
+        for lead in self.browse(cr, uid, ids, context=context):
+            stage_id = self.stage_find(cr, uid, [lead], lead.team_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
+            if stage_id:
+                if stages_leads.get(stage_id):
+                    stages_leads[stage_id].append(lead.id)
+                else:
+                    stages_leads[stage_id] = [lead.id]
+        for stage_id, lead_ids in stages_leads.items():
+            self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
+        self.write(cr, uid, lead_ids, {'probability': 100}, context=context)
+        return True
 
     def log_next_activity_1(self, cr, uid, ids, context=None):
         return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
@@ -573,7 +595,7 @@ class crm_lead(format_address, osv.osv):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
-        final_stage_domain = ['|', '|', ('stage_id.on_change', '=', False), ('stage_id.probability', 'not in', [0, 100]), ('stage_id.sequence', '<=', 1)]
+        final_stage_domain = [('active', '=', True)]
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
@@ -681,8 +703,7 @@ class crm_lead(format_address, osv.osv):
             partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
-            # TDE: was if lead.state in ('done', 'cancel'):
-            if (lead.probability == 100 or lead.probability == 0) and lead.stage_id.on_change and lead.stage_id.sequence > 1:
+            if not lead.active:
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, team_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
@@ -868,6 +889,8 @@ class crm_lead(format_address, osv.osv):
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
+        if (vals.get('probability',0) >= 100) or not vals.get('active', True):
+            vals['date_closed'] = fields.datetime.now()
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -900,11 +923,11 @@ class crm_lead(format_address, osv.osv):
 
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
-        if 'stage_id' in init_values and record.probability == 100 and record.stage_id and record.stage_id.on_change:
+        if 'stage_id' in init_values and (record.probability == 100):
             return 'crm.mt_lead_won'
-        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.on_change and record.stage_id.sequence > 1:
+        elif 'stage_id' in init_values and (record.probability == 0) and not record.active:
             return 'crm.mt_lead_lost'
-        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.sequence <= 1:
+        elif 'stage_id' in init_values and (record.probability == 0) and record.stage_id and record.stage_id.sequence <= 1:
             return 'crm.mt_lead_create'
         elif 'stage_id' in init_values:
             return 'crm.mt_lead_stage'

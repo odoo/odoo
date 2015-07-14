@@ -37,27 +37,6 @@ class crm_team(osv.Model):
         if (not vals) or (not len(vals.get('stage_ids', []))):
             self.pool.get('crm.stage').create(
                 cr, uid, {
-                    'name': _('New'),
-                    'sequence': 0,
-                    'on_change': False,
-                    'team_ids': [(6, 0, [team_id])],
-                    'fold': False,
-                    'type': 'both'
-                }, context=context
-            )
-            self.pool.get('crm.stage').create(
-                cr, uid, {
-                    'name': _('Lost'),
-                    'sequence': 19,
-                    'probability': 0,
-                    'on_change': True,
-                    'team_ids': [(6, 0, [team_id])],
-                    'fold': True,
-                    'type': 'both'
-                }, context=context
-            )
-            self.pool.get('crm.stage').create(
-                cr, uid, {
                     'name': _('Won'),
                     'sequence': 20,
                     'probability': 100,
