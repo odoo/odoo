@@ -1637,19 +1637,22 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             this.$(".oe_form_text_content").text(txt);
         }
     },
+    get_editing_session: function(show_value) {
+        var mode = this.options.mode || 'xml';
+        var editingSession = new ace.EditSession(show_value);
+        editingSession.setMode("ace/mode/"+mode);
+        editingSession.setUndoManager(new ace.UndoManager());
+        return editingSession;
+    },
     display_view: function (show_value) {
         var self = this;
-        var editingSession = new ace.EditSession(show_value);
-        editingSession.setMode("ace/mode/xml");
-        editingSession.setUndoManager(new ace.UndoManager());
+        var editingSession = this.get_editing_session(show_value);
         this.aceEditor.on("blur", function() {
             self.save_value(editingSession);
         });
         this.aceEditor.setSession(editingSession);
         //this.aceEditor.setOption("showInvisibles", true);
-
-        console.log("this.aceEditor.textInput is :::: ", this.aceEditor.textInput)
-        this.aceEditor.textInput.getElement().tabIndex = 2;
+        //this.aceEditor.textInput.getElement().tabIndex = 2;
     },
     save_value: function(editingSession) {
         if (editingSession.getUndoManager().hasUndo()) {
