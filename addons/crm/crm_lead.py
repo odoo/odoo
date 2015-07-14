@@ -179,7 +179,10 @@ class crm_lead(format_address, osv.osv):
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
             help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                     "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."),
-        'type': fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', select=True, help="Type is used to separate Leads and Opportunities"),
+        'type': fields.selection(
+            [('lead', 'Lead'), ('opportunity', 'Opportunity')],
+            string='Type', select=True, required=True,
+            help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
@@ -890,7 +893,7 @@ class crm_lead(format_address, osv.osv):
             context['default_type'] = vals.get('type')
         if vals.get('team_id') and not context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
 
         # context: no_log, because subtype already handle this
@@ -901,7 +904,7 @@ class crm_lead(format_address, osv.osv):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
         # stage change with new stage: update probability and date_closed
         if vals.get('stage_id') and not vals.get('probability'):
