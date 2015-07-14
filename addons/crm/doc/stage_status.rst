@@ -15,9 +15,9 @@ following models are impacted:
  - ``crm.lead`` now use only stages. However conventions still exist about
    'New', 'Won' and 'Lost' stages. Those conventions are:
 
-   - ``new``: ``stage_id and stage_id.sequence = 1``
-   - ``won``: ``stage_id and stage_id.probability = 100 and stage_id.on_change = True``
-   - ``lost``: ``stage_id and stage_id.probability = 0 and stage_id.on_change = True
+   - ``new``: ``first stage
+   - ``won``: ``probability = 100
+   - ``lost``: ``probability = 0 and active=False
      and stage_id.sequence != 1``
 
  - ``crm.case.stage`` do not have any ``state`` field anymore. 
