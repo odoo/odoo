@@ -8,14 +8,6 @@
     description: This is the description of the test new lead.
     team_id: sales_team.team_sales_department
 -
-  I check default stage of lead.
--
-  !python {model: crm.lead}: |
-    stage = self.pool.get('crm.stage').search_read(cr,uid,[('sequence','=',1)],['id'],context)[0]
-    lead = self.browse(cr, uid, ref('test_crm_lead_new'))
-    stage_id = self.stage_find(cr, uid , [lead], lead.team_id.id or False,[], context)
-    assert stage_id == stage['id'], "Default stage of lead is incorrect!"
--
   I change type from lead to opportunity.
 -
   !python {model: crm.lead}: |
