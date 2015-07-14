@@ -117,8 +117,8 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
-                    <field name="partner_id" groups="base.group_user"/>
-                    <field name="commercial_partner_id" invisible="1"/>
+                   <field name="partner_id" groups="base.group_user"/>
+                   <field name="commercial_partner_id" invisible="1"/>
                    <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="reference" invisible="1"/>
@@ -632,7 +632,6 @@
               </p>
             </field>
         </record>
-        view_account_invoice_supplier_search
 
         <record id="action_invoice_tree2_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
