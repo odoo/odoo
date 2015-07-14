@@ -145,7 +145,7 @@
                 }
                 var missing = odoo.__DEBUG__.get_missing_jobs();
                 var failed = odoo.__DEBUG__.get_failed_jobs();
-                console.warn('Warning: Some modules could not be started !'+
+                console.error('Warning: Some modules could not be started !'+
                     '\nMissing dependencies: ', !missing.length ? null : missing,
                     '\nFailed modules:       ', _.isEmpty(failed) ? null : _.map(failed, function (job) {return job.name;}),
                     '\nUnloaded modules:     ', _.isEmpty(debug_jobs) ? null : debug_jobs);

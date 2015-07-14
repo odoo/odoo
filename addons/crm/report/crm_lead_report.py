@@ -5,12 +5,11 @@ from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 
-
-class crm_opportunity_report(osv.Model):
-    """ CRM Opportunity Analysis """
-    _name = "crm.opportunity.report"
+class crm_lead_report(osv.Model):
+    """ CRM Lead Analysis """
+    _name = "crm.lead.report"
     _auto = False
-    _description = "CRM Opportunity Analysis"
+    _description = "CRM Lead Analysis"
     _rec_name = 'date_deadline'
     _inherit = ["utm.mixin"]
 
@@ -29,12 +28,11 @@ class crm_opportunity_report(osv.Model):
 
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
-        'nbr_activities': fields.integer('# of Activities', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
-        'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
+        'planned_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),  # TDE FIXME master: rename into total_revenue
+        'probable_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),  # TDE FIXME master: rename into expected_revenue
         'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="[('team_ids', '=', team_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -43,18 +41,21 @@ class crm_opportunity_report(osv.Model):
             ('lead','Lead'),
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
-        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', readonly=True),
-        'date_conversion': fields.datetime('Conversion Date', readonly=True),
     }
 
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'crm_opportunity_report')
+
+        """
+            CRM Lead Report
+            @param cr: the current row, from the database cursor
+        """
+        tools.drop_view_if_exists(cr, 'crm_lead_report')
         cr.execute("""
-            CREATE OR REPLACE VIEW crm_opportunity_report AS (
+            CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
-                    c.id,
+                    id,
                     c.date_deadline,
-                    count(c.id) as nbr_cases,
+                    count(id) as nbr_cases,
 
                     c.date_open as opening_date,
                     c.date_closed as date_closed,
@@ -68,29 +69,19 @@ class crm_opportunity_report(osv.Model):
                     c.company_id,
                     c.priority,
                     c.team_id,
-                    activity.nbr_activities,
                     c.campaign_id,
                     c.source_id,
                     c.medium_id,
                     c.partner_id,
                     c.country_id,
-                    c.planned_revenue as total_revenue,
-                    c.planned_revenue*(c.probability/100) as expected_revenue,
+                    c.planned_revenue as planned_revenue,
+                    c.planned_revenue*(c.probability/100) as probable_revenue,
                     c.create_date as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
-                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
-                    c.lost_reason,
-                    c.date_conversion as date_conversion
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM
-                    "crm_lead" c
-                LEFT JOIN (
-                    SELECT m.res_id, COUNT(*) nbr_activities
-                    FROM "mail_message" m
-                    WHERE m.model = 'crm.lead'
-                    GROUP BY m.res_id ) activity
-                ON
-                    (activity.res_id = c.id)
+                    crm_lead c
                 WHERE c.active = 'true'
-                GROUP BY c.id, activity.nbr_activities
+                GROUP BY c.id
             )""")

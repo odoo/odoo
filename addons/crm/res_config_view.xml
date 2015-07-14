@@ -34,8 +34,10 @@
                             <label for="id" string="Leads Email Alias"/>
                             <div>
                                 <div>
-                                    <label string="Each sales team has an email alias that can be defined on the sales team form view" class="oe_inline oe_form_label_help oe_align_right"/>
-                                    <span class="oe_inline">
+                                    <span attrs="{'invisible': [('group_multi_salesteams', '!=', True)]}">
+                                        <label string="Each sales team has an email alias that can be defined on the sales team form view" class="oe_inline oe_form_label_help oe_align_right"/>
+                                    </span>
+                                    <span class="oe_inline" attrs="{'invisible': [('group_multi_salesteams', '!=', False)]}">
                                         <label string="Automatically create new leads when an email is sent to the following alias :" class="oe_inline oe_form_label_help oe_align_right"/>
                                         <field name="alias_prefix" class="oe_inline"/>
                                         <span>@</span>

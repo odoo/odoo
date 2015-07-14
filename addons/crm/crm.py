@@ -41,16 +41,9 @@ class crm_stage(osv.Model):
                                  help="This field is used to distinguish stages related to Leads from stages related to Opportunities, or to specify stages available for both types."),
     }
 
-    # When creating a column from the opportunity kanban, assign columnto right team
-    def default_team_ids(self, cr, uid, context=None):
-        if context.get('default_team_id'):
-            return [(6,0, [context.get('default_team_id')])]
-        return []
-
     _defaults = {
         'sequence': 1,
         'probability': 1.0,
-        "team_ids": default_team_ids,
         'fold': False,
         'type': 'both',
     }

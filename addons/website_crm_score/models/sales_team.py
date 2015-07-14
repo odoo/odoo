@@ -138,7 +138,8 @@ class crm_team(osv.osv):
             haslead = False
             for salesteam in all_salesteams:
                 domain = safe_eval(salesteam['score_team_domain'], evaluation_context)
-                domain.extend([('team_id', '=', False), ('user_id', '=', False), ('active','=',True)])
+                domain.extend([('team_id', '=', False), ('user_id', '=', False)])
+                domain.extend(['|', ('stage_id.on_change', '=', False), '&', ('stage_id.probability', '!=', 0), ('stage_id.probability', '!=', 100)])
                 leads = self.env["crm.lead"].search(domain, limit=50)
                 haslead = haslead or (len(leads) == 50 and not dry)
 
