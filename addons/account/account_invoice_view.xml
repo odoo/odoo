@@ -118,6 +118,7 @@
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="commercial_partner_id" invisible="1"/>
+                    <field string="Supplier Invoice Number" name="supplier_invoice_number" attrs="{'invisible:[('type','!=','in_invoice')]'}"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="reference" invisible="1"/>
@@ -464,6 +465,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
+                    <field string="Supplier Invoice Number" name="supplier_invoice_number" attrs="{'invisible:[('type','!=','in_invoice')]'}"/>
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
@@ -476,7 +478,7 @@
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
                     <group expand="0" string="Group By">
-                    	<filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter name="group_by_partner_id" string="Partner" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <separator/>
