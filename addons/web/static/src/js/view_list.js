@@ -285,7 +285,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // Pager
         if (!this.$pager) {
             this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
-            if (this.options.$buttons) {
+            if (this.options.$pager) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
                 this.$el.find('.oe_list_pager').replaceWith(this.$pager);
