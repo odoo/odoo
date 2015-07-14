@@ -30,5 +30,5 @@
 -
   !python {model: crm.lead}: |
     opp = self.browse(cr, uid, ref('test_crm_lead_new'))
-    assert opp.probability=100, "A won opportunity should be probability=100"
+    assert opp.probability==100, "A won opportunity should be probability=100"
 
