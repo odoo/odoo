@@ -28,7 +28,7 @@ Main Features
 * Allows the user to create an invoice automatically
 * Refund previous sales
     """,
-    'depends': ['sale_stock', 'barcodes'],
+    'depends': ['sale_stock', 'barcodes', 'web_planner'],
     'data': [
         'data/report_paperformat.xml',
         'data/default_barcode_patterns.xml',
@@ -63,6 +63,7 @@ Main Features
         'views/report_userlabel.xml',
         'views/point_of_sale.xml',
         'point_of_sale_dashboard.xml',
+        'web_planner_data.xml',
     ],
     'demo': [
         'point_of_sale_demo.xml',
