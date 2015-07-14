@@ -1,9 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    @author -  Fekete Mihai <feketemihai@gmail.com>
-#    Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro). 
-#    Copyright (C) 2009 (<http://www.filsystem.ro>)
+#     Author:  Fekete Mihai <feketemihai@gmail.com>, Tatár Attila <atta@nvm.ro>
+#    Copyright (C) 2011-2014 TOTAL PC SYSTEMS (http://www.erpsystems.ro).
+#    Copyright (C) 2014 Fekete Mihai
+#    Copyright (C) 2014 Tatár Attila
+#     Based on precedent versions developed by Fil System, Fekete Mihai
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,6 +43,8 @@ Romanian accounting chart and localization.
               'account_tax_template.xml',
               'fiscal_position_template.xml',
               'l10n_chart_ro_wizard.xml',
+              'res.country.state.csv',
+              'res.bank.csv',
               ],
     "installable": True,
 }

@@ -141,7 +141,8 @@ class CompanyLDAP(osv.osv):
         try:
             conn = self.connect(conf)
             ldap_password = conf['ldap_password'] or ''
-            conn.simple_bind_s(conf['ldap_binddn'] or '', ldap_password.encode('utf-8'))
+            ldap_binddn = conf['ldap_binddn'] or ''
+            conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
                                      filter, retrieve_attributes, timeout=60)
             conn.unbind()
