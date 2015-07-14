@@ -114,12 +114,12 @@
         <record id="invoice_tree" model="ir.ui.view">
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="commercial_partner_id" invisible="1"/>
-                    <field string="Supplier Invoice Number" name="supplier_invoice_number" attrs="{'invisible:[('type','!=','in_invoice')]'}"/>
-                    <field name="date_invoice"/>
+                   <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="reference" invisible="1"/>
                     <field name="name" invisible="1"/>
@@ -463,9 +463,9 @@
         <record id="view_account_invoice_filter" model="ir.ui.view">
             <field name="name">account.invoice.select</field>
             <field name="model">account.invoice</field>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field string="Supplier Invoice Number" name="supplier_invoice_number" attrs="{'invisible:[('type','!=','in_invoice')]'}"/>
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
@@ -486,6 +486,30 @@
                         <filter string="Due Month" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_invoice_supplier_tree">
+            <field name="name">view.account_invoice.supplier.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="invoice_tree" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_invoice']" position="before">
+                    <field string="Supplier Invoice Number" name="supplier_invoice_number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_account_invoice_supplier_search">
+            <field name="name">view.account.invoice.supplier.search</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="view_account_invoice_filter" />
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="/search/field[@name='number']" position="before">
+                    <field name="supplier_invoice_number"/>
+                </xpath>
             </field>
         </record>
 
@@ -513,6 +537,7 @@
         <record id="action_invoice_refund_out_tree_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree"/>
             <field name="act_window_id" ref="action_invoice_refund_out_tree"/>
         </record>
 
@@ -575,6 +600,7 @@
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
 
@@ -595,7 +621,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_supplier_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new supplier invoice.
@@ -606,6 +632,21 @@
               </p>
             </field>
         </record>
+        view_account_invoice_supplier_search
+
+        <record id="action_invoice_tree2_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_invoice_supplier_tree"/>
+            <field name="act_window_id" ref="action_invoice_tree2"/>
+        </record>
+
+        <record id="action_invoice_tree2_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="action_invoice_tree2"/>
+        </record>
+
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
         <record id="action_invoice_tree3" model="ir.actions.act_window">
@@ -633,6 +674,7 @@
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree"/>
             <field name="act_window_id" ref="action_invoice_tree3"/>
         </record>
 
@@ -662,6 +704,19 @@
               </p>
             </field>
         </record>
+        <record id="action_invoice_tree4_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_invoice_supplier_tree"/>
+            <field name="act_window_id" ref="action_invoice_tree4"/>
+        </record>
+
+        <record id="action_invoice_tree4_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="action_invoice_tree4"/>
+        </record>
+
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
         <act_window
