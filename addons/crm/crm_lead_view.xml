@@ -106,13 +106,15 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object"/>
-                    <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object"/>
-                    <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object"/>
+                    <button name="case_mark_unactive" string="Archive" attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}" type="object" class="oe_highlight"/>
+                    <button name="case_mark_won" string="Mark Won" attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                    <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object" class="oe_highlight"/>
+                    <button name="case_mark_active" string="Unarchive" attrs="{'invisible': [('active', '=', True)]}" type="object" class="oe_highlight"/>
+                    <div class="oe_crm_won" attrs="{'invisible': ['|', ('probability', '&lt;', 100), ('active', '=', True)]}">Won</div>
+                    <div class="oe_crm_lost" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
                     <field name="stage_id" widget="statusbar" clickable="True"
-                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
-                            options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
-                            on_change="onchange_stage_id(stage_id)"/>
+                        options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
+                        domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
