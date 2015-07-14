@@ -482,7 +482,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.is_slow_open = true;
         if (this.current_mode() === 'month') {
             event_obj['start_date'].addHours(8);
-            if (event_obj._length === 1) {
+            var timediff = Math.abs(event_obj['end_date'] - event_obj['start_date']);
+            if (timediff <= 24*60*60*1000) {  // If it spans one day or less
                 event_obj['end_date'] = new Date(event_obj['start_date']);
                 event_obj['end_date'].addHours(1);
             } else {

@@ -147,6 +147,16 @@ class stock_partial_picking(osv.osv_memory):
                 return {'cost': cost, 'currency': company_currency}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
+    def _partial_move_for(self, cr, uid, move, context=None):
+        partial_move = super(stock_partial_picking, self)._partial_move_for(cr, uid, move, context=context)
+        if move.picking_id.purchase_id and move.purchase_line_id:
+            pur_currency = move.purchase_line_id.order_id.currency_id.id
+            partial_move.update({
+                'currency': pur_currency,
+                'cost': move.purchase_line_id.price_unit
+            })
+        return partial_move
+
     def __get_help_text(self, cursor, user, picking_id, context=None):
         picking = self.pool.get('stock.picking').browse(cursor, user, picking_id, context=context)
         if picking.purchase_id:

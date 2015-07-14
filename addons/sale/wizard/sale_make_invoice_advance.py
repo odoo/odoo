@@ -105,7 +105,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 raise osv.except_osv(_('Incorrect Data'),
                     _('The value of Advance Amount must be positive.'))
             if wizard.advance_payment_method == 'percentage':
-                inv_amount = sale.amount_total * wizard.amount / 100
+                inv_amount = sale.amount_untaxed * wizard.amount / 100
                 if not res.get('name'):
                     res['name'] = self._translate_advance(cr, uid, percentage=True, context=dict(context, lang=sale.partner_id.lang)) % (wizard.amount)
             else:

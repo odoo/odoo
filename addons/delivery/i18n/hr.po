@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-12-07 13:21+0000\n"
 "Last-Translator: Krešimir Jeđud <kresimir.jedud@infokom.hr>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-12-08 05:46+0000\n"
-"X-Generator: Launchpad (build 16869)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "Dostava Poštom"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr " u funkciji "
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "Poštanski br."
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr "Stavka isporuke"
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Jedinica mjere"
 
@@ -64,14 +71,16 @@ msgstr "Dostavne mreže"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Volumen"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "Poštanski br."
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "Otpremnica"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
@@ -176,7 +185,7 @@ msgid "Delivery Method"
 msgstr "Način Dostave"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "Cijena nije dostupna !"
@@ -188,6 +197,7 @@ msgstr "Skladišni prijenos"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr ""
@@ -327,6 +337,7 @@ msgstr "Naziv Mreže"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Broj paketa"
@@ -358,21 +369,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "Nalog nije u nacrtu!"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -404,6 +403,12 @@ msgstr "Uvjet"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Cijena Koštanja"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -474,6 +479,12 @@ msgid ""
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -491,6 +502,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr ""
 
@@ -518,12 +531,6 @@ msgstr "Cjenik Dostave"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Cijena"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "Ne postoji odgovarajuća mreža za ovog dostavljača"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -558,6 +565,7 @@ msgstr "Napredna cijene po odredištu"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Prijevoznik"
@@ -610,3 +618,11 @@ msgstr ""
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Vrsta Cijene"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "Ne postoji odgovarajuća mreža za ovog dostavljača"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "Nalog nije u nacrtu!"

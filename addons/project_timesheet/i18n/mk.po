@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-28 23:28+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: mk\n"
 
 #. module: project_timesheet
@@ -24,9 +24,23 @@ msgid "Tasks by User"
 msgstr "Задача по корисник"
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Задача на временска таблица"
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
 msgstr "Групирај по година од датумот"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Не може да селектирате Аналитичка сметка која е во состојба Затворено или "
+"Откажано."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -39,7 +53,7 @@ msgid "Related Timeline Id"
 msgstr "Id на поврзана временска линија"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
@@ -54,13 +68,10 @@ msgid "Project Task Work"
 msgstr "Работа на проектна задача"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
-"Не може да селектирате Аналитичка сметка која е во состојба Затворено или "
-"Откажано."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -244,9 +255,9 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Задача на временска таблица"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Часови на временска таблица"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -269,14 +280,9 @@ msgid "Trigger Invoice"
 msgstr "Активирај фактура"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "Ноември"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Март"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Извештај за временска таблица/Часови на задача по месец"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -310,24 +316,14 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Погрешна аналитичка сметка !"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Март"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Извештај за временска таблица/Часови на задача по месец"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Грешка конфигурација !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "Ноември"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -392,7 +388,7 @@ msgid "After task is completed, Create its invoice."
 msgstr "Отакако задачата е завршена, креирај фактура за неа."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr "Погрешна операција!"
@@ -414,9 +410,13 @@ msgstr ""
 "'%s'.</p>"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Часови на временска таблица"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -428,3 +428,11 @@ msgstr "Година"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Пополни временска таблица"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Грешка конфигурација !"
+
+#, python-format
+#~ msgid "Invalid Analytic Account !"
+#~ msgstr "Погрешна аналитичка сметка !"

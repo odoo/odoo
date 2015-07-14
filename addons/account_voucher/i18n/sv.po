@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-29 14:57+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-30 06:15+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:39+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -139,7 +139,7 @@ msgid "Voucher Statistics"
 msgstr "Verifikatstatistik"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1641
+#: code:addons/account_voucher/account_voucher.py:1655
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -160,7 +160,7 @@ msgstr "Godkänna"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Leverantörsbetalningar"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -235,7 +235,7 @@ msgstr "Meddelanden"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Inköpskvitton"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -244,7 +244,7 @@ msgstr "Journalpost"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:558
-#: code:addons/account_voucher/account_voucher.py:1073
+#: code:addons/account_voucher/account_voucher.py:1085
 #, python-format
 msgid "Error!"
 msgstr "Fel!"
@@ -276,7 +276,7 @@ msgid "Cancelled"
 msgstr "Avbruten"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1249
+#: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -294,6 +294,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Klicka för att skapa ett försäljningskvitto.\n"
+"               </p><p>\n"
+"                 När kundordern bekräftas, kan du registrera in kundens\n"
+"                 betalning i samband med detta kvitto.\n"
+"               </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -318,7 +325,7 @@ msgid "Tax"
 msgstr "Skatt"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:971
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ogiltig åtgärd"
@@ -376,7 +383,7 @@ msgid "e.g. Invoice SAJ/0042"
 msgstr "e.g. Invoice SAJ/0042"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1208
+#: code:addons/account_voucher/account_voucher.py:1220
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
@@ -395,7 +402,7 @@ msgid "Receipt"
 msgstr "Kvitto"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1110
+#: code:addons/account_voucher/account_voucher.py:1122
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -440,12 +447,6 @@ msgstr "Följare"
 #: selection:account.voucher.line,type:0
 msgid "Debit"
 msgstr "Debet"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1641
-#, python-format
-msgid "Unable to change journal !"
-msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -560,7 +561,7 @@ msgid "Are you sure you want to unreconcile this record?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1249
+#: code:addons/account_voucher/account_voucher.py:1261
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Ingen kontokod och skattekod"
@@ -614,15 +615,15 @@ msgid "To Review"
 msgstr "Att godkänna"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1120
-#: code:addons/account_voucher/account_voucher.py:1134
-#: code:addons/account_voucher/account_voucher.py:1286
+#: code:addons/account_voucher/account_voucher.py:1132
+#: code:addons/account_voucher/account_voucher.py:1146
+#: code:addons/account_voucher/account_voucher.py:1297
 #, python-format
 msgid "change"
 msgstr "ändra"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1118
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -717,7 +718,7 @@ msgid "Cancel Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1067
+#: code:addons/account_voucher/account_voucher.py:1079
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -782,7 +783,7 @@ msgid "October"
 msgstr "oktober"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1068
+#: code:addons/account_voucher/account_voucher.py:1080
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -806,7 +807,7 @@ msgstr "Betalad"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Försäljningskvitton"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
@@ -862,7 +863,7 @@ msgid "Previous Payments ?"
 msgstr "Tidigare betalningar ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1208
+#: code:addons/account_voucher/account_voucher.py:1220
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
@@ -894,7 +895,7 @@ msgid "Active"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1074
+#: code:addons/account_voucher/account_voucher.py:1086
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -904,14 +905,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Kundbetalningar"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Försäljningskvittonanalys"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1206,6 +1207,12 @@ msgid "April"
 msgstr "april"
 
 #. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1655
+#, python-format
+msgid "Unable to Change Journal!"
+msgstr ""
+
+#. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
 msgstr "Endast för skatt ej inkluderat i priset"
@@ -1244,7 +1251,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:971
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1302,8 +1309,8 @@ msgid "Open Balance"
 msgstr "Ingående balans"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1106
-#: code:addons/account_voucher/account_voucher.py:1110
+#: code:addons/account_voucher/account_voucher.py:1118
+#: code:addons/account_voucher/account_voucher.py:1122
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""

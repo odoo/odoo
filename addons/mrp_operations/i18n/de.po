@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-05-01 12:17+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-02 06:46+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:05+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -103,6 +103,12 @@ msgstr "Fertigungsauftrag"
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
 msgstr "MRP-Vorgänge"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -204,6 +210,27 @@ msgid "Actual Production Date"
 msgstr "Tatsächliches Fertigungsdatum"
 
 #. module: mrp_operations
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+"* Wenn ein Arbeitsauftrag erstellt wurde, befindet er sich zunächst im "
+"Status 'Entwurf'.\n"
+"* Wenn ein Anwender den Arbeitsauftrag dann started, ist der Auftrag dadurch "
+"'in Bearbeitung'.\n"
+"* Ein Auftrag in Bearbeitung kann durch Unterbrechung oder Anpassung in den "
+"'Wiedervorlage\" Status versetzt werden.\n"
+"* Durch Abbrechen des Arbeitsauftrags kann er 'Storniert' werden.\n"
+"* Wenn der Auftrag fertig gestellt wird, kann er dadurch 'Erledigt' werden."
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
 msgstr "Arbeitsplatz"
@@ -255,12 +282,6 @@ msgstr "Plandatum"
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Produktmenge"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#, python-format
-msgid "Manufacturing order cannot start in state \"%s\"!"
-msgstr "Produktionsauftrag kann nicht im Status \"%s\" beginnen!"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -555,12 +576,6 @@ msgid "Finish the operation."
 msgstr "Arbeitsauftrag erledigen."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
-#, python-format
-msgid "Operation is not started yet !"
-msgstr "Arbeitsauftrag wurde noch nicht gestartet !"
-
-#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Information aus dem Fertigungsauftrag."
@@ -623,25 +638,10 @@ msgid "Cancel"
 msgstr "Abbruch"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
-"* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+#: code:addons/mrp_operations/mrp_operations.py:454
+#, python-format
+msgid "Operation is not started yet!"
 msgstr ""
-"* Wenn ein Arbeitsauftrag erstellt wurde, befindet er sich zunächst im "
-"Status 'Entwurf'.\n"
-"* Wenn ein Anwender den Arbeitsauftrag dann started, ist der Auftrag dadurch "
-"'in Bearbeitung'.\n"
-"* Ein Auftrag in Bearbeitung kann durch Unterbrechung oder Anpassung in den "
-"'Wiedervorlage\" Status versetzt werden.\n"
-"* Durch Abbrechen des Arbeitsauftrags kann er 'Storniert' werden.\n"
-"* Wenn der Auftrag fertig gestellt wird, kann er dadurch 'Erledigt' werden."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -835,3 +835,11 @@ msgstr "Jahr"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Dauer"
+
+#, python-format
+#~ msgid "Operation is not started yet !"
+#~ msgstr "Arbeitsauftrag wurde noch nicht gestartet !"
+
+#, python-format
+#~ msgid "Manufacturing order cannot start in state \"%s\"!"
+#~ msgstr "Produktionsauftrag kann nicht im Status \"%s\" beginnen!"

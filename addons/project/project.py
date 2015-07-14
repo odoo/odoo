@@ -319,7 +319,7 @@ class project(osv.osv):
         return True
 
     _constraints = [
-        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+        (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
     ]
 
     def set_template(self, cr, uid, ids, context=None):
@@ -691,7 +691,7 @@ class task(base_stage, osv.osv):
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            if task.state in ('done','cancelled'):
+            if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0
         return res
 
@@ -891,25 +891,30 @@ class task(base_stage, osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
-        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
+        (_check_dates, 'Error ! Task end-date must be greater than task start-date', ['date_start','date_end'])
     ]
 
     # Override view according to the company definition
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         if context is None: context = {}
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
 
-        if tm in ['Hours','Hour']:
+        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
+        # this should be safe (no context passed to avoid side-effects)
+        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
+        try:
+            # using get_object to get translation value
+            uom_hour = self.pool['ir.model.data'].get_object(cr, uid, 'product', 'product_uom_hour', context=context)
+        except ValueError:
+            uom_hour = False
+        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
             return res
 
         eview = etree.fromstring(res['arch'])
 
+        # if the project_time_mode_id is not in hours (so in days), display it as a float field
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
@@ -921,9 +926,13 @@ class task(base_stage, osv.osv):
 
         res['arch'] = etree.tostring(eview)
 
+        # replace reference of 'Hours' to 'Day(s)'
         for f in res['fields']:
+            # TODO this NOT work in different language than english
+            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
+            # but string 'Initially Planned Days' is not available in translation
             if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
         return res
 
     # ----------------------------------------
@@ -1170,13 +1179,20 @@ class task(base_stage, osv.osv):
         context = context or {}
         result = ""
         ident = ' '*ident
+        company = self.pool["res.users"].browse(cr, uid, uid, context=context).company_id
+        duration_uom = {
+            'day(s)': 'd', 'days': 'd', 'day': 'd', 'd': 'd',
+            'month(s)': 'm', 'months': 'm', 'month': 'month', 'm': 'm',
+            'week(s)': 'w', 'weeks': 'w', 'week': 'w', 'w': 'w',
+            'hour(s)': 'H', 'hours': 'H', 'hour': 'H', 'h': 'H',
+        }.get(company.project_time_mode_id.name.lower(), "hour(s)")
         for task in tasks:
             if task.state in ('done','cancelled'):
                 continue
             result += '''
 %sdef Task_%s():
-%s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
+%s  todo = \"%.2f%s\"
+%s  effort = \"%.2f%s\"''' % (ident, task.id, ident, task.remaining_hours, duration_uom, ident, task.total_hours, duration_uom)
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))

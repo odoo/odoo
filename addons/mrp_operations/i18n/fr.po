@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-07-13 11:34+0000\n"
 "Last-Translator: Florian Hatat <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-07-14 07:06+0000\n"
-"X-Generator: Launchpad (build 17111)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:05+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -103,6 +103,12 @@ msgstr "Ordre de fabrication"
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
 msgstr "Opérations MRP"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -203,6 +209,19 @@ msgid "Actual Production Date"
 msgstr "Date effective de production"
 
 #. module: mrp_operations
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' "
+"status."
+msgstr ""
+
+#. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
 msgstr "Poste de charge"
@@ -254,12 +273,6 @@ msgstr "Date planifiée"
 #: field:mrp.workorder,product_qty:0
 msgid "Product Qty"
 msgstr "Qté d'articles"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:134
-#, python-format
-msgid "Manufacturing order cannot start in state \"%s\"!"
-msgstr "L'ordre de fabrication ne peut pas démarrer à l'état \"%s\" !"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -558,12 +571,6 @@ msgid "Finish the operation."
 msgstr "Terminer l'opération."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:454
-#, python-format
-msgid "Operation is not started yet !"
-msgstr "L'Opération n'est pas encore commencée !"
-
-#. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
 msgstr "Information concernant l'ordre de fabrication."
@@ -626,16 +633,9 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: mrp_operations
-#: help:mrp.production.workcenter.line,state:0
-msgid ""
-"* When a work order is created it is set in 'Draft' status.\n"
-"* When user sets work order in start mode that time it will be set in 'In "
-"Progress' status.\n"
-"* When work order is in running mode, during that time if user wants to stop "
-"or to make changes in order then can set in 'Pending' status.\n"
-"* When the user cancels the work order it will be set in 'Canceled' status.\n"
-"* When order is completely processed that time it is set in 'Finished' "
-"status."
+#: code:addons/mrp_operations/mrp_operations.py:454
+#, python-format
+msgid "Operation is not started yet!"
 msgstr ""
 
 #. module: mrp_operations
@@ -830,3 +830,11 @@ msgstr "Année"
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
 msgstr "Durée"
+
+#, python-format
+#~ msgid "Operation is not started yet !"
+#~ msgstr "L'Opération n'est pas encore commencée !"
+
+#, python-format
+#~ msgid "Manufacturing order cannot start in state \"%s\"!"
+#~ msgstr "L'ordre de fabrication ne peut pas démarrer à l'état \"%s\" !"

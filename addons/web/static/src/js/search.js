@@ -1453,7 +1453,7 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
         var results = _(this.attrs.selection).chain()
             .filter(function (sel) {
                 var value = sel[0], label = sel[1];
-                if (!value) { return false; }
+                if (value === undefined || !label) { return false; }
                 return label.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
             })
             .map(function (sel) {
@@ -1497,7 +1497,19 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         return instance.web.date_to_str(facetValue.get('value'));
     },
     complete: function (needle) {
-        var d = Date.parse(needle);
+        var d;
+        try {
+            var t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
+            var v = instance.web.parse_value(needle, {'widget': t});
+            if (t === 'datetime'){
+                d = instance.web.str_to_datetime(v);
+            }
+            else{
+                d = instance.web.str_to_date(v);
+            }
+        } catch (e) {
+            // pass
+        }
         if (!d) { return $.when(null); }
         var date_string = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
@@ -2138,6 +2150,10 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
+    init: function (parent) {
+        this._super(parent);
+        this.decimal_point = instance.web._t.database.parameters.decimal_point;
+    },
     toString: function () {
         return this.$el.val();
     },

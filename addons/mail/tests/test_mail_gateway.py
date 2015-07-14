@@ -430,6 +430,16 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
                          'message_process: email_from -> author_id wrong')
 
+        # Do: post a new message with a non-existant email that is a substring of a partner email
+        format_and_process(MAIL_TEMPLATE, email_from='Not really Lombrik Lubrik <oul@email.com>',
+                           subject='Re: news (2)',
+                           msg_id='<zzzbbbaaaa@agrolait.com>',
+                           extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: author must not be set, otherwise the system is confusing different users
+        self.assertFalse(frog_group.message_ids[0].author_id, 'message_process: email_from -> mismatching author_id')
+
         # Do: post a new message, with a known partner -> duplicate emails -> user
         frog_group.message_unsubscribe([extra_partner_id])
         raoul_email = self.user_raoul.email

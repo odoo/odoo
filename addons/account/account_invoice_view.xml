@@ -181,8 +181,10 @@
                             <field name="date_due"/>
                             <field domain="[('company_id', '=', company_id), ('type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_user"/>
+                            <field name="internal_number" invisible="1"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+                                on_change="onchange_journal_id(journal_id, context)" widget="selection"
+                                attrs="{'readonly':[('internal_number','!=',False)]}"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
@@ -251,7 +253,7 @@
                                 <group>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                     <field name="user_id"/>
-                                    <field name="name" invisible="1"/>
+                                    <field name="name" attrs="{'invisible': [('type', '=', 'in_invoice')]}"/>
                                     <field name="payment_term" widget="selection"/>
                                 </group>
                                 <group>
@@ -327,8 +329,10 @@
                         </group>
                         <group>
                             <field name="date_invoice"/>
+                            <field name="internal_number" invisible="1"/>
                             <field name="journal_id" groups="account.group_account_user"
-                                on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
+                                on_change="onchange_journal_id(journal_id, context)" widget="selection"
+                                attrs="{'readonly':[('internal_number','!=',False)]}"/>
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-09-28 05:43+0000\n"
 "Last-Translator: Bluce <igamall@yahoo.com.tw>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:21+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:05+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -48,7 +48,7 @@ msgstr "工作中心使用率"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr "途程工作中心"
+msgstr "製程工作中心"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
@@ -65,7 +65,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
 msgstr ""
@@ -84,12 +84,12 @@ msgstr "MRP 工作中心"
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "途程"
+msgstr "製程"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
-msgstr "搜尋材料清單"
+msgstr "搜尋物料清單"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
@@ -195,12 +195,12 @@ msgid "Order Planning"
 msgstr "訂單計劃"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr "允許對工作中心的詳細規劃"
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per product using properties"
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:633
+#: code:addons/mrp/mrp.py:666
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "無法取消工令!"
@@ -211,7 +211,7 @@ msgid "Cycle Account"
 msgstr "循環帳戶"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
 msgstr "工作成本"
@@ -227,6 +227,8 @@ msgid "Capacity Information"
 msgstr "產能資料"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "工作中心"
@@ -245,6 +247,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"點選建立一個製程(Routing)。\n"
+"</p><p>\n"
+"製程(Routing)允許您建立並管理在工作中心內應被遵循的製造程序(即工作順序)，用以生產產品。\n"
+"它們被附加於用以定義所需原物料的物料清單(BOM)。\n"
+"</p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -300,7 +309,7 @@ msgstr "預定之貨品"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr "套件 / 虛項"
+msgstr "組 / 虛擬物料"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -316,7 +325,7 @@ msgstr "於外部計劃中之位置的引用。"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr "管理途程"
+msgstr "管理製程"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -362,7 +371,7 @@ msgid "Reference must be unique per Company!"
 msgstr "編號必須在同一公司內唯一！"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: report:bom.structure:0
 #: view:mrp.bom:0
 #: field:mrp.product_price,number:0
@@ -394,7 +403,7 @@ msgstr "確認生產"
 msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
-msgstr ""
+msgstr "系統依據已售數量與產品參數建立一個供給訂單(製造單或採購單)。"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -462,6 +471,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                點選建立一個新的屬性。\n"
+"              </p><p>\n"
+"                OpenERP的屬性(properties)是使用於選擇正確的物料表(BoM)於製造產品，\n"
+"　　　　當您有不同的方法來建立同一產品。您能指定數個屬性給每一個物料表。\n"
+"　　　　當一位業務人員建立一張銷售訂單時，他們可以將銷售訂單關聯至數個屬性，\n"
+"　　　　並且OpenERP將根據需求自動選擇物料表(BoM)。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: view:mrp.production:0
@@ -471,7 +489,7 @@ msgid "Scheduled Date"
 msgstr "預定日期"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:129
+#: code:addons/mrp/procurement.py:121
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "工令 <em>%s</em> 已建立。"
@@ -540,7 +558,7 @@ msgstr ""
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr ""
+msgstr "物料清單(BOM)已連結至一個製程(工作順序)，如各工作中心的接續"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -567,7 +585,7 @@ msgstr "強制預留"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "庫存評價"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
@@ -651,7 +669,7 @@ msgid "Work Center Load"
 msgstr "工作中心負荷"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:55
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "此產品無物料清單！"
@@ -774,7 +792,7 @@ msgstr "每月"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "度量單位(UoM)是庫存管理的計算單位。"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -787,8 +805,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:779
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "警告!"
@@ -825,7 +843,7 @@ msgstr "標示為開始"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr "部份"
+msgstr "分批"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -851,7 +869,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "待料中的製令"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -928,7 +946,7 @@ msgid "BoM Type"
 msgstr "物料清單類型"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:57
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -950,7 +968,7 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:634
+#: code:addons/mrp/mrp.py:667
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -964,8 +982,8 @@ msgid "Minimum Stock"
 msgstr "最少庫存"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:160
-#: code:addons/mrp/report/price.py:211
+#: code:addons/mrp/report/price.py:162
+#: code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "%s %s 的總成本"
@@ -978,7 +996,7 @@ msgid "Stockable Product"
 msgstr "可庫存貨品"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
 msgstr "工作中心名稱"
@@ -1148,7 +1166,7 @@ msgid "Group By..."
 msgstr "群組依據..."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
 msgstr "週期成本"
@@ -1176,6 +1194,11 @@ msgid "Resources"
 msgstr "資源"
 
 #. module: mrp
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
@@ -1188,7 +1211,7 @@ msgid "Analytic Journal"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
 msgstr "每一度量單位的供應商價格"
@@ -1267,7 +1290,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1281,7 +1304,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:187
+#: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
 msgstr ""
@@ -1310,7 +1333,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:375
+#: code:addons/mrp/mrp.py:379
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1321,7 +1344,7 @@ msgid "Production Scheduled Product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:204
+#: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
 msgstr ""
@@ -1367,7 +1390,7 @@ msgid "Product Cost Structure"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
 msgstr ""
@@ -1492,7 +1515,7 @@ msgid "SO Number"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1529,9 +1552,7 @@ msgid "Manufacturing Orders To Start"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1745,7 +1766,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:779
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1810,7 +1831,7 @@ msgid "Compute Data"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1818,8 +1839,9 @@ msgid "Error!"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: view:mrp.bom:0
+#: view:product.product:0
 #, python-format
 msgid "Components"
 msgstr ""
@@ -1856,7 +1878,7 @@ msgid "Manufacturing Lead Time"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -1869,6 +1891,11 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Operation"
 msgstr ""
 
 #. module: mrp
@@ -2041,7 +2068,7 @@ msgid "Assignment from stock."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
 msgstr ""
@@ -2069,7 +2096,7 @@ msgid "Manufacturing Steps."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:146
+#: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2096,7 +2123,7 @@ msgid "BOM Ref"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2134,7 +2161,7 @@ msgid "Bill of Materials"
 msgstr "物料清單"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2153,7 +2180,6 @@ msgid "Manage manual picking to fulfill manufacturing orders "
 msgstr ""
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
 msgstr ""
@@ -2264,11 +2290,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
@@ -2365,3 +2386,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr ""
+
+#~ msgid "Allow detailed planning of work order"
+#~ msgstr "允許對工作中心的詳細規劃"

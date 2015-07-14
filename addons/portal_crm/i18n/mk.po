@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
 "macedonian@lists.launchpad.net >\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-28 23:27+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: mk\n"
 
 #. module: portal_crm
@@ -65,9 +65,9 @@ msgid "Company"
 msgstr "Компанија"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
-msgstr "Продавач"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
+msgstr "Денови до отварање"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -98,6 +98,11 @@ msgstr "Пораки"
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
 msgstr "Индекс на боја"
+
+#. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_latitude:0
+msgid "Geo Latitude"
+msgstr "Гео ширина"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_name:0
@@ -211,6 +216,11 @@ msgid "Channel"
 msgstr "Канал"
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr "Име"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr "Најниско"
@@ -232,6 +242,16 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
 msgstr ""
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
+msgstr "Затвори"
+
+#. module: portal_crm
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
+msgstr "Чекам"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
@@ -370,9 +390,9 @@ msgid "Closed"
 msgstr "Затворено"
 
 #. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
-msgstr "Чекам"
+#: field:portal_crm.crm_contact_us,date_assign:0
+msgid "Assignation Date"
+msgstr "Датум на назначување"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,state:0
@@ -415,9 +435,9 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
-msgstr "Денови до отварање"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
+msgstr "Продавач"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,day_close:0
@@ -452,14 +472,19 @@ msgid "Partner Contact Name"
 msgstr "Контакт Име на партнер"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_longitude:0
+msgid "Geo Longitude"
+msgstr "Гео должина"
+
+#. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Your phone number..."
 msgstr "Вашиот телефонски број..."
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Close"
-msgstr "Затвори"
+#: help:portal_crm.crm_contact_us,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr "Последен датум кога овој предмет беше препратен/доделен на партнер"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
@@ -487,14 +512,19 @@ msgid "Referred By"
 msgstr "Препорачано од"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr "Назначен партнер"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr "Можност"
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr "Име"
+#: help:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "Партнер кому овој предмет му е препратен/доделен."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
@@ -564,21 +594,3 @@ msgstr "Контакт од портал"
 #~ msgstr ""
 #~ "Доколку е означено opt-out, значи дека контактот одбива да прима мејлови или "
 #~ "unsubscribed to a campaign."
-
-#~ msgid "Partner this case has been forwarded/assigned to."
-#~ msgstr "Партнер кому овој предмет му е препратен/доделен."
-
-#~ msgid "Assignation Date"
-#~ msgstr "Датум на назначување"
-
-#~ msgid "Assigned Partner"
-#~ msgstr "Назначен партнер"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Гео ширина"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Гео должина"
-
-#~ msgid "Last date this case was forwarded/assigned to a partner"
-#~ msgstr "Последен датум кога овој предмет беше препратен/доделен на партнер"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-10-27 17:47+0000\n"
-"Last-Translator: Bosko Stojakovic <bluesoft83@gmail.com>\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:20+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -75,7 +75,7 @@ msgstr ""
 "kada nivo zalihe dostigne definisani minimum."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
 msgstr "Trošak po Satu"
@@ -212,12 +212,12 @@ msgid "Order Planning"
 msgstr "Planiranje radnih naloga"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr "Detaljno planiranje radova za radne naloge"
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per product using properties"
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:633
+#: code:addons/mrp/mrp.py:666
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "Ne može se otkazati radni nalog proizvodnje!"
@@ -228,7 +228,7 @@ msgid "Cycle Account"
 msgstr "Konto ciklusa"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
 msgstr "Trošak Rada"
@@ -244,6 +244,8 @@ msgid "Capacity Information"
 msgstr "Informacija o kapacitetu"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "Radni centri"
@@ -406,7 +408,7 @@ msgid "Reference must be unique per Company!"
 msgstr "Referenca mora biti jedinstvena unuar kompanije!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: report:bom.structure:0
 #: view:mrp.bom:0
 #: field:mrp.product_price,number:0
@@ -546,7 +548,7 @@ msgid "Scheduled Date"
 msgstr "Zakazani datum"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:129
+#: code:addons/mrp/procurement.py:121
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Radni nalog proizvodnje <em>%s</em> je kreiran"
@@ -741,7 +743,7 @@ msgid "Work Center Load"
 msgstr "Opterećenje radnog centra"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:55
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Proizvod nema sastavnicu!"
@@ -909,8 +911,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "Odnos 0.9 znači gubitak od 10% unutar procesa proizvodnje."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:779
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -978,7 +980,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Radni nalozi proizvodnje koje čekaju sirovine."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -1073,7 +1075,7 @@ msgid "BoM Type"
 msgstr "Tip sastavnice"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:57
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1097,7 +1099,7 @@ msgid "Companies"
 msgstr "Kompanije"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:634
+#: code:addons/mrp/mrp.py:667
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -1113,8 +1115,8 @@ msgid "Minimum Stock"
 msgstr "Minimalna zaliha"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:160
-#: code:addons/mrp/report/price.py:211
+#: code:addons/mrp/report/price.py:162
+#: code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "Ukupni trošak %s %s"
@@ -1127,7 +1129,7 @@ msgid "Stockable Product"
 msgstr "Proizvod koji se može skladištiti"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
 msgstr "Ime Radnog Centra"
@@ -1306,7 +1308,7 @@ msgid "Group By..."
 msgstr "Grupiši po..."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
 msgstr "Trašak Ciklusa"
@@ -1334,6 +1336,11 @@ msgid "Resources"
 msgstr "Resursi"
 
 #. module: mrp
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
@@ -1348,7 +1355,7 @@ msgid "Analytic Journal"
 msgstr "Dnevnik analitike"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
 msgstr "Dobavljačeva cijena po jedinici mjere"
@@ -1432,7 +1439,7 @@ msgstr ""
 "proizvodnje (Radni centri) će biti automaski pre-završeni."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Invalid Action!"
 msgstr "Neispravna akcija!"
@@ -1449,7 +1456,7 @@ msgstr ""
 "inventurom i konfigurisano po proizvodu."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:187
+#: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
 msgstr "Troškovi komponente %s %s"
@@ -1480,7 +1487,7 @@ msgstr ""
 "gotovih proizvoda."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:375
+#: code:addons/mrp/mrp.py:379
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -1491,7 +1498,7 @@ msgid "Production Scheduled Product"
 msgstr "Proizvodi zakazani u proizvodnji"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:204
+#: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
 msgstr "Trošak rada %s %s"
@@ -1537,7 +1544,7 @@ msgid "Product Cost Structure"
 msgstr "Struktura troška proizvoda"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
 msgstr "Dobavljači komponenti"
@@ -1667,7 +1674,7 @@ msgid "SO Number"
 msgstr "Broj prodajne narudžbe"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr "Ne može se obrisati radni nalog proizvodnje u statusu '%s'."
@@ -1704,9 +1711,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Radni nalozi proizvodnje za pokretanje"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1955,7 +1960,7 @@ msgstr ""
 "                Ovo instalira module mrp_operations."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:779
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -2024,7 +2029,7 @@ msgid "Compute Data"
 msgstr "Izračunaj podatke"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -2032,8 +2037,9 @@ msgid "Error!"
 msgstr "Greška!"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: view:mrp.bom:0
+#: view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "Komponente"
@@ -2070,7 +2076,7 @@ msgid "Manufacturing Lead Time"
 msgstr "Vrijeme vođenja proizvodnje"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid "Warning"
 msgstr "Upozorenje"
@@ -2084,6 +2090,11 @@ msgstr "Količina JP"
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
 msgstr "Kretanje proizvoda"
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Operation"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2278,7 +2289,7 @@ msgid "Assignment from stock."
 msgstr "Dodjela sa skladišta"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
 msgstr "Cijena koštanja po jedinici mjere"
@@ -2306,7 +2317,7 @@ msgid "Manufacturing Steps."
 msgstr "Koraci proizvodnje"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:146
+#: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2333,7 +2344,7 @@ msgid "BOM Ref"
 msgstr "Ref. sastavnice"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2373,7 +2384,7 @@ msgid "Bill of Materials"
 msgstr "Sastavnica"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr "Ne može se pronaći sastavnica za ovaj proizvod."
@@ -2397,7 +2408,6 @@ msgstr ""
 "proizvodnje "
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
 msgstr "Opšte informacije"
@@ -2516,11 +2526,6 @@ msgstr ""
 "                        proizvodnje"
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr "Dozvoljava nekoliko sastavnica po proizvodu koristeći svojstva"
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
@@ -2626,3 +2631,9 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "Proizvodi za utrošiti"
+
+#~ msgid "Allow detailed planning of work order"
+#~ msgstr "Detaljno planiranje radova za radne naloge"
+
+#~ msgid "Allow several bill of materials per products using properties"
+#~ msgstr "Dozvoljava nekoliko sastavnica po proizvodu koristeći svojstva"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-04-05 22:03+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-06 06:53+0000\n"
-"X-Generator: Launchpad (build 16976)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -167,6 +167,12 @@ msgid "Email Templates"
 msgstr "E-Mail-Vorlagen"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Dokument, das mit diesem Template genutzt werden kann"
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -189,17 +195,9 @@ msgid "Sidebar action"
 msgstr "Sidebar-Aktion"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
-"Optionaler ISO Sprachcode für ausgehende E-Mails. Standard ist englisch. "
-"Üblicherweise wird das ein Platzhalter sein z.B. "
-"${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
+msgstr "Vorschau von"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -259,9 +257,10 @@ msgid "Advanced"
 msgstr "Weiterführend"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Vorschau von"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -371,10 +370,14 @@ msgid "Add context action"
 msgstr "Kontextaktion hinzufügen"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Dokument, das mit diesem Template genutzt werden kann"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,email_recipients:0
@@ -497,6 +500,14 @@ msgid "Suppliers"
 msgstr "Lieferanten"
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -543,6 +554,16 @@ msgstr "Betreff"
 
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr "Absenderadresse (Platzhalter können verwendet werden)"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Optionaler ISO Sprachcode für ausgehende E-Mails. Standard ist englisch. "
+#~ "Üblicherweise wird das ein Platzhalter sein z.B. "
+#~ "${object.partner_id.lang.code}."
 
 #~ msgid ""
 #~ "If checked, this partner will not receive any automated email notifications, "

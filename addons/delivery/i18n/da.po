@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-08 23:02+0000\n"
 "Last-Translator: Per G. Rasmussen <pgr@msteknik.dk>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:07+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "Levering med post"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr ""
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "Postnummer"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr ""
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Enhed"
 
@@ -64,14 +71,16 @@ msgstr ""
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Volumen"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "Postnummer"
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "Leverings ordre"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
@@ -166,7 +175,7 @@ msgid "Delivery Method"
 msgstr "Leveringsmåde"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "Ingen pris findes !"
@@ -178,6 +187,7 @@ msgstr "Lager flytning"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Transportør sporings reference"
@@ -317,6 +327,7 @@ msgstr ""
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Antal pakker"
@@ -348,21 +359,9 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "Ordren er ikke i kladde status !"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -394,6 +393,12 @@ msgstr "Betingelse"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Kost pris"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -449,6 +454,12 @@ msgid ""
 msgstr "Udfyld dette felt hvis du vil fakturere transport baseret på pluk."
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -466,6 +477,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "Vægt enhed"
 
@@ -493,12 +506,6 @@ msgstr "Leverings prisliste"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Pris"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr ""
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -533,6 +540,7 @@ msgstr "Avanceret prisstyring pr. destination"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Transportør"
@@ -586,3 +594,7 @@ msgstr "Enhed er enheden for vægt."
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Pris type"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "Ordren er ikke i kladde status !"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-01 17:56+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-02 06:00+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -159,7 +159,7 @@ msgid "Rule Name"
 msgstr "Дүрмийн нэр"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Энэ бол тухайн цагт нэг л утасны дуудлагыг хөрвүүлэх боломжтой"
@@ -198,7 +198,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -226,7 +226,7 @@ msgid "Schedule Other Call"
 msgstr "Бусад дуудлагыг төлөвлөх"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -261,6 +261,11 @@ msgstr "Шалгуур"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Манай багт оноогдсон"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "Ялгагдсан Хариултууд :"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -304,7 +309,7 @@ msgid "Prospect Partner"
 msgstr "Хэтийн түнш"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
@@ -425,6 +430,7 @@ msgid "Unread Messages"
 msgstr "Уншаагүй зурвасууд"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -561,7 +567,7 @@ msgid "Planned Revenue"
 msgstr "Төлөвлөсөн орлого"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "Захиалагчийн Эмэйл"
@@ -579,9 +585,9 @@ msgid "October"
 msgstr "10 сар"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Хийх Ажлыг Шинэчлэх"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "Агуулагдсан Хариултууд :"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -638,6 +644,11 @@ msgid ""
 msgstr ""
 "Захиалагчийн нэр тодорхойлогдоогүй байна. Дараах талбаруудын аль нэгийг "
 "бөглө: Компанийн нэр, Холбогчийн Нэр эсвэл Эмэйл (\"Нэр <эмэйл@хаяг>\")"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "Профайлдах Сонголт"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -722,7 +733,7 @@ msgid "Partner Segmentation"
 msgstr "Харилцагчийн хуваалт"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr "%(date)s-д дуудлага хөтлөгдлөө. %(description)s"
@@ -1335,7 +1346,7 @@ msgid "Days to Close"
 msgstr "Хаах өдөр"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1415,6 +1426,11 @@ msgid ""
 msgstr ""
 "Идэвхтэй хэрэглэгч юмуу идэвхтэй хэрэглэгчийн удирдаж байгаа багт холбогдсон "
 "утасны дуудлагууд"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "Сегментчлэлийн Тодорхойлолт"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1712,7 +1728,7 @@ msgid "Describe the lead..."
 msgstr "Сэжимийг тодорхойл..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Харилцагч <b>үүсгэгдлээ</b>."
@@ -1935,7 +1951,7 @@ msgid "Support Department"
 msgstr "Дэмжлэгийн Хэлтэс"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -3007,7 +3023,6 @@ msgstr "Функц"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Тайлбар"
@@ -3092,7 +3107,12 @@ msgid "Referred By"
 msgstr "Хамаарагчаар"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Хийх Ажлыг Шинэчлэх"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr "%(date)s-д дуудлага товлогсдон. %(description)s"
@@ -3103,7 +3123,7 @@ msgid "Working Hours"
 msgstr "Ажлын цаг"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3168,6 +3188,11 @@ msgstr "4 сар"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "Компанит ажлын нэр"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "Профайлдах"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3255,18 +3280,6 @@ msgstr ""
 #~ msgid "Unassigned Leads"
 #~ msgstr "Эзэнгүй сэжим"
 
-#~ msgid "Excluded Answers :"
-#~ msgstr "Ялгагдсан Хариултууд :"
-
-#~ msgid "Included Answers :"
-#~ msgstr "Агуулагдсан Хариултууд :"
-
-#~ msgid "Profiling Options"
-#~ msgstr "Профайлдах Сонголт"
-
-#~ msgid "Segmentation Description"
-#~ msgstr "Сегментчлэлийн Тодорхойлолт"
-
 #~ msgid "Unassigned Opportunities"
 #~ msgstr "Эзэнгүй боломжууд"
 
@@ -3275,9 +3288,6 @@ msgstr ""
 
 #~ msgid "Exp.Closing"
 #~ msgstr "Таамаг.Хаах"
-
-#~ msgid "Profiling"
-#~ msgstr "Профайлдах"
 
 #~ msgid "Users"
 #~ msgstr "Хэрэглэгчид"

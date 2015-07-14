@@ -358,9 +358,18 @@ class account_coda_import(osv.osv_memory):
                                 voucher_vals['line_cr_ids'] = line_crs
                                 line['voucher_id'] = self.pool.get('account.voucher').create(cr, uid, voucher_vals, context=context)
                     if 'counterpartyNumber' in line and line['counterpartyNumber']:
-                        ids = self.pool.get('res.partner.bank').search(cr, uid, [('acc_number', '=', str(line['counterpartyNumber']))])
+                        account = str(line['counterpartyNumber'])
+                        domain = [('acc_number', '=', account)]
+                        iban = account[0:2].isalpha()
+                        if iban:
+                            n = 4
+                            space_separated_account = ' '.join(account[i:i + n] for i in range(0, len(account), n))
+                            domain = ['|', ('acc_number', '=', space_separated_account)] + domain
+                        ids = self.pool.get('res.partner.bank').search(cr, uid, domain)
                         if ids and len(ids) > 0:
-                            partner = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context).partner_id
+                            bank_account = self.pool.get('res.partner.bank').browse(cr, uid, ids[0], context=context)
+                            line['counterpartyNumber'] = bank_account.acc_number
+                            partner = bank_account.partner_id
                             partner_id = partner.id
                             if not invoice:
                                 if line['debit'] == '0':

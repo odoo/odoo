@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-04 02:13+0000\n"
 "Last-Translator: Mohamed M. Hagag <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:03+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -67,7 +67,7 @@ msgstr ""
 "يتم الوصول الى الحد الادنى من المخزون."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
 msgstr "تكلفة الساعة"
@@ -198,12 +198,12 @@ msgid "Order Planning"
 msgstr "تخطيط  الأمر"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr "السماح بتخطيط تفصيلي لامر الانتاج"
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per product using properties"
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:633
+#: code:addons/mrp/mrp.py:666
 #, python-format
 msgid "Cannot cancel manufacturing order!"
 msgstr "لا يمكن إلغاء أمر التصنيع"
@@ -214,7 +214,7 @@ msgid "Cycle Account"
 msgstr "حساب الدورة"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
 msgstr "تكلفة العمل"
@@ -230,6 +230,8 @@ msgid "Capacity Information"
 msgstr "معلومات عن القدرة"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
 msgstr "مراكز العمل"
@@ -365,7 +367,7 @@ msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: report:bom.structure:0
 #: view:mrp.bom:0
 #: field:mrp.product_price,number:0
@@ -477,7 +479,7 @@ msgid "Scheduled Date"
 msgstr "تاريخ مجدول"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:129
+#: code:addons/mrp/procurement.py:121
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "تم إنشاء أمرالتصنيع %s ."
@@ -661,7 +663,7 @@ msgid "Work Center Load"
 msgstr "تحميل مركز العمل"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:55
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "لا يوجد فاتورة للمواد محددة لهذا المنتج !"
@@ -800,8 +802,8 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr "يعني العامل 0.9 المفقود من 10% خلال عملية الانتاج."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:779
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -866,7 +868,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "تصنيع الطلبيات التي تنتظر المواد الخام."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -943,7 +945,7 @@ msgid "BoM Type"
 msgstr "علامة فاتورة القياس"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:57
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -966,7 +968,7 @@ msgid "Companies"
 msgstr "الشركات"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:634
+#: code:addons/mrp/mrp.py:667
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -981,8 +983,8 @@ msgid "Minimum Stock"
 msgstr "الحد الادنى من المخزون"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:160
-#: code:addons/mrp/report/price.py:211
+#: code:addons/mrp/report/price.py:162
+#: code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
 msgstr "التكلفة الكلية لـ%s %s"
@@ -995,7 +997,7 @@ msgid "Stockable Product"
 msgstr "منتج قابل للتخزين"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
 msgstr "اسم مركز العمل"
@@ -1167,7 +1169,7 @@ msgid "Group By..."
 msgstr "تجميع حسب..."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:130
+#: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
 msgstr "تكلفة الدورات"
@@ -1195,6 +1197,11 @@ msgid "Resources"
 msgstr "الموارد"
 
 #. module: mrp
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work orders"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
@@ -1207,7 +1214,7 @@ msgid "Analytic Journal"
 msgstr "يومية تحليلية"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
 msgstr ""
@@ -1288,7 +1295,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -1304,7 +1311,7 @@ msgstr ""
 "الدني او القصوى. وهي متوفرة في قائمة ادارة الجرد وتم تكوينه بواسطة المنتج."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:187
+#: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
 msgstr ""
@@ -1333,7 +1340,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:375
+#: code:addons/mrp/mrp.py:379
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1344,7 +1351,7 @@ msgid "Production Scheduled Product"
 msgstr "يضيف الانتاج امنتج الى الجدول"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:204
+#: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
 msgstr ""
@@ -1390,7 +1397,7 @@ msgid "Product Cost Structure"
 msgstr "تركيب التكلفة للمنتج"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
 msgstr "موردين المكونات"
@@ -1515,7 +1522,7 @@ msgid "SO Number"
 msgstr "رقم امر البيع"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:505
+#: code:addons/mrp/mrp.py:519
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
@@ -1552,9 +1559,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "اوامر التصنيع للبدء"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1776,7 +1781,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:779
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1843,7 +1848,7 @@ msgid "Compute Data"
 msgstr "حساب البيانات"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
@@ -1851,8 +1856,9 @@ msgid "Error!"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #: view:mrp.bom:0
+#: view:product.product:0
 #, python-format
 msgid "Components"
 msgstr "المكونات"
@@ -1889,7 +1895,7 @@ msgid "Manufacturing Lead Time"
 msgstr "وقت قيادة التصنيع"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:285
+#: code:addons/mrp/mrp.py:287
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -1902,6 +1908,11 @@ msgstr "كمية جدول الامر الغير مستلم للمنتج"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Operation"
 msgstr ""
 
 #. module: mrp
@@ -2077,7 +2088,7 @@ msgid "Assignment from stock."
 msgstr "تخصيص من المخزون."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
+#: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
 msgstr ""
@@ -2105,7 +2116,7 @@ msgid "Manufacturing Steps."
 msgstr "خطوات التصنيع."
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:146
+#: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2132,7 +2143,7 @@ msgid "BOM Ref"
 msgstr "مرجع فاتورة المواد"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:765
+#: code:addons/mrp/mrp.py:807
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2170,7 +2181,7 @@ msgid "Bill of Materials"
 msgstr "فاتورة المواد"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -2189,7 +2200,6 @@ msgid "Manage manual picking to fulfill manufacturing orders "
 msgstr ""
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
 msgstr "معلومات عامة"
@@ -2300,11 +2310,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: field:mrp.config.settings,group_mrp_properties:0
-msgid "Allow several bill of materials per products using properties"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
@@ -2410,3 +2415,6 @@ msgstr ""
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr "منتجات للاستهلاك"
+
+#~ msgid "Allow detailed planning of work order"
+#~ msgstr "السماح بتخطيط تفصيلي لامر الانتاج"

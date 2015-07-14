@@ -172,10 +172,6 @@ class account_asset_asset(osv.osv):
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
-                company_currency = asset.company_id.currency_id.id
-                current_currency = asset.currency_id.id
-                # compute amount into company currency
-                amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -216,7 +212,10 @@ class account_asset_asset(osv.osv):
                 l.asset_id IN %s GROUP BY l.asset_id """, (tuple(ids),))
         res=dict(cr.fetchall())
         for asset in self.browse(cr, uid, ids, context):
-            res[asset.id] = asset.purchase_value - res.get(asset.id, 0.0) - asset.salvage_value
+            company_currency = asset.company_id.currency_id.id
+            current_currency = asset.currency_id.id
+            amount = self.pool['res.currency'].compute(cr, uid, company_currency, current_currency, res.get(asset.id, 0.0), context=context)
+            res[asset.id] = asset.purchase_value - amount - asset.salvage_value
         for id in ids:
             res.setdefault(id, 0.0)
         return res
@@ -407,8 +406,8 @@ class account_asset_depreciation_line(osv.osv):
             context.update({'date': depreciation_date})
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
-            asset_name = line.asset_id.name
-            reference = line.name
+            asset_name = "/"
+            reference = line.asset_id.name
             move_vals = {
                 'name': asset_name,
                 'date': depreciation_date,

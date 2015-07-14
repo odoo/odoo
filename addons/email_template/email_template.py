@@ -311,11 +311,14 @@ class email_template(osv.osv):
             context = {}
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
+        ctx = context.copy()
+        if template.lang:
+            ctx['lang'] = template._context.get('lang')
         values = {}
         for field in ['subject', 'body_html', 'email_from',
                       'email_to', 'email_recipients', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
-                                                 template.model, res_id, context=context) \
+                                                 template.model, res_id, context=ctx) \
                                                  or False
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
@@ -333,12 +336,9 @@ class email_template(osv.osv):
         attachments = []
         # Add report in attachments
         if template.report_template:
-            report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
+            report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=ctx)
             report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
             # Ensure report is rendered using template's language
-            ctx = context.copy()
-            if template.lang:
-                ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
             service = netsvc.LocalService(report_service)
             (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
             # TODO in trunk, change return format to binary to match message_post expected format

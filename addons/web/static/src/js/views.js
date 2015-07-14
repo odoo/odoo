@@ -1210,17 +1210,19 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
+            var dataset = self.getParent().dataset;
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model
+                active_model: dataset.model
             }; 
             var c = instance.web.pyeval.eval('context',
                 new instance.web.CompoundContext(
                     sidebar_eval_context, active_ids_context));
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: c
+                context: new instance.web.CompoundContext(
+                    dataset.get_context(), active_ids_context).eval()
             }).done(function(result) {
                 result.context = new instance.web.CompoundContext(
                     result.context || {}, active_ids_context)
@@ -1586,7 +1588,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return sindent + node;
+        return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
             _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),

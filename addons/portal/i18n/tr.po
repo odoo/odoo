@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-07-11 21:49+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -128,6 +128,15 @@ msgid "Share Wizard"
 msgstr "Paylaşım Sihirbazı"
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid ""
+"<p>\n"
+"                    You don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 ", so it may use Mako expressions.\n"
@@ -135,19 +144,6 @@ msgid ""
 msgstr ""
 ", yani Mako terimleri kullanabilir.\n"
 "                                Mako değerlendirme içeriğinin sağladığı:"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_news
-msgid ""
-"<p>\n"
-"                    Youd don't have unread company's news.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Okumadığınız şirket haberleri yok.\n"
-"                </p>\n"
-"            "
 
 #. module: portal
 #: field:portal.wizard.user,email:0
@@ -181,6 +177,7 @@ msgid "Jobs"
 msgstr "İşler"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users
 #: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Kullanıcılar"
@@ -198,7 +195,7 @@ msgid "No online payment acquirers configured"
 msgstr "Tanımlı çevrimiçi ödeme alıcısı yok"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:54
+#: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -223,17 +220,13 @@ msgid "Users you already shared with"
 msgstr "Halen paylaşımda bulunduğunuz kullanıcılar"
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_jobs
+#: view:portal.payment.acquirer:0
 msgid ""
-"<p>\n"
-"                    Youd don't have unread job offers.\n"
-"                </p>\n"
-"            "
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
 msgstr ""
-"<p>\n"
-"                    Okumadığınız iş teklifleri yok.\n"
-"                </p>\n"
-"            "
+"nesne: ödeme formunun çevrildiği belge (genellikle bir fatura ya da satış "
+"siparişi kaydı)"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -287,9 +280,16 @@ msgid "News"
 msgstr "Haberler"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Satış Sonrası Hizmetleri"
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
+msgstr "Erişim Reddedildi"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "Gelen Kutusu"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
@@ -314,10 +314,10 @@ msgid "Projects"
 msgstr "Projeler"
 
 #. module: portal
-#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_inbox
-msgid "Inbox"
-msgstr "Gelen Kutusu"
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "Varolan Gruplar (örn. Portal Grupları)"
 
 #. module: portal
 #: view:share.wizard:0
@@ -341,9 +341,9 @@ msgid "Access Groups"
 msgstr "Gruplara Erişim"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "uid: the current user id"
-msgstr "uid: geçerli kullanıcı kimliği"
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "Mesaj"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -378,11 +378,6 @@ msgstr ""
 "Portalımız</a>dan erişin</p>"
 
 #. module: portal
-#: field:portal.payment.acquirer,form_template:0
-msgid "Payment form template (HTML)"
-msgstr "Ödeme formu şablonu (HTML)"
-
-#. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
 msgstr "Kişi"
@@ -393,15 +388,19 @@ msgid "Outgoing Mails"
 msgstr "Giden Postalar"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:193
-#, python-format
-msgid "Email required"
-msgstr "E-posta Gerekli"
+#: field:portal.payment.acquirer,form_template:0
+msgid "Payment form template (HTML)"
+msgstr "Ödeme formu şablonu (HTML)"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
 msgstr "Mesajlaşma"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "uid: the current user id"
+msgstr "uid: geçerli kullanıcı kimliği"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -420,10 +419,9 @@ msgid "Online Payment Acquirer"
 msgstr "Çevrimiçi Ödeme Alıcısı"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:53
-#, python-format
-msgid "Access Denied"
-msgstr "Erişim Reddedildi"
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "Satış Sonrası Hizmetleri"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -467,15 +465,6 @@ msgstr ""
 "                    bilgileri de içerir.\n"
 "                </p>\n"
 "            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sales order record)"
-msgstr ""
-"nesne: ödeme formunun çevrildiği belge (genellikle bir fatura ya da satış "
-"siparişi kaydı)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -604,10 +593,10 @@ msgid "Visible"
 msgstr "Görünür"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:39
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
-msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Varolan Gruplar (örn. Portal Grupları)"
+msgid "Email Required"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard:0
@@ -620,9 +609,13 @@ msgid "Apply"
 msgstr "Uygula"
 
 #. module: portal
-#: model:ir.model,name:portal.model_mail_message
-msgid "Message"
-msgstr "Mesaj"
+#: model:ir.actions.client,help:portal.action_news
+msgid ""
+"<p>\n"
+"                    You don't have unread company's news.\n"
+"                </p>\n"
+"            "
+msgstr ""
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -671,8 +664,34 @@ msgstr "Form Şablonu"
 msgid "Details"
 msgstr "Ayrıntılar"
 
+#, python-format
+#~ msgid "Email required"
+#~ msgstr "E-posta Gerekli"
+
 #~ msgid "Quotations and Sales Orders"
 #~ msgstr "Teklifler ve Satış Siparişleri"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread company's news.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Okumadığınız şirket haberleri yok.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread job offers.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Okumadığınız iş teklifleri yok.\n"
+#~ "                </p>\n"
+#~ "            "
 
 #, python-format
 #~ msgid ""

@@ -31,6 +31,7 @@ from openerp import pooler, tools
 from openerp.osv import fields, osv, expression
 from openerp.tools.translate import _
 from openerp.tools.float_utils import float_round as round
+from openerp.tools.safe_eval import safe_eval as eval
 
 import openerp.addons.decimal_precision as dp
 
@@ -226,29 +227,36 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
+    def _where_calc(self, cr, uid, domain, active_test=True, context=None):
+        """ Convert domains to allow easier filtering:
+                code: force case insensitive and right side matching search
+                journal_id: restrict to the accounts sharing the same account.account.type
+        """
         pos = 0
-
-        while pos < len(args):
-
-            if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
-            if args[pos][0] == 'journal_id':
-                if not args[pos][2]:
-                    del args[pos]
+        while pos < len(domain):
+            if domain[pos][0] == 'code' and domain[pos][1] in ('like', 'ilike') and domain[pos][2]:
+                domain[pos] = ('code', '=like', tools.ustr(domain[pos][2].replace('%', '')) + '%')
+            if domain[pos][0] == 'journal_id':
+                if not domain[pos][2]:
+                    del domain[pos]
                     continue
-                jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2], context=context)
-                if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
-                    args[pos] = ('type','not in',('consolidation','view'))
+                jour = self.pool.get('account.journal').browse(cr, uid, domain[pos][2], context=context)
+                if (not (jour.account_control_ids or jour.type_control_ids)) or not domain[pos][2]:
+                    domain[pos] = ('type', 'not in', ('consolidation', 'view'))
                     continue
                 ids3 = map(lambda x: x.id, jour.type_control_ids)
                 ids1 = super(account_account, self).search(cr, uid, [('user_type', 'in', ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
-                args[pos] = ('id', 'in', ids1)
+                domain[pos] = ('id', 'in', ids1)
             pos += 1
+
+        return super(account_account, self)._where_calc(cr, uid, domain, active_test, context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        """ Check presence of key 'consolidate_children' in context to include also the Consolidated Children
+            of found accounts into the result of the search
+        """
 
         if context and context.has_key('consolidate_children'): #add consolidated children of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
@@ -1157,6 +1165,19 @@ class account_move(osv.osv):
     _description = "Account Entry"
     _order = 'id desc'
 
+    def account_assert_balanced(self, cr, uid, context=None):
+        cr.execute("""\
+            SELECT      move_id
+            FROM        account_move_line
+            WHERE       state = 'valid'
+            GROUP BY    move_id
+            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
+            """)
+        assert len(cr.fetchall()) == 0, \
+            "For all Journal Items, the state is valid implies that the sum " \
+            "of credits equals the sum of debits"
+        return True
+
     def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
         '''
         Prepares and returns a dictionary of values, ready to be passed to create() based on the parameters received.
@@ -1742,7 +1763,7 @@ class account_tax_code(osv.osv):
         res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
-                amount = res.get(record.id, 0.0)
+                amount = res.get(record.id) or 0.0
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
@@ -2013,7 +2034,7 @@ class account_tax(osv.osv):
         for tax in taxes:
             if tax.applicable_type=='code':
                 localdict = {'price_unit':price_unit, 'product':product, 'partner':partner}
-                exec tax.python_applicable in localdict
+                eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
                 if localdict.get('result', False):
                     res.append(tax)
             else:
@@ -2054,7 +2075,7 @@ class account_tax(osv.osv):
                # data['amount'] = quantity
             elif tax.type=='code':
                 localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
-                exec tax.python_compute in localdict
+                eval(tax.python_compute, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
                 data['amount'] = amount
             elif tax.type=='balance':
@@ -2190,7 +2211,7 @@ class account_tax(osv.osv):
 
             elif tax.type=='code':
                 localdict = {'price_unit':cur_price_unit, 'product':product, 'partner':partner}
-                exec tax.python_compute_inv in localdict
+                eval(tax.python_compute_inv, localdict, mode="exec", nocopy=True)
                 amount = localdict['result']
             elif tax.type=='balance':
                 amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)

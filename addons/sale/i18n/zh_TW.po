@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-01-21 04:35+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-22 06:13+0000\n"
-"X-Generator: Launchpad (build 16901)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:23+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -56,13 +56,13 @@ msgid "Cancel Order"
 msgstr "取消訂單"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:101
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
 #, python-format
 msgid "Incorrect Data"
 msgstr "錯誤的資料"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:102
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:103
 #, python-format
 msgid "The value of Advance Amount must be positive."
 msgstr "預付款金額必須為正值(大於零)"
@@ -76,6 +76,11 @@ msgstr "讓您可以對銷售訂單每個項目給予折扣"
 #: help:sale.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "當有新訊息時通知您。"
+
+#. module: sale
+#: report:sale.order:0
+msgid "VAT"
+msgstr "增值稅(VAT)"
 
 #. module: sale
 #: view:res.partner:0
@@ -122,12 +127,6 @@ msgid "# of Qty"
 msgstr "數量"
 
 #. module: sale
-#: code:addons/sale/sale.py:444
-#, python-format
-msgid "Customer Invoices"
-msgstr "客戶發票"
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_partner
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
@@ -169,7 +168,7 @@ msgid "Disc.(%)"
 msgstr "折扣(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:764
+#: code:addons/sale/sale.py:770
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "請為此產品定義收益科目  \"%s\" (id:%d) 。"
@@ -220,9 +219,9 @@ msgid "Other Information"
 msgstr "其他資訊"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
-#: code:addons/sale/wizard/sale_make_invoice.py:42
-#: code:addons/sale/wizard/sale_make_invoice.py:55
+#: code:addons/sale/wizard/sale_line_invoice.py:106
+#: code:addons/sale/wizard/sale_make_invoice.py:43
+#: code:addons/sale/wizard/sale_make_invoice.py:57
 #, python-format
 msgid "Warning!"
 msgstr "警告！"
@@ -255,7 +254,7 @@ msgid "Sales Make Invoice"
 msgstr "銷售開立發票"
 
 #. module: sale
-#: code:addons/sale/sale.py:307
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "價格表警示！"
@@ -287,7 +286,7 @@ msgid "Shop Name"
 msgstr "商店名稱"
 
 #. module: sale
-#: code:addons/sale/sale.py:598
+#: code:addons/sale/sale.py:604
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr "您無法確認沒有銷售項目的銷售訂單。"
@@ -319,7 +318,7 @@ msgid "Quotation "
 msgstr "報價 "
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:107
 #, python-format
 msgid "Advance of %s %%"
 msgstr "%s %%的預付款"
@@ -410,8 +409,8 @@ msgid "View Invoice"
 msgstr "檢視發票"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:113
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:115
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:114
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:116
 #, python-format
 msgid "Advance of %s %s"
 msgstr "預付款: %s %s"
@@ -488,7 +487,7 @@ msgid "Sales Order Lines ready to be invoiced"
 msgstr "銷售訂單項目已可開立發票"
 
 #. module: sale
-#: code:addons/sale/sale.py:308
+#: code:addons/sale/sale.py:310
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -499,6 +498,13 @@ msgstr "假如你更動此訂單的價格清單(及幣別)，已經存在的訂�
 #: report:sale.order:0
 msgid "Tel. :"
 msgstr "電話 :"
+
+#. module: sale
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -516,7 +522,7 @@ msgid "Before Delivery"
 msgstr "出貨前"
 
 #. module: sale
-#: code:addons/sale/sale.py:781
+#: code:addons/sale/sale.py:787
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -534,7 +540,7 @@ msgid "Ordered month of the sales order"
 msgstr "銷售訂單下單月份"
 
 #. module: sale
-#: code:addons/sale/sale.py:505
+#: code:addons/sale/sale.py:507
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -560,7 +566,7 @@ msgid "Invoiced"
 msgstr "已開發票"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:202
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:203
 #, python-format
 msgid "Advance Invoice"
 msgstr "先開發票"
@@ -735,15 +741,15 @@ msgstr ""
 "* 「取消」狀態，指使用者取消該銷售訂單。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:93
 #, python-format
 msgid "There is no income account defined as global property."
 msgstr "沒有任何收益科目被定義為全域屬性。"
 
 #. module: sale
-#: code:addons/sale/sale.py:960
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:91
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
+#: code:addons/sale/sale.py:966
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:92
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
 #, python-format
 msgid "Configuration Error!"
 msgstr "設定錯誤！"
@@ -759,7 +765,7 @@ msgid "Send by Email"
 msgstr "以電子郵件傳送"
 
 #. module: sale
-#: code:addons/sale/res_config.py:97
+#: code:addons/sale/res_config.py:98
 #, python-format
 msgid "Hour"
 msgstr "時"
@@ -790,7 +796,7 @@ msgid "Currency"
 msgstr "貨幣"
 
 #. module: sale
-#: code:addons/sale/sale.py:942
+#: code:addons/sale/sale.py:948
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -806,7 +812,7 @@ msgid "Category of Product"
 msgstr "產品類別"
 
 #. module: sale
-#: code:addons/sale/sale.py:564
+#: code:addons/sale/sale.py:570
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "無法取消此銷售訂單!"
@@ -820,6 +826,13 @@ msgstr "重新開立發票"
 #: report:sale.order:0
 msgid "Taxes :"
 msgstr "稅 :"
+
+#. module: sale
+#: code:addons/sale/sale.py:279
+#, python-format
+msgid ""
+"In order to delete a confirmed sales order, you must cancel it before!"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -934,7 +947,7 @@ msgstr ""
 "            供應商：別忘記要求快遞。"
 
 #. module: sale
-#: code:addons/sale/sale.py:955
+#: code:addons/sale/sale.py:961
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "找不到有效的價格表項目！"
@@ -981,7 +994,7 @@ msgid "Order Reference must be unique per Company!"
 msgstr "訂單編號在同一公司內不可重複！"
 
 #. module: sale
-#: code:addons/sale/sale.py:952
+#: code:addons/sale/sale.py:958
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1014,13 +1027,6 @@ msgid ""
 msgstr ""
 "於建立報價單、銷售訂單時，允許使用不同的下單策略並且管理與其相關庫存。\n"
 "此功能將會安裝 sale_stock 模組。"
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -1093,7 +1099,7 @@ msgid "# of Sales Order"
 msgstr "銷售訂單數量"
 
 #. module: sale
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:989
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr "不能刪除「%s」狀態的銷售訂單細項。"
@@ -1104,7 +1110,7 @@ msgid "Properties on lines"
 msgstr "細項屬性"
 
 #. module: sale
-#: code:addons/sale/sale.py:865
+#: code:addons/sale/sale.py:871
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -1117,7 +1123,7 @@ msgid "Total Tax Included"
 msgstr "含稅總額"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:43
 #, python-format
 msgid "You cannot create invoice when sales order is not confirmed."
 msgstr "當銷售訂單尚未確認時，您不能開立發票。"
@@ -1126,6 +1132,12 @@ msgstr "當銷售訂單尚未確認時，您不能開立發票。"
 #: view:sale.report:0
 msgid "Ordered date of the sales order"
 msgstr "銷售訂單的下單日期"
+
+#. module: sale
+#: code:addons/sale/sale.py:871
+#, python-format
+msgid "No Customer Defined!"
+msgstr ""
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
@@ -1227,9 +1239,9 @@ msgid "Create Invoices"
 msgstr "開立發票"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
-#: code:addons/sale/sale.py:820
-#: code:addons/sale/sale.py:983
+#: code:addons/sale/sale.py:279
+#: code:addons/sale/sale.py:826
+#: code:addons/sale/sale.py:989
 #, python-format
 msgid "Invalid Action!"
 msgstr "無效的動作"
@@ -1394,17 +1406,16 @@ msgid "Use pricelists to adapt your price per customers"
 msgstr "使用價格表依客戶調整報價"
 
 #. module: sale
-#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:187
 #, python-format
 msgid "There is no default shop for the current user's company!"
 msgstr "目前使用者的公司沒有預設的店點！"
 
 #. module: sale
-#: code:addons/sale/sale.py:277
+#: code:addons/sale/sale.py:446
 #, python-format
-msgid ""
-"In order to delete a confirmed sales order, you must cancel it before !"
-msgstr "要刪除已確認的銷售訂單前，您必須先取消它。"
+msgid "Customer Invoices"
+msgstr "客戶發票"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.open_board_sales
@@ -1444,7 +1455,7 @@ msgid "Done"
 msgstr "完成"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:121
+#: code:addons/sale/wizard/sale_line_invoice.py:120
 #: model:ir.model,name:sale.model_account_invoice
 #: model:process.node,name:sale.process_node_invoice0
 #: view:sale.order:0
@@ -1813,7 +1824,7 @@ msgid "Date on which sales order is confirmed."
 msgstr "銷售訂單於該日期確認"
 
 #. module: sale
-#: code:addons/sale/sale.py:565
+#: code:addons/sale/sale.py:571
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr "請先取消此銷售訂單附帶的所有發票。"
@@ -1842,12 +1853,6 @@ msgstr "預付款發票總金額"
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
 msgstr "發票異常情況"
-
-#. module: sale
-#: code:addons/sale/sale.py:865
-#, python-format
-msgid "No Customer Defined !"
-msgstr "未定義客戶 !"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -1880,12 +1885,12 @@ msgid "Project"
 msgstr "專案管理"
 
 #. module: sale
-#: code:addons/sale/sale.py:185
-#: code:addons/sale/sale.py:363
-#: code:addons/sale/sale.py:504
-#: code:addons/sale/sale.py:598
-#: code:addons/sale/sale.py:763
-#: code:addons/sale/sale.py:780
+#: code:addons/sale/sale.py:187
+#: code:addons/sale/sale.py:365
+#: code:addons/sale/sale.py:506
+#: code:addons/sale/sale.py:604
+#: code:addons/sale/sale.py:769
+#: code:addons/sale/sale.py:786
 #, python-format
 msgid "Error!"
 msgstr "錯誤！"
@@ -1941,7 +1946,7 @@ msgid "Date Confirm"
 msgstr "確認日期"
 
 #. module: sale
-#: code:addons/sale/sale.py:364
+#: code:addons/sale/sale.py:366
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr "請為此公司 \"%s\" (id:%d) 定義銷售日記帳。"
@@ -1952,8 +1957,8 @@ msgid "Contract Features"
 msgstr "合約功能"
 
 #. module: sale
-#: code:addons/sale/sale.py:287
-#: code:addons/sale/sale.py:584
+#: code:addons/sale/sale.py:289
+#: code:addons/sale/sale.py:590
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -1986,7 +1991,7 @@ msgid "Confirm"
 msgstr "確認"
 
 #. module: sale
-#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:826
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr "您無法取消已開發票的銷售訂單項目。"
@@ -2045,7 +2050,7 @@ msgid "Sales order lines done"
 msgstr "銷售訂單項目已完成"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:107
+#: code:addons/sale/wizard/sale_line_invoice.py:106
 #, python-format
 msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the "
@@ -2073,7 +2078,7 @@ msgid "December"
 msgstr "十二月"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:97
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr "這個產品沒有定義收益科目: \"%s\" (id:%d)."
@@ -2109,7 +2114,7 @@ msgid "June"
 msgstr "六月"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:55
+#: code:addons/sale/wizard/sale_make_invoice.py:57
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
 msgstr "您不應為以下的銷售訂單%s手動開立發票。"
@@ -2215,7 +2220,7 @@ msgid "from stock"
 msgstr "自庫存"
 
 #. module: sale
-#: code:addons/sale/sale.py:944
+#: code:addons/sale/sale.py:950
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "無價格表！ : "
@@ -2346,6 +2351,15 @@ msgstr "已提貨"
 #: field:sale.report,year:0
 msgid "Year"
 msgstr "年"
+
+#, python-format
+#~ msgid "No Customer Defined !"
+#~ msgstr "未定義客戶 !"
+
+#, python-format
+#~ msgid ""
+#~ "In order to delete a confirmed sales order, you must cancel it before !"
+#~ msgstr "要刪除已確認的銷售訂單前，您必須先取消它。"
 
 #~ msgid "Quotation send"
 #~ msgstr "報價單已送出"

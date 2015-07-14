@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-02-06 15:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-04-17 04:26+0000\n"
 "Last-Translator: Andy Cheng <andy@dobtor.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-18 07:21+0000\n"
-"X-Generator: Launchpad (build 16985)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:28+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -124,8 +124,8 @@ msgid "Product Moves"
 msgstr "產品調度"
 
 #. module: stock
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "請提供適當的數量。"
@@ -149,7 +149,7 @@ msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr "您不能在一個以上的庫存盤點執行這操作。"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "數量不能為負。"
@@ -204,11 +204,6 @@ msgid "Physical Inventories"
 msgstr "實地盤存"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse a Period"
-msgstr "分析一個期間"
-
-#. module: stock
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
@@ -233,9 +228,9 @@ msgid ""
 msgstr "選擇性使用的送貨地址，專門用於配發"
 
 #. module: stock
-#: model:ir.actions.server,name:stock.action_partial_move_server
-msgid "Deliver/Receive Products"
-msgstr "交貨／收貨"
+#: field:stock.location.product,type:0
+msgid "Analysis Type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -315,7 +310,7 @@ msgid "Reference"
 msgstr "參照"
 
 #. module: stock
-#: code:addons/stock/stock.py:1565
+#: code:addons/stock/stock.py:1559
 #, python-format
 msgid "Products to Process"
 msgstr "待處理產品"
@@ -352,19 +347,19 @@ msgid ""
 msgstr "保留談話摘要(訊息數量等等)。為了放入看板檢視模式，此摘要直接存為HTML格式。"
 
 #. module: stock
-#: code:addons/stock/stock.py:782
-#: code:addons/stock/stock.py:2517
-#: code:addons/stock/stock.py:2568
-#: code:addons/stock/stock.py:2629
-#: code:addons/stock/wizard/stock_change_product_qty.py:95
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/stock.py:777
+#: code:addons/stock/stock.py:2512
+#: code:addons/stock/stock.py:2563
+#: code:addons/stock/stock.py:2624
+#: code:addons/stock/wizard/stock_change_product_qty.py:101
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
 #: code:addons/stock/wizard/stock_inventory_merge.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:96
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:98
-#: code:addons/stock/wizard/stock_partial_picking.py:174
-#: code:addons/stock/wizard/stock_partial_picking.py:181
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:176
+#: code:addons/stock/wizard/stock_partial_picking.py:183
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #: code:addons/stock/wizard/stock_return_picking.py:102
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #: code:addons/stock/wizard/stock_return_picking.py:212
@@ -475,7 +470,7 @@ msgid "Ready to Deliver"
 msgstr "可出貨"
 
 #. module: stock
-#: code:addons/stock/stock.py:2525
+#: code:addons/stock/stock.py:2520
 #, python-format
 msgid ""
 "Forbidden operation: it is not allowed to scrap products from a virtual "
@@ -568,7 +563,7 @@ msgid ""
 msgstr "在客戶訂單確認和出貨之間的平均延遲天數。這是你承諾客戶的出貨時間。"
 
 #. module: stock
-#: code:addons/stock/product.py:195
+#: code:addons/stock/product.py:197
 #, python-format
 msgid "Products: "
 msgstr "產品： "
@@ -585,7 +580,7 @@ msgid "Draft Physical Inventories"
 msgstr "實際盤點草稿"
 
 #. module: stock
-#: code:addons/stock/stock.py:1806
+#: code:addons/stock/stock.py:1800
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -628,7 +623,7 @@ msgid "Item Labels"
 msgstr "項目標籤"
 
 #. module: stock
-#: code:addons/stock/stock.py:1373
+#: code:addons/stock/stock.py:1367
 #, python-format
 msgid "Back order <em>%s</em> has been <b>created</b>."
 msgstr "延期交貨清單<em>%s</em><b>已建立</b>。"
@@ -823,9 +818,11 @@ msgid "Packs"
 msgstr "包裹"
 
 #. module: stock
-#: selection:stock.location.product,type:0
-msgid "Analyse Current Inventory"
-msgstr "分析目前庫存"
+#: selection:report.stock.inventory,location_type:0
+#: field:res.partner,property_stock_supplier:0
+#: selection:stock.location,usage:0
+msgid "Supplier Location"
+msgstr "供應商地點"
 
 #. module: stock
 #: view:stock.move:0
@@ -890,7 +887,7 @@ msgid ""
 msgstr "在執行即時庫存估價時，此會計日記帳簿將自動登記處理庫存調動的會計分錄。"
 
 #. module: stock
-#: code:addons/stock/stock.py:2296
+#: code:addons/stock/stock.py:2289
 #, python-format
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
@@ -917,7 +914,7 @@ msgid "Reference must be unique per Company!"
 msgstr "編號必須在同一公司內唯一！"
 
 #. module: stock
-#: code:addons/stock/product.py:448
+#: code:addons/stock/product.py:450
 #, python-format
 msgid "Future Receptions"
 msgstr "日後收貨"
@@ -926,11 +923,6 @@ msgstr "日後收貨"
 #: selection:stock.move,priority:0
 msgid "Urgent"
 msgstr "緊急"
-
-#. module: stock
-#: selection:stock.picking.out,state:0
-msgid "Delivered"
-msgstr "已出貨"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1001,7 +993,7 @@ msgid "December"
 msgstr "十二月"
 
 #. module: stock
-#: code:addons/stock/stock.py:1204
+#: code:addons/stock/stock.py:1198
 #, python-format
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
@@ -1024,7 +1016,7 @@ msgid "Change Product Quantity"
 msgstr "更改產品數量"
 
 #. module: stock
-#: code:addons/stock/product.py:464
+#: code:addons/stock/product.py:466
 #, python-format
 msgid "Future P&L"
 msgstr "未來損益"
@@ -1061,7 +1053,7 @@ msgid "You must assign a serial number for this product."
 msgstr "您必須為此產品指定一組序號。"
 
 #. module: stock
-#: code:addons/stock/stock.py:2299
+#: code:addons/stock/stock.py:2292
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
 msgstr "請為這個產品分類設定一個日記賬：「%s」(id: %d)"
@@ -1182,6 +1174,13 @@ msgid ""
 msgstr "請在列表中選擇多個實地盤點結果進行合併"
 
 #. module: stock
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of Serial Number, internal reference, Product and Company "
+"must be unique !"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
@@ -1190,10 +1189,9 @@ msgid ""
 msgstr "沒有產品可進行退貨（只有完成狀態和未完全退貨的項目能退貨）！"
 
 #. module: stock
-#: view:stock.picking:0
-#: view:stock.picking.in:0
-msgid "Back Orders"
-msgstr "延期交貨單"
+#: model:ir.actions.server,name:stock.action_partial_move_server
+msgid "Deliver/Receive Products"
+msgstr "交貨／收貨"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1237,7 +1235,7 @@ msgid "Production Location"
 msgstr "生產地點"
 
 #. module: stock
-#: code:addons/stock/product.py:121
+#: code:addons/stock/product.py:123
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)."
 msgstr "請為產品分類：「%s」 (id: %d) 設定日記帳。"
@@ -1301,7 +1299,7 @@ msgid "Author"
 msgstr "作者"
 
 #. module: stock
-#: code:addons/stock/stock.py:1851
+#: code:addons/stock/stock.py:1848
 #, python-format
 msgid ""
 "You are moving %.2f %s but only %.2f %s available for this serial number."
@@ -1338,7 +1336,7 @@ msgid "Supplier"
 msgstr "供應商"
 
 #. module: stock
-#: code:addons/stock/stock.py:2908
+#: code:addons/stock/stock.py:2903
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1346,7 +1344,7 @@ msgid ""
 msgstr "為了取消這次盤點，您必須先取消相關的日記帳分錄。"
 
 #. module: stock
-#: code:addons/stock/product.py:113
+#: code:addons/stock/product.py:115
 #, python-format
 msgid "Please specify company in Location."
 msgstr "請在倉位中指定公司"
@@ -1512,9 +1510,10 @@ msgid "Waiting Another Move"
 msgstr "等待其他調動"
 
 #. module: stock
-#: selection:stock.picking,state:0
-msgid "Transferred"
-msgstr "已運送"
+#: help:stock.move,product_packaging:0
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+msgstr "指定包裝的屬性，例如類型、產品數量等等。"
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -1530,14 +1529,11 @@ msgid ""
 msgstr "當使用者在提貨確認時，此程式用欄位用於記錄產品成本（使用平均成本法時）。"
 
 #. module: stock
-#: code:addons/stock/stock.py:1919
-#, python-format
-msgid "Warning: No Back Order"
-msgstr "警告：沒有延期交貨單"
-
-#. module: stock
 #: model:ir.model,name:stock.model_stock_move
 #: view:stock.partial.move:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Stock Move"
 msgstr "庫存調動"
 
@@ -1552,13 +1548,13 @@ msgid "To be refunded/invoiced"
 msgstr "待退款/開立發票"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
+#: code:addons/stock/stock.py:2487
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "只能刪除調動草案。"
 
 #. module: stock
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
 msgstr "您不能存入產品%s至檢視類別的倉位%s。"
@@ -1595,7 +1591,7 @@ msgid "Additional Info"
 msgstr "附加資訊"
 
 #. module: stock
-#: code:addons/stock/stock.py:2697
+#: code:addons/stock/stock.py:2692
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr "調動 #%s 缺少部分提貨資料。"
@@ -1776,7 +1772,7 @@ msgid "Order Date"
 msgstr "訂單日期"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:96
+#: code:addons/stock/wizard/stock_change_product_qty.py:102
 #, python-format
 msgid "INV: %s"
 msgstr "發票：%s"
@@ -1788,7 +1784,7 @@ msgid "Parent Location"
 msgstr "上層倉位"
 
 #. module: stock
-#: code:addons/stock/product.py:168
+#: code:addons/stock/product.py:170
 #, python-format
 msgid "Please define stock output account for this product: \"%s\" (id: %d)."
 msgstr "請為此產品定義出貨科目：「%s」(id: %d)。"
@@ -1814,7 +1810,7 @@ msgid "Stock Invoice Onshipping"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2517
+#: code:addons/stock/stock.py:2512
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "請輸入正的報廢數量。"
@@ -1890,7 +1886,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "庫存估價科目（出庫）"
 
 #. module: stock
-#: code:addons/stock/stock.py:1805
+#: code:addons/stock/stock.py:1799
 #, python-format
 msgid "Operation Forbidden!"
 msgstr "作業被禁止！"
@@ -1972,11 +1968,10 @@ msgid "You cannot remove a lot line."
 msgstr "您不能移除批號。"
 
 #. module: stock
-#: help:stock.location,posx:0
-#: help:stock.location,posy:0
-#: help:stock.location,posz:0
-msgid "Optional localization details, for information purpose only"
-msgstr "選擇性在地化明細，僅供參考用"
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+msgid "Back Orders"
+msgstr "延期交貨單"
 
 #. module: stock
 #: view:product.product:0
@@ -1990,7 +1985,7 @@ msgid "Localization"
 msgstr "本地化"
 
 #. module: stock
-#: code:addons/stock/product.py:460
+#: code:addons/stock/product.py:462
 #, python-format
 msgid "Delivered Qty"
 msgstr "交貨量"
@@ -2247,12 +2242,6 @@ msgid ""
 msgstr "此倉位會代替預設倉位，用在接收來自業務夥伴的產品時的來源倉位。"
 
 #. module: stock
-#: sql_constraint:stock.production.lot:0
-msgid ""
-"The combination of Serial Number and internal reference must be unique !"
-msgstr "序號與內部參考號碼的組合必須獨一無二。"
-
-#. module: stock
 #: field:stock.warehouse,partner_id:0
 msgid "Owner Address"
 msgstr "所有者地址"
@@ -2296,7 +2285,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr "對每項貨物調動建立會計分錄"
 
 #. module: stock
-#: code:addons/stock/product.py:450
+#: code:addons/stock/product.py:452
 #, python-format
 msgid "Received Qty"
 msgstr "接收量"
@@ -2370,8 +2359,8 @@ msgid "Customer Locations"
 msgstr "客戶倉位"
 
 #. module: stock
-#: code:addons/stock/stock.py:2492
-#: code:addons/stock/stock.py:2907
+#: code:addons/stock/stock.py:2487
+#: code:addons/stock/stock.py:2902
 #, python-format
 msgid "User Error!"
 msgstr "使用者錯誤！"
@@ -2405,13 +2394,6 @@ msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
 msgstr "如果連鎖類型並不是Transparent，連動調撥時會寫入庫存日記帳簿。 (如果保持空白，日記簿則不使用)"
-
-#. module: stock
-#: selection:report.stock.inventory,location_type:0
-#: field:res.partner,property_stock_supplier:0
-#: selection:stock.location,usage:0
-msgid "Supplier Location"
-msgstr "供應商地點"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2456,6 +2438,12 @@ msgstr "會計"
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr "庫存管理"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:224
+#, python-format
+msgid "Partial Delivery"
+msgstr "部份交貨"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2596,7 +2584,7 @@ msgid "Warehouse board"
 msgstr "倉庫控制面板"
 
 #. module: stock
-#: code:addons/stock/product.py:470
+#: code:addons/stock/product.py:472
 #, python-format
 msgid "Future Qty"
 msgstr "未來數量"
@@ -2615,7 +2603,7 @@ msgid "Notes"
 msgstr "備註"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:181
+#: code:addons/stock/wizard/stock_partial_picking.py:183
 #, python-format
 msgid ""
 "The unit of measure rounding does not allow you to ship \"%s %s\", only "
@@ -2661,7 +2649,7 @@ msgid "Products"
 msgstr "產品"
 
 #. module: stock
-#: code:addons/stock/stock.py:2287
+#: code:addons/stock/stock.py:2280
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Output Account of this product and Valuation "
@@ -2701,7 +2689,7 @@ msgid "Outgoing Products"
 msgstr "出庫產品"
 
 #. module: stock
-#: code:addons/stock/stock.py:2293
+#: code:addons/stock/stock.py:2286
 #, python-format
 msgid ""
 "Please define stock input account for this product or its category: \"%s\" "
@@ -2721,7 +2709,7 @@ msgid "Move"
 msgstr "調動"
 
 #. module: stock
-#: code:addons/stock/product.py:466
+#: code:addons/stock/product.py:468
 #, python-format
 msgid "P&L Qty"
 msgstr "損益數量"
@@ -2781,6 +2769,11 @@ msgid "New Quantity on Hand"
 msgstr "在庫數量調整"
 
 #. module: stock
+#: selection:stock.location.product,type:0
+msgid "Analyze current inventory"
+msgstr ""
+
+#. module: stock
 #: field:stock.move,priority:0
 msgid "Priority"
 msgstr "優先次序"
@@ -2833,7 +2826,7 @@ msgid "Cancel Move"
 msgstr "取消調動"
 
 #. module: stock
-#: code:addons/stock/stock.py:2290
+#: code:addons/stock/stock.py:2283
 #, python-format
 msgid ""
 "Cannot create Journal Entry, Input Account of this product and Valuation "
@@ -2855,14 +2848,6 @@ msgstr "固定地點"
 #: field:report.stock.inventory,scrap_location:0
 msgid "scrap"
 msgstr "報廢"
-
-#. module: stock
-#: code:addons/stock/stock.py:1920
-#, python-format
-msgid ""
-"By changing the quantity here, you accept the new quantity as complete: "
-"OpenERP will not automatically generate a Back Order."
-msgstr "修改此處的數量，則以新的數量視為完成。OpenERP 將不會自動建立一個延期交貨單。"
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -2930,7 +2915,7 @@ msgstr ""
 "此功能將安裝模組 product_expiry 。"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:174
+#: code:addons/stock/wizard/stock_partial_picking.py:176
 #, python-format
 msgid "Please provide proper Quantity."
 msgstr "請提供適當的數量。"
@@ -2959,7 +2944,7 @@ msgid "%s-%s-return"
 msgstr "%s-%s-退回"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:86
+#: code:addons/stock/wizard/stock_change_product_qty.py:92
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr ""
@@ -3027,7 +3012,7 @@ msgid "Date of Completion"
 msgstr "完成日期"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
+#: code:addons/stock/stock.py:1674
 #, python-format
 msgid "You cannot move product %s from a location of type view %s."
 msgstr "您不能將產品 %s 由類別為「檢視」的倉位 %s 中移出。"
@@ -3332,7 +3317,7 @@ msgstr ""
 "            "
 
 #. module: stock
-#: code:addons/stock/stock.py:2545
+#: code:addons/stock/stock.py:2540
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s 已被 <b>調動到</b> 報廢倉."
@@ -3382,7 +3367,7 @@ msgid "Date done"
 msgstr "完成日期"
 
 #. module: stock
-#: code:addons/stock/stock.py:1135
+#: code:addons/stock/stock.py:1129
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -3531,7 +3516,7 @@ msgid "Assigned Internal Moves"
 msgstr "指定的內部調動"
 
 #. module: stock
-#: code:addons/stock/stock.py:804
+#: code:addons/stock/stock.py:799
 #, python-format
 msgid "You cannot process picking without stock moves."
 msgstr "沒有庫存調動，您不能進行提貨。"
@@ -3625,6 +3610,11 @@ msgid "Products by Location"
 msgstr "各地點產品"
 
 #. module: stock
+#: selection:stock.picking,state:0
+msgid "Transferred"
+msgstr "已運送"
+
+#. module: stock
 #: view:stock.config.settings:0
 msgid "Logistic"
 msgstr "物流"
@@ -3707,7 +3697,7 @@ msgid "Manager"
 msgstr "主管"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_partial_picking.py:194
 #, python-format
 msgid ""
 "The rounding of the initial uom does not allow you to ship \"%s %s\", as it "
@@ -3724,11 +3714,6 @@ msgstr "內部運送"
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
 msgstr "啟動相關科目"
-
-#. module: stock
-#: field:stock.location.product,type:0
-msgid "Analyse Type"
-msgstr "分析類型"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3770,7 +3755,7 @@ msgid "Inventory Move"
 msgstr "存貨調動"
 
 #. module: stock
-#: code:addons/stock/product.py:476
+#: code:addons/stock/product.py:478
 #, python-format
 msgid "Future Productions"
 msgstr "未來生產"
@@ -3958,25 +3943,25 @@ msgstr "非歐洲客戶"
 
 #. module: stock
 #: code:addons/stock/product.py:100
-#: code:addons/stock/product.py:110
-#: code:addons/stock/product.py:113
-#: code:addons/stock/product.py:120
-#: code:addons/stock/product.py:141
-#: code:addons/stock/product.py:167
+#: code:addons/stock/product.py:112
+#: code:addons/stock/product.py:115
+#: code:addons/stock/product.py:122
+#: code:addons/stock/product.py:143
+#: code:addons/stock/product.py:169
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
 #: code:addons/stock/stock.py:543
-#: code:addons/stock/stock.py:804
-#: code:addons/stock/stock.py:1204
-#: code:addons/stock/stock.py:1213
-#: code:addons/stock/stock.py:2287
-#: code:addons/stock/stock.py:2290
-#: code:addons/stock/stock.py:2293
-#: code:addons/stock/stock.py:2296
-#: code:addons/stock/stock.py:2299
-#: code:addons/stock/stock.py:2302
-#: code:addons/stock/stock.py:2525
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:799
+#: code:addons/stock/stock.py:1198
+#: code:addons/stock/stock.py:1207
+#: code:addons/stock/stock.py:2280
+#: code:addons/stock/stock.py:2283
+#: code:addons/stock/stock.py:2286
+#: code:addons/stock/stock.py:2289
+#: code:addons/stock/stock.py:2292
+#: code:addons/stock/stock.py:2295
+#: code:addons/stock/stock.py:2520
+#: code:addons/stock/stock.py:2629
 #: code:addons/stock/wizard/stock_fill_inventory.py:63
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -4072,7 +4057,7 @@ msgstr ""
 "* 固定庫位：連鎖倉位為下一個欄位「如果連鎖庫位為固定」的設定。"
 
 #. module: stock
-#: code:addons/stock/stock.py:1882
+#: code:addons/stock/stock.py:1879
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -4085,7 +4070,7 @@ msgid "Serial Number Revisions"
 msgstr "序號版本"
 
 #. module: stock
-#: code:addons/stock/stock.py:1134
+#: code:addons/stock/stock.py:1128
 #, python-format
 msgid "Error, no partner!"
 msgstr "錯誤，沒有業務夥伴！"
@@ -4142,7 +4127,7 @@ msgid "Followers"
 msgstr "關注者"
 
 #. module: stock
-#: code:addons/stock/stock.py:2634
+#: code:addons/stock/stock.py:2629
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "調動數量不能為負值或零。"
@@ -4198,6 +4183,13 @@ msgid "Create invoice"
 msgstr "開立發票"
 
 #. module: stock
+#: help:stock.config.settings,group_stock_multiple_locations:0
+msgid ""
+"This allows to configure and use multiple stock locations and warehouses,\n"
+"                instead of having a single default one."
+msgstr ""
+
+#. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Internal Moves"
 msgstr "確認內部調動"
@@ -4225,7 +4217,7 @@ msgstr ""
 "如果成本價格減少，庫存變動科目為貸方，入庫科目為借方。"
 
 #. module: stock
-#: code:addons/stock/stock.py:2860
+#: code:addons/stock/stock.py:2855
 #, python-format
 msgid "INV:"
 msgstr ""
@@ -4247,7 +4239,7 @@ msgid "Chaining Journal"
 msgstr "連鎖倉位日記帳"
 
 #. module: stock
-#: code:addons/stock/stock.py:782
+#: code:addons/stock/stock.py:777
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr "庫存不足，無法保留產品"
@@ -4280,7 +4272,7 @@ msgstr ""
 "用於即時存貨估價。當設於虛擬倉位(非內部倉位)時，此科目記錄由內部倉位移入此倉位的存貨價值，優先於設定在產品上的存貨庫存科目。這對內部庫位沒有任何效果。"
 
 #. module: stock
-#: code:addons/stock/product.py:458
+#: code:addons/stock/product.py:460
 #, python-format
 msgid "Future Deliveries"
 msgstr "未來交貨"
@@ -4303,7 +4295,7 @@ msgid "Auto Validate"
 msgstr "自動檢驗"
 
 #. module: stock
-#: code:addons/stock/stock.py:1850
+#: code:addons/stock/stock.py:1847
 #, python-format
 msgid "Insufficient Stock for Serial Number !"
 msgstr "該序號的庫存不足！"
@@ -4355,7 +4347,7 @@ msgid "Unique Serial Number, will be displayed as: PREFIX/SERIAL [INT_REF]"
 msgstr "唯一序號將顯示為 前綴字元/序號 [整數參考號]"
 
 #. module: stock
-#: code:addons/stock/product.py:142
+#: code:addons/stock/product.py:144
 #, python-format
 msgid "Please define stock input account for this product: \"%s\" (id: %d)."
 msgstr "請定義入庫會計科目給這個產品：「%s」（id: %d）。"
@@ -4398,14 +4390,14 @@ msgid "Invoiced"
 msgstr "已開發票"
 
 #. module: stock
-#: code:addons/stock/stock.py:1881
+#: code:addons/stock/stock.py:1878
 #: view:product.template:0
 #, python-format
 msgid "Information"
 msgstr "資訊"
 
 #. module: stock
-#: code:addons/stock/stock.py:1213
+#: code:addons/stock/stock.py:1207
 #, python-format
 msgid "You cannot remove the picking which is in %s state!"
 msgstr "您不能移除 %s 狀態的提貨單"
@@ -4506,7 +4498,7 @@ msgid "Shelves (Y)"
 msgstr "貨架 (Y)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2295
 #, python-format
 msgid ""
 "Please define inventory valuation account on the product category: \"%s\" "
@@ -4567,7 +4559,7 @@ msgid "November"
 msgstr "十一月"
 
 #. module: stock
-#: code:addons/stock/product.py:472
+#: code:addons/stock/product.py:474
 #, python-format
 msgid "Unplanned Qty"
 msgstr "未計劃量"
@@ -4602,7 +4594,7 @@ msgid ""
 msgstr "這裡允許您透過使用序號管理存貨。當您在存貨調動選擇一個序號時，您將看到該產品的上下游回溯情形。"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:128
+#: code:addons/stock/wizard/stock_fill_inventory.py:129
 #, python-format
 msgid ""
 "No product in this location. Please select a location in the product form."
@@ -4619,14 +4611,14 @@ msgid "Move History (parent moves)"
 msgstr "調動歷史（上級調動）"
 
 #. module: stock
-#: code:addons/stock/product.py:454
+#: code:addons/stock/product.py:456
 #, python-format
 msgid "Future Stock"
 msgstr "未來庫存"
 
 #. module: stock
-#: code:addons/stock/stock.py:1680
-#: code:addons/stock/stock.py:1682
+#: code:addons/stock/stock.py:1674
+#: code:addons/stock/stock.py:1676
 #, python-format
 msgid "Error"
 msgstr "錯誤"
@@ -4736,10 +4728,9 @@ msgid "Picking Slip"
 msgstr "提貨單"
 
 #. module: stock
-#: help:stock.move,product_packaging:0
-msgid ""
-"It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr "指定包裝的屬性，例如類型、產品數量等等。"
+#: selection:stock.picking.out,state:0
+msgid "Delivered"
+msgstr "已出貨"
 
 #. module: stock
 #: view:product.product:0
@@ -4801,7 +4792,7 @@ msgid "May"
 msgstr "五月"
 
 #. module: stock
-#: code:addons/stock/product.py:110
+#: code:addons/stock/product.py:112
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
@@ -4834,7 +4825,7 @@ msgid "Location Content"
 msgstr "地點內容"
 
 #. module: stock
-#: code:addons/stock/product.py:478
+#: code:addons/stock/product.py:480
 #, python-format
 msgid "Produced Qty"
 msgstr "生產量"
@@ -4904,10 +4895,8 @@ msgid "Date of Reception"
 msgstr ""
 
 #. module: stock
-#: help:stock.config.settings,group_stock_multiple_locations:0
-msgid ""
-"This allows to configure and use multiple stock locations and warehouses,\n"
-"                instead of having a single default one."
+#: selection:stock.location.product,type:0
+msgid "Analyze period"
 msgstr ""
 
 #. module: stock
@@ -5033,6 +5022,13 @@ msgstr "準備處理"
 msgid "Warehouse Address :"
 msgstr "倉庫地址："
 
+#. module: stock
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
+msgstr "選擇性在地化明細，僅供參考用"
+
 #~ msgid "_Cancel"
 #~ msgstr "取消(_C)"
 
@@ -5040,6 +5036,29 @@ msgstr "倉庫地址："
 #~ msgid "Error, no partner !"
 #~ msgstr "錯誤，無伙伴！"
 
+#~ msgid "Analyse a Period"
+#~ msgstr "分析一個期間"
+
+#~ msgid "Analyse Current Inventory"
+#~ msgstr "分析目前庫存"
+
+#, python-format
+#~ msgid "Warning: No Back Order"
+#~ msgstr "警告：沒有延期交貨單"
+
+#~ msgid ""
+#~ "The combination of Serial Number and internal reference must be unique !"
+#~ msgstr "序號與內部參考號碼的組合必須獨一無二。"
+
 #, python-format
 #~ msgid "Operation forbidden !"
 #~ msgstr "禁止該作業！！"
+
+#, python-format
+#~ msgid ""
+#~ "By changing the quantity here, you accept the new quantity as complete: "
+#~ "OpenERP will not automatically generate a Back Order."
+#~ msgstr "修改此處的數量，則以新的數量視為完成。OpenERP 將不會自動建立一個延期交貨單。"
+
+#~ msgid "Analyse Type"
+#~ msgstr "分析類型"

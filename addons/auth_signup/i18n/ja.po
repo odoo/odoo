@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2014-05-08 04:02+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-28 08:39+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-05-10 07:55+0000\n"
-"X-Generator: Launchpad (build 16996)\n"
+"X-Launchpad-Export-Date: 2014-08-30 07:31+0000\n"
+"X-Generator: Launchpad (build 17176)\n"
 
 #. module: auth_signup
-#: view:res.users:0
+#: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
@@ -35,11 +35,9 @@ msgid "Allow external users to sign up"
 msgstr "外部ユーザの登録を許可"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
-#, python-format
+#: view:website:auth_signup.fields
 msgid "Confirm Password"
-msgstr ""
+msgstr "パスワードを確認"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
@@ -49,7 +47,7 @@ msgstr ""
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an invitation email"
-msgstr ""
+msgstr "招待Eメールを送信"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -62,18 +60,15 @@ msgid "base.config.settings"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:266
+#: code:addons/auth_signup/res_users.py:295
 #, python-format
 msgid "Cannot send email: user has no email address."
-msgstr ""
+msgstr "Eメールが送信できません： ユーザにEメールアドレスが設定されていません。"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
-#, python-format
+#: view:website:auth_signup.reset_password
 msgid "Reset password"
-msgstr ""
+msgstr "パスワードをリセット"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_template_user_id:0
@@ -87,7 +82,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:121
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr ""
@@ -111,10 +106,10 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: view:res.users:0
+#: view:res.users:auth_signup.res_users_form_view
 msgid ""
 "An invitation email containing the following subscription link has been sent:"
-msgstr ""
+msgstr "次のサブスクリプションリンクを含む招待Eメールが送信されました："
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -128,7 +123,7 @@ msgstr "接続履歴なし"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:115
 #, python-format
 msgid "Please enter a name."
 msgstr ""
@@ -136,7 +131,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "ユーザ"
 
 #. module: auth_signup
 #: field:res.partner,signup_url:0
@@ -176,10 +171,35 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name} さん\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        こちらは \"${object.company_id.name}\" "
+"のOpenERP環境に接続いただくための招待Eメールです。\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        この招待を受ける場合は、次のリンクをクリックしてください：\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a "
+"href=\"${object.signup_url}\">\"${object.company_id.name}\" "
+"からの招待を承諾</a></li>\n"
+"                    </ul>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:118
 #, python-format
 msgid "Please enter a username."
 msgstr ""
@@ -193,8 +213,7 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:177
+#: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -215,7 +234,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:173
+#: code:addons/auth_signup/static/src/js/auth_signup.js:174
 #, python-format
 msgid "Please enter a username or email address."
 msgstr ""
@@ -251,35 +270,34 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
-#: code:addons/auth_signup/static/src/js/auth_signup.js:123
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
-#: code:addons/auth_signup/static/src/js/auth_signup.js:173
+#: code:addons/auth_signup/static/src/js/auth_signup.js:112
+#: code:addons/auth_signup/static/src/js/auth_signup.js:115
+#: code:addons/auth_signup/static/src/js/auth_signup.js:118
+#: code:addons/auth_signup/static/src/js/auth_signup.js:121
+#: code:addons/auth_signup/static/src/js/auth_signup.js:124
+#: code:addons/auth_signup/static/src/js/auth_signup.js:171
+#: code:addons/auth_signup/static/src/js/auth_signup.js:174
 #, python-format
 msgid "Login"
 msgstr ""
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:97
+#: code:addons/auth_signup/controllers/main.py:109
 #, python-format
 msgid "Invalid signup token"
 msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#: code:addons/auth_signup/static/src/js/auth_signup.js:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:112
+#: code:addons/auth_signup/static/src/js/auth_signup.js:171
 #, python-format
 msgid "No database selected !"
 msgstr ""
@@ -295,9 +313,8 @@ msgid "${object.company_id.name} invitation to connect on OpenERP"
 msgstr ""
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
-#, python-format
+#: view:website:auth_signup.reset_password
+#: view:website:auth_signup.signup
 msgid "Back to Login"
 msgstr ""
 

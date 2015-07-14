@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-04 01:55+0000\n"
 "Last-Translator: Mohamed M. Hagag <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -31,12 +31,6 @@ msgstr "تجميع حسب..."
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
 msgstr "إعادة إنشاء الفاتورة"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr "يجب تحديد عنوان إرسال الفواتير في نموذج التصليح !"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -71,7 +65,7 @@ msgid "Unread Messages"
 msgstr "رسائل غير مقروءة"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "لا يوجد منتج محدد في الرسوم !"
@@ -146,9 +140,9 @@ msgid "Taxes"
 msgstr "الضرائب"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:391
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -241,9 +235,9 @@ msgid "Extra Info"
 msgstr "معلومات إضافية"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:341
+#: code:addons/mrp_repair/mrp_repair.py:354
+#: code:addons/mrp_repair/mrp_repair.py:441
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -261,7 +255,7 @@ msgid "Partner"
 msgstr "شريك"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "لا يوجد حساب محدد للشريك \"%s\"."
@@ -294,7 +288,7 @@ msgid "Repairs order"
 msgstr "امر التصليحات"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -551,6 +545,12 @@ msgid "Date"
 msgstr "تاريخ"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
 msgstr "خط رسوم الاصلاح"
@@ -581,8 +581,8 @@ msgid "End Repair"
 msgstr "انهي التصليح"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "لا يوجد حساب محدد للمنتج \"%s\"."
@@ -606,9 +606,7 @@ msgid "Product Information"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr "عمل فاتورة"
 
@@ -616,6 +614,12 @@ msgstr "عمل فاتورة"
 #: view:mrp.repair:0
 msgid "Start Repair"
 msgstr "ابدأ التصليح"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -683,6 +687,8 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "إنشاء فاتورة"
@@ -742,7 +748,7 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr ""
@@ -820,8 +826,10 @@ msgstr "الإجمالي"
 msgid "Ready to Repair"
 msgstr "جاهز للتصليح"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
-msgid "No partner !"
-msgstr "لا يوجد شريك !"
+#~ msgid "No partner !"
+#~ msgstr "لا يوجد شريك !"
+
+#, python-format
+#~ msgid "You have to select a Partner Invoice Address in the repair form !"
+#~ msgstr "يجب تحديد عنوان إرسال الفواتير في نموذج التصليح !"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-29 04:04+0000\n"
 "Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-08 05:39+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -157,7 +157,7 @@ msgid "Rule Name"
 msgstr "규칙 이름"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "통화는 하나씩만 전환할 수 있습니다."
@@ -194,7 +194,7 @@ msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -222,7 +222,7 @@ msgid "Schedule Other Call"
 msgstr "기타 통화의 일정을 생성"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -257,6 +257,11 @@ msgstr "범주"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "내 팀에게 할당됨"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "재외된 답변들:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -300,7 +305,7 @@ msgid "Prospect Partner"
 msgstr "잠재 협력업체"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "제목 없음"
@@ -418,6 +423,7 @@ msgid "Unread Messages"
 msgstr "읽지 않은 메시지"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -552,7 +558,7 @@ msgid "Planned Revenue"
 msgstr "계획된 수익"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "고객 이메일"
@@ -570,9 +576,9 @@ msgid "October"
 msgstr "10월"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "과제를 재설정"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "포함된 답변:"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -625,6 +631,11 @@ msgid ""
 "Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
 "고객명이 정의되지 않았습니다. 다음 필드 중 하나를 채우시기 바랍니다: 회사명, 연락처명 또는 이메일 (\"이름 <이메일@주소>\")"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "프로파일링 옵션"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -709,7 +720,7 @@ msgid "Partner Segmentation"
 msgstr "파트너 세그먼테이션"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
@@ -1309,7 +1320,7 @@ msgid "Days to Close"
 msgstr "마감 잔여일"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1385,6 +1396,11 @@ msgid ""
 "Phone Calls Assigned to the current user or with a team having the current "
 "user as team leader"
 msgstr "현재 사용자가 팀 리더일 때 현재 사용자 또는 팀에게 할당된 통화"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "분할 설명"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1677,7 +1693,7 @@ msgid "Describe the lead..."
 msgstr "리드를 설명하십시오..."
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "협력업체가 <b>생성</b>되었습니다."
@@ -1897,7 +1913,7 @@ msgid "Support Department"
 msgstr "지원부"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -2954,7 +2970,6 @@ msgstr "함수"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "설명"
@@ -3039,7 +3054,12 @@ msgid "Referred By"
 msgstr "소개자"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "과제를 재설정"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -3050,7 +3070,7 @@ msgid "Working Hours"
 msgstr "근무시간"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3115,6 +3135,11 @@ msgstr "4월"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "캠페인명"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "정보 수집"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3192,21 +3217,6 @@ msgstr ""
 #, python-format
 #~ msgid "Warning !"
 #~ msgstr "경고 !"
-
-#~ msgid "Excluded Answers :"
-#~ msgstr "재외된 답변들:"
-
-#~ msgid "Profiling Options"
-#~ msgstr "프로파일링 옵션"
-
-#~ msgid "Included Answers :"
-#~ msgstr "포함된 답변:"
-
-#~ msgid "Segmentation Description"
-#~ msgstr "분할 설명"
-
-#~ msgid "Profiling"
-#~ msgstr "정보 수집"
 
 #~ msgid ""
 #~ "If opt-out is checked, this contact has refused to receive emails or "

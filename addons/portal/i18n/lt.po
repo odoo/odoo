@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-04-30 16:28+0000\n"
 "Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -122,19 +122,19 @@ msgid "Share Wizard"
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid ""
+"<p>\n"
+"                    You don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 ", so it may use Mako expressions.\n"
 "                                The Mako evaluation context provides:"
-msgstr ""
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_news
-msgid ""
-"<p>\n"
-"                    Youd don't have unread company's news.\n"
-"                </p>\n"
-"            "
 msgstr ""
 
 #. module: portal
@@ -167,6 +167,7 @@ msgid "Jobs"
 msgstr ""
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users
 #: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Naudotojai"
@@ -184,7 +185,7 @@ msgid "No online payment acquirers configured"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_message.py:54
+#: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -205,12 +206,10 @@ msgid "Users you already shared with"
 msgstr "Naudotojai, su kuriais jau buvo dalintasi"
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_jobs
+#: view:portal.payment.acquirer:0
 msgid ""
-"<p>\n"
-"                    Youd don't have unread job offers.\n"
-"                </p>\n"
-"            "
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
 msgstr ""
 
 #. module: portal
@@ -265,9 +264,16 @@ msgid "News"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
 msgstr ""
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "Gauta"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
@@ -289,10 +295,10 @@ msgid "Projects"
 msgstr ""
 
 #. module: portal
-#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_inbox
-msgid "Inbox"
-msgstr "Gauta"
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "Esamos grupės (pvz. Portalo grupė)"
 
 #. module: portal
 #: view:share.wizard:0
@@ -316,8 +322,8 @@ msgid "Access Groups"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "uid: the current user id"
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
 msgstr ""
 
 #. module: portal
@@ -348,11 +354,6 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: field:portal.payment.acquirer,form_template:0
-msgid "Payment form template (HTML)"
-msgstr ""
-
-#. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
 msgstr "Kontaktas"
@@ -363,15 +364,19 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:193
-#, python-format
-msgid "Email required"
+#: field:portal.payment.acquirer,form_template:0
+msgid "Payment form template (HTML)"
 msgstr ""
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
 msgstr "Žinutės"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "uid: the current user id"
+msgstr ""
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -387,9 +392,8 @@ msgid "Online Payment Acquirer"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_message.py:53
-#, python-format
-msgid "Access Denied"
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
 msgstr ""
 
 #. module: portal
@@ -431,13 +435,6 @@ msgstr ""
 "žmonėmis.\n"
 "                </p>\n"
 "            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sales order record)"
-msgstr ""
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -528,10 +525,10 @@ msgid "Visible"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:39
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
-msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Esamos grupės (pvz. Portalo grupė)"
+msgid "Email Required"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard:0
@@ -544,8 +541,12 @@ msgid "Apply"
 msgstr "Taikyti"
 
 #. module: portal
-#: model:ir.model,name:portal.model_mail_message
-msgid "Message"
+#: model:ir.actions.client,help:portal.action_news
+msgid ""
+"<p>\n"
+"                    You don't have unread company's news.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: portal

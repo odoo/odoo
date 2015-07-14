@@ -91,6 +91,10 @@ class res_partner(osv.osv):
                         getattr(vatnumber, check_func_name, None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
+            if country_code.upper() == 'EU':
+                # Foreign companies that trade with non-enterprises in the EU
+                # may have a VATIN starting with "EU" instead of a country code.
+                return True
             res_country = self.pool.get('res.country')
             return bool(res_country.search(cr, uid, [('code', '=ilike', country_code)], context=context))
         return check_func(vat_number)

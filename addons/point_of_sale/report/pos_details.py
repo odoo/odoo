@@ -107,7 +107,8 @@ class pos_details(report_sxw.rml_parse):
         statement_line_obj = self.pool.get("account.bank.statement.line")
         pos_order_obj = self.pool.get("pos.order")
         user_ids = form['user_ids'] or self._get_all_users()
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
+        company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
+        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
         data={}
         if pos_ids:
             st_line_ids = statement_line_obj.search(self.cr, self.uid, [('pos_statement_id', 'in', pos_ids)])
@@ -155,7 +156,8 @@ class pos_details(report_sxw.rml_parse):
         account_tax_obj = self.pool.get('account.tax')
         user_ids = form['user_ids'] or self._get_all_users()
         pos_order_obj = self.pool.get('pos.order')
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
+        company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
+        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
             for line in order.lines:
                 line_taxes = account_tax_obj.compute_all(self.cr, self.uid, line.product_id.taxes_id, line.price_unit, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)

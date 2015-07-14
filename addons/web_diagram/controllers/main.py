@@ -1,4 +1,5 @@
 import openerp
+from openerp.tools.safe_eval import safe_eval as eval
 
 class DiagramView(openerp.addons.web.http.Controller):
     _cp_path = "/web_diagram/diagram"

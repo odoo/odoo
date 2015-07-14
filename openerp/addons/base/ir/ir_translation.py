@@ -20,7 +20,6 @@
 ##############################################################################
 
 import logging
-import unicodedata
 
 from openerp import tools
 import openerp.modules
@@ -111,18 +110,22 @@ class ir_translation_import_cursor(object):
 
         # Records w/o res_id must _not_ be inserted into our db, because they are
         # referencing non-existent data.
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
-            self._table_name)
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
 
-        find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
-                    " AND irt.name = ti.name AND irt.src = ti.src " \
-                    " AND (ti.type != 'model' OR ti.res_id = irt.res_id) "
+        find_expr = """
+                irt.lang = ti.lang
+            AND irt.type = ti.type
+            AND irt.name = ti.name
+            AND (ti.type IN ('field', 'help') OR irt.src = ti.src)
+            AND (ti.type != 'model' OR ti.res_id = irt.res_id)
+        """
 
         # Step 2: update existing (matching) translations
         if self._overwrite:
             cr.execute("""UPDATE ONLY %s AS irt
                 SET value = ti.value,
-                state = 'translated'
+                    src = ti.src,
+                    state = 'translated'
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                 """ % (self._parent_table, self._table_name, find_expr))
@@ -339,8 +342,7 @@ class ir_translation(osv.osv):
         trad = res and res[0] or u''
         if source and not trad:
             return tools.ustr(source)
-        # Remove control characters
-        return filter(lambda c: unicodedata.category(c) != 'Cc', tools.ustr(trad))
+        return trad
 
     def create(self, cr, uid, vals, context=None):
         if context is None:

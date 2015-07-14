@@ -29,7 +29,7 @@
                                 <field name="type" invisible="context.get('default_type', False)"/>
                                 <field name="template_id" on_change="on_change_template(template_id,context)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                                 <field name="code"/>
-                                <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract'])]}"/>
+                                <field name="parent_id" on_change="on_change_parent(parent_id)" />
                                 <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             </group>
                         </group>

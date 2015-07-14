@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2014-03-06 08:55+0000\n"
 "Last-Translator: jack lee <liyupu@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-03-07 07:24+0000\n"
-"X-Generator: Launchpad (build 16948)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:24+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:842
@@ -223,6 +223,11 @@ msgid "Configuration"
 msgstr "设置"
 
 #. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr "能查看"
+
+#. module: share
 #: view:share.wizard:0
 msgid ""
 "Please select the action that opens the screen containing the data you want "
@@ -233,13 +238,6 @@ msgstr "该操作是打开选择要包含哪些共享数据的视图"
 #: field:res.groups,share:0
 msgid "Share Group"
 msgstr "共享用户组"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:835
-#: code:addons/share/wizard/share_wizard.py:866
-#, python-format
-msgid "Email required"
-msgstr "需要一个电子邮件地址"
 
 #. module: share
 #: view:share.wizard:0
@@ -258,7 +256,7 @@ msgstr "非共享组"
 msgid ""
 "An email notification with instructions has been sent to the following "
 "people:"
-msgstr ""
+msgstr "带有操作说明的邮件通知已经发送到以下人了："
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:77
@@ -275,6 +273,8 @@ msgid ""
 "Sales, HR, etc.)\n"
 "It is open source and can be found on http://www.openerp.com."
 msgstr ""
+"OpenERP是强大的、用户友好的商业应用套装（CRM，销售、人事、等）\n"
+"而且是开源的，可以在 http://www.openerp.com 找到并下载。"
 
 #. module: share
 #: field:share.wizard,action_id:0
@@ -339,7 +339,7 @@ msgstr "创建新的"
 #. module: share
 #: help:share.wizard,name:0
 msgid "Title for the share (displayed to users as menu and shortcut name)"
-msgstr ""
+msgstr "共享标题（显示给用户的菜单和快捷方式的名称）"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:636
@@ -350,7 +350,7 @@ msgstr "创建用户 %s  （%s ）间接共享过滤器，在用户组 %s"
 #. module: share
 #: help:share.wizard,share_root_url:0
 msgid "Main access page for users that are granted shared access"
-msgstr ""
+msgstr "用户主要访问的页面被授权共享访问"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:206
@@ -358,7 +358,7 @@ msgstr ""
 msgid ""
 "You must configure your email address in the user preferences before using "
 "the Share button."
-msgstr ""
+msgstr "在使用分享按钮前，你必须在用户首选项处配置你的电子邮件。"
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -389,7 +389,7 @@ msgstr "数据库"
 #. module: share
 #: view:share.wizard:0
 msgid "Share with these People (one email per line)"
-msgstr ""
+msgstr "与这些人分享（每行一个电子邮件）"
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -411,7 +411,7 @@ msgstr "简述"
 #: help:share.wizard,embed_code:0
 msgid ""
 "Embed this code in your documents to provide a link to the shared document."
-msgstr ""
+msgstr "在你的文档中嵌入下列代码以提供到分享文档的连接。"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:513
@@ -433,7 +433,7 @@ msgstr "共享你的单据"
 #. module: share
 #: view:share.wizard:0
 msgid "Or insert the following code where you want to embed your documents"
-msgstr ""
+msgstr "或者在你想要嵌入你的文档时，插入下列代码"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:886
@@ -441,7 +441,7 @@ msgstr ""
 msgid ""
 "The documents have been automatically added to your current OpenERP "
 "documents.\n"
-msgstr ""
+msgstr "一份文档已经被自动增加到你现在的OpenERP文档中了。\n"
 
 #. module: share
 #: model:ir.model,name:share.model_share_wizard_result_line
@@ -474,9 +474,11 @@ msgid "Current View Type"
 msgstr "当前视图类型"
 
 #. module: share
-#: selection:share.wizard,access_mode:0
-msgid "Can view"
-msgstr "能查看"
+#: code:addons/share/wizard/share_wizard.py:835
+#: code:addons/share/wizard/share_wizard.py:866
+#, python-format
+msgid "Email Required"
+msgstr ""
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -621,3 +623,7 @@ msgstr ""
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
 msgstr "已获得共享文档的访问权限"
+
+#, python-format
+#~ msgid "Email required"
+#~ msgstr "需要一个电子邮件地址"

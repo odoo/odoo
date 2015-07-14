@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-13 14:45+0000\n"
 "Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-14 07:44+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:50+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -171,6 +171,12 @@ msgid "Email Templates"
 msgstr "Email-sjablonen"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -195,18 +201,9 @@ msgid "Sidebar action"
 msgstr "Navigatiekolom actie"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
-msgstr ""
-"Optioneel vertaling taal (ISO-code) om te selecteren bij het verzenden van "
-"een e-mail. Indien niet ingesteld, zal de Engels versie worden gebruikt. Dit "
-"moet meestal een tijdelijke aanduiding expressie zijn  die de juiste "
-"taalcode geeft, bijvoorbeeld ${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
+msgstr "Voorbeeld van"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -270,9 +267,10 @@ msgid "Advanced"
 msgstr "Geavanceerd"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
-msgstr "Voorbeeld van"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -386,10 +384,14 @@ msgid "Add context action"
 msgstr "Voeg context actie toe"
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
-msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,email_recipients:0
@@ -512,6 +514,14 @@ msgid "Suppliers"
 msgstr "Leveranciers"
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -567,3 +577,14 @@ msgstr "Onderwerp"
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr ""
 #~ "Adres van de afzender (tijdelijke aanduidingen kunnen hier worden gebruikt)"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Optioneel vertaling taal (ISO-code) om te selecteren bij het verzenden van "
+#~ "een e-mail. Indien niet ingesteld, zal de Engels versie worden gebruikt. Dit "
+#~ "moet meestal een tijdelijke aanduiding expressie zijn  die de juiste "
+#~ "taalcode geeft, bijvoorbeeld ${object.partner_id.lang.code}."

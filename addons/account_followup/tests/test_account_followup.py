@@ -6,6 +6,7 @@ from openerp import tools
 from openerp.tests.common import TransactionCase
 
 from openerp import netsvc
+from openerp.osv import fields
 
 class TestAccountFollowup(TransactionCase):
     def setUp(self):
@@ -48,14 +49,15 @@ class TestAccountFollowup(TransactionCase):
         wf_service.trg_validate(uid, 'account.invoice', self.invoice_id, 'invoice_open', cr)
         
         self.voucher = self.registry("account.voucher")
+
+        self.current_date = datetime.datetime.strptime(fields.date.context_today(self.user, cr, uid, context={}), tools.DEFAULT_SERVER_DATE_FORMAT)
         
         
     def test_00_send_followup_after_3_days(self):
         """ Send follow up after 3 days and check nothing is done (as first follow-up level is only after 15 days)"""
         cr, uid = self.cr, self.uid
-        current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=3)
-        result = current_date + delta
+        result = self.current_date + delta
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
@@ -65,33 +67,32 @@ class TestAccountFollowup(TransactionCase):
         
     def run_wizard_three_times(self):
         cr, uid = self.cr, self.uid
-        current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=40)
-        result = current_date + delta
+        result = self.current_date + delta
+        result = self.current_date + delta
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.wizard_id = self.wizard.create(cr, uid, {'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 
                                                       'followup_id': self.followup_id, 
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         
     def test_01_send_followup_later_for_upgrade(self):
         """ Send one follow-up after 15 days to check it upgrades to level 1"""
         cr, uid = self.cr, self.uid
-        current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=15)
-        result = current_date + delta
+        result = self.current_date + delta
         self.wizard_id = self.wizard.create(cr, uid, {
                                                       'date':result.strftime(tools.DEFAULT_SERVER_DATE_FORMAT), 
                                                       'followup_id': self.followup_id
                                                       }, context={"followup_id": self.followup_id})
-        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id, 'tz':'UTC'})
+        self.wizard.do_process(cr, uid, [self.wizard_id], context={"followup_id": self.followup_id})
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).latest_followup_level_id.id, self.first_followup_line_id, 
                                             "Not updated to the correct follow-up level")
         
@@ -102,7 +103,7 @@ class TestAccountFollowup(TransactionCase):
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).payment_next_action, 
                          "Call the customer on the phone! ", "Manual action not set")
         self.assertEqual(self.partner.browse(cr, uid, self.partner_id).payment_next_action_date, 
-                         datetime.datetime.utcnow().strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
+                         self.current_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
 
     def test_03_filter_on_credit(self):
         """ Check the partners can be filtered on having credits """
@@ -139,9 +140,8 @@ class TestAccountFollowup(TransactionCase):
         """Run wizard until manual action, pay the invoice and check that partner has no follow-up level anymore and after running the wizard the action is empty"""
         cr, uid = self.cr, self.uid
         self.test_02_check_manual_action()
-        current_date = datetime.datetime.utcnow()
         delta = datetime.timedelta(days=1)
-        result = current_date + delta
+        result = self.current_date + delta
         self.invoice.pay_and_reconcile(cr, uid, [self.invoice_id], 1000.0, self.pay_account_id, 
                                              self.period_id, self.journal_id, self.pay_account_id, 
                                              self.period_id, self.journal_id, 

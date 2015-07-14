@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-31 21:00+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-01 06:53+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -53,15 +53,20 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "Tömningsprocessen av tidsramen framgångsrikt slutförd."
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one!"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
 msgstr "Vilande aktiviteter"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Saknar underliggande tidsramar !"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Tasks selection"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -218,11 +223,6 @@ msgid "Context"
 msgstr "Sammanhang"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Tasks selection"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Display"
 msgstr "Visa"
@@ -303,3 +303,7 @@ msgstr "För återstart av uppgiften"
 #: view:project.timebox.fill.plan:0
 msgid "or"
 msgstr "eller"
+
+#, python-format
+#~ msgid "No timebox child of this one !"
+#~ msgstr "Saknar underliggande tidsramar !"

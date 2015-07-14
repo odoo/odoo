@@ -412,7 +412,17 @@ openerp.web.pyeval = function (instance) {
                 py.PY_getAttr(args.time, 'minute'),
                 py.PY_getAttr(args.time, 'second')
             ]);
-        })
+        }),
+        toJSON: function () {
+            return new Date(
+                this.year,
+                this.month - 1,
+                this.day,
+                this.hour,
+                this.minute,
+                this.second,
+                this.microsecond / 1000);
+        },
     });
     datetime.date = py.type('date', null, {
         __init__: function () {

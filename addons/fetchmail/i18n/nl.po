@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-05-01 18:12+0000\n"
-"Last-Translator: Erwin van der Ploeg (BAS Solutions) <Unknown>\n"
+"PO-Revision-Date: 2015-02-25 14:41+0000\n"
+"Last-Translator: Jos De Graeve - http://www.apertoso.be/ "
+"<Jos.DeGraeve@apertoso.be>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:09+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2015-02-26 05:46+0000\n"
+"X-Generator: Launchpad (build 17361)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -28,7 +29,7 @@ msgid "Server Name"
 msgstr "Servernaam"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
@@ -69,12 +70,12 @@ msgstr ""
 "zal meestal de grootte van uw berichtendatabase verdubbelen."
 
 #. module: fetchmail
-#: view:base.config.settings:0
+#: view:base.config.settings:fetchmail.inherit_view_general_configuration
 msgid "Configure the incoming email gateway"
-msgstr "Inkomende e-mail server instellen"
+msgstr "De inkomende e-mail server instellen"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Nu ophalen"
 
@@ -85,12 +86,12 @@ msgid "Incoming Mail Servers"
 msgstr "Inkomende mailservers"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Server soort IMAP."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "POP/IMAP Servers"
 
@@ -110,12 +111,12 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP Server"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "Reset bevestiging"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
@@ -139,9 +140,9 @@ msgstr ""
 "op de regel welke is gemaakt of bijgewerkt door deze e-mail."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_tree
 msgid "# of emails"
-msgstr "# emails"
+msgstr "# E-mail"
 
 #. module: fetchmail
 #: field:fetchmail.server,original:0
@@ -149,12 +150,12 @@ msgid "Keep Original"
 msgstr "Bewaar origineel"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Geavanceerde opties"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 #: field:fetchmail.server,configuration:0
 msgid "Configuration"
 msgstr "Instellingen"
@@ -165,7 +166,8 @@ msgid "Script"
 msgstr "Script"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
 msgstr "Inkomende mailserver"
 
@@ -201,7 +203,7 @@ msgstr ""
 " %s."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Test & Bevestig"
 
@@ -222,7 +224,7 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
 msgstr "Zoek inkomende mailservers"
 
@@ -257,12 +259,12 @@ msgid "IMAP Server"
 msgstr "IMAP server"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "Server soort POP."
 
@@ -272,7 +274,7 @@ msgid "Password"
 msgstr "Wachtwoord"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
 msgstr "Uit te voeren acties op inkomende e-mails"
 
@@ -282,27 +284,27 @@ msgid "Server Type"
 msgstr "Soort server"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Aanmeldingsinformatie"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "Serverinformatie"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_search
 msgid "If SSL required."
 msgstr "Indien SSL verplicht."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Advanced"
 msgstr "Geavanceerd"
 
 #. module: fetchmail
-#: view:fetchmail.server:0
+#: view:fetchmail.server:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "Server & Login"
 

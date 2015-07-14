@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:28+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:15+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project
 #: view:project.project:0
@@ -54,17 +54,17 @@ msgstr "Tarefas do Projeto"
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr "Nome estágio"
+msgstr "Nome da Etapa"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "Definir como pendente"
+msgstr "Marcar como pendente"
 
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr "Novo Projeto Baseado num Template"
+msgstr "Novo Projeto baseado num Template"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -81,12 +81,6 @@ msgstr "Fundir"
 #: view:res.partner:0
 msgid "Start Task"
 msgstr "Iniciar Tarefa"
-
-#. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr "Aviso !"
 
 #. module: project
 #: help:project.project,message_unread:0
@@ -133,8 +127,9 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr "Aviso!"
@@ -412,7 +407,7 @@ msgid "Assigned to"
 msgstr "Atribuído a"
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Utilizador delegado deve ser especificado"
@@ -766,7 +761,7 @@ msgstr "Diversos"
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
 msgid "Stage"
-msgstr "Fase"
+msgstr "Etapa"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -791,7 +786,7 @@ msgstr "O meu Painel"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 msgid "Stages"
-msgstr "Fases"
+msgstr "Etapas"
 
 #. module: project
 #: view:project.project:0
@@ -1002,7 +997,7 @@ msgstr "Utilizadores"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Etapa mudou"
 
 #. module: project
 #: view:project.project:0
@@ -1043,7 +1038,7 @@ msgstr "Reavaliar a tarefa"
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr "Fase Tarefas"
+msgstr "Etapa da Tarefa"
 
 #. module: project
 #: view:project.task.type:0
@@ -1133,7 +1128,7 @@ msgstr "Abrir tarefa"
 #. module: project
 #: view:project.task.type:0
 msgid "Stages common to all projects"
-msgstr "Fases comuns a todos os projetos"
+msgstr "Etapas comuns a todos os projetos"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -1173,7 +1168,7 @@ msgid "Done by"
 msgstr "Concluído por"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ação inválida!"
@@ -1185,6 +1180,9 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"O Estado do seu documento é automaticamente atualizado de acordo com a sua "
+"Etapa. Por exemplo, se à Etapa corresponder o Estado 'Fechado', quando o seu "
+"documento chegar a essa etapa ele é automaticamente fechado."
 
 #. module: project
 #: view:project.task:0
@@ -1247,9 +1245,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Processado como: Tempo Gasto + Tempo Restante."
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -1257,7 +1255,7 @@ msgstr "%s (cópia)"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "Etapa da tarefa mudou"
 
 #. module: project
 #: view:project.task:0
@@ -1295,6 +1293,12 @@ msgstr ""
 #: view:project.project:0
 msgid "Team"
 msgstr "Equipa"
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
+msgstr ""
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1462,7 +1466,7 @@ msgstr ""
 "do projeto quando a tarefa está no estado rascunho."
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr "Anexos"
@@ -1473,7 +1477,7 @@ msgid "Issue Version"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1503,7 +1507,7 @@ msgstr "Horas Restantes"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Etapa mudou"
 
 #. module: project
 #: constraint:project.task:0
@@ -1583,7 +1587,7 @@ msgid "Overpassed Tasks"
 msgstr "Tarefas superada"
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1629,6 +1633,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Esta Etapa não é visível, por exemplo na barra de estado ou na vista kanban, "
+"quando não existirem registos a exibir nessa Etapa."
 
 #. module: project
 #: view:project.task:0
@@ -1643,12 +1649,6 @@ msgstr "Prazos"
 #, python-format
 msgid "CHECK: "
 msgstr "VERIFICAR: "
-
-#. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr "Deve atribuir os membros em projeto '%s'!"
 
 #. module: project
 #: view:project.project:0
@@ -1703,6 +1703,11 @@ msgstr "Importante"
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "Definir as exigências e fixar as horas planeadas."
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1873,7 +1878,7 @@ msgid "Starting Date"
 msgstr "Data Inicial"
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2034,7 +2039,7 @@ msgid "Reevaluation Task"
 msgstr "Tarefa reavaliação"
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Por favor, excluir o projeto ligado a esta conta primeiro."
@@ -2061,7 +2066,7 @@ msgstr "Projetos em que eu sou gestor"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Pronto para avançar"
 
 #. module: project
 #: field:project.task.type,case_default:0
@@ -2086,8 +2091,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
 msgstr ""
-"Se verificar neste campo, esta fase será proposta por omissão em cada "
-"projeto novo. Não vai atribuir nesta fase, os projetos existentes."
+"Se marcar este campo, esta Etapa fará parte das predefinidas em novos "
+"projetos. Não irá afetar as Etapas dos projetos já existentes."
 
 #. module: project
 #: field:project.task,partner_id:0
@@ -2178,7 +2183,15 @@ msgstr "Ano"
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
-msgstr "Estágios da tarefa"
+msgstr "Etapas das Tarefas"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Aviso !"
+
+#, python-format
+#~ msgid "You must assign members on the project '%s' !"
+#~ msgstr "Deve atribuir os membros em projeto '%s'!"
 
 #~ msgid "Public"
 #~ msgstr "Público"

@@ -223,7 +223,7 @@ class mrp_production(osv.osv):
                 result[prod.id] = max(line.date_planned_end, result[prod.id])
         return result
 
-    def action_production_end(self, cr, uid, ids):
+    def action_production_end(self, cr, uid, ids, context=None):
         """ Finishes work order if production order is done.
         @return: Super method
         """
@@ -233,9 +233,9 @@ class mrp_production(osv.osv):
             if workcenter_line.state == 'draft':
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
-        return super(mrp_production,self).action_production_end(cr, uid, ids)
+        return super(mrp_production,self).action_production_end(cr, uid, ids, context=context)
 
-    def action_in_production(self, cr, uid, ids):
+    def action_in_production(self, cr, uid, ids, context=None):
         """ Changes state to In Production and writes starting date.
         @return: True
         """
@@ -245,7 +245,7 @@ class mrp_production(osv.osv):
         for prod in self.browse(cr, uid, ids):
             if prod.workcenter_lines:
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', prod.workcenter_lines[0].id, 'button_start_working', cr)
-        return super(mrp_production,self).action_in_production(cr, uid, ids)
+        return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
     
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
@@ -354,7 +354,7 @@ class mrp_production(osv.osv):
             for po in self.browse(cr, uid, ids, context=context):
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
         result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
-        if (vals.get('workcenter_lines', False) or vals.get('date_start', False)) and update:
+        if (vals.get('workcenter_lines', False) or vals.get('date_start', False) or vals.get('date_planned', False)) and update:
             self._compute_planned_workcenter(cr, uid, ids, context=context, mini=mini)
         for d in direction:
             if direction[d] == 1:

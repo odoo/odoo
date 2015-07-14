@@ -44,10 +44,11 @@ class ir_filters(osv.osv):
             ``context`` of the matching ``ir.filters``.
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
+        context = self.pool['res.users'].context_get(cr, uid)
         filter_ids = self.search(cr, uid,
             [('model_id','=',model),('user_id','in',[uid, False])])
         my_filters = self.read(cr, uid, filter_ids,
-            ['name', 'is_default', 'domain', 'context', 'user_id'])
+            ['name', 'is_default', 'domain', 'context', 'user_id'], context=context)
         return my_filters
 
     def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
@@ -118,12 +119,13 @@ class ir_filters(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(ir_filters, self)._auto_init(cr, context)
+        result = super(ir_filters, self)._auto_init(cr, context)
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_index'")
         if not cr.fetchone():
             cr.execute("""CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_index" ON ir_filters
                             (lower(name), model_id, COALESCE(user_id,-1))""")
+        return result
 
     _columns = {
         'name': fields.char('Filter Name', size=64, translate=True, required=True),

@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: Ivica Dimitrijev <palifra@gmail.com>\n"
-"POT-Creation-Date: 2014-01-07 16:56+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-28 22:23+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-01-08 05:39+0000\n"
-"X-Generator: Launchpad (build 16877)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:45+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 "Language: mk\n"
 
 #. module: crm
@@ -154,7 +154,7 @@ msgid "Rule Name"
 msgstr "Име на правило"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #, python-format
 msgid "It's only possible to convert one phonecall at a time."
 msgstr "Може да се конвертира само еден телефонски повик во исто време."
@@ -193,7 +193,7 @@ msgstr ""
 #. module: crm
 #: code:addons/crm/crm_lead.py:637
 #: code:addons/crm/crm_lead.py:758
-#: code:addons/crm/crm_phonecall.py:282
+#: code:addons/crm/crm_phonecall.py:283
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:92
 #, python-format
 msgid "Warning!"
@@ -221,7 +221,7 @@ msgid "Schedule Other Call"
 msgstr "Распореди друг повик"
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:211
+#: code:addons/crm/crm_phonecall.py:212
 #: view:crm.phonecall:0
 #, python-format
 msgid "Phone Call"
@@ -256,6 +256,11 @@ msgstr "Критериум"
 #: view:crm.lead:0
 msgid "Assigned to My Team(s)"
 msgstr "Доделено на мојот Тим(ови)"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Excluded Answers :"
+msgstr "Исклучени одговори :"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
@@ -299,7 +304,7 @@ msgid "Prospect Partner"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1018
+#: code:addons/crm/crm_lead.py:1021
 #, python-format
 msgid "No Subject"
 msgstr "Без тема"
@@ -423,6 +428,7 @@ msgid "Unread Messages"
 msgstr "Непрочитани пораки"
 
 #. module: crm
+#: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
@@ -561,7 +567,7 @@ msgid "Planned Revenue"
 msgstr "Планиран приход"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1004
+#: code:addons/crm/crm_lead.py:1007
 #, python-format
 msgid "Customer Email"
 msgstr "Е-пошта накупувач"
@@ -579,9 +585,9 @@ msgid "October"
 msgstr "Октомври"
 
 #. module: crm
-#: view:crm.phonecall:0
-msgid "Reset to Todo"
-msgstr "Ресетирај во Да се направи"
+#: view:crm.segmentation:0
+msgid "Included Answers :"
+msgstr "Вклучени одговори :"
 
 #. module: crm
 #: help:crm.phonecall,state:0
@@ -638,6 +644,11 @@ msgid ""
 msgstr ""
 "Нема дефинирано име на купувач. Пополнете едно од следниве полиња: Име на "
 "компанија, Име или Е-пошта на контакт (\"Name <email@address>\")"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling Options"
+msgstr "Опции за профилирање"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -725,7 +736,7 @@ msgid "Partner Segmentation"
 msgstr "Разделување на партнер"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1064
+#: code:addons/crm/crm_lead.py:1067
 #, python-format
 msgid "Logged a call for %(date)s. %(description)s"
 msgstr ""
@@ -1339,7 +1350,7 @@ msgid "Days to Close"
 msgstr "Денови до затварање"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1075
+#: code:addons/crm/crm_lead.py:1078
 #: field:crm.case.section,complete_name:0
 #, python-format
 msgid "unknown"
@@ -1420,6 +1431,11 @@ msgid ""
 msgstr ""
 "Телефонски повици доделени на тековен корисник или со тим кој има тековен "
 "корисник како тимски лидер"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Segmentation Description"
+msgstr "Опис на сегментација"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:578
@@ -1719,7 +1735,7 @@ msgid "Describe the lead..."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_phonecall.py:292
+#: code:addons/crm/crm_phonecall.py:293
 #, python-format
 msgid "Partner has been <b>created</b>."
 msgstr "Партнерот е <b>криран</b>."
@@ -1937,7 +1953,7 @@ msgid "Support Department"
 msgstr "Одделение за поддршка"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1078
+#: code:addons/crm/crm_lead.py:1081
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -2996,7 +3012,6 @@ msgstr "Функција"
 #. module: crm
 #: field:crm.case.section,note:0
 #: field:crm.phonecall,description:0
-#: view:crm.segmentation:0
 #: field:crm.segmentation,description:0
 msgid "Description"
 msgstr "Опис"
@@ -3083,7 +3098,12 @@ msgid "Referred By"
 msgstr "Препорачано од"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1066
+#: view:crm.phonecall:0
+msgid "Reset to Todo"
+msgstr "Ресетирај во Да се направи"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
 #, python-format
 msgid "Scheduled a call for %(date)s. %(description)s"
 msgstr ""
@@ -3094,7 +3114,7 @@ msgid "Working Hours"
 msgstr "Работни часови"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1002
+#: code:addons/crm/crm_lead.py:1005
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3159,6 +3179,11 @@ msgstr "Април"
 #: field:crm.case.resource.type,name:0
 msgid "Campaign Name"
 msgstr "Име на кампања"
+
+#. module: crm
+#: view:crm.segmentation:0
+msgid "Profiling"
+msgstr "Профилирање"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
@@ -3235,21 +3260,12 @@ msgstr ""
 "              </p>\n"
 "            "
 
-#~ msgid "Excluded Answers :"
-#~ msgstr "Исклучени одговори :"
-
 #, python-format
 #~ msgid "<b>%s a call</b> for the <em>%s</em>."
 #~ msgstr "<b>%s повик</b> за <em>%s</em>."
 
-#~ msgid "Included Answers :"
-#~ msgstr "Вклучени одговори :"
-
 #~ msgid "Opportunity ${object.name | h})"
 #~ msgstr "Можност ${object.name | h})"
-
-#~ msgid "Profiling Options"
-#~ msgstr "Опции за профилирање"
 
 #, python-format
 #~ msgid "Warning !"
@@ -3257,12 +3273,6 @@ msgstr ""
 
 #~ msgid "Send Mail"
 #~ msgstr "Испрати маил"
-
-#~ msgid "Profiling"
-#~ msgstr "Профилирање"
-
-#~ msgid "Segmentation Description"
-#~ msgstr "Опис на сегментација"
 
 #~ msgid "Leads that are assigned to one of the sale teams I manage, or to me"
 #~ msgstr ""

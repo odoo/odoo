@@ -16,7 +16,7 @@
     claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     assert claim_ids and len(claim_ids), "Claim is not created after getting request"
     claim = self.browse(cr, uid, claim_ids[0], context=context)
-    assert claim.name == tools.ustr("demande derèglement de votre produit."), "Subject does not match"
+    assert claim.name == tools.ustr("demande de règlement de votre produit."), "Subject does not match"
 -
   I open customer claim.
 -

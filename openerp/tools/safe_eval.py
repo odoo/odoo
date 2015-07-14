@@ -32,6 +32,7 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
 from opcode import HAVE_ARGUMENT, opmap, opname
+from psycopg2 import OperationalError
 from types import CodeType
 import logging
 
@@ -285,6 +286,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     )
     try:
         return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    except OperationalError:
+        # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
+        # of serialized transactions work its magic
+        raise
     except Exception:
         _logger.exception('Cannot eval %r', expr)
         raise

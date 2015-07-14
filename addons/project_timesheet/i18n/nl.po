@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-04 13:46+0000\n"
 "Last-Translator: Jan Jurkus (GCE CAD-Service) <ict@gcecad-service.nl>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:17+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -23,9 +23,23 @@ msgid "Tasks by User"
 msgstr "Taken per gebruiker"
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Urenstaat taak"
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
 msgstr "Groepeer per jaar of datum"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"Het is niet mogelijk een kostenplaats te selecteren welke gesloten of "
+"geannuleerd is."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -38,7 +52,7 @@ msgid "Related Timeline Id"
 msgstr "Gerelateerde tijdlijn ID"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
@@ -53,13 +67,10 @@ msgid "Project Task Work"
 msgstr "Project taak werk"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
-"Het is niet mogelijk een kostenplaats te selecteren welke gesloten of "
-"geannuleerd is."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -246,9 +257,9 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Urenstaat taak"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Urenstaat uren"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -271,14 +282,9 @@ msgid "Trigger Invoice"
 msgstr "Trigger facturatie"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "November"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Maart"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Urenstaat/Taak uren rapport per maand"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -312,24 +318,14 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "Ongeldige kostenplaats!"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Maart"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Urenstaat/Taak uren rapport per maand"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "Fout in configuratie !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "November"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -396,7 +392,7 @@ msgid "After task is completed, Create its invoice."
 msgstr "Wanneer taak voltooid is, wordt een factuur gecreeërd"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ongeldige actie!"
@@ -417,9 +413,13 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">Maak urenstaten voor project '%s'.</p>"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Urenstaat uren"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -431,3 +431,11 @@ msgstr "Jaar"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Urenstaat invullen"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Fout in configuratie !"
+
+#, python-format
+#~ msgid "Invalid Analytic Account !"
+#~ msgstr "Ongeldige kostenplaats!"

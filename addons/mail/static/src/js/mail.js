@@ -408,6 +408,16 @@ openerp.mail = function (session) {
             this.is_log = false;
             this.recipients = [];
             this.recipient_ids = [];
+            session.web.bus.on('clear_uncommitted_changes', this, function(e) {
+                if (this.show_composer && !e.isDefaultPrevented()){
+                    if (!confirm(_t("You are currently composing a message, your message will be discarded.\n\nAre you sure you want to leave this page ?"))) {
+                        e.preventDefault();
+                    }
+                    else{
+                        this.on_cancel();
+                    }
+                }
+            });
         },
 
         start: function () {
@@ -700,8 +710,8 @@ openerp.mail = function (session) {
             if (self.flag_post) {
                 return;
             }
-            self.flag_post = true;
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || this.$('textarea').val().match(/\S+/))) {
+                self.flag_post = true;
                 if (this.is_log) {
                     this.do_send_message_post([], this.is_log);
                 }

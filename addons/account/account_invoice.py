@@ -1696,13 +1696,10 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency = False
-        factor = 1
-        if ids:
-            factor = self.read(cr, uid, ids[0], ['factor_tax'])['factor_tax']
         if company_id:
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount*factor, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
         return {'value': {'tax_amount': amount}}
 
     _order = 'sequence'
@@ -1808,10 +1805,10 @@ class res_partner(osv.osv):
             partner = partner.parent_id
         return partner
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default.update({'invoice_ids' : []})
-        return super(res_partner, self).copy(cr, uid, id, default, context)
+        return super(res_partner, self).copy_data(cr, uid, id, default=default, context=context)
 
 
 class mail_compose_message(osv.Model):

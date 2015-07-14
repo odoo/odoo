@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-07 02:03+0000\n"
 "Last-Translator: 盈通 ccdos <ccdos@intoerp.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:29+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:16+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,12 +83,6 @@ msgid "Start Task"
 msgstr "开始任务"
 
 #. module: project
-#: code:addons/project/project.py:944
-#, python-format
-msgid "Warning !"
-msgstr "警告！"
-
-#. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
@@ -133,8 +127,9 @@ msgid ""
 msgstr "保存对话概要信息，这些概要信息将为直接以HTML格式插入到看板视图。"
 
 #. module: project
-#: code:addons/project/project.py:444
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:458
+#: code:addons/project/project.py:969
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Warning!"
 msgstr "警告!"
@@ -403,7 +398,7 @@ msgid "Assigned to"
 msgstr "指派到"
 
 #. module: project
-#: code:addons/project/project.py:1033
+#: code:addons/project/project.py:1058
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "应该制定委派用户"
@@ -696,7 +691,7 @@ msgstr "新任务"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr ""
+msgstr "依据问题工作时间开票"
 
 #. module: project
 #: view:project.project:0
@@ -853,7 +848,7 @@ msgstr "花费的时间"
 #: view:project.project:0
 #: view:project.task:0
 msgid "í"
-msgstr ""
+msgstr "í"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
@@ -993,7 +988,7 @@ msgstr "本项目和相关项目的任务实际花费的小时数合计"
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
+msgstr "关注此项目的同时，追踪此项目的任务和问题关联的事件。"
 
 #. module: project
 #: view:project.task:0
@@ -1062,7 +1057,7 @@ msgstr "信息和通信历史记录"
 msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
-msgstr ""
+msgstr "开票或设定发票更新选项，到相关的合同："
 
 #. module: project
 #: field:project.task.delegate,state:0
@@ -1174,7 +1169,7 @@ msgid "Done by"
 msgstr "完成者"
 
 #. module: project
-#: code:addons/project/project.py:181
+#: code:addons/project/project.py:188
 #, python-format
 msgid "Invalid Action!"
 msgstr "无效的动作！"
@@ -1248,9 +1243,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "计算:花费的时间 + 剩余的时间"
 
 #. module: project
-#: code:addons/project/project.py:368
-#: code:addons/project/project.py:389
-#: code:addons/project/project.py:721
+#: code:addons/project/project.py:382
+#: code:addons/project/project.py:403
+#: code:addons/project/project.py:733
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1296,6 +1291,12 @@ msgstr ""
 #: view:project.project:0
 msgid "Team"
 msgstr "团队"
+
+#. module: project
+#: code:addons/project/project.py:458
+#, python-format
+msgid "You must assign members on the project '%s'!"
+msgstr ""
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1455,7 +1456,7 @@ msgid ""
 msgstr "做任务的估计时间.通常由项目经理在任务草稿阶段设定"
 
 #. module: project
-#: code:addons/project/project.py:230
+#: code:addons/project/project.py:237
 #, python-format
 msgid "Attachments"
 msgstr "附件"
@@ -1466,7 +1467,7 @@ msgid "Issue Version"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:182
+#: code:addons/project/project.py:189
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
@@ -1573,7 +1574,7 @@ msgid "Overpassed Tasks"
 msgstr "拖期任务"
 
 #. module: project
-#: code:addons/project/project.py:944
+#: code:addons/project/project.py:969
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1634,12 +1635,6 @@ msgid "CHECK: "
 msgstr "CHECK: "
 
 #. module: project
-#: code:addons/project/project.py:444
-#, python-format
-msgid "You must assign members on the project '%s' !"
-msgstr "您必须为项目“%s”指定成员！"
-
-#. module: project
 #: view:project.project:0
 msgid "Pending Projects"
 msgstr "未决项目"
@@ -1692,6 +1687,11 @@ msgstr "重要"
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
 msgstr "确认要求和设置计划时间"
+
+#. module: project
+#: field:project.task,write_date:0
+msgid "Last Modification Date"
+msgstr ""
 
 #. module: project
 #: field:project.project,message_ids:0
@@ -1866,7 +1866,7 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: code:addons/project/project.py:410
+#: code:addons/project/project.py:424
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2027,7 +2027,7 @@ msgid "Reevaluation Task"
 msgstr "任务重估"
 
 #. module: project
-#: code:addons/project/project.py:1332
+#: code:addons/project/project.py:1348
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "请删除与此科目关联的项目"
@@ -2172,6 +2172,14 @@ msgstr "年"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "任务阶段"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "警告！"
+
+#, python-format
+#~ msgid "You must assign members on the project '%s' !"
+#~ msgstr "您必须为项目“%s”指定成员！"
 
 #~ msgid "Public"
 #~ msgstr "公开"

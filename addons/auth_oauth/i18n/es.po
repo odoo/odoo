@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
+"PO-Revision-Date: 2014-08-27 22:30+0000\n"
+"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:01+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 
 #. module: auth_oauth
 #: field:auth.oauth.provider,validation_endpoint:0
@@ -31,6 +31,13 @@ msgstr "URL Autenticación"
 #: model:ir.model,name:auth_oauth.model_base_config_settings
 msgid "base.config.settings"
 msgstr "Parámetros de configuración base"
+
+#. module: auth_oauth
+#. openerp-web
+#: code:addons/auth_oauth/static/src/js/auth_oauth.js:14
+#, python-format
+msgid "Sign up error"
+msgstr "Error de registro"
 
 #. module: auth_oauth
 #: field:auth.oauth.provider,name:0
@@ -68,6 +75,14 @@ msgid "unknown"
 msgstr "Desconocido"
 
 #. module: auth_oauth
+#. openerp-web
+#: code:addons/auth_oauth/static/src/js/auth_oauth.js:16
+#: code:addons/auth_oauth/static/src/js/auth_oauth.js:18
+#, python-format
+msgid "Authentication error"
+msgstr "Error de autenticación"
+
+#. module: auth_oauth
 #: field:res.users,oauth_access_token:0
 msgid "OAuth Access Token"
 msgstr "Palabra de acceso (token) OAuth"
@@ -78,6 +93,12 @@ msgstr "Palabra de acceso (token) OAuth"
 #: field:base.config.settings,auth_oauth_google_client_id:0
 msgid "Client ID"
 msgstr "Id. de cliente"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:99
+#, python-format
+msgid "Access Denied"
+msgstr "Acceso denegado"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
@@ -115,7 +136,8 @@ msgid "Data URL"
 msgstr "URL de los datos"
 
 #. module: auth_oauth
-#: view:auth.oauth.provider:0
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_form
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_list
 msgid "arch"
 msgstr "arquitectura"
 
@@ -133,3 +155,21 @@ msgstr "Permitir a los usuarios ingresar con Google"
 #: field:auth.oauth.provider,enabled:0
 msgid "Allowed"
 msgstr "Permitido"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:97
+#, python-format
+msgid "Sign up is not allowed on this database."
+msgstr "No se permiten registros en esta base de datos."
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:101
+#, python-format
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr ""
+"No tiene acceso a esta base de datos o su invitación ha expirado. Por favor "
+"pida una invitación y asegúrese de pulsar en el enlace en el correo de "
+"invitación."

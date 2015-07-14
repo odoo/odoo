@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-07 19:28+0000\n"
 "Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
@@ -63,9 +63,9 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
-msgstr "Agent de vanzari"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
+msgstr "Zile pana la deschidere"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -98,6 +98,11 @@ msgstr "Mesaje"
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
 msgstr "Index de Culori"
+
+#. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_latitude:0
+msgid "Geo Latitude"
+msgstr "Latitudine Geo"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_name:0
@@ -212,6 +217,11 @@ msgid "Channel"
 msgstr "Canal"
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr "Nume"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr "Cel mai scazut (cea mai scazuta)"
@@ -233,6 +243,16 @@ msgid ""
 "mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
 "users to filter the leads when performing mass mailing."
 msgstr ""
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
+msgstr "Inchide"
+
+#. module: portal_crm
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
+msgstr "In asteptare"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
@@ -371,9 +391,9 @@ msgid "Closed"
 msgstr "Inchis(a)"
 
 #. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
-msgstr "In asteptare"
+#: field:portal_crm.crm_contact_us,date_assign:0
+msgid "Assignation Date"
+msgstr "Data alocarii"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,state:0
@@ -416,9 +436,9 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
-msgstr "Zile pana la deschidere"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
+msgstr "Agent de vanzari"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,day_close:0
@@ -454,14 +474,20 @@ msgid "Partner Contact Name"
 msgstr "Numele de Contact al Partenerului"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_longitude:0
+msgid "Geo Longitude"
+msgstr "Geo Longitudine"
+
+#. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Your phone number..."
 msgstr "Numarul dumneavoastra de telefon..."
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Close"
-msgstr "Inchide"
+#: help:portal_crm.crm_contact_us,date_assign:0
+msgid "Last date this case was forwarded/assigned to a partner"
+msgstr ""
+"Ultima data cand acest caz a fost redirectionat/atribuit unui partener"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
@@ -489,14 +515,19 @@ msgid "Referred By"
 msgstr "Recomandat de"
 
 #. module: portal_crm
+#: field:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Assigned Partner"
+msgstr "Partenerul Alocat"
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr "Oportunitate"
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr "Nume"
+#: help:portal_crm.crm_contact_us,partner_assigned_id:0
+msgid "Partner this case has been forwarded/assigned to."
+msgstr "Partenerul caruia i-a fost redirectionat/atribuit cazul."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
@@ -560,28 +591,9 @@ msgstr "Ultima Actiune"
 msgid "Contact form for the portal"
 msgstr "Formular de contact pentru portal"
 
-#~ msgid "Geo Latitude"
-#~ msgstr "Latitudine Geo"
-
 #~ msgid ""
 #~ "If opt-out is checked, this contact has refused to receive emails or "
 #~ "unsubscribed to a campaign."
 #~ msgstr ""
 #~ "Daca este bifata optiunea de neparticipare, acest contact a refuzat sa "
 #~ "primeasca e-mailuri sau s-a dezabonat de la o campanie."
-
-#~ msgid "Assignation Date"
-#~ msgstr "Data alocarii"
-
-#~ msgid "Last date this case was forwarded/assigned to a partner"
-#~ msgstr ""
-#~ "Ultima data cand acest caz a fost redirectionat/atribuit unui partener"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Geo Longitudine"
-
-#~ msgid "Assigned Partner"
-#~ msgstr "Partenerul Alocat"
-
-#~ msgid "Partner this case has been forwarded/assigned to."
-#~ msgstr "Partenerul caruia i-a fost redirectionat/atribuit cazul."

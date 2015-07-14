@@ -155,10 +155,12 @@
 
                             <label for="street" string="Address"/>
                             <div>
-                                <field name="use_parent_address" class="oe_edit_only oe_inline"
-                                       on_change="onchange_address(use_parent_address, parent_id)"
-                                       attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}"/>
-                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': ['|', ('is_company', '=', True), ('parent_id', '=', False)]}"/>
+                                <div class="oe_edit_only">
+                                    <field name="use_parent_address" class="oe_inline"
+                                           on_change="onchange_address(use_parent_address, parent_id)"
+                                           attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}"/>
+                                    <label for="use_parent_address" attrs="{'invisible': ['|', ('is_company', '=', True), ('parent_id', '=', False)]}"/>
+                                </div>
                                 <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
                                         attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
                                 <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>

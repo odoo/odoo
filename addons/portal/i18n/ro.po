@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-03-07 19:30+0000\n"
 "Last-Translator: ERPSystems.ro <Unknown>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:10+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -134,6 +134,15 @@ msgid "Share Wizard"
 msgstr "Wizard Partajare"
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid ""
+"<p>\n"
+"                    You don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
 ", so it may use Mako expressions.\n"
@@ -141,19 +150,6 @@ msgid ""
 msgstr ""
 ", prin urmare poate folosi expresii Mako.\n"
 "                                Contextul evaluarii Mako ofera:"
-
-#. module: portal
-#: model:ir.actions.client,help:portal.action_news
-msgid ""
-"<p>\n"
-"                    Youd don't have unread company's news.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Nu aveti stiri necitite.\n"
-"                </p>\n"
-"            "
 
 #. module: portal
 #: field:portal.wizard.user,email:0
@@ -187,6 +183,7 @@ msgid "Jobs"
 msgstr "Locuri de munca"
 
 #. module: portal
+#: model:ir.model,name:portal.model_res_users
 #: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Utilizatori"
@@ -204,7 +201,7 @@ msgid "No online payment acquirers configured"
 msgstr "Nu au fost configurati beneficiarii platii online"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:54
+#: code:addons/portal/mail_message.py:60
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -225,17 +222,13 @@ msgid "Users you already shared with"
 msgstr "Utilizatori cu care ati partajat deja"
 
 #. module: portal
-#: model:ir.actions.client,help:portal.action_jobs
+#: view:portal.payment.acquirer:0
 msgid ""
-"<p>\n"
-"                    Youd don't have unread job offers.\n"
-"                </p>\n"
-"            "
+"object: the document on which the payment form is rendered (usually an "
+"invoice or sales order record)"
 msgstr ""
-"<p>\n"
-"                    Nu aveti oferte de munca necitite.\n"
-"                </p>\n"
-"            "
+"obiect: documentul in care este redat formularul de plata (de obicei o "
+"factura sau o inregistrare a comenzii de vanzare)"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
@@ -290,9 +283,16 @@ msgid "News"
 msgstr "Stiri"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Servicii Post Vanzare"
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
+msgstr ""
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "Casuta postala"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_portal
@@ -317,10 +317,10 @@ msgid "Projects"
 msgstr "Proiecte"
 
 #. module: portal
-#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
-#: model:ir.ui.menu,name:portal.portal_inbox
-msgid "Inbox"
-msgstr "Casuta postala"
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "Grupuri Existente (de exemplu Grupuri Portal)"
 
 #. module: portal
 #: view:share.wizard:0
@@ -344,9 +344,9 @@ msgid "Access Groups"
 msgstr "Acces Grupuri"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "uid: the current user id"
-msgstr "uid: id-ul utilizatorului actual"
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -382,11 +382,6 @@ msgstr ""
 "Portalul nostru pentru Clienti</a></p>"
 
 #. module: portal
-#: field:portal.payment.acquirer,form_template:0
-msgid "Payment form template (HTML)"
-msgstr "Sablon formular de plata (HTML)"
-
-#. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
 msgstr "Contact"
@@ -397,15 +392,19 @@ msgid "Outgoing Mails"
 msgstr "Email-uri Expediate"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:193
-#, python-format
-msgid "Email required"
-msgstr "Email necesar"
+#: field:portal.payment.acquirer,form_template:0
+msgid "Payment form template (HTML)"
+msgstr "Sablon formular de plata (HTML)"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
 msgstr "Mesagerie"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "uid: the current user id"
+msgstr "uid: id-ul utilizatorului actual"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -424,10 +423,9 @@ msgid "Online Payment Acquirer"
 msgstr "Beneficiarul Platii Online"
 
 #. module: portal
-#: code:addons/portal/mail_message.py:53
-#, python-format
-msgid "Access Denied"
-msgstr ""
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "Servicii Post Vanzare"
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -472,15 +470,6 @@ msgstr ""
 "                    le urmariti.\n"
 "                </p>\n"
 "            "
-
-#. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"object: the document on which the payment form is rendered (usually an "
-"invoice or sales order record)"
-msgstr ""
-"obiect: documentul in care este redat formularul de plata (de obicei o "
-"factura sau o inregistrare a comenzii de vanzare)"
 
 #. module: portal
 #: help:portal.wizard,welcome_message:0
@@ -609,10 +598,10 @@ msgid "Visible"
 msgstr "Vizibil (a)"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:39
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
-msgid "Existing Groups (e.g Portal Groups)"
-msgstr "Grupuri Existente (de exemplu Grupuri Portal)"
+msgid "Email Required"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard:0
@@ -625,8 +614,12 @@ msgid "Apply"
 msgstr "Aplica"
 
 #. module: portal
-#: model:ir.model,name:portal.model_mail_message
-msgid "Message"
+#: model:ir.actions.client,help:portal.action_news
+msgid ""
+"<p>\n"
+"                    You don't have unread company's news.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: portal
@@ -677,8 +670,34 @@ msgstr "Sablon Formular"
 msgid "Details"
 msgstr "Detalii"
 
+#, python-format
+#~ msgid "Email required"
+#~ msgstr "Email necesar"
+
 #~ msgid "Quotations and Sales Orders"
 #~ msgstr "Cotatii si Comenzi de Vanzare"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread company's news.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Nu aveti stiri necitite.\n"
+#~ "                </p>\n"
+#~ "            "
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    Youd don't have unread job offers.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Nu aveti oferte de munca necitite.\n"
+#~ "                </p>\n"
+#~ "            "
 
 #, python-format
 #~ msgid ""

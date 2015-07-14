@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:30+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:18+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -23,9 +23,23 @@ msgid "Tasks by User"
 msgstr "Tareas por usuario"
 
 #. module: project_timesheet
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Tarea de la hoja de servicios"
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
 msgstr "Agrupar por año"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:295
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr ""
+"No puede seleccionar una cuenta analítica que está en estado 'Cerrada' o "
+"'Cancelada'."
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -38,7 +52,7 @@ msgid "Related Timeline Id"
 msgstr "Id de la línea de tiempos asociada"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid ""
 "You cannot delete a partner which is assigned to project, but you can "
@@ -53,13 +67,10 @@ msgid "Project Task Work"
 msgstr "Trabajo tarea proyecto"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
+#: code:addons/project_timesheet/project_timesheet.py:295
 #, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgid "Invalid Analytic Account!"
 msgstr ""
-"No puede seleccionar una cuenta analítica que está en estado 'Cerrada' o "
-"'Cancelada'."
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -247,9 +258,9 @@ msgstr ""
 "            "
 
 #. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Tarea de la hoja de servicios"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Horas de la hoja de servicios"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -272,14 +283,9 @@ msgid "Trigger Invoice"
 msgstr "Disparar factura"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "November"
-msgstr "Noviembre"
-
-#. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "March"
-msgstr "Marzo"
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Reporte por mes de horas de tareas/hojas de asistencia"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -313,24 +319,14 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:294
-#, python-format
-msgid "Invalid Analytic Account !"
-msgstr "¡Cuentas analíticas no válidas!"
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "Marzo"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Reporte por mes de horas de tareas/hojas de asistencia"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:84
-#: code:addons/project_timesheet/project_timesheet.py:88
-#: code:addons/project_timesheet/project_timesheet.py:92
-#: code:addons/project_timesheet/project_timesheet.py:99
-#, python-format
-msgid "Bad Configuration !"
-msgstr "¡ Configuración errónea !"
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "Noviembre"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
@@ -398,7 +394,7 @@ msgid "After task is completed, Create its invoice."
 msgstr "Después que la tarea esté completada, crear su factura."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:266
+#: code:addons/project_timesheet/project_timesheet.py:267
 #, python-format
 msgid "Invalid Action!"
 msgstr "¡Acción no válida!"
@@ -420,9 +416,13 @@ msgstr ""
 "proyecto '%s'.</p>"
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Horas de la hoja de servicios"
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
+#, python-format
+msgid "Bad Configuration!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -434,3 +434,11 @@ msgstr "Año"
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Rellenar hoja de servicios"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "¡ Configuración errónea !"
+
+#, python-format
+#~ msgid "Invalid Analytic Account !"
+#~ msgstr "¡Cuentas analíticas no válidas!"

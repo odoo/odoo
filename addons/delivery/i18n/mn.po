@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-02-04 13:07+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-02-06 06:24+0000\n"
-"X-Generator: Launchpad (build 16916)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:49+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -31,6 +31,11 @@ msgstr "Шуудан хүргэлт"
 #: view:delivery.grid.line:0
 msgid " in Function of "
 msgstr ""
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "Зип"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -51,6 +56,8 @@ msgstr "Хүргэлтийн координат"
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
 #: field:stock.picking,weight_uom_id:0
+#: field:stock.picking.in,weight_uom_id:0
+#: field:stock.picking.out,weight_uom_id:0
 msgid "Unit of Measure"
 msgstr "Хэмжих нэгж"
 
@@ -64,14 +71,16 @@ msgstr "Хүргэлтийн хүснэгтүүд"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.in,volume:0
 #: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Эзлэхүүн"
 
 #. module: delivery
-#: view:delivery.carrier:0
-msgid "Zip"
-msgstr "Зип"
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -89,7 +98,7 @@ msgid "Delivery order"
 msgstr "Хүргэх захиалга"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
@@ -183,7 +192,7 @@ msgid "Delivery Method"
 msgstr "Хүргэх арга"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:221
+#: code:addons/delivery/delivery.py:222
 #, python-format
 msgid "No price available!"
 msgstr "Бэлэн бус үнэ!"
@@ -195,6 +204,7 @@ msgstr "Барааны хөдөлгөөн"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.in,carrier_tracking_ref:0
 #: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Хүргэгчийн Мөр хөөх Сурвалж"
@@ -339,6 +349,7 @@ msgstr "Хүснэгтийн нэр"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.in,number_of_packages:0
 #: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Савлагааны дугаар"
@@ -374,21 +385,9 @@ msgstr ""
 "хоосон үлдээ."
 
 #. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid available !"
-msgstr "Сүлжээ алга !"
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
 msgstr ">="
-
-#. module: delivery
-#: code:addons/delivery/sale.py:57
-#, python-format
-msgid "Order not in draft state !"
-msgstr "Ноорог захиалга байхгүй !"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -420,6 +419,12 @@ msgstr "Нөхцөл"
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "Өртөг үнэ"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:57
+#, python-format
+msgid "Order not in Draft State!"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -492,6 +497,12 @@ msgstr ""
 "бөглөнө."
 
 #. module: delivery
+#: code:addons/delivery/sale.py:54
+#, python-format
+msgid "No Grid Available!"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
@@ -509,6 +520,8 @@ msgstr "<="
 
 #. module: delivery
 #: help:stock.picking,weight_uom_id:0
+#: help:stock.picking.in,weight_uom_id:0
+#: help:stock.picking.out,weight_uom_id:0
 msgid "Unit of measurement for Weight"
 msgstr "Нэг бүрийн жин"
 
@@ -537,12 +550,6 @@ msgstr "Хүргэлтийн үнэ"
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
 msgstr "Үнэ"
-
-#. module: delivery
-#: code:addons/delivery/sale.py:54
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "Энэ хүргэлтийн компанид тохирох сүлжээ алга !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -577,6 +584,7 @@ msgstr "Хүргэлт бүрийн ахисан үнэлгээ"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.in,carrier_id:0
 #: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Тээвэрлэгч"
@@ -629,3 +637,15 @@ msgstr "Хэмжих нэгж нь жинг хэмжих нэгж юм"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Үнийн төрөл"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "Ноорог захиалга байхгүй !"
+
+#, python-format
+#~ msgid "No grid available !"
+#~ msgstr "Сүлжээ алга !"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "Энэ хүргэлтийн компанид тохирох сүлжээ алга !"

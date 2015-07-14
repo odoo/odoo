@@ -839,8 +839,7 @@ class calendar_alarm(osv.osv):
         current_datetime = datetime.now()
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
-        mail_to = ""
-
+        mail_to = set()
         for alarm in self.browse(cr, uid, alarm_ids, context=context):
             next_trigger_date = None
             update_vals = {}
@@ -890,10 +889,12 @@ From:
 </pre>
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
-                    mail_to = alarm.user_id.email
+                    mail_to.add(alarm.user_id.email)
                     for att in alarm.attendee_ids:
-                        mail_to = mail_to + " " + att.user_id.email
+                        if att.user_id.email:
+                            mail_to.add(att.user_id.email)
                     if mail_to:
+                        mail_to = ','.join(mail_to)
                         vals = {
                             'state': 'outgoing',
                             'subject': sub,
@@ -1121,7 +1122,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for att in event.attendee_ids:
                 attendees[att.partner_id.id] = True
             new_attendees = []
-            mail_to = ""
+            mail_to = set()
             for partner in event.partner_ids:
                 if partner.id in attendees:
                     continue
@@ -1134,13 +1135,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     'email': partner.email
                 }, context=local_context)
                 if partner.email:
-                    mail_to = mail_to + " " + partner.email
+                    mail_to.add(partner.email)
                 self.write(cr, uid, [event.id], {
                     'attendee_ids': [(4, att_id)]
                 }, context=context)
                 new_attendees.append(att_id)
 
             if mail_to and current_user.email:
+                mail_to = ','.join(mail_to)
                 att_obj._send_mail(cr, uid, new_attendees, mail_to,
                     email_from = current_user.email, context=context)
         return True

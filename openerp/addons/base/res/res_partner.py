@@ -68,6 +68,10 @@ class format_address(object):
                 doc = etree.fromstring(arch)
                 for node in doc.xpath("//div[@class='address_format']"):
                     tree = etree.fromstring(v)
+                    for child in node.xpath("//field"):
+                        if child.attrib.get('modifiers'):
+                            for field in tree.xpath("//field[@name='%s']" % child.attrib.get('name')):
+                                field.attrib['modifiers'] = child.attrib.get('modifiers')
                     node.getparent().replace(node, tree)
                 arch = etree.tostring(doc)
                 break
@@ -507,6 +511,14 @@ class res_partner(osv.osv, format_address):
             parent.update_address(addr_vals)
             if not parent.is_company:
                 parent.write({'is_company': True})
+
+    def unlink(self, cr, uid, ids, context=None):
+        orphan_contact_ids = self.search(cr, uid,
+            [('parent_id', 'in', ids), ('id', 'not in', ids), ('use_parent_address', '=', True)], context=context)
+        if orphan_contact_ids:
+            # no longer have a parent address
+            self.write(cr, uid, orphan_contact_ids, {'use_parent_address': False}, context=context)
+        return super(res_partner, self).unlink(cr, uid, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):

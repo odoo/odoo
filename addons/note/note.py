@@ -173,7 +173,7 @@ class note_note(osv.osv):
             return result
 
         else:
-            return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
+            return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby)
 
 

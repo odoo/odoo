@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-24 21:03+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-25 06:00+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:48+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -215,9 +215,9 @@ msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "İzleme"
+#: view:crm.claim.report:0
+msgid "Month of claim"
+msgstr "Şikayeyin ayı"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -283,9 +283,10 @@ msgid "Lowest"
 msgstr "En düşük"
 
 #. module: crm_claim
-#: field:crm.claim,action_next:0
-msgid "Next Action"
-msgstr "Sonraki İşlem"
+#: code:addons/crm_claim/crm_claim.py:186
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -361,7 +362,7 @@ msgid "Destination email for email gateway."
 msgstr "Eposta ağgeçidi için eposta varış yeri."
 
 #. module: crm_claim
-#: code:addons/crm_claim/crm_claim.py:194
+#: code:addons/crm_claim/crm_claim.py:202
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
@@ -441,6 +442,11 @@ msgstr "İşlem Türü"
 #: field:crm.claim,write_date:0
 msgid "Update Date"
 msgstr "Güncelleme Tarihi"
+
+#. module: crm_claim
+#: field:crm.claim,action_next:0
+msgid "Next Action"
+msgstr "Sonraki İşlem"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -823,9 +829,9 @@ msgid "# Emails"
 msgstr "# E-postaları"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr "Şikayeyin ayı"
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "İzleme"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0

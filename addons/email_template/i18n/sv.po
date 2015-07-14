@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2014-03-31 16:56+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-04-01 06:52+0000\n"
-"X-Generator: Launchpad (build 16967)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:51+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -166,6 +166,12 @@ msgid "Email Templates"
 msgstr "E-postmallar"
 
 #. module: email_template
+#: help:email.template,model_id:0
+#: help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr ""
+
+#. module: email_template
 #: help:email.template,report_name:0
 #: help:email_template.preview,report_name:0
 msgid ""
@@ -189,17 +195,9 @@ msgid "Sidebar action"
 msgstr "Åtgärd i sidramen"
 
 #. module: email_template
-#: help:email.template,lang:0
-#: help:email_template.preview,lang:0
-msgid ""
-"Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language code, e.g. "
-"${object.partner_id.lang.code}."
+#: view:email_template.preview:0
+msgid "Preview of"
 msgstr ""
-"Tillval översättningsspråk (ISO-kod) att välja när du skickar ut ett mail. "
-"Om inte inställt, kommer den engelska versionen användas. Detta bör "
-"vanligtvis vara en platshållaruttryck som ger"
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -258,8 +256,9 @@ msgid "Advanced"
 msgstr "Avancerad"
 
 #. module: email_template
-#: view:email_template.preview:0
-msgid "Preview of"
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: email_template
@@ -368,9 +367,13 @@ msgid "Add context action"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,model_id:0
-#: help:email_template.preview,model_id:0
-msgid "The kind of document with with this template can be used"
+#: help:email.template,lang:0
+#: help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
 msgstr ""
 
 #. module: email_template
@@ -490,6 +493,14 @@ msgid "Suppliers"
 msgstr ""
 
 #. module: email_template
+#: code:addons/email_template/email_template.py:381
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,user_signature:0
 #: field:email_template.preview,user_signature:0
 msgid "Add Signature"
@@ -542,3 +553,13 @@ msgstr "Ämne"
 
 #~ msgid "Sender address (placeholders may be used here)"
 #~ msgstr "Avsändare (platshållare kan användas här)"
+
+#~ msgid ""
+#~ "Optional translation language (ISO code) to select when sending out an "
+#~ "email. If not set, the english version will be used. This should usually be "
+#~ "a placeholder expression that provides the appropriate language code, e.g. "
+#~ "${object.partner_id.lang.code}."
+#~ msgstr ""
+#~ "Tillval översättningsspråk (ISO-kod) att välja när du skickar ut ett mail. "
+#~ "Om inte inställt, kommer den engelska versionen användas. Detta bör "
+#~ "vanligtvis vara en platshållaruttryck som ger"

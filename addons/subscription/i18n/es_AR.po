@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:11+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Argentina) <es_AR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:37+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:29+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -29,9 +29,15 @@ msgid "Object"
 msgstr "Objeto"
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:147
+#, python-format
+msgid "You cannot delete an active subscription!"
+msgstr ""
+
+#. module: subscription
 #: view:subscription.subscription:0
 msgid "Search Subscription"
-msgstr ""
+msgstr "Buscar Suscripción"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -73,7 +79,7 @@ msgstr "Estado"
 #: model:ir.ui.menu,name:subscription.config_recuuring_event
 #: model:ir.ui.menu,name:subscription.next_id_45
 msgid "Recurring Events"
-msgstr ""
+msgstr "Eventos Recurrentes"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -81,6 +87,11 @@ msgstr ""
 #: view:subscription.subscription:0
 msgid "Subscriptions"
 msgstr "Suscripciones"
+
+#. module: subscription
+#: view:subscription.subscription:0
+msgid "Subsription Data"
+msgstr "Datos de Suscripción"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -135,18 +146,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
 msgstr ""
+"Si el campo activo se desmarca, le permitirá ocultar el documento de "
+"suscripción sin eliminarlo."
 
 #. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
 msgstr "Nombre"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:147
-#, python-format
-msgid "You cannot delete an active subscription !"
-msgstr ""
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -174,7 +181,7 @@ msgstr "Días"
 #: code:addons/subscription/subscription.py:147
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -197,17 +204,26 @@ msgstr "Partner"
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
+msgstr "Planificador que ejecuta la suscripción"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid "Wrong Source Document!"
 msgstr ""
 
 #. module: subscription
-#: view:subscription.subscription:0
-msgid "Subsription Data"
-msgstr "Datos de Suscripción"
+#: code:addons/subscription/subscription.py:120
+#, python-format
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist!"
+msgstr ""
 
 #. module: subscription
 #: help:subscription.subscription,note:0
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Descripción o Resumen de la Suscripción"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -222,11 +238,15 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
 msgstr ""
+"Si el campo activo se desmarca, le permitirá ocultar la suscripción sin "
+"eliminarla."
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
 msgstr ""
+"Se tiene en cuenta el valor por defecto del campo cuando se genera un nuevo "
+"documento."
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -236,7 +256,7 @@ msgstr "Falso"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar Por..."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -248,18 +268,14 @@ msgstr "Procesar"
 msgid ""
 "User can choose the source document on which he wants to create documents"
 msgstr ""
+"El usuario puede elegir el documento de origen en el que quiere crear "
+"documentos"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
 msgstr "Tipos de Documentos"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "¡Documento origen erróneo!"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
@@ -271,16 +287,6 @@ msgstr "Campos de Documento de Suscripción"
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "Finalizado"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:120
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Por favor proporcione otro documento origen.\n"
-"¡Éste no existe!"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -298,3 +304,19 @@ msgstr "Documentos creados"
 #: field:subscription.subscription,active:0
 msgid "Active"
 msgstr "Activo"
+
+#, python-format
+#~ msgid ""
+#~ "Please provide another source document.\n"
+#~ "This one does not exist !"
+#~ msgstr ""
+#~ "Por favor proporcione otro documento origen.\n"
+#~ "¡Éste no existe!"
+
+#, python-format
+#~ msgid "Wrong Source Document !"
+#~ msgstr "¡Documento origen erróneo!"
+
+#, python-format
+#~ msgid "You cannot delete an active subscription !"
+#~ msgstr "¡No puede borrar una suscripción activa!"

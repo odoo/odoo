@@ -175,7 +175,7 @@ class purchase_requisition_line(osv.osv):
     _rec_name = 'product_id'
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product' ),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
@@ -221,7 +221,8 @@ class purchase_order(osv.osv):
             if po.requisition_id and all(purchase_id.state in ['draft', 'cancel'] for purchase_id in po.requisition_id.purchase_ids if purchase_id.id != po.id):
                 procurement_ids = self.pool['procurement.order'].search(cr, uid, [('requisition_id', '=', po.requisition_id.id)], context=context)
                 for procurement in proc_obj.browse(cr, uid, procurement_ids, context=context):
-                    procurement.move_id.write({'location_id': procurement.move_id.location_dest_id.id})
+                    if procurement.move_id:
+                        procurement.move_id.write({'location_id': procurement.move_id.location_dest_id.id})
         return res
 
 purchase_order()

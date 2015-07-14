@@ -393,7 +393,7 @@ class YamlInterpreter(object):
             fg = view_info['fields']
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=self.context) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
@@ -447,7 +447,7 @@ class YamlInterpreter(object):
 
                     # Evaluation args
                     args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                    result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
                     for key, val in (result or {}).get('value', {}).items():
                         if key in fg:
                             record_dict[key] = process_val(key, val)

@@ -7,20 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-10-25 08:50+0000\n"
 "Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:25+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:11+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_config_settings
 msgid "account.config.settings"
 msgstr "account.config.settings"
+
+#. module: portal_sale
+#: model:email.template,subject:portal_sale.email_template_edi_invoice
+msgid ""
+"${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
+msgstr ""
 
 #. module: portal_sale
 #: view:account.invoice:0
@@ -49,13 +55,6 @@ msgstr ""
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
 msgid "Show payment buttons to employees too"
-msgstr ""
-
-#. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_sale
-msgid ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
@@ -196,9 +195,11 @@ msgstr ""
 "and 'draft' or ''}"
 
 #. module: portal_sale
-#: model:email.template,subject:portal_sale.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
-msgstr "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
+#: model:email.template,subject:portal_sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
@@ -212,9 +213,9 @@ msgid "Quotations"
 msgstr "Ponudbe"
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_sale_order
-msgid "Sales Order"
-msgstr "Prodajni nalog"
+#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
+msgid "Sale Orders"
+msgstr "Prodajni nalogi"
 
 #. module: portal_sale
 #: field:account.invoice,portal_payment_options:0
@@ -354,6 +355,9 @@ msgid "Invoice"
 msgstr "Račun"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-msgid "Sale Orders"
-msgstr "Prodajni nalogi"
+#: model:ir.model,name:portal_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Prodajni nalog"
+
+#~ msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
+#~ msgstr "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"

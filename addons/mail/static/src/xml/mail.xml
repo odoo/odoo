@@ -93,7 +93,7 @@
                         <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
+                    <div t-if="!attachment.upload" class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -105,7 +105,7 @@
                         <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
-                    <div class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
+                    <div t-if="!attachment.upload" class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>

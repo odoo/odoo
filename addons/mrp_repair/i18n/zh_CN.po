@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-19 05:07+0000\n"
 "Last-Translator: Guipo Hao <hrlpool@sohu.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:22+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 07:06+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -31,12 +31,6 @@ msgstr "分组..."
 #: view:mrp.repair:0
 msgid "Recreate Invoice"
 msgstr "重新生成发票"
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form !"
-msgstr "必须在维修单上输入业务伙伴的发票地址"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -71,7 +65,7 @@ msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:441
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "没有定义费用产品"
@@ -146,9 +140,9 @@ msgid "Taxes"
 msgstr "税"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:391
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -251,9 +245,9 @@ msgid "Extra Info"
 msgstr "额外信息"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
-#: code:addons/mrp_repair/mrp_repair.py:349
-#: code:addons/mrp_repair/mrp_repair.py:435
+#: code:addons/mrp_repair/mrp_repair.py:341
+#: code:addons/mrp_repair/mrp_repair.py:354
+#: code:addons/mrp_repair/mrp_repair.py:441
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
@@ -271,7 +265,7 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:385
+#: code:addons/mrp_repair/mrp_repair.py:391
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "业务伙伴 \"%s\" 没有指定应收账款科目"
@@ -310,7 +304,7 @@ msgid "Repairs order"
 msgstr "修理单"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:336
+#: code:addons/mrp_repair/mrp_repair.py:341
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "带产品'%s'的操作行需要序列号"
@@ -566,6 +560,12 @@ msgid "Date"
 msgstr "日期"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "No partner!"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
 msgstr "维修费行"
@@ -596,8 +596,8 @@ msgid "End Repair"
 msgstr "结束修理"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:413
-#: code:addons/mrp_repair/mrp_repair.py:442
+#: code:addons/mrp_repair/mrp_repair.py:419
+#: code:addons/mrp_repair/mrp_repair.py:448
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "产品 \"%s\" 没有指定科目"
@@ -621,9 +621,7 @@ msgid "Product Information"
 msgstr "产品信息"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
-#: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr "创建发票"
 
@@ -631,6 +629,12 @@ msgstr "创建发票"
 #: view:mrp.repair:0
 msgid "Start Repair"
 msgstr "开始修理"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:377
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -699,6 +703,8 @@ msgstr ""
 "保修期限计算方法：上次移库时间 + 该产品保修期。若当前日期早于保修期限，所有维修操作及费用将被默认设定为“不开票”。注意该条款日后可以手工调整。"
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:0
 #: view:mrp.repair.make_invoice:0
 msgid "Create Invoice"
 msgstr "创建发票"
@@ -758,7 +764,7 @@ msgid "Do you really want to create the invoice(s)?"
 msgstr "你真的要生成发票吗 ？"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:349
+#: code:addons/mrp_repair/mrp_repair.py:354
 #, python-format
 msgid "Repair order is already invoiced."
 msgstr "维修单已开票。"
@@ -836,8 +842,10 @@ msgstr "合计"
 msgid "Ready to Repair"
 msgstr "准备修理"
 
-#. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:371
 #, python-format
-msgid "No partner !"
-msgstr "没有输入业务伙伴"
+#~ msgid "You have to select a Partner Invoice Address in the repair form !"
+#~ msgstr "必须在维修单上输入业务伙伴的发票地址"
+
+#, python-format
+#~ msgid "No partner !"
+#~ msgstr "没有输入业务伙伴"

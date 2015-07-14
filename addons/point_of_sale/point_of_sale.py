@@ -311,7 +311,7 @@ class pos_session(osv.osv):
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
-                jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
+                jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_id': jid}, context=context)
             else:
                 raise osv.except_osv( _('error!'),
                     _("Unable to open the session. You have to assign a sale journal to your point of sale."))
@@ -325,8 +325,8 @@ class pos_session(osv.osv):
                 if not cashids:
                     cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
-            journal_proxy.write(cr, uid, cashids, {'journal_user': True})
-            jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
+            journal_proxy.write(cr, openerp.SUPERUSER_ID, cashids, {'journal_user': True})
+            jobj.write(cr, openerp.SUPERUSER_ID, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
         pos_config = jobj.browse(cr, uid, config_id, context=context)

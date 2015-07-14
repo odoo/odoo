@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2014-08-14 00:10+0000\n"
 "PO-Revision-Date: 2013-11-23 15:03+0000\n"
-"Last-Translator: Yoshi Tashiro <yostashiro@gmail.com>\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-24 05:47+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2014-08-14 06:40+0000\n"
+"X-Generator: Launchpad (build 17156)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -45,7 +45,6 @@ msgstr "テンプレート"
 
 #. module: analytic
 #: view:account.analytic.account:0
-#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr "終了日"
 
@@ -91,6 +90,17 @@ msgstr "アカウント責任者"
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really useful for consolidation "
+"purposes of several companies charts with different currencies, for example."
 msgstr ""
 
 #. module: analytic
@@ -182,21 +192,6 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:160
-#, python-format
-msgid ""
-"If you set a company, the currency selected has to be the same as it's "
-"currency. \n"
-"You can remove the company belonging, and thus change the currency, only on "
-"analytic account of type 'view'. This can be really usefull for "
-"consolidation purposes of several companies charts with different "
-"currencies, for example."
-msgstr ""
-"会社を設定した場合、選択した通貨は会社の通貨と同じである必要があります。\n"
-"タイプがビューである分析アカウント上でのみ、所属会社を削除して通貨を変更することができます。これは例えば、異なる通貨である複数の会社チャートを連結する目的"
-"のために非常に役立ちます。"
-
-#. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
 msgstr ""
@@ -225,6 +220,11 @@ msgstr "契約終了"
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
 msgstr "諸条件"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -397,6 +397,19 @@ msgstr "開始日"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "分析エントリー"
+
+#, python-format
+#~ msgid ""
+#~ "If you set a company, the currency selected has to be the same as it's "
+#~ "currency. \n"
+#~ "You can remove the company belonging, and thus change the currency, only on "
+#~ "analytic account of type 'view'. This can be really usefull for "
+#~ "consolidation purposes of several companies charts with different "
+#~ "currencies, for example."
+#~ msgstr ""
+#~ "会社を設定した場合、選択した通貨は会社の通貨と同じである必要があります。\n"
+#~ "タイプがビューである分析アカウント上でのみ、所属会社を削除して通貨を変更することができます。これは例えば、異なる通貨である複数の会社チャートを連結する目的"
+#~ "のために非常に役立ちます。"
 
 #~ msgid "Date End"
 #~ msgstr "終了日"

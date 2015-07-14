@@ -954,13 +954,13 @@ class ir_model_data(osv.osv):
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
-            self.write(cr, uid, [action_id], {
+            self.write(cr, SUPERUSER_ID, [action_id], {
                 'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
                 },context=context)
         elif res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             if xml_id:
-                self.create(cr, uid, {
+                self.create(cr, SUPERUSER_ID, {
                     'name': xml_id,
                     'model': model,
                     'module':module,
@@ -971,7 +971,7 @@ class ir_model_data(osv.osv):
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
                                 res_id,context=context)[model_obj._inherits[table]]
-                        self.create(cr, uid, {
+                        self.create(cr, SUPERUSER_ID, {
                             'name': xml_id + '_' + table.replace('.', '_'),
                             'model': table,
                             'module': module,
@@ -982,7 +982,7 @@ class ir_model_data(osv.osv):
             if mode=='init' or (mode=='update' and xml_id):
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
-                    self.create(cr, uid, {
+                    self.create(cr, SUPERUSER_ID, {
                         'name': xml_id,
                         'model': model,
                         'module': module,
@@ -993,7 +993,7 @@ class ir_model_data(osv.osv):
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
                                     res_id,context=context)[model_obj._inherits[table]]
-                            self.create(cr, uid, {
+                            self.create(cr, SUPERUSER_ID, {
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
                                 'module': module,

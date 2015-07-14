@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2013-06-07 19:37+0000\n"
-"PO-Revision-Date: 2013-09-21 09:43+0000\n"
-"Last-Translator: Darja Zorman <darja.zorman@mentis.si>\n"
+"PO-Revision-Date: 2015-03-26 08:59+0000\n"
+"Last-Translator: Matjaž Mozetič (Matmoz) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-11-21 06:34+0000\n"
-"X-Generator: Launchpad (build 16831)\n"
+"X-Launchpad-Export-Date: 2015-03-27 05:32+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -24,29 +24,28 @@ msgstr "Opomba"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr "Način fakturiranja"
+msgstr "Tip obračuna"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
 "This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
-"Ta način fakturiranja bo ponujen kot privzet za fakture tega partnerja."
+msgstr "Ta način obračuna bo ponujen kot privzet za račune tega partnerja."
 
 #. module: sale_journal
-#: view:res.partner:0
+#: view:res.partner:sale_journal.view_partner_property_form
 msgid "Sales & Purchases"
 msgstr "Prodaja in nabava"
 
 #. module: sale_journal
-#: view:res.partner:0
+#: view:res.partner:sale_journal.view_partner_property_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Izdaja računov"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Prihajajoče pošiljke"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -54,9 +53,10 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Če nastavljeno na False, tip obračuna skrijemo, ne da bi ga izbrisali."
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
 msgid "Notes"
 msgstr "Opombe"
 
@@ -68,7 +68,7 @@ msgstr "Način zaračunavanja"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Zbirnik"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -94,26 +94,23 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
-"Tipi faktur se uporabljajo za partnerje, prodajne naloge in odpremnice. "
-"Kreiramo lahko ločen dnevnik fakturiranja in tako združimo fakture glede na "
+"Tipi računov se uporabljajo za partnerje, prodajne naloge in odpremnice. "
+"Ustvarimo lahko ločen dnevnik obračuna in tako združimo račune glede na "
 "potrebe stranke: dnevno, vsako sredo, mesečno, itd."
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
 msgid "Generate invoice based on the selected option."
-msgstr "Kreiraj račun na osnovi izbranih opcij."
+msgstr "Ustvari račun na osnovi izbranih opcij."
 
 #. module: sale_journal
-#: view:sale.order:0
+#: view:sale.order:sale_journal.view_sales_order_search
 #: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
 #: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:0
+#: view:stock.picking:sale_journal.view_picking_internal_search
 #: field:stock.picking,invoice_type_id:0
-#: view:stock.picking.in:0
-#: field:stock.picking.in,invoice_type_id:0
-#: view:stock.picking.out:0
-#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
 msgstr "Vrsta računa"
 
@@ -125,14 +122,14 @@ msgstr "Aktiven"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Dostavni nalogi"
