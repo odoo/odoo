@@ -1,5 +1,5 @@
 -
-  In order to test Contract Recurrent Invoice I create a new Contract Template 
+  In order to test Contract Recurrent Invoice I create a new Contract Template
 -
   !record {model: account.analytic.account, id: contract_template}:
     name: Maintenance of Servers
@@ -10,9 +10,9 @@
     recurring_interval : 1
     recurring_invoice_line_ids:
       - quantity: 2.0
-        price_unit: 75.0
+        price_unit: 30.75
         name: Database Administration
-        product_id: product.product_product_consultant
+        product_id: product.product_product_1
         uom_id: product.product_uom_hour
 -
   I create a contract based on this template
@@ -43,4 +43,4 @@
     ids = self.search(cr, uid, [('invoice_line.analytic_account_id','=',aid)], context=context)
     assert len(ids)>=1, 'No invoice created for the contract'
     for invoice in self.browse(cr, uid, ids,context=context):
-        assert float_compare(invoice.amount_untaxed, 150.0, precision_digits=2) == 0, "The invoice total is different than 150!"
+        assert float_compare(invoice.amount_untaxed, 61.5, precision_digits=2) == 0, "The invoice total is different than 61.5!"

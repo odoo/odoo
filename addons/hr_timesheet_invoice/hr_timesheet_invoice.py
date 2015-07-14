@@ -270,6 +270,9 @@ class account_analytic_line(osv.osv):
                 if not analytic_line.to_invoice:
                     raise UserError(_('Trying to invoice non invoiceable line for %s.') % (analytic_line.product_id.name))
 
+                if not analytic_line.product_id and not data['product']:
+                    raise UserError(_('No product associated with %s, force a product.') % (analytic_line.name))
+
                 key = (analytic_line.product_id.id,
                     analytic_line.product_uom_id.id,
                     analytic_line.user_id.id,

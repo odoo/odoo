@@ -52,8 +52,6 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         if vals.get('attendances_ids'):
@@ -97,7 +95,7 @@ class hr_timesheet_sheet(osv.osv):
                 date_attendances.append((1, name, att_tuple))
             elif att_tuple[0] in [2,3]:
                 date_attendances.append((0, self.pool['hr.attendance'].browse(cr, uid, att_tuple[1]).name, att_tuple))
-            else: 
+            else:
                 date_attendances.append((0, False, att_tuple))
         date_attendances.sort()
         return [att[2] for att in date_attendances]
@@ -120,7 +118,7 @@ class hr_timesheet_sheet(osv.osv):
         for sheet in self.browse(cr, uid, ids, context=context):
             if sheet.employee_id.id not in employee_ids: employee_ids.append(sheet.employee_id.id)
         return hr_employee.attendance_action_change(cr, uid, employee_ids, context=context)
-    
+
     def _count_attendances(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         attendances_groups = self.pool['hr.attendance'].read_group(cr, uid, [('sheet_id' , 'in' , ids)], ['sheet_id'], 'sheet_id', context=context)

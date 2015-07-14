@@ -15,7 +15,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
         'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
-        'product': fields.many2one('product.product', 'Force Product', help='Fill this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
+        'product': fields.many2one('product.product', 'Force Product', help='Fill this field only if you want to force the use a specific product. Keep empty to use the real product that comes from the cost.'),
         'group_by_partner': fields.boolean('Group by Partner', help='If this box is checked, the system will group invoices by customer.'),
     }
 
