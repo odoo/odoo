@@ -2,7 +2,7 @@
   In order to test Carrier Cost,
 -
   Create sale order with Normal Delivery Charges
-- 
+-
   !record {model: sale.order, id: sale_normal_delivery_charges}:
     partner_id: base.res_partner_18
     partner_invoice_id: base.res_partner_18
@@ -48,7 +48,7 @@
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
 -
   Create one more sale order with Free Delivery Charges
-- 
+-
   !record {model: sale.order, id: sale_free_delivery_charges}:
     partner_id: base.res_partner_7
     partner_invoice_id: base.res_partner_address_13
@@ -57,7 +57,7 @@
     order_policy: 'manual'
     order_line:
       - name: 'Service on demand'
-        product_id: product.product_product_consultant
+        product_id: product.product_product_1
         product_uom_qty: 24
         product_uos_qty: 24
         product_uom: product.product_uom_hour

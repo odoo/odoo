@@ -11,7 +11,8 @@ class AccountAnalyticLine(models.Model):
 
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
-    general_account_id = fields.Many2one('account.account', string='Financial Account', required=True, ondelete='restrict', domain=[('deprecated', '=', False)])
+    general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict',
+                                         related='move_id.account_id', store=True, domain=[('deprecated', '=', False)])
     move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
     journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True)
     code = fields.Char(size=8)
@@ -30,7 +31,7 @@ class AccountAnalyticLine(models.Model):
         if not journal_id:
             j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type', '=', 'purchase')])
             journal_id = j_ids and j_ids[0] or False
-        if not journal_id or not prod_id:
+        if not journal_id:
             return {}
         product_obj = self.pool.get('product.product')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
@@ -52,18 +53,10 @@ class AccountAnalyticLine(models.Model):
             a = prod.property_account_expense_id.id
             if not a:
                 a = prod.categ_id.property_account_expense_categ_id.id
-            if not a:
-                raise UserError(_('There is no expense account defined ' \
-                                'for this product: "%s" (id:%d).') % \
-                                (prod.name, prod.id,))
         else:
             a = prod.property_account_income_id.id
             if not a:
                 a = prod.categ_id.property_account_income_categ_id.id
-            if not a:
-                raise UserError(_('There is no income account defined ' \
-                                'for this product: "%s" (id:%d).') % \
-                                (prod.name, prod_id,))
 
         flag = False
         # Compute based on pricetype
@@ -83,7 +76,12 @@ class AccountAnalyticLine(models.Model):
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
+        amount_unit = prod.price_get(pricetype.field, context=ctx)
+        if amount_unit:
+            amount_unit = amount_unit[prod.id]
+        else:
+            amount_unit = 0.0
+
         amount = amount_unit * quantity or 0.0
         cur_record = self.browse(cr, uid, id, context=context)
         currency = cur_record.exists() and cur_record.currency_id or prod.company_id.currency_id

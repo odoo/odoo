@@ -3,12 +3,11 @@
     <data noupdate="1">
         <!-- Example employee -->
         <record id="hr.employee_qdp" model="hr.employee">
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_2"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 
         <record id="hr.employee_al" model="hr.employee">
-            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 
@@ -16,7 +15,6 @@
             <field name="name">Lisa Jongejans</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
-            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
             <field name="work_location">Building 1, Second Floor</field>
             <field name="work_phone">+3282623500</field>
@@ -27,21 +25,19 @@
             <field name="name">Martin Lawrence</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_2"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
         <record id="hr.employee_jth" model="hr.employee">
             <field name="name">Jimmy Kosikin</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
-            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
         <record id="hr.employee7" model="hr.employee">
             <field name="name">Alice Englert</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
-            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
             <field name="work_location">Building 1, Second Floor</field>
             <field name="work_phone">+3282823500</field>
@@ -52,7 +48,6 @@
         </record>
         <record id="hr.employee_fp" model="hr.employee">
             <field name="calendar_id" ref="resource.timesheet_group1"/>
-            <field name="product_id" ref="product.product_product_consultant"/>
             <field name="journal_id" ref="hr_timesheet.analytic_journal"/>
         </record>
 

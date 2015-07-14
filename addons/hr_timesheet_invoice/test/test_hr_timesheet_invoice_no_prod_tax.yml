@@ -9,7 +9,7 @@
     general_account_id: a_expense
     journal_id: hr_timesheet.analytic_journal
     name: develop yaml for hr module
-    product_id: product.product_product_consultant
+    product_id: product.product_product_1
     product_uom_id: product.product_uom_hour
     to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
     unit_amount: 5.00
@@ -51,7 +51,7 @@
 -
   I set the account as property_account_income_id on the product and I set no tax on the product (so default tax from the account will be used)
 -
-  !record {model: product.product, id: product.product_product_consultant, view: False}:
+  !record {model: product.product, id: product.product_product_1, view: False}:
     property_account_income_id: account_income_i000
     uom_id: product.product_uom_hour
     taxes_id: []
@@ -63,7 +63,7 @@
     date: 1
     name: 1
     price: 1
-    product: product.product_product_consultant
+    product: product.product_product_1
     time: 1
 -
   I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice.
@@ -91,7 +91,7 @@
     invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner),
        ('origin', '=', 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm1_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule1") ))
     ])
-    
+
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
 
     for invoice in invoice_id.invoice_line_ids:

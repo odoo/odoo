@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-
-
-        <!-- complete our example employee -->
         <record id="hr.employee_fp" model="hr.employee">
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="journal_id" ref="analytic_journal"/>
         </record>
         <record id="hr.employee_qdp" model="hr.employee">
-            <field name="product_id" ref="product.product_product_consultant"/>
+            <field name="product_id" ref="product.product_product_1"/>
             <field name="journal_id" ref="analytic_journal"/>
         </record>
 
@@ -25,10 +22,5 @@
         <record id="analytic.analytic_super_product_trainings" model="account.analytic.account">
             <field name="invoice_on_timesheets">True</field>
         </record>
-        
-        <record id="product.product_product_consultant" model="product.product">
-            <field name="categ_id" ref="product.product_category_3"/>
-        </record>
-
     </data>
 </openerp>
