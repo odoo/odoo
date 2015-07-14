@@ -582,7 +582,9 @@ openerp.mail = function (session) {
                     context: context,
                 };
 
-                self.do_action(action);
+                self.do_action(action, {
+                    'on_close': function(){ self.parent_thread.message_fetch() }
+                });
                 self.on_cancel();
             });
 
