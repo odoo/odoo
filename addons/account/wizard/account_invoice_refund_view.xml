@@ -8,27 +8,26 @@
             <field name="arch" type="xml">
                 <form string="Credit Note">
                     <group>
-                         <group colspan="2">
-                             <label for="filter_refund"/>
-                             <div>
-                                 <field name="filter_refund" class="oe_inline"/>
-                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','refund')]}" class="oe_grey">
-                                    You will be able to edit and validate this
-                                    credit note directly or keep it draft,
-                                    waiting for the document to be issued by
-                                    your supplier/customer.
-                                 </p>
-                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey">
-                                    Use this option if you want to cancel an invoice you should not
-                                    have issued. The credit note will be created, validated and reconciled
-                                    with the invoice. You will not be able to modify the credit note.
-                                 </p>
-                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','modify')]}" class="oe_grey">
-                                    Use this option if you want to cancel an invoice and create a new
-                                    one. The credit note will be created, validated and reconciled
-                                    with the current invoice. A new, draft, invoice will be created 
-                                    so that you can edit it.
-                                 </p>
+                         <group>
+                             <field name="filter_refund"/>
+                         </group>
+                         <group>
+                             <div attrs="{'invisible':[('filter_refund','&lt;&gt;','refund')]}" class="oe_grey" colspan="4">
+                                You will be able to edit and validate this
+                                credit note directly or keep it draft,
+                                waiting for the document to be issued by
+                                your supplier/customer.
+                             </div>
+                             <div attrs="{'invisible':[('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey" colspan="4">
+                                Use this option if you want to cancel an invoice you should not
+                                have issued. The credit note will be created, validated and reconciled
+                                with the invoice. You will not be able to modify the credit note.
+                             </div>
+                             <div attrs="{'invisible':[('filter_refund','&lt;&gt;','modify')]}" class="oe_grey" colspan="4">
+                                Use this option if you want to cancel an invoice and create a new
+                                one. The credit note will be created, validated and reconciled
+                                with the current invoice. A new, draft, invoice will be created 
+                                so that you can edit it.
                              </div>
                          </group>
                          <group>
@@ -36,7 +35,7 @@
                          </group>
                          <group>
                              <field name="date_invoice"/>
-                             <field name="date"/>
+                             <field name="date" groups="base.group_no_one"/>
                          </group>
                     </group>
                     <footer>

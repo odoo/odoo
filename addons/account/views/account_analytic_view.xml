@@ -48,19 +48,6 @@
                     <xpath expr="//field[@name='date']" position="after">
                         <field name="ref" invisible="context.get('to_invoice', False)"/>
                     </xpath>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="partner_id"/>
-                        <field name="journal_id" invisible="context.get('to_invoice', False)"/>
-                    </xpath>
-                    <xpath expr="//field[@name='amount']" position="after">
-                        <field name="product_id" invisible="not context.get('to_invoice', False)"/>
-                    </xpath>
-                    <xpath expr="//field[@name='unit_amount']" position="after">
-                        <field name="product_uom_id" invisible="not context.get('to_invoice', False)"/>
-                    </xpath>
-                    <xpath expr="//field[@name='account_id']" position="after">
-                        <field name="general_account_id" invisible="context.get('to_invoice', False)"/>
-                    </xpath>
                 </data>
             </field>
         </record>
@@ -94,17 +81,6 @@
             id="account_analytic_journal_entries"
             parent="menu_finance_entries"
             sequence="40"/>
-            
-        <record id="view_account_journal_1" model="ir.ui.view">
-            <field name="name">account.journal.form.1</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="analytic_journal_id" groups="analytic.group_analytic_accounting"/>
-                </field>
-            </field>
-        </record>
 
         <record id="view_account_analytic_line_pivot" model="ir.ui.view">
             <field name="name">account.analytic.line.pivot</field>

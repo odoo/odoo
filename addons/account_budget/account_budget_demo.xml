@@ -3,7 +3,6 @@
     <!-- Budgets -->
     <data noupdate="1">
         <record id="crossovered_budget_budgetoptimistic0" model="crossovered.budget">
-            <field eval="'+'+str(time.localtime(time.time())[0]+1)" name="code"/>
             <field eval="'Budget '+str(time.localtime(time.time())[0]+1)+': Optimistic'" name="name"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>
@@ -13,7 +12,6 @@
     </data>
     <data noupdate="1">
         <record id="crossovered_budget_budgetpessimistic0" model="crossovered.budget">
-            <field eval="'-'+str(time.localtime(time.time())[0]+1)" name="code"/>
             <field eval="'Budget '+str(time.localtime(time.time())[0]+1)+': Pessimistic'" name="name"/>
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>

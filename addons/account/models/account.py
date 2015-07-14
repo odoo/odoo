@@ -5,7 +5,6 @@ import math
 
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
-from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.exceptions import UserError
 from openerp import api, fields, models, _
@@ -108,14 +107,14 @@ class AccountAccount(models.Model):
     last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
         help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
-    reconcile = fields.Boolean(string='Allow Invoices & Payments Matching', default=False,
+    reconcile = fields.Boolean(string='Reconciliation of Entries', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
     note = fields.Text('Internal Notes')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -190,7 +189,7 @@ class AccountJournal(models.Model):
         return self.env.ref('account.account_payment_method_manual_out')
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Short Name', size=5, required=True, help="The code will be displayed on reports.")
+    code = fields.Char(string='Sequence Prefix', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
@@ -203,8 +202,8 @@ class AccountJournal(models.Model):
         " Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments."\
         " Select 'General' for miscellaneous operations journals."\
         " Select 'Opening/Closing Situation' for entries generated for new fiscal years.")
-    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed (empty for no control)')
-    account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed (empty for no control)',
+    type_control_ids = fields.Many2many('account.account.type', 'account_journal_type_rel', 'journal_id', 'type_id', string='Account Types Allowed')
+    account_control_ids = fields.Many2many('account.account', 'account_account_type_rel', 'journal_id', 'account_id', string='Accounts Allowed',
         domain=[('deprecated', '=', False)])
     default_credit_account_id = fields.Many2one('account.account', string='Default Credit Account',
         domain=[('deprecated', '=', False)], help="It acts as a default account for credit amount")
@@ -229,11 +228,11 @@ class AccountJournal(models.Model):
     refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('payment_type', '=', 'inbound')], string='Inbound Payment Methods', default=lambda self: self._default_inbound_payment_methods(),
+        domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
         help="Means of payment for collecting money. Odoo modules offer various payments handling facilities, "
              "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
     outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('payment_type', '=', 'outbound')], string='Outbound Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
+        domain=[('payment_type', '=', 'outbound')], string='Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
         help="Means of payment for sending money. Odoo modules offer various payments handling facilities, "
              "but you can always use the 'Manual' payment method in order to manage payments outside of the software.")
     at_least_one_inbound = fields.Boolean(compute='_methods_compute', store=True)
@@ -445,13 +444,13 @@ class AccountTax(models.Model):
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
     refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
         help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
-    description = fields.Char(string='Text on Invoices')
+    description = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
-    include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
+    include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
-    tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
+    tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),

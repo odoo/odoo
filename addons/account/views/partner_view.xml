@@ -12,17 +12,18 @@
                         <group>
                             <field name="name"/>
                             <field name="active"/>
-                            <field name="auto_apply"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="vat_required" attrs="{'readonly': [('auto_apply', '=', False)]}"/>
-                            <field name="country_id"/>
-                            <field name="country_group_id"/>
+                            <field name="auto_apply"/>
+                            <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                         </group>
                     </group>
-                    <group>
-                        <group string="Taxes Mapping">
+                    <notebook>
+                        <page name="tax_mapping" string="Tax Mapping">
+                        <group>
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
                                 <tree string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
@@ -34,7 +35,9 @@
                                 </form>
                             </field>
                         </group>
-                        <group string="Accounts Mapping">
+                        </page>
+                        <page name="account_mapping" string="Account Mapping">
+                        <group>
                             <field name="account_ids" widget="one2many_list" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
                                     <field name="account_src_id"/>
@@ -46,7 +49,8 @@
                                 </form>
                             </field>
                         </group>
-                    </group>
+                        </page>
+                    </notebook>
                     </sheet>
                 </form>
             </field>

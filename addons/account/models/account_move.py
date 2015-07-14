@@ -64,10 +64,15 @@ class AccountMove(models.Model):
     def _compute_currency(self):
         self.currency_id = self.company_id.currency_id or self.env.user.company_id.currency_id
 
+    @api.multi
+    def _get_default_journal(self):
+        if self.env.context.get('default_journal_type'):
+            return self.env['account.journal'].search([('type', '=', self.env.context['default_journal_type'])], limit=1).id
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
-    ref = fields.Char(string='Partner Reference', copy=False)
+    ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]}, default=_get_default_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True)
     rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of', help="Technical field used to keep track of the origin of journal entries created in case of fluctuation of the currency exchange rate. This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
@@ -86,7 +91,6 @@ class AccountMove(models.Model):
         default=lambda self: self.env.user.company_id)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
-    to_check = fields.Boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
     @api.model
     def create(self, vals):
@@ -187,6 +191,7 @@ class AccountMove(models.Model):
     @api.multi
     def reverse_moves(self, date=None, journal_id=None):
         date = date or fields.Date.today()
+        reversed_moves = self.env['account.move']
         for ac_move in self:
             reversed_move = ac_move.copy(default={'date': date,
                 'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
@@ -197,8 +202,11 @@ class AccountMove(models.Model):
                     'credit': acm_line.debit,
                     'amount_currency': -acm_line.amount_currency
                     })
-            reversed_move._post_validate()
-            reversed_move.post()
+            reversed_moves |= reversed_move
+        if reversed_moves:
+            reversed_moves._post_validate()
+            reversed_moves.post()
+            return [x.id for x in reversed_moves]
         return True
 
 
@@ -233,7 +241,7 @@ class AccountMoveLine(models.Model):
             #we can only check the amount in company currency
             reconciled = False
             digits_rounding_precision = line.company_id.currency_id.rounding
-            if float_is_zero(amount, digits_rounding_precision):
+            if float_is_zero(amount, digits_rounding_precision) and (line.debit or line.credit):
                 reconciled = True
             line.reconciled = reconciled
 

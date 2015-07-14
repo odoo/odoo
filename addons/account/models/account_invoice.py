@@ -112,10 +112,10 @@ class AccountInvoice(models.Model):
             domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
             if self.type in ('out_invoice', 'in_refund'):
                 domain.extend([('credit', '>', 0), ('debit', '=', 0)])
-                type_payment = _('Outstanding credit from %s')
+                type_payment = _('Outstanding credits')
             else:
                 domain.extend([('credit', '=', 0), ('debit', '>', 0)])
-                type_payment = _('Outstanding debit from %s')
+                type_payment = _('Outstanding debits')
             info = {'title': '', 'outstanding': True, 'content': [], 'invoice_id': self.id}
             lines = self.env['account.move.line'].search(domain)
             if len(lines) != 0:
@@ -133,7 +133,7 @@ class AccountInvoice(models.Model):
                         'position': self.currency_id.position,
                         'digits': [69, self.currency_id.decimal_places],
                     })
-                info['title'] = type_payment % line.partner_id.name
+                info['title'] = type_payment
                 self.outstanding_credits_debits_widget = json.dumps(info)
                 self.has_outstanding = True
 
@@ -1198,7 +1198,7 @@ class AccountPaymentTerm(models.Model):
 
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
-    note = fields.Text(string='Description', translate=True)
+    note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
@@ -1248,9 +1248,9 @@ class AccountPaymentTermLine(models.Model):
             ('balance', 'Balance'),
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
-        ], string='Computation', required=True, default='balance',
+        ], string='Type', required=True, default='balance',
         help="Select here the kind of valuation related to this payment term line.")
-    value_amount = fields.Float(string='Amount To Pay', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
+    value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computing the day of the month.")
     days2 = fields.Integer(string='Day of the Month', required=True, default='0',
         help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")

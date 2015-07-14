@@ -11,11 +11,16 @@
             <form string="Asset category">
                 <group>
                     <group>
-                        <field name="name"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" class="oe_inline"/>
+                            </h1>
+                        </div>
                         <field name="type" attrs="{'invisible': 1}"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
-                    <group>
+                    <group string="Journal Entries">
                         <field name="journal_id"/>
                         <div>
                             <label for="account_asset_id" string="Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
@@ -27,9 +32,9 @@
                             <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
-                    <group>
-                        <separator string="Periodicity" colspan="2"/>
+                    <group string="Periodicity">
                         <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <field name="method_number" string="Number of Entries" attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
                         <label for="method_period" string="Every"/>
@@ -40,18 +45,12 @@
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
                         <field name="open_asset"/>
                     </group>
-                    <group attrs="{'invisible': [('type','=','sale')]}">
-                        <separator string="Depreciation Method" colspan="2"/>
+                    <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                         <field name="method" widget="radio"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata"/>
                     </group>
-                    <group groups="analytic.group_analytic_accounting" string="Analytic Information">
-                        <field name="account_analytic_id"/>
-                    </group>
                 </group>
-                <separator string="Notes"/>
-                <field name="note"/>
             </form>
         </field>
     </record>

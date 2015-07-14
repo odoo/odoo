@@ -215,7 +215,7 @@
                 <tree string="Analytic Entries">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="user_id"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="amount" sum="Total" invisible="context.get('to_invoice', False)" widget="monetary"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total Quantity"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>

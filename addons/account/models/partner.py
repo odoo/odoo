@@ -23,7 +23,7 @@ class AccountFiscalPosition(models.Model):
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
     note = fields.Text('Notes')
-    auto_apply = fields.Boolean(string='Automatic', help="Apply automatically this fiscal position.")
+    auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Countries',
         help="Apply only if delivery or invoicing country match.")
@@ -143,8 +143,8 @@ class AccountFiscalPositionTax(models.Model):
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    tax_src_id = fields.Many2one('account.tax', string='Tax Source', required=True)
-    tax_dest_id = fields.Many2one('account.tax', string='Replacement Tax')
+    tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True)
+    tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply')
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -160,9 +160,9 @@ class AccountFiscalPositionAccount(models.Model):
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
-    account_src_id = fields.Many2one('account.account', string='Account Source',
+    account_src_id = fields.Many2one('account.account', string='Account on Product',
         domain=[('deprecated', '=', False)], required=True)
-    account_dest_id = fields.Many2one('account.account', string='Account Destination',
+    account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
         domain=[('deprecated', '=', False)], required=True)
 
     _sql_constraints = [

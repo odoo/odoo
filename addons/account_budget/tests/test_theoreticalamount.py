@@ -15,7 +15,6 @@ class TestTheoreticalAmount(TransactionCase):
         cr, uid, = self.cr, self.uid
         crossovered_budget_id = self.registry('crossovered.budget').create(cr, uid, {
             'name': 'test budget name',
-            'code': 'test budget code',
             'date_from': '2014-01-01',
             'date_to': '2014-12-31',
         })

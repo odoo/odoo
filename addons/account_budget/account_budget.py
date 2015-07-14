@@ -43,15 +43,14 @@ class account_budget_post(osv.osv):
 class crossovered_budget(osv.osv):
     _name = "crossovered.budget"
     _description = "Budget"
+    _inherit = ['mail.thread']
 
     _columns = {
-        'name': fields.char('Name', required=True, states={'done':[('readonly',True)]}),
-        'code': fields.char('Code', size=16, required=True, states={'done':[('readonly',True)]}),
-        'creating_user_id': fields.many2one('res.users', 'Responsible User'),
-        'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),
+        'name': fields.char('Budget Name', required=True, states={'done':[('readonly',True)]}),
+        'creating_user_id': fields.many2one('res.users', 'Responsible'),
         'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
         'date_to': fields.date('End Date', required=True, states={'done':[('readonly',True)]}),
-        'state' : fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('confirm','Confirmed'),('validate','Validated'),('done','Done')], 'Status', select=True, required=True, readonly=True, copy=False),
+        'state' : fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('confirm','Confirmed'),('validate','Validated'),('done','Done')], 'Status', select=True, required=True, readonly=True, copy=False, track_visibility='always'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]}, copy=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
@@ -77,7 +76,6 @@ class crossovered_budget(osv.osv):
     def budget_validate(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state': 'validate',
-            'validating_user_id': uid,
         })
         return True
 
@@ -179,7 +177,7 @@ class crossovered_budget_lines(osv.osv):
         'planned_amount':fields.float('Planned Amount', required=True, digits=0),
         'practical_amount':fields.function(_prac, string='Practical Amount', type='float', digits=0),
         'theoritical_amount':fields.function(_theo, string='Theoretical Amount', type='float', digits=0),
-        'percentage':fields.function(_perc, string='Percentage', type='float'),
+        'percentage':fields.function(_perc, string='Achievement', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 

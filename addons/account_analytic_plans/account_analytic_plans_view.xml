@@ -9,7 +9,7 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
-            <field name="group_invoice_lines" position="before">
+            <field name="analytic_journal_id" position="after">
                 <field name="plan_id" groups="analytic.group_analytic_accounting"/>
             </field>
         </field>
