@@ -117,19 +117,6 @@ class AccountChartTemplate(models.Model):
         return True
 
     @api.model
-    def check_created_journals(self, vals_journal, company):
-        """
-        This method used for checking journals already created or not. If not then create new journal.
-        """
-        JournalObj = self.env['account.journal']
-        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company.id)], limit=1)
-        if not rec_list:
-            journal = JournalObj.create(vals_journal)
-            if vals_journal['type'] == 'general' and not company.currency_exchange_journal_id.id:
-                company.write({'currency_exchange_journal_id': journal.id})
-        return True
-
-    @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         """
         This method is used for creating journals.
@@ -139,8 +126,11 @@ class AccountChartTemplate(models.Model):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
+        JournalObj = self.env['account.journal']
         for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
-            self.check_created_journals(vals_journal, company)
+            journal = JournalObj.create(vals_journal)
+            if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
+                company.write({'currency_exchange_journal_id': journal.id})
         return True
 
     @api.multi
@@ -166,7 +156,7 @@ class AccountChartTemplate(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['name'] == _('Exchange Rate Journal'):
+            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
                 if type=='credit':
                     default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
                 else:
