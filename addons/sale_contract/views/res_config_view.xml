@@ -13,18 +13,8 @@
                         <label for="group_template_required"/>
                     </div>
                 </xpath>
-                <group name="default_options" position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </group>
-                <xpath expr="//div[@name='div_default_options']" position="inside">
-                    <div name='time_unit' attrs="{'required':[('module_sale_contract','=',True)]}">
-                        <label for="time_unit"/>
-                        <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
-                    </div>
-                </xpath> 
             </field>
         </record>
 
     </data>
 </openerp>
-

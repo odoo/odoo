@@ -14,12 +14,7 @@ class HrEmployee(models.Model):
         # We need the "or ..." because we need an empty recordset of the right type, 'False' is not enough.
         return self.env.ref('hr_timesheet.analytic_journal', raise_if_not_found=False) or self.env['account.analytic.journal']
 
-    @api.model
-    def _get_default_employee_product(self):
-        # We need the "or ..." because we need an empty recordset of the right type, 'False' is not enough.
-        return self.env.ref('product.product_product_consultant', raise_if_not_found=False) or self.env['product.product']
-
-    product_id = fields.Many2one('product.product', 'Product', help="If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job.", default=_get_default_employee_product)
+    product_id = fields.Many2one('product.product', 'Product', help="If you want to reinvoice working time of employees, link this employee to a service to determinate the cost price of the job.")
     journal_id = fields.Many2one('account.analytic.journal', 'Analytic Journal', default=_get_default_analytic_journal)
     uom_id = fields.Many2one('product.uom', related='product_id.uom_id', string='Unit of Measure', store=True, readonly=True)
 
@@ -48,7 +43,7 @@ class account_analytic_line(models.Model):
         if emp and emp.product_id.id:
             return emp.product_id.id
         else:
-            raise exceptions.ValidationError("This user or employee is not associated to a valid Product")
+            return None
 
     @api.model
     def _get_employee_unit(self, user_id=None):
@@ -56,7 +51,7 @@ class account_analytic_line(models.Model):
         if emp and emp.product_id.uom_id.id:
             return emp.product_id.uom_id.id
         else:
-            raise exceptions.ValidationError("This user or employee is not associated to a Product with a valid Amount Type")
+            return None
 
     @api.model
     def _get_general_account(self, user_id=None):
@@ -64,7 +59,7 @@ class account_analytic_line(models.Model):
         if emp and emp.product_id.categ_id.property_account_expense_categ_id.id:
             return emp.product_id.categ_id.property_account_expense_categ_id.id
         else:
-            raise exceptions.ValidationError("This user or employee is not associated to a Product with a valid Financial Account")
+            return None
 
     @api.model
     def _get_analytic_journal(self, user_id=None):
@@ -72,24 +67,12 @@ class account_analytic_line(models.Model):
         if emp and emp.journal_id.id:
             return emp.journal_id.id
         else:
-            raise exceptions.ValidationError("This user or employee is not associated to a valid Journal ID")
+            journal = self.env['account.analytic.journal'].search([('type', '=', 'general')], limit=1)
 
-    @api.one
-    @api.constrains('user_id')
-    def check_user_id(self):
-        if self.is_timesheet:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id)], limit=1)
-            if not emp:
-                raise exceptions.ValidationError("There is no employee defined for user " + self.user_id.name)
+            if journal:
+                return journal.id
             else:
-                if not emp.journal_id.id:
-                    raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Analytic Journal. Please define one for him or select another user.")
-                elif not emp.product_id:
-                    raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Product. Please define one for him or select another user.")
-                elif not emp.product_id.uom_id.id:
-                    raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Product Unit of Measure. Please define one for him or select another user.")
-                elif not emp.product_id.categ_id.property_account_expense_categ_id.id:
-                    raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Financial Account. Please define one for him or select another user.")
+                return None
 
     @api.onchange('user_id')
     def V8_on_change_user_id(self):
@@ -112,7 +95,7 @@ class account_analytic_line(models.Model):
 
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
         res = {'value': {}}
-        if prod_id and unit_amount:
+        if unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
             r = super(account_analytic_line, self).on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context)

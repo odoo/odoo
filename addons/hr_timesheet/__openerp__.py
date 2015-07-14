@@ -37,7 +37,6 @@ up a management by affair.
     ],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/hr_timesheet_data.xml',
         'test/hr_timesheet_users.yml',
     ],
     'installable': True,
