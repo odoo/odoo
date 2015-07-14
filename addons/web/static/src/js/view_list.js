@@ -500,7 +500,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {$.Deferred} promise to content reloading
      */
     reload_content: synchronized(function () {
-        var self = this;
+        var self = this,
+            max_page = Math.floor(self.dataset.size() / self.limit());
+            
+        if (self.page > max_page){
+            self.page = 0;
+        }
         self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
