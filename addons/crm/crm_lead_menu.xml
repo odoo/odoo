@@ -5,12 +5,12 @@
     <record model="ir.actions.act_window" id="crm_lead_all_leads">
         <field name="name">Leads</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
         <field name="context">{
                 'default_type':'lead',
-                'search_default_type_lead':True,
                 'stage_type':'lead',
                 'needaction_menu_ref': 'crm.menu_crm_opportunities',
                 'search_default_to_process':1,
@@ -77,6 +77,9 @@
     <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
     <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
             action="crm_lead_all_leads"/>
+    <menuitem name="Opportunities" id="menu_crm_opportunities" parent="base.menu_sales" sequence="2"
+            action="crm_lead_opportunities"
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
 
 </data>
 </openerp>

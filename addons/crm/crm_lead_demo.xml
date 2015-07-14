@@ -106,9 +106,9 @@ Could you please send me the details ?</field>
             <field name="city">Drury</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor5])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="stage_id" ref="stage_lead5"/>
+            <field name="stage_id" ref="stage_lead6"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="medium_id" ref="utm.utm_medium_banner"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
@@ -160,7 +160,7 @@ Contact: +1 813 494 5005</field>
             <field name="city">Roma</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3,categ_oppor4])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref=""/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -180,7 +180,7 @@ Contact: +1 813 494 5005</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor4])]"/>
 
             <field name="priority">0</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
@@ -239,7 +239,7 @@ Contact: +1 813 494 5005</field>
             <field name="city">Sevilla</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">2</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hi,
@@ -444,7 +444,7 @@ Andrew</field>
             <field name="type">opportunity</field>
             <field name="name">Trainee's training plan in your Organization</field>
             <field eval="35000" name="planned_revenue"/>
-            <field eval="0.0" name="probability"/>
+            <field eval="25.0" name="probability"/>
             <field name="contact_name">Leland Martinez</field>
             <field name="email_from">info@deltapc.com</field>
             <field name="partner_name">Delta PC</field>
@@ -461,7 +461,7 @@ Andrew</field>
             <field name="team_id" ref="sales_team.crm_team_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
-            <field eval="0" name="active"/>
+            <field eval="1" name="active"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_products"/>
             <field name="source_id" ref="utm.utm_source_newsletter"/>
         </record>
@@ -474,10 +474,9 @@ Andrew</field>
             <field name="name">Interest in your customizable Pcs</field>
             <field name="color">3</field>
             <field eval="15000" name="planned_revenue"/>
-            <field eval="0" name="probability"/>
+            <field eval="65.0" name="probability"/>
             <field name="contact_name">Robin Smith</field>
             <field name="partner_name">Global Solutions</field>
-            <field eval="0" name="active"/>
             <field name="partner_id" ref="base.res_partner_21"/>
             <field name="country_id" ref="base.uk"/>
             <field name="city">Liverpool</field>
@@ -522,7 +521,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor7])]"/>
             <field name="priority">2</field>
             <field name="next_activity_id" ref="crm_activity_data_meeting"/>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field name="date_closed" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
@@ -542,7 +541,7 @@ Andrew</field>
             <field name="tag_ids" eval="[(6, 0, [categ_oppor3])]"/>
             <field name="priority">1</field>
             <field name="next_activity_id" ref="crm_activity_data_email"/>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field name="campaign_id" ref="utm.utm_campaign_email_campaign_services"/>
@@ -571,9 +570,8 @@ Andrew</field>
         <record id="crm_case_24" model="crm.lead">
             <field name="type">opportunity</field>
             <field name="name">Need 20 Days of Consultancy</field>
-            <field eval="0" name="active"/>
             <field eval="6025" name="planned_revenue"/>
-            <field eval="100.0" name="probability"/>
+            <field eval="90.0" name="probability"/>
             <field name="email_from">info@mycompany.net</field>
             <field name="country_id" ref="base.pe"/>
             <field name="city">Lima</field>
@@ -594,7 +592,7 @@ Andrew</field>
             <field name="type">opportunity</field>
             <field name="name">Need to customize the solution</field>
             <field eval="4060" name="planned_revenue"/>
-            <field eval="100.0" name="probability"/>
+            <field eval="60.0" name="probability"/>
             <field name="contact_name">Henry Jordan</field>
             <field name="partner_name">E-light Industry</field>
             <field name="email_from">henry@elight.com</field>
@@ -632,7 +630,7 @@ Andrew</field>
             <field name="next_activity_id" ref="crm_activity_data_email"/>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Send Catalogue by Email</field>
-            <field name="team_id" ref="sales_team.crm_team_1"/>
+            <field name="team_id" ref="sales_team.crm_team_2"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <!-- <field name="date_closed" eval="(DateTime.today() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/> -->

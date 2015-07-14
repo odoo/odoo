@@ -33,14 +33,15 @@
                     <filter name="opportunity" string="Opportunities" domain="[('lead_type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
                     <filter string="Won" name="won"
-                            domain="[('probability', '=', 100)]"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
                     <filter string="Lost" name="lost"
-                            domain="[('action', '=', False), ('probability', '=', 0)]"/>
-                    <field name="team_id" context="{'invisible_team': False}"/>
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                    <field name="team_id" context="{'invisible_team': False}"
+                            groups="base.group_multi_salesteams"/>
                     <field name="author_id" string="Salesperson"/>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" context="{'group_by':'author_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
@@ -60,7 +61,7 @@
        </record>
        <menuitem name="Activities" id="crm_activity_report_menu"
             groups="base.group_sale_manager"
-            parent="base.menu_sale_report" action="crm_activity_report_action" sequence="7"/>
+            parent="base.menu_sale_report" action="crm_activity_report_action" sequence="6"/>
 
     </data>
 </openerp>

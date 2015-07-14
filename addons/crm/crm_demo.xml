@@ -12,8 +12,16 @@
 
         <record model="crm.team" id="sales_team.crm_team_1">
             <field name="name">Indirect Sales</field>
+            <field name="code">IM</field>
             <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
         </record>
 
+        <record model="crm.team" id="sales_team.crm_team_2">
+            <field name="name">Marketing</field>
+            <field name="code">SPD</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root')),(4, ref('base.user_demo'))]"/>
+        </record>
+
+  
     </data>
 </openerp>

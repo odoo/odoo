@@ -42,11 +42,11 @@
                     <filter string="Open" domain="[('state','=','open')]" />
                     <filter string="Closed" domain="[('state','=','cancel')]" />
                     <separator/>
-                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"/>
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter string="My Company" context="{'invisible_team': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"/>
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}" groups="base.group_multi_salesteams"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
@@ -57,7 +57,7 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" context="{'group_by':'partner_id'}" />
                         <filter string="Status" context="{'group_by':'state'}" />
                         <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}" />

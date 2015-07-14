@@ -39,10 +39,18 @@
             <field name="sequence">60</field>
             <field name="type">opportunity</field>
         </record>
-
         <record model="crm.stage" id="stage_lead6">
             <field name="name">Won</field>
+            <field name="fold">1</field>
             <field name="probability">100</field>
+            <field name="on_change">1</field>
+            <field name="sequence">70</field>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.stage" id="stage_lead7">
+            <field name="name">Lost</field>
+            <field name="fold">1</field>
+            <field name="probability">0</field>
             <field name="on_change">1</field>
             <field name="sequence">80</field>
             <field name="type">opportunity</field>
@@ -51,7 +59,8 @@
         <record model="crm.team" id="sales_team.team_sales_department">
             <field name="stage_ids" eval="[ (4, ref('stage_lead1')), (4, ref('stage_lead2')),
                                             (4, ref('stage_lead3')), (4, ref('stage_lead4')),
-                                            (4, ref('stage_lead5')), (4, ref('stage_lead6'))]"/>
+                                            (4, ref('stage_lead5')), (4, ref('stage_lead6')),
+                                            (4, ref('stage_lead7'))]"/>
         </record>
 
     </data>

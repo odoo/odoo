@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 
 class crm_team(osv.Model):
@@ -34,18 +33,6 @@ class crm_team(osv.Model):
         team_id = super(crm_team, self).create(cr, uid, vals, context=create_context)
         team = self.browse(cr, uid, team_id, context=context)
         self.pool.get('mail.alias').write(cr, uid, [team.alias_id.id], {'alias_parent_thread_id': team_id, 'alias_defaults': {'team_id': team_id, 'type': 'lead'}}, context=context)
-        if (not vals) or (not len(vals.get('stage_ids', []))):
-            self.pool.get('crm.stage').create(
-                cr, uid, {
-                    'name': _('Won'),
-                    'sequence': 20,
-                    'probability': 100,
-                    'on_change': True,
-                    'team_ids': [(6, 0, [team_id])],
-                    'fold': True,
-                    'type': 'both'
-                }, context=context
-            )
         return team_id
 
     def unlink(self, cr, uid, ids, context=None):
