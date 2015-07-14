@@ -13,6 +13,7 @@ class crm_activity_report(models.Model):
     _rec_name = 'id'
 
     date = fields.Datetime('Date', readonly=True)
+    active = fields.Boolean('Archive', readonly=True)
     author_id = fields.Many2one('res.partner', 'Author', readonly=True)
     user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
@@ -38,6 +39,7 @@ class crm_activity_report(models.Model):
                     l.user_id,
                     l.team_id,
                     l.country_id,
+                    l.active,
                     l.company_id,
                     l.stage_id,
                     l.partner_id,

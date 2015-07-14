@@ -5,7 +5,7 @@
     uid: 'crm_res_users_salesmanager'
 -
   !python {model: crm.lead}: |
-    team_id = self.pool.get('crm.team').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("sales_team.crm_team_2")})
+    team_id = self.pool.get('crm.team').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("sales_team.crm_team_1")})
     self.write(cr, uid, [ref("crm_case_1")], {'team_id': team_id})
 -
   Salesman check unqualified lead .

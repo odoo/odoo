@@ -77,18 +77,11 @@
                         <group>
                             <field name="name"/>
                             <field name="type"/>
-                            <field name="on_change"/>
-                            <label for="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
-                            <div attrs="{'invisible': [('on_change', '=', False)]}">
-                                <field name="probability"/>
-                                <p class="text-muted">
-                                    A stage will be considered as 'Won' if the probability is 100% and if 'Change Probability Automatically' is true.<br/>
-                                    A stage will be considered as 'Lost' or 'Dead' if the probability is 0% and if 'Change Probability Automatically' is true.
-                                </p>
-                            </div>
+                            <field name="fold"/>
                         </group>
                         <group>
-                            <field name="fold"/>
+                            <field name="on_change"/>
+                            <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
                         </group>
                     </group>
                     <separator string="Requirements"/>
