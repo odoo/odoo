@@ -106,9 +106,12 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
+                    <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object"/>
+                    <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object"/>
+                    <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object" class="pull-right"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
-                            options="{'fold_field': 'fold'}"
+                            options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -385,10 +388,10 @@
                 <form string="Opportunities">
                     <header>
                         <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
-                        <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object"/>
                         <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object" class="pull-right"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
-                            options="{'fold_field': 'fold'}"
+                            options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
