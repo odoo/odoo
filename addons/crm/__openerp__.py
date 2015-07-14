@@ -64,7 +64,6 @@ Dashboard for CRM will include:
 
         'calendar_event_menu.xml',
 
-        'report/crm_lead_report_view.xml',
         'report/crm_activity_report_view.xml',
         'report/crm_opportunity_report_view.xml',
 

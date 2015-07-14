@@ -20,7 +20,7 @@ class crm_opportunity_report(osv.Model):
         'opening_date': fields.datetime('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
-        'nbr_cases': fields.integer("# of Cases", readonly=True),
+        'active': fields.boolean('Active', readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -36,6 +36,7 @@ class crm_opportunity_report(osv.Model):
         'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
         'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
         'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="[('team_ids', '=', team_id)]"),
+        'stage_name': fields.char('Stage Name', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority'),
@@ -54,21 +55,21 @@ class crm_opportunity_report(osv.Model):
                 SELECT
                     c.id,
                     c.date_deadline,
-                    count(c.id) as nbr_cases,
 
                     c.date_open as opening_date,
                     c.date_closed as date_closed,
-
                     c.date_last_stage_update as date_last_stage_update,
 
                     c.user_id,
                     c.probability,
                     c.stage_id,
+                    stage.name as stage_name,
                     c.type,
                     c.company_id,
                     c.priority,
                     c.team_id,
                     activity.nbr_activities,
+                    c.active,
                     c.campaign_id,
                     c.source_id,
                     c.medium_id,
@@ -91,6 +92,8 @@ class crm_opportunity_report(osv.Model):
                     GROUP BY m.res_id ) activity
                 ON
                     (activity.res_id = c.id)
+                LEFT JOIN "crm_stage" stage
+                ON stage.id = c.stage_id
                 WHERE c.active = 'true'
-                GROUP BY c.id, activity.nbr_activities
+                GROUP BY c.id, activity.nbr_activities, stage.name
             )""")
