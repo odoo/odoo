@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.crm import crm
+from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
 from openerp import tools
 
@@ -38,7 +38,7 @@ class crm_opportunity_report(osv.Model):
         'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="[('team_ids', '=', team_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),

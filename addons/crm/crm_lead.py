@@ -5,11 +5,11 @@ from datetime import datetime, timedelta
 import logging
 from operator import itemgetter
 
-import crm
 import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
+from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
@@ -183,7 +183,7 @@ class crm_lead(format_address, osv.osv):
             [('lead', 'Lead'), ('opportunity', 'Opportunity')],
             string='Type', select=True, required=True,
             help="Type is used to separate Leads and Opportunities"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True, copy=False),
         'stage_id': fields.many2one('crm.stage', 'Stage', track_visibility='onchange', select=True,
                         domain="['&', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
@@ -248,7 +248,7 @@ class crm_lead(format_address, osv.osv):
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[0][0],
+        'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }
@@ -996,7 +996,7 @@ class crm_lead(format_address, osv.osv):
         }
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+        if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
         return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
@@ -1010,7 +1010,7 @@ class crm_lead(format_address, osv.osv):
             ids = [ids]
         if update_vals is None: update_vals = {}
 
-        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+        if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             update_vals['priority'] = msg.get('priority')
         maps = {
             'cost':'planned_cost',

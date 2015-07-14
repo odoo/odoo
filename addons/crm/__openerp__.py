@@ -56,6 +56,7 @@ Dashboard for CRM will include:
         'wizard/crm_merge_opportunities_view.xml',
 
         'crm_view.xml',
+        'crm_stage_views.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
         'views/crm_action_views.xml',
