@@ -360,7 +360,7 @@ class crm_lead(format_address, osv.osv):
                     stages_leads[stage_id] = [lead.id]
         for stage_id, lead_ids in stages_leads.items():
             self.write(cr, uid, lead_ids, {'stage_id': stage_id}, context=context)
-        self.write(cr, uid, lead_ids, {'probability': 100}, context=context)
+        self.write(cr, uid, ids, {'probability': 100}, context=context)
         return True
 
     def log_next_activity_1(self, cr, uid, ids, context=None):
