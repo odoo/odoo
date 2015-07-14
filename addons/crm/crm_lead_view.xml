@@ -342,6 +342,9 @@
                     <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="create_date"/>
                     <field name="country_id"/>
+                    <separator/>
+                    <filter string="Archived"
+                            domain="[('active', '=', False)]"/>
                     <separator />
                     <filter string="Leads"
                             name="type_lead"
