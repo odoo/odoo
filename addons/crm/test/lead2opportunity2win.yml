@@ -73,8 +73,6 @@
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_2'))
-    assert lead.stage_id.id == ref('crm.stage_lead7'), "Opportunity stage should be 'Lost'."
-    assert lead.stage_id.sequence != 1 and lead.stage_id.probability == 0.0, "Lost opportunity is not in 'cancel' state!"
     assert lead.probability == 0.0, "Revenue probability should be 0.0!"
 -
   I confirm review needs meeting.

@@ -106,6 +106,18 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
+                    <button name="action_set_unactive" string="Archive"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
+                    <button name="action_set_won" string="Mark Won"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
+                    <button name="action_set_lost" string="Mark Lost"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_set_active" string="Unarchive"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
@@ -116,6 +128,10 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                        <span class="label label-danger"
+                            attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                        <span class="label label-success"
+                            attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                     </div>
                     <group>
                         <group>
@@ -280,6 +296,7 @@
                     <field name="message_unread_counter"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
+                    <field name="active"/>
                     <templates>
                         <field name="date_deadline"/>
                         <t t-name="kanban-box">
@@ -290,10 +307,10 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <t t-if="widget.editable"><li><a type="edit">Edit Opportunity</a></li></t>
+                                        <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
-                                        <li><a name="action_schedule_meeting" type="object">Schedule Meeting</a></li>
+                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Unarchive</a></li>
+                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -337,15 +354,22 @@
                     <field name="create_date"/>
                     <field name="country_id"/>
                     <separator/>
+                    <filter string="Archived"
+                            domain="[('active', '=', False)]"/>
+                    <separator />
+                    <filter string="Leads"
+                            name="type_lead"
+                            domain="[('type', '=', 'lead')]"/>
+                    <filter string="Opportunities"
+                            name="type_opportunity"
+                            domain="[('type', '=', 'opportunity')]"/>
+                    <separator/>
                     <filter string="My Leads"
                             domain="[('user_id','=',uid)]"
                             help="Leads that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
-                    <filter string="To Process" name="to_process"
-                            domain="['|',('stage_id.probability','>', 0),('stage_id.fold','=', False)]"
-                            help="Not marked as Dead"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator />
@@ -380,11 +404,22 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="action_set_unactive" string="Archive"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
+                        <button name="action_set_won" string="Mark Won"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
+                        <button name="action_set_lost" string="Mark Lost"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('active', '=', False)]}"/>
+                        <button name="action_set_active" string="Unarchive"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
-                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
+                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            attrs="{'invisible': [('active', '=', False)]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -397,6 +432,10 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
+                            <span class="label label-danger"
+                                attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                            <span class="label label-success"
+                                attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                             <div class="o_row">
                                 <label for="planned_revenue" class="oe_edit_only"/>
                                 <label for="probability" class="oe_edit_only"/>
@@ -577,8 +616,9 @@
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
-                    <filter string="New" name="new"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
+                    <filter string="Archived"
+                            domain="[('active', '=', False)]"/>
+                    <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"

@@ -1,11 +1,31 @@
 # -*- coding: utf-8 -*-
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 class crm_team(osv.Model):
     _inherit = 'crm.team'
     _inherits = {'mail.alias': 'alias_id'}
+
+    def _get_default_stage_ids(self, cr, uid, context=None):
+        return [
+            (0, 0, {
+                'name': _('New'),
+                'sequence': 1,
+                'probability': 10.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'both',
+            }),
+            (0, 0, {
+                'name': _('Won'),
+                'sequence': 50,
+                'probability': 100.0,
+                'on_change': True,
+                'fold': True,
+                'type': 'both',
+            })]
 
     _columns = {
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
@@ -22,6 +42,7 @@ class crm_team(osv.Model):
             'crm.lead', self._columns['alias_id'], 'name', alias_prefix='Lead+', alias_defaults={}, context=context)
 
     _defaults = {
+        'stage_ids': _get_default_stage_ids,
         'use_leads': True,
         'use_opportunities': True,
     }

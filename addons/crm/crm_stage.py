@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp.osv import osv, fields
-from openerp.http import request
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -10,6 +9,7 @@ AVAILABLE_PRIORITIES = [
     ('2', 'High'),
     ('3', 'Very High'),
 ]
+
 
 class crm_stage(osv.Model):
     """ Model for case stages. This models the main stages of a document
@@ -21,6 +21,9 @@ class crm_stage(osv.Model):
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence"
+
+    def _default_team_ids(self, cr, uid, context=None):
+        return context.get('default_team_id') and [(6, 0, [context['default_team_id']])] or False
 
     _columns = {
         'name': fields.char('Stage Name', required=True, translate=True),
@@ -43,7 +46,8 @@ class crm_stage(osv.Model):
 
     _defaults = {
         'sequence': 1,
-        'probability': 1.0,
+        'probability': 10.0,
+        'team_ids': _default_team_ids,
         'fold': False,
         'type': 'both',
     }
