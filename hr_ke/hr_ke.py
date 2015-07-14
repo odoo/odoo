@@ -477,7 +477,7 @@ class hr_ke_deductions(models.Model):
 	fixed = fields.Float('Fixed Amount', digits=dp.get_precision('Account'))
 	computation = fields.Selection([('fixed', 'Fixed Amount'),('formula1', 'Use General Formula'), ('formula2', 'Use Employee Formula')], 'Computation Method', required=True)
 	amount = fields.Float('Amount to Deduct', compute='compute_deduction', digits=dp.get_precision('Account'), store=True)
-	base = fields.Float('Actual Value', digits=dp.get_precision('Account'), required=True,
+	base = fields.Float('Actual Value', digits=dp.get_precision('Account'), required=True,default=0.00,
                         help="This is the actual Cost/Contribution that the employee is making. E.g if its towards a defined pension scheme fund, then enter the actual monthly contribution. Depending on how the deductable amount is computed, this field my not be necessary and can be left out.")
 	formula = formula = fields.Text('Formula', help="You can define an employee specific formula for computing a deduction to be made on his/her salary. This is useful for voluntary deductions such as SACCO/CHAMA contributions")
         _defaults = {
@@ -695,9 +695,4 @@ class ke_hr_payslip(models.Model):
 	
 	def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
 	    lines = super(ke_hr_payslip, self).get_payslip_lines(cr, uid, contract_ids, payslip_id, context=context)
-	    #for line in lines:
-	      #raise except_orm(_('err'), _(line['code']))
-	     # if line['amount'] == 0:
-		#raise except_orm(_('err'), _('code is %s and amount is %s'%(line['code'], line['amount'])))
-	#	line['appears_on_payslip'] = False
 	    return lines

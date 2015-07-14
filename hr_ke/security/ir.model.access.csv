@@ -1,15 +1,24 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_ke_benefit_type,access_ke_benefit_type,model_ke_benefit_type,,1,0,0,0
-access_ke_earnings_type,access_ke_earnings_type,model_ke_earnings_type,,1,0,0,0
-access_ke_relief_type,access_ke_relief_type,model_ke_relief_type,,1,0,0,0
-access_ke_deductions_type,access_ke_deductions_type,model_ke_deductions_type,,1,0,0,0
-access_ke_reliefs,access_ke_reliefs,model_ke_reliefs,,1,0,0,0
-access_ke_deductions,access_ke_deductions,model_ke_deductions,,1,0,0,0
-access_ke_benefits,access_ke_benefits,model_ke_benefits,,1,0,0,0
-access_ke_earnings,access_ke_earnings,model_ke_earnings,,1,0,0,0
-access_ke_relation_type,access_ke_relation_type,model_ke_relation_type,,1,0,0,0
-access_ke_employee_kin,access_ke_employee_kin,model_ke_employee_kin,,1,0,0,0
-
+access_ke_benefit_type,access_ke_benefit_type,model_ke_benefit_type,base.group_hr_manager,1,1,1,1
+access_ke_benefit_type_officer,access_ke_benefit_type_officer,model_ke_benefit_type,base.group_hr_user,1,0,0,0
+access_ke_earnings_type,access_ke_earnings_type,model_ke_earnings_type,base.group_hr_manager,1,1,1,1
+access_ke_earnings_type_officer,access_ke_earnings_type_officer,model_ke_earnings_type,base.group_hr_user,1,0,0,0
+access_ke_relief_type,access_ke_relief_type,model_ke_relief_type,base.group_hr_manager,1,1,1,1
+access_ke_relief_type_officer,access_ke_relief_type_officer,model_ke_relief_type,base.group_hr_user,1,0,0,0
+access_ke_deductions_type,access_ke_deductions_type,model_ke_deductions_type,base.group_hr_manager,1,1,1,1
+access_ke_deductions_type_officer,access_ke_deductions_type_officer,model_ke_deductions_type,base.group_hr_user,1,0,0,0
+access_ke_reliefs,access_ke_reliefs,model_ke_reliefs,base.group_hr_user,1,1,1,1
+access_ke_deductions,access_ke_deductions,model_ke_deductions,base.group_hr_user,1,1,1,1
+access_ke_benefits,access_ke_benefits,model_ke_benefits,base.group_hr_user,1,1,1,1
+access_ke_earnings,access_ke_earnings,model_ke_earnings,base.group_hr_user,1,1,1,1
+access_ke_earnings_approval,access_ke_earnings_approval,model_ke_earnings,base.group_overtime,1,0,1,0
+access_ke_relation_type,access_ke_relation_type,model_ke_relation_type,base.group_hr_manager,1,1,1,1
+access_ke_employee_kin,access_ke_employee_kin,model_ke_employee_kin,base.group_hr_user,1,1,1,1
+access_ke_overtime,access_ke_overtime,model_ke_overtime,base.group_user,1,1,1,0
+access_ke_advance,access_ke_advance,model_ke_advance,base.group_user,1,1,1,0
+access_ke_overtime_approver,access_ke_overtime_approver,model_ke_overtime,base.group_overtime,1,1,0,0
+access_ke_advance_approver,access_ke_advance_approver,model_ke_advance,base.group_sal_adv,1,1,0,0
+access_ke_contract,access_ke_contract,model_hr_contract,base.group_user,1,0,0,0
 
 
 

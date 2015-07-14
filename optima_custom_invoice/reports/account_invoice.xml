@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <template id="custom_invoice_document">
+    		<!-- Multicompany -->
+	    	<t t-if="o and 'company_id' in o">
+        	    <t t-set="company" t-value="o.company_id"></t>
+    	   	</t>
+           	<t t-if="not o or not 'company_id' in o">
+        	    <t t-set="company" t-value="res_company"></t>
+           	</t>
+	        <div class="header col-xs-12 inv-black inv-bg-grey" style="padding-bottom:28px;">
+		  <!--<div class="inv-wrapper"> -->
+		       <div class="col-xs-3">
+			    <img src="/optima_custom_invoice/static/description/logo.png"/> 
+		       </div>
+		       <div class="col-xs-4 mb8 inv-black inv-right" >
+		            <h5 class="inv-nomargin inv-green" t-field="company.name"/>
+                            <p class="inv-nomargin"><span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="company.street"/>
+			    </p>
+                            <p class="inv-nomargin"><span class="fa fa-map-marker fa-lg"/>&#160;
+					<span t-field="company.city"/>,&#160;
+					<span t-field="company.country_id"/>
+			    </p>
+                            <p class="inv-nomargin">
+					<span class="fa fa-phone-square fa-lg"/>&#160;
+					<span t-field="company.phone"/>
+			    </p>
+                            <p class="inv-nomargin">
+					<span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="company.email"/>
+			    </p>
+                            <p class="inv-nomargin">
+					<span class="fa fa-globe fa-lg"/>&#160;
+					<span t-field="company.website"/>
+			    </p>
+		       </div>
+		  <!--</div>--> <!--end of wrapper-->
+		  <div class="col-xs-8 inv-black inv-bg-green">
+			 <span class="inv-social fa fa-twitter fa-lg"/>&#160;<span t-field="company.twitter"/>
+			 <span class="inv-social fa fa-facebook-square fa-lg"/>&#160;<span t-field="company.facebook"/>
+			 <span class="inv-social fa fa-google-plus fa-lg"/>&#160;<span t-field="company.googleplus" />
+		  </div>
+                </div> <!--end of Header-->
+               <div class="page col-xs-12 inv-black inv-bg-grey" style="margin-top:0px; padding-top:0px;">  <!--start of PAGE-->
+	         <div class="col-xs-4 mt32 inv-bg-green inv-nofloat" >
+			<h4><span class="fa fa-user fa-lg"/>&#160;Customer</h4>
+		 </div>
+		 <div><!--start of wrapper -->
+		   <div class="col-xs-4 inv-black">
+		            <p class="inv-nomargin"  t-field="o.partner_id"/>
+			    <p class="inv-nomargin" t-field="o.partner_id.street"/>
+			    <p class="inv-nomargin"><span t-esc="o.partner_id.city"/></p>
+			    <p class="inv-nomargin" t-field="o.partner_id.country_id"/>
+			    <p class="inv-nomargin" t-field="o.partner_id.email"/>
+ 			    <span t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></span>
+		   </div>
+		   <div class="col-xs-5 mt8 mb8 inv-bg-green inv-right">
+			   <h3>
+				<span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
+		                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
+                		<span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
+		                <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
+                		<span t-if="o.type == 'out_refund'">Refund</span>
+		                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
+                		<span t-if="o.type == 'in_invoice'">Supplier Invoice</span>
+		                <span t-field="o.number"/>
+			   </h3>
+			   <p t-if="o.name" class="inv-nomargin">Ref: <span t-field="o.name"/></p>
+			   <p t-if="o.date_invoice" class="inv-nomargin">Invoice Date: <span t-field="o.date_invoice"/></p>
+			   <p t-if="o.date_due" class="inv-nomargin">Due Date: <span t-field="o.date_due"/></p>
+			   <p t-if="o.origin" class="inv-nomargin">Source Doc: <span t-field="o.origin"/></p>
+	     	   </div>
+		 </div> <!--end of wrapper2-->
+		 <div class="col-xs-12 mt8 mb8 inv-bg-grey"> <!--start of DATA-->
+                    <table class="table  table-condensed inv-black inv-tr-test">
+                        <thead class="inv-bg-green" style="page-break-inside: avoid">
+                            <tr>
+                                <th>Item#</th>
+                                <th>Description</th>
+                                <th class="text-right">Quantity</th>
+                                <th class="text-right" >Unit Price (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right" groups="sale.group_discount_per_so_line">Discount(%) 
+					(<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right">Taxes</th>
+                                <th class="text-right">Amount (<span t-esc="company.currency_id.name"/>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			    <!--<t t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
+                            <tr  t-attf-class="inv-{{p_parity}}">
+                                <td><span t-field="p.code"/></td>
+                                <td><span t-field="p.name"/></td>
+                                <td t-attf-class="text-right inv-last-{{p_last}}"><span t-esc="formatLang(p.amount)"/></td>
+                            </tr>
+			   </t> -->
+			  <t t-foreach="o.invoice_line" t-as="l">
+	                    <tr t-attf-class="inv-{{l_parity}}">
+        	                <td><span t-esc="l_index + 1"/></td>
+        	                <td><span t-field="l.name"/></td>
+                	        <td class="text-right">
+                        	    <span t-field="l.quantity"/>
+                            	    <span t-field="l.uos_id"  groups="product.group_uom"/>
+                        	</td>
+                        	<td class="text-right">
+                            		<span t-field="l.price_unit"/>
+                        	</td>
+                        	<td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                        	<td class="text-right">
+                            		<span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
+                        	</td>
+                        	<td class="text-right">
+                            		<span t-field="l.price_subtotal"/> 
+                        	</td>
+                    	    </tr>
+			  </t>
+                        </tbody>
+                    </table>
+		 </div><!--End of DATA-->
+	         <div class="row">
+        	   <div class="col-xs-5 pull-right inv-nosplit">
+                    <table class="table table-condensed inv-black inv-tr-test"><tbody>
+                        <tr class="border-black">
+                            <td><strong>Total Without Taxes (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Taxes (<span t-esc="company.currency_id.name"/>)</td>
+                            <td class="text-right">
+                                <span t-field="o.amount_tax"/>
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Total (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td class="text-right">
+                                 <strong><span  class="inv-last-True" t-field="o.amount_total"/></strong>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                   </div>
+            	</div>
+                <div class="row" t-if="o.tax_line">
+                  <div class="col-xs-6 inv-nosplit">
+                    <table class="table table-condensed inv-black">
+                        <thead>
+                            <tr class="inv-bg-green">
+                                <th>Tax</th>
+                                <th class="text-right">Base (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right">Amount (<span t-esc="company.currency_id.name"/>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			   <t t-foreach="o.tax_line" t-as="t">
+                            <tr t-attf-class="inv-{{t_parity}}">
+                                <td><span t-field="t.name"/></td>
+                                <td class="text-right">
+                                    <span t-field="t.base"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="t.amount"/>
+                                </td>
+                            </tr>
+			   </t>
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+		<div class="inv-nosplit">
+                <p t-if="o.payment_term.note" class="inv-green">
+                  <strong>Payment Terms:</strong>
+                  <span t-field="o.payment_term.note"/>
+                </p>
+                <p t-if="o.fiscal_position.note">
+                  <strong>Fiscal Position Remark:</strong>
+                  <span t-field="o.fiscal_position.note"/>
+                </p>
+                <p t-if="o.comment">
+                  <strong>Comment:</strong>
+                  <span t-field="o.comment"/>
+                </p>
+		</div>
+
+	       </div><!--End of PAGE-->
+	       <div class="footer col-xs-12 inv-black inv-bg-green inv-nopad">
+                 <div class="text-center" style="border-top: 1px solid black;">
+                    <ul t-if="not company.custom_footer" class="list-inline">
+                      <li t-if="company.phone"> <span class="fa fa-phone-square fa-lg"/> <span t-field="company.phone"/></li>
+                      <li  t-if="company.fax and company.phone">&amp;bull;</li>
+                      <li t-if="company.fax"><span class="fa fa-phone-square fa-lg"/> <span t-field="company.fax"/></li>
+                      <li t-if="company.email">&amp;bull;</li>
+                      <li t-if="company.email"><span class="fa fa-envelope-o fa-lg"/> <span t-field="company.email"/></li>
+                      <li t-if="company.website">&amp;bull;</li>
+                      <li t-if="company.website"><span class="fa fa-globe fa-lg"/> <span t-field="company.website"/></li>
+                    </ul>
+                    <t t-if="company.custom_footer">
+                       <span t-raw="company.rml_footer"/>
+                    </t>
+
+                    <ul class="list-inline">
+                      <li>Page:</li>
+                      <li><span class="page"/></li>
+                      <li>/</li>
+                      <li><span class="topage"/></li>
+                    </ul>
+                 </div>
+               </div><!--End of FOOTER-->
+    </template>
+<template id="custom_invoice">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'optima_custom_invoice.custom_invoice_document')"/>
+        </t>
+    </t>
+</template>
+
+         <!--custome Styles for the report -->
+    <template id="ke_hr_assets_backend" name="payslip_css" inherit_id="report.layout">
+         <xpath expr="//style" position="after">
+                <style type="text/css">
+                .inv-odd {
+                        background-color:#EBEAE9;
+                }
+                .inv-even {
+                        background-color:#D8D8D8;
+                }
+                .inv-last-True {
+                        font-weight:bold;
+                        text-decoration:underline;
+                        /*border-bottom: 1px solid #000;*/
+                }
+		.inv-bg-grey{
+			background:#EBEAE9 ! important; padding-right:0px; padding-left:0px; margin-top:0px;
+		}
+		.inv-bg-green{
+			background:#9ABE00;
+		}
+		.inv-bg-black{
+			background:#545454;
+		}
+		.inv-wrapper{
+			overflow:hidden;
+		}
+		.inv-black{
+			color:#545454 !important;
+		}
+		.inv-right{
+			float:right;
+		}
+		.inv-nofloat{
+			float:none;
+		}
+		.inv-nomargin{
+			margin:0px;
+		}
+		.inv-green{
+			color:#9ABE00 !important;
+		}
+		.inv-social{
+			padding-left:15px;
+		}
+		.inv-nopad{
+			 padding-right:0px; padding-left:0px;
+		}
+		.inv-th-pad > th{
+			 padding-top:15px ! important; padding-bottom: 5px ! important;
+		}
+		.table-condensed > thead > tr > th,
+		.table-condensed > tbody > tr > th,
+		.table-condensed > tfoot > tr > th,
+		.table-condensed > thead > tr > td,
+		.table-condensed > tbody > tr > td,
+		.table-condensed > tfoot > tr > td {
+		  padding: 2px;
+		}
+		.inv-td-pad > td{
+			 padding-top:15px ! important; padding-bottom: 2px ! important;
+		}
+		.inv-tr-test > thead > tr,
+		.inv-tr-test > tbody > tr {
+		  page-break-inside: avoid ! important;
+		}
+		.table-condensed > thead > tr > th {
+         		border-bottom: 1px solid black !important;
+     		}
+		.inv-nosplit {
+		   page-break-inside: avoid ! important;
+		}
+                </style>
+       </xpath>
+    </template>
+</data>
+</openerp>

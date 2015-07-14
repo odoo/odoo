@@ -36,11 +36,11 @@
          <field name="res_model">ke.earnings.type</field>
          <field name="view_mode">tree,form</field>
         </record>
-<menuitem id="menu_ke_earnings_type" parent="hr.menu_hr_configuration" name="Earnings (Cash)" sequence="101" action="ke_earnings_type_action"/>
-<menuitem id="menu_ke_benefits_type" parent="hr.menu_hr_configuration" name="Benefits (Non-Cash)" sequence="102" action="ke_benefits_type_action"/>
-<menuitem id="menu_ke_reliefs_type" parent="hr.menu_hr_configuration" name="Tax Relief" sequence="103" action="ke_reliefs_type_action"/>
-<menuitem id="menu_ke_deductions_type" parent="hr.menu_hr_configuration" name="Deductions" sequence="104" action="ke_deductions_type_action"/>
-<menuitem id="menu_ke_relations_type" parent="hr.menu_hr_configuration"  sequence="105" action="ke_relation_type_action"/>
+<menuitem id="menu_ke_earnings_type" parent="hr.menu_hr_configuration" name="Earnings (Cash)" sequence="101" action="ke_earnings_type_action" groups="base.group_hr_manager" />
+<menuitem id="menu_ke_benefits_type" parent="hr.menu_hr_configuration" name="Benefits (Non-Cash)" sequence="102" action="ke_benefits_type_action" groups="base.group_hr_manager" />
+<menuitem id="menu_ke_reliefs_type" parent="hr.menu_hr_configuration" name="Tax Relief" sequence="103" action="ke_reliefs_type_action" groups="base.group_hr_manager" />
+<menuitem id="menu_ke_deductions_type" parent="hr.menu_hr_configuration" name="Deductions" sequence="104" action="ke_deductions_type_action" groups="base.group_hr_manager" />
+<menuitem id="menu_ke_relations_type" parent="hr.menu_hr_configuration"  sequence="105" action="ke_relation_type_action" groups="base.group_hr_manager" />
 <!-- Benefits Type Form view-->
 	<record id="ke_benefits_type_form" model="ir.ui.view">
          <field name="name">ke.hr.benefits.type.form</field>
@@ -185,11 +185,11 @@
          <field name="model">ke.earnings.type</field>
          <field name="arch" type="xml">
            <form>
-            <sheet>
+            <sheet><field name="id" invisible="True"/>
                 <group name="earning_type" string="Other Earnings (cash)">
                   <group>
                         <field name="name"/>
-                        <field name="code"/>
+                        <field name="code" attrs="{'readonly': [('id', '!=', False)]}"/>
                   </group>
                   <group>
                         <field name="taxable"/>

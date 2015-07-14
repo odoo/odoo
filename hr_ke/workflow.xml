@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+<openerp>
+<data>
+<!-- Overtime Workflow -->
+<record id="ke_overtime_workflow" model="workflow">
+    <field name="name">ke.overtime.workflow</field>
+    <field name="osv">ke.overtime</field>
+    <field name="on_create">True</field>
+</record>
+
+<!-- Activities-->
+
+<record id="ke_set_overtime_draft" model="workflow.activity">
+    <field name="wkf_id" ref="ke_overtime_workflow"/>
+    <field name="flow_start">True</field>
+    <field name="name">ke.overtime.draft</field>
+</record>
+<record id="ke_set_overtime_approval" model="workflow.activity">
+    <field name="wkf_id" ref="ke_overtime_workflow"/>
+    <field name="name">ke.overtime.approval</field>
+    <field name="kind">function</field>
+    <field name="action">overtime_approval()</field>
+</record>
+
+<record id="ke_set_overtime_approved" model="workflow.activity">
+    <field name="wkf_id" ref="ke_overtime_workflow"/>
+    <field name="flow_stop">True</field>
+    <field name="name">ke.overtime.approved</field>
+    <field name="kind">function</field>
+    <field name="action">overtime_approved()</field>
+</record>
+<record id="ke_set_overtime_disapproved" model="workflow.activity">
+    <field name="wkf_id" ref="ke_overtime_workflow"/>
+    <field name="flow_stop">True</field>
+    <field name="name">ke.overtime.disapproved</field>
+    <field name="kind">function</field>
+    <field name="action">overtime_disapproved()</field>
+</record>
+
+<record id="ke_set_overtime_reset" model="workflow.activity">
+    <field name="wkf_id" ref="ke_overtime_workflow"/>
+    <field name="name">ke.overtime.reset</field>
+    <field name="kind">function</field>
+    <field name="action">overtime_reset()</field>
+</record>
+
+<!-- Transitions-->
+
+<record id="ke_trans_draft_approval" model="workflow.transition">     <!-- 1. draft -> approval-->
+    <field name="act_from" ref="ke_set_overtime_draft"/>
+    <field name="act_to" ref="ke_set_overtime_approval"/>
+    <field name="signal">approval</field>
+    <field name="condition">True</field>
+    <field name="group_id" ref="base.group_user"/>
+</record>
+
+<record id="ke_trans_approval_approved" model="workflow.transition">   <!-- 2. approval -> approved-->
+    <field name="act_from" ref="ke_set_overtime_approval"/>
+    <field name="act_to" ref="ke_set_overtime_approved"/>
+    <field name="signal">approve</field>
+    <field name="condition">True</field>
+    <field name="group_id" ref="base.group_overtime"/> 
+</record>
+<record id="ke_trans_approval_disapproved" model="workflow.transition"><!-- 3. approval -> disapproved-->
+    <field name="act_from" ref="ke_set_overtime_approval"/>
+    <field name="act_to" ref="ke_set_overtime_disapproved"/>
+    <field name="signal">disapprove</field>
+    <field name="condition">True</field>
+ <field name="group_id" ref="base.group_overtime"/> 
+</record>
+<record id="ke_trans_approval_draft" model="workflow.transition"><!-- 4. approval -> draft-->
+    <field name="act_from" ref="ke_set_overtime_approval"/>
+    <field name="act_to" ref="ke_set_overtime_reset"/>
+    <field name="signal">reset</field>
+    <field name="condition">True</field>
+ <field name="group_id" ref="base.group_user"/>
+</record>
+
+
+ 
+<!-- Salary Advance Workflow -->
+<record id="ke_advance_workflow" model="workflow">
+    <field name="name">ke.advance.workflow</field>
+    <field name="osv">ke.advance</field>
+    <field name="on_create">True</field>
+</record>
+
+<!-- salary Activities-->
+
+<record id="ke_set_advance_draft" model="workflow.activity">
+    <field name="wkf_id" ref="ke_advance_workflow"/>
+    <field name="flow_start">True</field>
+    <field name="name">ke.advance.draft</field>
+</record>
+<record id="ke_set_advance_approval" model="workflow.activity">
+    <field name="wkf_id" ref="ke_advance_workflow"/>
+    <field name="name">ke.advance.approval</field>
+    <field name="kind">function</field>
+    <field name="action">advance_approval()</field>
+</record>
+
+<record id="ke_set_advance_approved" model="workflow.activity">
+    <field name="wkf_id" ref="ke_advance_workflow"/>
+    <field name="flow_stop">True</field>
+    <field name="name">ke.advance.approved</field>
+    <field name="kind">function</field>
+    <field name="action">advance_approved()</field>
+</record>
+<record id="ke_set_advance_disapproved" model="workflow.activity">
+    <field name="wkf_id" ref="ke_advance_workflow"/>
+    <field name="flow_stop">True</field>
+    <field name="name">ke.advance.disapproved</field>
+    <field name="kind">function</field>
+    <field name="action">advance_disapproved()</field>
+</record>
+
+<record id="ke_set_advance_reset" model="workflow.activity">
+    <field name="wkf_id" ref="ke_advance_workflow"/>
+    <field name="name">ke.advance.reset</field>
+    <field name="kind">function</field>
+    <field name="action">advance_reset()</field>
+</record>
+
+<!-- Salary Transitions-->
+
+<record id="ke_advance_draft_approval" model="workflow.transition">     <!-- 1. draft -> approval-->
+    <field name="act_from" ref="ke_set_advance_draft"/>
+    <field name="act_to" ref="ke_set_advance_approval"/>
+    <field name="signal">approval</field>
+    <field name="condition">True</field>
+    <field name="group_id" ref="base.group_user"/>
+</record>
+
+<record id="ke_advance_approval_approved" model="workflow.transition">   <!-- 2. approval -> approved-->
+    <field name="act_from" ref="ke_set_advance_approval"/>
+    <field name="act_to" ref="ke_set_advance_approved"/>
+    <field name="signal">approve</field>
+    <field name="condition">True</field>
+    <field name="group_id" ref="base.group_sal_adv"/> 
+</record>
+<record id="ke_advance_approval_disapproved" model="workflow.transition"><!-- 3. approval -> disapproved-->
+    <field name="act_from" ref="ke_set_advance_approval"/>
+    <field name="act_to" ref="ke_set_advance_disapproved"/>
+    <field name="signal">disapprove</field>
+    <field name="condition">True</field>
+ <field name="group_id" ref="base.group_sal_adv"/> 
+</record>
+<record id="ke_advance_approval_draft" model="workflow.transition"><!-- 4. approval -> draft-->
+    <field name="act_from" ref="ke_set_advance_approval"/>
+    <field name="act_to" ref="ke_set_advance_reset"/>
+    <field name="signal">reset</field>
+    <field name="condition">True</field>
+ <field name="group_id" ref="base.group_user"/> 
+</record>
+</data>
+</openerp>
+

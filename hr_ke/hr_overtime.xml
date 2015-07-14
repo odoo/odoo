@@ -1,0 +1,86 @@
+<openerp>
+    <data>
+	<!-- Overtime Action-->
+	<record id="ke_overtime_action" model="ir.actions.act_window">
+         <field name="name">Overtime Request</field>
+         <field name="res_model">ke.overtime</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+<menuitem id="ke_menu_overtime" parent="hr.menu_hr_root" name="Overtime" sequence="20"/>
+<menuitem id="ke_menu_overtime_request" parent="ke_menu_overtime" name="Overtime Request" action="ke_overtime_action"/>
+<!-- overtime  Form view-->
+        <record id="ke_overtime_form" model="ir.ui.view">
+         <field name="name">ke.overtime.form</field>
+         <field name="model">ke.overtime</field>
+         <field name="arch" type="xml">
+           <form>
+	    <header>
+		<button string="Send for Approval" name="approval" type="workflow" class="oe_highlight" attrs="{'invisible': ['|',('same_user', '!=', True), ('state', '!=', 'draft')]}"/>
+                <button string="Approve" name="approve" type="workflow" class="oe_highlight" groups="base.group_overtime" attrs="{'invisible': ['|',('same_user', '!=', False), ('state', '!=', 'approval')]}"/>
+		<button string="Disapprove" name="disapprove"  type="workflow" groups="base.group_overtime" class="oe_highlight" attrs="{'invisible': ['|',('same_user', '!=', False), ('state', '!=', 'approval')]}"/>
+                <button string="Reset to Draft" name="reset" type="workflow" states="approval" class="oe_highlight"/>
+		 <field name="state" widget="statusbar" statusbar_visible="draft,approval,approved,disapproved" statusbar_colors="{&quot;draft&quot;:&quot;blue&quot;,&quot;approval&quot;:&quot;blue&quot;,&quot;approved&quot;:&quot;green&quot;}"/>
+	    </header>
+            <sheet>
+		<group>
+                  <field name="name"/>
+		</group>
+		<group>
+                  <group>
+			<field name="same_user" invisible="1"/>
+		<!--	<field name="same_dept" invisible="0"/> -->
+                        <field name="employee_id" options="{'no_quick_create':True, 'no_open': True}"/>
+                        <field name="date_from"/>
+                <!--        <field name="dept_id"/> -->
+                  </group>
+                  <group>
+			<field name="contract_id" options="{'no_quick_create':True, 'no_open': True}"/>
+                        <field name="date_to"/>
+                  </group>
+                </group>
+                <group>
+                   <field name="hours"/>
+                </group>
+	    <notebook>
+		<page string="work Details">
+		 <field name="description"/>
+		</page>
+	    </notebook>
+            </sheet>
+	 	<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            	</div>
+           </form>
+         </field>
+        </record>
+<!-- Overtime Tree view-->
+        <record id="ke_overtime_tree" model="ir.ui.view">
+         <field name="name">ke.overtime.tree</field>
+         <field name="model">ke.overtime</field>
+         <field name="arch" type="xml">
+           <tree colors="blue: state == 'draft'; black: state == 'approval'; red: state == 'disapproved'">
+                 <field name="name"/>
+		 <field name="dept_id"/>
+		 <field name="employee_id"/>
+                 <field name="hours"/>
+                 <field name="state"/>
+           </tree>
+         </field>
+        </record>
+
+<!--add overtime field for every department -->
+<record id="ke_hr_department_inherit" model="ir.ui.view">	
+    <field name="model">hr.department</field>
+    <field name="inherit_id" ref="hr.view_department_form"/>
+    <field name="arch" type="xml">
+	<data>
+	<xpath expr="//field[@name = 'manager_id']" position="after">
+		<field name="overtime"/>
+	</xpath>
+	</data>
+    </field>	
+</record>
+    </data>
+</openerp>
+

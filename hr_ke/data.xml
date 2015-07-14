@@ -59,7 +59,7 @@
             <field name="category_id" ref="category5"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = categories.GROSS_PAY - categories.NET_TAX - categories.POST_TAX_DED - NSSF - PENSION</field>
+            <field name="amount_python_compute">result = categories.GROSS_PAY - categories.NET_TAX - categories.POST_TAX_DED - categories.PRE_TAX_DED</field>
             <field name="register_id" ref="hr_payroll.contrib_register_employees"/>
 	</record>
 
@@ -184,7 +184,14 @@ result = tax
 	   <field name="appears_on_payslip">True</field>
 	   <field name="condition_select">none</field>
 	   <field name="amount_select">code</field>
-	   <field name="amount_python_compute">result = 200</field>
+	   <field name="amount_python_compute">TIER1_RATE = 0.06; TIER2_RATE = 0.06; LEL = 6000; UEL = 18000; PAY = categories.GROSS_PAY
+
+### Calculation of NSSF Contribution based on Gross Pay###
+if  PAY &lt;= LEL: nssf = round((TIER1_RATE * PAY))
+elif PAY > LEL and PAY &lt;= UEL: nssf = round((TIER1_RATE * LEL) + (TIER2_RATE* (PAY - LEL)))
+elif PAY > UEL: nssf = round((TIER1_RATE * LEL) + (TIER2_RATE* (UEL - LEL)))
+else: nssf = 0
+result = nssf</field>
 	</record>
 <!-- NHIF Deductions rule-->
 	<record id="ke_rule21" model="hr.salary.rule">
@@ -196,7 +203,45 @@ result = tax
 	   <field name="appears_on_payslip">True</field>
 	   <field name="condition_select">none</field>
 	   <field name="amount_select">code</field>
-	   <field name="amount_python_compute">result = 320</field>
+	   <field name="amount_python_compute">#NHIF Upper limits and Contributions
+MARGIN1 = 5999; 	        CONTRIB1 = 150
+MARGIN2 = 7999; 	        CONTRIB2 = 300
+MARGIN3 = 11999; 	CONTRIB3 = 400
+MARGIN4 = 14999; 	CONTRIB4 = 500
+MARGIN5 = 19999;	        CONTRIB5 = 600
+MARGIN6 = 24999; 	CONTRIB6 = 750
+MARGIN7 = 29999; 	CONTRIB7 = 850
+MARGIN8 = 34999; 	CONTRIB8 = 900
+MARGIN9 = 39999; 	CONTRIB9 = 950
+MARGIN10 = 44999; 	CONTRIB10 = 1000
+MARGIN11 = 49999; 	CONTRIB11 = 1100
+MARGIN12 = 59999; 	CONTRIB12 = 1200
+MARGIN13 = 69999; 	CONTRIB13 = 1300
+MARGIN14 = 79999; 	CONTRIB14 = 1400
+MARGIN15 = 89999; 	CONTRIB15 = 1500
+MARGIN16 = 99999; 	CONTRIB16 = 1600;
+PAY = categories.GROSS_PAY; CONTRIB17 = 1700
+
+###### Calculation of NHIF contribution based on the maximum pay###
+if PAY &lt;= MARGIN1: nhif = CONTRIB1
+elif PAY &lt;= MARGIN2 and PAY > MARGIN1: nhif = CONTRIB2
+elif PAY &lt;= MARGIN3 and PAY > MARGIN2: nhif = CONTRIB3
+elif PAY &lt;= MARGIN4 and PAY > MARGIN3: nhif = CONTRIB4
+elif PAY &lt;= MARGIN5 and PAY > MARGIN4: nhif = CONTRIB5
+elif PAY &lt;= MARGIN6 and PAY > MARGIN5: nhif = CONTRIB6
+elif PAY &lt;= MARGIN7 and PAY > MARGIN6: nhif = CONTRIB7
+elif PAY &lt;= MARGIN8 and PAY > MARGIN7: nhif = CONTRIB8
+elif PAY &lt;= MARGIN9 and PAY > MARGIN8: nhif = CONTRIB9
+elif PAY &lt;= MARGIN10 and PAY > MARGIN9: nhif = CONTRIB10
+elif PAY &lt;= MARGIN11 and PAY > MARGIN10: nhif = CONTRIB11
+elif PAY &lt;= MARGIN12 and PAY > MARGIN11: nhif = CONTRIB12
+elif PAY &lt;= MARGIN13 and PAY > MARGIN12: nhif = CONTRIB13
+elif PAY &lt;= MARGIN14 and PAY > MARGIN13: nhif = CONTRIB14
+elif PAY &lt;= MARGIN15 and PAY > MARGIN14: nhif = CONTRIB15
+elif PAY &lt;= MARGIN16 and PAY > MARGIN15: nhif = CONTRIB16
+elif PAY > MARGIN16: nhif = CONTRIB17
+else: nhif = 0
+result = nhif</field>
 	</record>
 <!-- Net Tax Rule-->
 	<record id="ke_rule22" model="hr.salary.rule">
@@ -474,6 +519,25 @@ result = min(PRESCRIBED_LIMIT, deduction.base)
 #----------------------
 # contract: hr.contract object
 # deduction: this deduction(HELB)
+# Note: returned value have to be set in the variable 'result'
+
+###Please consult HELB for the formula to use. The default behaviour is to deduct (after Tax) the actual voluntary contribution per employee####
+result = deduction.base
+	   </field>
+	</record>
+	<!--Salary Advance-->
+	<record id="deduct5" model="ke.deductions.type">
+	   <field name="name">Salary Advance</field>
+	   <field name="code">SAL_ADV</field>
+	   <field name="pre_tax"></field>
+	   <field name="sequence">80</field>
+	   <field name="net_pay">1</field>
+	   <field name="frequency">month</field>
+	   <field name="formula">
+#Available variables:
+#----------------------
+# contract: hr.contract object
+# deduction: this deduction(Salary Advanced)
 # Note: returned value have to be set in the variable 'result'
 
 ###Please consult HELB for the formula to use. The default behaviour is to deduct (after Tax) the actual voluntary contribution per employee####

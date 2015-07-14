@@ -25,9 +25,17 @@
 
     # always loaded
     'data': [
+        'security/rules.xml',
+        'security/groups.xml',
         'security/ir.model.access.csv',
 	'data.xml',
+	'hr_overtime_data.xml',
+	'hr_advance_data.xml',
         'hr.xml',
+	'hr_overtime.xml',
+	'workflow.xml',
+	'hr_advance.xml',
+	'report/payslip.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

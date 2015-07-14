@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <template id="ke_report_payslip" inherit_id="hr_payroll.report_payslip">
+	<xpath  expr="//t[@t-call='report.html_container']" position="replace">
+	  <t t-call="report.html_container">
+	     <t t-foreach="docs" t-as="o">
+	        <div class="header col-xs-12 pys-bg-grey pys-black">
+		  <div class="pys-wrapper">
+		     <div class="col-xs-3"><img src="/hr_ke/static/description/logo.png"/> </div>
+		       <div class="col-xs-3 mt8 mb8 pys-black pys-right" >
+		            <h5 class="pys-nomargin pys-green" t-field="o.employee_id.company_id"/>
+                            <p class="pys-nomargin"><span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="o.employee_id.company_id.street"/>
+			    </p>
+                            <p class="pys-nomargin"><span class="fa fa-map-marker fa-lg"/>&#160;
+					<span t-field="o.employee_id.company_id.city"/>,&#160;
+					<span t-field="o.employee_id.company_id.country_id"/>
+					
+			    </p>
+                            <p class="pys-nomargin">
+					<span class="fa fa-phone-square fa-lg"/>&#160;
+					<span t-field="o.employee_id.company_id.phone"/>
+			    </p>
+                            <p class="pys-nomargin">
+					<span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="o.employee_id.company_id.email"/>
+			    </p>
+                            <p class="pys-nomargin">
+					<span class="fa fa-globe fa-lg"/>&#160;
+					<span t-field="o.employee_id.company_id.website"/>
+			    </p>
+
+		       </div>
+		  </div> <!--end of wrapper-->
+		  <div class="mt8 mb8 col-xs-9 pys-black pys-bg-green pys-nofloat">
+			 <span class="pys-social fa fa-twitter fa-lg"/>&#160;<span t-field="o.employee_id.company_id.twitter"/>
+			 <span class="pys-social fa fa-facebook-square fa-lg"/>&#160;<span t-field="o.employee_id.company_id.facebook"/>
+			 <span class="pys-social fa fa-google-plus fa-lg"/>&#160;<span t-field="o.employee_id.company_id.googleplus" />
+		  </div>
+                </div> <!--end of Header-->
+
+               <div class="page col-xs-12 pys-bg-grey pys-black ">  <!--start of PAGE-->
+			<br/>
+	         <div class="col-xs-3 mt32 pys-bg-green pys-nofloat" >
+			<h4><span class="fa fa-user fa-lg"/>&#160;Employee</h4>
+		 </div>
+		 <div><!--start of wrapper -->
+		   <div class="col-xs-3 pys-black">
+		            <p class="pys-nomargin"  t-field="o.employee_id"/>
+			    <p class="pys-nomargin" t-field="o.employee_id.job_id"/>
+			    <p class="pys-nomargin">Emp_No: <span t-esc="o.employee_id.employee_no"/></p>
+			    <p class="pys-nomargin" t-field="o.employee_id.work_email"/>
+		   </div>
+		   <div class="col-xs-4 mt8 mb8 pys-bg-green pys-right">
+			   <h1>Pay Slip</h1>
+			   <p class="pys-nomargin" t-field="o.name"/>
+			   <p class="pys-nomargin" t-field="o.number"/>
+			   <p class="pys-nomargin"><span t-field="o.employee_id.bank_account_id.bank"/>: 
+				<span t-field="o.employee_id.bank_account_id.acc_number"/></p>
+			   <p class="pys-nomargin">From: <span t-field="o.date_from"/> - To: <span t-field="o.date_to"/></p>
+	     	   </div>
+		 </div> <!--end of wrapper2-->
+		 <div class="col-xs-12 mt8 mb8 pys-bg-grey"> <!--start of DATA-->
+                    <table class="table table-condensed pys-black">
+                        <thead class="pys-bg-green">
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th class="text-right">Amount (<span t-esc="o.company_id.currency_id.name"/>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			    <t t-foreach="get_payslip_lines(o.line_ids)" t-as="p">
+                            <tr  t-attf-class="pys-{{p_parity}}">
+                                <td><span t-field="p.code"/></td>
+                                <td><span t-field="p.name"/></td>
+                                <td t-attf-class="text-right pys-last-{{p_last}}"><span t-esc="formatLang(p.amount)"/></td>
+                            </tr>
+			   </t>
+                        </tbody>
+                    </table>
+		 </div><!--End of DATA-->
+	       </div><!--End of PAGE-->
+	       <div class="footer col-xs-12 pys-black pys-bg-green pys-nopad">
+                 <div class="text-center" style="border-top: 1px solid black;">
+                    <ul t-if="not company.custom_footer" class="list-inline">
+                      <li t-if="company.phone"> <span class="fa fa-phone-square fa-lg"/> <span t-field="company.phone"/></li>
+                      <li  t-if="company.fax and company.phone">&amp;bull;</li>
+                      <li t-if="company.fax"><span class="fa fa-phone-square fa-lg"/> <span t-field="company.fax"/></li>
+                      <li t-if="company.email">&amp;bull;</li>
+                      <li t-if="company.email"><span class="fa fa-envelope-o fa-lg"/> <span t-field="company.email"/></li>
+                      <li t-if="company.website">&amp;bull;</li>
+                      <li t-if="company.website"><span class="fa fa-globe fa-lg"/> <span t-field="company.website"/></li>
+                    </ul>
+                    <t t-if="company.custom_footer">
+                       <span t-raw="company.rml_footer"/>
+                    </t>
+
+                    <ul class="list-inline">
+                      <li>Page:</li>
+                      <li><span class="page"/></li>
+                      <li>/</li>
+                      <li><span class="topage"/></li>
+                    </ul>
+                 </div>
+               </div><!--End of FOOTER-->
+	     </t><!--End of DOCS-->
+	  </t><!--End of HTML CONTAINER-->
+	</xpath>
+    </template>
+
+         <!--custome Styles for the report -->
+    <template id="ke_hr_assets_backend" name="payslip_css" inherit_id="report.layout">
+         <xpath expr="//style" position="after">
+                <style type="text/css">
+                .pys-odd {
+                        background-color:#EBEAE9;
+                }
+                .pys-even {
+                        background-color:#D8D8D8;
+                }
+                .pys-last-True {
+                        font-weight:bold;
+                        text-decoration:underline;
+                        /*border-bottom: 1px solid #000;*/
+                }
+		.pys-bg-grey{
+			background:#EBEAE9; padding-right:0px; padding-left:0px;
+		}
+		.pys-bg-green{
+			background:#9ABE00;
+		}
+		.pys-bg-black{
+			background:#545454;
+		}
+		.pys-wrapper{
+			overflow:hidden;
+		}
+		.pys-black{
+			color:#545454 !important;
+		}
+		.pys-right{
+			float:right;
+		}
+		.pys-nofloat{
+			float:none;
+		}
+		.pys-nomargin{
+			margin:0px;
+		}
+		.pys-green{
+			color:#9ABE00 !important;
+		}
+		.pys-social{
+			margin-left:80px;
+		}
+		.pys-nopad{
+			 padding-right:0px; padding-left:0px;
+		}
+                </style>
+       </xpath>
+    </template>
+
+</data>
+</openerp>
