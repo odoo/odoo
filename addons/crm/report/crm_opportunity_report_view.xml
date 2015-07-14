@@ -7,13 +7,25 @@
             <field name="name">crm.opportunity.report.pivot</field>
             <field name="model">crm.opportunity.report</field>
             <field name="arch" type="xml">
-                <pivot string="Leads Analysis" disable_linking="True">
+                <pivot string="Pipeline Analysis" disable_linking="True">
                     <field name="create_date" interval="month" type="col"/>
                     <field name="stage" type="row"/>
                     <field name="expected_revenue" type="measure"/>
                 </pivot>
             </field>
         </record>
+
+        <record id="view_report_crm_lead_pivot" model="ir.ui.view">
+            <field name="name">crm.lead.report.pivot</field>
+            <field name="model">crm.opportunity.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Leads Analysis" disable_linking="True">
+                    <field name="create_date" interval="month" type="row"/>
+                    <field name="team_id" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
 
         <!-- Opportunities by user and team Graph View -->
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
@@ -69,6 +81,11 @@
             <field name="model">crm.opportunity.report</field>
             <field name="arch" type="xml">
                 <search string="Opportunities Analysis">
+                    <filter string="Archived" name="archived"
+                            domain="[('active', '=', False)]"/>
+                    <filter string="Current" name="current"
+                            domain="[('active', '=', True)]"/>
+                    <separator/>
                     <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
                     <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
@@ -86,7 +103,6 @@
                         <field name="source_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('team_ids', '=', 'team_id')]" />
                         <field name="campaign_id" widget="selection"/>
                         <field name="medium_id" widget="selection"/>
                         <field name="source_id" widget="selection"/>
@@ -114,28 +130,41 @@
         </record>
 
         <record id="action_report_crm_opportunity" model="ir.actions.act_window">
-             <field name="name">Pipeline Analysis</field>
+             <field name="name">Pipeline</field>
              <field name="res_model">crm.opportunity.report</field>
              <field name="view_type">form</field>
              <field name="view_mode">pivot,graph</field>
-             <field name="domain">[('active', 'in', [True,False])]</field>
-             <field name="context">{'search_default_opportunity': 1}</field>
-             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
-         </record>
-        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_graph">
-             <field name="sequence" eval="2"/>
-             <field name="view_mode">graph</field>
-             <field name="view_id" ref="view_report_crm_opportunity_graph"/>
-             <field name="act_window_id" ref="action_report_crm_opportunity"/>
+             <field name="domain">['|', ('active', '=', False), ('active', '=', True)]</field>
+             <field name="context">{}</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True}</field>
+             <field name="help">Pipeline Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
-        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_pivot">
-             <field name="sequence" eval="1"/>
-             <field name="view_mode">pivot</field>
-             <field name="view_id" ref="view_report_crm_opportunity_pivot"/>
-             <field name="act_window_id" ref="action_report_crm_opportunity"/>
+        <record id="action_report_crm_opportunity_pivot" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">pivot</field>
+            <field name="act_window_id" ref="action_report_crm_opportunity"/>
+            <field name="view_id" ref="view_report_crm_opportunity_pivot"/>
         </record>
         <menuitem id="menu_report_crm_opportunities_tree"
-             parent="base.menu_sale_report" action="action_report_crm_opportunity" sequence="5"/>
+             parent="base.menu_sale_report" action="action_report_crm_opportunity" sequence="6"/>
+
+        <record id="action_report_crm_lead" model="ir.actions.act_window">
+             <field name="name">Leads</field>
+             <field name="res_model">crm.opportunity.report</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">pivot,graph</field>
+             <field name="domain">['|', ('active', '=', False), ('active', '=', True)]</field>
+             <field name="help">This report analyses the source of your leads (including those converted into opportunities).</field>
+        </record>
+        <record id="action_report_crm_lead_pivot" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">pivot</field>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+            <field name="view_id" ref="view_report_crm_lead_pivot"/>
+        </record>
+
+        <menuitem id="menu_report_crm_lead_tree"
+             parent="base.menu_sale_report" action="action_report_crm_lead" sequence="5"/>
 
     </data>
 </openerp>

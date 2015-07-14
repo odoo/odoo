@@ -108,7 +108,7 @@
                             help="Convert to Opportunity" class="oe_highlight"/>
                     <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object"/>
                     <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object"/>
-                    <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object" class="pull-right"/>
+                    <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
@@ -183,7 +183,7 @@
                             </group>
                             <group name="misc" string="Misc">
                                 <field name="probability" groups="base.group_no_one"/>
-                                <field name="active"/>
+                                <field name="active" groups="base.group_no_one"/>
                                 <field name="referred"/>
                             </group>
                             <group>
@@ -276,6 +276,7 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
+                    <field name="active"/>
                     <field name="planned_revenue"/>
                     <field name="user_email"/>
                     <field name="user_id"/>
@@ -293,10 +294,10 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <t t-if="widget.editable"><li><a type="edit">Edit Opportunity</a></li></t>
+                                        <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
-                                        <li><a name="action_schedule_meeting" type="object">Schedule Meeting</a></li>
+                                        <t t-if="! record.active.value"><li><a name="case_mark_active" type="object">Unarchive</a></li></t>
+                                        <t t-if="record.active.value"><li><a name="case_mark_unactive" type="object">Archive</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -387,9 +388,12 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_unactive" string="Archive" attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('active', '=', False)]}" type="object" class="oe_highlight"/>
-                        <button name="case_mark_active" string="Active" attrs="{'invisible': [('active', '=', True)]}" type="object" class="pull-right"/>
+                        <button name="case_mark_active" string="Unarchive" attrs="{'invisible': [('active', '=', True)]}" type="object" class="oe_highlight"/>
+                        <div class="oe_crm_won" attrs="{'invisible': ['|', ('probability', '&lt;', 100), ('active', '=', True)]}">Won</div>
+                        <div class="oe_crm_lost" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False)]}"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
@@ -585,8 +589,9 @@
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
-                    <filter string="New" name="new"
-                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '&lt;=', 1)]"/>
+                    <filter string="Archived"
+                            domain="[('active', '=', False)]"/>
+                    <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>
                     <filter string="Lost" name="lost"

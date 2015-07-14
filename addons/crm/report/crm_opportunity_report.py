@@ -19,7 +19,7 @@ class crm_opportunity_report(osv.Model):
         'opening_date': fields.datetime('Assignation Date', readonly=True),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
-        'active': fields.boolean('Archived', readonly=True),
+        'active': fields.boolean('Active', readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -56,9 +56,7 @@ class crm_opportunity_report(osv.Model):
                     c.date_deadline,
                     c.date_open as opening_date,
                     c.date_closed as date_closed,
-
                     c.date_last_stage_update as date_last_stage_update,
-
                     c.user_id,
                     c.probability,
                     c.stage_id,

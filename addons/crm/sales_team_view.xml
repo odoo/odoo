@@ -65,7 +65,7 @@
            <field name="res_model">crm.opportunity.report</field>
            <field name="context">{"search_default_month":1}</field>
            <field name="view_mode">graph,pivot</field>
-           <field name="domain">[('type','=', 'lead'),('team_id', '=', active_id)]</field>
+           <field name="domain">[('type','=', 'lead'),('team_id', '=', active_id), '|', ('active','=',True), ('active','=',False)]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
 
@@ -73,7 +73,7 @@
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.opportunity.report</field>
             <field name="view_mode">graph,pivot</field>
-            <field name="domain">[('type','=', 'opportunity'), ('team_id', '=', active_id)]</field>
+            <field name="domain">[('type','=', 'opportunity'), ('team_id', '=', active_id), '|', ('active','=',True), ('active','=',False)]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
