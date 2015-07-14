@@ -5,7 +5,7 @@ from openerp import fields, models
 from openerp import tools
 
 
-class project_issue_report(models.Model):
+class ProjectIssueReport(models.Model):
     _name = "project.issue.report"
     _auto = False
 

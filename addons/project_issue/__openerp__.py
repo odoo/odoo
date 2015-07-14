@@ -20,11 +20,11 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'project',
     ],
     'data': [
-        'data/mail_message_data.xml',
         'data/mail_message_subtype_data.xml',
-        'report/project_issue_report_view.xml',
+        'data/mail_message_data.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
+        'report/project_issue_report_view.xml',
         'views/project_issue_views.xml',
         'views/project_issue_menu.xml',
         'views/account_analytic_account_views.xml',
@@ -36,12 +36,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'data/project_tags_demo.xml',
         'data/project_project_demo.xml',
         'data/project_issue_demo.xml',
-    ],
-    'test': [
-        'test/issue_users.yml',
-        'test/subscribe_issue.yml',
-        'test/issue_process.yml',
-        'test/issue_demo.yml'
     ],
     'installable': True,
     'application': True,
