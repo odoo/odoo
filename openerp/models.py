@@ -2801,9 +2801,20 @@ class BaseModel(object):
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
                 self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
+            index_name_pattern = "%s_%s_index"
+            index_names = [(index_name_pattern % (m2m_tbl, col))[:63]
+                           for col in (col1, col2)]
+            if index_names[0] == index_names[1]:
+                message = ("Creation of m2m table %s will fail because "
+                           "automatic index names are too long. Please "
+                           "specify explicit short names for the m2m table "
+                           "and columns in the m2m field declaration (see "
+                           "m2m documentation)."
+                           )
+                raise ValueError(message % m2m_tbl)
 
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            for col, index_name  in zip((col1, col2), index_names):
+                cr.execute('CREATE INDEX "%s" ON "%s" ("%s")' % (index_name, m2m_tbl, col))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)

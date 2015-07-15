@@ -23,3 +23,4 @@ import test_translate
 import test_view_validation
 import test_views
 import test_xmlrpc
+from . import test_m2m_index
