@@ -319,7 +319,7 @@ def test_tgz(o):
     with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
-        wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
+        wheezy.system('pip install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
