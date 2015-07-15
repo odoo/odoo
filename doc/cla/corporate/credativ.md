@@ -12,9 +12,9 @@ Irenie White irenie.white@credativ.co.uk
 
 List of contributors:
 
-Craig Gowing craig.gowing@credativ.co.uk
-David Spautz david.spautz@credativ.co.uk
-Jacob Hicks jacob.hicks@credativ.co.uk
-Ondrej Kuznik ondrej.kuznik@credativ.co.uk
-Kinner Vachhani kinner.vachhani@credativ.co.uk
-Tom Pickering tom.pickering@credativ.co.uk
+Craig Gowing    craig.gowing@credativ.co.uk     https://github.com/craiggowing
+David Spautz    david.spautz@credativ.co.uk     https://github.com/dspautz
+Jacob Hicks     jacob.hicks@credativ.co.uk      https://github.com/JaHicks
+Ondřej Kuzník   ondrej.kuznik@credativ.co.uk    https://github.com/mistotebe
+Kinner Vachhani kinner.vachhani@credativ.co.uk  https://github.com/kenvac
+Tom Pickering   tom.pickering@credativ.co.uk    https://github.com/tompickering
