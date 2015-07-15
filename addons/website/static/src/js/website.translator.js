@@ -87,7 +87,8 @@
                     .not('link, script')
                     .not('.oe_snippets,.oe_snippet, .oe_snippet *, .navbar-toggle')
                     .not('[data-oe-type]')
-                    .add($('[data-oe-translate="1"]:not([data-oe-model="ir.ui.view"])').addClass('o_editable'));
+                    .add($('[data-oe-translate="1"]:not([data-oe-model="ir.ui.view"])').addClass('o_editable'))
+                    .on('click', self, function(ev) {ev.preventDefault()});
 
             $editables.each(function () {
                 var $node = $(this);
