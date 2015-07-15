@@ -51,6 +51,8 @@ var Mention = Widget.extend({
     },
     bind_events: function() {
         var self = this;
+        // TODO: Add textarea inside div from standard mail template
+        this.$textarea.css({'width':'100%'}).wrap( "<div class='o_mail_mention_container'></div>" );
         this.$dropdown.insertAfter(this.$textarea);
         this.$textarea.on('keyup', this.proxy('textarea_keyup'))
         .on('click', function(){ self.clear_dropdown(); })
@@ -80,6 +82,40 @@ var Mention = Widget.extend({
         this.on('change:partners', this, this.show_dropdown);
         this.clear_dropdown();
     },
+    get_caret_position: function($el){
+        // ref: https://github.com/ilkkah/textarea-caret-position
+        var position = this.get_cursor_position($el),
+            faux_div = $("<div class='rga_test'>").appendTo('body').get(0),
+            element = $el.get(0),
+            style = faux_div.style,
+            computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;
+
+        style.whiteSpace = 'pre-wrap';
+        style.position = 'absolute';
+        style.visibility = 'hidden';
+        style.top = element.offsetTop + parseInt(computed.borderTopWidth) + 'px';
+
+        var properties = ['direction','boxSizing','width','height','overflowX','overflowY','borderTopWidth',
+        'borderRightWidth','borderBottomWidth','borderLeftWidth','paddingTop','paddingRight','paddingBottom','paddingLeft','fontStyle','fontVariant',
+        'fontWeight','fontStretch','fontSize','lineHeight','fontFamily','textAlign','textTransform','textIndent','textDecoration', 'letterSpacing',
+        'wordSpacing'];
+
+        properties.forEach(function (prop) {
+            style[prop] = computed[prop];
+        });
+
+        faux_div.textContent = element.value.substring(0, position);
+        var span = document.createElement('span');
+        span.textContent = element.value.substring(position) || '.';
+        faux_div.appendChild(span);
+
+        var offset = {
+            top: span.offsetTop + parseInt(computed.borderTopWidth, 10),
+            left: span.offsetLeft + parseInt(computed.borderLeftWidth, 10)
+        };
+        $(faux_div).remove();
+        return offset;
+    },
     show_dropdown: function(){
         var self = this;
         var highlight = function(description){
@@ -101,7 +137,8 @@ var Mention = Widget.extend({
             };
         });
         this.clear_dropdown();
-        this.$dropdown.find("ul").append(QWeb.render('Mention', {"partners": res})).show();
+        var offset = this.get_caret_position(this.$textarea);
+        this.$dropdown.css({top: offset.top}).find("ul").append(QWeb.render('Mention', {"partners": res})).show();
         this.$dropdown.find("li:first").addClass("active");
     },
     clear_dropdown: function() {
