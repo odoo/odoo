@@ -1067,6 +1067,10 @@
                 this.$bg.removeClass("oe_img_bg").removeClass("oe_custom_bg");
             }
         },
+        select_class : function(type, value, $li) {
+            this.background(type, '', $li);
+            this._super(type, value, $li);
+        },
         choose_image: function(type, value, $li) {
             if(type !== "click") return;
 
