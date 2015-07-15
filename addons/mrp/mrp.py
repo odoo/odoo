@@ -265,7 +265,6 @@ class mrp_bom(osv.osv):
         return False
 
     def _prepare_conssumed_line(self, cr, uid, bom_line_id, quantity, product_uos_qty, context=None):
-        import ipdb; ipdb.set_trace()
         vals = {
             'name': bom_line_id.product_id.name,
             'product_id': bom_line_id.product_id.id,
