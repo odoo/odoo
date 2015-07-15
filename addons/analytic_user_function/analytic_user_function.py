@@ -53,9 +53,9 @@ class account_analytic_line(osv.osv):
 
     # Look in account, if no value for the user => look in parent until there is no more parent to look
     # Take the first found... if nothing found => return False
-    def _get_related_user_account_recursiv(self, cr, uid, user_id, account_id, context):
-        user_function_id = self.pool.get('analytic.user.funct.grid').search(cr, uid, [('user_id', '=', user_id), ('account_id', '=', account_id)])
-        account = self.pool['account.analytic.account'].browse(cr, uid, account_id)
+    def _get_related_user_account_recursiv(self, cr, uid, user_id, account_id, context=None):
+        user_function_id = self.pool.get('analytic.user.funct.grid').search(cr, uid, [('user_id', '=', user_id), ('account_id', '=', account_id)], context=context)
+        account = self.pool['account.analytic.account'].browse(cr, uid, account_id, context=context)
         if user_function_id:
             return user_function_id
         elif account.parent_id:
@@ -68,16 +68,16 @@ class account_analytic_line(osv.osv):
         if not (account_id):
             return res
         if not (user_id):
-            return super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, is_timesheet, context)
+            return super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, unit_amount, is_timesheet, context)
 
         # get the browse record related to user_id and account_id
         user_function_id = self._get_related_user_account_recursiv(cr, uid, user_id, account_id, context)
         if not user_function_id:
             # if there isn't any record for this user_id and account_id
-            return super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, is_timesheet, context)
+            return super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, unit_amount, is_timesheet, context)
         else:
             # get the old values from super and add the value from the new relation analytic_user_funct_grid
-            res['value'] = super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, is_timesheet, context)['value']
+            res['value'] = super(account_analytic_line, self).on_change_account_id(cr, uid, ids, account_id, user_id, unit_amount, is_timesheet, context)['value']
             res['value'].update(self._get_values_based_on_user_function(cr, uid, ids, user_function_id, unit_amount, context=context))
         return res
 

@@ -29,7 +29,7 @@
                                 <field name="date"/>
                                 <field name="user_id" required="1"/>
                                 <field name="name"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, context)" groups="analytic.group_analytic_accounting"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, user_id, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
                                 <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" widget="float_time"/>
                                 <field name="to_invoice"  invisible="1"/>
                                 <field name="product_uom_id" invisible="1" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)"/>

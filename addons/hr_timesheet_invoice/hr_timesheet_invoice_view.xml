@@ -39,7 +39,7 @@
                     </xpath>
                     <field name="account_id" position="attributes">
                         <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
-                        <attribute name="on_change">on_change_account_id(account_id, user_id, is_timesheet, context)</attribute>
+                        <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)</attribute>
                         <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                     </field>
                 </field>
@@ -56,7 +56,7 @@
                     </field>
                     <field name="account_id" position="attributes">
                         <attribute name="domain">[('type','in',['normal','contract']),('state', '!=', 'close'),('invoice_on_timesheets','=',1)]</attribute>
-                        <attribute name="on_change">on_change_account_id(account_id, user_id, is_timesheet, context)</attribute>
+                        <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)</attribute>
                         <attribute name="context">{'default_invoice_on_timesheets': 1}</attribute>
                     </field>
                 </field>

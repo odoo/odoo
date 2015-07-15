@@ -350,7 +350,7 @@ class account_analytic_line(osv.osv):
         return True
 
     def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
-        return dict([(account_id, self.on_change_account_id(cr, uid, ids, account_id, user_id=context.get('user_id', uid), is_timesheet=True, context=context)) for account_id in account_ids])
+        return dict([(account_id, self.on_change_account_id(cr, uid, ids, account_id, user_id=context.get('user_id', uid), unit_amount=0, is_timesheet=True, context=context)) for account_id in account_ids])
 
 
 class hr_attendance(osv.osv):
