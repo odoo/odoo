@@ -375,9 +375,9 @@ instance.web.Session.include( /** @lends instance.web.Session# */{
             var mod = this.module_list[j];
             if(this.module_loaded[mod])
                 continue;
-            instance[mod] = {};
-            // init module mod
             var fct = instance._openerp[mod];
+            // init module mod
+            instance[mod] = {};
             if(typeof(fct) === "function") {
                 instance._openerp[mod] = {};
                 for (var k in fct) {
