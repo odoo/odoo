@@ -30,6 +30,7 @@ RUN apt-get update -qq &&  \
 		python-pip \
 		build-essential \
 		python -y && \
+	easy_install --upgrade pip && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /opt/release/requirements.txt
