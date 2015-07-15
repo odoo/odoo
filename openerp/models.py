@@ -2753,9 +2753,17 @@ class BaseModel(object):
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
                 self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
-
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            index_name_pattern = "%s_%s_index"
+            for col in (col1, col2):
+                index_name = index_name_pattern % (m2m_tbl, col)
+                if len(index_name) > 63:
+                    _logger.warning(
+                        'Index creation for m2m relation %s %s-> %s will '
+                        'generate a truncated name. Please use '
+                        '"relation=\'<forced_rel_table_name>\' in the m2m '
+                        'field declaration.',
+                        m2m_tbl, self._table, ref)
+                cr.execute('CREATE INDEX "%s" ON "%s" ("%s")' % (index, m2m_tbl, col))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
