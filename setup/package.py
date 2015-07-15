@@ -318,7 +318,7 @@ def test_tgz(o):
     with docker('openerp-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = 'openerp.tar.gz'
         wheezy.system("service postgresql start")
-        wheezy.system('pip install /opt/release/%s' % wheezy.release)
+        wheezy.system('pip install --allow-external PIL --allow-unverified PIL /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home openerp")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s openerp"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
