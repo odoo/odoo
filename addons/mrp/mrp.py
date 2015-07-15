@@ -334,7 +334,7 @@ class mrp_bom(osv.osv):
             #If BoM should not behave like PhantoM, just add the product, otherwise explode further
             if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
                 product_uos_qty = bom_line_id.product_uos and _factor(bom_line_id.product_uos_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding) or False
-                result.append(self._prepare_conssumed_line(cr, uid, bom_line_id, quantity, product_uos_qty))
+                result.append(self._prepare_conssumed_line(cr, uid, bom_line_id, quantity, product_uos_qty, context))
             elif bom_id:
                 all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
