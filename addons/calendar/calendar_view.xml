@@ -105,48 +105,50 @@
                         </page>
                         <page string="Options">
                             <group>
-                                <group col="1">
+                                <div>
                                     <group>
                                         <field name="recurrency"/>
                                     </group>
-                                    <group attrs="{'invisible': [('recurrency','=',False)]}">
-                                        <label for="interval"/>
-                                        <div>
-                                            <field name="interval" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="rrule_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                        </div>
-                                        <label string="Until" for="end_type"/>
-                                        <div>
-                                            <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
-                                            <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
-                                        </div>
-                                        <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                        <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}" >
-                                            <field name="mo" />
-                                            <field name="tu" />
-                                            <field name="we" />
-                                            <field name="th" />
-                                            <field name="fr" />
-                                            <field name="sa" />
-                                            <field name="su" />
+                                    <div attrs="{'invisible': [('recurrency', '=', False)]}">
+                                        <group>
+                                            <label for="interval"/>
+                                            <div class="o_row">
+                                                <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                            </div>
+                                            <label string="Until" for="end_type"/>
+                                            <div class="o_row">
+                                                <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
+                                                <field name="final_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                            </div>
                                         </group>
-    
-                                        <label string="Day of Month"
-                                            attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
-    
-                                        <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
-                                            <field name="month_by"/>
-                                            <field name="day"
-                                                attrs="{'required': [('month_by','=','date'), ('rrule_type','=','monthly')],
-                                                    'invisible': [('month_by','=','day')]}"/>
-                                            <field name="byday" string="The"
-                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
-                                            <field name="week_list" nolabel="1"
-                                                attrs="{'required': [('month_by','=','day'), ('rrule_type','=','monthly')], 'invisible': [('month_by','=','date')]}"/>
-                                        </div>
-                                    </group>
-                                </group>
+                                        <group attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}" name="weekdays">
+                                            <field name="mo"/>
+                                            <field name="tu"/>
+                                            <field name="we"/>
+                                            <field name="th"/>
+                                            <field name="fr"/>
+                                            <field name="sa"/>
+                                            <field name="su"/>
+                                        </group>
+                                        <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
+                                            <label string="Day of Month" for="month_by"/>
+                                            <div class="o_row">
+                                                <field name="month_by"/>
+                                                <field name="day"
+                                                    attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'date')]}"/>
+                                                <field name="byday" string="The"
+                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                                <field name="week_list" nolabel="1"
+                                                    attrs="{'required': [('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                            </div>
+                                        </group>
+                                    </div>
+                                </div>
                                 <group>
                                     <field name="class"/>
                                     <field name="show_as"/>
