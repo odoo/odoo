@@ -1069,11 +1069,12 @@ class sale_order_line(osv.osv):
             uom2 = product_obj.uom_id
 
         if pricelist and partner_id:
+            ctx_product.update({
+                'uom': uom or result.get('product_uom'),
+                'date': date_order,
+                })
             price = self.pool['product.pricelist'].price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        })[pricelist]
+                    product, qty or 1.0, partner_id, context=ctx_product)[pricelist]
         else:
             price = Product.price_get(cr, uid, [product], ptype='list_price', context=ctx_product)[product] or False
         result.update({'price_unit': price})
