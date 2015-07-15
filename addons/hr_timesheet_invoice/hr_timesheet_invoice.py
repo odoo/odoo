@@ -288,7 +288,7 @@ class account_analytic_line(osv.osv):
             invoice_obj.compute_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, is_timesheet=False, context=None):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0, is_timesheet=False, context=None):
         res = {'value': {}}
         if is_timesheet and account_id:
             acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)
