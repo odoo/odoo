@@ -392,7 +392,7 @@
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Invoice Lines">
-                            <field name="invoice_line_ids" nolabel="1" widget="one2many_list" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
+                            <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
                                 <tree string="Invoice Lines" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
@@ -411,7 +411,7 @@
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
-                                <kanban class="o_kanban_mobile o_kanban_one2many">
+                                <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="price_subtotal"/>
                                     <field name="quantity"/>

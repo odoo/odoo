@@ -773,8 +773,8 @@
                             <button class="oe_link oe_right" name="put_in_pack" type="object" string="&#8627;Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Initial Demand" attrs="{'invisible': [('state', 'not in', ('draft', 'confirmed', 'waiting'))]}">
-                            <field name="move_lines" options="{'reload_on_button': True}" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
-                                    <kanban class="o_kanban_mobile o_kanban_one2many">
+                            <field name="move_lines" options="{'reload_on_button': True}" mode="tree,kanban" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                                    <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="availability"/>
                                     <field name="product_uom_qty"/>

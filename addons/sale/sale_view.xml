@@ -178,7 +178,7 @@
                     </group>
                     <notebook>
                         <page string="Order Lines">
-                            <field name="order_line">
+                            <field name="order_line" mode="tree,kanban">
                                 <form string="Sales Order Lines">
                                     <header groups="base.group_user">
                                         <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
@@ -244,7 +244,7 @@
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
-                                <kanban class="o_kanban_mobile o_kanban_one2many">
+                                <kanban class="o_kanban_mobile">
                                     <field name="product_id"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                         groups="base.group_user"
