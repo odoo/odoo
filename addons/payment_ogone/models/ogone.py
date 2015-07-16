@@ -260,9 +260,9 @@ class PaymentTxOgone(osv.Model):
             })
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
-                'error_str': data.get('NCERROR'),
-                'error_code': data.get('NCERRORPLUS'),
-                'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERRORPLUS')),
+                'error_str': data.get('NCERRORPLUS'),
+                'error_code': data.get('NCERROR'),
+                'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERROR')),
             }
             _logger.info(error)
             tx.write({
