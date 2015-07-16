@@ -29,8 +29,6 @@ class PosInvoiceReport(osv.AbstractModel):
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
         docargs = {
-            'doc_ids': ids_to_print,
-            'doc_model': report.model,
-            'docs': selected_orders,
+            'docs': self.pool['account.invoice'].browse(cr, uid, ids_to_print, context=context)
         }
         return report_obj.render(cr, SUPERUSER_ID, ids, 'account.report_invoice', docargs, context=context)
