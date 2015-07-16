@@ -24,20 +24,17 @@ var QWeb = core.qweb;
 var Mention = Widget.extend({
     init: function(parent, $el, options) {
         this._super.apply(this, arguments);
+        this.options = _.defaults(options || {}, {'partner_limit': 8, 'typing_speed': 400, 'min_charactor': 3});
         this.$textarea = $el;
         this.$dropdown = $("<div class='o_mail_mention_main'><ul></ul></div>");
         this.model_res_partner = new Model("res.partner");
         this.selected_partners = {};
-        this.partner_limit = options['partner_limit'] || 8;
-        this.typing_speed = options['typing_speed'] || 400;
-        this.min_charactor = options['min_charactor'] || 4;
         this.search_string = '';
         this.recent_string = '';
         this.set('partners', []);
         var keycode = $.ui.keyCode;
         this.escape_keys = [keycode.DOWN,
                             keycode.UP,
-                            keycode.ENTER,
                             keycode.END,
                             keycode.PAGE_UP,
                             keycode.PAGE_DOWN,
@@ -62,14 +59,18 @@ var Mention = Widget.extend({
                 switch(e.keyCode) {
                     case $.ui.keyCode.DOWN:
                         $active.next().addClass('active').siblings().removeClass();
+                        e.preventDefault();
                         break;
                     case $.ui.keyCode.UP:
                         $active.prev().addClass('active').siblings().removeClass();
-                        break;
-                    case $.ui.keyCode.ENTER:
-                        self.replace_partner_text($active.find("span").data("id"));
                         e.preventDefault();
                         break;
+                    case $.ui.keyCode.ENTER:
+                        var active_id = $active.find("span").data("id");
+                        if(active_id){
+                            self.replace_partner_text(active_id);
+                            e.preventDefault();
+                        }
                 }
             }
         });
@@ -85,7 +86,7 @@ var Mention = Widget.extend({
     get_caret_position: function($el){
         // ref: https://github.com/ilkkah/textarea-caret-position
         var position = this.get_cursor_position($el),
-            faux_div = $("<div class='rga_test'>").appendTo('body').get(0),
+            faux_div = $("<div>").appendTo('body').get(0),
             element = $el.get(0),
             style = faux_div.style,
             computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;
@@ -147,10 +148,11 @@ var Mention = Widget.extend({
     set_partners: function() {
         var self = this;
         if(this.recent_string) {
+            // TODO: abort request when recent string not valid
             this.model_res_partner.call("search_read", {
                 domain: ['|', ['name', 'ilike', self.search_string], ['email', 'ilike', self.search_string]],
                 fields: ['name', 'email'],
-                limit: this.partner_limit
+                limit: this.options.partner_limit
             }).done(function(res) {
                 if(!res.length) return;
                 self.set('partners', res);
@@ -162,11 +164,12 @@ var Mention = Widget.extend({
         var test_string = function(search_str){
             var pattern = /(^@|(^\s@))/g;
             var regex_start = new RegExp(pattern);
-            if (regex_start.test(search_str) && search_str.length >= self.min_charactor ){
-                search_str = _.str.ltrim(search_str.replace(pattern, ''));
-                return search_str.indexOf(' ') < 0 &&  _.isNull(/\r|\n/.exec(search_str))? search_str:'';
+            search_str = search_str.replace(/^\s\s*|^[\n\r]/g, '');
+            if (regex_start.test(search_str) && search_str.length > self.options.min_charactor ){
+                search_str = search_str.replace(pattern, '');
+                return search_str.indexOf(' ') < 0 && !/[\r\n]/.test(search_str) ? search_str : false;
             }
-            return '';
+            return false;
         };
         var desctiption = this.$textarea.val(),
         left_string = desctiption.substring(0, this.get_cursor_position(this.$textarea)),
@@ -184,7 +187,7 @@ var Mention = Widget.extend({
             clearTimeout(this.timer);
             this.timer = setTimeout(function() {
                 self.set_partners();
-            }, this.typing_speed);
+            }, this.options.typing_speed);
         }else if(this.$dropdown.find("li")){
             this.clear_dropdown();
         }
