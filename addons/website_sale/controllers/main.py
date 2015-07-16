@@ -586,7 +586,7 @@ class website_sale(http.Controller):
             orm_partner.write(cr, SUPERUSER_ID, [partner_id], billing_info, context=context)
         else:
             # create partner
-            billing_info['team_id'] = request.registry.get('ir.model.data').xmlid_to_res_id(cr, uid, 'website.salesteam_website_sales')
+            billing_info['team_id'] = request.website.salesteam_id.id
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
 
         # create a new shipping partner
