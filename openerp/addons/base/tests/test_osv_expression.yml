@@ -512,7 +512,7 @@
             # Should give: 'DataError: invalid input syntax for type timestamp' or similar
             cr.execute('ROLLBACK TO SAVEPOINT expression_failure_test')
 -
-    Testing for Many2Many field with category supplier and active=False
+    Testing for Many2Many field with category vendor and active=False
 -
     !python {model: res.partner }: |
         vals = {'category_id': [(6, 0, [ref("base.res_partner_category_1")])],
@@ -521,8 +521,8 @@
                 'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': ref("base.be")})]
                 }
         self.create(cr, uid, vals, context=context)
-        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
-        assert len(res_ids) != 0, "Record not Found with category supplier and active False."
+        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'vendor'), ('active', '=', False)])
+        assert len(res_ids) != 0, "Record not Found with category vendor and active False."
 -
     Testing for One2Many field with country Belgium and active=False
 -
