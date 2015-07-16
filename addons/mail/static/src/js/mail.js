@@ -583,7 +583,7 @@ openerp.mail = function (session) {
                 };
 
                 self.do_action(action, {
-                    'on_close': function(){ self.parent_thread.message_fetch() }
+                    'on_close': function(){ self.is_log && self.parent_thread.message_fetch() }
                 });
                 self.on_cancel();
             });
