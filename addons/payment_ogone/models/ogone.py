@@ -407,9 +407,9 @@ class PaymentTxOgone(osv.Model):
             return self.ogone_s2s_validate(tx, tree, tries - 1)
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
-                'error_str': tree.get('NCERROR'),
-                'error_code': tree.get('NCERRORPLUS'),
-                'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERRORPLUS')),
+                'error_str': tree.get('NCERRORPLUS'),
+                'error_code': tree.get('NCERROR'),
+                'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERROR')),
             }
             _logger.info(error)
             tx.write({
