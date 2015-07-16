@@ -366,9 +366,9 @@ define(['summernote/summernote'], function () {
 
         var def = new $.Deferred();
         editor.on("save", this, function (linkInfo) {
-            linkInfo.range.select();
             $editable.data('range', linkInfo.range);
             def.resolve(linkInfo);
+            $editable.data('range', range.create());
             $('.note-popover .note-link-popover').show();
         });
         editor.on("cancel", this, function () {
