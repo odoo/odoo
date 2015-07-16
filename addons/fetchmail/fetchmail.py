@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import poplib
 import time
 from imaplib import IMAP4
 from imaplib import IMAP4_SSL
@@ -40,6 +41,9 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 MAX_POP_MESSAGES = 50
+
+# Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
+poplib._MAXLINE = 65536
 
 class fetchmail_server(osv.osv):
     """Incoming POP/IMAP mail server account"""
