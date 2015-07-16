@@ -1,4 +1,4 @@
-Ecuador, 16/07/2015
+Ecuador, 2015-07-16
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
