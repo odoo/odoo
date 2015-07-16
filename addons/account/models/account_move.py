@@ -1122,8 +1122,8 @@ class AccountMoveLine(models.Model):
         where_clause_params = []
         if domain:
             query = self._where_calc(domain)
-            dummy, where_clause, where_clause_params = query.get_sql()
-        return where_clause, where_clause_params
+            tables, where_clause, where_clause_params = query.get_sql()
+        return tables, where_clause, where_clause_params
 
 
 class AccountPartialReconcile(models.Model):

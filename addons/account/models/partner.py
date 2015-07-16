@@ -179,7 +179,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def _credit_debit_get(self):
-        where_clause, where_params = self.env['account.move.line']._query_get()
+        tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
         self._cr.execute("""SELECT l.partner_id, act.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
