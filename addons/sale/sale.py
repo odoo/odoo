@@ -1195,6 +1195,47 @@ class sale_order_line(osv.osv):
                     }
         return {'value': result, 'domain': domain, 'warning': warning}
 
+
+    def product_uom_qty_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, partner_id=False, lang=False, date_order=False, context=None):
+        context = context or {}
+        lang = lang or context.get('lang', False)
+        if not product:
+            return {'value': {'th_weight': 0,
+                'product_uos_qty': qty}, 'domain': {'product_uom': [],
+                   'product_uos': []}}
+        if not partner_id:
+            raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
+        product_uom_obj = self.pool.get('product.uom')
+        partner_obj = self.pool.get('res.partner')
+        product_obj = self.pool.get('product.product')
+        partner = partner_obj.browse(cr, uid, partner_id)
+        lang = partner.lang
+        context_partner = context.copy()
+        context_partner.update({'lang': lang, 'partner_id': partner_id})
+        product_obj = product_obj.browse(cr, uid, product, context=context_partner)
+        result = {}
+        if not pricelist:
+            warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
+                    'Please set one before choosing a product.')
+            warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                    product, qty or 1.0, partner_id, {
+                        'uom': uom or (product_obj.uom_id and product_obj.uom_id.id),
+                        'date': date_order or time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+                        })[pricelist]
+            if price is False:
+                warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
+                        "You have to change either the product, the quantity or the pricelist.")
+
+                warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
+            else:
+                result['price_unit'] = price
+        return {'value': result, 'domain': {}, 'warning': False}
+
+
+
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, context=None):
