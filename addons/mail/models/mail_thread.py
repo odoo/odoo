@@ -1426,7 +1426,7 @@ class MailThread(models.AbstractModel):
     @api.multi
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None, message_type='notification',
-                     subtype=None, parent_id=False, attachments=None, context=None,
+                     subtype=None, parent_id=False, attachments=None,
                      content_subtype='html', **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -1586,7 +1586,7 @@ class MailThread(models.AbstractModel):
         return result
 
     @api.multi
-    def message_subscribe(self, partner_ids, subtype_ids=None, context=None):
+    def message_subscribe(self, partner_ids, subtype_ids=None):
         """ Add partners to the records followers. """
         # not necessary for computation, but saves an access right check
         if not partner_ids:
