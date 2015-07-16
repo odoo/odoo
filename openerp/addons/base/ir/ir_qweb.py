@@ -1559,7 +1559,7 @@ class PreprocessedCSS(StylesheetAsset):
                     datas = self.content.encode('utf8').encode('base64')
                     if ira_id:
                         # TODO: update only if needed
-                        ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': datas},
+                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
                                   context=self.context)
                     else:
                         ira.create(self.cr, openerp.SUPERUSER_ID, dict(
