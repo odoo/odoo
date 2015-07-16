@@ -24,6 +24,11 @@ class website_config_settings(osv.osv_memory):
         'cdn_activated': fields.related('website_id', 'cdn_activated', type="boolean", string='Use CDN'),
         'cdn_url': fields.related('website_id', 'cdn_url', type="char", string='CDN Base URL'),
         'cdn_filters': fields.related('website_id', 'cdn_filters', type="text", string='CDN Filters'),
+        'module_website_twitter': fields.boolean("Add a twitter roller in the website builder",
+            help='Allows you to display your retweets by adding a twitter roller in the website builder.\n'
+                 '-This installs the module website_twitter'),
+        'module_website_forum_doc': fields.boolean("Allows you to make a documentation based on questions and pertinent answers on your forum",
+            help='-This installs the module website_forum_doc.'),
     }
 
     def on_change_website_id(self, cr, uid, ids, website_id, context=None):

@@ -37,4 +37,6 @@ class mrp_config_settings(osv.osv_memory):
         'group_rounding_efficiency': fields.boolean("Manage rounding and efficiency of BoM components",
             implied_group='mrp.group_rounding_efficiency',
             help="""Allow to manage product rounding on quantity and product efficiency during production process"""),
+        'module_product_extended': fields.boolean("Allows you to compute the standard price of a product from the bill of materials",
+            help="-This installs the module product_extended.")
     }

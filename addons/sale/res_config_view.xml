@@ -35,6 +35,18 @@
                           <field name="group_sale_delivery_address" class="oe_inline"/>
                           <label for="group_sale_delivery_address"/>
                      </div>
+                     <div name="module_sale_layout">
+                        <field name="module_sale_layout" class="oe_inline"/>
+                        <label for="module_sale_layout"/>
+                     </div>
+                     <div>
+                          <field name="module_delivery" class="oe_inline"/>
+                          <label for="module_delivery"/>
+                     </div>
+                     <div name="visible_discount" attrs="{'invisible': ['|',('group_sale_pricelist', '!=', True),'|',('module_delivery', '!=', True),('module_sale_layout', '!=', True)]}">
+                          <field name="module_product_visible_discount" class="oe_inline"/>
+                          <label for="module_product_visible_discount"/>
+                     </div>
                 </div>
                 <group name="Sale" position="before">
                     <group>
@@ -70,6 +82,25 @@
                         </div>
                     </group>
                 </group>
+                <group name="Sale" position="after">
+                    <group name="ecommerce_Features">
+                        <label for="id" string="E-Commerce Features"/>
+                        <div>
+                            <div>
+                                <field name="module_website_sale" class="oe_inline"/>
+                                <label for="module_website_sale"/>
+                            </div>
+                            <div>
+                                <field name="module_website_sale_options" class="oe_inline"/>
+                                <label for="module_website_sale_options"/>
+                            </div>
+                            <div>
+                                <field name="module_website_sale_delivery" class="oe_inline"/>
+                                <label for="module_website_sale_delivery"/>
+                            </div>
+                        </div>
+                    </group>
+                </group>
                 <div name="Sale Features" position="inside">
                     <div name="module_website_quote">
                         <field name="module_website_quote" class="oe_inline"/>
@@ -79,9 +110,9 @@
                         <field name="module_sale_margin" class="oe_inline"/>
                         <label for="module_sale_margin"/>
                     </div>
-                    <div name="module_sale_layout">
-                        <field name="module_sale_layout" class="oe_inline"/>
-                        <label for="module_sale_layout"/>
+                    <div name="module_sale_order_dates">
+                        <field name="module_sale_order_dates" class="oe_inline"/>
+                        <label for="module_sale_order_dates"/>
                     </div>
                 </div>
                 <div name="customer feature" position="after">
