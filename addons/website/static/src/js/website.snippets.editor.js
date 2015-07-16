@@ -1162,6 +1162,7 @@
                 .click(function () {
                     $td.removeClass("selected");
                     $(this).parent().addClass("selected");
+                    self.$target.closest(".o_editable").trigger("content_changed");
                 });
         }
     });
