@@ -20,7 +20,7 @@ Tour.register({
         {
             title:     "load french",
             waitFor:   '.modal select[name="lang"]:propValueContains(fr_BE)',
-            element:   '.modal button.oe_highlight',
+            element:   '.modal .modal-footer button:first',
         },
         {
             title:     "go to english version",
