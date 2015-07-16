@@ -219,8 +219,7 @@ class BlogPost(osv.Model):
                         'blog_slug': slug(post.blog_id),
                         'post_slug': slug(post),
                     },
-                    subtype='website_blog.mt_blog_blog_published',
-                    context=context)
+                    subtype='website_blog.mt_blog_blog_published')
             return True
         return False
 
