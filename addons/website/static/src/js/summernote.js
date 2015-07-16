@@ -920,19 +920,21 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     options.keyMap.mac['ESCAPE'] = 'cancel';
     
     $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
-      var $editable = layoutInfo.editable();
-      var dimension = sDim.split('x');
-      var rng = range.create();
-      rng = rng.deleteContents();
+        var $editable = layoutInfo.editable();
+        $editable.data('NoteHistory').recordUndo($editable, 'enter');
 
-      var isBodyContainer = dom.isBodyContainer;
-      dom.isBodyContainer = dom.isNotBreakable;
-      rng.insertNode(editor.table.createTable(dimension[0], dimension[1]));
-      dom.isBodyContainer = isBodyContainer;
+        var dimension = sDim.split('x');
+        var rng = range.create();
+        rng = rng.deleteContents();
 
-      editor.afterCommand($editable);
-      event.preventDefault();
-      return false;
+        var isBodyContainer = dom.isBodyContainer;
+        dom.isBodyContainer = dom.isNotBreakable;
+        rng.insertNode(editor.table.createTable(dimension[0], dimension[1]));
+        dom.isBodyContainer = isBodyContainer;
+
+        editor.afterCommand($editable);
+        event.preventDefault();
+        return false;
     };
     $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
         var $editable = layoutInfo.editable();
