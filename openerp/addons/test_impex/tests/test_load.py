@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
+from os.path import join
+from os.path import dirname
 import pkgutil
 import unittest
 
@@ -992,7 +994,8 @@ class test_o2m_multiple(ImporterCase):
 
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
-        data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json'))
+        with open(join(dirname(__file__), 'contacts_big.json'), 'rb') as fp:
+            data = json.load(fp)
         result = self.registry('res.partner').load(
             self.cr, openerp.SUPERUSER_ID,
             ['name', 'mobile', 'email', 'image'],
@@ -1001,7 +1004,8 @@ class test_realworld(common.TransactionCase):
         self.assertEqual(len(result['ids']), len(data))
 
     def test_backlink(self):
-        data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json'))
+        with open(join(dirname(__file__), 'contacts.json'), 'rb') as fp:
+            data = json.load(fp)
         result = self.registry('res.partner').load(
             self.cr, openerp.SUPERUSER_ID,
             ["name", "type", "street", "city", "country_id", "category_id",
