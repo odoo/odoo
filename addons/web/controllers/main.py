@@ -838,6 +838,7 @@ class Session(http.Controller):
             "db": request.session.db,
             "username": request.session.login,
             "company_id": request.env.user.company_id.id if request.session.uid else None,
+            "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
         }
 
     @http.route('/web/session/get_session_info', type='json', auth="none")
