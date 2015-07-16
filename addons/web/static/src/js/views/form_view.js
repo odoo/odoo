@@ -316,7 +316,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
     do_show: function (options) {
         var self = this;
         options = options || {};
-        this.$el.show().css({
+        this._super();
+        this.$el.css({
             opacity: '0',
             filter: 'alpha(opacity = 0)'
         });

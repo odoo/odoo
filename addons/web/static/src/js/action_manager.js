@@ -252,7 +252,7 @@ var ActionManager = Widget.extend({
             // Hide the old_widget as it will be removed from the DOM when it
             // is destroyed
             if (old_widget) {
-                old_widget.$el.hide();
+                old_widget.do_hide();
             }
             if (options.clear_breadcrumbs) {
                 self.clear_action_stack(to_destroy);

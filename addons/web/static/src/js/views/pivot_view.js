@@ -209,7 +209,6 @@ var PivotView = View.extend({
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
-            self.$el.show();
         });
         return this._super();
     },

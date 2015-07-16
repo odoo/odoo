@@ -182,9 +182,9 @@ var Pager = Widget.extend({
         var single_page = 1 === current_min && current_max === size;
 
         if (size === 0 || (single_page && this.options.single_page_hidden)) {
-            this.$el.hide();
+            this.do_hide();
         } else {
-            this.$el.show();
+            this.do_show();
 
             if (single_page) {
                 this.disable();

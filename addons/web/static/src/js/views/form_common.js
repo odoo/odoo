@@ -918,11 +918,11 @@ var FormViewDialog = ViewDialog.extend({
             self.view_form.set_embedded_view(self.options.alternative_form_view);
         }
 
-        self.$el.hide();
+        self.do_hide();
         self.view_form.appendTo(self.$el);
         self.view_form.on("form_view_loaded", self, function() {
             self.view_form.do_show().then(function() {
-                self.$el.show();
+                self.do_show();
             });
         });
 

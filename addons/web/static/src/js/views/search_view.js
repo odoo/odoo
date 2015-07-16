@@ -393,7 +393,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
     },    
     start: function() {
         if (this.headless) {
-            this.$el.hide();
+            this.do_hide();
         }
         this.toggle_visibility(false);
         this.$facets_container = this.$('div.oe_searchview_facets');

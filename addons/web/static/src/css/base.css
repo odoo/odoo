@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -71,6 +71,10 @@
   white-space: nowrap;
   overflow: hidden;
   vertical-align: middle;
+}
+
+.o_hidden {
+  display: none !important;
 }
 
 .openerp {
@@ -1281,13 +1285,6 @@
 }
 .openerp .oe-search-options .filters-menu .divider {
   display: list-item;
-}
-.openerp .oe-search-options .closed-menu a:before {
-  font-family: FontAwesome;
-  position: absolute;
-  left: 12px;
-  top: 3px;
-  content: "";
 }
 .openerp .oe-search-options .oe-select-group {
   margin: 3px 25px;
