@@ -121,9 +121,9 @@
     reco_id = self.search(cr ,uid , [('product_id','=',ref('product1'))], context=context)
     for rec in self.browse(cr, uid, reco_id, context=context):
       if rec.package_id.name == 'Pallet 1' and rec.location_id.id == ref('stock_location_customers'):
-        assert rec.qty == 120, "Should have 120 pieces on pallet 1"
+        assert rec.qty == 120, "Should have 120 pieces on pallet 1, got " +  str(rec.qty)
       elif rec.package_id.name == 'Pallet 2' and rec.location_id.id == ref('stock_location_stock'):
-        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2"
+        assert rec.qty == 100, "Should have 100 pieces in stock on pallet 2, got " +  str(rec.qty)
       elif rec.lot_id.name == 'Lot A' and rec.location_id.id == ref('stock_location_customers'):
         assert (rec.qty == 20 and not rec.package_id), "Should have 20 pieces in customer location from pallet 2"
       elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
