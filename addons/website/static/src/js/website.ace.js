@@ -7,6 +7,7 @@ var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var ace_call = require('web.ace_call');
+var ace_mode_xml = require('web.ace_mode_xml');
 var website = require('website.website');
 
 var _t = core._t;
@@ -22,6 +23,7 @@ var Ace = Widget.extend({
     },
     launchAce: function (e) {
         ace_call.load();
+        ace_mode_xml.load();
 
         if (e) {
             e.preventDefault();
@@ -104,10 +106,12 @@ var ViewEditor = Widget.extend({
             $editor.width(width);
             self.aceEditor.resize();
             self.$el.width(width);
+            
         }
         function resizeEditorHeight(height) {
             self.$el.css('top', height);
             self.$('.ace_editor').css('bottom', height);
+            self.aceEditor.resize();
         }
         function storeEditorWidth() {
             window.localStorage.setItem('ace_editor_width', self.$el.width());

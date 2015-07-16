@@ -16,6 +16,8 @@ var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
 var ace_call = require('web.ace_call');
+var ace_mode_xml = require('web.ace_mode_xml');
+var ace_mode_python = require('web.ace_mode_python');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -1616,21 +1618,31 @@ var FieldToggleBoolean = common.AbstractField.extend({
 });
 
 /**
-    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XMLs.
+    This widget is intended to be used on Text fields. It will provide Ace Editor for editing XML and Python.
 */
 var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     template: "AceEditor",
+    init: function() {
+        this._super.apply(this, arguments);
+        var mode = this.options.mode || 'xml';
+        var mode_to_load = mode == 'xml' ? ace_mode_xml : ace_mode_python;
+        ace_call.load();
+        mode_to_load.load();
+    },
     initialize_content: function () {
         if (! this.get("effective_readonly")) {
-            ace_call.load();
             this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
             this.aceEditor.setTheme("ace/theme/monokai");
         }
     },
+    destroy_content: function() {
+        if (this.aceEditor) {
+            this.aceEditor.destroy();
+        }
+    },
     render_value: function() {
         if (! this.get("effective_readonly")) {
-            var show_value = formats.format_value(this.get('value'), this, '');
-            //var show_value = this.get("value") || '';
+            var show_value = formats.format_value(this.get('value'), this);
             this.display_view(show_value);
         } else {
             var txt = this.get("value") || '';
@@ -1638,10 +1650,12 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         }
     },
     get_editing_session: function(show_value) {
+        //We can create cache of EditSession, may be key as viewID
         var mode = this.options.mode || 'xml';
         var editingSession = new ace.EditSession(show_value);
         editingSession.setMode("ace/mode/"+mode);
         editingSession.setUndoManager(new ace.UndoManager());
+        editingSession.setUseWorker(false);
         return editingSession;
     },
     display_view: function (show_value) {
@@ -1651,12 +1665,10 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             self.save_value(editingSession);
         });
         this.aceEditor.setSession(editingSession);
-        //this.aceEditor.setOption("showInvisibles", true);
-        //this.aceEditor.textInput.getElement().tabIndex = 2;
     },
     save_value: function(editingSession) {
         if (editingSession.getUndoManager().hasUndo()) {
-            var value_ = editingSession.getValue()
+            var value_ = editingSession.getValue();
             this.set_value(value_);
         }
     },
