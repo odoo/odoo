@@ -284,7 +284,7 @@ class AccountBankStatement(models.Model):
                 additional_domain = [('ref', '=', st_line.name)]
                 match_recs = st_line.get_move_lines_for_reconciliation(limit=1, additional_domain=additional_domain, overlook_partner=True)
                 if match_recs and match_recs[0].partner_id:
-                    st_line.write({'partner_id': match_recs[0].partner_id.name})
+                    st_line.write({'partner_id': match_recs[0].partner_id.id})
 
         # Collect various informations for the reconciliation widget
         notifications = []
