@@ -71,7 +71,7 @@
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
     <!--Supplier menu-->
-    <menuitem id="base.menu_procurement_management_supplier_name" name="Suppliers"
+    <menuitem id="base.menu_procurement_management_supplier_name" name="Vendors"
         parent="menu_procurement_management"
         action="base.action_partner_supplier_form" sequence="15"/>
 
@@ -102,10 +102,10 @@
             Click to create a draft invoice.
           </p><p>
             Use this menu to control the invoices to be received from your
-            supplier. Odoo generates draft invoices from your purchase
+            vendor. Odoo generates draft invoices from your purchase
             orders or receipts, according to your settings.
           </p><p>
-            Once you receive a supplier bill, you can match it with the
+            Once you receive a vendor bill, you can match it with the
             draft invoice and validate it.
           </p>
         </field>
@@ -131,7 +131,7 @@
           </p><p>
             The product form contains detailed information to improve the
             purchase process: prices, procurement logistics, accounting data,
-            available suppliers, etc.
+            available vendors, etc.
           </p>
         </field>
     </record>
@@ -314,7 +314,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <group expand="0" string="Group By">
-                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Vendor" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
@@ -340,7 +340,7 @@
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Vendor" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Expected Month" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
@@ -417,7 +417,7 @@
                 Click to create a request for quotation.
               </p><p>
                 The quotation contains the history of the discussion/negotiation
-                you had with your supplier. Once confirmed, a request for
+                you had with your vendor. Once confirmed, a request for
                 quotation is converted into a purchase order.
               </p><p>
                 Most propositions of purchase orders are created automatically
@@ -442,9 +442,9 @@
                 Click to create a quotation that will be converted into a purchase order. 
               </p><p>
                 Use this menu to search within your purchase orders by
-                references, supplier, products, etc. For each purchase order,
-                you can track the related discussion with the supplier, control
-                the products received and control the supplier bills.
+                references, vendor, products, etc. For each purchase order,
+                you can track the related discussion with the vendor, control
+                the products received and control the vendor bills.
               </p>
             </field>
         </record>
@@ -501,7 +501,7 @@
                 <tree string="Purchase Order Lines" create="false">
                     <field name="order_id"/>
                     <field name="name"/>
-                    <field name="partner_id" string="Supplier" />
+                    <field name="partner_id" string="Vendor" />
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
@@ -564,10 +564,10 @@
                 <search string="Search Purchase Order">
                     <field name="order_id"/>
                     <field name="product_id"/>
-                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
                     <group expand="0" string="Group By">
-                        <filter name="groupby_supplier" string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
+                        <filter name="groupby_supplier" string="Vendor" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
@@ -588,8 +588,8 @@
               <p>
                 Here you can track all the lines of purchase orders where the
                 invoicing is "Based on Purchase Order Lines", and for which you
-                have not received a supplier bill yet. You can generate a
-                draft supplier bill based on the lines from this list.
+                have not received a vendor bill yet. You can generate a
+                draft vendor bill based on the lines from this list.
               </p>
             </field>
         </record>

@@ -74,7 +74,7 @@
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel','proforma','proforma2'))]"/>
                 <separator/>
                 <filter string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
-                <filter string="Supplier" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
+                <filter string="Vendor" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
                 <filter string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
                 <filter string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
@@ -103,7 +103,7 @@
         <field name="view_mode">pivot,graph</field>
         <field name="context">{'search_default_current':1, 'search_default_supplier':1, 'group_by':[], 'group_by_no_leaf':1, 'search_default_year': 1}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
-        <field name="help">From this report, you can have an overview of the amount invoiced from your suppliers. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+        <field name="help">From this report, you can have an overview of the amount invoiced from your vendors. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
     </record>
     <record id="action_account_invoice_report_all" model="ir.actions.act_window">
         <field name="name">Invoices Analysis</field>

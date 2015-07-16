@@ -1,5 +1,5 @@
 -
-  In order to check Inter-Company Rule of creating Supplier bill from Customer invoice
+  In order to check Inter-Company Rule of creating vendor bill from Customer invoice
   make 'Create Invoices/Refunds when encoding invoices/refunds made' true.
 -
   !record {model: res.company, id: company_a}:
@@ -60,7 +60,7 @@
   !context
     uid: 'res_users_company_b'
 -
-  I check that the supplier bill is created with proper data.
+  I check that the vendor bill is created with proper data.
 -
   !python {model: account.invoice}: |
     supplier_invoices = self.search(cr, uid, [('type','=','in_invoice')], context=context)

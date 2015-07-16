@@ -10,10 +10,10 @@
                     <field name="date"/>
                     <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Supplier" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
@@ -170,7 +170,7 @@
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Supplier Voucher">
+                <sheet string="Vendor Voucher">
                     <label for="number" string="Purchase Receipt"/>
                     <h1>
                         <field name="number" class="oe_inline" readonly="1"/>
@@ -178,7 +178,7 @@
                     <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
-                            <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
+                            <field name="partner_id" domain="[('supplier','=',True)]" string="Vendor" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
                             <field name="pay_now" required="1"/>
                             <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" 
                                   domain="[('internal_type','=', 'payable')]"/>
@@ -257,7 +257,7 @@
                 Click to register a purchase receipt.
               </p><p>
                 When the purchase receipt is confirmed, you can record the
-                supplier payment related to this purchase receipt.
+                vendor payment related to this purchase receipt.
               </p>
             </field>
         </record>

@@ -23,11 +23,11 @@
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    This supplier has no purchase order. Click to create a new RfQ.
+                    This vendor has no purchase order. Click to create a new RfQ.
                 </p><p>
                     The request for quotation is the first step of the purchases flow. Once
                     converted into a purchase order, you will be able to control the receipt
-                    of the products and the supplier bill.
+                    of the products and the vendor bill.
                 </p>
             </field>
         </record>
@@ -49,7 +49,7 @@
         </record>
         
     <record id="act_res_partner_2_supplier_invoices" model="ir.actions.act_window">
-            <field name="name">Supplier Bills</field>
+            <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -57,11 +57,11 @@
             <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to record a supplier bill.
+                    Click here to record a vendor bill.
                 </p><p>
-                    Supplier bills can be pre-generated based on purchase
+                    Vendors bills can be pre-generated based on purchase
                     orders or receipts. This allows you to control bills
-                    you receive from your supplier according to the draft
+                    you receive from your vendor according to the draft
                     document in Odoo.
                 </p>
             </field>
@@ -92,8 +92,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
-                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Supplier Bills">
-                        <field string="Supplier Inv." name="supplier_invoice_count" widget="statinfo"/>
+                        attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Vendor Bills">
+                        <field string="Vendor Bills." name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </div>
             </field>

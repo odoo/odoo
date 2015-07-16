@@ -333,7 +333,7 @@
                    <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
-                   <filter string="Suppliers" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                   <filter string="Vendors" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
@@ -468,7 +468,7 @@
         </record>
 
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
-            <field name="name">Suppliers</field>
+            <field name="name">Vendors</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>

@@ -363,7 +363,7 @@
                     <field name="name" string="Stock Locations"/>
                     <filter icon="terp-go-home" name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                     <filter icon="terp-personal" name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
-                    <filter icon="terp-personal" name="supplier" string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations"/>
+                    <filter icon="terp-personal" name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
                     <field name="location_id" string="Parent Location"/>
                 </search>
             </field>
@@ -502,13 +502,13 @@
                 Define your locations to reflect your warehouse structure and
                 organization. Odoo is able to manage physical locations
                 (warehouses, shelves, bin, etc), partner locations (customers,
-                suppliers) and virtual locations which are the counterpart of
+                vendors) and virtual locations which are the counterpart of
                 the stock operations like the manufacturing orders
                 consumptions, inventories, etc.
               </p><p>  
                 Every stock operation in Odoo moves the products from one
                 location to another one.  For instance, if you receive products
-                from a supplier, Odoo will move products from the Supplier
+                from a vendor, Odoo will move products from the Vendor
                 location to the Stock location. Each report can be performed on
                 physical, partner or virtual locations.
               </p>
@@ -1397,7 +1397,7 @@
                     <field name="picking_id" string="Reference" invisible="1"/>
                     <field name="sequence" invisible="1"/>
                     <field name="origin"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
@@ -1449,7 +1449,7 @@
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
                 the list of all products you are waiting for. Once you receive
-                an order, you can filter based on the name of the supplier or
+                an order, you can filter based on the name of the vendor or
                 the purchase order reference. Then you can confirm all products
                 received using the buttons on the right of each line.
               </p>

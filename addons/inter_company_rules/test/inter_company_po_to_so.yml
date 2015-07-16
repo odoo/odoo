@@ -31,7 +31,7 @@
     sale_order_ids = self.search(cr, uid, [('client_order_ref', '=', po_name)], context=context)
     sale_order= self.browse(cr, uid, sale_order_ids[0], context=context)
     assert sale_order.state == "draft", "sale order should be in draft state."
-    assert sale_order.partner_id.id == ref("partner_company_a"), "Supplier is not correspond to Company A."
+    assert sale_order.partner_id.id == ref("partner_company_a"), "Vendor does not correspond to Company A."
     assert sale_order.company_id.id == ref("company_b"), "Applied company in created sale order is incorrect."
     assert sale_order.amount_total == 450.0, "Total amount is incorrect."
 

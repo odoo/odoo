@@ -20,8 +20,8 @@
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
-                        <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Supplier Order by Month"/>
+                        <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
+                        <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Vendor Orders by Month"/>
                     </group>
                 </search>
             </field>
@@ -176,14 +176,14 @@
 
         <!--Action for Administrate Orders group by supplier-->
         <record id="lunch_order_line_action_by_supplier" model="ir.actions.act_window">
-            <field name="name">Orders by Supplier</field>
+            <field name="name">Orders by Vendor</field>
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see today's orders grouped by suppliers.
+                Here you can see today's orders grouped by vendors.
               </p>
               <p>
                 - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
@@ -194,16 +194,16 @@
         </record>
         <menuitem name="Today's Orders" parent="menu_lunch_admin" id="lunch_order_line_menu_by_supplier" action="lunch_order_line_action_by_supplier" />
 
-        <!--Action for control Supplier-->
+        <!--Action for control Vendor -->
         <record id="lunch_order_line_action_control_suppliers" model="ir.actions.act_window">
-            <field name="name">Control Suppliers</field>
+            <field name="name">Control Vendors</field>
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see every orders grouped by suppliers and by date.
+                Here you can see every orders grouped by vendors and by date.
               </p>
               <p>
                 - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
@@ -212,7 +212,7 @@
               </p>
             </field>
         </record>
-        <menuitem name="Orders by Supplier" parent="menu_lunch_admin" id="lunch_order_line_menu_control_suppliers" action="lunch_order_line_action_control_suppliers" />
+        <menuitem name="Orders by Vendor" parent="menu_lunch_admin" id="lunch_order_line_menu_control_suppliers" action="lunch_order_line_action_control_suppliers" />
 
         <!--Action for Control Accounts-->
         <record id="lunch_cashmove_action_control_accounts" model="ir.actions.act_window">
@@ -264,7 +264,7 @@
                 Click to create a product for lunch.
             </p>
               <p>
-                A product is defined by its name, category, price and supplier.
+                A product is defined by its name, category, price and vendor.
               </p>
             </field>
         </record>

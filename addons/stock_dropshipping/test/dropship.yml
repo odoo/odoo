@@ -1,8 +1,8 @@
 -
-    Create a supplier
+    Create a vendor
 -
   !record {model: res.partner, id: supplier_dropship}:
-    name: Supplier of Dropshipping test
+    name: Vendor of Dropshipping test
 - 
     Create new product without any routes
 - 
@@ -43,7 +43,7 @@
         sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
         assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200
 - 
-    Check a quotation was created to a certain supplier and confirm so it becomes a confirmed purchase order
+    Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
 -
     !python {model: purchase.order}: |
         from openerp import netsvc, workflow

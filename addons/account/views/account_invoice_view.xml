@@ -184,7 +184,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
-                    <field name="partner_id" groups="base.group_user" string="Supplier"/>
+                    <field name="partner_id" groups="base.group_user" string="Vendor"/>
                     <field name="date_invoice" string="Bill Date"/>
                     <field name="number"/>
                     <field name="reference"/>
@@ -209,7 +209,7 @@
             <field name="model">account.invoice</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier Bill">
+                <form string="Vendor Bill">
                 <header>
                         <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
@@ -222,7 +222,7 @@
                     You have <bold><a class="alert-link" href="#outstanding">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
-                <sheet string="Supplier Bill">
+                <sheet string="Vendor Bill">
                     <div>
                         <label string="Draft Bill" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_invoice')]}"/>
                         <label string="Draft Refund" attrs="{'invisible': ['|',('state','&lt;&gt;','draft'), ('type','&lt;&gt;','in_refund')]}"/>
@@ -235,10 +235,10 @@
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
-                            <field string="Supplier" name="partner_id"
+                            <field string="Vendor" name="partner_id"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
-                            <field name="reference" string="Supplier Reference"/>
+                            <field name="reference" string="Vendor Reference"/>
                         </group>
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
@@ -628,7 +628,7 @@
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables" sequence="1"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Bills</field>
+            <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
@@ -638,9 +638,9 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to record a new supplier bill.
+                Click to record a new vendor bill.
               </p><p>
-                You can control the invoice from your supplier according to
+                You can control the invoice from your vendor according to
                 what you purchased or received. Odoo can also generate
                 draft invoices automatically from purchase orders or receipts.
               </p>

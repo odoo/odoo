@@ -105,7 +105,7 @@
                                 <field name="state"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                                 <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
+                                <button name="purchase_approve" states="confirmed" string="Approved by Vendor" icon="gtk-ok"/>
                                 <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" icon="gtk-network"/>
                             </tree>
                         </field>
@@ -178,7 +178,7 @@
             A Call for Tenders is a procedure for generating competing offers from
             different bidders. In the call for tenders, you can record the
             products you need to buy and generate the creation of RfQs to
-            suppliers. Once the tenders have been registered, you can review and
+            vendors. Once the tenders have been registered, you can review and
             compare them and you can validate some and cancel others.
           </p>
         </field>
@@ -227,7 +227,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order Lines" create="false" decoration-info="state == 'confirmed'" decoration-muted="state == 'cancel'">
                     <field name="name"/>
-                    <field name="partner_id" string="Supplier" />
+                    <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>

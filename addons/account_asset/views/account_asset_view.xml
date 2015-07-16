@@ -124,7 +124,7 @@
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <div>
                                 <label for="partner_id" string="Customer" attrs="{'invisible': [('type','==','purchase')]}"/>
-                                <label for="partner_id" string="Supplier" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             </div>
                             <field name="partner_id" string="Partner" nolabel="1"/>
                             <field name="invoice_id" string="Invoice"/>
@@ -201,7 +201,7 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
-                <field name="partner_id" string="Supplier"/>
+                <field name="partner_id" string="Vendor"/>
                 <field name="value"/>
                 <field name="value_residual" widget="monetary"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
