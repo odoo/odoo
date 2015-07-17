@@ -1,7 +1,6 @@
 odoo.define('im_odoo_support.OdooSupport', function (require) {
 "use strict";
 
-var im_livechat = require('im_livechat.im_livechat');
 var core = require('web.core');
 var UserMenu = require('web.UserMenu');
 var utils = require('web.utils');
@@ -55,7 +54,7 @@ var OdooSupport = Widget.extend({
             this.load_assets().then(function(){
                 try{
 
-                    this.support = new im_livechat.LiveSupport(self.options, self.params);
+                    this.support = new openerp.LiveSupport(self.options, self.params);
                     // bind event change status
                     this.support.on('im_odoo_support_status', this, function(is_online){
                         if(web_client.im_messaging){
@@ -117,41 +116,3 @@ return OdooSupport;
 
 });
 
-odoo.define('im_odoo_support.config_im_chat', function (require) {
-"use strict";
-
-var im_chat = require('im_chat.im_chat');
-var core = require('web.core');
-
-var _t = core._t;
-
-im_chat.InstantMessaging.include({
-    start: function(){
-        this._super.apply(this, arguments);
-        var user = {
-            "id" : -1,
-            "name": _t('Odoo Support'),
-            "im_status": 'online',
-            "image_url": "/im_odoo_support/static/img/odoo_o_small.png"
-        };
-        var widget = new im_chat.UserWidget(this, user);
-        widget.prependTo(this.$(".oe_im_users"));
-        widget.$el.addClass('odoo_support_contact');
-        this.support_user = widget;
-
-        $(window).trigger('odoo_support_ready_to_bind','im_contact');
-    },
-    search_users_status: function(e){
-        var self = this;
-        this._super.apply(this, arguments).then(function(res){
-            if(self.$('.oe_im_searchbox').val().length === 0 || _t("Odoo Support").toLowerCase().indexOf(self.$('.oe_im_searchbox').val().toLowerCase()) !== -1){
-                self.support_user.$el.show();
-            }else{
-                self.support_user.$el.hide();
-            }
-            return res;
-        });
-    }
-});
-
-});
