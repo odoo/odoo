@@ -545,12 +545,12 @@ class AccountTax(models.Model):
                 'analytic': boolean,
             }]
         } """
-        if not currency:
-            currency = self[0].company_id.currency_id
         if len(self) == 0:
             company_id = self.env.user.company_id
         else:
             company_id = self[0].company_id
+        if not currency:
+            currency = company_id.currency_id
         taxes = []
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each

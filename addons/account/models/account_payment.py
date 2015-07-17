@@ -193,8 +193,8 @@ class account_payment(models.Model):
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usablity purposes")
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Partial payment'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
-    writeoff_account_id = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
+    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
+    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
@@ -375,7 +375,7 @@ class account_payment(models.Model):
 
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile':
-            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account, self.journal_id)
+            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account_id, self.journal_id)
         else:
             self.invoice_ids.register_payment(counterpart_aml)
 

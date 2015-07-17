@@ -198,13 +198,14 @@
                                 <field name="payment_date"/>
                                 <field name="communication"/>
                             </group>
-                            <group attrs="{'invisible': [('payment_difference', '&lt;=', 0.0)]}">
+                            <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                                 <label for="payment_difference"/>
                                 <div>
-                                <field name="payment_difference"/>
-                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                    <field name="payment_difference"/>
+                                    <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                 </div>
-                                <field name="writeoff_account_id" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': [('payment_difference_handling', '!=', 'reconcile')]}"/>
+                                <field name="writeoff_account_id" string="Post Difference In"
+                                    attrs="{'invisible': [('payment_difference_handling','=','open')], 'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                             </group>
                         </group>
                     </sheet>
