@@ -161,7 +161,7 @@
                 <field name="message_unread_counter"/>
                 <templates>
                     <t t-name="kanban-box">
-                    <div class="o_kanban_two_column oe_kanban_global_click oe_employee_details">
+                    <div class="o_kanban_two_column oe_kanban_global_click">
                         <div class="o_kanban_image">
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
                             <div class="o_employee_summary_icons">
@@ -188,12 +188,12 @@
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
                                 <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
                             </ul>
-                            <div class="oe_followers o_kanban_button">
-                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="o_follow_btn o_following btn btn-primary">
+                            <div class="o_kanban_button">
+                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="o_follow_btn o_following btn btn-default">
                                     <span class="o_unfollow">Unfollow</span>
                                     <span class="o_following">Following</span>
                                 </button>
-                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="o_follow_btn o_not_following btn btn-primary">Follow</button>
+                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="o_follow_btn o_follow btn btn-primary">Follow</button>
                             </div>
                         </div>
                     </div>
