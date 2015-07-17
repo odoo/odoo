@@ -1120,6 +1120,7 @@ class AccountMoveLine(models.Model):
 
         where_clause = ""
         where_clause_params = []
+        tables = ''
         if domain:
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
