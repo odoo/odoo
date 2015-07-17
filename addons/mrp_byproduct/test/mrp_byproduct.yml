@@ -55,6 +55,11 @@
 -
   I consume and produce the production of products.
 -
+  I have update context with active_id
+-
+  !python {model: mrp.product.produce}: |
+    context.update({'active_model': 'mrp.production', 'active_ids': [ref('mrp_production_mo0')], 'active_id': ref('mrp_production_mo0')})
+-
   I create record for selecting mode and quantity of products to produce.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce0}:

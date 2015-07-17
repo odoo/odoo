@@ -23,6 +23,7 @@ class mrp_product_produce(osv.osv_memory):
     _columns = {
         'product_id': fields.many2one('product.product', type='many2one'),
         'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True),
         'mode': fields.selection([('consume_produce', 'Consume & Produce'),
                                   ('consume', 'Consume Only')], 'Mode', required=True,
                                   help="'Consume only' mode will only consume the products with the quantity selected.\n"
@@ -90,11 +91,20 @@ class mrp_product_produce(osv.osv_memory):
         prod_obj = self.pool.get("product.product")
         return prod and prod_obj.browse(cr, uid, prod, context=context).tracking or 'none'
 
+    def _get_product_uom(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        if context.get('active_id'):
+            production = self.pool.get('mrp.production').browse(cr, uid, context.get('active_id'), context=context)
+            return production and production.product_uom.id
+        return False
+
     _defaults = {
          'product_qty': _get_product_qty,
          'mode': lambda *x: 'consume_produce',
          'product_id': _get_product_id,
          'tracking': _get_track,
+         'product_uom': _get_product_uom,
     }
 
     def do_produce(self, cr, uid, ids, context=None):

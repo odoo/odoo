@@ -184,10 +184,29 @@ class mrp_bom(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
+    def _get_default_product_tmpl_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        active_id = context.get('active_id')
+        if context.get('active_model') == 'product.product' and active_id:
+            product = self.pool['product.product'].browse(cr, uid, active_id, context=context)
+            return product.product_tmpl_id.id
+        return False
+
+    def _get_default_product_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        active_id = context.get('active_id')
+        if context.get('active_model') == 'product.product' and active_id:
+            return active_id
+        return False
+
     def _get_uom_id(self, cr, uid, *args):
         return self.pool["product.uom"].search(cr, uid, [], limit=1, order='id')[0]
     _defaults = {
         'active': lambda *a: 1,
+        'product_tmpl_id': _get_default_product_tmpl_id,
+        'product_id': _get_default_product_id,
         'product_qty': lambda *a: 1.0,
         'product_efficiency': lambda *a: 1.0,
         'product_rounding': lambda *a: 0.0,
@@ -379,6 +398,17 @@ class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
     _order = "sequence"
     _rec_name = "product_id"
+
+    def _check_bom_product(self, cr, uid, ids, context=None):
+        for bom_line in self.browse(cr, uid, ids, context=context):
+            if bom_line.product_id.product_tmpl_id.id == bom_line.bom_id.product_tmpl_id.id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_bom_product, 'Components in bill of material must be different than its product variants', ['product_id']),
+    ]
+
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
         """If the BOM line refers to a BOM, return the ids of the child BOM lines"""
