@@ -288,24 +288,20 @@
                     <field name="product_variant_ids"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="o_kanban_two_column">
-                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="o_kanban_image"/></a>
+                            <div class="o_kanban_two_column_tags oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="o_kanban_image"/>
+                                </div>
                                 <div class="oe_kanban_details">
-                                    <h4>
-                                        <a type="open">
-                                             <span t-if="record.default_code.value">
-                                                 [<field name="default_code"/>]
-                                              </span>
-                                             <field name="name"/> 
-                                        </a>
-                                    </h4>
-                                    <a name="%(product.product_variant_action)d" type="action">
-                                        <t t-esc="record.product_variant_count.value"/> Variants
-                                    </a>
-                                    <div name="tags"/>
+                                    <strong>
+                                        <span t-if="record.default_code.value">[<field name="default_code"/>]</span>
+                                        <field name="name"/>
+                                    </strong>
                                     <ul>
+                                        <li><t t-esc="record.product_variant_count.value"/> Variant(s)</li>
                                         <li>Price: <field name="lst_price"></field></li>
                                     </ul>
+                                    <div name="tags"/>
                                 </div>
                             </div>
                         </t>
