@@ -1662,12 +1662,6 @@ class calendar_event(osv.Model):
         virtual_id = context.get('virtual_id', True)
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
-        for result in res:
-            #remove the count, since the value is not consistent with the result of the search when expand the group
-            for groupname in groupby:
-                if result.get(groupname + "_count"):
-                    del result[groupname + "_count"]
-            result.get('__context', {}).update({'virtual_id': virtual_id})
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
