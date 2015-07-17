@@ -60,19 +60,16 @@ class product_product(osv.osv):
     }
     
     def action_view_bom(self, cr, uid, ids, context=None):
-        tmpl_obj = self.pool.get("product.template")
-        products = set()
-        for product in self.browse(cr, uid, ids, context=context):
-            products.add(product.product_tmpl_id.id)
-        result = tmpl_obj._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
+        templates = set([product.product_tmpl_id.id for product in self.browse(cr, uid, ids, context=context)])
+        result = self.pool.get("product.template")._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
         # bom specific to this variant or global to template
         domain = [
             '|',
                 ('product_id', 'in', ids),
                 '&',
                     ('product_id', '=', False),
-                    ('product_tmpl_id', 'in', list(products)),
+                    ('product_tmpl_id', 'in', list(templates)),
         ]
-        result['context'] = "{}"
+        result['context'] = "{'default_product_id': " + str(ids[0]) + ", 'search_default_product_id': " + str(ids[0]) + ", 'default_product_tmpl_id': " + str(list(templates)[0]) + "}"
         result['domain'] = str(domain)
         return result
