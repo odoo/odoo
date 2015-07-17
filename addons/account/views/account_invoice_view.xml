@@ -219,7 +219,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('has_outstanding','=',False)]}">
-                    You have <bold><a class="alert-link" href="#outstanding">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
+                    You have <bold><a class="alert-link" href="#outstanding">outstanding debits</a></bold> for this supplier. You can allocate them to mark this bill as paid.
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Vendor Bill">
