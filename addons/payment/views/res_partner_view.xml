@@ -9,8 +9,8 @@
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field name="arch" type="xml">
                     <xpath expr='//group[@name="purchase"]' position="after">
-                        <group string="Payment" colspan="2">
-                            <field name="payment_method_ids" groups="base.group_sale_salesman">
+                        <group string="Payment Methods" colspan="2">
+                            <field name="payment_method_ids" groups="base.group_sale_salesman" nolabel="1">
                                 <tree editable="bottom" create="false">
                                     <field name="name"/>
                                     <field name="acquirer_id" readonly="1"/>
