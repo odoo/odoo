@@ -388,8 +388,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name"/>
-                            <field name="code" string="Reference"/>
+                            <field name="code" string="Recipe"/>
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
@@ -452,7 +451,8 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
-                    <field name="name"/>
+                    <field name="display_name"/>
+                    <field name="product_tmpl_id"/>
                     <field name="product_id" groups="product.group_product_variant"/>
                 </tree>
             </field>
@@ -462,7 +462,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="code" string="Recipe"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="product_id" string="Variant"/>
