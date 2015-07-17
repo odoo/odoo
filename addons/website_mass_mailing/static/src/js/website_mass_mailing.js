@@ -119,7 +119,15 @@ animation.registry.newsletter_popup = animation.Class.extend({
     }
 });
 
-website.if_dom_contains('div.o_unsubscribe_form', function() {
+});
+
+
+odoo.define('mass_mailing.unsubscribe', function (require) {
+
+if(!$('.o_unsubscribe_form').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
+}
+
     $('#unsubscribe_form').on('submit', function(e) {
         e.preventDefault();
 
@@ -144,6 +152,5 @@ website.if_dom_contains('div.o_unsubscribe_form', function() {
                 $('.alert-info').html('You changes has not been saved, try again later.').removeClass('alert-info').addClass('alert-warning');
             });
     });
-});
 
 });

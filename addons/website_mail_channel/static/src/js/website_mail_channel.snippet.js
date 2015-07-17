@@ -86,11 +86,8 @@ animation.registry.follow_alias = animation.Class.extend({
 });
 
 
-base.dom_ready.then(function () {
-    $('.js_follow_btn').on('click', function (ev) {
-        var email = $(ev.currentTarget).parents('.js_mg_follow_form').first().find('.js_follow_email').val();
-        $(document).find('.js_follow_email').val(email);
-    });
+$('.js_follow_btn').on('click', function (ev) {
+    $('.js_follow_email').val($(ev.currentTarget).closest('.js_mg_follow_form').find('.js_follow_email').val());
 });
 
 });

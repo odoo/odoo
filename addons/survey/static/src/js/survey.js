@@ -8,7 +8,12 @@ var website = require('website.website');
  * the website engine.
  */
 
-website.if_dom_contains('.js_surveyform', function (the_form) {
+var the_form = $('.js_surveyform');
+
+if(!the_form.length) {
+    return $.Deferred().reject("DOM doesn't contain '.js_surveyform'");
+}
+
     console.debug("[survey] Custom JS for survey is loading...");
 
     var prefill_controller = the_form.attr("data-prefill");
@@ -163,6 +168,5 @@ website.if_dom_contains('.js_surveyform', function (the_form) {
     }
 
     console.debug("[survey] Custom JS for survey loaded!");
-});
 
 });

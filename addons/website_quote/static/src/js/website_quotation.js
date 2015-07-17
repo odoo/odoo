@@ -5,7 +5,9 @@ var ajax = require('web.ajax');
 var Widget = require('web.Widget');
 var website = require('website.website');
 
-website.if_dom_contains('div.o_website_quote', function () {
+if(!$('.o_website_quote').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_quote'");
+}
 
     // Add to SO button
     var UpdateLineButton = Widget.extend({
@@ -159,10 +161,15 @@ website.if_dom_contains('div.o_website_quote', function () {
 
 });
 
-// dbo note: website_sale code for payment
-// if we standardize payment somehow, this should disappear
-$(document).ready(function () {
+odoo.define('website_quote.payment_method', function (require) {
+'use strict';
 
+    if(!$('#payment_method').length) {
+        return $.Deferred().reject("DOM doesn't contain '#payment_method'");
+    }
+
+    // dbo note: website_sale code for payment
+    // if we standardize payment somehow, this should disappear
     // When choosing an acquirer, display its Pay Now button
     var $payment = $("#payment_method");
     $payment.on("click", "input[name='acquirer']", function (ev) {
@@ -187,6 +194,4 @@ $(document).ready(function () {
         $form.submit();
       });
    });
-});
-
 });

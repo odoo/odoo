@@ -4,8 +4,11 @@ odoo.define('website_sale_options.website_sale', function(require) {
 var ajax = require('web.ajax');
 var website = require('website.website');
 var base = require('web_editor.base');
+require('website_sale.website_sale');
 
-website.if_dom_contains("ul.js_add_cart_variants[data-attribute_value_ids]", function () {
+if(!$('ul.js_add_cart_variants[data-attribute_value_ids]').length) {
+    return $.Deferred().reject("DOM doesn't contain 'ul.js_add_cart_variants[data-attribute_value_ids]'");
+}
 
 $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
     .off('click')
@@ -103,6 +106,12 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
         return false;
     });
 
+});
+
+
+odoo.define('website_sale_options.website_sale', function(require) {
+"use strict";
+require('website_sale.cart');
 
 $('#cart_products input.js_quantity').change(function () {
     var value = $(this).val();
@@ -111,8 +120,6 @@ $('#cart_products input.js_quantity').change(function () {
         $next.find('.js_quantity').text(value);
         $next = $next.next('.optional_product');
     }
-});
-
 });
 
 });

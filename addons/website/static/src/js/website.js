@@ -23,6 +23,7 @@ browser += ","+$.browser.version;
 if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
 document.documentElement.setAttribute('data-browser', browser);
 
+
 /* ----------------------------------------------------
    Helpers
    ---------------------------------------------------- */
@@ -217,22 +218,6 @@ var init_kanban = function ($kanban) {
 ajax.loadXML('/website/static/src/xml/website.xml', qweb);
 
 /**
- * Execute a function if the dom contains at least one element matched
- * through the given jQuery selector. Will first wait for the dom to be ready.
- *
- * @param {String} selector A jQuery selector used to match the element(s)
- * @param {Function} fn Callback to execute if at least one element has been matched
- */
-var if_dom_contains = function(selector, fn) {
-    base.dom_ready.then(function () {
-        var elems = $(selector);
-        if (elems.length) {
-            fn(elems);
-        }
-    });
-};
-
-/**
  * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
  */
  
@@ -249,8 +234,7 @@ base.ready().then(function () {
  * Returns a deferred resolved when the templates are loaded
  * and the Widgets can be instanciated.
  */
- 
-base.dom_ready.then(function () {
+
     /* ----- PUBLISHING STUFF ---- */
     $(document).on('click', '.js_publish_management .js_publish_btn', function () {
         var $data = $(this).parents(".js_publish_management:first");
@@ -305,7 +289,6 @@ base.dom_ready.then(function () {
             window.document.body.scrollTop = +location.hash.match(/scrollTop=([0-9]+)/)[1];
         }
     },0);
-});
 
 
 /**
@@ -329,7 +312,6 @@ var TopBar = Widget.extend({
 var data = {
     prompt: prompt,
     form: form,
-    if_dom_contains: if_dom_contains,
     TopBar: TopBar,
     ready: function () {
         console.warn("website.ready is deprecated: Please use require('web_editor.base').ready()");
@@ -341,5 +323,5 @@ return data;
 });
 
 $(function () {
-    odoo.init();
+    _.defer(odoo.init);
 });

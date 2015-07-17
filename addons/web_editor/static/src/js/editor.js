@@ -19,7 +19,6 @@ editor.editable = !!$('html').data('editable');
 
 ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
 
-base.dom_ready.done(function () {
     $(document).on('click', '.note-editable', function (ev) {
         ev.preventDefault();
     });
@@ -37,7 +36,6 @@ base.dom_ready.done(function () {
             ev.preventDefault();
         }
     });
-});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -74,5 +74,5 @@ translator.Class.include({
 });
 
 $(function () {
-    odoo.init();
+    _.delay(odoo.init, 500);
 });

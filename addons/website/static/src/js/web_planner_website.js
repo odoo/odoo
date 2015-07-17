@@ -10,9 +10,13 @@ var base = require('web_editor.base');
 
 var qweb = core.qweb;
 
+if(!$('#oe_systray').length) {
+    return $.Deferred().reject("DOM doesn't contain '#oe_systray'");
+}
+
 var PlannerDialog = planner.PlannerDialog;
 
-planner.WebistePlannerLauncher = Widget.extend({
+planner.WebsitePlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
     events: {
         'click .o_planner_progress': 'toggle_dialog'
@@ -58,12 +62,8 @@ PlannerDialog.include({
     }
 });
 
-base.dom_ready.done(function() {
-    if($('#oe_systray').length) {
-        ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
-            new planner.WebistePlannerLauncher().prependTo($('#oe_systray'));
-        });
-    }
+return ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then(function() {
+    new planner.WebsitePlannerLauncher().prependTo($('#oe_systray'));
 });
 
 });

@@ -6,10 +6,14 @@ var core = require('web.core');
 var base = require('web_editor.base');
 var SocialShare = require('website.share');
 var website = require('website.website');
-website.if_dom_contains('.website_forum', function () {
-
 var qweb = core.qweb;
 ajax.loadXML('/website_forum/static/src/xml/website_forum_share_templates.xml', qweb);
+
+
+if(!$('.website_forum').length) {
+    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
+}
+
 
 var ForumShare = SocialShare.extend({
     init: function (parent, target_type) {
@@ -61,7 +65,6 @@ base.ready().done(function() {
         var $question_container = $('.oe_js_bump');
         new ForumShare($question_container, 'social-alert');
     }
-});
 
 });
 return {};

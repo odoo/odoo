@@ -1,24 +1,8 @@
-odoo.define('website_sale.website_sale', function (require) {
+odoo.define('website_sale.cart', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var _t = core._t;
-var base = require('web_editor.base');
-
-base.dom_ready.then(function () {
-
-$('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
-    $(this).parent().siblings().find('.fa-chevron-down:first').click();
-    $(this).parents('li').find('ul:first').show('normal');
-    $(this).toggleClass('fa-chevron-down fa-chevron-right');
-});
-
-$('#o_shop_collapse_category').on('click', '.fa-chevron-down',function(){
-    $(this).parent().find('ul:first').hide('normal');
-    $(this).toggleClass('fa-chevron-down fa-chevron-right');
-});
-
 
 var shopping_cart_link = $('ul#top_menu li a[href^="/shop/cart"]');
 var shopping_cart_link_counter;
@@ -61,6 +45,31 @@ shopping_cart_link.popover({
     }, 1000);
 });
 
+});
+
+odoo.define('website_sale.website_sale', function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+var core = require('web.core');
+var _t = core._t;
+var base = require('web_editor.base');
+
+
+if(!$('#o_shop_collapse_category, .oe_website_sale').length) {
+    return $.Deferred().reject("DOM doesn't contain '#o_shop_collapse_category, .oe_website_sale'");
+}
+
+$('#o_shop_collapse_category').on('click', '.fa-chevron-right',function(){
+    $(this).parent().siblings().find('.fa-chevron-down:first').click();
+    $(this).parents('li').find('ul:first').show('normal');
+    $(this).toggleClass('fa-chevron-down fa-chevron-right');
+});
+
+$('#o_shop_collapse_category').on('click', '.fa-chevron-down',function(){
+    $(this).parent().find('ul:first').hide('normal');
+    $(this).toggleClass('fa-chevron-down fa-chevron-right');
+});
 
 $('.oe_website_sale').each(function () {
     var oe_website_sale = this;
@@ -335,8 +344,6 @@ $('.oe_website_sale').each(function () {
         $select.parent().toggle(nb>1);
     });
     $(oe_website_sale).find("select[name='shipping_country_id']").change();
-});
-
 });
 
 });

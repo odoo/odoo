@@ -6,8 +6,6 @@ var ajax = require('web.ajax');
 var qweb = core.qweb;
 var _t = core._t;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 var get_context = function (dict) {
     var html = document.documentElement;
     return _.extend({
@@ -16,20 +14,23 @@ var get_context = function (dict) {
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* ----------------------------------------------------
-   Async Ready and Template loading
-   ---------------------------------------------------- */
+
+var data = {
+    'get_context': get_context,
+    'url_translations': '/web/webclient/translations',
+};
+
 var dom_ready = $.Deferred();
 $(document).ready(function () {
-    dom_ready.resolve();
+    dom_ready.resolve(data);
     // fix for ie
     if($.fn.placeholder) $('input, textarea').placeholder();
 });
-
+data.dom_ready = dom_ready;
 
 // todo: remove and load a bundle of translated templates
 var all_ready;
-var ready = function() {
+data.ready = function() {
     if (!all_ready) {
         all_ready = $.when(dom_ready, ajax.loadXML()).then(translations);
     } else if(all_ready.state() === "resolved") { // can add async template
@@ -63,13 +64,6 @@ function translations() {
             }
         }).promise();
 }
-
-var data = {
-    'get_context': get_context,
-    'url_translations': '/web/webclient/translations',
-    'dom_ready': dom_ready,
-    'ready': ready,
-};
-return data;
+return dom_ready;
 
 });

@@ -8,7 +8,10 @@ var Model = require('web.Model');
 
 var exports = {};
 
-website.if_dom_contains('div.o_website_links_chart', function() {
+if(!$('.o_website_links_chart').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_links_chart'");
+}
+
     var BarChart = Widget.extend({
         init: function($element, begin_date, end_date, dates) {
             this.$element = $element;
@@ -244,7 +247,6 @@ website.if_dom_contains('div.o_website_links_chart', function() {
 
     exports.BarChart = BarChart;
     exports.PieChart = PieChart;
-});
 
 return exports;
 });

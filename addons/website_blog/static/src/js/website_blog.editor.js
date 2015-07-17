@@ -1,15 +1,11 @@
-odoo.define('website_blog.editor', function (require) {
+odoo.define('website_blog.new_blog_post', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var core = require('web.core');
-var Model = require('web.Model');
 var base = require('web_editor.base');
-var widget = require('web_editor.widget');
-var options = require('web_editor.snippets.options');
+var Model = require('web.Model');
 var website = require('website.website');
 var contentMenu = require('website.contentMenu');
-var rte = require('web_editor.rte');
 
 var _t = core._t;
 
@@ -35,7 +31,19 @@ contentMenu.TopBar.include({
     },
 });
 
-website.if_dom_contains('.website_blog', function() {
+});
+
+odoo.define('website_blog.editor', function (require) {
+"use strict";
+
+    var ajax = require('web.ajax');
+    var widget = require('web_editor.widget');
+    var options = require('web_editor.snippets.options');
+    var rte = require('web_editor.rte');
+
+    if(!$('.website_blog').length) {
+        return $.Deferred().reject("DOM doesn't contain '.website_blog'");
+    }
 
     rte.Class.include({
         saveElement: function ($el, context) {
@@ -97,7 +105,5 @@ website.if_dom_contains('.website_blog', function() {
             });
         },
     });
-
-});
 
 });

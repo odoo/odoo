@@ -5,8 +5,10 @@ var ajax = require('web.ajax');
 var base = require('web_editor.base');
 var website = require('website.website');
 
-base.ready().done(function() {
-website.if_dom_contains('.o_website_links_edit_code', function() {
+
+if(!$('.o_website_links_edit_code').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_links_edit_code'");
+}
 
     // Edit the short URL code
     $('.o_website_links_edit_code').on('click', function(e) {
@@ -83,6 +85,4 @@ website.if_dom_contains('.o_website_links_edit_code', function() {
         });
     });
 
-});
-});
 });

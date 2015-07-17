@@ -9,7 +9,10 @@ var _t = core._t;
 
 var lastsearch;
 
-website.if_dom_contains('.website_forum', function () {
+if(!$('.website_forum').length) {
+    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
+}
+
     $("[data-toggle='popover']").popover();
     $('.karma_required').on('click', function (ev) {
         var karma = $(ev.currentTarget).data('karma');
@@ -256,6 +259,5 @@ website.if_dom_contains('.website_forum', function () {
             $textarea.html($form.find('.note-editable').code());
         });
     });
-});
 
 });

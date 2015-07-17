@@ -14,7 +14,9 @@ var ZeroClipboard = window.ZeroClipboard;
 
 var exports = {};
 
-website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
+if(!$('.o_website_links_create_tracked_url').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_links_create_tracked_url'");
+}
 
     var SelectBox = Widget.extend({
         init: function(obj) {
@@ -386,7 +388,6 @@ website.if_dom_contains('div.o_website_links_create_tracked_url', function() {
     exports.SelectBox = SelectBox;
     exports.RecentLinkBox = RecentLinkBox;
     exports.RecentLinks = RecentLinks;
-});
 
 return exports;
 });

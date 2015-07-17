@@ -5,6 +5,10 @@
 /**
  * @name openerp
  * @namespace openerp
+ *
+ * Modules can return a deferred the module is mark as loaded only when
+ * the deferred is resolved, and the service value equal the resolved value.
+ * The module can be rejected (unloaded) and logged as info.
  */
 
 (function() {
@@ -14,6 +18,7 @@
     var factories = Object.create(null);
     var job_names = [];
     var job_deps = [];
+    var job_deferred = [];
 
     var services = Object.create({
         qweb: new QWeb2.Engine(),
@@ -29,6 +34,7 @@
     var odoo = window.odoo = {
         testing: typeof QUnit === "object",
         debug: debug,
+        remaining_jobs: jobs,
 
         __DEBUG__: {
             get_dependencies: function (name, transitive) {
@@ -122,7 +128,11 @@
             odoo.__DEBUG__.web_client = services['web.web_client'];
 
             if (jobs.length) {
-                var debug_jobs = {}, job;
+                var debug_jobs = {};
+                var rejected = [];
+                var rejected_linked = [];
+                var job;
+                var jobdep;
 
                 for (var k=0; k<jobs.length; k++) {
                     debug_jobs[jobs[k].name] = job = {
@@ -133,13 +143,26 @@
                     if (jobs[k].error) {
                         job.error = jobs[k].error;
                     }
+                    if (jobs[k].rejected) {
+                        job.rejected = jobs[k].rejected;
+                        rejected.push(job.name);
+                    }
                     var deps = odoo.__DEBUG__.get_dependencies( job.name );
                     for (var i=0; i<deps.length; i++) {
                         if (job.name !== deps[i] && !(deps[i] in services)) {
-                            if (!job.missing) {
-                                job.missing = [];
+                            jobdep = debug_jobs[deps[i]] || (deps[i] in factories && _.find(jobs, function (job) { return job.name === deps[i];}));
+                            if (jobdep && jobdep.rejected) {
+                                if (!job.rejected) {
+                                    job.rejected = [];
+                                    rejected_linked.push(job.name);
+                                }
+                                job.rejected.push(deps[i]);
+                            } else {
+                                if (!job.missing) {
+                                    job.missing = [];
+                                }
+                                job.missing.push(deps[i]);
                             }
-                            job.missing.push(deps[i]);
                         }
                     }
                 }
@@ -152,20 +175,34 @@
             }
         },
         process_jobs: function (jobs, services) {
-            var job, require;
-            while (jobs.length && (job = _.find(jobs, is_ready))) {
-                require = make_require(job);
+            var job;
+            var require;
+            var time;
+
+            function process_job (job) {
+                var require = make_require(job);
                 try {
-                    services[job.name] = job.factory.call(null, require);
+                    var def = $.Deferred();
+                    $.when(job.factory.call(null, require)).then(
+                        function (data) {
+                            services[job.name] = data;
+                            clearTimeout(time);
+                            time = _.defer(odoo.process_jobs, jobs, services);
+                            def.resolve();
+                        }, function (e) {
+                            job.rejected = e || true;
+                            jobs.push(job);
+                            def.resolve();
+                        });
                     jobs.splice(jobs.indexOf(job), 1);
+                    job_deferred.push(def);
                 } catch (e) {
                     job.error = e;
                 }
             }
-            return services;
 
             function is_ready (job) {
-                return !job.error && _.every(job.factory.deps, function (name) { return name in services; });
+                return !job.error && !job.rejected && _.every(job.factory.deps, function (name) { return name in services; });
             }
 
             function make_require (job) {
@@ -183,6 +220,12 @@
                 require.__require_calls = 0;
                 return require;
             }
+
+            while (jobs.length && (job = _.find(jobs, is_ready))) {
+                process_job(job);
+            }
+
+            return services;
         }
     };
 
