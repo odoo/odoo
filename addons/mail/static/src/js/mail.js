@@ -1538,3 +1538,12 @@ return {
 };
 
 });
+
+odoo.define('mail.compatibility', function (require) {
+var mail = require('mail.mail');
+
+window.openerp = window.openerp || {};
+openerp.mail = {};
+openerp.mail.Wall = mail.Wall;
+
+});
