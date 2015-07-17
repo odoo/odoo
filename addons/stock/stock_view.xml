@@ -1940,9 +1940,8 @@
             <field name="model">stock.quant</field>
             <field name="arch" type="xml">
                 <pivot string="Inventory">
-                    <field name="product_id" type="row"/>
+                    <field name="location_id" type="row"/>
                     <field name="qty" type="measure"/>
-                    <field name="inventory_value" type="measure"/>
                 </pivot>
             </field>
         </record>

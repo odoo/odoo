@@ -4418,6 +4418,32 @@ class stock_picking_type(osv.osv):
                 result[tid]['rate_picking_backorders'] = 0
         return result
 
+    def _get_action(self, cr, uid, ids, action, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        result = mod_obj.xmlid_to_res_id(cr, uid, action, raise_if_not_found=True)
+        result = act_obj.read(cr, uid, [result], context=context)[0]
+        if ids:
+            picking_type = self.browse(cr, uid, ids[0], context=context)
+            result['display_name'] = picking_type.display_name
+        return result
+
+    def get_action_picking_tree_late(self, cr, uid, ids, context=None):
+        return self._get_action(cr, uid, ids, 'stock.action_picking_tree_late', context=context)
+
+    def get_action_picking_tree_backorder(self, cr, uid, ids, context=None):
+        return self._get_action(cr, uid, ids, 'stock.action_picking_tree_backorder', context=context)
+
+    def get_action_picking_tree_waiting(self, cr, uid, ids, context=None):
+        return self._get_action(cr, uid, ids, 'stock.action_picking_tree_waiting', context=context)
+
+    def get_action_picking_tree_ready(self, cr, uid, ids, context=None):
+        return self._get_action(cr, uid, ids, 'stock.action_picking_tree_ready', context=context)
+
+    def get_stock_picking_action_picking_type(self, cr, uid, ids, context=None):
+        return self._get_action(cr, uid, ids, 'stock.stock_picking_action_picking_type', context=context)
+
+
     def onchange_picking_code(self, cr, uid, ids, picking_code=False):
         if not picking_code:
             return False
