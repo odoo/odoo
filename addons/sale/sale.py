@@ -1188,6 +1188,8 @@ class sale_order_line(osv.osv):
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 result.update({'price_unit': price})
+                if context.get('uom_qty_change', False):
+                    return {'value': {'price_unit': price}, 'domain': {}, 'warning': False}
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),
