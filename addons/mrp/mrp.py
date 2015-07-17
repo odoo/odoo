@@ -154,8 +154,7 @@ class mrp_bom(osv.osv):
         return self.pool['mrp.bom'].search(cr, uid, [('product_tmpl_id', 'in', product_template_ids)], context=context)
 
     _columns = {
-        'name': fields.char('Name'),
-        'code': fields.char('Reference', size=16),
+        'code': fields.char('Recipe', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Manufacture this product'),('phantom','Ship this product as a set of components (kit)')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),
@@ -344,7 +343,7 @@ class mrp_bom(osv.osv):
         if default is None:
             default = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update(name=_("%s (copy)") % (bom_data['name']))
+        default.update(name=_("%s (copy)") % (bom_data['display_name']))
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
     def onchange_uom(self, cr, uid, ids, product_tmpl_id, product_uom, context=None):
@@ -372,9 +371,17 @@ class mrp_bom(osv.osv):
         if product_tmpl_id:
             prod = self.pool.get('product.template').browse(cr, uid, product_tmpl_id, context=context)
             res['value'] = {
-                'name': prod.name,
                 'product_uom': prod.uom_id.id,
             }
+        return res
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.product_tmpl_id.name
+            if record.code:
+                name = '[%s] %s' % (record.code, name)
+            res.append((record.id, name))
         return res
 
 class mrp_bom_line(osv.osv):

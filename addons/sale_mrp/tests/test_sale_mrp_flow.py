@@ -50,9 +50,8 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'bom_id': bom_id,
                 'product_uom': uom_id})
 
-        def create_bom(name, product_tmpl_id, qty, uom_id, bom_type):
+        def create_bom(product_tmpl_id, qty, uom_id, bom_type):
             return self.MrpBom.create({
-                'name': name,
                 'product_tmpl_id': product_tmpl_id,
                 'product_qty': qty,
                 'type': bom_type,
@@ -97,18 +96,18 @@ class TestSaleMrpFlow(common.TransactionCase):
         # ------------------------------------------------------------------------------------------
 
         # Bill of materials for Product A.
-        bom_a = create_bom(product_a.name, product_a.product_tmpl_id.id, 2, self.uom_dozen.id, 'normal')
+        bom_a = create_bom(product_a.product_tmpl_id.id, 2, self.uom_dozen.id, 'normal')
         create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id, 'phantom')
         create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id, 'normal')
         create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'phantom')
         create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'normal')
 
         # Bill of materials for Product B.
-        bom_b = create_bom(product_b.name, product_b.product_tmpl_id.id, 1, self.uom_unit.id, 'phantom')
+        bom_b = create_bom(product_b.product_tmpl_id.id, 1, self.uom_unit.id, 'phantom')
         create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id, 'normal')
 
         # Bill of materials for Product D.
-        bom_d = create_bom(product_d.name, product_d.product_tmpl_id.id, 1, self.uom_unit.id, 'normal')
+        bom_d = create_bom(product_d.product_tmpl_id.id, 1, self.uom_unit.id, 'normal')
         create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'normal')
 
         # ----------------------------------------
