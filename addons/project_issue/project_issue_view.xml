@@ -174,14 +174,13 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                    <field name="tag_ids"/>
                                     <div>
                                         <b><field name="name"/></b> <br/>
                                         <field name="partner_id"/> <br/>
                                     </div>
-                                    <div class="oe_kanban_footer_left">
-                                        <field name="tag_ids"/>
-                                    </div>
                                     <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
                                         <t t-if="record.message_unread_counter.raw_value">
                                             <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
                                         </t>
@@ -191,7 +190,6 @@
                                         <div class="pull-left" groups="base.group_user">
                                             <field name="kanban_state" widget="kanban_state_selection"
                                                 options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
-                                            <field name="priority" widget="priority"/>
                                         </div>
                                     </div>
                                 </div>
