@@ -326,7 +326,7 @@
                 var content;
                 _.find(website.editor.fontIcons, function (font) {
                     return _.find(website.editor.getCssSelectors(font.parser), function (css) {
-                        if ($font.is(css[0].replace(/::?before$/, ''))) {
+                        if ($font.is(css[2])) {
                             content = css[1].match(/content:\s*['"](.)['"]/)[1];
                             return true;
                         }
