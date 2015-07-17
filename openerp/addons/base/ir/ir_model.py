@@ -349,6 +349,10 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise UserError(_("Model %s does not exist!") % vals['relation'])
 
+            if vals.get('ttype', False) == 'one2many':
+                if not self.search(cr, user, [('model_id','=',vals['relation']), ('name','=',vals['relation_field']), ('ttype','=','many2one')]):
+                    raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
+
             self.pool.clear_manual_fields()
 
             if vals['model'] in self.pool:
