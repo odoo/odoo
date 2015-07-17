@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import models
-import report
+import project_issue
+import account_analytic_account
+import project_project
+import res_partner
