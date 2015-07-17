@@ -2,14 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # @author -  Fekete Mihai <feketemihai@gmail.com>
-# Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.www.erpsystems.ro).
+# Copyright (C) 2015 Forest and Biomass Services Romania (http://www.forbiom.eu).
+# Copyright (C) 2011 TOTAL PC SYSTEMS (http://www.erpsystems.ro).
 # Copyright (C) 2009 (<http://www.filsystem.ro>)
 
 {
     "name" : "Romania - Accounting",
     "version" : "1.0",
-    "author" : "ERPsystems Solutions",
-    "website": "http://www.erpsystems.ro",
+    "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
+    "website": "http://www.forbiom.eu",
     "category" : "Localization/Account Charts",
     "depends" : ['account','base_vat'],
     "description": """
@@ -25,6 +26,8 @@ Romanian accounting chart and localization.
               'account_tax_template.xml',
               'fiscal_position_template.xml',
               'account_chart_template.yml',
+              'res.country.state.csv',
+              'res.bank.csv',
               ],
     "installable": True,
 }
