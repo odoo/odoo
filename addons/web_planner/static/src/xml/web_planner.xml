@@ -15,26 +15,24 @@
 
     <t t-name="PlannerDialog">
         <div id="PlannerDialog" tabindex="-1">
-            <div class="row dropdown o_planner_menu">
-                <a class="col-xs-12 btn btn-default" data-toggle="dropdown" href="#" aria-expanded="false">Steps  <span class="caret"></span></a>
+            <div class="dropdown o_planner_menu">
+                <a class="btn btn-default" data-toggle="dropdown" href="#" aria-expanded="false">Steps <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"/>
             </div>
-            <div class="row o_planner_header">
-                <div class="col-xs-4">
-                    <button class='fa fa-square-o btn btn-primary mark_as_done'>
-                        <i/>
-                        <span>Mark As Done</span>
-                    </button>
-                </div>
-                <div class="col-xs-4 text-center"><span class="help-block span-next o_planner_title"/></div>
-                <div class="col-xs-4">
-                    <a class="pull-right btn btn-next">
-                        Next step
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                </div>
+
+            <div class="o_planner_header">
+                <button class='fa fa-square-o btn btn-primary mark_as_done'>
+                    <i/>
+                    <span>Mark As Done</span>
+                </button>
+            </div><div class="o_planner_header text-center">
+                <span class="help-block span-next o_planner_title"/>
+            </div><div class="o_planner_header text-right">
+                <a class="btn btn-next">
+                    Next step
+                    <i class="fa fa-angle-right"></i>
+                </a>
             </div>
-            <div class="row o_content_page"/>
         </div>
     </t>
 

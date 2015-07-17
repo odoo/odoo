@@ -7,7 +7,6 @@ var Widget = require('web.Widget');
 var utils = require('web.utils');
 
 var QWeb = core.qweb;
-var bus = core.bus;
 
 var Page = core.Class.extend({
     init: function (dom, page_index) {
@@ -36,13 +35,6 @@ var Page = core.Class.extend({
     },
 });
 
-/*
- Template rules:
- Input elements (select, textarea, radio, ...) MUST HAVE an 'id' as 'input_element_#####', where ##### is a string.
- Page div MUST HAVE the class "o_planner_page" and an 'id' as 'planner_page#', where # is ideally a
- number. The declaration order of the page are important. The 'id' number is NOT the sequence order.
- Menu item MUST HAVE an href attribute containing the id of the page they are referencing.
-*/
 var PlannerDialog = Widget.extend({
     template: "PlannerDialog",
     pages: [],
@@ -51,32 +43,46 @@ var PlannerDialog = Widget.extend({
     currently_active_menu_item: null,
     category_selector: 'div[menu-category-id]',
     events: {
-        'click li a[href^="#"]': 'change_page',
+        'click li a[href^="#"]:not([data-toggle="collapse"])': 'change_page',
         'click button.mark_as_done': 'click_on_done',
         'click a.btn-next': 'change_to_next_page',
     },
     init: function(parent, planner) {
         this._super(parent);
-        this.planner_launcher = parent;
         this.planner = planner;
-        this.cookie_name = this.planner['planner_application'] + '_last_page';
+        this.cookie_name = this.planner.planner_application + '_last_page';
         this.set('progress', 0);
         this.pages = [];
         this.menu_items = [];
     },
+    /**
+     * Fetch the planner's rendered template
+     */
+    willStart: function() {
+        var self = this;
+        var res = this._super.apply(this, arguments).then(function() {
+            return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]);
+        }).then(function(template) {
+            self.$res = $(template);
+        });
+        return res;
+    },
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
-        self.$el.hide();
-        return (new Model('web.planner')).call('render', [self.planner.view_id[0], self.planner.planner_application]).then(function(res) {
-            var $res = $(res);
-            $res.find('.o_planner_page').each(function(index, dom_page) {
-                var page = new Page(dom_page, index);
+        return this._super.apply(this, arguments).then(function() {
+            self.do_hide();
 
+            self.$el.on('keyup', "textarea", function() {
+                if (this.scrollHeight != this.clientHeight) {
+                    this.style.height = this.scrollHeight + "px";
+                }
+            }); 
+            self.$res.find('.o_planner_page').andSelf().filter('.o_planner_page').each(function(index, dom_page) {
+                var page = new Page(dom_page, index);
                 self.pages.push(page);
             });
 
-            var $menu = self.render_menu($res);
+            var $menu = self.render_menu();  // wil use self.$res
             self.$('.o_planner_menu ul').html($menu);
             self.menu_items = self.$('.o_planner_menu li');
 
@@ -84,7 +90,7 @@ var PlannerDialog = Widget.extend({
                 page.menu_item = self._find_menu_item_by_page_id(page.id);
             });
 
-            self.$('.o_content_page').html($res);
+            self.$el.append(self.$res);
 
             // update the planner_data with the new inputs of the view
             var actual_vals = self._get_values();
@@ -93,24 +99,20 @@ var PlannerDialog = Widget.extend({
             self._set_values(self.planner.data);
             // show last opened page
             self._show_last_open_page();
-
-            self.$el.on('keyup', "textarea", function() {
-                if (this.scrollHeight != this.clientHeight) {
-                    this.style.height = this.scrollHeight + "px";
-                }
-            });
-        }).then(function() {
             self.prepare_planner_event();
         });
     },
-    // This method should be overridden in other planners to bind their custom events, once the view is loaded.
+    /**
+     * This method should be overridden in other planners to bind their custom events once the
+     * view is loaded.
+     */
     prepare_planner_event: function() {
         var self = this;
-        self.on('change:progress', self, function(){
+        this.on('change:progress', this, function() {
             self.trigger('planner_progress_changed', self.get('progress'));
         });
         this.on('planner_progress_changed', this, this.update_ui_progress_bar);
-        this.set('progress', this.planner.progress); // init progress to trigger ui update
+        this.set('progress', this.planner.progress); // set progress to trigger initial UI update
     },
     _render_done_page: function (page) {
         var mark_as_done_button = this.$('.mark_as_done');
@@ -140,7 +142,7 @@ var PlannerDialog = Widget.extend({
         var last_open_page = utils.get_cookie(this.cookie_name);
 
         if (! last_open_page) {
-            last_open_page = this.planner.data['last_open_page'] || false;
+            last_open_page = this.planner.data.last_open_page || false;
         }
 
         if (last_open_page) {
@@ -152,7 +154,7 @@ var PlannerDialog = Widget.extend({
     update_ui_progress_bar: function(percent) {
         this.$(".progress-bar").css('width', percent+"%");
     },
-    create_menu_item: function(page, menu_items, menu_item_page_map) {
+    _create_menu_item: function(page, menu_items, menu_item_page_map) {
         var $page = $(page.dom);
         var $menu_item_element = $page.find('h1[data-menutitle]');
         var menu_title = $menu_item_element.data('menutitle') || $menu_item_element.text();
@@ -168,14 +170,13 @@ var PlannerDialog = Widget.extend({
 
         // pages with no category
         self.pages.forEach(function(page) {
-            var $page = $(page.dom);
             if (! page.hide_from_menu && ! page.get_category_name(self.category_selector)) {
-                self.create_menu_item(page, orphan_pages, menu_item_page_map);
+                self._create_menu_item(page, orphan_pages, menu_item_page_map);
             }
         });
 
         // pages with a category
-        $res.find(self.category_selector).each(function(index, menu_category) {
+        self.$res.filter(self.category_selector).each(function(index, menu_category) {
             var $menu_category = $(menu_category);
             var menu_category_item = {
                 name: $menu_category.attr('menu-category-id'),
@@ -185,11 +186,15 @@ var PlannerDialog = Widget.extend({
 
             self.pages.forEach(function(page) {
                 if (! page.hide_from_menu && page.get_category_name(self.category_selector) === menu_category_item.name) {
-                    self.create_menu_item(page, menu_category_item.menu_items, menu_item_page_map);
+                    self._create_menu_item(page, menu_category_item.menu_items, menu_item_page_map);
                 }
             });
 
             menu_categories.push(menu_category_item);
+
+            // remove the branding used to separate the pages
+            self.$res = self.$res.not($menu_category);
+            self.$res = self.$res.add($menu_category.contents());
         });
 
         var menu = QWeb.render('PlannerMenu', {
@@ -204,7 +209,7 @@ var PlannerDialog = Widget.extend({
         var self = this;
         var current_page_found = false;
         var next_page_id = null;
-        self.pages.every(function(page) {
+        this.pages.every(function(page) {
             if (current_page_found) {
                 next_page_id = page.id;
                 return false;
@@ -282,9 +287,10 @@ var PlannerDialog = Widget.extend({
         this.$('.o_planner_title').text(this.currently_shown_page.title);
         this._render_done_page(this.currently_shown_page);
 
-        this.planner.data['last_open_page'] = page_id;
+        this.planner.data.last_open_page = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
-        this.$(".o_content_page").scrollTop("0");
+        this.$(".o_planner_page").scrollTop("0");
+        autosize(this.$("textarea"));
     },
     // planner data functions
     _get_values: function(page){
@@ -297,16 +303,16 @@ var PlannerDialog = Widget.extend({
         _.each(inputs, function(elem){
             var $elem = $(elem);
             var tid = $elem.attr('id');
-            if ($elem.prop("tagName") == 'BUTTON'){
+            if ($elem.prop("tagName") === 'BUTTON'){
                 if($elem.hasClass('fa-check-square-o')){
                     values[tid] = 'marked';
                 }else{
                     values[tid] = '';
                 }
             }
-            if ($elem.prop("tagName") == 'INPUT' || $elem.prop("tagName") == 'TEXTAREA'){
+            if ($elem.prop("tagName") === 'INPUT' || $elem.prop("tagName") === 'TEXTAREA'){
                 var ttype = $elem.attr('type');
-                if (ttype == 'checkbox' || ttype == 'radio'){
+                if (ttype === 'checkbox' || ttype === 'radio'){
                     values[tid] = '';
                     if ($elem.is(':checked')){
                         values[tid] = 'checked';
@@ -326,16 +332,16 @@ var PlannerDialog = Widget.extend({
         var self = this;
         _.each(values, function(val, id){
             var $elem = self.$('[id="'+id+'"]');
-            if ($elem.prop("tagName") == 'BUTTON'){
-                if(val == 'marked'){
+            if ($elem.prop("tagName") === 'BUTTON'){
+                if(val === 'marked'){
                     $elem.addClass('fa-check-square-o btn-default').removeClass('fa-square-o btn-primary');
                     self.$("li a[href=#"+$elem.data('pageid')+"] span").addClass('fa-check');
                 }
             }
-            if ($elem.prop("tagName") == 'INPUT' || $elem.prop("tagName") == 'TEXTAREA'){
+            if ($elem.prop("tagName") === 'INPUT' || $elem.prop("tagName") === 'TEXTAREA'){
                 var ttype = $elem.attr("type");
-                if (ttype  == 'checkbox' || ttype == 'radio'){
-                    if (val == 'checked') {
+                if (ttype  === 'checkbox' || ttype === 'radio'){
+                    if (val === 'checked') {
                        $elem.attr('checked', 'checked');
                     }
                 }else{
@@ -376,18 +382,17 @@ var PlannerDialog = Widget.extend({
     _save_planner_data: function() {
         return (new Model('web.planner')).call('write', [this.planner.id, {'data': JSON.stringify(this.planner.data), 'progress': this.planner.progress}]);
     },
-    // user actions
     click_on_done: function(ev) {
+        ev.preventDefault();
         this.currently_shown_page.toggle_done();
         this._render_done_page(this.currently_shown_page);
         this.update_planner();
     },
-    on_webclient_action: function(e) {
-        this.$('#PlannerDialog').hide();
-    },
 });
+
 return {
     PlannerDialog: PlannerDialog,
 };
 
 });
+

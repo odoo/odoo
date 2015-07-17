@@ -204,35 +204,44 @@
     width: @o_planner_width;
     z-index: 1001; // z-index website + 1
     padding-bottom: 80px;
-
-    .row { // website adds negative margins
-        margin-left: 0px;
-        margin-right: 0px;
-    }
-
-    .box-shadow(@shadow) {
-        -webkit-box-shadow: @shadow; // iOS <4.3 & Android <4.1
-        box-shadow: @shadow;
-    }
-    .box-shadow(0 3px 9px #666666);
     background-color: white;
 
+    -webkit-box-shadow: 0 3px 9px #666666;
+    box-shadow: 0 3px 9px #666666;
+
     .o_planner_header {
+        display: inline-block;
+        width: 33.33333333%;
         padding: 5px 5px 5px 5px;
     }
 
-    h1 {
-        font-size: 3.5em;
-        font-weight: 100;
+    .o_planner_menu {
+        > a.btn {
+            width: 100%;
+        }
+
+        > ul {
+            > h4 {
+                > i.fa {
+                    margin-right: 5px;
+                }
+            }
+        }
     }
 
-    .o_content_page {
+    .o_planner_page {
+        display: none;
         padding-left:  15px;
         padding-right: 15px;
         height: 100%;
         overflow: auto;
 
-        .marked:after {
+        > h1 {
+            font-size: 3.5em;
+            font-weight: 100;
+        }
+
+        &.marked:after {
             position: absolute;
             top: 0;
             left: 105px;
@@ -261,6 +270,7 @@
             -ms-transform-origin: 50% 50%;
             -ms-animation-fill-mode:forwards; /*IE 10+*/
         }
+
         //NOTEBOOK
         .o_planner_notebook_container {
             margin: 20px 0;
@@ -273,18 +283,20 @@
                 position: relative;
                 background-color: #fcf8e3;
 
-                textarea,input {
+                textarea, input {
                     background: #fcf8e3;
                     border: none;
                     width: 100%;
                     max-width: 100%;
                 }
+
                 > li {
                     list-style: none;
                     border-bottom: 1px dashed #C1D6DA;
                     padding: 10px 10px 5px 55px;
                     text-transform: capitalize;
                     margin: 0;
+
                     span {
                         position: absolute;
                         left: 9px;
@@ -293,10 +305,22 @@
                         font-weight: bold;
                     }
                 }
-                > li:last-child { border-bottom: 0;}
+
+                > li.row {
+                    span {
+                        left: -50px; // make up for the li's left padding
+                    }
+                }
+
+                > li:last-child {
+                    border-bottom: 0;
+                }
 
                 .o_planner_notebook_header {
-                    div.dropdown { display: inline;float:right; }
+                    div.dropdown {
+                        display: inline;
+                        float:right;
+                    }
                     a {
                         color: #C4A87A;
                         position: absolute;
@@ -332,6 +356,7 @@
                 }
             }
         }
+
         // WHITE BOX
         .o_planner_white_box{
             .panel{
@@ -344,6 +369,7 @@
                 }
             }
         }
+
         // TROPHY
         .o_planner_trophy {
             font-size: 11em;
@@ -367,52 +393,25 @@
                 opacity: 0.6;
             }
         }
-    }
 
-    a {
-        color: #2E917D
-    }
-    .btn-default {
-        background-color: transparent;
-        color: #7C7C7C;
-        line-height: 19px;
-    }
-    .btn-default:hover {
-        color: #333;
-    }
-    .btn-primary {
-        background: #21b799;
-        border-color: #26A38A;
-        color: white;
-    }
-    .btn-primary:hover {
-        background-color: #2E917D;
-        color: white;
-    }
-    .odoo_purple, a.btn.odoo_purple {
-        background-color: #A24689;
-        color: white;
-    }
-    .odoo_purple.btn:hover {
-        background: #a24689;
-        color: #fff;
-    }
+        .odoo_purple, a.btn.odoo_purple, .btn.odoo_purple:hover {
+            background-color: #A24689;
+            color: white;
+        }
 
-    .o_planner_page {
-        display : none;
-    }
+        // PARAGRAPHS
+        .o_planner_paragraphs .icon {
+            text-align: center;
+            font-size: 2em;
+            margin: 1em auto .5em;
+            color: #21b799;
+        }
 
-    // PARAGRAPHS
-    .o_planner_paragraphs .icon {
-        text-align: center;
-        font-size: 2em;
-        margin: 1em auto .5em;
-        color: #21b799;
-    }
-    // INSTALL APP
-    .o_planner_row_apps{
-        .col-md-4{
-            margin-top: 20px;
+        // INSTALL APP
+        .o_planner_row_apps{
+            .col-md-4{
+                margin-top: 20px;
+            }
         }
     }
 }

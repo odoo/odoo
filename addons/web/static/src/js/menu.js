@@ -135,6 +135,7 @@ var Menu = Widget.extend({
         var $clicked_menu, $sub_menu, $main_menu;
         $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
         this.trigger('open_menu', id, $clicked_menu);
+        core.bus.trigger('change_menu_section', $clicked_menu.parents('.oe_secondary_menu').data('menu-parent') || 0); 
 
         if (this.$secondary_menus.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
