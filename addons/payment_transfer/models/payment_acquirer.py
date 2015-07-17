@@ -19,6 +19,11 @@ class TransferPaymentAcquirer(osv.Model):
         providers.append(['transfer', 'Wire Transfer'])
         return providers
 
+    _defaults = {
+        'provider': 'transfer',
+        'view_template_id': lambda self, cr, uid, context: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'payment_transfer.transfer_acquirer_button')
+    }
+
     def transfer_get_form_action_url(self, cr, uid, id, context=None):
         return '/payment/transfer/feedback'
 
