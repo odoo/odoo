@@ -221,13 +221,9 @@ ajax.loadXML('/website/static/src/xml/website.xml', qweb);
  * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
  */
  
-Tour.autoRunning = false;
 base.ready().then(function () {
     data.topBar = new TopBar();
-    data.topBar.attachTo($("#oe_main_menu_navbar"))
-        .then(function () {
-            setTimeout(Tour.running,0);
-        });
+    data.topBar.attachTo($("#oe_main_menu_navbar"));
 });
 
 /**
@@ -320,8 +316,4 @@ var data = {
 };
 return data;
 
-});
-
-$(function () {
-    _.defer(odoo.init);
 });

@@ -305,19 +305,25 @@ class HttpCase(TransactionCase):
                     line, buf = buf.split('\n', 1)
                 line = str(line)
 
-                # relay everything from console.log, even 'ok' or 'error...' lines
-                _logger.info("phantomjs: %s", line)
+                if line.startswith("error"):
+                    try:
+                        # when errors occur the execution stack may be sent as a JSON
+                        _logger.error("phantomjs: %s", json.loads(line[6:]))
+                    except ValueError:
+                        line_ = line.split('\n\n')
+                        _logger.error("phantomjs: %s", line_[0])
+                        # The second part of the log is for debugging
+                        if len(line_) > 1:
+                            _logger.info("phantomjs: \n%s", line.split('\n\n')[1])
+                        pass
+                    break
+                elif line.startswith("warning"):
+                    _logger.warn("phantomjs: %s", line)
+                else:
+                    _logger.info("phantomjs: %s", line)
 
                 if line == "ok":
                     break
-                if line.startswith("error"):
-                    line_ = line[6:]
-                    # when error occurs the execution stack may be sent as as JSON
-                    try:
-                        line_ = json.loads(line_)
-                    except ValueError: 
-                        pass
-                    self.fail(line_ or "phantomjs test failed")
 
     def phantom_run(self, cmd, timeout):
         _logger.info('phantom_run executing %s', ' '.join(cmd))

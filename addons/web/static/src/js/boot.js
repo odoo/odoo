@@ -6,9 +6,25 @@
  * @name openerp
  * @namespace openerp
  *
- * Modules can return a deferred the module is mark as loaded only when
- * the deferred is resolved, and the service value equal the resolved value.
- * The module can be rejected (unloaded) and logged as info.
+ * Each module can return a deferred. In that case, the module is marked as loaded
+ * only when the deferred is resolved, and its value is equal to the resolved value.
+ * The module can be rejected (unloaded). This will be logged in the console as info.
+ *
+ * logs: 
+ *      Missing dependencies:
+ *          These modules do not appear in the page. It is possible that the
+ *          JavaScript file is not in the page or that the module name is wrong
+ *      Failed modules:
+ *          A javascript error is detected
+ *      Rejected modules:
+ *          The module returns a rejected deferred. It (and its dependent modules)
+ *          is not loaded.
+ *      Rejected linked modules:
+ *          Modules who depend on a rejected module
+ *      Non loaded modules:
+ *          Modules who depend on a missing or a failed module
+ *      Debug:
+ *          Non loaded or failed module informations for debugging
  */
 
 (function() {
@@ -123,10 +139,7 @@
 
             this.process_jobs(jobs, services);
         },
-        init: function () {
-            odoo.__DEBUG__.remaining_jobs = jobs;
-            odoo.__DEBUG__.web_client = services['web.web_client'];
-
+        log: function () {
             if (jobs.length) {
                 var debug_jobs = {};
                 var rejected = [];
@@ -168,10 +181,16 @@
                 }
                 var missing = odoo.__DEBUG__.get_missing_jobs();
                 var failed = odoo.__DEBUG__.get_failed_jobs();
-                console.error('Warning: Some modules could not be started !'+
-                    '\nMissing dependencies: ', !missing.length ? null : missing,
-                    '\nFailed modules:       ', _.isEmpty(failed) ? null : _.map(failed, function (job) {return job.name;}),
-                    '\nUnloaded modules:     ', _.isEmpty(debug_jobs) ? null : debug_jobs);
+                var unloaded = _.filter(debug_jobs, function (job) { return job.missing; });
+
+                var log = [(_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning' ) : 'error') + ':', 'Some modules could not be started'];
+                if (missing.length)             log.push('\nMissing dependencies:   ', missing);
+                if (!_.isEmpty(failed))         log.push('\nFailed modules:         ', _.pluck(failed, 'name'));
+                if (!_.isEmpty(rejected))       log.push('\nRejected modules:       ', rejected);
+                if (!_.isEmpty(rejected_linked))log.push('\nRejected linked modules:', rejected_linked);
+                if (!_.isEmpty(unloaded))       log.push('\nNon loaded modules:     ', _.pluck(unloaded, 'name'));
+                if (!_.isEmpty(debug_jobs))     log.push('\nDebug:                  ', debug_jobs);
+                console[_.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
             }
         },
         process_jobs: function (jobs, services) {
@@ -228,5 +247,20 @@
             return services;
         }
     };
+
+    // automatically log errors detected when loading modules
+    var log_when_loaded = function () {
+        _.delay(function () {
+            var len = job_deferred.length;
+            $.when.apply($, job_deferred).then(function () {
+                if (len === job_deferred.length) {
+                    odoo.log();
+                } else {
+                    log_when_loaded();
+                }
+            });
+        }, 100);
+    };
+    $(log_when_loaded);
 
 })();

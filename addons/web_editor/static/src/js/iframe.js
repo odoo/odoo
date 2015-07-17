@@ -72,7 +72,3 @@ translator.Class.include({
 });
 
 });
-
-$(function () {
-    _.delay(odoo.init, 500);
-});

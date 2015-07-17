@@ -433,7 +433,7 @@ var Tour = {
     },
     error: function (step, message) {
         var state = Tour.getState();
-        Tour.logError(step, "Error: " + message, true);
+        Tour.logError(step, "error: " + message, true);
         Tour.endTour();
     },
     lists: function () {
@@ -537,7 +537,7 @@ var Tour = {
 
             } else if(next.onerror) {
                 
-                Tour.logError(next, "Error: Can't reach the next step (call next step onerror)", false);
+                Tour.logError(next, "error: Can't reach the next step (call next step onerror)", false);
                 var id = next.onerror();
                 if (id) {
                     if (Tour._goto(id)) return;
@@ -756,7 +756,7 @@ $(document).ready(function () {
         if (Tour.autoRunning) {
             Tour.running();
         }
-    }, 0);
+    }, 250);
 });
 
 return Tour;

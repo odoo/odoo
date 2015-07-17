@@ -755,6 +755,23 @@ properly.
 Modules are contained in a file, but a file can define several modules 
 (however, it is better to keep them in separate files).
 
+Each module can return a deferred. In that case, the module is marked as loaded
+only when the deferred is resolved, and its value is equal to the resolved value.
+The module can be rejected (unloaded). This will be logged in the console as info.
+
+* ``Missing dependencies``:
+  These modules do not appear in the page. It is possible that the JavaScript 
+  file is not in the page or that the module name is wrong
+* ``Failed modules``:
+  A javascript error is detected
+* ``Rejected modules``:
+  The module returns a rejected deferred. It (and its dependent modules) is not 
+  loaded.
+* ``Rejected linked modules``:
+  Modules who depend on a rejected module
+* ``Non loaded modules``:
+  Modules who depend on a missing or a failed module
+
 
 Web client structure
 --------------------
