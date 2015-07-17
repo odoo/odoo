@@ -7,6 +7,7 @@ import urlparse
 from lxml import objectify
 
 import odoo
+
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
@@ -97,7 +98,7 @@ class AuthorizeForm(AuthorizeCommon):
                 'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )
 
-    @mute_logger('openerp.addons.payment_authorize.models.payment', 'ValidationError')
+    @mute_logger('odoo.addons.payment_authorize.models.payment', 'ValidationError')
     def test_20_authorize_form_management(self):
         # be sure not to do stupid thing
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -174,3 +175,39 @@ class AuthorizeForm(AuthorizeCommon):
         self.env['payment.transaction'].form_feedback(authorize_post_data, 'authorize')
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
+
+    def test_30_authorize_s2s(self):
+        # be sure not to do stupid thing
+        authorize = self.authorize
+        self.assertEqual(authorize.environment, 'test', 'test without test environment')
+
+        #add credential
+        authorize.write({
+            'authorize_transaction_key': '893C5t67v78yuXDV',
+            'authorize_login': '7ssPCZc57ZQ6',
+        })
+
+        #create payment meethod
+        payment_token = self.env['payment.token'].create({
+            'acquirer_id': authorize.id,
+            'partner_id': self.buyer_id,
+            'cc_number': '4111 1111 1111 1111',
+            'cc_expiry': '02 / 26',
+            'cc_brand': 'visa',
+            'cc_cvc': '111',
+            'cc_holder_name': 'test',
+        })
+
+        #create transaction
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_ref_%s' % odoo.fields.Date.today(),
+            'payment_token_id': payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'done', 'Authorize: Transcation has been discarded.')

@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from authorize_request import AuthorizeRequest
+from datetime import datetime
 import hashlib
 import hmac
 import logging
@@ -10,6 +12,7 @@ from odoo import api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -85,6 +88,32 @@ class PaymentAcquirerAuthorize(models.Model):
         self.ensure_one()
         return self._get_authorize_urls(self.environment)['authorize_form_url']
 
+    @api.model
+    def authorize_s2s_form_process(self, data):
+        values = {
+            'cc_number': data.get('cc_number'),
+            'cc_holder_name': data.get('cc_holder_name'),
+            'cc_expiry': data.get('cc_expiry'),
+            'cc_cvc': data.get('cc_cvc'),
+            'cc_brand': data.get('cc_brand'),
+            'acquirer_id': int(data.get('acquirer_id')),
+            'partner_id': int(data.get('partner_id'))
+        }
+        PaymentMethod = self.env['payment.token'].sudo().create(values)
+        return PaymentMethod.id
+
+    @api.multi
+    def authorize_s2s_form_validate(self, data):
+        error = dict()
+        mandatory_fields = ["cc_number", "cc_cvc", "cc_holder_name", "cc_expiry", "cc_brand"]
+        # Validation
+        for field_name in mandatory_fields:
+            if not data.get(field_name):
+                error[field_name] = 'missing'
+        if data['cc_expiry'] and datetime.now().strftime('%y%M') > datetime.strptime(data['cc_expiry'], '%M / %y').strftime('%y%M'):
+            return False
+        return False if error else True
+
 
 class TxAuthorize(models.Model):
     _inherit = 'payment.transaction'
@@ -104,7 +133,7 @@ class TxAuthorize(models.Model):
         reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
             error_msg = 'Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)' % (reference, trans_id, fingerprint)
-            _logger.error(error_msg)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
         if not tx or len(tx) > 1:
@@ -113,7 +142,7 @@ class TxAuthorize(models.Model):
                 error_msg += '; no order found'
             else:
                 error_msg += '; multiple order found'
-            _logger.error(error_msg)
+            _logger.info(error_msg)
             raise ValidationError(error_msg)
         return tx[0]
 
@@ -161,3 +190,77 @@ class TxAuthorize(models.Model):
                 'acquirer_reference': data.get('x_trans_id'),
             })
             return False
+
+    @api.multi
+    def authorize_s2s_do_transaction(self, **data):
+        self.ensure_one()
+        transaction = AuthorizeRequest(self.acquirer_id.environment, self.acquirer_id.authorize_login, self.acquirer_id.authorize_transaction_key)
+        tree = transaction.create_authorize_transaction(self.payment_token_id.authorize_profile, self.payment_token_id.acquirer_ref, self.amount, str(self.reference))
+        return self._authorize_s2s_validate_tree(tree)
+
+    @api.multi
+    def _authorize_s2s_validate_tree(self, tree):
+        return self._authorize_s2s_validate(tree)
+
+    @api.multi
+    def _authorize_s2s_validate(self, tree):
+        self.ensure_one()
+        if self.state == 'done':
+            _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
+            return True
+        status_code = int(tree.get('x_response_code', '0'))
+        if status_code == self._authorize_valid_tx_status:
+            self.write({
+                'state': 'done',
+                'acquirer_reference': tree.get('x_trans_id'),
+                'date_validate': fields.Datetime.now(),
+            })
+            if self.callback_eval:
+                safe_eval(self.callback_eval, {'self': self})
+            return True
+        elif status_code == self._authorize_pending_tx_status:
+            self.write({
+                'state': 'pending',
+                'acquirer_reference': tree.get('x_trans_id'),
+            })
+            return True
+        elif status_code == self._authorize_cancel_tx_status:
+            self.write({
+                'state': 'cancel',
+                'acquirer_reference': tree.get('x_trans_id'),
+            })
+            return True
+        else:
+            error = tree.get('x_response_reason_text')
+            _logger.info(error)
+            self.write({
+                'state': 'error',
+                'state_message': error,
+                'acquirer_reference': tree.get('x_trans_id'),
+            })
+            return False
+
+
+class PaymentToken(models.Model):
+    _inherit = 'payment.token'
+
+    authorize_profile = fields.Char(string='Authorize.net Profile ID', help='This contains the unique reference '
+                                    'for this partner/payment token combination in the Authorize.net backend')
+
+    @api.model
+    def authorize_create(self, values):
+        if values.get('cc_number'):
+            values['cc_number'] = values['cc_number'].replace(' ', '')
+            acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+            expiry = str(values['cc_expiry'][:2]) + str(values['cc_expiry'][-2:])
+            partner = self.env['res.partner'].browse(values['partner_id'])
+            client = AuthorizeRequest(acquirer.environment, acquirer.authorize_login, acquirer.authorize_transaction_key)
+            payment_ids = client.create_authorize_payment_profile(partner, values['cc_number'], expiry, values['cc_cvc'])
+            profile_id, payment_ids = client.create_authorize_customer_profile(partner, payments=[payment_ids],)
+            if profile_id and payment_ids:
+                return {
+                    'authorize_profile': profile_id,
+                    'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name']),
+                    'acquirer_ref': payment_ids[0],
+                }
+        return {}
