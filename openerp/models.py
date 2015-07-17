@@ -2145,16 +2145,32 @@ class BaseModel(object):
         if not groupby_fields:
             return fetched_data
 
-        many2onefields = [gb['field'] for gb in annotated_groupbys if gb['type'] == 'many2one']
+        many2onefields = {
+            gb['field']: set()
+            for gb in annotated_groupbys if gb['type'] == 'many2one'
+        }
+        many2one_data = {}
         if many2onefields:
-            data_ids = [r['id'] for r in fetched_data]
-            many2onefields = list(set(many2onefields))
-            data_dict = {d['id']: d for d in self.read(cr, uid, data_ids, many2onefields, context=context)} 
-            for d in fetched_data:
-                d.update(data_dict[d['id']])
+            for row in fetched_data:
+                for field in many2onefields:
+                    many2onefields[field].add(row[field])
+            for field, ids in many2onefields.iteritems():
+                many2one_data[field] = dict(
+                    self.pool[self._columns[field]._obj].name_get(
+                        cr, uid, ids, context=context))
 
-        data = map(lambda r: {k: self._read_group_prepare_data(k,v, groupby_dict, context) for k,v in r.iteritems()}, fetched_data)
-        result = [self._read_group_format_result(d, annotated_groupbys, groupby, groupby_dict, domain, context) for d in data]
+        result = []
+        for row in fetched_data:
+            for field, values in many2one_data.iteritems():
+                row[field] = values[row[field]]
+            data = {
+                k: self._read_group_prepare_data(k,v, groupby_dict, context)
+                for k,v in row.iteritems()}
+            result.append(
+                self._read_group_format_result(
+                    data, annotated_groupbys, groupby, groupby_dict, domain,
+                    context))
+
         if lazy and groupby_fields[0] in self._group_by_full:
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
