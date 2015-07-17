@@ -126,15 +126,14 @@ var Mention = Widget.extend({
                     });
                 }
             };
-        var escape_ids = _.pluck(this.selected_partners, 'id');
+        var text_content = this.$textarea.val();
         var res = _.filter(this.get('partners'), function(partner) {
-            if (!_.contains(escape_ids, partner.id)){
-                return {
+                var pattern = new RegExp(_.str.sprintf("@%s ", partner.name));
+                return pattern.test(text_content) ? false : {
                     "id": partner["id"],
                     "name": highlight(partner["name"]),
                     "email": highlight(partner["email"])
                 };
-            }
         });
         this.clear_dropdown();
         var offset = this.get_caret_position(this.$textarea);
@@ -193,7 +192,7 @@ var Mention = Widget.extend({
     },
     preprocess_mention_post: function(post_body, mention_callback){
         var mentions_partners = _.filter(this.selected_partners, function(partner){
-            var word = _.str.sprintf("@%s", partner.name);
+            var word = _.str.sprintf("@%s ", partner.name);
             if(post_body.indexOf(word) != -1) {
                 post_body = post_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", partner.id, partner.name));
                 return true;
