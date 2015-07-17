@@ -28,7 +28,7 @@ var Mention = Widget.extend({
         this.$textarea = $el;
         this.$dropdown = $("<div class='o_mail_mention_main'><ul></ul></div>");
         this.model_res_partner = new Model("res.partner");
-        this.selected_partners = {};
+        this.selected_partners = [];
         this.search_string = '';
         this.recent_string = '';
         this.set('partners', []);
@@ -125,17 +125,16 @@ var Mention = Widget.extend({
                         return _.str.sprintf("<b><u>%s</u></b>", str);
                     });
                 }
-            },
-        escape_ids = _.keys(this.selected_partners),
-        partners = _.filter(this.get('partners'), function(partner){
-                            return !_.contains(escape_ids, partner.id.toString());
-                        });
-        var res = _.map(partners, function(partner) {
-            return {
-                "id": partner["id"],
-                "name": highlight(partner["name"]),
-                "email": highlight(partner["email"])
             };
+        var escape_ids = _.pluck(this.selected_partners, 'id');
+        var res = _.filter(this.get('partners'), function(partner) {
+            if (!_.contains(escape_ids, partner.id)){
+                return {
+                    "id": partner["id"],
+                    "name": highlight(partner["name"]),
+                    "email": highlight(partner["email"])
+                };
+            }
         });
         this.clear_dropdown();
         var offset = this.get_caret_position(this.$textarea);
@@ -161,7 +160,7 @@ var Mention = Widget.extend({
     },
     detect_at_keyword: function(){
         var self = this;
-        var test_string = function(search_str){
+        var validate_keyword = function(search_str){
             var pattern = /(^@|(^\s@))/g;
             var regex_start = new RegExp(pattern);
             search_str = search_str.replace(/^\s\s*|^[\n\r]/g, '');
@@ -174,7 +173,7 @@ var Mention = Widget.extend({
         var desctiption = this.$textarea.val(),
         left_string = desctiption.substring(0, this.get_cursor_position(this.$textarea)),
         search_str = desctiption.substring(left_string.lastIndexOf("@") - 1, this.get_cursor_position(this.$textarea));
-        return test_string(search_str);
+        return validate_keyword(search_str);
     },
     textarea_keyup: function(e) {
         var self = this;
@@ -193,16 +192,14 @@ var Mention = Widget.extend({
         }
     },
     preprocess_mention_post: function(post_body, mention_callback){
-        var self = this;
-        _.each(this.selected_partners, function(value, key){
-            var word = _.str.sprintf("@%s", value);
+        var mentions_partners = _.filter(this.selected_partners, function(partner){
+            var word = _.str.sprintf("@%s", partner.name);
             if(post_body.indexOf(word) != -1) {
-                post_body = post_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", key, value));
-                return;
+                post_body = post_body.replace(word, _.str.sprintf("@<span data-oe-model='res.partner' data-oe-id='%s'>%s</span> ", partner.id, partner.name));
+                return true;
             }
-            delete self.selected_partners[key];
         });
-        mention_callback(post_body, self.selected_partners);
+        mention_callback(post_body, _.pluck(mentions_partners, 'id'));
     },
     validate_partner_email: function(partner){
         var self = this,
@@ -242,12 +239,12 @@ var Mention = Widget.extend({
         }
         this.validate_partner_email(partner).done(function(partner) {
             self.clear_dropdown();
-            self.selected_partners[partner_id] = partner.name;
+            self.selected_partners.push({'id': partner.id, 'name': partner.name});
             var index = self.get_cursor_position(self.$textarea),
                 value = self.$textarea.val();
-            self.$textarea.val(_.str.sprintf("%s%s%s ",
+            self.$textarea.val(_.str.sprintf("%s%s%s",
                     value.substring(0, index - self.search_string.length),
-                    partner.name,
+                    partner.name + " ",
                     value.substring(index, value.length)));
             self.set_cursor_position(self.$textarea, index - self.search_string.length + partner.name.length + 1);
         });
@@ -265,7 +262,6 @@ var Mention = Widget.extend({
         }
         return 0;
     },
-
     set_cursor_position: function($el, pos) {
         $el.each(function(index, elem) {
             if (elem.setSelectionRange){
