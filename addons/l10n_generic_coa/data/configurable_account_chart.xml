@@ -27,7 +27,7 @@
         <record id="conf_xfa" model="account.account.template">
             <field name="code">1000</field>
             <field name="name">Fixed Asset Account</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
@@ -184,7 +184,7 @@
         <record id="a_expense_invest" model="account.account.template">
             <field name="code">2122</field>
             <field name="name">Purchase of Equipments</field>
-            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_investing')])]"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
