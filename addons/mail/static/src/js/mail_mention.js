@@ -199,6 +199,11 @@ var Mention = Widget.extend({
                 return true;
             }
         });
+        // textarea text content should be format as HTML(preserve line breaks, spaces..). there is three option
+        // 1) convert text to HTML in JS as we done at server side using plaintext2html.
+        // 2) content_subtype as text and add condition in plaintext2html to stop escaping of specific @span tag.
+        // 3) add message body inside pre tag.
+        post_body = _.str.sprintf("<pre>%s</pre>", post_body);
         mention_callback(post_body, _.pluck(mentions_partners, 'id'));
     },
     validate_partner_email: function(partner){
