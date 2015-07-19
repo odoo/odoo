@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-11 09:24+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-07-18 03:34+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr "公司"
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -110,12 +110,12 @@ msgstr "已送货"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "已交付部分开票"
+msgstr "待开票的交货"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "允许开发运单"
+msgstr "开启交货单开票"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -125,7 +125,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于发运单生产发票"
+msgstr "基于交货开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -152,12 +152,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "根据送货单生成发票"
+msgstr "基于送货单的发票"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr "基于销售单的发票"
+msgstr "基于销售单的开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -194,7 +194,7 @@ msgstr "只有管理员可以改变该设置"
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr "包装"
+msgstr "包装形式"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -211,7 +211,7 @@ msgstr "分拣信息！： "
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "分拣清单"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
@@ -276,7 +276,7 @@ msgstr "销售订单"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单明细"
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -309,7 +309,7 @@ msgstr "已送货"
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr "运送方式"
+msgstr "送货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -324,7 +324,7 @@ msgstr "默认的开票方法"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr "开发票"
+msgstr "待开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -336,7 +336,7 @@ msgstr "允许销售员 使用菜单“按已交付数量开票”  根据发运
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "查看出货单"
+msgstr "查看交货单"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
