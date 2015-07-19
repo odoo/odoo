@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-09 02:21+0000\n"
+"PO-Revision-Date: 2015-07-18 03:02+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/p/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -408,7 +408,7 @@ msgstr "${object.event_id.name} - 날짜가 업데이트됐습니다"
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr "${object.event_id.name} - 미리 알림"
+msgstr "${object.event_id.name} - 알림"
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -472,7 +472,7 @@ msgstr "금액"
 #: code:addons/calendar/calendar.py:1096
 #, python-format
 msgid "An invitation email has been sent to attendee %s"
-msgstr "참석자 %s에게 초청 이메일을 보냈습니다"
+msgstr "%s 참석자에게 초청 이메일을 보냈습니다"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1407
@@ -546,7 +546,7 @@ msgstr "달력 초대"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr "전체 일정이 아닌 이번 일정만 업데이트하려면 여기를 클릭하세요."
+msgstr "전체 일정이 아닌 이번 일정만 업데이트하려면 여기를 클릭하십시오."
 
 #. module: calendar
 #: field:calendar.attendee,cn:0
@@ -556,7 +556,7 @@ msgstr "공통 이름"
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Confirmed"
-msgstr "확정함"
+msgstr "확인함"
 
 #. module: calendar
 #: field:calendar.attendee,partner_id:0
@@ -568,19 +568,19 @@ msgstr "연락처"
 #: field:calendar.contacts,create_uid:0 field:calendar.event,create_uid:0
 #: field:calendar.event.type,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: calendar
 #: field:calendar.alarm,create_date:0 field:calendar.attendee,create_date:0
 #: field:calendar.contacts,create_date:0 field:calendar.event,create_date:0
 #: field:calendar.event.type,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet1
 msgid "Customer Meeting"
-msgstr "고객 미팅"
+msgstr "고객 회의"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -731,12 +731,12 @@ msgstr "모두의 달력"
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
 msgid "Feedback Meeting"
-msgstr "피드백 미팅"
+msgstr "의견 회의"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr "5 번째"
+msgstr "다섯 번째"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -757,7 +757,7 @@ msgstr "팔로워"
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr "4 번째"
+msgstr "네 번째"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
@@ -801,7 +801,7 @@ msgstr "HTTP 라우팅"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 포함함. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
+msgstr "대화 요약(메시지 개수, ...)을 포함합니다. 이 요약은 칸반 화면에 바로 삽입할 수 있는 html 형식입니다."
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -818,7 +818,7 @@ msgstr "ID"
 #. module: calendar
 #: help:calendar.event,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
+msgstr "선택하면 새로운 메시지에 주목할 필요가 있습니다."
 
 #. module: calendar
 #: help:calendar.event,active:0
@@ -830,7 +830,7 @@ msgstr ""
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet2
 msgid "Internal Meeting"
-msgstr "내부 미팅"
+msgstr "내부 회의"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -877,14 +877,14 @@ msgstr "최근 메시지 날짜"
 #: field:calendar.contacts,write_uid:0 field:calendar.event,write_uid:0
 #: field:calendar.event.type,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: calendar
 #: field:calendar.alarm,write_date:0 field:calendar.attendee,write_date:0
 #: field:calendar.contacts,write_date:0 field:calendar.event,write_date:0
 #: field:calendar.event.type,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
@@ -894,7 +894,7 @@ msgstr "최근 알림이 기준 달력에서 읽음으로 표시됐습니다."
 #. module: calendar
 #: help:calendar.event,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "일정을 주기마다 자동으로 반복하도록 설정"
+msgstr "일정을 주기마다 자동으로 반복하도록 설정합니다"
 
 #. module: calendar
 #: field:calendar.event,location:0
@@ -904,7 +904,7 @@ msgstr "위치"
 #. module: calendar
 #: help:calendar.event,location:0
 msgid "Location of Event"
-msgstr "일정의 위치"
+msgstr "행사 위치"
 
 #. module: calendar
 #: field:calendar.contacts,user_id:0
@@ -914,34 +914,34 @@ msgstr "나"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Meeting"
-msgstr "미팅"
+msgstr "회의"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr "미팅 세부사항"
+msgstr "회의 세부 정보"
 
 #. module: calendar
 #: field:calendar.event,name:0
 msgid "Meeting Subject"
-msgstr "미팅 제목"
+msgstr "회의 주제"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr "미팅 유형"
+msgstr "회의 유형"
 
 #. module: calendar
 #: view:calendar.event.type:calendar.view_calendar_event_type_tree
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 msgid "Meeting Types"
-msgstr "미팅 유형"
+msgstr "회의 유형"
 
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr "미팅을 연결함"
+msgstr "링크된 회의"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -952,7 +952,7 @@ msgstr "미팅을 연결함"
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_notify
 msgid "Meetings"
-msgstr "미팅"
+msgstr "회의"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
@@ -967,7 +967,7 @@ msgstr "메시지"
 #. module: calendar
 #: help:calendar.event,message_ids:0
 msgid "Messages and communication history"
-msgstr "메시지 및 대화이력"
+msgstr "메시지 및 대화 이력"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -997,7 +997,7 @@ msgstr "월요일"
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr "개월"
+msgstr "월"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -1007,7 +1007,7 @@ msgstr "내 일정"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr "내 미팅"
+msgstr "내 회의"
 
 #. module: calendar
 #: field:calendar.alarm,name:0 field:calendar.event.type,name:0
@@ -1047,7 +1047,7 @@ msgstr "확인"
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet3
 msgid "Off-site Meeting"
-msgstr "외부 미팅"
+msgstr "외부 회의"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet4
@@ -1072,14 +1072,14 @@ msgstr "소유자"
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Partner"
-msgstr "협력업체"
+msgstr "파트너"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 #: view:calendar.event:calendar.view_calendar_event_tree
 #: field:calendar.event,class:0
 msgid "Privacy"
-msgstr "사생활보호"
+msgstr "개인 정보 보호"
 
 #. module: calendar
 #: selection:calendar.event,class:0
@@ -1099,7 +1099,7 @@ msgstr "사원에게 공개"
 #. module: calendar
 #: field:calendar.event,end_type:0
 msgid "Recurrence Termination"
-msgstr "반복종료"
+msgstr "반복 종료"
 
 #. module: calendar
 #: field:calendar.event,rrule_type:0
@@ -1109,7 +1109,7 @@ msgstr "반복"
 #. module: calendar
 #: field:calendar.event,recurrency:0
 msgid "Recurrent"
-msgstr "반복적"
+msgstr "반복"
 
 #. module: calendar
 #: field:calendar.event,recurrent_id:0
@@ -1119,22 +1119,22 @@ msgstr "반복 ID"
 #. module: calendar
 #: field:calendar.event,recurrent_id_date:0
 msgid "Recurrent ID date"
-msgstr "반복적인 ID 날짜"
+msgstr "반복 ID 날짜"
 
 #. module: calendar
 #: help:calendar.event,recurrency:0
 msgid "Recurrent Meeting"
-msgstr "반복적인 미팅"
+msgstr "반복 회의"
 
 #. module: calendar
 #: field:calendar.event,rrule:0
 msgid "Recurrent Rule"
-msgstr "반복적인 규칙"
+msgstr "반복 규칙"
 
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr "미리 알림"
+msgstr "알림"
 
 #. module: calendar
 #. openerp-web
@@ -1161,7 +1161,7 @@ msgstr "다음 지정일까지 반복"
 #. module: calendar
 #: help:calendar.event,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "다음 주기마다 반복 (일/주/개월/년)"
+msgstr "다음 주기마다 반복 (일/주/월/년)"
 
 #. module: calendar
 #: help:calendar.event,count:0
@@ -1172,7 +1172,7 @@ msgstr "x회 반복"
 #: view:calendar.event:calendar.view_calendar_event_search
 #: field:calendar.event,user_id:0
 msgid "Responsible"
-msgstr "담당자:"
+msgstr "담당자 :"
 
 #. module: calendar
 #: field:calendar.event,sa:0
@@ -1187,7 +1187,7 @@ msgstr "토요일"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr "미팅 검색"
+msgstr "회의 검색"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1207,7 +1207,7 @@ msgstr "메일 보내기"
 #. module: calendar
 #: field:calendar.event,show_as:0
 msgid "Show Time as"
-msgstr "시간표시방식"
+msgstr "시간 표시 방식"
 
 #. module: calendar
 #. openerp-web
@@ -1230,7 +1230,7 @@ msgstr "시작일시"
 #: view:calendar.event:calendar.view_calendar_event_form
 #: view:calendar.event:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr "다음 시간에 시작"
+msgstr "시작 시간"
 
 #. module: calendar
 #: field:calendar.attendee,state:0 field:calendar.event,state:0
@@ -1240,7 +1240,7 @@ msgstr "상태"
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr "참석자의 참가상태"
+msgstr "참석자의 참가 상태"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1276,7 +1276,7 @@ msgstr "The"
 #: code:addons/calendar/calendar.py:1377
 #, python-format
 msgid "The following contacts have no email address :"
-msgstr "다음 연락처에 이메일주소가 없음 :"
+msgstr "다음 연락처는 이메일 주소가 없습니다 :"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1286,7 +1286,7 @@ msgstr "세 번째"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence..."
-msgstr "이 일정은 반복일정과 연결되어 있습니다..."
+msgstr "이 일정은 반복 일정과 연결되어 있습니다..."
 
 #. module: calendar
 #: field:calendar.event,th:0

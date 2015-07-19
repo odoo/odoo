@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-10 02:40+0000\n"
-"Last-Translator: leangjia <liangjia@qq.com>\n"
+"PO-Revision-Date: 2015-07-18 03:34+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +101,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr " * 当用户编辑一张新的未确认的发票时为“草稿\"状态。            \n* 当一张发票无发票号码时为“形式”状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为“启用”状态。             \n* 当发票已收款，则会自动配置为“已收款”状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为“删除”状态。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -174,24 +174,24 @@ msgstr "(客户/业务伙伴)名称"
 msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
-msgstr "（如果你没有选择会计年度，所有打开的会计年度将被选择。）"
+msgstr ""
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
-msgstr "（如果您不选择会计期间，所有开放的期间将被选择）"
+msgstr ""
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(如果您想打开它发票要反调节)"
+msgstr ""
 
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
 #: view:project.account.analytic.line:account.view_project_account_analytic_line_form
 msgid "(Keep empty to open the current situation)"
-msgstr "(留空打开当前的情形)"
+msgstr ""
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -799,7 +799,7 @@ msgstr "应收科目"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "科目调节"
+msgstr "会计调节"
 
 #. module: account
 #: view:account.financial.report:account.view_account_financial_report_form
@@ -1583,13 +1583,13 @@ msgstr "适用选项"
 #: field:account.tax,python_applicable:0
 #: field:account.tax.template,python_applicable:0
 msgid "Applicable Code"
-msgstr "可用代码"
+msgstr "适用代码"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
 #: view:account.tax.template:account.view_account_tax_template_form
 msgid "Applicable Code (if type=code)"
-msgstr "可用代码(如果类型=代码)"
+msgstr "适用代码(如果类型=代码)"
 
 #. module: account
 #: field:account.tax.template,applicable_type:0
@@ -5011,7 +5011,7 @@ msgstr "如果选中，在新的科目表中默认将不包含此项。"
 msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
-msgstr "如果没适用的 (计算通过python代码)， 税将不显示在发票上。"
+msgstr "如果不适用 (计算通过python代码)， 税金将不出现在发票上。"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -7410,7 +7410,7 @@ msgstr "期间长度（天数）"
 #. module: account
 #: field:account.period,name:0
 msgid "Period Name"
-msgstr "会计期间名称"
+msgstr "期间名称"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -7427,7 +7427,7 @@ msgstr "期间到："
 #. module: account
 #: field:account.subscription,period_type:0
 msgid "Period Type"
-msgstr "会计期间类型"
+msgstr "期间类型"
 
 #. module: account
 #: view:website:account.report_journal
@@ -7467,12 +7467,12 @@ msgstr "定期处理"
 #: model:ir.ui.menu,name:account.menu_action_account_period
 #: model:ir.ui.menu,name:account.next_id_23
 msgid "Periods"
-msgstr "会计期间"
+msgstr "期间"
 
 #. module: account
 #: view:website:account.report_vat
 msgid "Periods:"
-msgstr "会计期间："
+msgstr "期间："
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:36
@@ -7614,7 +7614,7 @@ msgstr "打印 销售/采购 日记账"
 #. module: account
 #: view:account.vat.declaration:account.view_account_vat_declaration
 msgid "Print Tax Statement"
-msgstr "打印税务结算单"
+msgstr "打印税金结算单"
 
 #. module: account
 #: selection:account.journal.period,state:0
@@ -7625,7 +7625,7 @@ msgstr "已打印"
 #: view:website:account.report_analyticcostledger
 #: view:website:account.report_analyticcostledgerquantity
 msgid "Printing Date:"
-msgstr "Printing Date:"
+msgstr "打印日期："
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -7661,7 +7661,7 @@ msgstr "产品"
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr "产品分类"
+msgstr "产品类别"
 
 #. module: account
 #: view:account.analytic.line:account.account_analytic_line_extended_form
@@ -9286,7 +9286,7 @@ msgstr "税编码"
 #. module: account
 #: view:account.tax:account.view_tax_form
 msgid "Tax Computation"
-msgstr "税收计算"
+msgstr "税金计算"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
@@ -9314,7 +9314,7 @@ msgstr "税金包含在价格中"
 #. module: account
 #: field:account.invoice,tax_line:0
 msgid "Tax Lines"
-msgstr "税明细"
+msgstr "税金行"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9419,7 +9419,7 @@ msgstr "税金"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr "税负替换规则"
+msgstr "税金财政位置"
 
 #. module: account
 #: view:account.fiscal.position:account.view_account_position_form
@@ -9465,7 +9465,7 @@ msgstr "科目模版财政映射"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr "税务替换规则的模板"
+msgstr "税金财政位置的模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -10414,12 +10414,12 @@ msgstr "全部交易"
 #: field:account.invoice.report,price_total:0
 #: field:account.invoice.report,user_currency_price_total:0
 msgid "Total Without Tax"
-msgstr "总总额(不含税)"
+msgstr "不含税金合计"
 
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Total Without Taxes"
-msgstr "Total Without Taxes"
+msgstr "不含税金合计"
 
 #. module: account
 #: help:account.account,adjusted_balance:0
