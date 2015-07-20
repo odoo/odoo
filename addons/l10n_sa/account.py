@@ -38,11 +38,6 @@ import openerp.addons.decimal_precision as dp
 class account_journal(osv.osv):
     _inherit = "account.journal"
 
-    _defaults = {
-        'entry_posted' : True,
-        'allow_date' : True,
-        }
-
     def create_sequence(self, cr, uid, vals, context=None):
         """ Create new no_gap entry sequence for every new Joural
         """

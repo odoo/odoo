@@ -8,5 +8,5 @@ declaration.
 
 Signed,
 
-Mohamed M. Hagag m.hagag@dvit.me https://github.com/mohamedhagag
+Mohamed M. Hagag mohamedhagag1981@gmail.com https://github.com/mohamedhagag
 
