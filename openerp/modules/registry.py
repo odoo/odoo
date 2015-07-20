@@ -170,6 +170,7 @@ class DataItem(pytest.Item):
         self.package = package
         self.registry = registry
         self.paths = paths
+        self.current = None
 
     def runtest(self, report=DataReporter()):
         mode = 'update'
@@ -181,6 +182,7 @@ class DataItem(pytest.Item):
             with contextlib.closing(self.registry.cursor()) as cr:
                 idrefs = {}
                 for p in self.paths:
+                    self.current = p
                     convert_file(cr, self.package.name, p,
                                  idrefs, mode=mode, noupdate=False, kind='test',
                                  report=report, pathname=p)
@@ -192,7 +194,7 @@ class DataItem(pytest.Item):
         return self.fspath, 0, ""
 
     def repr_failure(self, exc_info):
-        return str(exc_info)
+        return "Test failed in %s" % self.current
 
 
 class Registry(collections.Mapping):
@@ -937,6 +939,9 @@ class RegistryManager(object):
         The (possibly) previous registry for that database name is discarded.
 
         """
+        # FIXME: tests import registry
+        from .. import tests
+
         with cls.lock(), openerp.api.Environment.manage():
             # remove existing registry if any
             cls.delete(db_name)
@@ -969,16 +974,15 @@ class RegistryManager(object):
                         # run after that's been done but before thingy has
                         # been thingied
                         module.current_test = data.name
-                        threading.currentThread().testing = True
 
                         retcode = pytest.main(test_args, plugins=[
                             ModuleTest('at_install', [data.name]),
-                            DataTests(registry, data)
+                            DataTests(registry, data),
+                            tests.fixtures,
                         ])
                         if retcode in FAILURES:
                             failures += 1
 
-                        threading.currentThread().testing = False
                         module.current_test = None
 
                 # Run the post-install tests
@@ -989,9 +993,11 @@ class RegistryManager(object):
 
                     t0 = time.time()
                     t0_sql = openerp.sql_db.sql_counter
-                    threading.currentThread().testing = True
 
-                    retcode = pytest.main(test_args, plugins=[ ModuleTest('post_install', installed)])
+                    retcode = pytest.main(test_args, plugins=[
+                        ModuleTest('post_install', installed),
+                        tests.fixtures,
+                    ])
                     if retcode in FAILURES:
                         failures += 1
 

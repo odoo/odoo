@@ -25,8 +25,8 @@ from pprint import pformat
 import pytest
 
 import openerp
-from openerp import api
-from openerp.modules.registry import RegistryManager
+from .. import api
+from ..modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
 
@@ -160,22 +160,14 @@ class TransactionCase(BaseCase):
     is closed after each test.
     """
 
-    def setUp(self):
-        self.registry = RegistryManager.get(get_db_name())
-        #: current transaction's cursor
-        self.cr = self.cursor()
-        self.uid = openerp.SUPERUSER_ID
-        #: :class:`~openerp.api.Environment` for the current test case
-        self.env = api.Environment(self.cr, self.uid, {})
+    @pytest.fixture(autouse=True)
+    def _setup(self, registry, cr, uid, env):
+        self.registry = registry
+        self.cr = cr
+        self.uid = uid
+        self.env = env
 
-        @self.addCleanup
-        def reset():
-            # rollback and close the cursor, and reset the environments
-            self.registry.clear_caches()
-            self.env.reset()
-            self.cr.rollback()
-            self.cr.close()
-
+    # TODO: make that into a parametric fixture?
     def patch_order(self, model, order):
         m_e = self.env[model]
         m_r = self.registry(model)
@@ -187,7 +179,6 @@ class TransactionCase(BaseCase):
             m_r._order = type(m_e)._order = old_order
 
         m_r._order = type(m_e)._order = order
-
 
 class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
@@ -205,10 +196,10 @@ class SingleTransactionCase(BaseCase):
     @classmethod
     def tearDownClass(cls):
         # rollback and close the cursor, and reset the environments
-        cls.registry.clear_caches()
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+        cls.registry.clear_caches()
 
 
 savepoint_seq = itertools.count()
@@ -253,10 +244,10 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
     https_response = http_response
 
 @pytest.mark.http
+@pytest.mark.usefixtures('http')
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """
-
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
         # v8 api with correct xmlrpc exception handling.

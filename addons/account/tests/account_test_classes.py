@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from openerp.tests.common import HttpCase
 
+
 class AccountingTestCase(HttpCase):
     """ This class extends the base TransactionCase, in order to test the
     accounting with localization setups. It is configured to run the tests after
