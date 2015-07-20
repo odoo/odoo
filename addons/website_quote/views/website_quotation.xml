@@ -120,6 +120,16 @@
       <t t-call="website.layout">
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
+              <div t-if="breadcrumb" class="row">
+                  <div class="col-sm-4">
+                      <ol class="breadcrumb mt8">
+                          <li><a href="/my/home">My Account</a></li>
+                          <li>
+                              Quotation <t t-esc="quotation.name"/>
+                          </li>
+                      </ol>
+                  </div>
+              </div>
               <div class="row mt16">
                 <!-- Sidebar -->
                   <div class="col-md-3 hidden-print">
