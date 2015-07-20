@@ -12,10 +12,7 @@ class CrmPhoneCall(models.Model):
     _inherit = ['mail.thread']
 
     def _default_get_state(self):
-        state = self.env.context.get('default_state')
-        if state:
-            return state
-        return 'open'
+        return self.env.context.get('default_state', 'open')
 
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
     date_action_next = fields.Datetime(string='Next Action', readonly=True)
@@ -200,11 +197,10 @@ class CrmPhoneCall(models.Model):
         return opportunity_dict
 
     def _compute_duration(self):
-        for phonecall in self:
-            if phonecall.duration <= 0:
-                duration = fields.Datetime.from_string(fields.Datetime.now()) - fields.Datetime.from_string(phonecall.date)
-                values = {'duration': duration.seconds / float(60)}
-                phonecall.write(values)
+        for phonecall in self.filtered(lambda p: p.duration <= 0):
+            duration = fields.Datetime.from_string(fields.Datetime.now()) - fields.Datetime.from_string(phonecall.date)
+            values = {'duration': duration.seconds / float(60)}
+            phonecall.write(values)
         return True
 
 class CrmPhoneCallCategory(models.Model):

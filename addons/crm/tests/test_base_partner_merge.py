@@ -2,7 +2,7 @@
 
 from openerp.tests import common
 
-class testBasePartnerMerge(common.TransactionCase):
+class TestBasePartnerMerge(common.TransactionCase):
 
     def test_partner_merge(self):
         """ Tests for Merge Partner """

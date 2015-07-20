@@ -12,7 +12,8 @@ from openerp.addons.base.res.res_partner import format_address
 from openerp.addons.base.res.res_request import referencable_models
 
 
-CRM_LEAD_FIELDS_TO_MERGE = ['name',
+CRM_LEAD_FIELDS_TO_MERGE = [
+    'name',
     'partner_id',
     'campaign_id',
     'company_id',
@@ -43,7 +44,6 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'email_from',
     'email_cc',
     'partner_name']
-
 
 class CrmLead(format_address, models.Model):
     """ CRM Lead Case """
@@ -138,18 +138,15 @@ class CrmLead(format_address, models.Model):
         :return dict: difference between current date and log date
         """
         for lead in self:
-            ans = False
             if lead.date_open:
                 date_create = fields.Datetime.from_string(lead.create_date)
                 date_open = fields.Datetime.from_string(lead.date_open)
-                ans = date_open - date_create
-                self.day_open = abs(int(ans.days))
+                self.day_open = abs(int((date_open - date_create).days))
 
             if lead.date_closed:
                 date_create = fields.Datetime.from_string(lead.create_date)
                 date_close = fields.Datetime.from_string(lead.date_closed)
-                ans = date_close - date_create
-                self.day_close = abs(int(ans.days))
+                self.day_close = abs(int((date_close - date_create).days))
 
     @api.one
     def _compute_meeting_count(self):
@@ -301,7 +298,7 @@ class CrmLead(format_address, models.Model):
         """
         self.ensure_one()
         res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
-        partner_ids = [self.env.user.partner_id.id]
+        partner_ids = self.env.user.partner_id.ids
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         res['context'] = {
@@ -436,10 +433,7 @@ class CrmLead(format_address, models.Model):
     @api.model
     def get_empty_list_help(self, help):
         ctx = dict(self.env.context)
-        if ctx.get('default_lead_type') == 'lead':
-            ctx['empty_list_help_document_name'] = _("lead")
-        else:
-            ctx['empty_list_help_document_name'] = _("opportunity")
+        ctx['empty_list_help_document_name'] = ctx.get('default_lead_type') == 'lead' and _("lead") or _("opportunity")
         ctx['empty_list_help_model'] = 'crm.team'
         ctx['empty_list_help_id'] = ctx.get('default_team_id')
         return super(CrmLead, self.with_context(ctx)).get_empty_list_help(help)
@@ -459,8 +453,7 @@ class CrmLead(format_address, models.Model):
         types = ['both']
         default_type = self.env.context.get('default_lead_type')
         if default_type:
-            ctx_type = default_type
-            types += [ctx_type]
+            types += [default_type]
         if team_id:
             team_ids.add(team_id)
         for lead in self:
@@ -472,8 +465,7 @@ class CrmLead(format_address, models.Model):
         search_domain = []
         if team_ids:
             search_domain += [('|')] * len(team_ids)
-            for team_id in team_ids:
-                search_domain.append(('team_ids', '=', team_id))
+            search_domain += [('team_ids', '=', team_id) for team_id in team_ids]
         search_domain.append(('case_default', '=', True))
         # AND with cases types
         if not avoid_add_type_term:
@@ -481,8 +473,7 @@ class CrmLead(format_address, models.Model):
         # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
-        stage = self.env['crm.stage'].search(search_domain, order=order, limit=1)
-        return stage.id
+        return self.env['crm.stage'].search(search_domain, order=order, limit=1).id
 
     @api.multi
     def case_mark_lost(self):
@@ -492,10 +483,7 @@ class CrmLead(format_address, models.Model):
         for lead in self:
             stage_id = lead.stage_find(lead.team_id.id, [('probability', '=', 0.0), ('on_change', '=', True), ('sequence', '>', 1)])
             if stage_id:
-                if stages_leads.get(stage_id):
-                    stages_leads[stage_id].append(lead.id)
-                else:
-                    stages_leads[stage_id] = [lead.id]
+                stages_leads.setdefault(stage_id, []).append(lead.id)
             else:
                 raise UserError(_('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
                                     'probability = 0 %, select "Change Probability Automatically".\n'
@@ -512,10 +500,7 @@ class CrmLead(format_address, models.Model):
         for lead in self:
             stage_id = lead.stage_find(lead.team_id.id, domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             if stage_id:
-                if stages_leads.get(stage_id):
-                    stages_leads[stage_id].append(lead.id)
-                else:
-                    stages_leads[stage_id] = [lead.id]
+                stages_leads.setdefault(stage_id, []).append(lead.id)
             else:
                 raise UserError(_('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
                                     'probability = 100 % and select "Change Probability Automatically".\n'
@@ -863,8 +848,7 @@ class CrmLead(format_address, models.Model):
         #counter of all attachments to move. Used to make sure the name is different for all attachments
         count = 1
         for opportunity in opportunities:
-            attachments = _get_attachments(opportunity.id)
-            for attachment in attachments:
+            for attachment in _get_attachments(opportunity.id):
                 values = {'res_id': self.id}
                 for attachment_in_first in first_attachments:
                     if attachment.name == attachment_in_first.name:
@@ -895,8 +879,7 @@ class CrmLead(format_address, models.Model):
         if contact_name:
             contact_id = self._lead_create_contact(contact_name, False)
 
-        partner_id = contact_id or partner_company_id or self._lead_create_contact(self.name, False)
-        return partner_id
+        return contact_id or partner_company_id or self._lead_create_contact(self.name, False)
 
     def _lead_create_contact(self, name, is_company, parent_id=False):
         self.ensure_one()
@@ -921,14 +904,10 @@ class CrmLead(format_address, models.Model):
             'is_company': is_company,
             'type': 'contact'
                 }
-        partner = self.env['res.partner'].create(vals)
-        return partner
+        return self.env['res.partner'].create(vals)
 
     def _convert_opportunity_data(self, customer, team_id=False):
         self.ensure_one()
-        contact_id = False
-        if customer:
-            customer.address_get()['default']
         if not team_id:
             team_id = self.team_id.id
         val = {
@@ -950,6 +929,7 @@ class CrmLead(format_address, models.Model):
 class CrmLeadTag(models.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
+
     name = fields.Char(required=True, translate=True)
     team_id = fields.Many2one('crm.team', string='Sales Team')
 

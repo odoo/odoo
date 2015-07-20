@@ -16,8 +16,7 @@ class ResPartner(models.Model):
                     operator = 'child_of'
                 else:
                     operator = '='
-                opp_ids = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('lead_type', '=', 'opportunity'), ('probability', '<', '100')])
-                partner.opportunity_count = opp_ids
+                partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('lead_type', '=', 'opportunity'), ('probability', '<', '100')])
                 partner.meeting_count = len(partner.meeting_ids)
         except:
             pass
@@ -36,8 +35,7 @@ class ResPartner(models.Model):
 
     @api.multi
     def schedule_meeting(self):
-        partner_ids = self.ids
-        partner_ids.append(self.env.user.partner_id.ids)
+        partner_ids = self.ids + self.env.user.partner_id.ids
         result = self.env['ir.actions.act_window'].for_xml_id(
             'calendar', 'action_calendar_event')
         result['context'] = {
