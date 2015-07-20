@@ -376,28 +376,32 @@ class MailThread(models.AbstractModel):
         return False
 
     @api.multi
+    def _message_track(self, tracked_fields, initial):
+        self.ensure_one()
+        changes = set()
+        tracking_value_ids = []
+
+        # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
+        for col_name, col_info in tracked_fields.items():
+            initial_value = initial[col_name]
+            new_value = getattr(self, col_name)
+
+            if new_value != initial_value and (new_value or initial_value):  # because browse null != False
+                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info)
+                if tracking:
+                    tracking_value_ids.append([0, 0, tracking])
+
+                if col_name in tracked_fields:
+                    changes.add(col_name)
+        return changes, tracking_value_ids
+
+    @api.multi
     def message_track(self, tracked_fields, initial_values):
         if not tracked_fields:
             return True
 
         for record in self:
-            initial = initial_values[record.id]
-            changes = set()
-            tracking_value_ids = []
-
-            # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-            for col_name, col_info in tracked_fields.items():
-                initial_value = initial[col_name]
-                new_value = getattr(record, col_name)
-
-                if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                    tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value,  col_name, col_info)
-                    if tracking:
-                        tracking_value_ids.append([0, 0, tracking])
-
-                    if col_name in tracked_fields:
-                        changes.add(col_name)
-
+            changes, tracking_value_ids = record._message_track(tracked_fields, initial_values[record.id])
             if not changes:
                 continue
 
@@ -405,7 +409,7 @@ class MailThread(models.AbstractModel):
             subtype_xmlid = False
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
-                subtype_xmlid = record._track_subtype(dict((col_name, initial[col_name]) for col_name in changes))
+                subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
                 # compatibility: use the deprecated _track dict
                 if not subtype_xmlid and hasattr(self, '_track'):
                     for field, track_info in self._track.items():

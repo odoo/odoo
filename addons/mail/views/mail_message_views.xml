@@ -251,27 +251,23 @@
                                             </div> <!-- *** msg_header *** -->
 
                                             <div t-attf-class="o_timeline_msg_body"> <!-- *** msg_body *** -->
-                                                <t t-if="record.tracking_values">
-                                                    <ul class="o_timeline_tracking_value_list">
-                                                        <t t-foreach='record.tracking_value_ids' t-as='value'>
-                                                            <li>
-                                                                <t t-esc="value.changed_field"/>
-                                                                <span> : </span>
-                                                                <t t-if="value.old_value">
-                                                                    <span class="o_timeline_tracking_value"> <t t-esc="value.old_value"/> </span>
-                                                                    <span> <i class="fa fa-long-arrow-right"></i> </span>
-                                                                </t>
-                                                                <span class="o_timeline_tracking_value"> <t t-esc="value.new_value"/> </span>
-                                                            </li>
-                                                        </t>
-                                                    </ul> 
+                                                <t t-raw="record.body"/>
+                                                <t t-if="!record.body and record.subject">
+                                                    <t t-raw="record.subject"/>
                                                 </t>
-                                                <t t-if="!record.tracking_values">
-                                                    <t t-raw="record.body"/>
-                                                    <t t-if="!record.body and record.subject">
-                                                        <t t-raw="record.subject"/>
+                                                <ul class="o_timeline_tracking_value_list">
+                                                    <t t-foreach='record.tracking_value_ids' t-as='value'>
+                                                        <li>
+                                                            <t t-esc="value.changed_field"/>
+                                                            <span> : </span>
+                                                            <t t-if="value.old_value">
+                                                                <span class="o_timeline_tracking_value"> <t t-esc="value.old_value"/> </span>
+                                                                <span> <i class="fa fa-long-arrow-right"></i> </span>
+                                                            </t>
+                                                            <span class="o_timeline_tracking_value"> <t t-esc="value.new_value"/> </span>
+                                                        </li>
                                                     </t>
-                                                </t>
+                                                </ul> 
                                             </div> <!-- *** msg_body *** --> 
 
                                             <div class="o_timeline_msg_footer"> <!-- *** msg_footer *** -->
