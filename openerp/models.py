@@ -2157,7 +2157,7 @@ class BaseModel(object):
             for field, ids in many2onefields.iteritems():
                 many2one_data[field] = dict(
                     self.pool[self._columns[field]._obj].name_get(
-                        cr, uid, ids, context=context))
+                        cr, uid, list(ids), context=context))
 
         result = []
         for row in fetched_data:
