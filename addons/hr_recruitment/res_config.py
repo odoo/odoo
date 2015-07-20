@@ -18,7 +18,7 @@ class hr_applicant_settings(osv.TransientModel):
     }
 
     _defaults = {
-        'alias_domain': lambda self, cr, uid, context: self.pool["ir.config_parameter"].get_param(cr, uid, "mail.catchall.domain", context),
+        'alias_domain': lambda self, cr, uid, context: self.pool["ir.config_parameter"].get_param(cr, uid, "mail.catchall.domain", context=context),
     }
 
     def _find_default_job_alias_id(self, cr, uid, context=None):

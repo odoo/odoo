@@ -356,16 +356,14 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group name="employee_data">
-                            <field name="department_id" groups="hr.group_multi_departments" class="oe_inline"/>
-                            <field name="no_of_recruitment" class="oe_inline"/>
+                            <group>
+                                <field name="department_id" groups="hr.group_multi_departments" class="oe_inline"/>
+                                <field name="no_of_recruitment" class="oe_inline"/>
+                            </group>
                         </group>
                         <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
                             <label for="description"/>
                             <field name="description"/>
-                        </div>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="requirements"/>
-                            <field name="requirements"/>
                         </div>
                     </sheet>
                     <div class="oe_chatter">
