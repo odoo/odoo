@@ -1388,6 +1388,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.description_purchase:
                 name += '\n' + procurement.product_id.description_purchase
             price = prices[procurement.product_id.id][pricelist_id]
+            price = uom_obj._compute_price(cr, uid, procurement.product_uom.id, price, to_uom_id=procurement.product_id.product_tmpl_id.uom_po_id.id)
 
             values = {
                 'name': name,
