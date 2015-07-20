@@ -1225,23 +1225,25 @@ var ComposeMessage = Attachment.extend ({
      */
     do_send_message_post: function (partner_ids, log) {
         var self = this,
+            autofollow = true,
             post_body = this.$('textarea').val(),
-            selected_partner_ids = [];
+            mention_partner_ids = [];
 
         if(this.mail_mention){
-            this.mail_mention.preprocess_mention_post(post_body, function(processed_body, mention_partner_ids){
+            this.mail_mention.preprocess_mention_post(post_body, function(processed_body, selected_partner_ids){
                 post_body = processed_body;
-                selected_partner_ids = mention_partner_ids;
+                mention_partner_ids = selected_partner_ids;
+                autofollow = false;
             });
         }
         var values = {
             'body': post_body,
             'subject': false,
             'parent_id': this.parent_id || this.id,
-            'partner_ids': _.uniq(partner_ids.concat(selected_partner_ids)),
+            'partner_ids': _.union(partner_ids, mention_partner_ids),
             'attachment_ids': _.map(this.attachment_ids, function (file) {return file.id;}),
             'context': _.extend(this.parent_thread.context, {
-                'mail_post_autofollow': true,
+                'mail_post_autofollow': autofollow,
                 'mail_post_autofollow_partner_ids': partner_ids,
             }),
             'message_type': 'comment'
