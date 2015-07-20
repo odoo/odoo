@@ -24,7 +24,15 @@
     'sequence': 1,
     'author': 'DVIT.ME',
     'category': 'Localization/Account Charts',
-    'description': "Arabic Chart of accounts for Arabic countries and Saudi Arabia.",
+    'description': """
+Odoo Arabic localization for most arabic countries and Saudi Arabia.
+
+This initially includes chart of accounts of USA translated to Arabic.
+
+In future this module will include some payroll rules for ME .
+
+For support, Plz contact us: http://dvit.me/
+""",
     'website': 'http://www.dvit.me',
     'depends': ['account_chart', 'l10n_multilang', 'account_anglo_saxon'],
     'data': [
@@ -39,4 +47,3 @@
     'auto_install': False,
 }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
