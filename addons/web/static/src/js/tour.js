@@ -699,6 +699,7 @@ var Tour = {
                 click_event("mouseover");
                 click_event("mousedown");
                 click_event("mouseup");
+                $element.trigger('mouseenter'); // click_event("mouseenter") doesn't work because jquery event handler register mouseenter as mouseover
                 click_event("click");
                 if ($element.is("input, textarea, select") && !$element.is(":focus")) {
                     $element.focus();

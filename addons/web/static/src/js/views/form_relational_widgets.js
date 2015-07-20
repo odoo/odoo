@@ -290,6 +290,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             focus: function(e, ui) {
                 e.preventDefault();
             },
+            autoFocus: true,
             html: true,
             // disabled to solve a bug, but may cause others
             //close: anyoneLoosesFocus,
