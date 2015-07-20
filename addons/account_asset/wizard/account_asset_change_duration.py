@@ -3,17 +3,16 @@ from lxml import etree
 
 from openerp import api, fields, models
 from openerp.osv.orm import setup_modifiers
-
+from openerp.tools.translate import _
 
 class AssetModify(models.TransientModel):
     _name = 'asset.modify'
     _description = 'Modify Asset'
 
-    name = fields.Char(string='Reason', required=True)
+    name = fields.Text(string='Reason', required=True)
     method_number = fields.Integer(string='Number of Depreciations', required=True)
     method_period = fields.Integer(string='Period Length')
     method_end = fields.Date(string='Ending date')
-    note = fields.Text(string='Notes')
     asset_method_time = fields.Char(compute='_get_asset_method_time', string='Asset Method Time', readonly=True)
 
     @api.one
@@ -61,22 +60,15 @@ class AssetModify(models.TransientModel):
     @api.multi
     def modify(self):
         """ Modifies the duration of asset for calculating depreciation
-        and maintains the history of old values.
+        and maintains the history of old values, in the chatter.
         """
         asset_id = self.env.context.get('active_id', False)
         asset = self.env['account.asset.asset'].browse(asset_id)
-        history_vals = {
-            'asset_id': asset_id,
-            'name': self.name,
-            'method_time': asset.method_time,
+        old_values = {
             'method_number': asset.method_number,
             'method_period': asset.method_period,
             'method_end': asset.method_end,
-            'user_id': self.env.uid,
-            'date': fields.Date.context_today(self),
-            'note': self.note,
         }
-        self.env['account.asset.history'].create(history_vals)
         asset_vals = {
             'method_number': self.method_number,
             'method_period': self.method_period,
@@ -84,4 +76,8 @@ class AssetModify(models.TransientModel):
         }
         asset.write(asset_vals)
         asset.compute_depreciation_board()
+        tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_period', 'method_end'])
+        changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
+        if changes:
+            asset.message_post(subject=_('Depreciation board modified'), body=self.name, tracking_value_ids=tracking_value_ids)
         return {'type': 'ir.actions.act_window_close'}

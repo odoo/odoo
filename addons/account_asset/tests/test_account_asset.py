@@ -42,7 +42,7 @@ class TestAccountAsset(common.TransactionCase):
 
         # I check the move line is created.
         asset = self.env['account.asset.asset'].browse([self.ref("account_asset.account_asset_asset_vehicles_test0")])[0]
-        self.assertEqual(len(asset.depreciation_line_ids), len(asset.account_move_line_ids),
+        self.assertEqual(len(asset.depreciation_line_ids), len(asset.account_move_ids),
             'Move lines not created correctly')
 
         # I Check that After creating all the moves of depreciation lines the state "Close".
@@ -86,13 +86,13 @@ class TestAccountAsset(common.TransactionCase):
             line.create_move()
 
         # I check that move line is created from posted installment lines.
-        self.assertEqual(len(recognition.depreciation_line_ids), len(recognition.account_move_line_ids),
+        self.assertEqual(len(recognition.depreciation_line_ids), len(recognition.account_move_ids),
             'Move lines not created correctly.')
 
         # I check data in move line and installment line.
         first_installment_line = recognition.depreciation_line_ids[0]
-        first_move_line = recognition.account_move_line_ids[0]
-        self.assertEqual(first_installment_line.amount, first_move_line.credit,
+        first_move = recognition.account_move_ids[0]
+        self.assertEqual(first_installment_line.amount, first_move.amount,
             'First installment line amount is incorrect.')
         remaining_value = recognition.value - first_installment_line.amount
         self.assertEqual(first_installment_line.remaining_value, recognition.value - first_installment_line.amount,

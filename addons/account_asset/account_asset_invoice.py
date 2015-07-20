@@ -17,12 +17,6 @@ class AccountInvoice(models.Model):
             inv.invoice_line_ids.asset_create()
         return result
 
-    @api.model
-    def line_get_convert(self, line, part):
-        res = super(AccountInvoice, self).line_get_convert(line, part)
-        res['asset_id'] = line.get('asset_id', False)
-        return res
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

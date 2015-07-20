@@ -92,7 +92,7 @@
                 <header>
                     <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button type="object" name="compute_depreciation_board" string="Compute Depreciation" states="draft"/>
-                    <button name="set_to_close" states="open" string="Set to Close" type="object" class="oe_highlight"/>
+                    <button name="set_to_close" states="open" string="Sell or Dispose" type="object" class="oe_highlight"/>
                     <button name="set_to_draft" states="open" string="Set to Draft" type="object" />
                     <button name="%(action_asset_modify)d" states="open" string="Modify Depreciation" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
@@ -178,9 +178,6 @@
                                 <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                             </group>
                         </page>
-                        <page string="History">
-                            <field name="history_ids" readonly="1"/>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -263,67 +260,25 @@
         </field>
     </record>
 
-    <!--
-        Asset History
-     -->
 
-    <record model="ir.ui.view" id="view_account_asset_history_form">
-        <field name="name">account.asset.history.form</field>
-        <field name="model">account.asset.history</field>
-        <field name="arch" type="xml">
-            <form string="Asset History">
-                <group>
-                    <group>
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="user_id"/>
-                    </group>
-                    <group>
-                        <field name="method_time"/>
-                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
-                        <field name="method_period"/>
-                        <field name="method_end" attrs="{'invisible':[('method_time','=','number')]}"/>
-                    </group>
-                </group>
-                <separator string="Notes"/>
-                <field name="note"/>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_account_asset_history_tree">
-        <field name="name">account.asset.history.tree</field>
-        <field name="model">account.asset.history</field>
-        <field name="arch" type="xml">
-            <tree string="Asset history">
-                <field name="date"/>
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="method_time"/>
-                <field name="method_number"/>
-                <field name="method_period"/>
-                <field name="method_end"/>
-            </tree>
-        </field>
-    </record>
     
-    <record id="view_account_move_line_form_inherit" model="ir.ui.view">
-        <field name="name">Journal Items (form)</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_form"/>
+    <record id="view_account_move_form_asset_inherit" model="ir.ui.view">
+        <field name="name">Journal Entries (form)</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <field name="statement_id" position="after">
+            <field name="partner_id" position="after">
                 <field name="asset_id"/>
             </field>
         </field>
     </record>
 
-    <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
-        <field name="name">Journal Items (Search)</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+    <record id="view_account_move_filter_asset_inherit" model="ir.ui.view">
+        <field name="name">Journal Entries (Search)</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
-            <field name="account_id" position="after">
+            <field name="journal_id" position="after">
                 <field name="asset_id"/>
             </field>
         </field>

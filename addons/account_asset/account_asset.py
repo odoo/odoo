@@ -3,7 +3,6 @@
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
-import openerp.addons.decimal_precision as dp
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError, ValidationError
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
@@ -55,7 +54,7 @@ class AccountAssetAsset(models.Model):
     _description = 'Asset/Revenue Recognition'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    account_move_line_ids = fields.One2many('account.move.line', 'asset_id', string='Entries', readonly=True, states={'draft': [('readonly', False)]})
+    account_move_ids = fields.One2many('account.move', 'asset_id', string='Entries', readonly=True, states={'draft': [('readonly', False)]})
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
     code = fields.Char(string='Reference', size=32, readonly=True, states={'draft': [('readonly', False)]})
@@ -88,7 +87,6 @@ class AccountAssetAsset(models.Model):
              "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
     prorata = fields.Boolean(string='Prorata Temporis', readonly=True, states={'draft': [('readonly', False)]},
         help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January / Start date of fiscal year')
-    history_ids = fields.One2many('account.asset.history', 'asset_id', string='History', readonly=True)
     depreciation_line_ids = fields.One2many('account.asset.depreciation.line', 'asset_id', string='Depreciation Lines', readonly=True, states={'draft': [('readonly', False)], 'open': [('readonly', False)]})
     salvage_value = fields.Float(string='Salvage Value', digits=0, readonly=True, states={'draft': [('readonly', False)]},
         help="It is the amount you plan to have that you cannot depreciate.")
@@ -100,8 +98,8 @@ class AccountAssetAsset(models.Model):
         for asset in self:
             if asset.state in ['open', 'close']:
                 raise UserError(_('You cannot delete a document is in %s state.') % (asset.state,))
-            if asset.account_move_line_ids:
-                raise UserError(_('You cannot delete a document that contains posted lines.'))
+            if asset.account_move_ids:
+                raise UserError(_('You cannot delete a document that contains posted entries.'))
         return super(AccountAssetAsset, self).unlink()
 
     @api.multi
@@ -111,9 +109,9 @@ class AccountAssetAsset(models.Model):
         @return: Returns a dictionary of the effective dates of the last depreciation entry made for given asset ids. If there isn't any, return the purchase date of this asset
         """
         self.env.cr.execute("""
-            SELECT a.id as id, COALESCE(MAX(l.date),a.date) AS date
+            SELECT a.id as id, COALESCE(MAX(m.date),a.date) AS date
             FROM account_asset_asset a
-            LEFT JOIN account_move_line l ON (l.asset_id = a.id)
+            LEFT JOIN account_move m ON (m.asset_id = a.id)
             WHERE a.id IN %s
             GROUP BY a.id, a.date """, (tuple(self.ids),))
         result = dict(self.env.cr.fetchall())
@@ -170,7 +168,7 @@ class AccountAssetAsset(models.Model):
         # Remove old unposted depreciation lines. We cannot use unlink() with One2many field
         commands = [(2, line_id.id, False) for line_id in unposted_depreciation_line_ids]
 
-        if self.value != 0.0:
+        if self.value_residual != 0.0:
             amount_to_depr = residual_amount = self.value_residual
             if self.prorata:
                 depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
@@ -217,15 +215,76 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def validate(self):
         self.write({'state': 'open'})
+        fields = [
+            'method',
+            'method_number',
+            'method_period',
+            'method_end',
+            'method_progress_factor',
+            'method_time',
+            'salvage_value',
+            'invoice_id',
+        ]
+        ref_tracked_fields = self.env['account.asset.asset'].fields_get(fields)
+        for asset in self:
+            tracked_fields = ref_tracked_fields.copy()
+            if asset.method == 'linear':
+                del(tracked_fields['method_progress_factor'])
+            if asset.method_time != 'end':
+                del(tracked_fields['method_end'])
+            else:
+                del(tracked_fields['method_number'])
+            dummy, tracking_value_ids = asset._message_track(tracked_fields, dict.fromkeys(fields))
+            asset.message_post(subject=_('Asset created'), tracking_value_ids=tracking_value_ids)
 
     @api.multi
     def set_to_close(self):
-        unposted_dep_line = self.env['account.asset.depreciation.line'].search_count(
-            [('asset_id', 'in', self.ids), ('move_check', '=', False)])
-        if unposted_dep_line:
-            raise UserError(_('You cannot close a document which has unposted lines.'))
-        self.message_post(body=_("Document closed."))
-        self.write({'state': 'close'})
+        move_ids = []
+        for asset in self:
+            unposted_depreciation_line_ids = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
+            if unposted_depreciation_line_ids:
+                old_values = {
+                    'method_end': asset.method_end,
+                    'method_number': asset.method_number,
+                }
+
+                # Remove all unposted depr. lines
+                commands = [(2, line_id.id, False) for line_id in unposted_depreciation_line_ids]
+
+                # Create a new depr. line with the residual amount and post it
+                sequence = len(asset.depreciation_line_ids) - len(unposted_depreciation_line_ids) + 1
+                today = datetime.today().strftime(DF)
+                vals = {
+                    'amount': asset.value_residual,
+                    'asset_id': asset.id,
+                    'sequence': sequence,
+                    'name': (asset.code or '') + '/' + str(sequence),
+                    'remaining_value': 0,
+                    'depreciated_value': asset.value - asset.salvage_value,  # the asset is completely depreciated
+                    'depreciation_date': today,
+                }
+                commands.append((0, False, vals))
+                asset.write({'depreciation_line_ids': commands, 'method_end': today, 'method_number': sequence})
+                tracked_fields = self.env['account.asset.asset'].fields_get(['method_number', 'method_end'])
+                changes, tracking_value_ids = asset._message_track(tracked_fields, old_values)
+                if changes:
+                    asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
+                move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
+        if move_ids:
+            name = _('Disposal Move')
+            view_mode = 'form'
+            if len(move_ids) > 1:
+                name = _('Disposal Moves')
+                view_mode = 'tree,form'
+            return {
+                'name': name,
+                'view_type': 'form',
+                'view_mode': view_mode,
+                'res_model': 'account.move',
+                'type': 'ir.actions.act_window',
+                'target': 'current',
+                'res_id': move_ids[0],
+            }
 
     @api.multi
     def set_to_draft(self):
@@ -245,10 +304,10 @@ class AccountAssetAsset(models.Model):
         self.currency_id = self.company_id.currency_id.id
 
     @api.multi
-    @api.depends('account_move_line_ids')
+    @api.depends('account_move_ids')
     def _entry_count(self):
         for asset in self:
-            asset.entry_count = self.env['account.move.line'].search_count([('asset_id', '=', asset.id)])
+            asset.entry_count = self.env['account.move'].search_count([('asset_id', '=', asset.id)])
 
     @api.one
     @api.constrains('prorata', 'method_time')
@@ -314,10 +373,10 @@ class AccountAssetAsset(models.Model):
     @api.multi
     def open_entries(self):
         return {
-            'name': _('Journal Items'),
+            'name': _('Journal Entries'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'account.move.line',
+            'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
             'context': dict(self.env.context or {}, search_default_asset_id=self.id, default_asset_id=self.id),
@@ -345,9 +404,8 @@ class AccountAssetDepreciationLine(models.Model):
         self.move_check = bool(self.move_id)
 
     @api.multi
-    def create_move(self):
-        created_move_ids = []
-        asset_ids = []
+    def create_move(self, post_move=True):
+        created_moves = self.env['account.move']
         for line in self:
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
@@ -372,7 +430,6 @@ class AccountAssetDepreciationLine(models.Model):
                 'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'sale' else False,
                 'date': depreciation_date,
-                'asset_id': line.asset_id.id if categ_type == 'sale' else False,
             }
             move_line_2 = {
                 'name': asset_name,
@@ -385,43 +442,52 @@ class AccountAssetDepreciationLine(models.Model):
                 'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id if categ_type == 'purchase' else False,
                 'date': depreciation_date,
-                'asset_id': line.asset_id.id if categ_type == 'purchase' else False
             }
             move_vals = {
                 'ref': reference,
                 'date': depreciation_date or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 'line_ids': [(0, 0, move_line_1), (0, 0, move_line_2)],
+                'asset_id': line.asset_id.id,
                 }
             move = self.env['account.move'].create(move_vals)
             line.write({'move_id': move.id, 'move_check': True})
-            created_move_ids.append(move.id)
-            move.post()
-            asset_ids.append(line.asset_id)
-            partner_name = line.asset_id.partner_id.name
-            currency_name = line.asset_id.currency_id.name
+            created_moves |= move
 
-            def _format_message(message_description, tracked_values):
-                message = ''
-                if message_description:
-                    message = '<span>%s</span>' % message_description
-                for name, values in tracked_values.iteritems():
-                    message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % name
-                    message += '%s</div>' % values
-                return message
+        if post_move and created_moves:
+            created_moves.post()
+        return [x.id for x in created_moves]
 
-            msg_values = {_('Currency'): currency_name, _('Amount'): line.amount}
-            if partner_name:
-                msg_values[_('Partner')] = partner_name
-            msg = _format_message(_('Depreciation line posted.'), msg_values)
-            line.asset_id.message_post(body=msg)
+    @api.multi
+    def post_lines_and_close_asset(self):
         # we re-evaluate the assets to determine whether we can close them
-        for asset in asset_ids:
+        for line in self:
+            line.log_message_when_posted()
+            asset = line.asset_id
             if asset.currency_id.is_zero(asset.value_residual):
                 asset.message_post(body=_("Document closed."))
                 asset.write({'state': 'close'})
-                asset.compute_depreciation_board()
-        return created_move_ids
+
+    @api.multi
+    def log_message_when_posted(self):
+        def _format_message(message_description, tracked_values):
+            message = ''
+            if message_description:
+                message = '<span>%s</span>' % message_description
+            for name, values in tracked_values.iteritems():
+                message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % name
+                message += '%s</div>' % values
+            return message
+
+        for line in self:
+            if line.move_id and line.move_id.state == 'draft':
+                partner_name = line.asset_id.partner_id.name
+                currency_name = line.asset_id.currency_id.name
+                msg_values = {_('Currency'): currency_name, _('Amount'): line.amount}
+                if partner_name:
+                    msg_values[_('Partner')] = partner_name
+                msg = _format_message(_('Depreciation line posted.'), msg_values)
+                line.asset_id.message_post(body=msg)
 
     @api.multi
     def unlink(self):
@@ -435,25 +501,14 @@ class AccountAssetDepreciationLine(models.Model):
         return super(AccountAssetDepreciationLine, self).unlink()
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
     asset_id = fields.Many2one('account.asset.asset', string='Asset', ondelete="restrict")
 
-
-class AccountAssetHistory(models.Model):
-    _name = 'account.asset.history'
-    _description = 'Asset history'
-    _order = 'date desc'
-
-    name = fields.Char(string='History name', index=True)
-    user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self.env.user)
-    date = fields.Date(required=True, default=fields.Date.context_today)
-    asset_id = fields.Many2one('account.asset.asset', string='Asset', required=True)
-    method_time = fields.Selection([('number', 'Number of Depreciations'), ('end', 'Ending Date')], string='Time Method', required=True,
-        help="The method to use to compute the dates and number of depreciation lines.\n"
-             "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-             "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond.")
-    method_number = fields.Integer(string='Number of Depreciations', help="The number of depreciations needed to depreciate your asset")
-    method_period = fields.Integer(string='Period Length', help="Time in months between two depreciations")
-    method_end = fields.Date(string='Ending date')
-    note = fields.Text()
+    @api.multi
+    def post(self):
+        for move in self:
+            if move.asset_id:
+                move.asset_id.depreciation_line_ids.post_lines_and_close_asset()
+        return super(AccountMove, self).post()
