@@ -1006,7 +1006,8 @@ class RegistryManager(object):
 
                 if failures:
                     _logger.error('At least one test failed when loading the modules.')
-                _logger.info("Modules loaded...")
+                # match runbot's check that build is done
+                _logger.getChild('modules.loading').info("Modules loaded...")
 
             except Exception:
                 del cls.registries[db_name]
