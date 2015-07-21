@@ -21,6 +21,7 @@ class sale_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
+        'currency_price_total': fields.float('Amount in Currency', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
         'categ_id': fields.many2one('product.category','Product Category', readonly=True),
@@ -38,6 +39,7 @@ class sale_report(osv.osv):
         'team_id': fields.many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id'),
         'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'currency_rate':fields.float('Currency Rate',readonly=True),
     }
     _order = 'date desc'
 
@@ -56,7 +58,8 @@ class sale_report(osv.osv):
                     l.product_id as product_id,
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-                    sum(l.product_uom_qty * cr.rate * l.price_unit * (100.0-l.discount) / 100.0) as price_total,
+                    sum(((l.price_unit*l.product_uom_qty)* (100.0 - l.discount)) / 100.0) as currency_price_total,
+                    sum((((l.price_unit*l.product_uom_qty)*(ccr.rate/cr.rate))* (100.0 - l.discount)) / 100.0) as price_total,
                     count(*) as nbr,
                     s.date_order as date,
                     s.date_confirm as date_confirm,
@@ -73,7 +76,8 @@ class sale_report(osv.osv):
                     l.invoiced::integer as nbr_paid,
                     l.invoiced,
                     partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id
+                    partner.commercial_partner_id as commercial_partner_id,
+                    coalesce(cr.rate,1) as currency_rate
         """
         return select_str
 
@@ -88,8 +92,10 @@ class sale_report(osv.osv):
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                     join currency_rate cr on (cr.currency_id = pp.currency_id and
-                        cr.date_start <= coalesce(s.date_order, now()) and
-                        (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+                        cr.date_start <= s.date_order and
+                        (cr.date_end is null or cr.date_end > s.date_order))
+                    join res_company rc on rc.id=s.company_id
+                        left join currency_rate ccr on(ccr.currency_id=rc.currency_id and ccr.date_start <= s.date_order and (ccr.date_end is null or ccr.date_end > s.date_order))
         """
         return from_str
 
@@ -111,7 +117,9 @@ class sale_report(osv.osv):
                     p.product_tmpl_id,
                     l.invoiced,
                     partner.country_id,
-                    partner.commercial_partner_id
+                    partner.commercial_partner_id,
+                    cr.rate,
+                    ccr.rate
         """
         return group_by_str
 

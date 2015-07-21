@@ -36,7 +36,9 @@ class purchase_report(osv.osv):
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
         'quantity': fields.float('Product Quantity', readonly=True),  # TDE FIXME master: rename into unit_quantity
         'price_total': fields.float('Total Price', readonly=True),
+        'currency_price_total': fields.float('Amount in Currency', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
+        'currency_price_average': fields.float('Average Price in Currency', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
@@ -46,6 +48,7 @@ class purchase_report(osv.osv):
         'fiscal_position_id': fields.many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
+        'currency_rate':fields.float('Currency Rate',readonly=True),
     }
     _order = 'date desc, price_total desc'
     def init(self, cr):
@@ -84,13 +87,16 @@ class purchase_report(osv.osv):
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    sum(l.price_unit*cr.rate*l.product_qty)::decimal(16,2) as price_total,
-                    avg(100.0 * (l.price_unit*cr.rate*l.product_qty) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
+                    sum(l.price_unit*l.product_qty)::decimal(16,2) as currency_price_total,
+                    sum(((l.price_unit*l.product_qty)*(ccr.rate/cr.rate)))::decimal(16,2) as price_total,
+                    avg(100.0 * (((l.price_unit*l.product_qty)*(ccr.rate/cr.rate))) / NULLIF(ip.value_float*l.product_qty/u.factor*u2.factor, 0.0))::decimal(16,2) as negociation,
                     sum(ip.value_float*l.product_qty/u.factor*u2.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*cr.rate*l.price_unit)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
+                    (sum(l.price_unit*l.product_qty)/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as currency_price_average,
+                    (sum(((l.price_unit*l.product_qty)*(ccr.rate/cr.rate)))/NULLIF(sum(l.product_qty/u.factor*u2.factor),0.0))::decimal(16,2) as price_average,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id,
-                    analytic_account.id as account_analytic_id
+                    analytic_account.id as account_analytic_id,
+                    coalesce(cr.rate,1) as currency_rate
                 from purchase_order_line l
                     join purchase_order s on (l.order_id=s.id)
                     join res_partner partner on s.partner_id = partner.id
@@ -101,9 +107,9 @@ class purchase_report(osv.osv):
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join stock_picking_type spt on (spt.id=s.picking_type_id)
                     left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
-                    join currency_rate cr on (cr.currency_id = s.currency_id and
-                        cr.date_start <= coalesce(s.date_order, now()) and
-                        (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+                    join currency_rate cr on (cr.currency_id = s.currency_id and  cr.date_start <= s.date_order and (cr.date_end is null or cr.date_end > s.date_order))
+                    join res_company rc on rc.id=s.company_id
+                        left join currency_rate ccr on(ccr.currency_id=rc.currency_id and ccr.date_start <= s.date_order and (ccr.date_end is null or ccr.date_end > s.date_order))
                 group by
                     s.company_id,
                     s.create_uid,
@@ -132,6 +138,8 @@ class purchase_report(osv.osv):
                     u2.factor,
                     partner.country_id,
                     partner.commercial_partner_id,
-                    analytic_account.id
+                    analytic_account.id,
+                    cr.rate,
+                    ccr.rate
             )
         """)

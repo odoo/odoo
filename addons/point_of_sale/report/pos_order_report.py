@@ -18,9 +18,11 @@ class pos_order_report(osv.osv):
                                   'Status'),
         'user_id':fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
+        'currency_price_total':fields.float('Amount in Currency', readonly=True),
         'price_sub_total':fields.float('Subtotal w/o discount', readonly=True),
         'total_discount':fields.float('Total Discount', readonly=True),
         'average_price': fields.float('Average Price', readonly=True,group_operator="avg"),
+        'currency_average_price': fields.float('Average Price in Currency', readonly=True,group_operator="avg"),
         'location_id':fields.many2one('stock.location', 'Location', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),  # TDE FIXME master: rename into nbr_lines
@@ -33,6 +35,7 @@ class pos_order_report(osv.osv):
         'pos_categ_id': fields.many2one('pos.category','Public Category', readonly=True),
         'stock_location_id': fields.many2one('stock.location', 'Warehouse', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
+        'currency_rate':fields.float('Currency Rate',readonly=True),
     }
     _order = 'date desc'
 
@@ -40,15 +43,26 @@ class pos_order_report(osv.osv):
         tools.drop_view_if_exists(cr, 'report_pos_order')
         cr.execute("""
             create or replace view report_pos_order as (
+                WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                    SELECT r.currency_id, r.rate, r.name AS date_start,
+                        (SELECT name FROM res_currency_rate r2
+                        WHERE r2.name > r.name AND
+                            r2.currency_id = r.currency_id
+                         ORDER BY r2.name ASC
+                         LIMIT 1) AS date_end
+                    FROM res_currency_rate r
+                )
                 select
                     min(l.id) as id,
                     count(*) as nbr,
                     s.date_order as date,
                     sum(l.qty * u.factor) as product_qty,
-                    sum(l.qty * l.price_unit) as price_sub_total,
-                    sum((l.qty * l.price_unit) * (100 - l.discount) / 100) as price_total,
+                    sum(l.qty * (l.price_unit / cr.rate)) as price_sub_total,
+                    sum((l.qty * l.price_unit) * (100 - l.discount) / 100.0) as currency_price_total,
+                    sum(((l.qty * l.price_unit)*(ccr.rate/cr.rate)) * (100 - l.discount) / 100.0) as price_total,
                     sum((l.qty * l.price_unit) * (l.discount / 100)) as total_discount,
-                    (sum(l.qty*l.price_unit)/sum(l.qty * u.factor))::decimal as average_price,
+                    (sum(l.qty * l.price_unit)/sum(l.qty * u.factor))::decimal as currency_average_price,
+                    (sum(((l.qty * l.price_unit)*(ccr.rate/cr.rate)))/sum(l.qty * u.factor))::decimal as average_price,
                     sum(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') as int)) as delay_validation,
                     s.partner_id as partner_id,
                     s.state as state,
@@ -63,7 +77,8 @@ class pos_order_report(osv.osv):
                     pt.pos_categ_id,
                     pc.stock_location_id,
                     s.pricelist_id,
-                    s.invoice_id IS NOT NULL AS invoiced
+                    s.invoice_id IS NOT NULL AS invoiced,
+                    coalesce(cr.rate,1) as currency_rate
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
                     left join product_product p on (l.product_id=p.id)
@@ -71,8 +86,14 @@ class pos_order_report(osv.osv):
                     left join product_uom u on (u.id=pt.uom_id)
                     left join pos_session ps on (s.session_id=ps.id)
                     left join pos_config pc on (ps.config_id=pc.id)
+                    left join product_pricelist pp on (s.pricelist_id = pp.id)
+                    join currency_rate cr on (cr.currency_id = pp.currency_id and
+                        cr.date_start <= s.date_order and
+                        (cr.date_end is null or cr.date_end > s.date_order))
+                    join res_company rc on rc.id=s.company_id
+                        left join currency_rate ccr on(ccr.currency_id=rc.currency_id and ccr.date_start <= s.date_order and (ccr.date_end is null or ccr.date_end > s.date_order))
                 group by
                     s.date_order, s.partner_id,s.state, pt.categ_id,
-                    s.user_id,s.location_id,s.company_id,s.sale_journal,s.pricelist_id,s.invoice_id,l.product_id,s.create_date,pt.categ_id,pt.pos_categ_id,p.product_tmpl_id,ps.config_id,pc.stock_location_id
+                    s.user_id,s.location_id,s.company_id,s.sale_journal,s.pricelist_id,s.invoice_id,l.product_id,s.create_date,pt.categ_id,pt.pos_categ_id,p.product_tmpl_id,ps.config_id,pc.stock_location_id,s.pricelist_id,cr.rate,ccr.rate
                 having
                     sum(l.qty * u.factor) != 0)""")
