@@ -83,6 +83,9 @@ class MailThread(models.AbstractModel):
         'Unread Messages', compute='_get_message_unread',
         help="Number of unread messages")
 
+    def template_footer(self):
+        return []
+
     @api.multi
     def _get_followers(self):
         res = dict.fromkeys(self.ids, self.env['res.partner'])

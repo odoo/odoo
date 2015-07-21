@@ -17,3 +17,17 @@ class MailThread(osv.AbstractModel):
             help="Website communication history",
         ),
     }
+
+    def template_footer(self):
+        footer = super(MailThread, self).template_footer()
+        website = self.env['website'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+        if website:
+            if website.social_facebook:
+                footer.append({'name': 'social_facebook', 'link': website.social_facebook})
+            if website.social_twitter:
+                footer.append({'name': 'social_twitter', 'link': website.social_twitter})
+            if website.social_googleplus:
+                footer.append({'name': 'social_googleplus', 'link': website.social_googleplus})
+            if website.social_linkedin:
+                footer.append({'name': 'social_linkedin', 'link': website.social_linkedin})
+        return footer
