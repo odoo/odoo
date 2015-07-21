@@ -16,13 +16,11 @@ if(!$('#oe_systray').length) {
 
 var WebsitePlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
-    events: {
-        'click .o_planner_progress': 'toggle_dialog'
-    },
     start: function() {
         var self = this;
         var res = this._super.apply(this, arguments);
         return res.then(this.get_website_planner.bind(this)).then(function(planner) {
+            self.$el.filter('.o_planner_systray').on('click', self, self.toggle_dialog.bind(self));
             if (planner.length) {
                 self.planner = planner[0];
                 self.planner.data = $.parseJSON(planner[0].data) || {};

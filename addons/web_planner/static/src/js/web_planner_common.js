@@ -162,7 +162,7 @@ var PlannerDialog = Widget.extend({
         menu_items.push(menu_title);
         menu_item_page_map[menu_title] = page.id;
     },
-    render_menu: function($res) {
+    render_menu: function() {
         var self = this;
         var orphan_pages = [];
         var menu_categories = [];

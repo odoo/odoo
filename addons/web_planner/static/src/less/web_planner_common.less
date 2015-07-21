@@ -175,21 +175,31 @@
 }
 
 /**************** MENU PROGRESS BAR ****************/
-#oe_main_menu_navbar.navbar {
-    .o_planner_systray {
+.o_planner_systray {
+    width: 100px;
+
+    > .progress {
         height: 13px;
-        margin: 10px 0 0 0;
-        div.o_planner_progress {
-            cursor: pointer;
-            .progress {
-                display: inline-block;
-                width: 85px;
-            }
+        cursor: pointer;
+
+        // enterprise
+        margin-top: 16px;
+        margin-bottom: -16px;
+        margin-right: 10px;
+        margin-left: 10px;
+
+        > .progress-bar {
+            background-color: #21b799;
         }
-        .o_planner_progress {
-            div.progress {
-                height: 13px;
-            }
+    }
+}
+
+// community
+#oe_main_menu_navbar {
+    .o_planner_systray {
+        > .progress {
+            margin-top: 10px;
+            margin-bottom: -10px;
         }
     }
 }
@@ -198,16 +208,16 @@
 #PlannerDialog {
     font-family: "Lato", serif;
     position: absolute;
-    top: 35px;
-    right: 5px;  // include box shadow
-    bottom: 5px;
+    top: 46px; // enterprise fine-tuning
+    right: 0px;
+    bottom: 0px;
     width: @o_planner_width;
     z-index: 1001; // z-index website + 1
     padding-bottom: 80px;
     background-color: white;
-
     -webkit-box-shadow: 0 3px 9px #666666;
     box-shadow: 0 3px 9px #666666;
+    outline: none;
 
     .o_planner_header {
         display: inline-block;
@@ -222,8 +232,10 @@
 
         > ul {
             > h4 {
+                padding-left: 5px;
+
                 > i.fa {
-                    margin-right: 5px;
+                    margin-right: 10px;
                 }
             }
         }

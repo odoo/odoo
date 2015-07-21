@@ -12,9 +12,6 @@ var PlannerDialog = planner.PlannerDialog;
 
 var PlannerLauncher = Widget.extend({
     template: "PlannerLauncher",
-    events: {
-        'click .o_planner_progress': 'toggle_dialog'
-    },
     init: function(parent) {
         this._super(parent);
         this.planner_by_menu = {};
@@ -24,6 +21,7 @@ var PlannerLauncher = Widget.extend({
         var self = this;
         core.bus.on("change_menu_section", self, self.on_menu_clicked);
         var res =  self._super.apply(this, arguments).then(function() {
+            self.$el.filter('.o_planner_systray').on('click', self, self.toggle_dialog.bind(self));
             return self.fetch_application_planner();
         }).then(function(apps) {
             self.do_hide();  // hidden by default
