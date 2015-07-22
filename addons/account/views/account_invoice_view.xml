@@ -247,7 +247,6 @@
                             <field name="move_name" invisible="1"/>
                             <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
                     </group>
                     <notebook>
@@ -317,7 +316,7 @@
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable')]"
                                 name="account_id" groups="account.group_account_manager"/>
                                     <field name="name" invisible="1"/>
-                                    <field name="payment_term_id" options="{'no_create': True}"/>
+                                    <field name="payment_term_id" options="{'no_create': True}" attrs="{'invisible': [('payment_term_id','=',False)]}"/>
                                 </group>
                                 <group>
                                     <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>
@@ -351,7 +350,7 @@
                     <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user"/>
                     <button name="invoice_open" states="proforma2" string="Validate" groups="base.group_user"/>
                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid' groups="base.group_user" attrs="{'invisible': [('type', '=', 'out_refund')]}"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' groups="base.group_user" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','proforma2','paid'))]}"/>
                     <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel Invoice" groups="base.group_no_one"/>
                     <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_user"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
@@ -456,7 +455,7 @@
                                     options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field domain="[('partner_id.ref_company_ids', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
-                                    <field name="date_due"/>
+                                    <field name="date_due" groups="base.group_no_one"/>
                                 </group>
                                 <group>
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable')]"

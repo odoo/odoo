@@ -66,8 +66,8 @@ class AccountConfigSettings(models.TransientModel):
 
     fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
-    period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
-    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
+    period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
+    fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
     module_account_check_writing = fields.Boolean(string='Pay your vendors by check',
         help='This allows you to check writing and printing.\n'
@@ -87,9 +87,6 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_product_email_template = fields.Boolean(string='Send products tools and information at the invoice confirmation',
-        help='With this module, link your products to a template to send complete information and tools to your customer.\n'
-             'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.')
     module_account_bank_statement_import_ofx = fields.Boolean(string='Import of Bank Statements in .OFX Format',
         help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
             '-that installs the module account_bank_statement_import.')
@@ -99,16 +96,14 @@ class AccountConfigSettings(models.TransientModel):
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
-    default_sale_tax_id = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
-    default_purchase_tax_id = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
+    default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
+    default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
         help="Allows you multi currency environment")
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of vendor bills',
-        implied_group="account.group_supplier_inv_check_total")
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)

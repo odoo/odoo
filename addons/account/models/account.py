@@ -621,7 +621,7 @@ class AccountOperationTemplate(models.Model):
 
     name = fields.Char(string='Button Label', required=True)
     sequence = fields.Integer(required=True, default=10)
-    has_second_line = fields.Boolean(string='Second line', default=False)
+    has_second_line = fields.Boolean(string='Add a second line', default=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
@@ -629,7 +629,7 @@ class AccountOperationTemplate(models.Model):
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('percentage', 'Percentage of amount')
+        ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

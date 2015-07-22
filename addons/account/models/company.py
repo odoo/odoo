@@ -10,10 +10,10 @@ class ResCompany(models.Model):
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
-    period_lock_date = fields.Date(help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
-    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
+    period_lock_date = fields.Date(string="Lock Date for Non-Advisers", help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
+    fiscalyear_lock_date = fields.Date(string="Lock Date", help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
     transfer_account_id = fields.Many2one('account.account',
-        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
+        domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id), ('deprecated', '=', False)], string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liquidity account to another")
     expects_chart_of_accounts = fields.Boolean(string='Expects a Chart of Accounts', default=True)
     chart_template_id = fields.Many2one('account.chart.template', help='The chart template for the company (if any)')
     bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
@@ -25,7 +25,7 @@ class ResCompany(models.Model):
         ], default='round_per_line', string='Tax Calculation Rounding Method',
         help="If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes.")
     paypal_account = fields.Char(string='Paypal Account', size=128, help="Paypal username (usually email) for receiving online payments.")
-    currency_exchange_journal_id = fields.Many2one('account.journal', string="Currency Adjustments Journal", domain=[('type', '=', 'general')])
+    currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
     income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id',
         string="Gain Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',

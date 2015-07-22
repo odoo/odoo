@@ -9,7 +9,7 @@
             <field name="model">account.budget.post</field>
             <field name="arch" type="xml">
                 <search string="Budgetary Position">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Budgetary Position"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Budgetary Position"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -20,7 +20,6 @@
             <field name="model">account.budget.post</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
-                    <field name="code"/>
                     <field name="name"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </tree>
@@ -44,12 +43,16 @@
                 <form string="Budgetary Position">
                     <group col="4">
                         <field name="name"/>
-                        <field name="code"/>
                         <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
                     </group>
                     <notebook>
                         <page string="Accounts">
-                            <field name="account_ids"/>
+                            <field name="account_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </form>

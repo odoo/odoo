@@ -8,10 +8,9 @@
             <field name="model">validate.account.move</field>
             <field name="arch" type="xml">
                 <form string="Post Journal Entries">
-                    <separator string="Post Journal Entries"/>
-                    <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore."/>
+                    <label string="All selected journal entries will be validated and posted. It means you won't be able to modify them afterwards."/>
                     <footer>
-                        <button string="Approve" name="validate_move" type="object" default_focus="1" class="oe_highlight"/>
+                        <button string="Post Journal Entries" name="validate_move" type="object" default_focus="1" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>

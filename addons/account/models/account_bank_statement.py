@@ -98,6 +98,22 @@ class AccountBankStatement(models.Model):
                 return journals[0]
         return False
 
+    @api.multi
+    def _set_opening_balance(self, journal_id):
+        last_bnk_stmt = self.search([('journal_id', '=', journal_id), ('state', '=', 'confirm')], order="date desc", limit=1)
+        for bank_stmt in self:
+            if last_bnk_stmt:
+                bank_stmt.balance_start = last_bnk_stmt.balance_end
+            else:
+                bank_stmt.balance_start = 0
+
+    @api.model
+    def _default_opening_balance(self):
+        #Search last bank statement and set current opening balance as closing balance of previous one
+        journal_id = self._context.get('default_journal_id', False) or self._context.get('journal_id', False)
+        if journal_id:
+            self._set_opening_balance(journal_id)
+
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _order = "date desc, id desc"
@@ -106,7 +122,7 @@ class AccountBankStatement(models.Model):
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, select=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]})
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency')
@@ -127,6 +143,9 @@ class AccountBankStatement(models.Model):
     cashbox_end_id = fields.Many2one('account.bank.statement.cashbox')
 
 
+    @api.onchange('journal_id')
+    def onchange_journal_id(self):
+        self._set_opening_balance(self.journal_id.id)
 
     @api.multi
     def _balance_check(self):
@@ -334,7 +353,7 @@ class AccountBankStatementLine(models.Model):
     name = fields.Char(string='Memo', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
     amount = fields.Monetary(digits=0, currency_field='journal_currency_id')
-    journal_currency_id = fields.Many2one('res.currency', related='journal_id.currency_id',
+    journal_currency_id = fields.Many2one('res.currency', related='statement_id.currency_id',
         help='Utility field to express amount currency', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Partner')
     bank_account_id = fields.Many2one('res.partner.bank', string='Bank Account')

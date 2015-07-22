@@ -275,8 +275,6 @@ class AccountInvoice(models.Model):
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
-    check_total = fields.Monetary(string='Verification Total',
-        readonly=True, states={'draft': [('readonly', False)]}, default=0.0)
 
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
@@ -674,11 +672,6 @@ class AccountInvoice(models.Model):
             iml = inv.invoice_line_move_line_get()
             iml += inv.tax_line_move_line_get()
 
-            # I disabled the check_total feature
-            if self.env['res.users'].has_group('account.group_supplier_inv_check_total'):
-                if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding / 2.0):
-                    raise UserError(_('Please verify the price of the invoice!\nThe encoded total does not match the computed total.'))
-
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
@@ -994,25 +987,6 @@ class AccountInvoiceLine(models.Model):
         self.price_subtotal_signed = price_subtotal_signed * sign
 
     @api.model
-    def _default_price_unit(self):
-        if not self._context.get('check_total'):
-            return 0
-        currency = self.invoice_id and self.invoice_id.currency_id or None
-        total = self._context['check_total']
-        for l in self._context.get('invoice_line_ids', []):
-            if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
-                vals = l[2]
-                price = vals.get('price_unit', 0) * (1 - vals.get('discount', 0) / 100.0)
-                total = total - (price * vals.get('quantity'))
-                taxes = vals.get('invoice_line_tax_ids')
-                if taxes and len(taxes[0]) >= 3 and taxes[0][2]:
-                    taxes = self.env['account.tax'].browse(taxes[0][2])
-                    tax_res = taxes.compute_all(price, currency, vals.get('quantity'), vals.get('product_id'), self._context.get('partner_id'))
-                    for tax in tax_res['taxes']:
-                        total = total - tax['amount']
-        return total
-
-    @api.model
     def _default_account(self):
         if self._context.get('journal_id'):
             journal = self.env['account.journal'].browse(self._context.get('journal_id'))
@@ -1035,8 +1009,7 @@ class AccountInvoiceLine(models.Model):
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
-    price_unit = fields.Monetary(string='Unit Price', required=True,
-        default=_default_price_unit)
+    price_unit = fields.Monetary(string='Unit Price', required=True)
     price_subtotal = fields.Monetary(string='Amount',
         store=True, readonly=True, compute='_compute_price')
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',

@@ -6,7 +6,6 @@
       if account_ids:
           vals = {
               'name': 'Sales',
-              'code': 'SAL',
               'account_ids': [(6, None, account_ids)],
           }
           self._update(cr, uid, 'account.budget.post', 'account_budget', vals, 'account_budget_post_sales0')
@@ -98,7 +97,6 @@
       if account_ids:
           vals = {
               'name': 'Purchases',
-              'code': 'PUR',
               'account_ids': [(6, None, account_ids)],
           }
           self._update(cr, uid, 'account.budget.post', 'account_budget', vals, 'account_budget_post_purchase0')

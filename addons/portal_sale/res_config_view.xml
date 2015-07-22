@@ -11,11 +11,18 @@
                         <div>
                             <field name="group_payment_options" class="oe_inline"/>
                             <label for="group_payment_options"/>
-                            <button name='%(payment.action_payment_acquirer)d' type="action"
-                                    string="Configure payment acquiring methods" class="oe_link"/>
                         </div>
                     </xpath>
                 </field>
+        </record>
+        <record model="ir.ui.view" id="payment_acquirer_option_config">
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="payment.payment_acquirer_installation"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='configure_payments_button']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+            </field>
         </record>
  
     </data>
