@@ -2156,7 +2156,7 @@ class BaseModel(object):
                     many2onefields[field].add(row[field])
             for field, ids in many2onefields.iteritems():
                 many2one_data[field] = dict(
-                    self.pool[self._columns[field]._obj].name_get(
+                    self.pool[self._all_columns[field].column._obj].name_get(
                         cr, uid, list(ids), context=context))
 
         result = []
