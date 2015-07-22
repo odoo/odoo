@@ -687,9 +687,16 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 current_group = [];
             }
             if (filter.item.tag === 'field') {
-                var attrs = filter.item.attrs,
-                    field = self.fields_view_get.fields[attrs.name],
-                    Obj = my.fields.get_any([attrs.widget, field.type]);
+                var attrs = filter.item.attrs;
+                var field = self.fields_view_get.fields[attrs.name];
+
+                // M2O combined with selection widget is pointless and broken in search views,
+                // but has been used in the past for unsupported hacks -> ignore it
+                if (field.type === "many2one" && attrs.widget === "selection") {
+                    attrs.widget = undefined;
+                }
+
+                var Obj = my.fields.get_any([attrs.widget, field.type]);
                 if (Obj) {
                     self.search_fields.push(new (Obj) (filter.item, field, self));
                 }
