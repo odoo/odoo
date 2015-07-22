@@ -357,7 +357,7 @@ FavoriteMenu.include({
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
-             .toggleClass('o-closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
             .toggleClass('o_open_menu', is_open);
         this.$add_to_dashboard.toggle(is_open);
         if (this.$add_dashboard_link.hasClass('o_open_menu')) {
