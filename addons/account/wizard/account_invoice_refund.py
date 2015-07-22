@@ -23,8 +23,19 @@ class AccountInvoiceRefund(models.TransientModel):
     date_invoice = fields.Date(string='Refund Date', default=fields.Date.context_today, required=True)
     date = fields.Date(string='Accounting Date')
     description = fields.Char(string='Reason', required=True, default=_get_reason)
+    refund_only = fields.Boolean(string='Technical field to hide filter_refund in case invoice is partially paid', compute='_get_refund_only')
     filter_refund = fields.Selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create refund and reconcile'), ('modify', 'Modify: create refund, reconcile and create a new draft invoice')],
         default='refund', string='Refund Method', required=True, help='Refund base on this type. You can not Modify and Cancel if the invoice is already reconciled')
+
+    @api.depends('date_invoice')
+    @api.one
+    def _get_refund_only(self):
+        invoice_id = self.env['account.invoice'].browse(self._context.get('active_id',False))
+        if len(invoice_id.payment_move_line_ids) != 0 and invoice_id.state != 'paid':
+            self.refund_only = True
+        else:
+            self.refund_only = False
+
 
     @api.multi
     def compute_refund(self, mode='refund'):

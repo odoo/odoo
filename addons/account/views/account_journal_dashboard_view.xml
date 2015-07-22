@@ -54,13 +54,13 @@
                                     <span>View</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Operations</a>
-                                </div>
-                                <div>
                                     <a type="object" name="open_action">
                                         <t t-if="journal_type == 'bank'">Bank Statements</t>
                                         <t t-if="journal_type == 'cash'">Cash Statements</t>
                                     </a>
+                                </div>
+                                <div>
+                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Search Operations</a>
                                 </div>
                                 <div>
                                     <a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a>
@@ -191,7 +191,7 @@
 
                         <div groups="account.group_account_manager" class="row o_kanban_card_settings">
                             <div class="col-xs-6">
-                                <a type="object" name="toggle_favorite"><i t-att-class="(record.show_on_dashboard.raw_value ? 'oe_star_on' : 'oe_star_off') + ' fa fa-star o_dashboard_star'" title="Click to add/remove from favorite"></i></a>
+                                <a type="object" name="toggle_favorite"><i t-att-class="(record.show_on_dashboard.raw_value ? 'oe_star_on' : 'oe_star_off') + ' fa fa-star o_dashboard_star'" title="Click to add/remove from favorite"/> Favorite</a>
                             </div>
                             <div class="col-xs-6 text-right">
                                 <a t-if="widget.editable" type="edit">Settings</a>

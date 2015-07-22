@@ -431,12 +431,8 @@
                 <form string="Bank Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
-                    <span attrs="{'invisible':['|',('all_lines_reconciled','=',True),('line_ids','=',[])]}">
-                        <button name="%(action_bank_reconcile_bank_statements)d" states="open" string="Reconcile" type="action" class="oe_highlight"/>
-                    </span>
-                    <span attrs="{'invisible':[('all_lines_reconciled','=',False)]}">
-                        <button name="check_confirm_bank" states="open" string="Validate" type="object" class="oe_highlight"/>
-                    </span>
+                    <button name="%(action_bank_reconcile_bank_statements)d" string="Reconcile" type="action" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|',('all_lines_reconciled','=',False),('state', '!=', 'open')]}"/>
                     <button name="button_cancel" states="confirm" string="Cancel Statement" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
@@ -487,11 +483,11 @@
                                     <field name="sequence" readonly="1" invisible="1"/>
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
+                                    <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
@@ -586,7 +582,7 @@
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines">
+                <tree string="Statement lines" create="False">
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="statement_id" />
                     <field name="journal_id" invisible="1" />
@@ -655,7 +651,7 @@
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
-                                <field name="tax_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
                             </group>
                             <group>
@@ -665,7 +661,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="journal_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                         <div class="oe_edit_only">
@@ -676,7 +672,7 @@
                             <group>
                                 <field name="second_account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="second_amount_type"/>
-                                <field name="second_tax_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_tax_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
                                 <field name="second_analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
                             </group>
                             <group>
@@ -686,7 +682,7 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}" />
                                 </div>
-                                <field name="second_journal_id" domain="[('company_id', '=', company_id)]"/>
+                                <field name="second_journal_id" domain="[('company_id', '=', company_id)]" widget="selection"/>
                             </group>
                         </group>
                     </sheet>

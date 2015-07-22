@@ -10,13 +10,13 @@
         <field name="arch" type="xml">
             <form string="Asset category">
                 <group>
+                    <div class="oe_title oe_inline">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                    </div>
                     <group>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" class="oe_inline"/>
-                            </h1>
-                        </div>
                         <field name="type" attrs="{'invisible': 1}"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
