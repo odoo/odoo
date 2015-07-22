@@ -41,6 +41,7 @@
             <field name="name">New</field>
             <field name="sequence">1</field>
             <field name="case_default" eval="True"/>
+            <field name="on_followup" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim5">
             <field name="name">In Progress</field>
@@ -51,13 +52,44 @@
             <field name="name">Settled</field>
             <field name="sequence">28</field>
             <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
+            <field name="on_followup" eval="True"/>
         </record>
         <record model="crm.claim.stage" id="stage_claim3">
             <field name="name">Rejected</field>
             <field name="sequence">29</field>
             <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
+            <field name="on_followup" eval="True"/>
         </record>
-        
+
+         <!--CRM Claim-related subtypes for messaging / Chatter -->
+        <record id="mt_claim_settled" model="mail.message.subtype">
+            <field name="name">Claim Settled</field>
+            <field name="res_model">crm.claim</field>
+            <field name="default" eval="True"/>
+            <field name="description">Claim Settled</field>
+        </record>
+        <record id="mt_claim_rejected" model="mail.message.subtype">
+            <field name="name">Claim Rejected</field>
+            <field name="res_model">crm.claim</field>
+            <field name="default" eval="True"/>
+            <field name="description">Claim Rejected</field>
+        </record>
+
+        <record id="email_template_crm_claim_send_mail" model="mail.template">
+            <field name="name">Send Mail to Claimer</field>
+            <field name="model_id" ref="model_crm_claim"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">${object.user_id.email}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">Acknowledge request for [${object.id}]${object.name}.</field>
+            <field name="body_html"><![CDATA[<p>Dear Customer,</p></br>
+Hereby, we acknowledge the reception of your request. The reference of your ticket is <b>${object.id}</b>.</br>
+We will qualify and assign it and you'll receive an email as soon as the responsible will start working on it.</br>
+To provide additional information, you can simply reply to this email.
+<p>Kind regards,</p>]]></field>
+        </record>
 
     </data>
 </openerp>

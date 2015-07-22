@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
 
         <menuitem id="menu_config_claim" name="Claim"
             groups="base.group_no_one"
             parent="base.menu_sale_config" sequence="55"/>
-
         <!-- Claims categories  -->
 
         <record id="crm_claim_category_form" model="ir.ui.view">
@@ -60,6 +58,7 @@
                 <tree string="Claim Stages">
                     <field name="sequence"/>
                     <field name="name"/>
+                    <field name="on_followup"/>
                 </tree>
             </field>
         </record>
@@ -73,12 +72,13 @@
                         <field name="name"/>
                         <field name="case_default"/>
                         <field name="sequence"/>
+                        <field name="on_followup"/>
                     </group>
                 </form>
             </field>
         </record>
 
-        <record id="crm_claim_stage_act" model="ir.actions.act_window">
+        <record id="crm_claim_stage_action" model="ir.actions.act_window">
             <field name="name">Claim Stages</field>
             <field name="res_model">crm.claim.stage</field>
             <field name="view_type">form</field>
@@ -96,8 +96,8 @@
 
         <!-- Claims    -->
 
-        <record model="ir.ui.view" id="crm_case_claims_tree_view">
-            <field name="name">CRM - Claims Tree</field>
+        <record id="crm_case_claims_tree_view" model="ir.ui.view">
+            <field name="name"> crm.claim.tree</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <tree string="Claims">
@@ -110,74 +110,78 @@
                     <field name="action_next"/>
                     <field name="categ_id" string="Type"/>
                     <field name="date_deadline" invisible="1"/>
-                    <field name="date_closed" invisible="1"/>
                 </tree>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="crm_case_claims_form_view">
-            <field name="name">CRM - Claims Form</field>
+        <record  id="crm_case_claims_form_view" model="ir.ui.view">
+            <field name="name"> crm.claim.form</field>
             <field name="model">crm.claim</field>
             <field name="arch" type="xml">
                 <form string="Claim">
                 <header>
-                    <field name="stage_id" widget="statusbar" clickable="True"/>
+                    <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}"/>
                 </header>
                 <sheet string="Claims">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_attachment_view"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object">
+                            <field name="attachment_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_calendar_followup" class="oe_stat_button" icon="fa-calendar" type="object" help="Shows all the follow-up User" context="{'partner_id': active_id}">
+                            <field name="meeting_count" string="Calendar" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field class="oe_inline oe_left" name="priority" widget="priority"/>
+                            <field name="name" placeholder="Claim summary..." class="oe_inline"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="date"/>
+                        <group>
+                            <field name="categ_id"/>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                            <field name="team_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="date_deadline"/>
+                            <field name="id" string="Reference"/>
+                        </group>
                     </group>
-                    <group colspan="4" col="4"  groups="base.group_user">
-                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
-                        <field name="priority" widget="priority"/>
-                        <field name="team_id"/>
-                        <field name="date_deadline"/>
-                    </group>
-                    <group colspan="4" col="4">
                         <notebook>
-                            <page string="Claim Description">
-                                <group colspan="2" col="2" groups="base.group_user">
-                                    <separator colspan="2" string="Claim Reporter"/>
-                                    <field name="partner_id" string="Partner"
+                            <page string="Claim">
+                                <group col="4" groups="base.group_user" string="Claim Reporter">
+                                    <field name="partner_id" string="Name"
                                         on_change="onchange_partner_id(partner_id)"/>
                                     <field name="partner_phone"/>
                                     <field name="email_from" widget="email"/>
+                                    <field name="mobile"/>
                                 </group>
-                                <group colspan="2" col="2" groups="base.group_user">
-                                    <separator colspan="2" string="Responsibilities"/>
-                                    <field name="user_fault"/>
-                                    <field name="categ_id" options="{'no_create': True, 'no_open': True}"/>
+                                <group string="Claim Subject" groups="base.group_user">
                                     <field name="ref"/>
                                 </group>
-                                <separator colspan="4" string="Claim/Action Description" groups="base.group_user"/>
-                                <field name="description" colspan="4" nolabel="1"/>
+                                <field name="description" colspan="4" nolabel="1" groups="base.group_user" placeholder="Description..."/>
                             </page>
-                            <page string="Follow Up" groups="base.group_user">
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Actions"/>
-                                    <field name="date_action_next"/>
-                                    <field name="action_next"/>
-                                </group>
-                                <group colspan="2" col="2" groups="base.group_no_one">
-                                    <separator colspan="2" string="Dates"/>
-                                    <field name="create_date"/>
-                                    <field name="date_closed" invisible="1"/>
-                                    <field name="write_date"/>
-                                </group>
-
-                                <group colspan="2" col="2">
-                                    <separator colspan="2" string="Root Causes"/>
-                                    <field name="cause" colspan="2" nolabel="1"/>
-                                </group>
+                            <page string="Action" groups="base.group_user">
+                                <separator colspan="4" string="Follow-up"/>
+                                <field name="followup_ids" widget="one2many_list" string="Follow-up">
+                                    <tree editable="bottom">
+                                        <field name="date"/>
+                                        <field name="action"/>
+                                        <field name="user_id"/>
+                                    </tree>
+                                </field>
                                 <group colspan="2" col="2">
                                     <separator colspan="2" string="Resolution Actions"/>
                                     <field name="type_action"/>
-                                    <field name="resolution" colspan="2" nolabel="1" placeholder="Action Description..."/>
+                                    <field name="resolution" colspan="2" nolabel="1" placeholder="Action Description, Root Causes..."/>
                                 </group>
                             </page>
                         </notebook>
-                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
@@ -200,6 +204,62 @@
             </field>
         </record>
 
+        <!-- Claim Kanban view -->
+
+        <record id="crm_case_claims_kanban_view" model="ir.ui.view">
+            <field name="name">crm.claim.kanban</field>
+            <field name="model">crm.claim</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id">
+                    <field name="stage_id"/>
+                    <field name="color"/>
+                    <field name="user_id"/>
+                    <field name="message_unread"/>
+                    <field name="message_unread_counter"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                           <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable"><li><a type="edit">Edit Claim</a></li></t>
+                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                        <li><a name="%(mail.action_email_compose_message_wizard)d" type="action" >Send Email</a></li>
+                                        <br/>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div>
+                                        <field name="partner_id"/><br/>
+                                        <field name="date"/><br/>
+                                    </div>
+                                    <div>
+                                        <field name="categ_id"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority" groups="base.group_user"/>
+                                        <t t-if="record.message_unread_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        </t>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
 
         <!-- Crm claim Search view -->
 
@@ -209,10 +269,14 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                     <field name="name" string="Claims"/>
+                    <field name="id" string="Reference"/>
                     <separator/>
                     <filter string="Unassigned Claims" domain="[('user_id','=', False)]" help="Unassigned Claims" />
+                    <separator/>
+                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
+                    <field name="stage_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}"/>
                         <filter string="Responsible" domain="[]" help="Responsible User" context="{'group_by':'user_id'}"/>
@@ -220,10 +284,8 @@
                         <filter string="Type" domain="[]" context="{'group_by':'categ_id'}"/>
                         <filter string="Claim Month" domain="[]" help="Claim Date by Month" context="{'group_by':'date'}"/>
                         <filter string="Deadline" domain="[]" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Closure" domain="[]" help="Date Closed" context="{'group_by':'date_closed'}"  groups="base.group_no_one" invisible="1"/>
                     </group>
                 </search>
             </field>
         </record>
-     </data>
-</openerp>
+</odoo>
