@@ -307,6 +307,41 @@ function human_number (number) {
 }
 
 /**
+ * Parse time range from string
+ * eg. "5pm to 7pm sales meeting at gandhinagar" ==>['10pm', '11pm', 'gandhinagar', 'sales meeting']
+ *
+ * @param {String} string
+ */
+function parse_time_range (str){
+    var _to = _t("to"),
+        _from = _t("from"),
+        _at = _t("at");
+
+    // Regular expression for find patters like 3h, 3:00pm, 3:00:00am, 5h40, 4:20, 3:10:00 and etc.
+    var t_expr1 = "(\\d{1,2}:\\d{2}|\\d{1,2}:\\d{2}:\\d{2})((\\s)?[ap]m)?",
+        t_expr2 = "(\\d{1,2}h\\d{1,2})",
+        t_expr3 = "(\\d{1,2}(h|(\\s)?[ap]m))",
+        time_expr = new RegExp("(" + _at + "\\s|" + _from + "\\s)?(" + t_expr1 + "|" + t_expr2 + "|" + t_expr3 + ")", 'gi'),
+        // Regular expression for find patters like 3h to 8h, 5pm to 9AM, 3:20 to 4:50, 5h30 to 9h10.
+        range_expr = new RegExp(time_expr.source +  "(\\s(" + _to + ")\\s" + time_expr.source + ")?",'gi'),
+        location_expr = new RegExp("(\\b(" + _at + ")\\s|\\b(@))((\\w+('|,)?(?! " + _at + " )(\\s*))+)", 'gi'),
+        match_string = range_expr.test(str) ? str.match(range_expr)[0] : false;
+    if (match_string) {
+        var message = str.replace(range_expr, '').trim(),
+            match_range = match_string.split(' to '),
+            start = match_range[0],
+            stop = match_range.length > 1 ? match_range[1] : false,
+            location = location_expr.test(message) ? message.match(location_expr)[0] : false;
+        if(location){
+            message = message.replace(location, '').trim();
+            location = location.split(/at\s|@/i)[1].trim();
+        }
+        return [start, stop, location, message];
+    }
+    return [];
+}
+
+/**
  * performs a half up rounding with arbitrary precision, correcting for float loss of precision
  * See the corresponding float_round() in server/tools/float_utils.py for more info
  * @param {Number} the value to be rounded
@@ -421,6 +456,7 @@ return {
     binary_to_binsize: binary_to_binsize,
     human_size: human_size,
     human_number: human_number,
+    parse_time_range: parse_time_range,
     round_precision: round_precision,
     round_decimals: round_decimals,
     float_is_zero: float_is_zero,

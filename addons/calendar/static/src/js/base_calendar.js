@@ -8,8 +8,8 @@ var Model = require('web.DataModel');
 var WebClient = require('web.WebClient');
 var CalendarView = require('web_calendar.CalendarView');
 var widgets = require('web_calendar.widgets');
-var time = require('web.time');
 var formats = require('web.formats');
+var utils = require('web.utils');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
@@ -77,118 +77,70 @@ function reload_favorite_list(result) {
         });
     });
 }
-    
+
 widgets.QuickCreate.include({
-    init: function () {
-        this._super.apply(this, arguments);
-
-        var _at = _t("at");
-        var _from = _t("from");
-        var _to = _t("to");
-
-        // Regular expression for find patters like 3h, 3:00pm, 3:00:00am, 5h40, 4:20, 3:10:00 and etc.
-        var t_expr1 = "(\\d{1,2}:\\d{2}|\\d{1,2}:\\d{2}:\\d{2})((\\s)?[ap]m)?";
-        var t_expr2 = "(\\d{1,2}h\\d{1,2})";
-        var t_expr3 = "(\\d{1,2}(h|(\\s)?[ap]m))";
-        this.time_expr = new RegExp("(" + _at + "\\s|" + _from + "\\s)?(" + t_expr1 + "|" + t_expr2 + "|" + t_expr3 + ")", 'gi');
-        // Regular expression for find patters like 3h to 8h, 5pm to 9AM, 3:20 to 4:50, 5h30 to 9h10.
-        this.range_expr = new RegExp(this.time_expr.source +  "(\\s(" + _to + ")\\s" + this.time_expr.source + ")?",'gi');
-        // Regular expression for find patters like at Gandhinagar, @Ahmedabad.
-        this.location_expr = new RegExp("(\\b(" + _at + ")\\s|\\b(@))((\\w+('|,)?(?! " + _at + " )(\\s*))+)", 'gi');
-
-        this.start_datetime = null;
-        this.stop_datetime = null;
-        this.location = null;
-    },
-
     start: function() {
         this._super.apply(this, arguments);
         if(this.dataset.model == 'calendar.event') {
             this.$input.attr("placeholder",_t("14h to 16h Meeting, 2pm Meeting at Location"));
         }
     },
+    compute_fields_value: function(start, stop, location, message){
+        var time_format = ['hha', 'HH:mm', 'hh:mma', 'HH'],
+            start_date = moment(this.data_template.start.slice(0,10)),
+            stop_date = moment(this.data_template.stop.slice(0,10)),
+            start_time = moment(start, time_format),
+            stop_time = stop ? moment(stop, time_format) : start_time.add(1, 'hours');
 
-    prepare_data_pattern: function(data) {
-        var message =  data.name;
-        var valid = false;
-
-        if (!message) {
-            return false;
-        }
-
-        var time_range = message.match(this.range_expr);
-
-        this.start_date = moment(this.data_template.start.slice(0,10));
-        this.stop_date = moment(this.data_template.stop.slice(0,10));
-
-        if (time_range) {
-            message = message.replace(time_range[0], '');
-            valid = this.check_convert_time(time_range[0].split(' to '));
-
-            if (valid) {
-                this.start_datetime = (this.start_date.hours(this.start_time.hours()),this.start_date.minutes(this.start_time.minutes()));
-                this.stop_datetime = (this.stop_date.hours(this.stop_time.hours()),this.stop_date.minutes(this.stop_time.minutes()));
-            } else {
-                console.warn("WARNING: Invalid hours");
+        if(stop){
+            if (start_time.hours() > stop_time.hours()) {
+                stop_date = stop_date.add(1, 'days');
+            }
+        } else{
+            if (start_time.hours() >= 23) {
+                stop_date = stop_date.add(1,'days');
             }
         }
-
-        var at_location = message.match(this.location_expr);
-
-        // Get value of location
-        if (at_location) {
-            message = message.replace(at_location[at_location.length-1], '').trim();
-            this.location = at_location[at_location.length-1].split(/at\s|@/i)[1].trim();
+        if (start_time.isValid() &&  stop_time.isValid()){
+            var start_datetime = (start_date.hours(start_time.hours()), start_date.minutes(start_time.minutes()));
+            var stop_datetime = (stop_date.hours(stop_time.hours()), stop_date.minutes(stop_time.minutes()));
+            return {'start_datetime': start_datetime,
+                    'stop_datetime': stop_datetime,
+                    'location': location,
+                    'message':message
+                };
         }
-
-        // Set value of start_datetime, stop_datetime, location and subject in database.
-        if (this.start_datetime && this.stop_datetime) {
-            data.allday = false;
-            data.start = formats.parse_value(this.start_datetime, {type: 'datetime'});
-            data.stop = formats.parse_value(this.stop_datetime, {type: 'datetime'});
-        }
-        if (this.location) {
-            data.location = this.location;
-        }
-        data.name = message || _t("Meeting Name");
+        return {};
     },
-
-    /**
-     * Check value of start_datetime and stop_datetime
-     */
-    check_convert_time: function (time) {
-        var time_from = time[0];
-        var time_to = time.length > 1 ? time[1] : false;
-        var time_format = ['hha', 'HH:mm', 'hh:mma', 'HH'];
-
-        this.start_time = moment(time_from, time_format);
-
-        if (time_to) {
-            this.stop_time = moment(time_to, time_format);
-            if (this.start_time.hours() > this.stop_time.hours()) {
-                this.stop_date = this.stop_date.add(1, 'days');
-            }
-        } else {
-            // if no time_to, determine arbitrarily event duration is one hour
-            this.stop_time = (moment(time_from, time_format)).add(1, 'hours');
-            if (this.start_time.hours() >= 23) {
-                this.stop_date = this.stop_date.add(1,'days');
+    set_field_from_message: function(data){
+        var time_range = utils.parse_time_range(data.name);
+        if(time_range.length){
+            var computed_fields = this.compute_fields_value.apply(this, time_range),
+                start_datetime = computed_fields.start_datetime,
+                stop_datetime = computed_fields.stop_datetime;
+            if (start_datetime && stop_datetime){
+                data.allday = false;
+                data.start = formats.parse_value(start_datetime, {type: 'datetime'});
+                data.stop = formats.parse_value(stop_datetime, {type: 'datetime'});
+                if(computed_fields.location){
+                    data.location =computed_fields.location;
+                }
+                if(computed_fields.message){
+                    data.name = computed_fields.message;
+                }
             }
         }
-
-        return this.start_time.isValid() && this.stop_time.isValid();
     },
-   
     quick_create: function(data, options) {
-        if(this.dataset.model == 'calendar.event') {
-            this.prepare_data_pattern(data);
+        if(this.dataset.model == 'calendar.event' && data.name) {
+            this.set_field_from_message(data);
         }
         return this._super.apply(this, arguments);
     },
 
     slow_create: function(_data) {
-        if(this.dataset.model == 'calendar.event') {
-            this.prepare_data_pattern(_data);
+        if(this.dataset.model == 'calendar.event' && _data.name) {
+            this.set_field_from_message(_data);
         }
         return this._super.apply(this, arguments);
     },
