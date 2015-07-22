@@ -2162,7 +2162,7 @@ class BaseModel(object):
         result = []
         for row in fetched_data:
             for field, values in many2one_data.iteritems():
-                row[field] = values[row[field]]
+                row[field] = (row[field], values[row[field]])
             data = {
                 k: self._read_group_prepare_data(k,v, groupby_dict, context)
                 for k,v in row.iteritems()}
