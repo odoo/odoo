@@ -1125,7 +1125,7 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                 var file = file_node.files[0];
                 if (file.size > this.max_upload_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    core.bus.trigger('display_notification_warning', _t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
                 var filereader = new FileReader();
@@ -1303,7 +1303,7 @@ var FieldBinaryImage = FieldBinary.extend({
         });
         $img.on('error', function() {
             $img.attr('src', self.placeholder);
-            core.bus.trigger('display_notification_warning', _t("Image"), _t("Could not display the selected image."));
+            self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {

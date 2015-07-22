@@ -1111,9 +1111,8 @@ var One2ManyListView = X2ManyListView.extend({
     },
     do_button_action: function (name, id, callback) {
         if (!_.isNumber(id)) {
-            core.bus.trigger('display_notification_warning', 
-                _t("Action Button"),
-                _t("The o2m record must be saved before an action can be used"));
+            this.do_warn(_t("Action Button"),
+                         _t("The o2m record must be saved before an action can be used"));
             return;
         }
         var parent_form = this.x2m.view;

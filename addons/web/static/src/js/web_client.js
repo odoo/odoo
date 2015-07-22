@@ -9,7 +9,7 @@ var framework = require('web.framework');
 var Loading = require('web.Loading');
 var Menu = require('web.Menu');
 var Model = require('web.DataModel');
-var Notification = require('web.Notification');
+var NotificationManager = require('web.notification').NotificationManager;
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
@@ -20,11 +20,22 @@ var BarcodeEvents = require('web.BarcodeEvents');
 var QWeb = core.qweb;
 var _t = core._t;
 
-
 var WebClient = Widget.extend({
     events: {
         'click .oe_logo_edit_admin': 'logo_edit',
         'click .oe_logo img': 'on_logo_click',
+    },
+    custom_events: {
+        'notification': function (e) {
+            if(this.notification_manager) {
+                this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
+            }
+        },
+        'warning': function (e) {
+            if(this.notification_manager) {
+                this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
+            }
+        },
     },
 
     init: function(parent, client_options) {
@@ -110,16 +121,13 @@ var WebClient = Widget.extend({
     show_common: function() {
         var self = this;
         session.on('error', crash_manager, crash_manager.rpc_error);
-        self.notification = new Notification(this);
-        self.notification.appendTo(self.$('.openerp'));
+        self.notification_manager = new NotificationManager(this);
+        self.notification_manager.appendTo(self.$('.openerp'));
         self.loading = new Loading(self);
         self.loading.appendTo(self.$('.openerp_webclient_container'));
         self.action_manager = new ActionManager(self);
         self.action_manager.replace(self.$('.oe_application'));
 
-        core.bus.on('display_notification_warning', this, function (title, message) {
-            self.notification.warn(title, message);
-        });
         window.onerror = function (message, file, line, col, error) {
             var traceback = error ? error.stack : '';
             crash_manager.show_error({
@@ -249,14 +257,6 @@ var WebClient = Widget.extend({
         return this.session.session_reload().then(function () {
             session.load_modules(true).then(
                 self.menu.proxy('do_reload')); });
-    },
-    do_notify: function() {
-        var n = this.notification;
-        return n.notify.apply(n, arguments);
-    },
-    do_warn: function() {
-        var n = this.notification;
-        return n.warn.apply(n, arguments);
     },
     on_logout: function() {
         var self = this;
