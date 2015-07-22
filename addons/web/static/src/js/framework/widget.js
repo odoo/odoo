@@ -352,6 +352,13 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
     do_hide: function () {
         this.$el.addClass('o_hidden');
     },
+    do_toggle: function () {
+        if (this.$el.hasClass('o_hidden')) {
+            this.do_show();
+        } else {
+            this.do_hide();
+        }
+    },
     /**
      * Proxies a method of the object, in order to keep the right ``this`` on
      * method invocations.
