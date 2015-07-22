@@ -775,7 +775,7 @@ class MailThread(models.AbstractModel):
         if not model and not thread_id and not alias and not allow_private:
             return ()
 
-        return (model, thread_id, route[2], route[3], None if context.get('drop_alias', False) else route[4])
+        return (model, thread_id, route[2], route[3], None if self._context.get('drop_alias', False) else route[4])
 
     @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
@@ -842,12 +842,12 @@ class MailThread(models.AbstractModel):
         mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
         if ref_match and mail_messages:
             model, thread_id = mail_messages.model, mail_messages.res_id
-            alias = Alias.search(cr, uid, [('alias_name', '=', (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower())])          
+            alias = Alias.search([('alias_name', '=', (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower())])
             alias = alias[0] if alias else None
-            route = self.message_route_verify(
+            route = self.with_context(drop_alias=True).message_route_verify(
                 message, message_dict,
                 (model, thread_id, custom_values, self._uid, alias),
-                update_author=True, assert_model=False, create_fallback=True, context=dict(context, drop_alias=True))
+                update_author=True, assert_model=False, create_fallback=True)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',

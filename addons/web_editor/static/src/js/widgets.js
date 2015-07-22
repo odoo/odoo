@@ -525,7 +525,7 @@ var getCssSelectors = function(filter) {
 };
 function computeFonts() {
     _.each(fontIcons, function (data) {
-        data.cssData = website.editor.getCssSelectors(data.parser);
+        data.cssData = getCssSelectors(data.parser);
         data.alias = [];
         data.icons = _.map(data.cssData, function (css) {
             data.alias.push.apply(data.alias, css[3]);
