@@ -56,9 +56,9 @@ class product_product(osv.osv):
 
         location_ids = []
         if context.get('location', False):
-            if type(context['location']) == type(1):
+            if isinstance(context['location'], (int, long)):
                 location_ids = [context['location']]
-            elif type(context['location']) in (type(''), type(u'')):
+            elif isinstance(context['location'], basestring):
                 domain = [('complete_name','ilike',context['location'])]
                 if context.get('force_company', False):
                     domain += [('company_id', '=', context['force_company'])]
@@ -67,7 +67,15 @@ class product_product(osv.osv):
                 location_ids = context['location']
         else:
             if context.get('warehouse', False):
-                wids = [context['warehouse']]
+                if isinstance(context['warehouse'], (int, long)):
+                    wids = [context['warehouse']]
+                elif isinstance(context['warehouse'], basestring):
+                    domain = [('name', 'ilike', context['warehouse'])]
+                    if context.get('force_company', False):
+                        domain += [('company_id', '=', context['force_company'])]
+                    wids = warehouse_obj.search(cr, uid, domain, context=context)
+                else:
+                    wids = context['warehouse']
             else:
                 wids = warehouse_obj.search(cr, uid, [], context=context)
 
@@ -279,7 +287,7 @@ class product_product(osv.osv):
             toolbar=toolbar, submenu=submenu)
         if context is None:
             context = {}
-        if ('location' in context) and context['location']:
+        if context.get('location') and isinstance(context['location'], int):
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:

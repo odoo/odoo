@@ -1776,7 +1776,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     var startPoint = rng.getStartPoint();
     var endPoint = rng.getEndPoint();
 
-    if (rng.isCollapsed()) {
+    if (rng.isCollapsed() && !dom.isFont(rng.sc)) {
         return {
             sc: startPoint.node,
             so: startPoint.offset,
@@ -1824,6 +1824,11 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     });
     nodes = list.unique(nodes);
 
+        // If ico fa
+    if (rng.isCollapsed()) {
+        nodes.push(startPoint.node);
+    }
+
     // apply font: foreColor, backColor, size (the color can be use a class text-... or bg-...)
     var node, font, $font, fonts = [], className;
     if (color || bgcolor || size) {
@@ -1847,7 +1852,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
 
         if (color) {
           for (var k=0; k<className.length; k++) {
-            if (!className[k].length && className[k].slice(0,5) === "text-") {
+            if (className[k].length && className[k].slice(0,5) === "text-") {
               className.splice(k,1);
               k--;
             }

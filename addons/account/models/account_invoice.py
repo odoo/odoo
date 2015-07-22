@@ -738,7 +738,9 @@ class AccountInvoice(models.Model):
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
             ctx['invoice_id'] = inv.move_name and inv or False
-            move = account_move.with_context(ctx).create(move_vals)
+            ctx_nolang = ctx.copy()
+            ctx_nolang.pop('lang', None)
+            move = account_move.with_context(ctx_nolang).create(move_vals)
             # make the invoice point to that move
             vals = {
                 'move_id': move.id,

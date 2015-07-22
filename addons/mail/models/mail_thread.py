@@ -709,7 +709,7 @@ class MailThread(models.AbstractModel):
                 if not message_dict.get('parent_id'):
                     raise ValueError('Routing: posting a message without model should be with a parent_id (private mesage).')
             _warn('posting a message without model should be with a parent_id (private mesage), skipping')
-            return ()
+            return False
 
         if model and thread_id:
             record_set = self.env[model].browse(thread_id)
@@ -726,7 +726,7 @@ class MailThread(models.AbstractModel):
                 assert record_set.exists(), 'Routing: reply to missing document (%s,%s)' % (model, thread_id)
             else:
                 _warn('reply to missing document (%s,%s), skipping' % (model, thread_id))
-                return ()
+                return False
 
         # Existing Document: check model accepts the mailgateway
         if thread_id and model and not hasattr(record_set, 'message_update'):
@@ -737,7 +737,7 @@ class MailThread(models.AbstractModel):
                 assert hasattr(record_set, 'message_update'), 'Routing: model %s does not accept document update, crashing' % model
             else:
                 _warn('model %s does not accept document update, skipping' % model)
-                return ()
+                return False
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
@@ -747,7 +747,7 @@ class MailThread(models.AbstractModel):
                         'Model %s does not accept document creation, crashing' % model
                     )
             _warn('model %s does not accept document creation, skipping' % model)
-            return ()
+            return False
 
         # Update message author if asked
         # We do it now because we need it for aliases (contact settings)
@@ -766,16 +766,16 @@ class MailThread(models.AbstractModel):
             if not author_id or author_id not in [fol.id for fol in obj.message_follower_ids]:
                 _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
                 _create_bounce_email()
-                return ()
+                return False
         elif alias and alias.alias_contact == 'partners' and not author_id:
             _warn('alias %s does not accept unknown author, skipping' % alias.alias_name)
             _create_bounce_email()
-            return ()
+            return False
 
         if not model and not thread_id and not alias and not allow_private:
             return ()
 
-        return (model, thread_id, route[2], route[3], route[4])
+        return (model, thread_id, route[2], route[3], None if context.get('drop_alias', False) else route[4])
 
     @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
@@ -815,6 +815,7 @@ class MailThread(models.AbstractModel):
         if not isinstance(message, Message):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
+        Alias = self.env['mail.alias']
         fallback_model = model
 
         # Get email.message.Message variables for future processing
@@ -841,15 +842,19 @@ class MailThread(models.AbstractModel):
         mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
         if ref_match and mail_messages:
             model, thread_id = mail_messages.model, mail_messages.res_id
+            alias = Alias.search(cr, uid, [('alias_name', '=', (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower())])          
+            alias = alias[0] if alias else None
             route = self.message_route_verify(
                 message, message_dict,
-                (model, thread_id, custom_values, self._uid, None),
-                update_author=True, assert_model=False, create_fallback=True)
+                (model, thread_id, custom_values, self._uid, alias),
+                update_author=True, assert_model=False, create_fallback=True, context=dict(context, drop_alias=True))
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
                     email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
                 return [route]
+            elif route is False:
+                return []
 
         # 2. message is a reply to an existign thread (6.1 compatibility)
         if ref_match:
@@ -876,6 +881,8 @@ class MailThread(models.AbstractModel):
                                 'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
                             return [route]
+                        elif route is False:
+                            return []
 
         # 3. Reply to a private message
         if in_reply_to:
@@ -893,6 +900,8 @@ class MailThread(models.AbstractModel):
                         'Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                         email_from, email_to, message_id, mail_message_ids.id, custom_values, self._uid)
                     return [route]
+                elif route is False:
+                    return []
 
         # 4. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -905,7 +914,6 @@ class MailThread(models.AbstractModel):
                        decode_header(message, 'Resent-Cc')])
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
         if local_parts:
-            Alias = self.env['mail.alias']
             aliases = Alias.search([('alias_name', 'in', local_parts)])
             if aliases:
                 routes = []
@@ -962,7 +970,7 @@ class MailThread(models.AbstractModel):
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         partner_ids = message_dict.pop('partner_ids', [])
         thread_id = False
-        for model, thread_id, custom_values, user_id, alias in routes:
+        for model, thread_id, custom_values, user_id, alias in routes or ():
             if model:
                 Model = self.env[model]
                 if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):

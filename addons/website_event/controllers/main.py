@@ -14,7 +14,7 @@ from openerp.tools.translate import _
 
 
 class website_event(http.Controller):
-    @http.route(['/event', '/event/page/<int:page>'], type='http', auth="public", website=True)
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True)
     def events(self, page=1, **searches):
         cr, uid, context = request.cr, request.uid, request.context
         event_obj = request.registry['event.event']

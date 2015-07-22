@@ -67,7 +67,7 @@ class website_account(http.Controller):
         })
 
     @http.route(['/my/account'], type='http', auth='user', website=True)
-    def details(self, **post):
+    def details(self, redirect=None, **post):
         partner = request.env['res.users'].browse(request.uid).partner_id
         values = {
             'error': {},
@@ -81,6 +81,8 @@ class website_account(http.Controller):
             if not error:
                 post.update({'zip': post.pop('zipcode', '')})
                 partner.sudo().write(post)
+                if redirect:
+                    return request.redirect(redirect)
                 return request.redirect('/my/home')
 
         countries = request.env['res.country'].sudo().search([])
@@ -91,6 +93,7 @@ class website_account(http.Controller):
             'countries': countries,
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
+            'redirect': redirect,
         })
 
         return request.website.render("website_portal.details", values)

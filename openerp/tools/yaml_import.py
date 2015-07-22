@@ -319,10 +319,10 @@ class YamlInterpreter(object):
                     if not self._coerce_bool(record.forcecreate):
                         return None
 
-
             #context = self.get_context(record, self.eval_context)
-            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
-            context = record.context
+            # FIXME: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            # TODO: cleaner way to avoid resetting password in auth_signup (makes user creation costly)
+            context = dict(record.context or {}, no_reset_password=True)
             view_info = False
             if view_id:
                 varg = view_id
@@ -459,7 +459,7 @@ class YamlInterpreter(object):
                         result = recs.onchange(record_dict, field_name, onchange_spec)
 
                     else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
                         assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
                         # creating the context

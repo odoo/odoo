@@ -177,13 +177,15 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
+        prec = self.env['decimal.precision'].precision_get('Account')
+
         self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
             WHERE       move_id in %s
             GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
-            """, (tuple(self.ids),))
+            HAVING      abs(sum(debit) - sum(credit)) > %s
+            """, (tuple(self.ids), 10 ** (-max(5, prec))))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
@@ -1086,7 +1088,7 @@ class AccountMoveLine(models.Model):
             'journal_id': self.journal_id.analytic_journal_id.id,
             'ref': self.ref,
             'move_id': self.id,
-            'user_id': self._uid,
+            'user_id': self.invoice_id.user_id.id or self._uid,
         }
 
     @api.model

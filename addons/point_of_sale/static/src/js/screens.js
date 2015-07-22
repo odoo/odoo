@@ -1508,7 +1508,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             if (event.type === "keypress") {
                 if (event.keyCode === 13) { // Enter
                     self.validate_order();
-                } else if (event.keyCode === 46) { // Period
+                } else if ( event.keyCode === 190 || // Dot
+                            event.keyCode === 110 ||  // Decimal point (numpad)
+                            event.keyCode === 188 ) { // Comma
                     key = '.';
                 } else if (event.keyCode >= 48 && event.keyCode <= 57) { // Numbers
                     key = '' + (event.keyCode - 48);

@@ -19,19 +19,17 @@ class AccountTestUsers(AccountingTestCase):
         self.account_type_model = self.env['account.account.type']
         self.currency_euro = self.env.ref('base.EUR')
 
-        self.account_user = self.res_user_model.create(dict(
+        self.account_user = self.res_user_model.with_context({'no_reset_password': True}).create(dict(
             name="Accountant",
             company_id=self.main_company.id,
             login="acc",
-            password="acc",
             email="accountuser@yourcompany.com",
             groups_id=[(6, 0, [res_users_account_user.id, partner_manager.id])]
         ))
-        self.account_manager = self.res_user_model.create(dict(
+        self.account_manager = self.res_user_model.with_context({'no_reset_password': True}).create(dict(
             name="Adviser",
             company_id=self.main_company.id,
             login="fm",
-            password="fm",
             email="accountmanager@yourcompany.com",
             groups_id=[(6, 0, [res_users_account_manager.id, partner_manager.id])]
         ))

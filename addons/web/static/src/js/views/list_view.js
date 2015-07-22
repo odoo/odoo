@@ -1898,7 +1898,7 @@ var ColumnBinary = Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        var text = _t("Download");
+        var text = _t("Download"), filename=_t('Binary file');
         var value = row_data[this.id].value;
         if (!value) {
             return options.value_if_empty || '';
@@ -1916,11 +1916,13 @@ var ColumnBinary = Column.extend({
         if (this.filename && row_data[this.filename]) {
             text = _.str.sprintf(_t("Download \"%s\""), formats.format_value(
                     row_data[this.filename].value, {type: 'char'}));
+            filename = row_data[this.filename].value;
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)')({
+        return _.template('<a download="<%-download%>" href="<%-href%>"><%-text%></a> (<%-size%>)')({
             text: text,
             href: download_url,
             size: utils.binary_to_binsize(value),
+            download: filename,
         });
     }
 });

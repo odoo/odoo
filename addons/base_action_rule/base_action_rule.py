@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 import logging
 
@@ -16,11 +17,11 @@ from openerp.tools.safe_eval import safe_eval as eval
 _logger = logging.getLogger(__name__)
 
 DATE_RANGE_FUNCTION = {
-    'minutes': lambda interval: timedelta(minutes=interval),
-    'hour': lambda interval: timedelta(hours=interval),
-    'day': lambda interval: timedelta(days=interval),
-    'month': lambda interval: timedelta(months=interval),
-    False: lambda interval: timedelta(0),
+    'minutes': lambda interval: relativedelta(minutes=interval),
+    'hour': lambda interval: relativedelta(hours=interval),
+    'day': lambda interval: relativedelta(days=interval),
+    'month': lambda interval: relativedelta(months=interval),
+    False: lambda interval: relativedelta(0),
 }
 
 def get_datetime(date_str):

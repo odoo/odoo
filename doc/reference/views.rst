@@ -1,5 +1,6 @@
-.. highlight:: xml
+:banner: banners/views.jpg
 
+.. highlight:: xml
 .. _reference/views:
 
 =====
@@ -12,7 +13,7 @@ Common Structure
 ================
 
 View objects expose a number of fields, they are optional unless specified
-otherwise)
+otherwise.
 
 ``name`` (mandatory)
     only useful as a mnemonic/description of the view when looking for one in
@@ -21,7 +22,7 @@ otherwise)
     the model linked to the view, if applicable (it doesn't for QWeb views)
 ``priority``
     client programs can request views by ``id``, or by ``(model, type)``. For
-    the latter, all the views for the right type and model will be looked for,
+    the latter, all the views for the right type and model will be searched,
     and the one with the lowest ``priority`` number will be returned (it is
     the "default view").
 
@@ -567,7 +568,7 @@ Button Box
 ..........
 
 Many relevant actions or links can be displayed in the form. For example, in
-Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" take
+Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" have
 an important place in the use of the CRM. Instead of placing them in the
 "More" menu, put them directly in the sheet as buttons (on the top) to make
 them more visible and more easily accessible.
@@ -575,8 +576,8 @@ them more visible and more easily accessible.
 .. image:: forms/header3.png
    :class: img-responsive
 
-Technically, the buttons are placed inside a <div> to group them as a block on
-the top of the sheet.
+Technically, the buttons are placed inside a ``<div>`` to group them as a
+block on the top of the sheet.
 
 ::
 
@@ -636,7 +637,7 @@ place inside the field, it *must not* be an example as they are often confused
 with filled data.
 
 One can also group fields together by rendering them "inline" inside an
-explicit block element like `<div>``. This allows grouping semantically
+explicit block element like ``<div>``. This allows grouping semantically
 related fields as if they were a single (composite) fields.
 
 The following example, taken from the *Leads* form, shows both placeholders and

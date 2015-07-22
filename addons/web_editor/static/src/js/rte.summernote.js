@@ -408,7 +408,7 @@ dom.isImgFont = function (node) {
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
         for (var k=0; k<widgets.fontIcons.length; k++) {
-            if (_.intersection(widgets.fontIcons[k].icons, classNames).length) {
+            if (_.intersection(widgets.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }

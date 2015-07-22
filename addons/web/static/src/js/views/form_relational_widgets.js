@@ -876,6 +876,10 @@ var FieldX2Many = AbstractManyField.extend({
 var X2ManyDataSet = data.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.x2m.build_context();
+        var self = this;
+        _.each(arguments, function(context) {
+            self.context.add(context);
+        });
         return this.context;
     },
     create: function(data, options) {

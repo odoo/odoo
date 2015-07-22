@@ -501,9 +501,21 @@ var getCssSelectors = function(filter) {
             for(var r = 0; r < rules.length; r++) {
                 var selectorText = rules[r].selectorText;
                 if (selectorText) {
-                    var match = selectorText.match(filter);
-                    if (match) {
-                        css.push([match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, '')]);
+                    selectorText = selectorText.split(/\s*,\s*/);
+                    var data = null;
+                    for(var s = 0; s < selectorText.length; s++) {
+                        var match = selectorText[s].match(filter);
+                        if (match) {
+                            var clean = match[1].slice(1).replace(/::?before$/, '');
+                            if (!data) {
+                                data = [match[1], rules[r].cssText.replace(/(^.*\{\s*)|(\s*\}\s*$)/g, ''), clean, [clean]];
+                            } else {
+                                data[3].push(clean);
+                            }
+                        }
+                    }
+                    if (data) {
+                        css.push(data);
                     }
                 }
             }
@@ -513,8 +525,11 @@ var getCssSelectors = function(filter) {
 };
 function computeFonts() {
     _.each(fontIcons, function (data) {
-        data.icons = _.map(getCssSelectors(data.parser), function (css) {
-            return css[0].slice(1, css[0].length).replace(/::?before$/, '');
+        data.cssData = website.editor.getCssSelectors(data.parser);
+        data.alias = [];
+        data.icons = _.map(data.cssData, function (css) {
+            data.alias.push.apply(data.alias, css[3]);
+            return css[2];
         });
     });
 }
@@ -575,22 +590,20 @@ var fontIconsDialog = Widget.extend({
     search: function (needle) {
         var iconsParser = this.iconsParser;
         if (needle) {
-            var parser = [];
-            var fontIcon;
-
-            for (var k=0; k<fontIcons.length; k++) {
-                fontIcon = fontIcons[k];
-                var icons = _(fontIcon.icons).filter(function (icon) {
-                    return icon.indexOf(needle) !== -1;
+            var iconsParser = [];
+            _.filter(this.iconsParser, function (data) {
+                var cssData = _.filter(data.cssData, function (cssData) {
+                    return _.find(cssData[3], function (alias) {
+                        return alias.indexOf(needle) !== -1;
+                    });
                 });
-                if (icons.length) {
-                    parser.push({
-                        base: fontIcon.base,
-                        icons: icons
+                if (cssData.length) {
+                    iconsParser.push({
+                        base: data.base,
+                        cssData: cssData
                     });
                 }
-            }
-            iconsParser = parser;
+            });
         }
         this.$('div.font-icons-icons').html(
             QWeb.render('web_editor.dialog.font-icons.icons', {'iconsParser': iconsParser}));
@@ -624,17 +637,17 @@ var fontIconsDialog = Widget.extend({
         if (!(classNames instanceof Array)) {
             classNames = (classNames||"").split(/\s+/);
         }
-        var fontIcon, className;
-        for (var i=0; i<classNames.length; i++) {
-            className = classNames[i];
-            for (var k=0; k<fontIcons.length; k++) {
-                fontIcon = fontIcons[k];
-                if (className === fontIcon.base || fontIcon.icons.indexOf(className) !== -1) {
+        var fontIcon, cssData;
+        for (var k=0; k<this.iconsParser.length; k++) {
+            fontIcon = this.iconsParser[k];
+            for (var s=0; s<fontIcon.cssData.length; s++) {
+                cssData = fontIcon.cssData[s];
+                if (_.intersection(classNames, cssData[3]).length) {
                     return {
                         'base': fontIcon.base,
                         'parser': fontIcon.parser,
                         'icons': fontIcon.icons,
-                        'font': className
+                        'font': cssData[2]
                     };
                 }
             }
@@ -670,7 +683,7 @@ var fontIconsDialog = Widget.extend({
                     continue;
                 case '': continue;
                 default:
-                    $(".font-icons-icon").removeClass("font-icons-selected").filter("."+cls).addClass("font-icons-selected");
+                    $(".font-icons-icon").removeClass("font-icons-selected").filter("[data-alias*=',"+cls+",']").addClass("font-icons-selected");
                     for (var k=0; k<this.icons.length; k++) {
                         if (this.icons.indexOf(cls) !== -1) {
                             this.$('#fa-icon').val(cls);

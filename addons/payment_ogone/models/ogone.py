@@ -17,7 +17,7 @@ from openerp.addons.payment_ogone.controllers.main import OgoneController
 from openerp.addons.payment_ogone.data import ogone
 from openerp.osv import osv, fields
 from openerp.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
-from openerp.tools.float_utils import float_compare
+from openerp.tools.float_utils import float_compare, float_repr
 from openerp.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -148,12 +148,11 @@ class PaymentAcquirerOgone(osv.Model):
     def ogone_form_generate_values(self, cr, uid, id, partner_values, tx_values, context=None):
         base_url = self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url')
         acquirer = self.browse(cr, uid, id, context=context)
-
         ogone_tx_values = dict(tx_values)
         temp_ogone_tx_values = {
             'PSPID': acquirer.ogone_pspid,
             'ORDERID': tx_values['reference'],
-            'AMOUNT': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'AMOUNT': float_repr(float_round(tx_values['amount'], 2) * 100, 0),
             'CURRENCY': tx_values['currency'] and tx_values['currency'].name or '',
             'LANGUAGE':  partner_values['lang'],
             'CN':  partner_values['name'],
@@ -289,9 +288,11 @@ class PaymentTxOgone(osv.Model):
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
-                'date_validate': data['TRXDATE'],
+                'date_validate': datetime.datetime.strptime(data['TRXDATE'],'%m/%d/%y').strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': data['PAYID'],
             })
+            if tx.s2s_cb_eval:
+                safe_eval(tx.s2s_cb_eval, {'self': tx})
             return True
         elif status in self._ogone_cancel_tx_status:
             tx.write({
@@ -305,9 +306,9 @@ class PaymentTxOgone(osv.Model):
             })
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
-                'error_str': data.get('NCERROR'),
-                'error_code': data.get('NCERRORPLUS'),
-                'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERRORPLUS')),
+                'error_str': data.get('NCERRORPLUS'),
+                'error_code': data.get('NCERROR'),
+                'error_msg': ogone.OGONE_ERROR_MAP.get(data.get('NCERROR')),
             }
             _logger.info(error)
             tx.write({
@@ -406,9 +407,9 @@ class PaymentTxOgone(osv.Model):
             return self.ogone_s2s_validate(tx, tree, tries - 1)
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
-                'error_str': tree.get('NCERROR'),
-                'error_code': tree.get('NCERRORPLUS'),
-                'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERRORPLUS')),
+                'error_str': tree.get('NCERRORPLUS'),
+                'error_code': tree.get('NCERROR'),
+                'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERROR')),
             }
             _logger.info(error)
             tx.write({

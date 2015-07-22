@@ -826,7 +826,7 @@ class expression(object):
                 raise NotImplementedError('_auto_join attribute not supported on many2many column %s' % left)
 
             elif len(path) > 1 and column._type == 'many2one':
-                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
+                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=dict(context, active_test=False))
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 

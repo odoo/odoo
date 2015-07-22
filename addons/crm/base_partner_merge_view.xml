@@ -86,6 +86,9 @@
                             type='object'
                             attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}"
                             />
+                        <button name='next_cb' string='Skip these contacts'
+                            type='object'  class='oe_link'
+                            attrs="{'invisible': [('state', '!=', 'selection')]}" />
                         <button name='start_process_cb'
                             string='Merge with Manual Check'
                             type='object'  class='oe_highlight'

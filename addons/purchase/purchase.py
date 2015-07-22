@@ -860,6 +860,7 @@ class purchase_order(osv.osv):
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
+        return picking_id
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
@@ -1372,7 +1373,11 @@ class procurement_order(osv.osv):
             names_dict[id] = name
         for procurement in procurements:
             taxes_ids = procurement.product_id.supplier_taxes_id
-            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position_id, taxes_ids)
+            # It is necessary to have the appropriate fiscal position to get the right tax mapping
+            fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)
+            if fp:
+                fp = acc_pos_obj.browse(cr, uid, fp, context=context)
+            taxes = acc_pos_obj.map_tax(cr, uid, fp, taxes_ids)
             name = names_dict[procurement.product_id.id]
             if procurement.product_id.description_purchase:
                 name += '\n' + procurement.product_id.description_purchase
@@ -1493,6 +1498,7 @@ class procurement_order(osv.osv):
         po_line_obj = self.pool.get('purchase.order.line')
         seq_obj = self.pool.get('ir.sequence')
         uom_obj = self.pool.get('product.uom')
+        acc_pos_obj = self.pool.get('account.fiscal.position')
         add_purchase_procs, create_purchase_procs = self._get_grouping_dicts(cr, uid, ids, context=context)
         procs_done = []
 
@@ -1580,6 +1586,7 @@ class procurement_order(osv.osv):
             name = seq_obj.next_by_code(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
+            fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
@@ -1589,7 +1596,7 @@ class procurement_order(osv.osv):
                 'pricelist_id': partner.property_product_pricelist_purchase.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position_id': partner.property_account_position_id.id,
+                'fiscal_position_id': fp,
                 'payment_term_id': partner.property_supplier_payment_term_id.id,
                 'dest_address_id': procurement.partner_dest_id.id,
                 'group_id': group,
@@ -1719,7 +1726,8 @@ class account_invoice(osv.Model):
                     not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
                 shipped = False
             for po_line in order.order_line:
-                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
+                if (po_line.invoice_lines and 
+                        all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
                     invoiced.append(po_line.id)
             if invoiced and shipped:
                 self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})

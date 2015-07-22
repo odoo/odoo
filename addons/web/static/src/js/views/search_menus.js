@@ -55,10 +55,6 @@ return Widget.extend({
                 }
             })
             .on('reset', this.proxy('clear_selection'));
-        if (!this.action_id) {
-            this.prepare_dropdown_menu([]);
-            return $.when();
-        }
         return this.model.call('get_filters', [this.target_model, this.action_id],
                                {context: this.searchview.dataset.context})
             .done(this.proxy('prepare_dropdown_menu'));

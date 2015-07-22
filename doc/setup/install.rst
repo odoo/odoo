@@ -1,3 +1,5 @@
+:banner: banners/installing_odoo.jpg
+
 .. _setup/install:
 
 ===============
@@ -221,7 +223,7 @@ There are two way to get the odoo source source zip or git.
 
   The git repository is https://github.com/odoo/odoo.git.
 
-  Downloading it requires a `a git client <http://git-scm.com/download/>`_
+  Downloading it requires a `git client <http://git-scm.com/download/>`_
   (which may be available via your distribution on linux) and can be performed
   using the following command:
 

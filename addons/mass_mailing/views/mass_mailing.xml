@@ -26,17 +26,16 @@
                     <field name="mail_mail_id_int"/>
                     <field name="message_id"/>
                     <field name="mass_mailing_id"/>
-                    <filter help="Sent" domain="[('sent', '!=', False)]"/>
-                    <filter help="Opened" domain="[('opened', '!=', False)]"/>
-                    <filter help="Replied" domain="[('replied', '!=', False)]"/>
-                    <filter help="Bounced" domain="[('bounced', '!=', False)]"/>
+                    <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('bounced', '=', False)]"/>
+                    <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
+                    <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
+                    <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="State" domain="[]"
-                            context="{'group_by':'state'}"/>
-                        <filter string="Last State Update" domain="[]"
-                            context="{'group_by':'state_update'}"/>
-                        <filter string="Mass Mailing" domain="[]"
-                            context="{'group_by':'mass_mailing_id'}"/>
+                        <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
+                        <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
+                        <filter string="Last State Update" domain="[]" context="{'group_by':'state_update'}"/>
+                        <filter string="Mass Mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
                     </group>
                 </search>
             </field>
@@ -399,15 +398,18 @@
                                 <field name="sent" string="Emails Sent" widget="statinfo"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_received': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_opened': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
-                                type="action" class="oe_stat_button">
+                                    context="{'search_default_filter_replied': True}"
+                                    type="action" class="oe_stat_button">
                                 <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mass_mailing_links_statistics)d"
@@ -415,6 +417,7 @@
                                 <field name="clicks_ratio" string="Clicks" widget="percentpie"/>
                             </button>
                             <button name="%(action_view_mail_mail_statistics_mailing)d"
+                                context="{'search_default_filter_bounced': True}"
                                 type="action" class="oe_stat_button">
                                 <field name="bounced_ratio" string="Bounced" widget="percentpie"/>
                             </button>

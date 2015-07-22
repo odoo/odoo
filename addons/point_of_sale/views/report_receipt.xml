@@ -31,7 +31,7 @@
                             <td><span t-field="line.product_id"/></td>
                             <td class="text-right">
                                 <t t-if="o.state != 'cancel' and o.statement_ids">
-                                    <span t-esc="'%.f' % line.qty"/>
+                                    <span t-field="line.qty"/>
                                 </t>
                             </td>
                             <td class="text-right">

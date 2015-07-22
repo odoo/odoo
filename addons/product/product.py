@@ -697,7 +697,7 @@ class product_template(osv.osv):
             # unlink or inactive product
             for variant_id in map(int,variants_inactive):
                 try:
-                    with cr.savepoint():
+                    with cr.savepoint(), tools.mute_logger('openerp.sql_db'):
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
                 #We catch all kind of exception to be sure that the operation doesn't fail.
                 except (psycopg2.Error, except_orm):
@@ -931,12 +931,12 @@ class product_product(osv.osv):
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
         image = tools.image_resize_image_big(value)
-        res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
+
         product = self.browse(cr, uid, id, context=context)
-        if not product.product_tmpl_id.image:
-            product.write({'image_variant': None})
-            product.product_tmpl_id.write({'image': image})
-        return res
+        if product.product_tmpl_id.image:
+            product.image_variant = image
+        else:
+            product.product_tmpl_id.image = image
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)

@@ -217,9 +217,11 @@
     </t>
     <t t-name="web_editor.dialog.font-icons.icons">
         <t t-foreach="iconsParser" t-as="data">
-            <span t-foreach="data.icons" t-as="icon"
-                  t-attf-class="#{data.base} font-icons-icon #{icon}"
-                  t-att-data-id="icon"/>
+          <span t-foreach="data.cssData" t-as="cssData"
+                t-attf-class="#{data.base} font-icons-icon #{cssData[2]}"
+                t-attf-data-alias=",#{cssData[3]},"
+                t-att-title="cssData[3].join(', ')"
+                t-att-data-id="cssData[2]"/>
         </t>
     </t>
 

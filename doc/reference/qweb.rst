@@ -1,3 +1,5 @@
+:banner: banners/qweb.jpg
+
 .. highlight:: xml
 
 .. _reference/qweb:

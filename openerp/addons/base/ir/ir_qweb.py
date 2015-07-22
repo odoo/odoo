@@ -21,6 +21,7 @@ import babel.dates
 import werkzeug
 from lxml import etree, html
 from PIL import Image
+import psycopg2
 
 import openerp.http
 import openerp.tools
@@ -1285,14 +1286,18 @@ class AssetsBundle(object):
 
     def set_cache(self, type, content):
         ira = self.registry['ir.attachment']
-        ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
         url = '/web/%s/%s/%s' % (type, self.xmlid, self.version)
-        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+        try:
+            with self.cr.savepoint():
+                ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
+                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                     datas=content.encode('utf8').encode('base64'),
                     type='binary',
                     name=url,
                     url=url,
                 ), context=self.context)
+        except psycopg2.Error:
+            pass
 
     def css_message(self, message):
         # '\A' == css content carriage return
@@ -1549,22 +1554,27 @@ class PreprocessedCSS(StylesheetAsset):
 
     def to_html(self):
         if self.url:
-            ira = self.registry['ir.attachment']
-            url = self.html_url % self.url
-            domain = [('type', '=', 'binary'), ('url', '=', url)]
-            ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-            datas = self.content.encode('utf8').encode('base64')
-            if ira_id:
-                # TODO: update only if needed
-                ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas}, context=self.context)
-            else:
-                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=datas,
-                    mimetype='text/css',
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
+            try:
+                ira = self.registry['ir.attachment']
+                url = self.html_url % self.url
+                domain = [('type', '=', 'binary'), ('url', '=', url)]
+                with self.cr.savepoint():
+                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+                    datas = self.content.encode('utf8').encode('base64')
+                    if ira_id:
+                        # TODO: update only if needed
+                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
+                                  context=self.context)
+                    else:
+                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                            datas=datas,
+                            mimetype='text/css',
+                            type='binary',
+                            name=url,
+                            url=url,
+                        ), context=self.context)
+            except psycopg2.Error:
+                pass
         return super(PreprocessedCSS, self).to_html()
 
     def get_source(self):

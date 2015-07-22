@@ -56,15 +56,19 @@ class stock_history(osv.osv):
                 for product_id in ids:
                     line_ids.add(product_id)
             line_ids = list(line_ids)
-            cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
-            lines_rec = cr.dictfetchall()
+            lines_rec = {}
+            if line_ids:
+                cr.execute('SELECT id, product_id, price_unit_on_quant, company_id, quantity FROM stock_history WHERE id in %s', (tuple(line_ids),))
+                lines_rec = cr.dictfetchall()
             lines_dict = dict((line['id'], line) for line in lines_rec)
             product_ids = list(set(line_rec['product_id'] for line_rec in lines_rec))
             products_rec = self.pool['product.product'].read(cr, uid, product_ids, ['cost_method', 'product_tmpl_id'], context=context)
             products_dict = dict((product['id'], product) for product in products_rec)
             cost_method_product_tmpl_ids = list(set(product['product_tmpl_id'][0] for product in products_rec if product['cost_method'] != 'real'))
-            cr.execute('SELECT DISTINCT ON (product_template_id, company_id) product_template_id, company_id, cost FROM product_price_history WHERE product_template_id in %s AND datetime <= %s ORDER BY product_template_id, company_id, datetime DESC', (tuple(cost_method_product_tmpl_ids), date))
-            histories = cr.dictfetchall()
+            histories = []
+            if cost_method_product_tmpl_ids:
+                cr.execute('SELECT DISTINCT ON (product_template_id, company_id) product_template_id, company_id, cost FROM product_price_history WHERE product_template_id in %s AND datetime <= %s ORDER BY product_template_id, company_id, datetime DESC', (tuple(cost_method_product_tmpl_ids), date))
+                histories = cr.dictfetchall()
             histories_dict = {}
             for history in histories:
                 histories_dict[(history['product_template_id'], history['company_id'])] = history['cost']
@@ -158,8 +162,11 @@ class stock_history(osv.osv):
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND dest_location.usage in ('internal', 'transit')
-                AND ((source_location.company_id is null and dest_location.company_id is not null) or
-                (source_location.company_id is not null and dest_location.company_id is null) or source_location.company_id != dest_location.company_id)
+                AND (
+                    (source_location.company_id is null and dest_location.company_id is not null) or
+                    (source_location.company_id is not null and dest_location.company_id is null) or
+                    source_location.company_id != dest_location.company_id or
+                    source_location.usage not in ('internal', 'transit'))
                 ) UNION
                 (SELECT
                     '-' || stock_move.id::text || '-' || quant.id::text AS id,
@@ -192,8 +199,11 @@ class stock_history(osv.osv):
                 LEFT JOIN
                     product_template ON product_template.id = product_product.product_tmpl_id
                 WHERE quant.qty>0 AND stock_move.state = 'done' AND source_location.usage in ('internal', 'transit')
-                AND ((dest_location.company_id is null and source_location.company_id is not null) or
-                (dest_location.company_id is not null and source_location.company_id is null) or dest_location.company_id != source_location.company_id)
+                AND (
+                    (dest_location.company_id is null and source_location.company_id is not null) or
+                    (dest_location.company_id is not null and source_location.company_id is null) or
+                    dest_location.company_id != source_location.company_id or
+                    dest_location.usage not in ('internal', 'transit'))
                 ))
                 AS foo
                 GROUP BY move_id, location_id, company_id, product_id, product_categ_id, date, price_unit_on_quant, source, product_template_id, serial_number

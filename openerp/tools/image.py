@@ -115,8 +115,6 @@ def image_save_for_web(image, fp=None, format=None):
         if image.mode in ('RGBA', 'LA') or (image.mode == 'P' and 'transparency' in image.info):
             alpha = image.convert('RGBA').split()[-1]
         if image.mode != 'P':
-            # Get the alpha band
-            alpha = image.split()[-1]
             # Floyd Steinberg dithering by default
             image = image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
         if alpha:

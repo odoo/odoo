@@ -23,7 +23,7 @@
                         <field name="quote_viewed" invisible="1"/>
                         <field name="options">
                             <tree string="Sales Quotation Template Lines" editable="bottom">
-                                    <field name="product_id" on_change="on_change_product_id(product_id, uom_id)"/>
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom" on_change="product_uom_change(product_id, uom_id)"/>
@@ -35,7 +35,6 @@
                     </page>
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position="before">
-                    <field name="require_payment"/>
                     <label for="template_id"/>
                     <div>
                         <field name="template_id" on_change="onchange_template_id(template_id, partner_id, fiscal_position_id, pricelist_id)"/>
@@ -45,6 +44,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
+                    <field name="require_payment"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>

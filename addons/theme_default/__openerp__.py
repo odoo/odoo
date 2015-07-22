@@ -1,5 +1,5 @@
 {
-    'name': 'Default Website Theme',
+    'name': 'Default Theme',
     'description': 'Default website theme to showcase customization possibilities.',
     'category': 'Theme/Hidden',
     'version': '1.0',
