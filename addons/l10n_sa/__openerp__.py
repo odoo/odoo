@@ -34,7 +34,7 @@ In future this module will include some payroll rules for ME .
 For support, Plz contact us: http://dvit.me/
 """,
     'website': 'http://www.dvit.me',
-    'depends': ['account_chart', 'l10n_multilang', 'account_anglo_saxon'],
+    'depends': ['account_chart', 'l10n_multilang'],
     'data': [
         'account_type.xml',
         'account.account.template.csv',
