@@ -141,6 +141,18 @@ odoo.define_section('web-formats', ['web.formats', 'web.time'], function (test) 
         assert.equal(intersperse("12345678", [3,0], '.'), '12.345.678');
     });
 
+    test('parse_time_range', ['web.utils'], function (assert, formats, time, utils) {
+        var parse_time_range = utils.parse_time_range;
+        assert.deepEqual(parse_time_range("5pm to 7pm sales meeting at gandhinagar"), ['5pm', '7pm', 'gandhinagar', 'sales meeting']);
+        assert.deepEqual(parse_time_range("5PM to 7PM sales meeting @ gandhinagar"), ['5PM', '7PM', 'gandhinagar', 'sales meeting']);
+        assert.deepEqual(parse_time_range("5am to 7am sales meeting @gandhinagar"), ['5am', '7am', 'gandhinagar', 'sales meeting']);
+        assert.deepEqual(parse_time_range("13h to 15h sales meeting"), ['13h', '15h', false, 'sales meeting']);
+        assert.deepEqual(parse_time_range("5pm sales meeting"), ['5pm', false, false, 'sales meeting']);
+        assert.deepEqual(parse_time_range("11h  Meeting"), ["11h", false, false, "Meeting"]);
+        assert.deepEqual(parse_time_range("13d to 15d sales meeting"), []);
+        assert.deepEqual(parse_time_range("13 to 15 sales meeting"), []);
+    });
+
     test('format_integer', ['web.core'], function (assert, formats, time, core) {
         core._t.database.parameters.grouping = [3, 3, 3, 3];
         assert.equal(formats.format_value(1000000, {type: 'integer'}),

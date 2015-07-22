@@ -308,7 +308,7 @@ function human_number (number) {
 
 /**
  * Parse time range from string
- * eg. "5pm to 7pm sales meeting at gandhinagar" ==>['10pm', '11pm', 'gandhinagar', 'sales meeting']
+ * eg. "5pm to 7pm sales meeting at gandhinagar" ==>['5pm', '7pm', 'gandhinagar', 'sales meeting']
  *
  * @param {String} string
  */
@@ -324,7 +324,7 @@ function parse_time_range (str){
         time_expr = new RegExp("(" + _at + "\\s|" + _from + "\\s)?(" + t_expr1 + "|" + t_expr2 + "|" + t_expr3 + ")", 'gi'),
         // Regular expression for find patters like 3h to 8h, 5pm to 9AM, 3:20 to 4:50, 5h30 to 9h10.
         range_expr = new RegExp(time_expr.source +  "(\\s(" + _to + ")\\s" + time_expr.source + ")?",'gi'),
-        location_expr = new RegExp("(\\b(" + _at + ")\\s|\\b(@))((\\w+('|,)?(?! " + _at + " )(\\s*))+)", 'gi'),
+        location_expr = new RegExp("(\\b(" + _at + ")\\s|\\b( @)|\\b( @ ))((\\w+('|,)?(?! " + _at + " )(\\s*))+)", 'gi'),
         match_string = range_expr.test(str) ? str.match(range_expr)[0] : false;
     if (match_string) {
         var message = str.replace(range_expr, '').trim(),
