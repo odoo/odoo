@@ -148,7 +148,7 @@
             <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
-            <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
 
         </template>
 
@@ -369,6 +369,17 @@
 
                     <t t-call="web.assets_common"/>
                     <t t-call="web.assets_backend"/>
+                    <script type="text/javascript">
+                        $(function() {
+                            odoo.define('web.web_client', function (require) {
+                                var WebClient = require('web.WebClient');
+                                var web_client = new WebClient();
+                                web_client.setElement($(document.body));
+                                web_client.start();
+                                return web_client;
+                            });
+                        });
+                    </script>
 
                     <style>
                         body { overflow: auto !important; }
