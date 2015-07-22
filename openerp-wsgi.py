@@ -26,7 +26,7 @@ conf = openerp.tools.config
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
 
-conf['addons_path'] = './addons,../branch,../trunk'
+conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
@@ -50,9 +50,9 @@ openerp.service.server.load_server_wide_modules()
 # Standard OpenERP XML-RPC port is 8069
 bind = '0.0.0.0:8878'
 pidfile = '.gunicorn.pid'
-workers = 9
-timeout = 600
-max_requests = 1000
+workers = 4
+timeout = 240
+max_requests = 2000
 preload_app = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
