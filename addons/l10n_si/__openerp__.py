@@ -5,22 +5,22 @@
 
 {
     "name": "Slovenian - Accounting",
-    "version": "1.2",
+    "version": "1.0",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
     "category": "Localization/Account Charts",
-    "description": " ",
-    "depends": ["account", "base_iban", "base_vat", "account_cancel"],
     "description": "Kontni načrt za gospodarske družbe",
+    "depends": ["account", "base_iban", "base_vat", "account_cancel"],
     "data": [
-        "data/account.account.type.csv",
+        "data/account_chart_template.xml",
         "data/account.account.template.csv",
         "data/account.chart.template.csv",
+        'data/account.account.tag.csv',
         "data/account.tax.template.csv",
         "data/account.fiscal.position.template.csv",
         "data/account.fiscal.position.account.template.csv",
         "data/account.fiscal.position.tax.template.csv",
-        "l10n_si_wizard.xml"
+        "data/account_chart_template.yml",
     ],
-    "installable": False,
+    "installable": True,
 }
