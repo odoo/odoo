@@ -600,7 +600,7 @@ class AccountTax(models.Model):
                 })
 
         return {
-            'taxes': taxes,
+            'taxes': sorted(taxes, key=lambda k: k['sequence']),
             'total_excluded': currency.round(total_excluded),
             'total_included': currency.round(total_included),
         }
