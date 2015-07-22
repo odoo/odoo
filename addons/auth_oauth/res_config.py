@@ -9,9 +9,17 @@ _logger = logging.getLogger(__name__)
 class base_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
 
+    def get_uri(self, cr, uid, context=None):
+        return "%s/auth_oauth/signin" % (self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', context=context))
+
+    def _get_server_uri(self, cr, uid, ids, name, arg, context=None):
+        return dict.fromkeys(ids, self.get_uri(cr, uid, context))
+
     _columns = {
         'auth_oauth_google_enabled' : fields.boolean('Allow users to sign in with Google'),
         'auth_oauth_google_client_id' : fields.char('Client ID'),
+        'server_uri_google': fields.function(_get_server_uri, type='char', string='Server uri'),
+        'auth_oauth_tutorial_enabled': fields.boolean('Show tutorial'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -25,6 +33,7 @@ class base_config_settings(osv.TransientModel):
         return {
             'auth_oauth_google_enabled': rg[0]['enabled'],
             'auth_oauth_google_client_id': rg[0]['client_id'],
+            'server_uri_google': self.get_uri(cr, uid, context)
         }
 
     def set_oauth_providers(self, cr, uid, ids, context=None):
