@@ -599,7 +599,7 @@ class pos_order(osv.osv):
             session.refresh()
 
         if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
-            cash_journal = session.cash_journal_id
+            cash_journal = session.cash_journal_id.id
             if not cash_journal:
                 # Select for change one of the cash journals used in this payment
                 cash_journal_ids = self.pool['account.journal'].search(cr, uid, [
