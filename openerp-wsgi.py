@@ -26,14 +26,16 @@ conf = openerp.tools.config
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
 
-conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
+conf['addons_path'] = './addons,../branch,../trunk'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
-#conf['db_host'] = 'localhost'
-#conf['db_user'] = 'foo'
-#conf['db_port'] = 5432
-#conf['db_password'] = 'secret'
+conf['db_host'] = 'data.tunierp.com'
+conf['db_user'] = 'v8'
+conf['db_port'] = 5432
+conf['db_password'] = 'admin'
+conf['dbfilter']="^%d.*"
+conf['admin_passwd']="admin"
 
 #----------------------------------------------------------
 # Generic WSGI handlers application
@@ -46,10 +48,11 @@ openerp.service.server.load_server_wide_modules()
 # Gunicorn
 #----------------------------------------------------------
 # Standard OpenERP XML-RPC port is 8069
-bind = '127.0.0.1:8069'
+bind = '0.0.0.0:8878'
 pidfile = '.gunicorn.pid'
-workers = 4
-timeout = 240
-max_requests = 2000
+workers = 9
+timeout = 600
+max_requests = 1000
+preload_app = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
