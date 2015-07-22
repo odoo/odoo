@@ -109,7 +109,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
 });
 
 
-odoo.define('website_sale_options.website_sale', function(require) {
+odoo.define('website_sale_options.cart', function(require) {
 "use strict";
 require('website_sale.cart');
 
