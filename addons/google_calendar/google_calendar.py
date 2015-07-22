@@ -435,7 +435,7 @@ class google_calendar(osv.AbstractModel):
                 attendee_id = res_partner_obj.search(cr, uid, [('email', '=', google_attendee['email'])], context=context)
                 if not attendee_id:
                     data = {
-                        'email': google_attendee['email'],
+                        'email': google_attendee.get('email', False),
                         'customer': False,
                         'name': google_attendee.get("displayName", False) or google_attendee['email']
                     }
