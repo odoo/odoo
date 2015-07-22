@@ -38,6 +38,9 @@ that have no counterpart in the general financial accounts.
         'data/analytic_demo.xml',
         'data/analytic_account_demo.xml',
     ],
+    'test': [
+        'test/analytic_hierarchy.yml',
+    ],
     'installable': True,
     'auto_install': False,
 }
