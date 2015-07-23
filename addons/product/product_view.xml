@@ -74,7 +74,7 @@
                                 <group colspan="4">
                                     <group>
                                         <field name="type" on_change="onchange_type(type)"/>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="uom_id" options="{'no_open': True, 'no_create': True}" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
                                     </group>
                                     <group>
@@ -94,10 +94,10 @@
                                             <div>
                                                 <field name="standard_price" class="oe_inline"/> 
                                                 <label string="/" class="oe_inline" groups="product.group_uom"/>
-                                                <field name="uom_rel_id" class="oe_inline" groups="product.group_uom"/>
+                                                <field name="uom_rel_id" options="{'no_open':True,'no_create':True}" class="oe_inline" groups="product.group_uom"/>
                                             </div>
                                         </group>
-                                        <field name="uom_po_id" groups="product.group_uom"/>
+                                        <field name="uom_po_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>
@@ -130,7 +130,7 @@
                                         </div>
                                     </group>
                                     <group groups="product.group_uos" string="Unit of Measure">
-                                        <field name="uos_id"/>
+                                        <field name="uos_id" options="{'no_open':True,'no_create':True}"/>
                                         <field name="uos_coeff"/>
                                         <field name="mes_type"/>
                                     </group>
@@ -408,7 +408,7 @@
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="uom_id"/>
+                    <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
                     <field name="barcode"/>
                     <field name="state" invisible="1"/>
                     <field name="product_tmpl_id" invisible="1"/>
