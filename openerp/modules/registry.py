@@ -51,31 +51,38 @@ class TestReporter(object):
             self.skipped.append(report)
 
     def pytest_runtest_logreport(self, report):
+        testpath = getattr(report, 'nodeid', '')
+        logger = _test_logger.getChild('test')
+
         if report.passed:
             if report.when != 'call':
                 return
             self.successes += 1
+            logger.info("%s %s %s", 'pass', testpath, report.longrepr or '')
         elif report.skipped:
             self.skipped.append(report)
+            # maybe should be logged as a warning?
+            logger.info("%s %s %s", 'skip', testpath, report.longrepr[2])
         elif report.failed:
             self.failures.append(report)
+            logger.error("%s %s %s", 'fail', testpath, report.longrepr)
         self.tests += 1
 
-    def log_results(self, logger):
-        logger.info(
+    def log_results(self):
+        _test_logger.info(
             "%d tests, %d successes, %d skipped, %d failed",
             self.tests, self.successes, len(self.skipped), len(self.failures))
         if self.failures:
-            logger.error("%d failure(s) while loading modules", len(self.failures))
+            _test_logger.error("%d failure(s) while loading modules", len(self.failures))
 
         for skipped in self.skipped:
-            logger.debug(
+            _test_logger.debug(
                 "%s %s",
                 getattr(skipped, 'nodeid', None) or skipped.fspath,
                 skipped.longrepr[2]
             )
         for failure in self.failures:
-            logger.error(
+            _test_logger.error(
                 "%s %s",
                 getattr(failure, 'nodeid', None) or failure.fspath,
                 failure.longrepr
@@ -1039,7 +1046,7 @@ class RegistryManager(object):
                     threading.currentThread().testing = False
                     _logger.log(25, "All post-tested in %.2fs, %d queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
-                    reporter.log_results(_test_logger)
+                    reporter.log_results()
                 # match runbot's check that build is done
                 _logger.getChild('modules.loading').info("Modules loaded...")
 
