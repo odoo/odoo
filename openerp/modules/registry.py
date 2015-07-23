@@ -38,6 +38,49 @@ from . import db, graph, migration, module
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('openerp.tests')
 
+class TestReporter(object):
+    def __init__(self):
+        self.tests = 0
+        self.successes = 0
+        self.skipped = []
+        self.failures = []
+    def pytest_collectreport(self, report):
+        if report.failed:
+            self.failures.append(report)
+        elif report.skipped:
+            self.skipped.append(report)
+
+    def pytest_runtest_logreport(self, report):
+        if report.passed:
+            if report.when != 'call':
+                return
+            self.successes += 1
+        elif report.skipped:
+            self.skipped.append(report)
+        elif report.failed:
+            self.failures.append(report)
+        self.tests += 1
+
+    def log_results(self, logger):
+        logger.info(
+            "%d tests, %d successes, %d skipped, %d failed",
+            self.tests, self.successes, len(self.skipped), len(self.failures))
+        if self.failures:
+            logger.error("%d failure(s) while loading modules", len(self.failures))
+
+        for skipped in self.skipped:
+            logger.debug(
+                "%s %s",
+                getattr(skipped, 'nodeid', None) or skipped.fspath,
+                skipped.longrepr[2]
+            )
+        for failure in self.failures:
+            logger.error(
+                "%s %s",
+                getattr(failure, 'nodeid', None) or failure.fspath,
+                failure.longrepr
+            )
+
 class OdooTestModule(_pytest.python.Module):
     """ Should only be invoked for paths inside Odoo addons
     """
@@ -946,9 +989,9 @@ class RegistryManager(object):
             # dictionary then remove it if an exception is raised.
             registry = cls.registries[db_name] = Registry(db_name)
             try:
-                failures = 0
                 registry.setup_multi_process_signaling()
-                test_args = ['-r', 'fEs', '-s']
+                test_args = ['-p', 'no:terminal', '-p', 'no:terminalreporter']
+                reporter = TestReporter()
                 for event, data in registry.load_modules(force_demo, status, update_module):
                     # launch tests only in demo mode, allowing tests to use demo data.
                     if event == 'module_processed':
@@ -969,13 +1012,12 @@ class RegistryManager(object):
                         # been thingied
                         module.current_test = data.name
 
-                        retcode = pytest.main(test_args + [module.get_module_path(data.name)], plugins=[
+                        pytest.main(test_args + [module.get_module_path(data.name)], plugins=[
                             ModuleTest('at_install'),
                             DataTests(registry, data),
                             tests.fixtures,
+                            reporter
                         ])
-                        if retcode in FAILURES:
-                            failures += 1
 
                         module.current_test = None
 
@@ -988,18 +1030,16 @@ class RegistryManager(object):
                     t0 = time.time()
                     t0_sql = openerp.sql_db.sql_counter
 
-                    retcode = pytest.main(test_args + map(module.get_module_path, installed), plugins=[
+                    pytest.main(test_args + map(module.get_module_path, installed), plugins=[
                         ModuleTest('post_install'),
                         tests.fixtures,
+                        reporter
                     ])
-                    if retcode in FAILURES:
-                        failures += 1
 
                     threading.currentThread().testing = False
                     _logger.log(25, "All post-tested in %.2fs, %d queries", time.time() - t0, openerp.sql_db.sql_counter - t0_sql)
 
-                if failures:
-                    _logger.error('At least one test failed when loading the modules.')
+                    reporter.log_results(_test_logger)
                 # match runbot's check that build is done
                 _logger.getChild('modules.loading').info("Modules loaded...")
 
