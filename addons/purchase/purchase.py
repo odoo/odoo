@@ -1435,7 +1435,16 @@ class procurement_order(osv.osv):
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
 
         return qty, price
-  
+
+    def _get_available_draft_po_domain(self, cr, uid, procurement, partner,
+                                       context=None):
+        return [('partner_id', '=', partner.id),
+                ('state', '=', 'draft'),
+                ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
+                ('location_id', '=', procurement.location_id.id),
+                ('company_id', '=', procurement.company_id.id),
+                ('dest_address_id', '=', procurement.partner_dest_id.id)]
+
     def _get_available_draft_po_ids(self, cr, uid, procurement, partner,
                                    context=None):
         """ 
@@ -1444,12 +1453,7 @@ class procurement_order(osv.osv):
         """
         po_obj = self.pool['purchase.order']
         available_draft_po_ids = po_obj.search(cr, uid,
-            [('partner_id', '=', partner.id),
-             ('state', '=', 'draft'),
-             ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-             ('location_id', '=', procurement.location_id.id),
-             ('company_id', '=', procurement.company_id.id),
-             ('dest_address_id', '=', procurement.partner_dest_id.id)],
+            self._get_available_draft_po_domain(cr, uid, procurement, partner, context),
             context=context)
         return available_draft_po_ids
 
