@@ -146,7 +146,7 @@
                                 <tree decoration-muted="scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="product_uos" groups="product.group_uos"/>
                                     <field name="picking_id" invisible="1" />
                                     <field name="create_date" invisible="1" />
@@ -282,7 +282,7 @@
                 <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_packaging" domain="[('product_tmpl_id','=',product_tmpl_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
                     <field name="location_id" groups="stock.group_locations"/>
@@ -778,7 +778,7 @@
                                     <field name="product_id"/>
                                     <field name="availability"/>
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom"/>
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}"/>
                                     <field name="location_dest_id"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -1142,7 +1142,7 @@
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
-                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
@@ -1168,7 +1168,7 @@
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
                     <field name="name" invisible="1"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
-                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
                     <field name="product_uos" groups="product.group_uos" invisible="1"/>
                     <field name="location_id" invisible="1"/>
@@ -1208,7 +1208,7 @@
                                 <div class="o_row">
                                     <field name="product_uom_qty"
                                         on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                     <button name="%(stock.move_scrap)d" class="btn-default"
                                             string="Scrap" type="action" context="{'scrap': True}"
                                             states="draft,waiting,confirmed,assigned"/> <!-- FIXME icon="terp-gtk-jump-to-ltr" -->
@@ -1268,7 +1268,7 @@
                         <label for="product_uom_qty"/>
                         <div>
                             <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
-                            <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
                                 icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
@@ -1400,7 +1400,7 @@
                     <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
@@ -1427,7 +1427,7 @@
                     <field name="picking_id" string="Reference"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="date" groups="base.group_no_one"/>
                 </tree>
             </field>
@@ -1652,7 +1652,7 @@
                     <field name="warehouse_id" groups="stock.group_locations"/>
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -1693,7 +1693,7 @@
                             </group>
                             <group>
                                 <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
-                                <field name="product_uom" groups="product.group_uom"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                                 <field name="location_id" groups="stock.group_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
