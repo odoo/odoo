@@ -33,7 +33,7 @@ class TestExport(common.TransactionCase):
                 model = self.registry('.'.join(fs))
                 break
             except KeyError: pass
-
+            
         return lambda value, options=None, context=None: e(model.value_to_html(
             self.cr, self.uid, value, field, options=options, context=context))
 
@@ -174,7 +174,7 @@ class TestCurrencyExport(TestExport):
                     obj=obj,
                     symbol=currency.symbol.encode('utf-8')
                 ).encode('utf-8'),)
-        else:
+        elif lang.position == 'before':
             self.assertEqual(
                 converted,
                 '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
@@ -310,7 +310,6 @@ class TestDatetimeExport(TestBasicExport):
 
     def test_date(self):
         converter = self.get_converter('date')
-
         value = converter('2011-05-03')
 
         # default lang/format is US
@@ -360,7 +359,6 @@ class TestDurationExport(TestBasicExport):
 
     def test_basic(self):
         converter = self.get_converter('float', 'duration')
-
         result = converter(4, {'unit': 'hour'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u'4 heures')
 
