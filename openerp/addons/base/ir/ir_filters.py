@@ -145,13 +145,15 @@ class ir_filters(osv.osv):
         'action_id': fields.many2one('ir.actions.actions', 'Action', ondelete='cascade',
                                      help="The menu action this filter applies to. "
                                           "When left empty the filter applies to all menus "
-                                          "for this model.")
+                                          "for this model."),
+        'active': fields.boolean('Active')
     }
     _defaults = {
         'domain': '[]',
         'context':'{}',
         'sort': '[]',
         'user_id': lambda self,cr,uid,context=None: uid,
-        'is_default': False
+        'is_default': False,
+        'active': True
     }
     _order = 'model_id, name, id desc'
