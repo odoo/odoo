@@ -2,18 +2,18 @@ odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var core = require('web.core');
+var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
+var Notification = require('web.notification').Notification;
 var WebClient = require('web.WebClient');
-var CalendarView = require('web_calendar.CalendarView');
 var widgets = require('web_calendar.widgets');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
-
 
 function reload_favorite_list(result) {
     var self = result;
@@ -151,49 +151,53 @@ widgets.SidebarFilter.include({
     },
 });
 
-WebClient.include({
-    get_notif_box: function(me) {
-        return $(me).closest(".ui-notify-message-style");
+var CalendarNotification = Notification.extend({
+    template: "CalendarNotification",
+    events: {
+        'click .link2event': function() {
+            var self = this;
+
+            this.rpc("/web/action/load", {
+                action_id: "calendar.action_calendar_event_notify",
+            }).then(function(r) {
+                r.res_id = self.eid;
+                return self.do_action(r);
+            });
+        },
+
+        'click .link2recall': function() {
+            this.destroy(true);
+        },
+
+        'click .link2showed': function() {
+            this.destroy(true);
+            this.rpc("/calendar/notify_ack");
+        },
     },
+
+    init: function(parent, title, text, eid) {
+        this._super(parent, title, text, true);
+        this.eid = eid;
+    },
+});
+
+WebClient.include({
     get_next_notif: function() {
-        var self= this;
+        var self = this;
+
         this.rpc("/calendar/notify")
-        .done(
-            function(result) {
-                _.each(result,  function(res) {
-                    setTimeout(function() {
-                        //If notification not already displayed, we add button and action on it
-                        if (!($.find(".eid_"+res.event_id)).length) {
-                            res.title = QWeb.render('notify_title', {'title': res.title, 'id' : res.event_id});
-                            res.message += QWeb.render("notify_footer");
-                            var a = self.do_notify(res.title,res.message,true);
-                            
-                            $(".link2event").on('click', function() {
-                                self.rpc("/web/action/load", {
-                                    action_id: "calendar.action_calendar_event_notify",
-                                }).then( function(r) {
-                                    r.res_id = res.event_id;
-                                    return self.action_manager.do_action(r);
-                                });
-                            });
-                            a.element.find(".link2recall").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                            });
-                            a.element.find(".link2showed").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                                self.rpc("/calendar/notify_ack");
-                            });
-                        }
-                        //If notification already displayed in the past, we remove the css attribute which hide this notification
-                        else if (self.get_notif_box($.find(".eid_"+res.event_id)).attr("style") !== ""){
-                            self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");
-                        }
-                    },res.timer * 1000);
-                });
-            }
-        )
-        .fail(function (err, ev) {
-            if (err.code === -32098) {
+        .done(function(result) {
+            _.each(result, function(res) {
+                setTimeout(function() {
+                    // If notification not already displayed, we create and display it (FIXME is this check usefull?)
+                    if(self.$(".eid_" + res.event_id).length === 0) {
+                        self.notification_manager.display(new CalendarNotification(self.notification_manager, res.title, res.message, res.event_id));
+                    }
+                }, res.timer * 1000);
+            });
+        })
+        .fail(function(err, ev) {
+            if(err.code === -32098) {
                 // Prevent the CrashManager to display an error
                 // in case of an xhr error not due to a server error
                 ev.preventDefault();
@@ -201,13 +205,12 @@ WebClient.include({
         });
     },
     check_notifications: function() {
-        var self= this;
-        self.get_next_notif();
-        self.intervalNotif = setInterval(function(){
+        var self = this;
+        this.get_next_notif();
+        this.intervalNotif = setInterval(function() {
             self.get_next_notif();
-        }, 5 * 60 * 1000 );
+        }, 5 * 60 * 1000);
     },
-    
     //Override the show_application of addons/web/static/src/js/chrome.js       
     show_application: function() {
         this._super();
