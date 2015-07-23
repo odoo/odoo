@@ -296,13 +296,6 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             minLength: 0,
             delay: 200,
         });
-        var appendTo = this.$input.parents('.oe-view-manager-content:visible, .modal-dialog:visible').last();
-        if (appendTo.length === 0) {
-            appendTo = '.oe_application > *:visible:last';
-        }
-        this.$input.autocomplete({
-            appendTo: appendTo
-        });
         // set position for list of suggestions box
         this.$input.autocomplete( "option", "position", { my : "left top", at: "left bottom" } );
         this.$input.autocomplete("widget").openerpClass();

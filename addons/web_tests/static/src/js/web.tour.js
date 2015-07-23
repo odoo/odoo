@@ -303,7 +303,7 @@ Tour.register({
         },
         {
             title:      "select demo user",
-            element:    '.modal li:contains(Demo User)',
+            element:    'li:contains(Demo User)',
         },
         {
             title:      "test one2many's line onchange after many2one",
