@@ -1,3 +1,5 @@
+:banner: banners/module.jpg
+
 =======
 Modules
 =======
@@ -9,11 +11,11 @@ Modules
 Manifest
 ========
 
-The manifest file serves to both declare a python package as an Odoo module,
-and to specify a number of module metadata.
+The manifest file serves to declare a python package as an Odoo module
+and to specify module metadata.
 
 It is a file called ``__openerp__.py`` and contains a single Python
-dictionary, each dictionary key specifying a module metadatum.
+dictionary, where each key specifies module metadatum.
 
 ::
 
@@ -64,7 +66,7 @@ Available manifest fields are:
     define.
 
     When a module is installed, all of its dependencies are installed before
-    it. Likewise during modules loading.
+    it. Likewise dependencies are loaded before a module is loaded.
 ``data`` (``list(str)``)
     List of data files which must always be installed or updated with the
     module. A list of paths from the module root directory

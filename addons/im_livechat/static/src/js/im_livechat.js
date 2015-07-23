@@ -123,7 +123,7 @@
     });
 
     im_livechat.ChatButton = openerp.Widget.extend({
-        className: "openerp_style oe_chat_button",
+        className: "openerp_style oe_chat_button hidden-print",
         events: {
             "click": "click"
         },

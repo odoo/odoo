@@ -203,7 +203,7 @@ class view(osv.osv):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self.browse(cr, uid, ids, context):
-            view_def = self.read_combined(cr, uid, view.id, None, context=context)
+            view_def = self.read_combined(cr, uid, view.id, ['arch'], context=context)
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
                 view_doc = etree.fromstring(view_arch_utf8)
@@ -527,7 +527,7 @@ class view(osv.osv):
 
         # arch and model fields are always returned
         if fields:
-            fields = list(set(fields) | set(['arch', 'model']))
+            fields = list({'arch', 'model'}.union(fields))
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
@@ -833,10 +833,7 @@ class view(osv.osv):
             if k not in fields_def:
                 del fields[k]
         for field in fields_def:
-            if field == 'id':
-                # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
-                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
-            elif field in fields:
+            if field in fields:
                 fields[field].update(fields_def[field])
             else:
                 message = _("Field `%(field_name)s` does not exist") % \

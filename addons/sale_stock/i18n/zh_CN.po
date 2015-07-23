@@ -3,15 +3,16 @@
 # * sale_stock
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-04 04:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-07-18 03:34+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,7 +28,7 @@ msgstr "(n/a)"
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr "允许追加运输成本"
+msgstr "允许追加送货成本"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -73,7 +74,7 @@ msgstr "公司"
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -98,7 +99,7 @@ msgstr "一次性交货"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "可以分批交货"
+msgstr "分批交货"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -109,12 +110,12 @@ msgstr "已送货"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "已交付部分开票"
+msgstr "待开票的交货"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "允许开发运单"
+msgstr "开启交货单开票"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -124,7 +125,7 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于发运单生产发票"
+msgstr "基于交货开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -151,12 +152,12 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "根据送货单生成发票"
+msgstr "基于送货单的发票"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr "基于销售单的发票"
+msgstr "基于销售单的开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
@@ -182,7 +183,7 @@ msgstr "没足够的库存！： "
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "包装数"
+msgstr "包裹数"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:78
@@ -193,7 +194,7 @@ msgstr "只有管理员可以改变该设置"
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr "打包装"
+msgstr "包装形式"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -205,12 +206,12 @@ msgstr "如果你允许部分交付， 选择‘每个产品可用时发运’"
 #: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
-msgstr "装箱信息！： "
+msgstr "分拣信息！： "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "装箱单"
+msgstr "分拣清单"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
@@ -240,7 +241,7 @@ msgstr "订单行上面的产品属性"
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr "项目时间表"
+msgstr "项目工时单"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -260,12 +261,12 @@ msgstr "销售订单"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "销售服务"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -275,7 +276,7 @@ msgstr "销售订单"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单明细"
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -308,7 +309,7 @@ msgstr "已送货"
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr "运送方式"
+msgstr "送货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -323,7 +324,7 @@ msgstr "默认的开票方法"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr "开发票"
+msgstr "待开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -335,7 +336,7 @@ msgstr "允许销售员 使用菜单“按已交付数量开票”  根据发运
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "查看出货单"
+msgstr "查看交货单"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
@@ -376,8 +377,3 @@ msgstr "你选择了 %d 单位的数量。但它不兼容选定的包装。\n这
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "天数"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
-msgstr ""

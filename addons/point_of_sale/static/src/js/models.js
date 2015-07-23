@@ -252,7 +252,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
         },{
             model: 'res.currency',
-            fields: ['symbol','position','rounding','accuracy'],
+            fields: ['name','symbol','position','rounding','accuracy'],
             ids:    function(self){ return [self.pricelist.currency_id[0]]; },
             loaded: function(self, currencies){
                 self.currency = currencies[0];
@@ -872,7 +872,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         data = {amount:tmp, price_include:true, id: tax.id};
                         res.push(data);
                     } else if (tax.type === "fixed") {
-                        tmp = round_pr(tax.amount * self.get_quantity(),currency_rounding);
+                        tmp = tax.amount * self.get_quantity();
                         data = {amount:tmp, price_include:true, id: tax.id};
                         res.push(data);
                     } else {
@@ -884,7 +884,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         data = {amount:tmp, price_include:false, id: tax.id};
                         res.push(data);
                     } else if (tax.type === "fixed") {
-                        tmp = round_pr(tax.amount * self.get_quantity(), currency_rounding);
+                        tmp = tax.amount * self.get_quantity();
                         data = {amount:tmp, price_include:false, id: tax.id};
                         res.push(data);
                     } else {
@@ -937,6 +937,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 taxtotal += tax.amount;
                 taxdetail[tax.id] = tax.amount;
             });
+            totalNoTax = round_pr(totalNoTax, this.pos.currency.rounding);
 
             return {
                 "priceWithTax": totalTax,
@@ -1051,7 +1052,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         addOrderline: function(line){
             if(line.order){
-                order.removeOrderline(line);
+                line.order.removeOrderline(line);
             }
             line.order = this;
             this.get('orderLines').add(line);
@@ -1123,9 +1124,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             }), 0), this.pos.currency.rounding);
         },
         getTotalTaxIncluded: function() {
-            return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + orderLine.get_price_with_tax();
-            }), 0), this.pos.currency.rounding);
+            return this.getTotalTaxExcluded() + this.getTax();
         },
         getDiscountTotal: function() {
             return round_pr((this.get('orderLines')).reduce((function(sum, orderLine) {

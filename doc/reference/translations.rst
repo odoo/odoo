@@ -1,4 +1,7 @@
+:banner: banners/translate.jpg
+
 .. _reference/translations:
+
 
 ===================
 Translating Modules
@@ -13,7 +16,7 @@ your module's translatable terms and may find content to work with.
 
 .. todo:: needs technical features
 
-Translations export is done via the administration interface by logging into
+Translations export is performed via the administration interface by logging into
 the backend interface and opening :menuselection:`Settings --> Translations
 --> Import / Export --> Export Translations`
 
@@ -65,7 +68,7 @@ Explicit exports
 ================
 
 When it comes to more "imperative" situations in Python code or Javascript
-code, Odoo is not able to automatically export translatable terms and they
+code, Odoo cannot automatically export translatable terms so they
 must be marked explicitly for export. This is done by wrapping a literal
 string in a function call.
 
@@ -81,11 +84,11 @@ In JavaScript, the wrapping function is generally :js:func:`openerp.web._t`:
 
 .. warning::
 
-    Only literal strings can be marked for exports, not expressions and not
+    Only literal strings can be marked for exports, not expressions or
     variables. For situations where strings are formatted, this means the
     format string must be marked, not the formatted string::
 
-        # bad, the extract may work but it will not correctly translate the text
+        # bad, the extract may work but it will not translate the text correctly
         _("Scheduled meeting with %s" % invitee.name)
 
         # good

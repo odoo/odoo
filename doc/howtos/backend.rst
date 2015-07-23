@@ -1,3 +1,5 @@
+:banner: banners/build_a_module.jpg
+
 .. queue:: backend/series
 
 =================
@@ -1772,7 +1774,7 @@ with the standard Python libraries ``urllib2`` and ``json``::
     note_id = call(url, "object", "execute", DB, uid, PASS, 'note.note', 'create', args)
 
 Here is the same program, using the library
-`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`::
+`jsonrpclib <https://pypi.python.org/pypi/jsonrpclib>`_::
 
     import jsonrpclib
 

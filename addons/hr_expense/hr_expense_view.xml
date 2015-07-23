@@ -93,7 +93,7 @@
                                             <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
                                             <field name="name"/>
                                             <field name="ref"/>
-                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                            <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                         </group>
                                         <group>
                                             <field name="unit_amount"/>

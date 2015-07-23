@@ -1162,13 +1162,15 @@ class account_move(osv.osv):
     _order = 'id desc'
 
     def account_assert_balanced(self, cr, uid, context=None):
+        obj_precision = self.pool.get('decimal.precision')
+        prec = obj_precision.precision_get(cr, uid, 'Account')
         cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
             WHERE       state = 'valid'
             GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
-            """)
+            HAVING      abs(sum(debit) - sum(credit)) >= %s
+            """ % (10 ** (-max(5, prec))))
         assert len(cr.fetchall()) == 0, \
             "For all Journal Items, the state is valid implies that the sum " \
             "of credits equals the sum of debits"
@@ -1537,6 +1539,8 @@ class account_move(osv.osv):
         valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
         obj_analytic_line = self.pool.get('account.analytic.line')
         obj_move_line = self.pool.get('account.move.line')
+        obj_precision = self.pool.get('decimal.precision')
+        prec = obj_precision.precision_get(cr, uid, 'Account')
         for move in self.browse(cr, uid, ids, context):
             journal = move.journal_id
             amount = 0
@@ -1560,7 +1564,7 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id):
                         raise osv.except_osv(_('Error!'), _("""Cannot create move with currency different from ..""") % (line.account_id.code, line.account_id.name))
 
-            if abs(amount) < 10 ** -4:
+            if round(abs(amount), prec) < 10 ** (-max(5, prec)):
                 # If the move is balanced
                 # Add to the list of valid moves
                 # (analytic lines will be created later for valid moves)

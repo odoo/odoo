@@ -27,6 +27,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
+from openerp.tools import float_is_zero
 from openerp.tools.translate import _
 
 
@@ -658,7 +659,7 @@ class task(osv.osv):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': (task.remaining_hours or 0.0) + hours.get(task.id, 0.0)}
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
             res[task.id]['progress'] = 0.0
-            if (task.remaining_hours + hours.get(task.id, 0.0)):
+            if not float_is_zero(res[task.id]['total_hours'], precision_digits=2):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
             if task.stage_id and task.stage_id.fold:
                 res[task.id]['progress'] = 100.0

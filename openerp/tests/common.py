@@ -13,6 +13,7 @@ import select
 import subprocess
 import threading
 import time
+import itertools
 import unittest2
 import urllib2
 import xmlrpclib
@@ -169,6 +170,27 @@ class SingleTransactionCase(BaseCase):
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+
+
+savepoint_seq = itertools.count()
+class SavepointCase(SingleTransactionCase):
+    """ Similar to :class:`SingleTransactionCase` in that all test methods
+    are run in a single transaction *but* each test case is run inside a
+    rollbacked savepoint (sub-transaction).
+
+    Useful for test cases containing fast tests but with significant database
+    setup common to all cases (complex in-db test data): :meth:`~.setUpClass`
+    can be used to generate db test data once, then all test cases use the
+    same data without influencing one another but without having to recreate
+    the test data either.
+    """
+    def setUp(self):
+        self._savepoint_id = next(savepoint_seq)
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+    def tearDown(self):
+        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self.env.clear()
+        self.registry.clear_caches()
 
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):

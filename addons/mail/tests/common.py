@@ -22,63 +22,66 @@
 from openerp.tests import common
 
 
-class TestMail(common.TransactionCase):
+class TestMail(common.SavepointCase):
 
-    def _init_mock_build_email(self):
-        self._build_email_args_list = []
-        self._build_email_kwargs_list = []
+    @classmethod
+    def _init_mock_build_email(cls):
+        cls._build_email_args_list = []
+        cls._build_email_kwargs_list = []
 
     def setUp(self):
         super(TestMail, self).setUp()
-        cr, uid = self.cr, self.uid
+        self._build_email_args_list[:] = []
+        self._build_email_kwargs_list[:] = []
 
-        # Install mock SMTP gateway
-        test = self
+    @classmethod
+    def setUpClass(cls):
+        super(TestMail, cls).setUpClass()
+        cr, uid = cls.cr, cls.uid
 
         def build_email(self, *args, **kwargs):
-            test._build_email_args_list.append(args)
-            test._build_email_kwargs_list.append(kwargs)
+            cls._build_email_args_list.append(args)
+            cls._build_email_kwargs_list.append(kwargs)
             return build_email.origin(self, *args, **kwargs)
 
         def send_email(self, cr, uid, message, *args, **kwargs):
             return message['Message-Id']
 
-        self._init_mock_build_email()
-        self.registry('ir.mail_server')._patch_method('build_email', build_email)
-        self.registry('ir.mail_server')._patch_method('send_email', send_email)
+        cls._init_mock_build_email()
+        cls.registry('ir.mail_server')._patch_method('build_email', build_email)
+        cls.registry('ir.mail_server')._patch_method('send_email', send_email)
 
         # Usefull models
-        self.ir_model = self.registry('ir.model')
-        self.ir_model_data = self.registry('ir.model.data')
-        self.ir_attachment = self.registry('ir.attachment')
-        self.mail_alias = self.registry('mail.alias')
-        self.mail_thread = self.registry('mail.thread')
-        self.mail_group = self.registry('mail.group')
-        self.mail_mail = self.registry('mail.mail')
-        self.mail_message = self.registry('mail.message')
-        self.mail_notification = self.registry('mail.notification')
-        self.mail_followers = self.registry('mail.followers')
-        self.mail_message_subtype = self.registry('mail.message.subtype')
-        self.res_users = self.registry('res.users')
-        self.res_partner = self.registry('res.partner')
+        cls.ir_model = cls.registry('ir.model')
+        cls.ir_model_data = cls.registry('ir.model.data')
+        cls.ir_attachment = cls.registry('ir.attachment')
+        cls.mail_alias = cls.registry('mail.alias')
+        cls.mail_thread = cls.registry('mail.thread')
+        cls.mail_group = cls.registry('mail.group')
+        cls.mail_mail = cls.registry('mail.mail')
+        cls.mail_message = cls.registry('mail.message')
+        cls.mail_notification = cls.registry('mail.notification')
+        cls.mail_followers = cls.registry('mail.followers')
+        cls.mail_message_subtype = cls.registry('mail.message.subtype')
+        cls.res_users = cls.registry('res.users')
+        cls.res_partner = cls.registry('res.partner')
 
         # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
+        cls.group_employee_id = cls.env.ref('base.group_user').id or False
 
         # Partner Data
 
         # User Data: employee, noone
-        self.user_employee_id = self.res_users.create(cr, uid, {
+        cls.user_employee_id = cls.res_users.create(cr, uid, {
             'name': 'Ernest Employee',
             'login': 'ernest',
             'alias_name': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
             'notify_email': 'always',
-            'groups_id': [(6, 0, [self.group_employee_id])]
+            'groups_id': [(6, 0, [cls.group_employee_id])]
         }, {'no_reset_password': True})
-        self.user_noone_id = self.res_users.create(cr, uid, {
+        cls.user_noone_id = cls.res_users.create(cr, uid, {
             'name': 'Noemie NoOne',
             'login': 'noemie',
             'alias_name': 'noemie',
@@ -89,44 +92,45 @@ class TestMail(common.TransactionCase):
         }, {'no_reset_password': True})
 
         # Test users to use through the various tests
-        self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
-        self.user_raoul_id = self.res_users.create(cr, uid, {
+        cls.res_users.write(cr, uid, uid, {'name': 'Administrator'})
+        cls.user_raoul_id = cls.res_users.create(cr, uid, {
             'name': 'Raoul Grosbedon',
             'signature': 'SignRaoul',
             'email': 'raoul@raoul.fr',
             'login': 'raoul',
             'alias_name': 'raoul',
-            'groups_id': [(6, 0, [self.group_employee_id])]
-        })
-        self.user_bert_id = self.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [cls.group_employee_id])]
+        }, {'no_reset_password': True})
+        cls.user_bert_id = cls.res_users.create(cr, uid, {
             'name': 'Bert Tartignole',
             'signature': 'SignBert',
             'email': 'bert@bert.fr',
             'login': 'bert',
             'alias_name': 'bert',
             'groups_id': [(6, 0, [])]
-        })
-        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
-        self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
-        self.user_admin = self.res_users.browse(cr, uid, uid)
-        self.partner_admin_id = self.user_admin.partner_id.id
-        self.partner_raoul_id = self.user_raoul.partner_id.id
-        self.partner_bert_id = self.user_bert.partner_id.id
+        }, {'no_reset_password': True})
+        cls.user_raoul = cls.res_users.browse(cr, uid, cls.user_raoul_id)
+        cls.user_bert = cls.res_users.browse(cr, uid, cls.user_bert_id)
+        cls.user_admin = cls.res_users.browse(cr, uid, uid)
+        cls.partner_admin_id = cls.user_admin.partner_id.id
+        cls.partner_raoul_id = cls.user_raoul.partner_id.id
+        cls.partner_bert_id = cls.user_bert.partner_id.id
 
         # Test 'pigs' group to use through the various tests
-        self.group_pigs_id = self.mail_group.create(
+        cls.group_pigs_id = cls.mail_group.create(
             cr, uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !', 'alias_name': 'group+pigs'},
             {'mail_create_nolog': True}
         )
-        self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cls.group_pigs = cls.mail_group.browse(cr, uid, cls.group_pigs_id)
         # Test mail.group: public to provide access to everyone
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
+        cls.group_jobs_id = cls.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
         # Test mail.group: private to restrict access
-        self.group_priv_id = self.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
+        cls.group_priv_id = cls.mail_group.create(cr, uid, {'name': 'Private', 'public': 'private'})
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         # Remove mocks
-        self.registry('ir.mail_server')._revert_method('build_email')
-        self.registry('ir.mail_server')._revert_method('send_email')
-        super(TestMail, self).tearDown()
+        cls.registry('ir.mail_server')._revert_method('build_email')
+        cls.registry('ir.mail_server')._revert_method('send_email')
+        super(TestMail, cls).tearDownClass()

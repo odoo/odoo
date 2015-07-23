@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 from openerp.tools import mute_logger
 import socket
 
