@@ -4,7 +4,7 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp.addons.hr_holidays.tests.common import TestHrHolidaysBase
+from .common import TestHrHolidaysBase
 from openerp.exceptions import AccessError
 from openerp.exceptions import ValidationError
 from openerp.tools import mute_logger

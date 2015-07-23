@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from dateutil.relativedelta import relativedelta
-
-from openerp import fields
 from openerp.tests import common
 
 
@@ -18,9 +15,9 @@ class TestEventCommon(common.TransactionCase):
         self.EventMail = self.env['event.mail']
 
         # User groups
-        self.group_employee_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
-        self.group_event_user_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_user')
-        self.group_event_manager_id = self.env['ir.model.data'].xmlid_to_res_id('event.group_event_manager')
+        self.group_employee_id = self.ref('base.group_user')
+        self.group_event_user_id = self.ref('event.group_event_user')
+        self.group_event_manager_id = self.ref('event.group_event_manager')
 
         # Test users to use through the various tests
         self.user_eventuser = self.Users.with_context({'no_reset_password': True}).create({

@@ -15,15 +15,11 @@ import atexit
 import csv
 import logging
 import os
-import signal
 import sys
-import threading
-import traceback
-import time
 
 import openerp
 
-from . import Command
+from .command import Command
 
 __author__ = openerp.release.author
 __version__ = openerp.release.version

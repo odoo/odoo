@@ -7,7 +7,7 @@ import signal
 import sys
 
 import openerp
-from . import Command
+from .command import Command
 
 def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()

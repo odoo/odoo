@@ -4,7 +4,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import fields, tools
-from openerp.addons.event.tests.common import TestEventCommon
+from .common import TestEventCommon
 from openerp.tools import mute_logger
 
 
@@ -65,7 +65,7 @@ class TestMailSchedule(TestEventCommon):
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-2), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
+        self.assertEqual(schedulers[0].scheduled_date, (event_date_begin + relativedelta(days=-2)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
 
         # execute event reminder scheduler explicitly
         schedulers[0].execute()
@@ -73,7 +73,5 @@ class TestMailSchedule(TestEventCommon):
         self.assertTrue(schedulers[0].mail_sent, 'event: reminder scheduler should have sent an email')
         self.assertTrue(schedulers[0].done, 'event: reminder scheduler should be done')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'reminder'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'reminder'), ('date', '>=', now.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
         self.assertEqual(len(mails), 2, 'event: wrong number of reminders in outgoing mail queue')
-
-

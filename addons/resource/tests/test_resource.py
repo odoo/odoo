@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from openerp.addons.resource.tests.common import TestResourceCommon
+from .common import TestResourceCommon
 
 
 class TestResource(TestResourceCommon):

@@ -4,7 +4,7 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
-from openerp.addons.stock.tests.common import TestStockCommon
+from .common import TestStockCommon
 
 
 class TestVirtualAvailable(TestStockCommon):

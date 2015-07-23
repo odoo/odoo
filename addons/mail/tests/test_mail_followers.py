@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from psycopg2 import IntegrityError
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 
 
 class TestMailFollowers(TestMail):

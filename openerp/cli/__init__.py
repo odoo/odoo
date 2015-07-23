@@ -1,10 +1,4 @@
-import logging
-import sys
-import os
-
-import openerp
-
-from command import Command, main
+from command import main
 
 import deploy
 import scaffold

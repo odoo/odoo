@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 import base64
 import openerp
+import openerp.addons.bus.controllers.main
 
 from openerp import SUPERUSER_ID
 from openerp.http import request

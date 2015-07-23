@@ -5,7 +5,7 @@ import glob
 import os
 import sys
 
-from . import Command
+from .command import Command
 from .server import main
 from openerp.modules.module import get_module_root, MANIFEST
 from openerp.service.db import _create_empty_database, DatabaseExists

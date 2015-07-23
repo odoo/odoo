@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 
 
 class TestTracking(TestMail):

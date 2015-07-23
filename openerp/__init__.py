@@ -52,19 +52,19 @@ def registry(database_name=None):
 #----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
-import addons
-import conf
-import loglevels
-import modules
-import netsvc
-import osv
-import pooler
-import release
-import report
-import service
-import sql_db
-import tools
-import workflow
+from . import addons
+from . import conf
+from . import loglevels
+from . import modules
+from . import netsvc
+from . import osv
+from . import pooler
+from . import release
+from . import report
+from . import service
+from . import sql_db
+from . import tools
+from . import workflow
 
 #----------------------------------------------------------
 # Model classes, fields, api decorators, and translations
@@ -72,10 +72,10 @@ import workflow
 from . import models
 from . import fields
 from . import api
-from openerp.tools.translate import _
+from .tools.translate import _
 
 #----------------------------------------------------------
 # Other imports, which may require stuff from above
 #----------------------------------------------------------
-import cli
-import http
+from . import cli
+from . import http

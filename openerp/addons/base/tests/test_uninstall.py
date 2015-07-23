@@ -4,9 +4,7 @@ import unittest
 
 import openerp
 from openerp import SUPERUSER_ID
-import common
-
-ADMIN_USER_ID = common.ADMIN_USER_ID
+from openerp.tests import common
 
 def registry(model):
     return openerp.modules.registry.RegistryManager.get(common.get_db_name())[model]
