@@ -24,10 +24,11 @@ var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 var fields_registry = kanban_widgets.registry;
 
 var KanbanView = View.extend({
-    display_name: _lt("Kanban"),
-    view_type: "kanban",
+    accesskey: "K",
     className: "o_kanban_view",
+    display_name: _lt("Kanban"),
     mobile_friendly: true,
+    view_type: "kanban",
 
     custom_events: {
         'kanban_record_open': 'open_record',

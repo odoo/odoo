@@ -486,18 +486,7 @@
 </div>
 <t t-name="ViewManager.switch-buttons">
     <t t-foreach="views" t-as="view">
-        <t t-if="view.type === 'kanban'">
-            <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-kanban" t-att-data-view-type="view.type" accesskey="K" t-att-title="view.label"/>
-        </t>
-        <t t-if="view.type === 'form'">
-            <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-form" t-att-data-view-type="view.type" accesskey="F" t-att-title="view.label"/>
-        </t>
-        <t t-if="view.type === 'list'">
-            <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-list" t-att-data-view-type="view.type" accesskey="L" t-att-title="view.label"/>
-        </t>
-        <t t-if="view.type !== 'kanban' and view.type !== 'form' and view.type !== 'list'">
-            <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
-        </t>
+        <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label" t-att-accesskey="view.accesskey"/>
     </t>
 </t>
 
