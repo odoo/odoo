@@ -1436,7 +1436,7 @@ class procurement_order(osv.osv):
 
         return qty, price
   
-    def get_available_draft_po_ids(self, cr, uid, procurement, partner,
+    def _get_available_draft_po_ids(self, cr, uid, procurement, partner,
                                    context=None):
         """ 
             Return a list of existing draft po ids we can use to avoid 
@@ -1480,7 +1480,7 @@ class procurement_order(osv.osv):
                 purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context) 
                 line_vals = self._get_po_line_values_from_proc(cr, uid, procurement, partner, company, schedule_date, context=context)
                 #look for any other draft PO for the same supplier, to attach the new line on instead of creating a new draft one
-                available_draft_po_ids = self.get_available_draft_po_ids(
+                available_draft_po_ids = self._get_available_draft_po_ids(
                                                 cr, uid, procurement, partner,
                                                 context=context)
                 if available_draft_po_ids:
