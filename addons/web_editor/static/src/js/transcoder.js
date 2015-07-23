@@ -12,7 +12,20 @@ var getMatchedCSSRules = function (a) {
     if (!rulesCache.length) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
-            var rules = sheets[i].rules || sheets[i].cssRules;
+            var rules;
+            if (sheets[i].rules) {
+                rules = sheets[i].rules;
+            } else {
+                //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
+                try {
+                    rules = sheets[i].cssRules;
+                } catch(e) {
+                    if (e.name == 'SecurityError') {
+                        console.log("SecurityError. Cant read: "+ sheets[i].href);
+                        continue;
+                    }
+                }
+            }
             if (rules) {
                 for(var r = rules.length-1; r >= 0; r--) {
                     var selectorText = rules[r].selectorText;
