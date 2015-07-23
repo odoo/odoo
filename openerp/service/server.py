@@ -1,6 +1,7 @@
 #-----------------------------------------------------------
 # Threaded, Gevent and Prefork Servers
 #-----------------------------------------------------------
+import contextlib
 import datetime
 import errno
 import logging
@@ -844,14 +845,8 @@ def _reexec(updated_modules=None):
     os.execv(sys.executable, args)
 
 def load_test_file_yml(registry, test_file):
-    with registry.cursor() as cr:
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
-        if config['test_commit']:
-            _logger.info('test %s has been commited', test_file)
-            cr.commit()
-        else:
-            _logger.info('test %s has been rollbacked', test_file)
-            cr.rollback()
+    with contextlib.closing(registry.cursor()) as cr, open(test_file, 'rb') as f:
+        openerp.tools.convert_yaml_import(cr, 'base', f, 'test', {}, 'init')
 
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests

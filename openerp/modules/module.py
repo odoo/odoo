@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import functools
 import imp
 import importlib
@@ -284,51 +285,45 @@ def load_information_from_description_file(module, mod_path=None):
     if not mod_path:
         mod_path = get_module_path(module)
     terp_file = mod_path and opj(mod_path, MANIFEST) or False
-    if terp_file:
-        info = {}
-        if os.path.isfile(terp_file):
-            # default values for descriptor
-            info = {
-                'application': False,
-                'author': 'Odoo S.A.',
-                'auto_install': False,
-                'category': 'Uncategorized',
-                'depends': [],
-                'description': '',
-                'icon': get_module_icon(module),
-                'installable': True,
-                'license': 'LGPL-3',
-                'post_load': None,
-                'version': '1.0',
-                'web': False,
-                'website': 'https://www.odoo.com',
-                'sequence': 100,
-                'summary': '',
-            }
-            info.update(itertools.izip(
-                'depends data demo test init_xml update_xml demo_xml'.split(),
-                iter(list, None)))
+    if terp_file and os.path.isfile(terp_file):
+        # default values for descriptor
+        info = {
+            'application': False,
+            'author': 'Odoo S.A.',
+            'auto_install': False,
+            'category': 'Uncategorized',
+            'depends': [],
+            'description': '',
+            'icon': get_module_icon(module),
+            'installable': True,
+            'license': 'LGPL-3',
+            'post_load': None,
+            'version': '1.0',
+            'web': False,
+            'website': 'https://www.odoo.com',
+            'sequence': 100,
+            'summary': '',
+        }
+        info.update(itertools.izip(
+            'depends data demo test init_xml update_xml demo_xml'.split(),
+            iter(list, None)))
 
-            f = tools.file_open(terp_file)
-            try:
-                info.update(eval(f.read()))
-            finally:
-                f.close()
+        with contextlib.closing(tools.file_open(terp_file)) as f:
+            info.update(eval(f.read()))
 
-            if not info.get('description'):
-                readme_path = [opj(mod_path, x) for x in README
-                               if os.path.isfile(opj(mod_path, x))]
-                if readme_path:
-                    readme_text = tools.file_open(readme_path[0]).read()
-                    info['description'] = readme_text
+        if not info.get('description'):
+            readme_path = [opj(mod_path, x) for x in README
+                           if os.path.isfile(opj(mod_path, x))]
+            if readme_path:
+                readme_text = tools.file_open(readme_path[0]).read()
+                info['description'] = readme_text
 
-            if 'active' in info:
-                # 'active' has been renamed 'auto_install'
-                info['auto_install'] = info['active']
+        if 'active' in info:
+            # 'active' has been renamed 'auto_install'
+            info['auto_install'] = info['active']
 
-            info['version'] = adapt_version(info['version'])
-            return info
-
+        info['version'] = adapt_version(info['version'])
+        return info
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
     _logger.debug('module %s: no %s file found.', module, MANIFEST)
@@ -397,24 +392,21 @@ def load_openerp_module(module_name):
 def get_modules():
     """Returns the list of module names
     """
-    def listdir(dir):
+    def listdir(directory):
         def clean(name):
             name = os.path.basename(name)
             if name[-4:] == '.zip':
                 name = name[:-4]
             return name
 
-        def is_really_module(name):
-            manifest_name = opj(dir, name, MANIFEST)
-            zipfile_name = opj(dir, name)
-            return os.path.isfile(manifest_name)
-        return map(clean, filter(is_really_module, os.listdir(dir)))
+        return [
+            clean(name) for name in os.listdir(directory)
+            if os.path.isfile(opj(directory, name, MANIFEST))
+        ]
 
-    plist = []
     initialize_sys_path()
-    for ad in ad_paths:
-        plist.extend(listdir(ad))
-    return list(set(plist))
+    modules = itertools.chain.from_iterable(listdir(ad) for ad in ad_paths)
+    return list(set(modules))
 
 def get_modules_with_version():
     modules = get_modules()

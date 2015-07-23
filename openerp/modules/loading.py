@@ -7,7 +7,6 @@
 
 import itertools
 import logging
-import os
 import sys
 import threading
 import time
@@ -20,7 +19,6 @@ import openerp.modules.registry
 import openerp.tools as tools
 from openerp import SUPERUSER_ID
 
-from openerp.tools.translate import _
 from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_models, adapt_version
 from module import runs_post_install
@@ -48,12 +46,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            if tools.config.options['test_commit']:
-                cr.commit()
-            else:
-                cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache 
-                openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
+            cr.rollback()
+            # avoid keeping stale xml_id, etc. in cache
+            openerp.modules.registry.RegistryManager.clear_caches(cr.dbname)
 
 
     def _get_files_of_kind(kind):
