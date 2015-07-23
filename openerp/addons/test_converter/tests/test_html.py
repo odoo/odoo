@@ -121,12 +121,10 @@ class TestCurrencyExport(TestExport):
     def test_currency_post(self):
         user = self.env['res.users'].browse(self.uid)
         lang = self.env['res.lang'].search([('code','=',user.lang)])
-
         if lang.position == 'after':
             currency = self.create(self.Currency, name="Test", symbol=u"test")
             obj = self.create(self.Model, value=0.12)
             converted = self.convert(obj, dest=currency)
-
             self.assertEqual(
                 converted,
                 '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
@@ -141,12 +139,10 @@ class TestCurrencyExport(TestExport):
     def test_currency_pre(self):
         user= self.env['res.users'].browse(self.uid)
         lang = self.env['res.lang'].search([('code','=',user.lang)])
-
         if lang.position == 'before':
             currency = self.create(self.Currency, name="Test", symbol=u"test")
             obj = self.create(self.Model, value=0.12)
-            converted = self.convert(obj, dest=currency)
-
+            converted = self.convert(obj, dest=currency)            
             self.assertEqual(
                 converted,
                 '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
@@ -164,26 +160,32 @@ class TestCurrencyExport(TestExport):
         """
         user = self.env['res.users'].browse(self.uid)
         lang = self.env['res.lang'].search([('code','=',user.lang)])
-
         currency = self.create(self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=0.1234567)
-        pre = post = u''
-        if lang.position == 'after':
-            post = u'\N{NO-BREAK SPACE}{symbol}'
-        else:
-            pre = u'{symbol}\N{NO-BREAK SPACE}'
         converted = self.convert(obj, dest=currency)
-
-        self.assertEqual(
-            converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
-                  u'{pre}'
-                  '<span class="oe_currency_value">0.12</span></span>'
-                  u'{post}'.format(
-                obj=obj, pre=pre, post=post
-            ).format(symbol=currency.symbol.encode('utf-8')).encode('utf-8'))
+        if lang.position == 'after':
+            self.assertEqual(
+                converted,
+                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                      'data-oe-field="value" data-oe-type="monetary" '
+                      'data-oe-expression="obj.value">'
+                      '<span class="oe_currency_value">0.12</span>'
+                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
+                    obj=obj,
+                    symbol=currency.symbol.encode('utf-8')
+                ).encode('utf-8'),)
+        else:
+            self.assertEqual(
+                converted,
+                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                      'data-oe-field="value" data-oe-type="monetary" '
+                      'data-oe-expression="obj.value">'
+                        u'{symbol}\N{NO-BREAK SPACE}'
+                        '<span class="oe_currency_value">0.12</span>'
+                        '</span>'.format(
+                    obj=obj,
+                    symbol=currency.symbol.encode('utf-8')
+                ).encode('utf-8'),)        
 
 class TestTextExport(TestBasicExport):
     def test_text(self):
