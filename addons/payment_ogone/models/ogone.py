@@ -7,7 +7,6 @@ from lxml import etree, objectify
 from openerp.tools.translate import _
 from pprint import pformat
 import time
-import datetime
 from urllib import urlencode
 import urllib2
 import urlparse
