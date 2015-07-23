@@ -16,7 +16,6 @@ import subprocess
 import sys
 import threading
 import time
-import unittest
 
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
@@ -844,55 +843,19 @@ def _reexec(updated_modules=None):
         args.insert(0, exe)
     os.execv(sys.executable, args)
 
-def load_test_file_yml(registry, test_file):
-    with contextlib.closing(registry.cursor()) as cr, open(test_file, 'rb') as f:
-        openerp.tools.convert_yaml_import(cr, 'base', f, 'test', {}, 'init')
-
-def load_test_file_py(registry, test_file):
-    # Locate python module based on its filename and run the tests
-    test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod_name, mod_mod in sys.modules.items():
-        if mod_mod:
-            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-            if test_path == mod_path:
-                suite = unittest.TestSuite()
-                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
-                    suite.addTest(t)
-                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = openerp.modules.module.TestStream()
-                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
-                success = result.wasSuccessful()
-                if hasattr(registry._assertion_report,'report_result'):
-                    registry._assertion_report.report_result(success)
-                if not success:
-                    _logger.error('%s: at least one error occurred in a test', test_file)
-
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
     config = openerp.tools.config
-    test_file = config['test_file']
     dbnames = dbnames or []
-    rc = 0
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
-            registry = RegistryManager.new(dbname, update_module=update_module)
-            # run test_file if provided
-            if test_file:
-                _logger.info('loading test file %s', test_file)
-                with openerp.api.Environment.manage():
-                    if test_file.endswith('yml'):
-                        load_test_file_yml(registry, test_file)
-                    elif test_file.endswith('py'):
-                        load_test_file_py(registry, test_file)
-
-            if registry._assertion_report.failures:
-                rc += 1
+            RegistryManager.new(dbname, update_module=update_module)
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)
             return -1
-    return rc
+    return 0
 
 def start(preload=None, stop=False):
     """ Start the openerp http server and cron processor.

@@ -50,6 +50,15 @@ def registry(database_name=None):
     return modules.registry.RegistryManager.get(database_name)
 
 #----------------------------------------------------------
+# Configuration
+#----------------------------------------------------------
+# the default limit for CSV fields in the module is 128KiB, which is not
+# quite sufficient to import images to store in attachment. 500MiB is a
+# bit overkill, but better safe than sorry I guess
+import csv
+csv.field_size_limit(500 * 1024 * 1024)
+
+#----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
 from . import addons

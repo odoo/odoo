@@ -6,7 +6,6 @@ import workflow
 import module
 import res
 import report
-import tests
 
 def post_init(cr, registry):
     """Rewrite ICP's to force groups"""

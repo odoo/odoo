@@ -176,6 +176,7 @@ setup(
     },
     tests_require=[
         'mock',
+        'pytest',
     ],
     **py2exe_options()
 )

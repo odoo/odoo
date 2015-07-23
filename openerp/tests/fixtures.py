@@ -1,6 +1,11 @@
+"""
+Definition of various "standard" pytest fixtures useful for Odoo test cases
+"""
+
 import contextlib
 import threading
 import itertools
+
 import pytest
 
 from .. import SUPERUSER_ID, api, service

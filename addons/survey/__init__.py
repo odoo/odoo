@@ -4,4 +4,3 @@
 import survey
 import controllers
 import wizard
-import tests
