@@ -9,7 +9,7 @@ Theme Tutorial
 Odoo celebrates freedom. Freedom for the designer to go further and
 freedom for the user to customize everything according to their needs.
 
-Ready to create your own theme? Great. Here some things you should know before you begin. This tutorial is a guide to creating an Odoo theme.
+Ready to create your own theme? Great. Here are some things you should know before you begin. This tutorial is a guide to creating an Odoo theme.
 
 .. image:: theme_tutorial_assets/img/Intro.jpg
 
@@ -219,8 +219,8 @@ Odoo’s themes are packaged like modules. Even if you are designing a very simp
   Create another empty file and name it ``__init__.py``. It's a
   mandatory system file. Create and leave it blank.
 
-``view`` and ``static`` folders
-  Create them in the main folder. In ``view`` you'll place your xml
+``views`` and ``static`` folders
+  Create them in the main folder. In ``views`` you'll place your xml
   files that define your snippets, your pages and your
   options. ``static`` folder is the right place for your style ,
   images and custom js code.
@@ -276,7 +276,6 @@ The ``data`` property will contain the xml files list. Right now it’s empty, b
 Installing your theme
 ---------------------
 
-To install your theme you just place your theme folder inside "addons"
 To install your theme, you just place your theme folder inside addons in your Odoo installation.
 
 After that, navigate to the Settings page, look for your theme and click on the install button.
@@ -310,7 +309,7 @@ Extend the default Header
 
 By default, Odoo header contains a responsive navigation menu and the company’s logo. You can easily add new elements or style the existing one.
 
-To do so, create a **layout.xml** file in your **views** folder folder and add the default Odoo xml markup.
+To do so, create a **layout.xml** file in your **views** folder and add the default Odoo xml markup.
 
 .. code-block:: xml
 
@@ -429,7 +428,7 @@ default page layout with our code.
 As you can see, we wrapped our code into two ``<div>``,  one with ID ``wrap`` and the other one with class ``container``. This is to provide a minimal layout.
 
 The next step is to add an empty area that the user
-can fill with snippets. To archive this, just create a ``div`` with
+can fill with snippets. To achieve this, just create a ``div`` with
 ``oe_structure`` class just before closing the ``div#wrap`` element.
 
 .. code-block:: xml
@@ -463,7 +462,7 @@ can fill with snippets. To archive this, just create a ``div`` with
 
    You can create as many snippet areas as you like and place them anywhere in your pages.
 
-Our page is almost ready. Now all we have to do is add **pages.xml** in our **__opererp_.py** file
+Our page is almost ready. Now all we have to do is add **pages.xml** in our **__openerp__.py** file
 
 .. code-block:: python
 
@@ -555,8 +554,8 @@ order to operate.
 
 In this case, we are referring to ``assets_frontend`` template,
 located in the ``website`` module. ``assets_frontend`` specifies the
-list of assets loaded by the the website builder and our goal is to
-add our less file to this list.
+list of assets loaded by the website builder and our goal is to add
+our less file to this list.
 
 This can be achieved using xpath with the attributes
 ``expr="link[last()]"`` and ``position="after"``, which means "*take my
@@ -615,12 +614,12 @@ The template contains the HTML markup that will be displayed by the snippet.
 
 As you can see, we used Bootstrap default classes for our three columns. It’s not just about layout, these classes **will be triggered by the Website Builder to make them resizable by the user**.
 
-The previous code will create the snippet’s content, but we still need to place it into the editor bar, so the user will be able to drag&drop it into the page. Copy/paste this template in your **snippet.xml** file.
+The previous code will create the snippet’s content, but we still need to place it into the editor bar, so the user will be able to drag&drop it into the page. Copy/paste this template in your **snippets.xml** file.
 
 .. code-block:: xml
 
    <template id="place_into_bar" inherit_id="website.snippets" name="Place into bar">
-     <xpath expr="//div[@id='snippet_structure']//div[@class='o_panel_body']" position="inside">
+     <xpath expr="//div[@id='snippet_structure']" position="inside">
        <t t-snippet="theme_tutorial.snippet_testimonial"
           t-thumbnail="/theme_tutorial/static/src/img/ui/snippet_thumb.jpg"/>
      </xpath>
@@ -666,7 +665,7 @@ Options group properties
 Options are wrapped in groups. Groups can have properties that define how the included options will interact with the user interface.
 
 ``data-selector=" css selector(s) "``
-  Bind the all the options included into the group to a particular element.
+  Bind all the options included into the group to a particular element.
 ``data-js=" custom method name "``
   Is used to bind custom Javascript methods.
 ``data-drop-in=" css selector(s) "``
@@ -709,7 +708,7 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 
 .. note::
 
-  The previous template will inherit the default **snippet_option template** adding our options after the **background** options (xpath expr attribute).
+  The previous template will inherit the default **snippet_options template** adding our options after the **background** options (xpath expr attribute).
   To place your options in a particular order, inspect the **snippet_options template** from the **website module** and add your options before/after the desired position.
 
 As you can see, we wrapped all our options inside a DIV tag that will
@@ -724,6 +723,7 @@ Since ``select_class`` method avoids multiple selections, the last "empty"
 option will reset the snippet to default.
 
 Add **options.xml** to ``__openerp__.py`` and update your theme.
+
 .. image:: theme_tutorial_assets/img/restart.png
 
 Dropping our snippet onto the page, you will notice that our new options are automatically added to the customize menu. Inspecting the page, you will also notice that the class will be applied to the element when selecting an option.
