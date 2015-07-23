@@ -998,6 +998,7 @@ class mrp_production(osv.osv):
                     consume_lines.append({'product_id': cons.product_id.id, 'lot_id': cons.lot_id.id, 'product_qty': cons.product_qty})
             else:
                 consume_lines = self._calculate_qty(cr, uid, production, production_qty_uom, context=context)
+            to_consume = {}
             for consume in consume_lines:
                 remaining_qty = consume['product_qty']
                 for raw_material_line in production.move_lines:
@@ -1008,8 +1009,13 @@ class mrp_production(osv.osv):
                     if consume['product_id'] != raw_material_line.product_id.id:
                         continue
                     consumed_qty = min(remaining_qty, raw_material_line.product_qty)
-                    stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
-                                                 restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
+                    to_consume[raw_material_line.id] = {
+                        'move': raw_material_line,
+                        'product_qty': consumed_qty,
+                        'location_id': raw_material_line.location_id.id,
+                        'restrict_lot_id': consume['lot_id'],
+                        'consumed_for': main_production_move,
+                    }
                     remaining_qty -= consumed_qty
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
@@ -1018,6 +1024,8 @@ class mrp_production(osv.osv):
                     stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
                                                                     'consumed_for': main_production_move}, context=context)
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+            if to_consume:
+                stock_mov_obj._action_consume(cr, uid, to_consume, context=context)
 
         self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
 
