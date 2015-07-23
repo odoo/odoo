@@ -146,6 +146,11 @@ TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
 NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+REVERSE_NEGATIVE_OPERATOR = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike', 'not in': 'in'}
+def get_ids_operator(operator):
+    if operator in NEGATIVE_TERM_OPERATORS:
+        return 'not in'
+    return 'in'
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -832,8 +837,10 @@ class expression(object):
 
             # Making search easier when there is a left operand as column.o2m or column.m2m
             elif len(path) > 1 and column._type in ['many2many', 'one2many']:
-                right_ids = comodel.search(cr, uid, [(path[1], operator, right)], context=context)
-                table_ids = model.search(cr, uid, [(path[0], 'in', right_ids)], context=dict(context, active_test=False))
+                local_operator = REVERSE_NEGATIVE_OPERATOR.get(operator, operator)
+                right_ids = comodel.search(cr, uid, [(path[1], local_operator, right)], context=context)
+                ids_operator = get_ids_operator(operator)
+                table_ids = model.search(cr, uid, [(path[0], ids_operator, right_ids)], context=dict(context, active_test=False))
                 leaf.leaf = ('id', 'in', table_ids)
                 push(leaf)
 
@@ -909,9 +916,9 @@ class expression(object):
 
                 if right is not False:
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context, limit=None)]
-                        if ids2:
-                            operator = 'in'
+                        local_operator = REVERSE_NEGATIVE_OPERATOR.get(operator, operator)
+                        operator = get_ids_operator(operator)
+                        ids2 = [x[0] for x in comodel.name_search(cr, uid, right, [], local_operator, context=context, limit=None)]
                     elif isinstance(right, collections.Iterable):
                         ids2 = right
                     else:
@@ -950,9 +957,9 @@ class expression(object):
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], operator, context=context)]
-                            if res_ids:
-                                operator = 'in'
+                            local_operator = REVERSE_NEGATIVE_OPERATOR.get(operator, operator)
+                            operator = get_ids_operator(operator)
+                            res_ids = [x[0] for x in comodel.name_search(cr, uid, right, [], local_operator, context=context)]
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
@@ -964,10 +971,10 @@ class expression(object):
                                 call_null_m2m = False
                                 push(create_substitution_leaf(leaf, FALSE_LEAF, model))
                             else:
-                                operator = 'in'  # operator changed because ids are directly related to main object
+                                push(create_substitution_leaf(leaf, TRUE_LEAF, model))
                         else:
                             call_null_m2m = False
-                            m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                            m2m_op = get_ids_operator(operator)
                             push(create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), model))
 
                     if call_null_m2m:
