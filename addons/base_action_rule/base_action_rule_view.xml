@@ -34,7 +34,7 @@
                                             class="oe_inline"/>
                                         <div class="oe_edit_only oe_inline">Set selection based on a search filter:
                                             <field name="filter_pre_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                                class="oe_inline" context="{'default_model_id': model}"
+                                                class="oe_inline" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"
                                                 on_change="onchange_filter_pre_id(filter_pre_id, context)"/></div>
                                     </div>
                                     <label for="filter_id"/>
@@ -43,7 +43,7 @@
                                             class="oe_inline"/>
                                         <div class="oe_edit_only oe_inline">Set selection based on a search filter:
                                             <field name="filter_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                                class="oe_inline" context="{'default_model_id': model}"
+                                                class="oe_inline" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"
                                                 on_change="onchange_filter_id(filter_id, context)"/></div>
                                     </div>
                                     <field name="on_change_fields"
