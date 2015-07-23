@@ -12,11 +12,18 @@
             <field name="auto_delete" eval="True"/>
             <field name="report_template" ref="report_event_registration_badge"/>
             <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
-            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
-<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+<p>Hello ${object.name},</p>
+<p>Your subscription to the event ${object.event_id.name} has been confirmed.
 Please, Find your <b>Event Badge</b> attached with this mail.</p>
-<p>Thank you for your participation!</p>
-<p>Best regards</p>]]></field>
+<p>If you have any questions, please let us know.</p>
+<p>Thank you,</p>
+% if user.signature:
+    <pre>${user.signature | safe}</pre>
+%endif
+</div>]]></field>
         </record>
 
         <record id="event_subscription" model="mail.template">
@@ -27,11 +34,17 @@ Please, Find your <b>Event Badge</b> attached with this mail.</p>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Your subscription at ${object.event_id.name}</field>
-            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
-<p>We confirm that your subscription to the event ${object.event_id.name} has been recorded.
-You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>
-<p>Thank you for your participation!</p>
-<p>Best regards</p>]]></field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+<p>Hello ${object.name},</p>
+<p>We confirm your subscription to the event ${object.event_id.name}. You will receive an email with practical information(such as the schedule, the agenda etc...).</p>
+<p>If you have any questions, please let us know.</p>
+<p>Thank you,</p>
+% if user.signature:
+    <pre>${user.signature | safe}</pre>
+%endif
+</div>]]></field>
         </record>
 
         <record id="event_reminder" model="mail.template">
@@ -42,11 +55,18 @@ You will automatically receive an email providing you more practical information
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Reminder of event ${object.event_id.name}</field>
-            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
-<p>This is a reminder for ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.
-For any further information please contact our event department.</p>
-<p>Thank you for your participation!</p>
-<p>Best regards</p>]]></field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+<p>Hello ${object.name},</p>
+<p>Thank you for your registration to the event ${object.event_id.name}.</p>
+<p>The event will take place ${object.event_id.address_id and object.event_id.address_id.country_id and 'at %s' % (object.event_id.address_id.country_id.name) or ''} from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.</p>
+<p>If you have any questions, please let us know.</p>
+<p>Thank you,</p>
+% if user.signature:
+    <pre>${user.signature | safe}</pre>
+%endif
+</div>]]></field>
         </record>
 
         <record id="event_thanks" model="mail.template">
@@ -57,7 +77,10 @@ For any further information please contact our event department.</p>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Thanks for attending ${object.event_id.name}</field>
-            <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+<p>Hello ${object.name},</p>
 <p>We would like to thank you for your presence at our event ${object.event_id.name}.
 <br/><br/>
     % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:
@@ -65,7 +88,11 @@ For any further information please contact our event department.</p>
     % elif object.event_id.organizer_id:
         <strong>${object.event_id.organizer_id.name}</strong>
     % endif
-</p>]]></field>
+</p>
+% if user.signature:
+    <pre>${user.signature | safe}</pre>
+%endif
+</div>]]></field>
         </record>
 
     </data>
