@@ -1373,7 +1373,8 @@ class account_move(osv.osv):
         c = context.copy()
         c['novalidate'] = True
         result = super(account_move, self).write(cr, uid, ids, vals, c)
-        self.validate(cr, uid, ids, context=context)
+        if not context.get('novalidate'):
+            self.validate(cr, uid, ids, context=context)
         return result
 
     def create(self, cr, uid, vals, context=None):
