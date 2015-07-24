@@ -116,12 +116,21 @@ class base_action_rule(osv.osv):
             clear_fields = ['filter_pre_id']
         return {'value': dict.fromkeys(clear_fields, False)}
 
+    def _get_eval_context(self, cr, uid, context=None):
+        """ Prepare the context used when evaluating python code
+        :returns: dict -- evaluation context given to (safe_)eval """
+        return {
+            'time': time,
+            'user': self.pool['res.users'].browse(cr, uid, uid, context=context),
+        }
+
     def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
         """ filter the list record_ids that satisfy the action filter """
+        eval_context = self._get_eval_context(cr, uid, context=context)
         if record_ids and action_filter:
             assert action.model == action_filter.model_id, "Filter model different from action rule model"
             model = self.pool[action_filter.model_id]
-            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
+            domain = [('id', 'in', record_ids)] + eval(action_filter.domain, eval_context)
             ctx = dict(context or {})
             ctx.update(eval(action_filter.context))
             record_ids = model.search(cr, uid, domain, context=ctx)
@@ -297,6 +306,7 @@ class base_action_rule(osv.osv):
         # retrieve all the action rules to run based on a timed condition
         action_dom = [('kind', '=', 'on_time')]
         action_ids = self.search(cr, uid, action_dom, context=dict(context, active_test=True))
+        eval_context = self._get_eval_context(cr, uid, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
             if action.last_run:
@@ -309,7 +319,7 @@ class base_action_rule(osv.osv):
             domain = []
             ctx = dict(context)
             if action.filter_id:
-                domain = eval(action.filter_id.domain)
+                domain = eval(action.filter_id.domain, eval_context)
                 ctx.update(eval(action.filter_id.context))
                 if 'lang' not in ctx:
                     # Filters might be language-sensitive, attempt to reuse creator lang

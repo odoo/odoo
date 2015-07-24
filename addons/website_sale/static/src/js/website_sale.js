@@ -218,6 +218,11 @@ $('.oe_website_sale').each(function () {
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
     });
+
+    $('div.js_product', oe_website_sale).each(function () {
+        $('input.js_product_change', this).first().trigger('change');
+    });
+
     $('ul.js_add_cart_variants', oe_website_sale).each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
