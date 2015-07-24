@@ -214,7 +214,12 @@ var KanbanView = View.extend({
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
+                    var field = self.fields_view.fields[self.group_by_field];
+                    if (field && field.type === "selection") {
+                        value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
+                    } 
                     group.title = (value instanceof Array ? value[1] : value) || _t("Undefined");
+                    group.values = {};
                 });
                 return $.when(groups);
             }
