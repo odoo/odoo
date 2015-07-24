@@ -39,7 +39,7 @@ class project_task_type(osv.osv):
             'Kanban Ongoing Explanation', translate=True,
             help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
         'fold': fields.boolean('Folded in Kanban View',
-                               help='This stage is folded in the kanban view when'
+                               help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
     }
 
@@ -165,7 +165,7 @@ class project(osv.osv):
                                     domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
-                                    help="Internal email associated with this project. Incoming emails are automatically synchronized"
+                                    help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
