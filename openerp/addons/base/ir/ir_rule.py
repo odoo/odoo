@@ -37,13 +37,15 @@ class ir_rule(osv.osv):
            that are easier to parse and combine, but not to
            actually execute them."""
         return {'user': unquote('user'),
-                'time': unquote('time')}
+                'time': unquote('time'),
+                'ref': unquote('ref')}
 
     def _eval_context(self, cr, uid):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
         return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
-                'time':time}
+                'time': time,
+                'ref': lambda xml_id: self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, xml_id, raise_if_not_found=True)}
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
