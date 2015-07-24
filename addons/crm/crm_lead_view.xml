@@ -295,7 +295,7 @@
                                         <field name="partner_id"/>
                                     </div>
                                     <div style="padding-left: 0.5em">
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                         <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>

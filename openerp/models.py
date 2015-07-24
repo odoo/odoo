@@ -3230,7 +3230,8 @@ class BaseModel(object):
         try:
             result = records.read(list(fnames), load='_classic_write')
         except AccessError:
-            pass
+            # not all records may be accessible, try with only current record
+            result = self.read(list(fnames), load='_classic_write')
 
         # check the cache, and update it if necessary
         if not self._cache.contains(field):

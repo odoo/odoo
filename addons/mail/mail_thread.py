@@ -1006,6 +1006,8 @@ class mail_thread(osv.AbstractModel):
                             (model, thread_id, custom_values, uid, None),
                             update_author=True, assert_model=True, create_fallback=True, context=context)
                         if route:
+                            # parent is invalid for a compat-reply
+                            message_dict.pop('parent_id', None)
                             _logger.info(
                                 'Routing mail from %s to %s with Message-Id %s: direct thread reply (compat-mode) to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, model, thread_id, custom_values, uid)
@@ -1031,6 +1033,9 @@ class mail_thread(osv.AbstractModel):
                     return [route]
                 elif route is False:
                     return []
+
+        # no route found for a matching reference (or reply), so parent is invalid
+        message_dict.pop('parent_id', None)
 
         # 4. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -1114,6 +1119,8 @@ class mail_thread(osv.AbstractModel):
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], message_dict, context=nosub_ctx)
                 else:
+                    # if a new thread is created, parent is irrelevant
+                    message_dict.pop('parent_id', None)
                     thread_id = model_pool.message_new(cr, user_id, message_dict, custom_values, context=nosub_ctx)
             else:
                 if thread_id:
