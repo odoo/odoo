@@ -14,17 +14,31 @@
                                 <label for="auth_oauth_google_enabled"/>
                             </div>
                             <div attrs="{'invisible':[('auth_oauth_google_enabled','=',False)]}">
-                                <blockquote>
-                                    To setup the signin process with Google, first you have to perform the following steps:<br/>
-                                    <br/>
-                                    - Go to the <a href="https://code.google.com/apis/console/">Google APIs console</a><br/>
-                                    - Ceate a new project<br/>
-                                    - Go to Api Access<br/>
-                                    - Create an oauth client_id<br/>
-                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>
-                                    <br/>
-                                    Now copy paste the client_id here: <field name="auth_oauth_google_client_id" class="oe_inline" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
-                                </blockquote>
+                                <span>
+                                    <br/><b>To setup the signin process with Google, first you have to perform the following steps:</b><br/>
+                                    - Go to the <a href="https://code.google.com/apis/console/">Google APIs console</a><br/><br/>
+                                    - Old Google API console users follow these steps:<br/>
+                                    <ul>
+                                        <li class="text-info"> Ceate a new project</li>
+                                        <li class="text-info"> Go to Api Access</li>
+                                        <li class="text-info"> Create an oauth client_id</li>
+                                        <li class="text-info"> Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.</li>
+                                    </ul>
+                                    - New Google API console users follow these steps:<br/>
+                                    <ul>
+                                        <li class="text-info">Ceate a new project</li>
+                                        <li class="text-info">Go to: APIs and auth --> consent screen</li>
+                                        <li class="text-info">Fill up PRODUCT NAME(mandatory) and other details</li>
+                                        <li class="text-info">Go to: APIs and auth --> Credentials and click on <b>Create new Client ID</b> button</li>
+                                        <li class="text-info">Select <b>Web application</b> and fill up:</li>
+                                        <ul>
+                                            <li class="text-info"> AUTHORIZED JAVASCRIPT ORIGINS (e.g. http://odoo.mydomain.com)</li>
+                                            <li class="text-info">Replace 'oauth2callback' with 'auth_oauth/signin' in AUTHORIZED REDIRECT URIS field</li>
+                                         </ul>
+                                        <li class="text-info">Click on <b>Create client ID</b> button</li>
+                                    </ul>
+                                    <strong>- Now copy paste the client_id here: <field name="auth_oauth_google_client_id" class="oe_inline" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/></strong>
+                                </span>
                             </div>
                         </div>
                     </div>
