@@ -106,6 +106,12 @@ class stock_transfer_details(models.TransientModel):
 
         return True
 
+    @api.one
+    def cancel(self):
+        '''We delete related stock.pack.operation on cancel to avoid this bug:
+        https://github.com/odoo/odoo/issues/7725'''
+        self.picking_id.pack_operation_ids.unlink()
+
     @api.multi
     def wizard_view(self):
         view = self.env.ref('stock.view_stock_enter_transfer_details')
