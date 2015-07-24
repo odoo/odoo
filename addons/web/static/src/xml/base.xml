@@ -705,7 +705,7 @@
 <t t-name="ListView.buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
     <div class="oe_list_buttons">
-        <button type="button" class="oe_list_add btn btn-primary btn-sm">
+        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
             <t t-esc="widget.options.addable"/>
         </button>
     </div>
@@ -745,13 +745,13 @@
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="button.oe_list_add" t-operation="after">
-        <button class="oe_button oe_list_save oe_highlight"
-                type="button">Save</button>
-        <span class="oe_alternative">
-            <span class="oe_fade">or</span>
-            <a href="#" class="oe_bold oe_list_discard">Discard</a>
-        </span>
+    <t t-jquery="button.o_list_button_add" t-operation="after">
+        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
+            Save
+        </button>
+        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
+            Discard
+        </button>
     </t>
 </t>
 <button t-name="ListView.row.text_button" type="button"

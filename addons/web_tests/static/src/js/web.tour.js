@@ -17,7 +17,7 @@ Tour.register({
         
         {
             title:      "create new discussion",
-            element:    '.oe_application:has(.oe-view-title:contains(Discussions)) button.oe_list_add'
+            element:    '.oe_application:has(.oe-view-title:contains(Discussions)) button.o_list_button_add'
         },
         {
             title:      "insert title",
