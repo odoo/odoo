@@ -2,28 +2,12 @@
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
-            <div class="oe_view_manager oe_view_manager_current">
-                <div class="oe-control-panel oe_padding">
-                    <h2>
-                        Import a CSV File
-                    </h2>
-                    <input type="hidden" name="session_id"
-                       t-att-value="widget.session.session_id"/>
-                    <input type="hidden" name="import_id"/>
-                    <button type="button" disabled="disabled"
-                            class="oe_button oe_import_button oe_import_validate oe_highlight"
-                        >Validate</button>
-                    <button type="button" disabled="disabled"
-                            class="oe_button oe_import_button oe_import_import"
-                        >Import</button>
-                    <span class="oe_fade">or</span>
-                    <a class="oe_import_cancel" href="#">Cancel</a>
-                </div>
-            </div>
-
+            <input type="hidden" name="session_id"
+               t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
             <p>Select the <a
                     href="http://en.wikipedia.org/wiki/Comma-separated_values"
-                    class="oe_import_csv" target="_blank">.CSV</a>
+                    target="_blank">.CSV</a>
             file to import. If you need a sample importable file, you
             can use the export tool to generate one.</p>
             <div class="oe_import_box">
@@ -72,7 +56,7 @@
                 simpler especially when the file has many columns.</p>
 
                 <div class="oe_import_error_report"></div>
-                <table class="oe_import_grid" />
+                <table class="table-striped table-bordered oe_import_grid" />
             </div>
             <div class="oe_padding">
                 <h2>Frequently Asked Questions</h2>
@@ -349,26 +333,40 @@
         </form>
     </t>
 
+    <t t-name="ImportView.buttons">
+        <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
+                disabled="disabled">Validate</button>
+        <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
+                disabled="disabled">Import</button>
+        <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
+    </t>
+
     <t t-name="ImportView.preview">
-        <tr t-if="headers" class="oe_import_grid-header">
-            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                ><t t-esc="header"/></td>
-        </tr>
-        <tr class="oe_import_fields">
-            <!-- Iterate on first row to ensure we have all columns -->
-            <td t-foreach="preview[0]" t-as="column">
-                <input class="oe_import_match_field"/>
-            </td>
-        </tr>
-        <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
-            <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
-                ><t t-esc="cell"/></td>
-        </tr>
+        <thead>
+            <tr t-if="headers" class="oe_import_grid-header">
+                <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                    ><t t-esc="header"/></td>
+            </tr>
+            <tr class="oe_import_fields">
+                <!-- Iterate on first row to ensure we have all columns -->
+                <td t-foreach="preview[0]" t-as="column">
+                    <input class="oe_import_match_field"/>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                    ><t t-esc="cell"/></td>
+            </tr>
+        </tbody>
     </t>
     <t t-name="ImportView.preview.error">
-        <p>Import preview failed due to: <t t-esc="error"/>. The issue is
-            usually an incorrect file encoding.</p>
-        <p>Here is the start of the file we could not import:</p>
+        <div class="oe_import_report oe_import_report_error">
+            <p>Import preview failed due to: <t t-esc="error"/>. The issue is
+                usually an incorrect file encoding.</p>
+            <p>Here is the start of the file we could not import:</p>
+        </div>
         <pre><t t-esc="preview"/></pre>
     </t>
     <ul t-name="ImportView.error">

@@ -1,6 +1,7 @@
 odoo.define('base_import.import', function (require) {
 "use strict";
 
+var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ListView = require('web.ListView');
 var Model = require('web.DataModel');
@@ -74,7 +75,7 @@ ListView.include({
                     }
                 }, {
                     on_reverse_breadcrumb: function () {
-                        self.reload();
+                        return self.reload();
                     },
                 });
                 return false;
@@ -84,7 +85,7 @@ ListView.include({
     }
 });
 
-var DataImport = Widget.extend({
+var DataImport = Widget.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
@@ -133,22 +134,17 @@ var DataImport = Widget.extend({
                 }
             }));
         },
-        // buttons
-        'click .oe_import_validate': 'validate',
-        'click .oe_import_import': 'import',
-        'click .oe_import_cancel': function (e) {
-            e.preventDefault();
-            this.exit();
-        }
     },
     init: function (parent, action) {
         this._super.apply(this, arguments);
+        this.action_manager = parent;
         this.res_model = action.params.model;
         this.parent_context = action.params.context || {};
         // import object id
         this.id = null;
         this.Import = new Model('base_import.import');
         this.session = session;
+        action.display_name = _t('Import a CSV File'); // Displayed in the breadcrumbs
     },
     start: function () {
         var self = this;
@@ -162,8 +158,25 @@ var DataImport = Widget.extend({
             }]).done(function (id) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
+
+                self.render_buttons();
+                var status = {
+                    breadcrumbs: self.action_manager.get_breadcrumbs(),
+                    cp_content: {$buttons: self.$buttons},
+                };
+                self.update_control_panel(status);
             })
         );
+    },
+    render_buttons: function() {
+        var self = this;
+        this.$buttons = $(QWeb.render("ImportView.buttons", this));
+        this.$buttons.filter('.o_import_validate').on('click', this.validate.bind(this));
+        this.$buttons.filter('.o_import_import').on('click', this.import.bind(this));
+        this.$buttons.filter('.o_import_cancel').on('click', function(e) {
+            e.preventDefault();
+            self.exit();
+        });
     },
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
@@ -219,7 +232,7 @@ var DataImport = Widget.extend({
 
     //- File & settings change section
     onfile_loaded: function () {
-        this.$('.oe_import_button, .oe_import_file_reload')
+        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', true);
         if (!this.$('input.oe_import_file').val()) { return; }
 
@@ -230,7 +243,7 @@ var DataImport = Widget.extend({
     },
     onpreviewing: function () {
         var self = this;
-        this.$('.oe_import_button, .oe_import_file_reload')
+        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', true);
         this.$el.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
@@ -253,12 +266,12 @@ var DataImport = Widget.extend({
                 QWeb.render('ImportView.preview.error', result));
     },
     onpreview_success: function (event, from, to, result) {
-        this.$('.oe_import_import').removeClass('oe_highlight');
-        this.$('.oe_import_validate').addClass('oe_highlight');
-        this.$('.oe_import_button, .oe_import_file_reload')
+        this.$buttons.filter('.o_import_import').removeClass('btn-primary');
+        this.$buttons.filter('.o_import_validate').addClass('btn-primary');
+        this.$buttons.filter('.o_import_button').add(this.$('.oe_import_file_reload'))
                 .prop('disabled', false);
         this.$el.addClass('oe_import_preview');
-        this.$('table').html(QWeb.render('ImportView.preview', result));
+        this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
         if (result.headers.length === 1) {
             this.$('.oe_import_options').show();
@@ -419,8 +432,10 @@ var DataImport = Widget.extend({
     },
     onresults: function (event, from, to, message) {
         var no_messages = _.isEmpty(message);
-        this.$('.oe_import_import').toggleClass('oe_highlight', no_messages);
-        this.$('.oe_import_validate').toggleClass('oe_highlight', !no_messages);
+        this.$buttons.filter('.o_import_import').toggleClass('btn-primary', no_messages);
+        this.$buttons.filter('.o_import_import').toggleClass('btn-default', !no_messages);
+        this.$buttons.filter('.o_import_validate').toggleClass('btn-primary', !no_messages);
+        this.$buttons.filter('.o_import_validate').toggleClass('btn-default', no_messages);
         if (no_messages) {
             message.push({
                 type: 'info',
