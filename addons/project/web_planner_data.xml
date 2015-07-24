@@ -292,39 +292,68 @@
                                         </select>
                                     </div>
                                 </li>
-                                <li class="row"><span>#1</span>
-                                <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_0" type="text" value="Ideas"/>
-                                <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_7" type="text" value="Idea is fully explained"/>
+                                <li class="row">
+                                    <span>#1</span>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_0" type="text" value="Ideas"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_7" type="text" value="Idea is fully explained"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#2</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_1" type="text" value="To Do"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_8" type="text" value="Idea has been transformed into concrete actions"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_1" type="text" value="To Do"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_8" type="text" value="Idea has been transformed into concrete actions"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#3</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_2" type="text" value="Done"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_9" type="text" value="Task is completed"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_2" type="text" value="Done"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_9" type="text" value="Task is completed"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#4</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_3" type="text" value="Cancelled"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_10" type="text" value="Reason for cancellation has been documented"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_3" type="text" value="Cancelled"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_10" type="text" value="Reason for cancellation has been documented"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#5</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_4" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_11" type="text"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_4" type="text"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_11" type="text"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#6</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_5" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_12" type="text"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_5" type="text"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_12" type="text"/>
+                                    </div>
                                 </li>
                                 <li class="row">
                                     <span>#7</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_6" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_13" type="text"/>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <input class="user_project" id="input_element_stage_6" type="text"/>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-sm-offset-1">
+                                        <input id="input_element_stage_13" type="text"/>
+                                    </div>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
@@ -460,6 +489,9 @@
                     <p class="text-muted">Timesheets are often essential for running a company.<br/>
                     They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>
                     Fortunately, Odoo has may solutions to make them as efficient and painless as possible!<br/></p>
+                    <t t-if="not is_module_installed('hr_timesheet_sheet')">
+                        <span class="text-muted">Note: To use those features, you need to install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">HR Timesheet module.</a></span>
+                    </t>
                     <section>
                         <h3><strong>Enter you activities</strong> (every day)</h3>
                         <div class="row">
@@ -494,7 +526,7 @@
                                         <li> View statistics for the week</li>
                                         <li> Get full synchronization with Odoo</li><br/>
                                         <a href="https://chrome.google.com/webstore" target="_blank">
-                                            <img src="/project/static/src/img/web_planner_chrome.png"/>
+                                            <img class="img-responsive center-block" src="/project/static/src/img/web_planner_chrome.png"/>
                                         </a>
                                     </div>
                                 </div>
@@ -511,7 +543,7 @@
                                         <p>The same features as the Chrome extension, but on your mobile phone!</p>
                                         <p>Extra useful for when you're with a customer or in a meeting.</p>
                                         <a href="https://play.google.com/store/apps/details?id=org.bhc.android" target="_blank">
-                                            <img alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png"/>
+                                            <img class="img-responsive center-block" alt="Get it on Google Play" src="https://developer.android.com/images/brand/en_generic_rgb_wo_45.png"/>
                                         </a>
                                     </div>
                                 </div>
@@ -696,8 +728,10 @@
                                 <div class="col-xs-12 col-md-6">
                                     <input type="text" id="input_element_stage_0_user" value="Ideas" readonly="readonly"/>
                                 </div>
-                                <div class="col-xs-12 col-md-6">
+                                <div class="col-xs-2 col-md-1">
                                     <i class="fa fa-user"/>
+                                </div>
+                                <div class="col-xs-10 col-md-5">
                                     <input id="input_element_resp0" type="text"/>
                                 </div>
                                 </li>
@@ -706,8 +740,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_1_user" value="To Do" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp1" type="text"/>
                                     </div>
                                 </li>
@@ -716,8 +752,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_2_user" value="Done" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp2" type="text"/>
                                     </div>
                                 </li>
@@ -726,8 +764,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_3_user" value="Cancelled" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp3" type="text"/>
                                     </div>
                                 </li>
@@ -736,8 +776,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_4_user" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp4" type="text"/>
                                     </div>
                                 </li>
@@ -746,8 +788,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_5_user" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp5" type="text"/>
                                     </div>
                                 </li>
@@ -756,8 +800,10 @@
                                     <div class="col-xs-12 col-md-6">
                                         <input type="text" id="input_element_stage_6_user" readonly="readonly"/>
                                     </div>
-                                    <div class="col-xs-12 col-md-6">
+                                    <div class="col-xs-2 col-md-1">
                                         <i class="fa fa-user"/>
+                                    </div>
+                                    <div class="col-xs-10 col-md-5">
                                         <input id="input_element_resp6" type="text"/>
                                     </div>
                                 </li>
