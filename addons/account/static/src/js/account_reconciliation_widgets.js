@@ -59,7 +59,7 @@ then cloning it for each new child.
 
 */
 var abstractReconciliation = Widget.extend(ControlPanelMixin, {
-    className: 'oe_reconciliation',
+    className: 'oe_reconciliation o_reconciliation',
 
     events: {
         "click *[rel='do_action']": "doActionClickHandler",
@@ -268,6 +268,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     },
 
     doActionClickHandler: function(e) {
+        e.preventDefault();
         var name = e.currentTarget.dataset.action_nam;
         var model = e.currentTarget.dataset.model;
         var ids = e.currentTarget.dataset.ids.split(",").map(Number);
@@ -282,40 +283,22 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    presetConfigCreateClickHandler: function() {
+    presetConfigCreateClickHandler: function(e) {
+        e.preventDefault();
         var self = this;
-        // Fetch the ID of an action that will be pushed in the URL
-        // If the page is reloaded, this action will be loaded
-        new Model("ir.model.data")
-            .call("get_object_reference", ['account', 'action_account_operation_template'])
-            .then(function (result) {
-                self.action_manager.do_action({
-                    name: _t("Operation Templates"),
-                    res_model: "account.operation.template",
-                    views: [[false, 'form']],
-                    type: 'ir.actions.act_window',
-                    view_type: "form",
-                    view_mode: "form",
-                    action: result[1]
-                });
-            });
+        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+            result.views = [[false, "form"], [false, "list"]];
+            return self.do_action(result);
+        });
     },
 
-    presetConfigEditClickHandler: function() {
+    presetConfigEditClickHandler: function(e) {
+        e.preventDefault();
         var self = this;
-        new Model("ir.model.data")
-            .call("get_object_reference", ['account', 'action_account_operation_template'])
-            .then(function (result) {
-                self.action_manager.do_action({
-                    name: _t("Operation Templates"),
-                    res_model: "account.operation.template",
-                    views: [[false, 'list'], [false, 'form']],
-                    type: 'ir.actions.act_window',
-                    view_type: "list",
-                    view_mode: "list",
-                    action: result[1]
-                });
-            });
+        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+            result.views = [[false, "list"], [false, "form"]];
+            return self.do_action(result);
+        });
     },
 
     displayNotifications: function(notifications, speed) {
@@ -365,7 +348,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     keyboardShortcutsHandler: function(e) {
         var self = this;
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-            self.processReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
+            self.processReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
         }
     },
 
@@ -394,7 +377,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
 });
 
 var abstractReconciliationLine = Widget.extend({
-    className: 'oe_reconciliation_line',
+    className: 'oe_reconciliation_line o_reconciliation_line',
 
     events: {
         "click .mv_line": "moveLineClickHandler",
@@ -513,7 +496,7 @@ var abstractReconciliationLine = Widget.extend({
         var dataset = new data.DataSet(this, "account.account", self.context);
         dataset.ids = [];
         dataset.arch = {
-            attrs: { string: "Stéphanie de Monaco", version: "7.0", class: "oe_form_container" },
+            attrs: { string: "Stéphanie de Monaco", version: "7.0", class: "oe_form_container o_form_container" },
             children: [],
             tag: "form"
         };
@@ -1116,7 +1099,7 @@ var abstractReconciliationLine = Widget.extend({
 });
 
 var bankStatementReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_bank_statement_reconciliation',
+    className: abstractReconciliation.prototype.className + ' oe_bank_statement_reconciliation o_bank_statement_reconciliation',
 
     events: _.defaults({
         "click .statement_name span": "statementNameClickHandler",
@@ -1542,7 +1525,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         // Render it
         self.$(".protip").hide();
         self.updateShowMoreButton();
-        self.$(".oe_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
+        self.$(".oe_form_sheet, o_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
             title: title,
             all_was_auto_reconciled: all_was_auto_reconciled,
             time_taken: time_taken,
@@ -1604,7 +1587,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
 });
 
 var bankStatementReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line o_bank_statement_reconciliation_line',
 
     events: _.defaults({
         "click .change_partner": "changePartnerClickHandler",
@@ -1856,8 +1839,10 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         $.when(self.changePartner(false)).then(function(){
             self.$(".change_partner_container").show();
             self.$(".partner_name").hide();
-            self.change_partner_field.$drop_down.trigger("click");
-        })
+            // Old design uses drop_down and new design uses dropdown
+            var m2o_widget_dropdown = self.change_partner_field.$drop_down || self.change_partner_field.$dropdown;
+            m2o_widget_dropdown.trigger("click");
+        });
     },
 
 
@@ -2108,7 +2093,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 });
 
 var manualReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_manual_reconciliation',
+    className: abstractReconciliation.prototype.className + ' oe_manual_reconciliation o_manual_reconciliation',
 
     events: _.defaults({
         "change input[name='modeselektor']": "modeSelektorHandler",
@@ -2336,7 +2321,7 @@ var manualReconciliation = abstractReconciliation.extend({
     },
 
     showDoneMessage: function() {
-        this.$(".oe_form_sheet").append(QWeb.render("manual_reconciliation_done_message"));
+        this.$(".oe_form_sheet, .o_form_sheet").append(QWeb.render("manual_reconciliation_done_message"));
         var container = $("<div style='overflow: hidden;' />");
         this.$(".done_message").wrap(container).css("opacity", 0).css("position", "relative").css("left", "-50%");
         this.$(".done_message").animate({opacity: 1, left: 0}, this.aestetic_animation_speed*2, "easeOutCubic");
@@ -2364,7 +2349,7 @@ var manualReconciliation = abstractReconciliation.extend({
 });
 
 var manualReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line o_manual_reconciliation_line',
 
     events: _.defaults({
         "click .accounting_view thead": "headerClickHandler",

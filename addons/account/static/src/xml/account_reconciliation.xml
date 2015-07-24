@@ -5,16 +5,16 @@
     <!-- abstract or shared templates -->
 
     <t t-name="reconciliation">
-        <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
+        <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
             <h1><t t-esc="title"/></h1>
             <div t-if="! hide_progress" class="progress progress-striped">
                 <div class="progress-text"><span class="valuenow">0</span> / <span class="valuemax"><t t-esc="total_lines"/></span></div>
                 <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" t-att-aria-valuemax="total_lines" style="width: 0%;">
                 </div>
             </div>
-            <div class="oe_clear"></div>
+            <div class="oe_clear o_clear"></div>
             <div class="notification_area"></div>
-            <div class="interface_options oe_form"></div>
+            <div class="interface_options oe_form o_form"></div>
             <div class="reconciliation_lines_container"></div>
             <div class="show_more_container"><button class="show_more btn btn-default btn-sm">Show more... (<span class="num_items_remaining"></span> remaining)</button></div>
             <p class='protip'>Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet.</p>
@@ -22,9 +22,9 @@
     </t>
 
     <t t-name="nothing_to_reconcile">
-        <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
+        <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
             <div class="notification_area"></div>
-            <div class="oe_view_nocontent"></div>
+            <div class="oe_view_nocontent o_view_nocontent"></div>
         </div></div>
     </t>
 
@@ -82,7 +82,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="oe_form create_form">
+                        <div class="oe_form o_form create_form">
                             <!-- here come some form_create_field -->
                             <table class="create_field add_line_container"><tr><td><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> New Operation</a></td></tr></table>
                             <div class='clearer'></div>
@@ -187,7 +187,7 @@
             <t t-if="single_statement">
                 <h1 class="statement_name">
                     <span><t t-esc="title"/></span>
-                    <table class="change_statement_name_container oe_form"><tr>
+                    <table class="change_statement_name_container oe_form o_form"><tr>
                         <td><input class="change_statement_name_field" type="text"/></td>
                         <td><button class="change_statement_name_button btn btn-primary btn-sm">OK</button></td>
                     </tr></table>
@@ -200,7 +200,7 @@
     </t>
 
     <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
             <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
         </t>
@@ -236,7 +236,7 @@
                 <t t-esc="line.partner_name"/>
                 <span class="change_partner fa fa-times"></span>
             </span>
-            <div class="change_partner_container oe_form"></div>
+            <div class="change_partner_container oe_form o_form"></div>
         </t>
         <t t-jquery=".accounting_view caption" t-operation="after">
             <tbody class="tbody_initial_line">
@@ -276,20 +276,20 @@
 
     <t t-name="show_mode_selector_option">
         <div>
-            <span class="oe_radio_input"><input type="radio" name="modeselektor" t-att-val="value" t-attf-id="mode_{{value}}" t-att-checked="(mode === value ? true : undefined)" /></span>
+            <span class="oe_radio_input o_radio_input"><input type="radio" name="modeselektor" t-att-val="value" t-attf-id="mode_{{value}}" t-att-checked="(mode === value ? true : undefined)" /></span>
             <label t-attf-for="mode_{{value}}"><t t-esc="title"/></label>
         </div>
     </t>
 
     <t t-name="manual_reconciliation" t-extend="reconciliation">
         <t t-jquery=".interface_options" t-operation="append">
-            <table t-if="show_mode_selector" border="0" cellpadding="0" cellspacing="0" class="oe_form_group"><tbody>
-                <tr class="oe_form_group_row">
-                    <td class="oe_form_group_cell oe_form_group_cell_label" colspan="1">
-                        <label for="oe-field-input-5" class="oe_form_label oe_align_right">Show</label>
+            <table t-if="show_mode_selector" border="0" cellpadding="0" cellspacing="0" class="oe_form_group o_form_group"><tbody>
+                <tr class="oe_form_group_row o_form_group_row">
+                    <td class="oe_form_group_cell o_form_group_cell oe_form_group_cell_label o_form_group_cell_label" colspan="1">
+                        <label for="oe-field-input-5" class="oe_form_label o_form_label oe_align_right o_align_right">Show</label>
                     </td>
-                    <td class="oe_form_group_cell" colspan="1" width="99%">
-                        <span class="oe_form_field oe_form_field_radio oe_vertical oe_form_required">
+                    <td class="oe_form_group_cell o_form_group_cell" colspan="1" width="99%">
+                        <span class="oe_form_field o_form_field oe_form_field_radio o_form_field_radio oe_vertical o_vertical oe_form_required o_form_required">
                             <span>
                                 <t t-if="display_mode_customers" t-call="show_mode_selector_option"><t t-set="value">customers</t><t t-set="title">Customers</t></t>
                                 <t t-if="display_mode_suppliers" t-call="show_mode_selector_option"><t t-set="value">suppliers</t><t t-set="title">Vendors</t></t>
@@ -304,7 +304,7 @@
     </t>
 
     <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> There is nothing to reconcile.</p>
             <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
         </t>

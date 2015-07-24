@@ -1,23 +1,27 @@
-$actionColWidth: 15px;
-$mainTableBordersPadding: 3px;
-$lightBorder: 1px solid #bbb;
-$accountingBorder: 1px solid #000;
-$initialLineBackground: #f0f0f0;
-$infoColor: #44c;
-// Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
-$aestetic_animation_speed: 300ms;
+@actionColWidth: 15px;
+@mainTableBordersPadding: 3px;
+@lightBorder: 1px solid #bbb;
+@accountingBorder: 1px solid #000;
+@initialLineBackground: #f0f0f0;
+@infoColor: #44c;
+// Warning, this value is also specified in the abstractReconciliation widget
+@aestetic_animation_speed: 300ms;
 
 
-.openerp .oe_reconciliation {
-    font-size: 12px;
+.oe_reconciliation, .o_reconciliation {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
     cursor: default;
-    height: 100%;
+    font-size: 12px;
     overflow: auto;
+
+    // Why on earth does bootstrap set font-size to 14px in popovers ?
+    .popover {
+        font-size: 12px;
+    }
 
     .oe_form_sheetbg {
         padding-top: 0;
@@ -30,18 +34,11 @@ $aestetic_animation_speed: 300ms;
         }
     }
 
-    // For future ⌨ navigation
-    // *[tabindex='0']:focus {
-    //     outline: 1px solid #888;
-    //     outline-offset: 2px;
-    //     outline-color: invert;
-    // }
-
     .clearer {
         clear: both;
     }
 
-    .oe_view_nocontent {
+    .oe_view_nocontent, .o_view_nocontent {
         max-width: none;
 
         > p {
@@ -55,7 +52,7 @@ $aestetic_animation_speed: 300ms;
 
     h1 {
         width: 48%;
-        padding: 0 0 0 $actionColWidth;
+        padding: 0 0 0 @actionColWidth;
         margin: 0 0 25px 0;
         float: left;
         font-size: 2em;
@@ -91,7 +88,7 @@ $aestetic_animation_speed: 300ms;
 
     .progress {
         width: 49%;
-        margin: 10px $actionColWidth 0 0;
+        margin: 10px @actionColWidth 0 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -101,7 +98,7 @@ $aestetic_animation_speed: 300ms;
             position: absolute;
             width: 100%;
             left: 0;
-            top: 2px;
+            top: 1px;
             z-index: 10;
             text-shadow:
                -1px -1px 0 #f5f5f5,
@@ -109,17 +106,22 @@ $aestetic_animation_speed: 300ms;
                 -1px 1px 0 #f5f5f5,
                  1px 1px 0 #f5f5f5;
         }
+        .progress-bar {
+            background-color: @odoo-brand-optional;
+        }
     }
 
     .show_more_container {
         text-align: center;
+        margin-bottom: 15px;
 
         .show_more {
             display: none;
+            margin: auto;
         }
     }
     .notification_area {
-        margin: 0 $actionColWidth;
+        margin: 0 @actionColWidth;
         .fa {
             font-size: 20px;
             margin-left: 7px;
@@ -131,9 +133,9 @@ $aestetic_animation_speed: 300ms;
 
     .interface_options {
         margin-bottom: 25px;
-        padding-left: $actionColWidth;
+        padding-left: @actionColWidth;
 
-        .oe_radio_input {
+        .oe_radio_input, .o_radio_input {
             border: none;
             display: inline;
         }
@@ -198,8 +200,6 @@ $aestetic_animation_speed: 300ms;
 
     /* icons */
     .fa {
-        font-size: 12px !important;
-
         &.line_info_button {
             color: #ccc !important;
         }
@@ -212,7 +212,7 @@ $aestetic_animation_speed: 300ms;
     }
 
     // reconciliationLine widget
-    .oe_reconciliation_line {
+    .oe_reconciliation_line, .o_reconciliation_line {
         margin-bottom: 30px;
 
         table {
@@ -231,11 +231,11 @@ $aestetic_animation_speed: 300ms;
             -ms-transform: rotate(0deg);
             -o-transform: rotate(0deg);
             transform: rotate(0deg);
-            -webkit-transition-duration: $aestetic_animation_speed;
-            -moz-transition-duration: $aestetic_animation_speed;
-            -ms-transition-duration: $aestetic_animation_speed;
-            -o-transition-duration: $aestetic_animation_speed;
-            transition-duration: $aestetic_animation_speed;
+            -webkit-transition-duration: @aestetic_animation_speed;
+            -moz-transition-duration: @aestetic_animation_speed;
+            -ms-transition-duration: @aestetic_animation_speed;
+            -o-transition-duration: @aestetic_animation_speed;
+            transition-duration: @aestetic_animation_speed;
         }
 
         .visible_toggle {
@@ -248,7 +248,10 @@ $aestetic_animation_speed: 300ms;
         }
 
         .partner_name {
+            color: #444;
+
             .change_partner {
+                color: @odoo-brand-optional;
                 display: none;
                 cursor: pointer;
                 margin: 0 10px 0 5px;
@@ -267,25 +270,25 @@ $aestetic_animation_speed: 300ms;
         // modes : specific
         &[data-mode="match"] {
             .toggle_match {
-                @extend .visible_toggle;
+                .visible_toggle;
             }
         }
 
         &[data-mode="create"] {
             .toggle_create {
-                @extend .visible_toggle;
+                .visible_toggle;
             }
 
             &.no_partner {
                 .toggle_match {
-                    @extend .visible_toggle;
+                    .visible_toggle;
                 }
             }
         }
 
         &[data-mode="inactive"] {
             .initial_line > td {
-                background-color: ($initialLineBackground + #080808) !important;
+                background-color: (@initialLineBackground + #080808) !important;
             }
         }
 
@@ -318,7 +321,7 @@ $aestetic_animation_speed: 300ms;
                 td {
                     padding-top: 10px;
                     text-align: center;
-                    color: $infoColor;
+                    color: @infoColor;
                 }
             }
         }
@@ -332,7 +335,7 @@ $aestetic_animation_speed: 300ms;
             }
 
             tr.already_reconciled {
-                color: $infoColor;
+                color: @infoColor;
             }
 
             td {
@@ -341,7 +344,7 @@ $aestetic_animation_speed: 300ms;
             }
 
             td.cell_action, td.cell_info_popover {
-                width: $actionColWidth;
+                width: @actionColWidth;
                 padding: 0;
             }
 
@@ -351,7 +354,7 @@ $aestetic_animation_speed: 300ms;
 
             td.cell_account_code {
                 width: 80px;
-                padding-left: $mainTableBordersPadding;
+                padding-left: @mainTableBordersPadding;
             }
 
             td.cell_due_date {
@@ -370,7 +373,7 @@ $aestetic_animation_speed: 300ms;
             td.cell_credit {
                 width: 15%;
                 text-align: right;
-                padding-right: $mainTableBordersPadding;
+                padding-right: @mainTableBordersPadding;
             }
 
             td.cell_info_popover {
@@ -381,22 +384,22 @@ $aestetic_animation_speed: 300ms;
                 color: #bbb;
             }
 
-            tr .fa:not(.line_info_button) {
+            tr .toggle_create, .toggle_match, .fa-add-remove {
                 visibility: hidden;
                 color: #555;
             }
 
-            tr:hover .fa, tr:focus .fa, tr.active .fa {
+            tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove {
                 visibility: visible;
             }
 
             tr .do_partial_reconcile_button {
-                color: #f0ad4e;
+                color: @odoo-brand-optional;
                 padding-right: 5px;
             }
 
             tr .undo_partial_reconcile_button {
-                color: #555;
+                color: @odoo-brand-secondary;
                 padding-right: 5px;
             }
         }
@@ -406,19 +409,19 @@ $aestetic_animation_speed: 300ms;
             border-collapse: separate;
 
             .initial_line > td {
-                border-top: $lightBorder;
+                border-top: @lightBorder;
                 padding-top: 4px;
                 padding-bottom: 5px;
-                background-color: $initialLineBackground;
+                background-color: @initialLineBackground;
                 -webkit-transition-property: background-color;
                 -moz-transition-property: background-color;
                 -ms-transition-property: background-color;
                 transition-property: background-color;
-                -webkit-transition-duration: $aestetic_animation_speed;
-                -moz-transition-duration: $aestetic_animation_speed;
-                -ms-transition-duration: $aestetic_animation_speed;
-                -o-transition-duration: $aestetic_animation_speed;
-                transition-duration: $aestetic_animation_speed;
+                -webkit-transition-duration: @aestetic_animation_speed;
+                -moz-transition-duration: @aestetic_animation_speed;
+                -ms-transition-duration: @aestetic_animation_speed;
+                -o-transition-duration: @aestetic_animation_speed;
+                transition-duration: @aestetic_animation_speed;
 
                 &.cell_action, &.cell_info_popover {
                     border-top: none;
@@ -432,7 +435,8 @@ $aestetic_animation_speed: 300ms;
             caption {
                 text-align: left;
                 height: 26px;
-                margin: 0 $actionColWidth 4px $actionColWidth;
+                margin: 0 @actionColWidth 4px @actionColWidth;
+                padding: 0; 
 
                 .partner_name {
                     font-size: 1.1em;
@@ -440,6 +444,7 @@ $aestetic_animation_speed: 300ms;
                 }
 
                 .tip_reconciliation_not_balanced {
+                    color: red;
                     float: right;
                     padding-right: 7px;
                 }
@@ -460,7 +465,7 @@ $aestetic_animation_speed: 300ms;
             }
 
             // accounting "T"
-            td.cell_credit { border-left: $accountingBorder; }
+            td.cell_credit { border-left: @accountingBorder; }
         }
 
 
@@ -469,10 +474,11 @@ $aestetic_animation_speed: 300ms;
             display: none;
             padding: 1px;
             .match_controls {
-                padding: 0 0 5px ($actionColWidth+$mainTableBordersPadding);
+                padding: 0 0 5px (@actionColWidth+@mainTableBordersPadding);
 
                 .filter {
                     width: 240px;
+                    display: inline-block;
                 }
 
                 .pager_control_left, .pager_control_right {
@@ -492,7 +498,7 @@ $aestetic_animation_speed: 300ms;
 
             .show_more {
                 display: inline-block;
-                margin-left: ($actionColWidth+$mainTableBordersPadding);
+                margin-left: (@actionColWidth+@mainTableBordersPadding);
                 margin-top: 5px;
             }
         }
@@ -501,7 +507,7 @@ $aestetic_animation_speed: 300ms;
         /* Action create */
         .create {
             display: none;
-            margin: 0 $actionColWidth;
+            margin: 0 @actionColWidth;
             border: 1px solid #d5d5d5;
             border-radius: 5px;
             padding: 10px;
@@ -533,7 +539,7 @@ $aestetic_animation_speed: 300ms;
                 }
             }
 
-            .oe_form > table {
+            .oe_form > table, .o_form > table {
                 width: 49%;
                 height: 26px;
 
@@ -578,8 +584,8 @@ $aestetic_animation_speed: 300ms;
     }
 }
 
-.openerp .oe_manual_reconciliation {
-    .oe_manual_reconciliation_line {
+.oe_manual_reconciliation, .o_manual_reconciliation {
+    .oe_manual_reconciliation_line, .o_manual_reconciliation_line {
         .button_reconcile {
             float: right;
             position: relative;
@@ -616,7 +622,7 @@ $aestetic_animation_speed: 300ms;
                 }
 
                 tr:first-child td {
-                    border-bottom: $lightBorder;
+                    border-bottom: @lightBorder;
 
                     &.cell_action, &.cell_info_popover {
                         border-bottom: none;
@@ -640,7 +646,7 @@ $aestetic_animation_speed: 300ms;
         }
 
         td.cell_due_date {
-            padding-left: $mainTableBordersPadding !important;
+            padding-left: @mainTableBordersPadding !important;
         }
     }
 }
