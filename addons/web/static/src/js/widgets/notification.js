@@ -54,7 +54,8 @@ var NotificationManager = Widget.extend({
     className: 'o_notification_manager',
 
     display: function(notification) {
-        return notification.appendTo(this.$el);
+        notification.appendTo(this.$el);
+        return notification;
     },
     notify: function(title, text, sticky) {
         return this.display(new Notification(this, title, text, sticky));
