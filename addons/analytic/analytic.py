@@ -304,20 +304,22 @@ class account_analytic_account(osv.osv):
             args=[]
         if context is None:
             context={}
+        account_ids = []
         if name:
             account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
             if not account_ids:
                 dom = []
-                for name2 in name.split('/'):
-                    name = name2.strip()
-                    account_ids = self.search(cr, uid, dom + [('name', operator, name)], limit=limit, context=context)
-                    if not account_ids: break
-                    dom = [('parent_id','in',account_ids)]
-                if account_ids and args:
-                    # final filtering according to domain (args)
-                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
-        else:
-            account_ids = self.search(cr, uid, args, limit=limit, context=context)
+                if '/' in name:
+                    for name2 in name.split('/'):
+                        # intermediate search without limit and args - could be expensive for large tables if `name` is not selective
+                        account_ids = self.search(cr, uid, dom + [('name', operator, name2.strip())], limit=None, context=context)
+                        if not account_ids: break
+                        dom = [('parent_id','in',account_ids)]
+                    if account_ids and args:
+                        # final filtering according to domain (args)4
+                        account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
+        if not account_ids:
+            return super(account_analytic_account, self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
         return self.name_get(cr, uid, account_ids, context=context)
 
 class account_analytic_line(osv.osv):
