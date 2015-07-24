@@ -33,7 +33,7 @@ class TestExport(common.TransactionCase):
                 model = self.registry('.'.join(fs))
                 break
             except KeyError: pass
-            
+
         return lambda value, options=None, context=None: e(model.value_to_html(
             self.cr, self.uid, value, field, options=options, context=context))
 
@@ -95,6 +95,8 @@ class TestCurrencyExport(TestExport):
         super(TestCurrencyExport, self).setUp()
         self.Currency = self.registry('res.currency')
         self.base = self.create(self.Currency, name="Source", symbol=u'source')
+        self.Lang = self.registry['res.lang']
+        self.lang_id = self.Lang.search(self.cr, self.uid, [], limit=1)
 
     def create(self, model, context=None, **values):
         return model.browse(
@@ -119,38 +121,42 @@ class TestCurrencyExport(TestExport):
         return converted
 
     def test_currency_post(self):
-        user = self.env['res.users'].browse(self.uid)
-        lang = self.env['res.lang'].search([('code','=',user.lang)])
-        if lang.position == 'after':
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'after'})
+
             currency = self.create(self.Currency, name="Test", symbol=u"test")
             obj = self.create(self.Model, value=0.12)
+    
             converted = self.convert(obj, dest=currency)
             self.assertEqual(
                 converted,
                 '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                       'data-oe-field="value" data-oe-type="monetary" '
                       'data-oe-expression="obj.value">'
-                        '<span class="oe_currency_value">0.12</span>'
+                          '<span class="oe_currency_value">0.12</span>'
                           u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
                     obj=obj,
                     symbol=currency.symbol.encode('utf-8')
                 ).encode('utf-8'),)
 
     def test_currency_pre(self):
-        user= self.env['res.users'].browse(self.uid)
-        lang = self.env['res.lang'].search([('code','=',user.lang)])
-        if lang.position == 'before':
-            currency = self.create(self.Currency, name="Test", symbol=u"test")
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'before'})
+
+            currency = self.create(
+                self.Currency, name="Test", symbol=u"test")
             obj = self.create(self.Model, value=0.12)
-            converted = self.convert(obj, dest=currency)            
+    
+            converted = self.convert(obj, dest=currency)
+    
             self.assertEqual(
                 converted,
                 '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                       'data-oe-field="value" data-oe-type="monetary" '
                       'data-oe-expression="obj.value">'
-                        u'{symbol}\N{NO-BREAK SPACE}'
-                        '<span class="oe_currency_value">0.12</span>'
-                        '</span>'.format(
+                          u'{symbol}\N{NO-BREAK SPACE}'
+                          '<span class="oe_currency_value">0.12</span>'
+                          '</span>'.format(
                     obj=obj,
                     symbol=currency.symbol.encode('utf-8')
                 ).encode('utf-8'),)
@@ -158,34 +164,24 @@ class TestCurrencyExport(TestExport):
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
-        user = self.env['res.users'].browse(self.uid)
-        lang = self.env['res.lang'].search([('code','=',user.lang)])
-        currency = self.create(self.Currency, name="Test", symbol=u"test")
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'after'})
+
+        currency = self.create(self.Currency, name="Test", symbol=u"test",)
         obj = self.create(self.Model, value=0.1234567)
+
         converted = self.convert(obj, dest=currency)
-        if lang.position == 'after':
-            self.assertEqual(
-                converted,
-                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                      'data-oe-field="value" data-oe-type="monetary" '
-                      'data-oe-expression="obj.value">'
+
+        self.assertEqual(
+            converted,
+            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                  'data-oe-field="value" data-oe-type="monetary" '
+                  'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
                       u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
-                    obj=obj,
-                    symbol=currency.symbol.encode('utf-8')
-                ).encode('utf-8'),)
-        elif lang.position == 'before':
-            self.assertEqual(
-                converted,
-                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                      'data-oe-field="value" data-oe-type="monetary" '
-                      'data-oe-expression="obj.value">'
-                        u'{symbol}\N{NO-BREAK SPACE}'
-                        '<span class="oe_currency_value">0.12</span>'
-                        '</span>'.format(
-                    obj=obj,
-                    symbol=currency.symbol.encode('utf-8')
-                ).encode('utf-8'),)        
+                obj=obj,
+                symbol=currency.symbol.encode('utf-8')
+            ).encode('utf-8'),)
 
 class TestTextExport(TestBasicExport):
     def test_text(self):
@@ -310,6 +306,7 @@ class TestDatetimeExport(TestBasicExport):
 
     def test_date(self):
         converter = self.get_converter('date')
+
         value = converter('2011-05-03')
 
         # default lang/format is US
@@ -359,6 +356,7 @@ class TestDurationExport(TestBasicExport):
 
     def test_basic(self):
         converter = self.get_converter('float', 'duration')
+
         result = converter(4, {'unit': 'hour'}, {'lang': 'fr_FR'})
         self.assertEqual(result, u'4 heures')
 
