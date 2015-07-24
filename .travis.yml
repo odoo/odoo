@@ -1,8 +1,12 @@
+cache: pip
+
 addons:
   apt:
     packages:
       - expect-dev  # provides unbuffer utility
       - python-lxml # because pip installation is slow
+      - poppler-utils
+      - antiword
 
 language: python
 
@@ -33,14 +37,12 @@ install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
-  - sudo apt-get install python-lxml python-ldap expect-dev
-  - pip install QUnitSuite flake8 coveralls
+  - pip install QUnitSuite flake8 coveralls python-ldap
   - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
     # document uses this
-  - sudo apt-get install poppler-utils antiword
     # wkhtmltopdf for report_webkit
-  - sudo wget http://downloads.sourceforge.net/project/wkhtmltopdf/archive/0.12.1/wkhtmltox-0.12.1_linux-precise-amd64.deb -P /tmp/
-  - sudo dpkg -i /tmp/wkhtmltox-0.12.1_linux-precise-amd64.deb
+  - wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-precise-amd64.deb 
+  - sudo dpkg -i wkhtmltox-0.12.1_linux-precise-amd64.deb
 
 script:
   - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
