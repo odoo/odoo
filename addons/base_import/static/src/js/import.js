@@ -60,7 +60,7 @@ ListView.include({
         }
         this._super.apply(this, arguments); // Sets this.$buttons
         if(add_button) {
-            this.$buttons.on('click', '.oe_list_button_import', function() {
+            this.$buttons.on('click', '.o_list_button_import', function() {
                 self.do_action({
                     type: 'ir.actions.client',
                     tag: 'import',
