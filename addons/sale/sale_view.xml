@@ -211,7 +211,7 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
                                             <field name="th_weight"/>
                                         </group>
                                     </group>
@@ -240,7 +240,7 @@
                                     <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
                                     <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
