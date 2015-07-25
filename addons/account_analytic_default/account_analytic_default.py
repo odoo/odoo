@@ -92,7 +92,7 @@ class stock_picking(osv.osv):
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         partner_id = picking.partner_id and picking.partner_id.id or False
-        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id, user, time.strftime('%Y-%m-%d'))
+        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id, user, time.strftime('%Y-%m-%d'), move_line.comapny_id.id)
 
         if rec:
             return rec.analytic_id.id
@@ -113,7 +113,7 @@ class sale_order_line(osv.osv):
         anal_def_obj = self.pool.get('account.analytic.default')
 
         for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, sale_line.order_id.user_id.id, time.strftime('%Y-%m-%d'), context=context)
+            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, sale_line.order_id.user_id.id, time.strftime('%Y-%m-%d'), sale_line.order_id.company_id.id, context=context)
 
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
