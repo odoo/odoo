@@ -57,6 +57,7 @@ Wizards provided by this module:
     ],
     'demo': [
         'demo/l10n_be_demo.yml',
+        '../account/demo/account_journal.yml',
         '../account/demo/account_bank_statement.yml',
         '../account/demo/account_invoice_demo.yml',
     ],

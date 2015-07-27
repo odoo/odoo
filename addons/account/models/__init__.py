@@ -5,7 +5,6 @@ import account
 import account_payment
 import account_invoice
 import account_bank_statement
-import account_bank
 import account_move
 import chart_template
 import account_analytic_line

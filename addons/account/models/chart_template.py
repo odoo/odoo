@@ -542,7 +542,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
     currency_id = fields.Many2one('res.currency', string='Currency', help="Currency as per company's country.", required=True)
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
-    bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
     bank_account_code_prefix = fields.Char('Bank Accounts Prefix', oldname="bank_account_code_char")
     cash_account_code_prefix = fields.Char('Cash Accounts Prefix')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
@@ -614,8 +613,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
         tax_templ_obj = self.env['account.tax.template']
         account_chart_template = self.env['account.chart.template']
 
-        if 'bank_account_ids' in fields:
-            res.update({'bank_account_ids': [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.env.user.company_id.id})
         if 'currency_id' in fields:
@@ -736,9 +733,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
         if self.purchase_tax_id and taxes_ref:
             ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], for_all_users=True, company_id=company.id)
 
-        # Create Bank journals
-        self._create_bank_journals_from_o2m(company, acc_template_ref)
-
         # Create the current year earning account (outside of the CoA)
         self.env['account.account'].create({
             'code': '9999',
@@ -746,54 +740,3 @@ class WizardMultiChartsAccounts(models.TransientModel):
             'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})
         return {}
-
-    @api.multi
-    def _create_bank_journals_from_o2m(self, company, acc_template_ref):
-        '''
-        This function creates bank journals and its accounts for each line encoded in the field bank_account_ids of the
-        wizard.
-
-        :param company_id: the id of the company for which the wizard is running.
-        :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
-            of the accounts that have been generated from them.
-        :return: True
-        '''
-        self.ensure_one()
-        # Build a list with all the data to process
-        journal_data = []
-        if self.bank_account_ids:
-            for acc in self.bank_account_ids:
-                vals = {
-                    'acc_name': acc.acc_name,
-                    'account_type': acc.account_type,
-                    'currency_id': acc.currency_id.id,
-                }
-                journal_data.append(vals)
-
-        for line in journal_data:
-            if line['account_type'] == 'bank':
-                #create the bank account that will trigger the journal and account.account creation
-                res_partner_bank_vals = {
-                    'acc_number': line['acc_name'],
-                    'currency_id': line['currency_id'],
-                    'company_id': company.id,
-                    'owner_name': company.partner_id.name,
-                    'partner_id': company.partner_id.id,
-                    'footer': True
-                }
-                self.env['res.partner.bank'].create(res_partner_bank_vals)
-            else:
-                #create the cash journal that will trigger the account.account creation
-                vals_journal = self.env['account.journal']._prepare_bank_journal(company, line)
-                self.env['account.journal'].create(vals_journal)
-        return True
-
-
-class AccountBankAccountsWizard(models.TransientModel):
-    _name = 'account.bank.accounts.wizard'
-
-    acc_name = fields.Char(string='Account Name.', required=True)
-    bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
-    currency_id = fields.Many2one('res.currency', string='Account Currency',
-        help="Forces all moves for this account to have this secondary currency.")
-    account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])

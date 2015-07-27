@@ -12,7 +12,6 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             company_id=self.main_company.id,
             partner_id=self.main_partner.id,
             acc_number='123456789',
-            footer=True,
             bank=self.main_bank.id,
             bank_name=self.main_bank.name,
         ))

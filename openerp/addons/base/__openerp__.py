@@ -69,6 +69,7 @@ The kernel of OpenERP, needed for all installation.
     'demo': [
         'base_demo.xml',
         'res/res_currency_demo.xml',
+        'res/res_bank_demo.xml',
         'res/res_partner_demo.xml',
         'res/res_partner_demo.yml',
         'res/res_partner_image_demo.xml',

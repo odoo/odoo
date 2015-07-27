@@ -80,7 +80,6 @@ class res_company(osv.osv):
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
         'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
-        'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.related('partner_id', 'email', size=64, type='char', string="Email", store=True),
         'phone': fields.related('partner_id', 'phone', size=64, type='char', string="Phone", store=True),
@@ -94,28 +93,20 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def onchange_footer(self, cr, uid, ids, custom_footer, phone, fax, email, website, vat, company_registry, bank_ids, context=None):
-        if custom_footer:
-            return {}
-
-        # first line (notice that missing elements are filtered out before the join)
-        res = ' | '.join(filter(bool, [
-            phone            and '%s: %s' % (_('Phone'), phone),
-            fax              and '%s: %s' % (_('Fax'), fax),
-            email            and '%s: %s' % (_('Email'), email),
-            website          and '%s: %s' % (_('Website'), website),
-            vat              and '%s: %s' % (_('TIN'), vat),
-            company_registry and '%s: %s' % (_('Reg'), company_registry),
-        ]))
-        # second line: bank accounts
-        res_partner_bank = self.pool.get('res.partner.bank')
-        account_data = self.resolve_2many_commands(cr, uid, 'bank_ids', bank_ids, context=context)
-        account_names = res_partner_bank._prepare_name_get(cr, uid, account_data, context=context)
-        if account_names:
-            title = _('Bank Accounts') if len(account_names) > 1 else _('Bank Account')
-            res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
-
-        return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
+    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
+    def onchange_footer(self):
+        if not self.custom_footer:
+            # first line (notice that missing elements are filtered out before the join)
+            res = ' | '.join(filter(bool, [
+                self.phone            and '%s: %s' % (_('Phone'), self.phone),
+                self.fax              and '%s: %s' % (_('Fax'), self.fax),
+                self.email            and '%s: %s' % (_('Email'), self.email),
+                self.website          and '%s: %s' % (_('Website'), self.website),
+                self.vat              and '%s: %s' % (_('TIN'), self.vat),
+                self.company_registry and '%s: %s' % (_('Reg'), self.company_registry),
+            ]))
+            self.rml_footer_readonly = res
+            self.rml_footer = res
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:

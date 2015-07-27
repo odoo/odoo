@@ -7,12 +7,19 @@
             <field name="model">account.bank.statement.import.journal.creation</field>
             <field name="arch" type="xml">
                 <form string="Journal Creation">
-                    <p>The account of the statement you are importing is not yet recorded in Odoo. In order to proceed with the import, you need to create a bank account and journal using this form.</p>
+                    <p>The account of the statement you are importing is not yet recorded in Odoo. In order to proceed with the import, you need to create a bank journal for this account.</p>
                     <p>Just click OK to create the account/journal and finish the import. If this was a mistake, hit cancel to abort the import.</p>
                     <group>
-                        <field name="name"/>
-                        <field name="currency_id" options="{'no_create': True}" attrs="{'invisible': [('currency_id', '=', False)]}"/>
-                        <field name="account_number"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="currency_id"/>
+                        </group>
+                        <group>
+                            <field name="company_partner_id" invisible="1"/>
+                            <field name="bank_account_id" domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', [])]"
+                                context="{'form_view_ref':'account.view_bank_account_form', 'default_acc_number': context['bank_acc_number'], 'default_company_id': company_id, 'default_partner_id': company_partner_id}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="create_journal" string="OK" type="object" class="btn-primary"/>

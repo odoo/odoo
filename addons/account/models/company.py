@@ -7,6 +7,10 @@ from datetime import timedelta
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    @api.one
+    def _compute_bank_ids(self):
+        self.bank_ids = self.bank_journal_ids.mapped('bank_account_id')
+
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
@@ -34,6 +38,22 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account')
+    bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
+    # Kept for backwards compatibility
+    bank_ids = fields.One2many('res.partner.bank', string='Bank Accounts', compute='_compute_bank_ids')
+
+    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
+    def onchange_footer(self):
+        super(ResCompany, self).onchange_footer()
+        if not self.custom_footer:
+            # FIXME: self.id in an onchange is a openerp.models.NewId, making following line useless
+            bank_accounts = self.env['account.journal'].search([('company_id', '=', self.id), ('display_on_footer', '=', True)]).mapped(lambda r: r.bank_account_id)
+            if not bank_accounts:
+                return
+            title = _('Bank Accounts') if len(bank_accounts) > 1 else _('Bank Account')
+            string = '\n%s: %s' % (title, ', '.join([r.acc_number for r in bank_accounts]))
+            self.rml_footer_readonly += string
+            self.rml_footer += string
 
     @api.multi
     def compute_fiscalyear_dates(self, date):

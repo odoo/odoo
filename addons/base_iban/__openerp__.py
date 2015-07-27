@@ -13,7 +13,7 @@ with a single statement.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com',
-    'depends': ['base'],
+    'depends': ['account_accountant'],
     'demo': ['demo/iban_demo.xml'],
     'data': ['base_iban_data.xml' , 'base_iban_view.xml'],
     'installable': True,

@@ -41,12 +41,12 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/product_view.xml',
         'views/account_analytic_view.xml',
         'views/company_view.xml',
-        'views/account_bank_view.xml',
         'views/res_config_view.xml',
         'views/account_tip_data.xml',
         'views/account.xml',
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',
+        'report/inherited_layouts.xml',
         'views/account_journal_dashboard_view.xml',
     ],
     'demo': [

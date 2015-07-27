@@ -187,9 +187,9 @@ class test_expression(common.TransactionCase):
         p_aa = partner_obj.create(cr, uid, {'name': 'test__AA', 'parent_id': p_a, 'state_id': state_ids[0]})
         p_ab = partner_obj.create(cr, uid, {'name': 'test__AB', 'parent_id': p_a, 'state_id': state_ids[1]})
         p_ba = partner_obj.create(cr, uid, {'name': 'test__BA', 'parent_id': p_b, 'state_id': state_ids[0]})
-        b_aa = bank_obj.create(cr, uid, {'acc_number': '__bank_test_a', 'state': bank_type[0], 'partner_id': p_aa})
-        b_ab = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': bank_type[0], 'partner_id': p_ab})
-        b_ba = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': bank_type[0], 'partner_id': p_ba})
+        b_aa = bank_obj.create(cr, uid, {'acc_number': '__bank_test_a', 'state': 'bank', 'partner_id': p_aa})
+        b_ab = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': 'bank', 'partner_id': p_ab})
+        b_ba = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': 'bank', 'partner_id': p_ba})
 
         # --------------------------------------------------
         # Test1: basics about the attribute

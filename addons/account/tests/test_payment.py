@@ -26,15 +26,13 @@ class TestPayment(AccountingTestCase):
         self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
 
-        self.bank_euro = self.env['res.partner.bank'].create({'acc_number': '0123456789', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
-        self.bank_journal_euro = self.bank_euro.journal_id
+        bank_account_euro = self.env['res.partner.bank'].create({'acc_number': '123', 'bank_name': 'bank', 'state': 'bank', 'partner_id': self.env.ref('base.main_partner').id})
+        self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67', 'bank_account_id': bank_account_euro.id})
         self.account_eur = self.bank_journal_euro.default_debit_account_id
 
-        self.bank_usd = self.env['res.partner.bank'].create({'acc_number': '0123456789', 'bank_name': 'Test Bank USD', 'company_id': self.env.user.company_id.id})
-        self.bank_journal_usd = self.bank_usd.journal_id
+        bank_account_usd = self.env['res.partner.bank'].create({'acc_number': '456', 'bank_name': 'bank us', 'state': 'bank', 'partner_id': self.env.ref('base.main_partner').id})
+        self.bank_journal_usd = self.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': self.currency_usd_id, 'bank_account_id': bank_account_usd.id})
         self.account_usd = self.bank_journal_usd.default_debit_account_id
-        self.account_usd.write({'currency_id': self.currency_usd_id})
-        self.bank_journal_usd.write({'currency_id': self.currency_usd_id})
 
         self.transfer_account = self.env['res.users'].browse(self.env.uid).company_id.transfer_account_id
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id

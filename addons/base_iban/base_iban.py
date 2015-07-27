@@ -65,9 +65,9 @@ class res_partner_bank(models.Model):
             validate_iban(self.acc_number)
 
     @api.one
-    @api.constrains('state', 'bank_bic')
+    @api.constrains('state', 'bank', 'bank_bic')
     def _check_bank_bic(self):
-        if self.state == 'iban' and not self.bank_bic:
+        if self.state == 'iban' and not (self.bank.bic or self.bank_bic):
             raise ValidationError(_("Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments."))
 
 

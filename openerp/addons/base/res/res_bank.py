@@ -4,8 +4,14 @@
 import re
 
 from openerp.osv import fields, osv
+from openerp.api import Environment
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+
+def sanitize_account_number(acc_number):
+    if acc_number:
+        return re.sub(r'\W+', '', acc_number).upper()
+    return False
 
 class Bank(osv.osv):
     _description='Bank'
@@ -97,11 +103,6 @@ class res_partner_bank(osv.osv):
                 value = address.get(field, value)
         return value
 
-    def _sanitize_account_number(self, acc_number):
-        if acc_number:
-            return re.sub(r'\W+', '', acc_number).upper()
-        return False
-
     def _get_sanitized_account_number(
             self, cr, uid, ids, field_name, arg, context):
         """Compute sanitized version off account number.
@@ -110,7 +111,7 @@ class res_partner_bank(osv.osv):
         res = {}
         for this_obj in self.browse(cr, uid, ids, context = context):
             res[this_obj.id] = (
-                self._sanitize_account_number(this_obj.acc_number))
+                sanitize_account_number(this_obj.acc_number))
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
@@ -121,9 +122,9 @@ class res_partner_bank(osv.osv):
                 op = args[pos][1]
                 value = args[pos][2]
                 if hasattr(value, '__iter__'):
-                    value = [self._sanitize_account_number(i) for i in value]
+                    value = [sanitize_account_number(i) for i in value]
                 else:
-                    value = self._sanitize_account_number(value)
+                    value = sanitize_account_number(value)
                 if 'like' in op:
                     value = '%' + value + '%'
                 args[pos] = ('sanitized_acc_number', op, value)
@@ -151,14 +152,12 @@ class res_partner_bank(osv.osv):
             change_default=True),
         'state_id': fields.many2one("res.country.state", 'Fed. State',
             change_default=True, domain="[('country_id','=',country_id)]"),
-        'company_id': fields.many2one('res.company', 'Company',
-            ondelete='cascade', help="Only if this bank account belong to your company"),
         'partner_id': fields.many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
-        'state': fields.selection(_bank_type_get, 'Bank Account Type',
+        'state': fields.selection(_bank_type_get, 'Bank Account Type', required=True,
             change_default=True),
         'sequence': fields.integer('Sequence'),
-        'footer': fields.boolean("Display on Reports", help="Display this bank account on the footer of printed documents like invoices and sales orders."),
         'currency_id': fields.many2one('res.currency', string='Currency', help="Currency of the bank account and its related journal."),
+        'company_id': fields.many2one('res.company', 'Company', ondelete='cascade'),
     }
     _sql_constraints = [
         ('unique_number', 'unique(sanitized_acc_number)',
@@ -179,6 +178,8 @@ class res_partner_bank(osv.osv):
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
         'name': '/',
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.bank', context=c),
+        'state': lambda self, cr, uid, c: self._fields['state'].get_values(Environment(cr, uid, c))[0],
     }
 
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
@@ -228,17 +229,6 @@ class res_partner_bank(osv.osv):
             return []
         bank_dicts = self.read(cr, uid, ids, self.fields_get_keys(cr, uid, context=context), context=context)
         return self._prepare_name_get(cr, uid, bank_dicts, context=context)
-
-    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        result = {}
-        if company_id:
-            c = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-            if c.partner_id:
-                r = self.onchange_partner_id(cr, uid, ids, c.partner_id.id, context=context)
-                r['value']['partner_id'] = c.partner_id.id
-                r['value']['footer'] = 1
-                result = r
-        return result
 
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
         result = {}
