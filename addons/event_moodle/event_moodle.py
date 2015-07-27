@@ -24,7 +24,6 @@ import xmlrpclib
 import string
 import time
 import random
-from random import sample
 from openerp.tools.translate import _
 
 class event_moodle(osv.osv):
@@ -123,7 +122,7 @@ class event_moodle(osv.osv):
         """
         rand = string.ascii_letters + string.digits
         length = 8
-        passwd = ''.join(sample(rand, length))
+        passwd = ''.join(random.SystemRandom().sample(rand, length))
         passwd = passwd + '+'
         return passwd
 

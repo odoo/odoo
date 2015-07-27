@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from random import choice
+import random
 import string
 import os
 import datetime
@@ -51,7 +51,7 @@ class survey_send_invitation(osv.osv_memory):
 
     def genpasswd(self):
         chars = string.letters + string.digits
-        return ''.join([choice(chars) for i in range(6)])
+        return ''.join([random.SystemRandom().choice(chars) for i in range(6)])
 
     def default_get(self, cr, uid, fields_list, context=None):
         if context is None:

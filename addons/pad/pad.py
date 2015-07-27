@@ -35,7 +35,7 @@ class pad_common(osv.osv_memory):
         pad["server"] = pad["server"].rstrip('/')
         # generate a salt
         s = string.ascii_uppercase + string.digits
-        salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
+        salt = ''.join([s[random.SystemRandom().randint(0, len(s) - 1)] for i in range(10)])
         #path
         # etherpad hardcodes pad id length limit to 50
         path = '-%s-%s' % (self._name, salt)
