@@ -233,6 +233,29 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
+            if(instance.web._t.database.parameters.decimal_point &&
+               instance.web._t.database.parameters.decimal_point !== ".") {
+                /* If this is a localization where the decimal point is not the dot, accept it
+                   regardless as such if this is unambigous so that users can still use the numeric
+                   keypad to enter decimals
+                */
+                var first_separator;
+                if(_t.database.parameters.grouping.length && _t.database.parameters.grouping[0] > 0)
+                    first_separator = _t.database.parameters.grouping[0];
+                else {
+                    var digits = descriptor.digits ? descriptor.digits : [69,2];
+                    digits = typeof digits === "string" ? py.eval(digits) : digits;
+                    first_separator = digits[1] + 1;
+                }
+                index = value.lastIndexOf(".");
+                if(index > -1) {
+                    if(value.length - (index + 1) < first_separator) {
+                        console.log(value);
+                        value = value.substr(0,index) +
+                        instance.web._t.database.parameters.decimal_point + value.substr(index+1);
+                    }
+                }
+            }
             var tmp;
             var tmp2 = value;
             do {
