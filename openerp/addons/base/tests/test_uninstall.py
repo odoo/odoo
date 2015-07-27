@@ -5,7 +5,7 @@ import unittest
 import pytest
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, tools
 from openerp.tests import common
 
 def registry(model):
@@ -51,15 +51,22 @@ def uninstall_module(module_name):
     cr.close()
     reload_registry()
 
-@pytest.mark.skipif(reason="uninstall test hangs")
+@pytest.mark.at_install(False)
+@pytest.mark.post_install(True)
 class test_uninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
     `openerp.tests` which should be present in the addons-path.
     """
+    @pytest.fixture(autouse=True, scope='class')
+    def _disable_tests(self, request):
+        tools.config['test_enable'] = False
+        @request.addfinalizer
+        def reenable():
+            tools.config['test_enable'] = True
 
-    def test_01_install(self):
-        """ Check a few things showing the module is installed. """
+    def test_install_and_uninstall(self):
+        # Check a few things showing the module is installed.
         install_module('test_uninstall')
         assert get_module('test_uninstall.model')
 
@@ -69,8 +76,7 @@ class test_uninstall(unittest.TestCase):
         assert search_registry('ir.model.fields',
             [('model', '=', 'test_uninstall.model')])
 
-    def test_02_uninstall(self):
-        """ Check a few things showing the module is uninstalled. """
+        # Check a few things showing the module is uninstalled.
         uninstall_module('test_uninstall')
         assert not get_module('test_uninstall.model')
 
