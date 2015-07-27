@@ -70,6 +70,9 @@ Available manifest fields are:
 ``data`` (``list(str)``)
     List of data files which must always be installed or updated with the
     module. A list of paths from the module root directory
+``test`` (``list(str)``)
+    List of XML and YAML data files to execute during testing. The files are
+    executed in-order in the same transaction.
 ``demo`` (``list(str)``)
     List of data files which are only installed or updated in *demonstration
     mode*

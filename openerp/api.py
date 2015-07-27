@@ -814,15 +814,26 @@ def expected(decorator, func):
 
 
 class Environment(object):
-    """ An environment wraps data for ORM records:
+    """ An environment wraps data for ORM records and provides access to 
+    registry objects by implementing a mapping of model names to new api
+    model objects.
 
-         - :attr:`cr`, the current database cursor;
-         - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary.
+    .. attribute:: cr
 
-        It provides access to the registry by implementing a mapping from model
-        names to new api models. It also holds a cache for records, and a data
-        structure to manage recomputations.
+        the current database cursor
+
+    .. attribute:: uid
+
+        the current user id
+
+    .. attribute:: context
+
+        the current context dictionary.
+
+    .. attribute:: registry
+
+        the :class:`~openerp.modules.registry.Registry` backing this
+        Environment
     """
     _local = Local()
 
@@ -862,7 +873,10 @@ class Environment(object):
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
+        self.args = (cr, uid, frozendict(context))
+        self.cr = cr
+        self.uid = uid
+        self.context = frozendict(context)
         self.registry = RegistryManager.get(cr.dbname)
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}

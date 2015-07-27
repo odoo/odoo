@@ -155,6 +155,11 @@ class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
     and with its own cursor. The transaction is rolled back and the cursor
     is closed after each test.
+
+    .. attribute:: env
+
+        :class:`~openerp.api.Environment`, can be used to query the Odoo
+        system.
     """
 
     @pytest.fixture(autouse=True)
@@ -181,6 +186,14 @@ class SingleTransactionCase(BaseCase):
     """ TestCase in which all test methods are run in the same transaction,
     the transaction is started with the first test method and rolled back at
     the end of the last.
+
+    Data setup should be performed in :meth:`.setUpClass` rather than the
+    usual :meth:`.setUp`
+
+    .. attribute:: env
+
+        :class:`~openerp.api.Environment`, can be used to query the Odoo
+        system.
     """
 
     @classmethod

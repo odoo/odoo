@@ -355,7 +355,7 @@ class WebRequest(object):
 
         .. deprecated:: 8.0
 
-            use :attr:`.env`
+            use :attr:`~openerp.http.WebRequest.env`
         """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
@@ -373,7 +373,7 @@ class WebRequest(object):
 
         .. deprecated:: 8.0
 
-            Use :attr:`.session` instead.
+            Use :attr:`~openerp.http.WebRequest.session` instead.
         """
         return self.session
 

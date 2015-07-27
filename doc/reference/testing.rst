@@ -7,12 +7,11 @@
 Testing Modules
 ===============
 
-Odoo provides support for testing modules using unittest.
+Odoo provides support for testing modules using pytest_.
 
-To write tests, simply define a ``tests`` sub-package in your module, it will
-be automatically inspected for test modules. Test modules should have a name
-starting with ``test_`` and should be imported from ``tests/__init__.py``,
-e.g.
+To write tests, simply define a ``tests`` sub-package in your module. It
+*must* have an empty ``__init__.py`` and will contain your test modules. The
+test modules should be named :samp:`test_{modname}.py`
 
 .. code-block:: text
 
@@ -23,38 +22,34 @@ e.g.
         |-- test_bar.py
         `-- test_foo.py
 
-and ``__init__.py`` contains::
+.. versionchanged:: 9.0
 
-    from . import test_foo, test_bar
+    previously, only test modules imported from ``tests/__init__.py`` would be
+    run. Starting in 9.0, all test modules are matched and run automatically.
 
-.. warning::
+    To skip or disable tests, they must be explicitly marked using
+    :ref:`unittest.skip <unittest-skipping>` or
+    `pytest.mark.skipif <http://pytest.org/latest/skipping.html>`_.
 
-    test modules which are not imported from ``tests/__init__.py`` will not be
-    run
+The test runner will run both `unittest-style <unittest>`_ class-based tests
+and `pytest-style <pytest-cases>`_ function-based tests, matching tests based
+on `pytest's standard discovery conventions
+<http://pytest.org/latest/goodpractises.html#test-discovery>`_
 
-.. versionchanged:: 8.0
+.. note:: the test runner will also run yaml and XML test files specified via
+          the ``tests`` key of a :ref:`module's manifest
+          <reference/module/manifest>`.
 
-    previously, the test runner would only run modules added to two lists
-    ``fast_suite`` and ``checks`` in ``tests/__init__.py``. In 8.0 it will
-    run all imported modules
+Unittest-style cases
+====================
 
-The test runner will simply run any test case, as described in the official
-`unittest documentation`_, but Odoo provides a number of utilities and helpers
-related to testing Odoo content (modules, mainly):
+For integration with the Odoo system, Odoo provides two utility subclasses of
+:class:`python:unittest.TestCase` managing transaction state and providing
+access to an Odoo :class:`~openerp.api.Environment`:
 
 .. autoclass:: openerp.tests.common.TransactionCase
-    :members: browse_ref, ref
 
 .. autoclass:: openerp.tests.common.SingleTransactionCase
-    :members: browse_ref, ref
-
-By default, tests are run once right after the corresponding module has been
-installed. Test cases can also be configured to run after all modules have
-been installed, and not run right after the module installation:
-
-.. autofunction:: openerp.tests.common.at_install
-
-.. autofunction:: openerp.tests.common.post_install
 
 The most common situation is to use
 :class:`~openerp.tests.common.TransactionCase` and test a property of a model
@@ -70,14 +65,97 @@ in each method::
 
         # other tests...
 
+Pytest-style cases
+==================
+
+Pytest-style cases are just test functions whose names match the `discovery
+conventions <http://pytest.org/latest/goodpractises.html#test-discovery>`_.
+Rather than use special ``assert*`` methods, they just use the standard
+``assert`` statement::
+
+    def test_action():
+        assert 1 + 1 == 2
+    # other tests
+
+Integration with the Odoo system is provided via a `pytest fixture
+<http://pytest.org/latest/fixture.html>`_ ``env``, which provides the same
+service as :attr:`openerp.tests.common.TransactionCase.env`::
+
+    def test_action(env):
+        record = env['model.a'].create({'field': 'value'})
+        record.some_action()
+        assert record.field == expected_field_value
+
+    # other tests
+
+Test data and setup/teardown behaviour can be provided using `in-module
+fixtures <http://pytest.org/latest/fixture.html#fixtures-as-function-arguments>`_::
+
+    import pytest
+
+    @pytest.fixture
+    def records(env):
+        ModelA = env['model.a']
+        ModelA.create({'field': 'value'})
+        ModelA.create({'field': 'value2'})
+
+    def test_action(env, records):
+        record = env['model.a'].search([('field', '=', 'value')])
+        record.some_action()
+        assert record.field == expected_field_value
+
+    def test_action2(env, records):
+        # gets a brand new version of records in a separate transaction
+        record2 = env['model.a'].search([('field', '=', 'value2')])
+        record2.some_action()
+        assert record2.field == expected_field_value2
+
+Pytest fixtures for Odoo
+------------------------
+
+.. automodule:: openerp.tests.fixtures
+    :members:
+    :member-order: bysource
+
+Cross-style utilities
+=====================
+
+By default, Python tests are run once at the end of the corresponding module's
+installation. Test cases can also be configured to run after all modules have
+been installed, and not run during the module's installation, by *marking*
+them with the following decorators:
+
+.. function:: pytest.mark.at_install(flag)
+
+    * if the flag is ``True``, will schedule the test to run during the
+      module's installation
+    * if the flag is ``False``, will skip the test during the module's
+      installation
+
+.. function:: pytest.mark.post_install(flag)
+
+    * if the flag is ``True``, will schedule the test to run after all modules
+      have been installed
+    * if the flag is ``False``, will skip the test after all modules have been
+      installed
+
+* By default, tests are run ``at_install`` and not run ``post_install``
+  (they're implicitly decorated with ``at_install(True)`` and
+  ``post_install(False)``
+* Using unittest-style cases, it is possible to decorate both class and test
+  method. A test class's decoration will apply to all of its test methods,
+  a test method's decoration will override the classe's.
+
 Running tests
--------------
+=============
 
-Tests are automatically run when installing or updating modules if
-:option:`--test-enable <odoo.py --test-enable>` was enabled when starting the
-Odoo server.
+* tests can be run using the :ref:`odoo.py test <reference/cmdline/testing>`
+  command, providing addons or directories whose tests should be run (and
+  which should be installed if necessary)
+* tests can also be run while installing or updating modules if
+  :option:`--test-enable <odoo.py --test-enable>` is set when starting the
+  Odoo server.
 
-As of Odoo 8, running tests outside of the install/update cycle is not
-supported.
-
-.. _unittest documentation: https://docs.python.org/2/library/unittest.html
+.. _pytest: http://pytest.org
+.. _pytest-cases: http://pytest.org/latest/getting-started.html
+.. _unittest: https://docs.python.org/2/library/unittest.html

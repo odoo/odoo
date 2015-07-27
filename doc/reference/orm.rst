@@ -176,6 +176,9 @@ other model, and query that model::
     >>> self.env['res.partner'].search([['is_company', '=', True], ['customer', '=', True]])
     res.partner(7, 18, 12, 14, 17, 19, 8, 31, 26, 16, 13, 20, 30, 22, 29, 15, 23, 28, 74)
 
+.. autoclass:: openerp.api.Environment
+    :members: ref, user, lang, __getitem__, __call__
+
 Altering the environment
 ------------------------
 
