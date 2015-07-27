@@ -3,6 +3,7 @@
 from openerp.osv import orm, fields
 from openerp import SUPERUSER_ID
 from openerp.addons import decimal_precision
+from openerp.exceptions import ValidationError
 
 
 class delivery_carrier(orm.Model):
@@ -97,7 +98,12 @@ class SaleOrder(orm.Model):
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
         for delivery_id in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
-            if not delivery_id.available:
+            try:
+                if not delivery_id.available:
+                    delivery_ids.remove(delivery_id.id)
+            except ValidationError:
+            # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
+            # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
                 delivery_ids.remove(delivery_id.id)
         return delivery_ids
 
