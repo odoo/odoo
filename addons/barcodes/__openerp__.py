@@ -30,7 +30,7 @@ It provides the following features:
         'data/barcodes_data.xml',
         'views/barcodes_view.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml',
+        'views/barcodes_templates.xml',
     ],
     'installable': True,
     'auto_install': False,
