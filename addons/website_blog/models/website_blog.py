@@ -63,6 +63,34 @@ class BlogTag(osv.Model):
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
+    def all_tags(self, cr, uid, ids, min_limit=1, context=None):
+        req = """
+            SELECT
+                p.blog_id, count(*), r.blog_tag_id
+            FROM
+                blog_post_blog_tag_rel r
+                    join blog_post p on r.blog_post_id=p.id
+            WHERE
+                r.blog_tag_id in %s
+            GROUP BY
+                p.blog_id,
+                r.blog_tag_id
+            ORDER BY
+                count(*) DESC
+        """
+        cr.execute(req, [tuple(ids)])
+        tag_by_blog = {}
+        for blog_id, freq, tag_id in cr.fetchall():
+            if blog_id not in tag_by_blog:
+                tag_by_blog[blog_id] = []
+            if freq >= min_limit:
+                tag_by_blog[blog_id].append(tag_id)
+
+        tag_obj = self.pool['blog.tag']
+        for blog_id in tag_by_blog:
+            tag_by_blog[blog_id] = tag_obj.browse(cr, uid, tag_by_blog[blog_id], context=context)
+        return tag_by_blog
+
 
 class BlogPost(osv.Model):
     _name = "blog.post"
@@ -272,3 +300,32 @@ class Website(osv.Model):
             })
 
         return dep
+
+    def search_bar(self, cr, uid, ids, module=None, needle='', context=None):
+        data = super(Website, self).search_bar(cr, uid,  ids, module=module, needle=needle, context=context)
+
+        if not module or module == 'website_blog':
+            _needle = needle not in _('Blog').lower() and needle or ''
+
+            tag_obj = self.pool.get('blog.tag')
+            blog_obj = self.pool.get('blog.blog')
+
+            blogs = {}
+            tags_ids = tag_obj.search(cr, uid, [('name', 'ilike', _needle)], context=context)
+            if tags_ids:
+                blogs = tag_obj.all_tags(cr, uid, tags_ids, context=context)
+
+            blog_ids = blog_obj.search(cr, uid, [('name', 'ilike', _needle)], context=context)
+            if blog_ids:
+                blogs.update(blog_obj.all_tags(cr, uid, blog_ids, context=context))
+
+            for blog in blog_obj.browse(cr, uid, map(int, blogs.keys()), context=context).exists():
+                children = [{'id': '/tag/%s' % slug(tag), 'text': tag.display_name} for tag in blogs[blog.id][0:5]]
+                data.append({
+                    'module': 'website_blog',
+                    'url': '/blog/%s' % slug(blog),
+                    'text': _('blog: %s') % blog.display_name,
+                    'children': children,
+                })
+
+        return data

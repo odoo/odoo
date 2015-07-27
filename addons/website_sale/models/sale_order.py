@@ -7,6 +7,7 @@ from openerp.osv import osv, orm, fields
 from openerp.addons.web.http import request
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+from openerp.addons.website.models.website import slug
 
 
 class sale_order(osv.Model):
@@ -346,6 +347,23 @@ class website(orm.Model):
             'website_sale_current_pl': False,
         })
 
+    def search_bar(self, cr, uid, ids, module=None, needle='', context=None):
+        data = super(website, self).search_bar(cr, uid,  ids, module=module, needle=needle, context=context)
+
+        if not module or module == 'website_sale':
+            _needle = needle not in _('Shop').lower() and needle or ''
+
+            categ_ids = self.pool.get('product.public.category').search(cr, uid, [('name', 'ilike', _needle)], context=context, limit=5)
+            children = [{'id': '/category/%s' % slug(categ), 'text': categ.display_name}
+                for categ in self.pool.get('product.public.category').browse(cr, uid, categ_ids, context=context)]
+
+            data.append({
+                'module': 'website_sale',
+                'url': '/shop',
+                'text': _('Shop Category'),
+                'children': children,
+            })
+        return data
 
 class website_pricelist(osv.Model):
     _name = 'website_pricelist'

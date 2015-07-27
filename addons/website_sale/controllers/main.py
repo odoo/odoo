@@ -158,7 +158,7 @@ class website_sale(http.Controller):
             ppg = PPG
 
         if search:
-            for srch in search.split(" "):
+            for srch in search.split(","):
                 domain += ['|', '|', '|', ('name', 'ilike', srch), ('description', 'ilike', srch),
                     ('description_sale', 'ilike', srch), ('product_variant_ids.default_code', 'ilike', srch)]
         if category:

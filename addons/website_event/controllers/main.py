@@ -24,6 +24,7 @@ class website_event(http.Controller):
         searches.setdefault('date', 'all')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
+        searches.setdefault('search', '')
 
         domain_search = {}
 
@@ -82,6 +83,8 @@ class website_event(http.Controller):
 
         def dom_without(without):
             domain = [('state', "in", ['draft', 'confirm', 'done'])]
+            for srch in searches['search'].split(','):
+                domain += ['|', ('name', 'ilike', srch), ('description', 'ilike', srch)]
             for key, search in domain_search.items():
                 if key != without:
                     domain += search

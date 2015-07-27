@@ -49,6 +49,7 @@
 
 <template id="404">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <div id="wrap">
           <div class="oe_structure oe_empty">
               <div class="container">
@@ -132,13 +133,13 @@
 
 <template id="products" name="Products">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <t t-set="additional_title">Shop</t>
       <div id="wrap" class="js_sale">
         <div class="oe_structure"/>
         <div class="container oe_website_sale">
           <div class="products_pager">
             <div class="row" style="width: 100%;">
-              <t t-call="website_sale.search"><t t-set="search_class">pagination form-inline col-md-3</t></t>
               <t t-call="website.pager"/>
             </div>
           </div>
@@ -315,19 +316,17 @@
 
 <template id="product" name="Product">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <t t-set="additional_title" t-value="product.name"/>
       <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale">
         <section t-attf-class="container mt8 oe_website_sale #{(compute_currency(product.lst_price) - product.price) &gt; 0.1 and 'discount'}" id="product_detail">
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-7">
                 <ol class="breadcrumb">
                     <li><a t-att-href="keep(category=0)">Products</a></li>
                     <li t-if="category"><a t-att-href="keep('/shop/category/%s' % slug(category), category=0)" t-field="category.name"/></li>
                     <li class="active"><span t-field="product.name"/></li>
                 </ol>
-            </div>
-            <div class="col-sm-3">
-              <t t-call="website_sale.search"><t t-set="search_class">pull-right</t></t>
             </div>
             <div id="website_published_button" class="col-sm-4" groups="base.group_sale_manager">
                 <t t-call="website.publish_management">
@@ -604,6 +603,7 @@
 
 <template id="extra_info" name="Checkout Extra Info">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <div id="wrap">
         <div class="container oe_website_sale">
           <t t-call="website_sale.wizard_checkout">
@@ -672,6 +672,7 @@
 
 <template id="cart" name="Shopping Cart">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <div id="wrap">
         <div class="container oe_website_sale">
           <t t-call="website_sale.wizard_checkout">
@@ -883,6 +884,7 @@
 
 <template id="checkout">
   <t t-call="website.layout">
+    <t t-set="search_module" t-value="'website_sale'"/>
     <t t-set="additional_title">Shop - Checkout</t>
     <div id="wrap">
       <div class="container oe_website_sale">
@@ -1045,6 +1047,7 @@
 
 <template id="payment">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <t t-set="additional_title">Shop - Select Payment Method</t>
       <div id="wrap">
         <div class="container oe_website_sale">
@@ -1181,6 +1184,7 @@
 
 <template id="confirmation">
   <t t-call="website.layout">
+      <t t-set="search_module" t-value="'website_sale'"/>
       <t t-set="additional_title">Shop - Confirmed</t>
       <div id="wrap">
         <div class="container oe_website_sale">

@@ -95,7 +95,7 @@ Tour.register({
         {
             title:     "click on input",
             waitFor:   '#wrap .o_dirty font:first:contains(translated french text)',
-            element:   'input:first',
+            element:   '.oe_structure input:first',
         },
         {
             title:     "translate placeholder",
@@ -119,7 +119,7 @@ Tour.register({
         },
         {
             title:     "check: placeholder translation",
-            waitFor:   'input[placeholder="test french placeholder"]',
+            waitFor:   '.oe_structure input[placeholder="test french placeholder"]',
         },
         {
             title:     "return to english version",
@@ -164,7 +164,7 @@ Tour.register({
         },
         {
             title:     "check bis: placeholder translation",
-            waitFor:   'input[placeholder="test french placeholder"]',
+            waitFor:   '.oe_structure input[placeholder="test french placeholder"]',
         },
     ]
 });

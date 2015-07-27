@@ -381,3 +381,10 @@ class Website(openerp.addons.web.controllers.main.Home):
     def website_image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
         logger.warning("Deprecated image controller, please use /web_editor/image/")
         return Web_Editor().image(model=model, id=id, field=field, xmlid=xmlid, max_width=max_width, max_height=max_height)
+
+    #------------------------------------------------------
+    # search bar
+    #------------------------------------------------------
+    @http.route(['/website/search_bar'], type='http', auth="public", website=True)
+    def website_search_bar_category(self, module, needle):
+        return json.dumps(request.website._search_bar(module, needle.lower()))

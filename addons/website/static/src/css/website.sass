@@ -624,18 +624,35 @@ div.carousel
     nav#oe_main_menu_navbar
         position: inherit
 
-.oe_search_clear
-    position: absolute
-    display: none
-    cursor: pointer
-    z-index: 2
-    right: 42px
-    color: #939393
-    padding: 10px 0
-    top: 1px
+#top_menu form.o_search_bar
+    padding: 8px 0
 
-.oe_search_box
-    padding-right: 23px
+form.o_search_bar .form-group .input-group
+    .o_search_clear
+        position: absolute
+        display:none
+        cursor: pointer
+        z-index: 2
+        right: 42px
+        color: #939393
+        padding: 10px 0
+        top: 1px
+    .o_search_input
+        padding-right: 23px
+    .o_search_select, .o_search_size_select
+        width: 206px !important
+    .o_search_select
+        position: absolute
+    .o_search_search
+        border: 0
+        -webkit-box-shadow: none
+        box-shadow: none
+        background: transparent
+        padding-top: 5px
+    .o_search_category
+        margin-top: 5px
+    .input-group-btn
+        vertical-align: top
 
 .note-editor button
     height: 30px

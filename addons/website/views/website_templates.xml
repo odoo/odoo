@@ -154,7 +154,7 @@
                                     <t t-foreach="website.menu_id.child_id" t-as="submenu">
                                         <t t-call="website.submenu"/>
                                     </t>
-                                    <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
+                                    <li><t t-call="website.website_search_bar"/></li>
                                     <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                             <b>
@@ -990,16 +990,33 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </t>
 </template>
 
+<!-- Search Bar -->
+
+<template id="website_search_bar" name="Website Search Bar">
+    <form action="#" method="get" class="form-inline o_search_bar" t-att-data-module="search_module">
+        <div class="form-group">
+            <div class="input-group">
+                <input class="form-control o_search_select"/>
+                <div class="o_search_size_select"></div>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default o_search_button"><i class="fa fa-search"/></button>
+                </span>
+            </div>
+        </div>
+    </form>
+</template>
+
 <template id="website_search_box" name="Website Searchbox">
     <div class="input-group">
         <div class="oe_search">
-            <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
-            <span class="fa fa-remove fa-lg oe_search_clear"></span>
+            <input type="text" name="search" class="search-query form-control o_search_box" placeholder="Search..." t-att-value="search" />
+            <span class="fa fa-remove fa-lg o_search_clear"></span>
         </div>
         <span class="input-group-btn">
            <button type="submit" class="btn btn-default oe_search_button"><i class="fa fa-search"/></button>
         </span>
     </div>
 </template>
+
      </data>
 </openerp>
