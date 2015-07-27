@@ -362,7 +362,7 @@ class MassMailing(osv.Model):
             ondelete='set null',
         ),
         'state': fields.selection(
-            [('draft', _('Draft')), ('test', _('Tested')), ('done', _('Sent'))],
+            [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
             string='Status', required=True, copy=False,
         ),
         'color': fields.related(
