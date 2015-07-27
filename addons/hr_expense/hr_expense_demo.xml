@@ -2,6 +2,10 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="hr.employee_niv" model="hr.employee">
+            <field name="address_home_id" ref="base.res_partner_address_4"/>
+        </record>
+
         <record id="hr.employee_mit" model="hr.employee">
             <field name="address_home_id" ref="base.res_partner_address_5"/>
         </record>
@@ -41,6 +45,7 @@
         <record id="expenses0" model="hr.expense.expense">
             <field name="name">Expenses</field>
             <field name="date" eval="time.strftime('%Y-08-25')"/>
+            <field name="employee_id" ref="hr.employee_niv"/>
         </record>
         <record id="expenses_line0" model="hr.expense.line">
             <field name="name">Travel Expenses</field>

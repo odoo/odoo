@@ -41,11 +41,6 @@
         </record>
 
 
-        <record id="hr.employee" model="hr.employee">
-            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-        </record>
-
-
         <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
            <field name="name">Run Employee Appraisal</field>
            <field eval="True" name="active" />
