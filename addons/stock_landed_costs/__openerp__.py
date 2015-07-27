@@ -4,6 +4,7 @@
 {
     'name': 'WMS Landed Costs',
     'version': '1.1',
+    'author': 'Odoo SA',
     'summary': 'Landed Costs',
     'description': """
 Landed Costs Management
