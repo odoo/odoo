@@ -151,6 +151,7 @@ openerp.point_of_sale.load_models = function load_models(instance, module){ //mo
             model:  'product.uom',
             fields: [],
             domain: null,
+            context: function(self){ return { active_test: false }; },
             loaded: function(self,units){
                 self.units = units;
                 var units_by_id = {};

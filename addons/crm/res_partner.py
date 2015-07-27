@@ -41,8 +41,12 @@ class res_partner(osv.osv):
                 }
         except:
             pass
+        return res
+
+    def _phonecall_count(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
         for partner in self.browse(cr, uid, ids, context):
-            res[partner.id]['phonecall_count'] = len(partner.phonecall_ids)
+            res[partner.id] = len(partner.phonecall_ids)
         return res
 
     _columns = {
@@ -55,7 +59,7 @@ class res_partner(osv.osv):
             'Phonecalls'),
         'opportunity_count': fields.function(_opportunity_meeting_phonecall_count, string="Opportunity", type='integer', multi='opp_meet'),
         'meeting_count': fields.function(_opportunity_meeting_phonecall_count, string="# Meetings", type='integer', multi='opp_meet'),
-        'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
+        'phonecall_count': fields.function(_phonecall_count, string="Phonecalls", type="integer"),
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
