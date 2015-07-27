@@ -387,10 +387,6 @@
             <field name="stage_id" ref="project_stage_0"/>
         </record>
 
-        <!-- Schedule tasks to assign users and dates -->
-        <function model="project.project" name="schedule_tasks"
-            eval="[ref('project_project_3'), ref('project_project_4'), ref('project_project_5')], {'install_mode': True}"/>
-
         <record id="message_task_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_22"/>

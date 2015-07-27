@@ -67,9 +67,8 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(pigs.state, 'close')
         # Re-open
         pigs.state = 'open'
-        # Re-convert into a template and schedule tasks
+        # Re-convert into a template
         pigs.set_template()
-        pigs.schedule_tasks()
         # Copy the project
         new_project = pigs.copy()
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')

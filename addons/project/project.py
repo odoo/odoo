@@ -2,14 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, date
-from dateutil import relativedelta
 from lxml import etree
 import time
 
 from openerp import api
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -313,104 +311,6 @@ class project(osv.osv):
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
-        return True
-
-    def _schedule_header(self, cr, uid, ids, force_members=True, context=None):
-        context = context or {}
-        if type(ids) in (long, int,):
-            ids = [ids]
-        projects = self.browse(cr, uid, ids, context=context)
-
-        for project in projects:
-            if (not project.members) and force_members:
-                raise UserError(_("You must assign members on the project '%s'!") % (project.name,))
-
-        resource_pool = self.pool.get('resource.resource')
-
-        result = "from openerp.addons.resource.faces import *\n"
-        result += "import datetime\n"
-        for project in self.browse(cr, uid, ids, context=context):
-            u_ids = [i.id for i in project.members]
-            if project.user_id and (project.user_id.id not in u_ids):
-                u_ids.append(project.user_id.id)
-            for task in project.tasks:
-                if task.user_id and (task.user_id.id not in u_ids):
-                    u_ids.append(task.user_id.id)
-            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
-            resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
-            for key, vals in resource_objs.items():
-                result +='''
-class User_%s(Resource):
-    efficiency = %s
-''' % (key,  vals.get('efficiency', False))
-
-        result += '''
-def Project():
-        '''
-        return result
-
-    def _schedule_project(self, cr, uid, project, context=None):
-        resource_pool = self.pool.get('resource.resource')
-        calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
-        working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
-        # TODO: check if we need working_..., default values are ok.
-        puids = [x.id for x in project.members]
-        if project.user_id:
-            puids.append(project.user_id.id)
-        result = """
-  def Project_%d():
-    start = \'%s\'
-    working_days = %s
-    resource = %s
-"""       % (
-            project.id,
-            project.date_start or time.strftime('%Y-%m-%d'), working_days,
-            '|'.join(['User_'+str(x) for x in puids]) or 'None'
-        )
-        vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
-        if vacation:
-            result+= """
-    vacation = %s
-""" %   ( vacation, )
-        return result
-
-    #TODO: DO Resource allocation and compute availability
-    def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
-        if context ==  None:
-            context = {}
-        allocation = {}
-        return allocation
-
-    def schedule_tasks(self, cr, uid, ids, context=None):
-        context = context or {}
-        if type(ids) in (long, int,):
-            ids = [ids]
-        projects = self.browse(cr, uid, ids, context=context)
-        result = self._schedule_header(cr, uid, ids, False, context=context)
-        for project in projects:
-            result += self._schedule_project(cr, uid, project, context=context)
-            result += self.pool.get('project.task')._generate_task(cr, uid, project.tasks, ident=4, context=context)
-
-        local_dict = {}
-        exec result in local_dict
-        projects_gantt = Task.BalancedProject(local_dict['Project'])
-
-        for project in projects:
-            project_gantt = getattr(projects_gantt, 'Project_%d' % (project.id,))
-            for task in project.tasks:
-                if task.stage_id and task.stage_id.fold:
-                    continue
-
-                p = getattr(project_gantt, 'Task_%d' % (task.id,))
-
-                self.pool.get('project.task').write(cr, uid, [task.id], {
-                    'date_start': p.start.strftime('%Y-%m-%d %H:%M:%S'),
-                    'date_end': p.end.strftime('%Y-%m-%d %H:%M:%S')
-                }, context=context)
-                if (not task.user_id) and (p.booked_resource):
-                    self.pool.get('project.task').write(cr, uid, [task.id], {
-                        'user_id': int(p.booked_resource[0].name[5:]),
-                    }, context=context)
         return True
 
     def create(self, cr, uid, vals, context=None):
