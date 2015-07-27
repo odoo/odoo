@@ -19,14 +19,12 @@ import openerp
 import openerp.release
 import openerp.workflow
 
-import assertion_report
 import misc
 
 from config import config
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
 from misc import pickle, unquote
-from openerp import SUPERUSER_ID
 from translate import _
 from yaml_import import convert_yaml_import
 
@@ -585,15 +583,11 @@ form: module.record_id""" % (xml_id,)
             ids = self.pool[rec_model].search(cr, uid, q, context=context)
             if rec_src_count:
                 count = int(rec_src_count)
-                if len(ids) != count:
-                    self.assertion_report.record_failure()
-                    msg = 'assertion "%s" failed!\n'    \
-                          ' Incorrect search count:\n'  \
-                          ' expected count: %d\n'       \
-                          ' obtained count: %d\n'       \
-                          % (rec_string, count, len(ids))
-                    _logger.error(msg)
-                    return
+                assert len(ids) == count,\
+                    'assertion "%s" failed!\n'    \
+                    ' Incorrect search count:\n'  \
+                    ' expected count: %d\n'       \
+                    ' obtained count: %d\n' % (rec_string, count, len(ids))
 
         assert ids is not None,\
             'You must give either an id or a search criteria'
@@ -613,17 +607,12 @@ form: module.record_id""" % (xml_id,)
                 f_expr = test.get("expr",'').encode('utf-8')
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
                 expression_value = unsafe_eval(f_expr, globals_dict)
-                if expression_value != expected_value: # assertion failed
-                    self.assertion_report.record_failure()
-                    msg = 'assertion "%s" failed!\n'    \
-                          ' xmltag: %s\n'               \
-                          ' expected value: %r\n'       \
-                          ' obtained value: %r\n'       \
-                          % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    _logger.error(msg)
-                    return
-        else: # all tests were successful for this assertion tag (no break)
-            self.assertion_report.record_success()
+                assert expression_value == expected_value, \
+                    'assertion "%s" failed!\n'    \
+                    ' xmltag: %s\n'               \
+                    ' expected value: %r\n'       \
+                    ' obtained value: %r\n'       \
+                      % (rec_string, etree.tostring(test), expected_value, expression_value)
 
     def _tag_record(self, cr, rec, data_node=None, mode=None):
         rec_model = rec.get("model").encode('ascii')
@@ -818,9 +807,6 @@ form: module.record_id""" % (xml_id,)
         self.idref = idref
         self.pool = openerp.registry(cr.dbname)
         self.uid = 1
-        if report is None:
-            report = assertion_report.assertion_report()
-        self.assertion_report = report
         self.noupdate = noupdate
         self.xml_filename = xml_filename
         self._tags = {
@@ -848,9 +834,9 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.sql':
             convert_sql_import(cr, fp)
         elif ext == '.yml':
-            convert_yaml_import(cr, module, fp, kind, idref, mode, noupdate, report)
+            convert_yaml_import(cr, module, fp, kind, idref, mode, noupdate)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
+            convert_xml_import(cr, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
@@ -934,6 +920,6 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile.name
     else:
         xml_filename = xmlfile
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot(), mode=mode)
     return True

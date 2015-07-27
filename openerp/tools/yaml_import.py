@@ -6,7 +6,6 @@ import time # used to eval time.strftime expressions
 import types
 
 import openerp
-import openerp.sql_db as sql_db
 import openerp.workflow
 import misc
 from config import config
@@ -20,8 +19,6 @@ from openerp import SUPERUSER_ID
 # default to /safe/.
 unsafe_eval = eval
 from safe_eval import safe_eval as eval
-
-import assertion_report
 
 _logger = logging.getLogger(__name__)
 
@@ -111,9 +108,6 @@ class YamlInterpreter(object):
         self.id_map = id_map
         self.mode = mode
         self.filename = filename
-        if report is None:
-            report = assertion_report.assertion_report()
-        self.assertion_report = report
         self.noupdate = noupdate
         self.loglevel = loglevel
         self.pool = openerp.registry(cr.dbname)
@@ -200,10 +194,6 @@ class YamlInterpreter(object):
     def process_comment(self, node):
         return node
 
-    def _log_assert_failure(self, msg, *args):
-        self.assertion_report.record_failure()
-        _logger.error(msg, *args)
-
     def _get_assertion_id(self, assertion):
         if assertion.id:
             ids = [self.get_id(assertion.id)]
@@ -225,54 +215,46 @@ class YamlInterpreter(object):
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
-        if assertion.count is not None and len(ids) != assertion.count:
-            msg = 'assertion "%s" failed!\n'   \
-                  ' Incorrect search count:\n' \
-                  ' expected count: %d\n'      \
-                  ' obtained count: %d\n'
-            args = (assertion.string, assertion.count, len(ids))
-            self._log_assert_failure(msg, *args)
-        else:
-            context = self.get_context(assertion, self.eval_context)
-            for id in ids:
-                record = model.browse(self.cr, self.uid, id, context)
-                for test in expressions:
-                    try:
-                        success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
-                    except Exception, e:
-                        _logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
-                        raise YamlImportAbortion(e)
-                    if not success:
-                        msg = 'Assertion "%s" FAILED\ntest: %s\n'
-                        args = (assertion.string, test)
-                        for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
-                            if aop in test:
-                                left, right = test.split(aop,1)
-                                lmsg = ''
-                                rmsg = ''
-                                try:
-                                    lmsg = unsafe_eval(left, self.eval_context, RecordDictWrapper(record))
-                                except Exception, e:
-                                    lmsg = '<exc>'
+        assert assertion.count is None or len(ids) == assertion.count, \
+            'assertion "{0.string}" failed!\n'   \
+            ' Incorrect search count:\n' \
+            ' expected count: {0.count}\n'      \
+            ' obtained count: {1}\n'.format(assertion, len(ids))
 
-                                try:
-                                    rmsg = unsafe_eval(right, self.eval_context, RecordDictWrapper(record))
-                                except Exception, e:
-                                    rmsg = '<exc>'
+        context = self.get_context(assertion, self.eval_context)
+        for id in ids:
+            record = model.browse(self.cr, self.uid, id, context)
+            for test in expressions:
+                try:
+                    success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
+                except Exception, e:
+                    _logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
+                    raise YamlImportAbortion(e)
+                if success:
+                    continue
 
-                                msg += 'values: ! %s %s %s'
-                                args += ( lmsg, aop, rmsg )
-                                break
+                msg = 'Assertion "%s" FAILED\ntest: %s\n' % (assertion.string, test)
+                for aop in ('==', '!=', '<>', 'in', 'not in', '>=', '<=', '>', '<'):
+                    if aop in test:
+                        left, right = test.split(aop,1)
+                        try:
+                            lmsg = unsafe_eval(left, self.eval_context, RecordDictWrapper(record))
+                        except Exception:
+                            lmsg = '<exc>'
 
-                        self._log_assert_failure(msg, *args)
-                        return
-            else: # all tests were successful for this assertion tag (no break)
-                self.assertion_report.record_success()
+                        try:
+                            rmsg = unsafe_eval(right, self.eval_context, RecordDictWrapper(record))
+                        except Exception:
+                            rmsg = '<exc>'
+
+                        msg += 'values: ! %s %s %s' % ( lmsg, aop, rmsg )
+                        break
+                assert success, msg
 
     def _coerce_bool(self, value, default=False):
         if isinstance(value, types.BooleanType):
             b = value
-        if isinstance(value, types.StringTypes):
+        elif isinstance(value, types.StringTypes):
             b = value.strip().lower() not in ('0', 'false', 'off', 'no')
         elif isinstance(value, types.IntType):
             b = bool(value)
@@ -612,18 +594,8 @@ class YamlInterpreter(object):
             'context': self.context,
             'openerp': openerp,
         }
-        try:
-            code_obj = compile(statements, self.filename, 'exec')
-            unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
-        except AssertionError, e:
-            self._log_assert_failure('AssertionError in Python code %s (line %d): %s',
-                python.name, python.first_line, e)
-            return
-        except Exception, e:
-            _logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
-            raise
-        else:
-            self.assertion_report.record_success()
+        code_obj = compile(statements, self.filename, 'exec')
+        unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
 
     def process_workflow(self, node):
         workflow, values = node.items()[0]
@@ -868,7 +840,7 @@ class YamlInterpreter(object):
         """
         Empty node or commented node should not pass silently.
         """
-        self._log_assert_failure("You have an empty block in your tests.")
+        assert False, "Found an empty block in a YAML test file"
 
 
     def process(self, yaml_string):
@@ -944,7 +916,7 @@ def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=Fa
         idref = {}
     loglevel = logging.DEBUG
     yaml_string = yamlfile.read()
-    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
+    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)
 
 # keeps convention of convert.py

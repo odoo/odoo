@@ -15,10 +15,8 @@ import time
 
 import openerp
 from .. import SUPERUSER_ID
-from ..tools import assertion_report, classproperty, config, \
-                    lazy_property, topological_sort, OrderedSet,\
-                    convert_file, lru
-
+from ..tools import classproperty, config, convert_file, lazy_property, \
+                    lru, topological_sort, OrderedSet
 from . import db, graph, migration, module
 
 _logger = logging.getLogger(__name__)
@@ -40,7 +38,6 @@ class Registry(collections.Mapping):
         self._pure_function_fields = {}         # {model: [field, ...], ...}
         self._init = True
         self._init_parent = {}
-        self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
 
         self.graph = graph.Graph()
@@ -456,10 +453,8 @@ class Registry(collections.Mapping):
                 Views = self['ir.ui.view']
                 custom_view_test = True
                 for model in self.models:
-                    if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
-                        custom_view_test = False
-                        _logger.error('invalid custom view(s) for model %s', model)
-                self._assertion_report.record_result(custom_view_test)
+                    assert Views._validate_custom_views(cr, SUPERUSER_ID, model), \
+                        'invalid custom view(s) for model %s' % model
 
             # STEP 7: call _register_hook on every model
             for model in self.models.values():
@@ -543,7 +538,7 @@ class Registry(collections.Mapping):
                 noupdate = False
                 if kind in ('demo', 'demo_xml') or (filename.endswith('.csv') and kind in ('init', 'init_xml')):
                     noupdate = True
-                convert_file(cr, package.name, filename, idref, mode, noupdate, kind, self._assertion_report)
+                convert_file(cr, package.name, filename, idref, mode, noupdate, kind)
         finally:
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False

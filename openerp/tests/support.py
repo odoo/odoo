@@ -16,6 +16,7 @@ import threading
 
 import py.error
 import py.code
+import traceback
 import _pytest.python
 import pytest
 
@@ -206,10 +207,6 @@ class DataFile(pytest.File):
         self.paths = paths
     def collect(self):
         return [DataItem(self, self.registry, self.package, self.paths)]
-class DataException(AssertionError): pass
-class DataReporter(tools.assertion_report.assertion_report):
-    def record_failure(self):
-        raise DataException()
 class DataItem(pytest.Item):
     def __init__(self, parent, registry, package, paths):
         super(DataItem, self).__init__(package.name, parent)
@@ -218,7 +215,7 @@ class DataItem(pytest.Item):
         self.paths = paths
         self.current = None
 
-    def runtest(self, report=DataReporter()):
+    def runtest(self):
         mode = 'update'
         if hasattr(self.package, 'init') or self.package.state == 'to_install':
             mode = 'init'
@@ -230,9 +227,8 @@ class DataItem(pytest.Item):
                 for p in self.paths:
                     self.current = p
                     tools.convert_file(
-                        cr, self.package.name, p,
-                        idrefs, mode=mode, noupdate=False, kind='test',
-                        report=report, pathname=p)
+                        cr, self.package.name, p, idrefs, mode=mode,
+                        noupdate=False, kind='test', pathname=p)
         finally:
             self.registry.clear_caches()
             threading.currentThread().testing = False
@@ -241,7 +237,7 @@ class DataItem(pytest.Item):
         return self.fspath, 0, ""
 
     def repr_failure(self, exc_info):
-        return "Test failed in %s" % self.current
+        return "Test failed in %s\n%s" % (self.current, ''.join(traceback.format_exception(*exc_info._excinfo)))
 
 def is_at_install(item):
     marker = item.get_marker('at_install')
