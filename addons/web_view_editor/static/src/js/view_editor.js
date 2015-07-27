@@ -178,7 +178,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     do_delete_view: function() {
         var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
-            var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view].controller;
+            var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view.type].controller;
             this.dataset.unlink([this.main_view_id]).done(function() {
                 controller.reload_content();
                 self.main_view_id = self.parent.fields_view.view_id;
@@ -646,7 +646,9 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == _.uniq(check_list).length ) {return xml_child;}
             });
-            xml_arch = QWeb.load_xml(instance.web.xml_to_str(inherited_view));
+            if (inherited_view) {
+                xml_arch = QWeb.load_xml(instance.web.xml_to_str(inherited_view));
+            }
         }
         return self.do_save_xml(xml_arch.documentElement, obj[0].child_id[0],obj[0].child_id, move_direct, update_values,arch);
     },
@@ -994,7 +996,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        table_selector.find("td[id^=]").attr("width","100px");
+        table_selector.find("td[id]").attr("width","100px");
         self.add_node_dialog.$el.find('#new_field').click(function() {
             model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).done(function(result) {
