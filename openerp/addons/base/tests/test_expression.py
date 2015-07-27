@@ -187,9 +187,9 @@ class test_expression(common.TransactionCase):
         p_aa = partner_obj.create(cr, uid, {'name': 'test__AA', 'parent_id': p_a, 'state_id': state_ids[0]})
         p_ab = partner_obj.create(cr, uid, {'name': 'test__AB', 'parent_id': p_a, 'state_id': state_ids[1]})
         p_ba = partner_obj.create(cr, uid, {'name': 'test__BA', 'parent_id': p_b, 'state_id': state_ids[0]})
-        b_aa = bank_obj.create(cr, uid, {'acc_number': '__bank_test_a', 'state': 'bank', 'partner_id': p_aa})
-        b_ab = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': 'bank', 'partner_id': p_ab})
-        b_ba = bank_obj.create(cr, uid, {'acc_number': '__bank_test_b', 'state': 'bank', 'partner_id': p_ba})
+        b_aa = bank_obj.create(cr, uid, {'acc_number': '123', 'state': 'bank', 'partner_id': p_aa})
+        b_ab = bank_obj.create(cr, uid, {'acc_number': '456', 'state': 'bank', 'partner_id': p_ab})
+        b_ba = bank_obj.create(cr, uid, {'acc_number': '789', 'state': 'bank', 'partner_id': p_ba})
 
         # --------------------------------------------------
         # Test1: basics about the attribute
@@ -203,34 +203,34 @@ class test_expression(common.TransactionCase):
         # Test2: one2many
         # --------------------------------------------------
 
-        name_test = 'test_a'
+        name_test = '12'
 
         # Do: one2many without _auto_join
         self._reinit_mock()
-        partner_ids = partner_obj.search(cr, uid, [('bank_ids.acc_number', 'like', name_test)])
+        partner_ids = partner_obj.search(cr, uid, [('bank_ids.sanitized_acc_number', 'like', name_test)])
         # Test result
         self.assertEqual(set(partner_ids), set([p_aa]),
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..'): incorrect result")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         # Test produced queries
         self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
         sql_query = self.query_list[0].get_sql()
         self.assertIn('res_partner_bank', sql_query[0],
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') first query incorrect main table")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect main table")
 
-        expected = "%s::text like %s" % (unaccent('"res_partner_bank"."acc_number"'), unaccent('%s'))
+        expected = "%s::text like %s" % (unaccent('"res_partner_bank"."sanitized_acc_number"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') first query incorrect where condition")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect where condition")
         
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') first query incorrect parameter")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect parameter")
         sql_query = self.query_list[2].get_sql()
         self.assertIn('res_partner', sql_query[0],
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') third query incorrect main table")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect main table")
         self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') third query incorrect where condition")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect where condition")
         self.assertEqual(set([p_aa]), set(sql_query[2]),
-            "_auto_join off: ('bank_ids.acc_number', 'like', '..') third query incorrect parameter")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect parameter")
 
         # Do: cascaded one2many without _auto_join
         self._reinit_mock()
@@ -245,27 +245,27 @@ class test_expression(common.TransactionCase):
         # Do: one2many with _auto_join
         partner_bank_ids_col._auto_join = True
         self._reinit_mock()
-        partner_ids = partner_obj.search(cr, uid, [('bank_ids.acc_number', 'like', 'test_a')])
+        partner_ids = partner_obj.search(cr, uid, [('bank_ids.sanitized_acc_number', 'like', '12')])
         # Test result
         self.assertEqual(set(partner_ids), set([p_aa]),
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') incorrect result")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') incorrect result")
         # Test produced queries
         self.assertEqual(len(self.query_list), 1,
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') should produce 1 query")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 1 query")
         sql_query = self.query_list[0].get_sql()
         self.assertIn('"res_partner"', sql_query[0],
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') query incorrect main table")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect main table")
         self.assertIn('"res_partner_bank" as "res_partner__bank_ids"', sql_query[0],
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') query incorrect join")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join")
 
-        expected = "%s::text like %s" % (unaccent('"res_partner__bank_ids"."acc_number"'), unaccent('%s'))
+        expected = "%s::text like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') query incorrect where condition")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect where condition")
         
         self.assertIn('"res_partner"."id"="res_partner__bank_ids"."partner_id"', sql_query[1],
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') query incorrect join condition")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join condition")
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
-            "_auto_join on: ('bank_ids.acc_number', 'like', '..') query incorrect parameter")
+            "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect parameter")
 
         # Do: one2many with _auto_join, test final leaf is an id
         self._reinit_mock()
@@ -426,7 +426,7 @@ class test_expression(common.TransactionCase):
         partner_child_ids_col._auto_join = True
         partner_bank_ids_col._auto_join = True
         partner_child_ids_col._domain = lambda self: ['!', ('name', '=', self._name)]
-        partner_bank_ids_col._domain = [('acc_number', 'like', 'a')]
+        partner_bank_ids_col._domain = [('sanitized_acc_number', 'like', '2')]
         # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa, b_ba])])
@@ -438,7 +438,7 @@ class test_expression(common.TransactionCase):
         # Test produced queries that domains effectively present
         sql_query = self.query_list[0].get_sql()
         
-        expected = "%s::text like %s" % (unaccent('"res_partner__child_ids__bank_ids"."acc_number"'), unaccent('%s'))
+        expected = "%s::text like %s" % (unaccent('"res_partner__child_ids__bank_ids"."sanitized_acc_number"'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on one2many with domains incorrect result")
         # TDE TODO: check first domain has a correct table name
