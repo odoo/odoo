@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.issue.form.inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="project"]' position='inside'>
+                    <field name="use_issues" groups="base.group_no_one"/>
+                    <label for="use_issues" groups="base.group_no_one"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
