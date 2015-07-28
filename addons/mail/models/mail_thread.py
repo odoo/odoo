@@ -90,6 +90,8 @@ class MailThread(models.AbstractModel):
         for follower in followers:
             res[follower.res_id] |= follower.partner_id
         for record in self:
+            if not record.id:
+                continue
             record.message_follower_ids = res[record.id]
             record.message_is_follower = self.env.user.partner_id in record.message_follower_ids
 
