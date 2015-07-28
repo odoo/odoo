@@ -1457,6 +1457,20 @@ class procurement_order(osv.osv):
             context=context)
         return available_draft_po_ids
 
+    def _get_available_draft_po_line_domain(self, cr, uid, po_id, line_vals, context=None):
+        return [
+            ('order_id', '=', po_id),
+            ('product_id', '=', line_vals['product_id']),
+            ('product_uom', '=', line_vals['product_uom']),
+            ]
+
+    def _get_available_draft_po_line_ids(self, cr, uid, po_id, line_vals,
+                                         context=None):
+        po_line_obj = self.pool.get('purchase.order.line')
+        domain = self._get_available_draft_po_line_domain(
+            cr, uid, po_id, line_vals, context=context)
+        return po_line_obj.search(cr, uid, domain, context=context)
+
     def update_origin_po(self, cr, uid, po, proc, context=None):
         pass
 
@@ -1494,7 +1508,8 @@ class procurement_order(osv.osv):
                     if datetime.strptime(po_rec.date_order, DEFAULT_SERVER_DATETIME_FORMAT) > purchase_date:
                         po_obj.write(cr, uid, [po_id], {'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
                     #look for any other PO line in the selected PO with same product and UoM to sum quantities instead of creating a new po line
-                    available_po_line_ids = po_line_obj.search(cr, uid, [('order_id', '=', po_id), ('product_id', '=', line_vals['product_id']), ('product_uom', '=', line_vals['product_uom'])], context=context)
+                    available_po_line_ids = self._get_available_draft_po_line_ids(
+                        cr, uid, po_id, line_vals, context=context)
                     if available_po_line_ids:
                         po_line = po_line_obj.browse(cr, uid, available_po_line_ids[0], context=context)
                         po_line_id = po_line.id
