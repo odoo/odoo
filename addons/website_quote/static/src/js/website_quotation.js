@@ -164,6 +164,9 @@ if(!$('.o_website_quote').length) {
 odoo.define('website_quote.payment_method', function (require) {
 'use strict';
 
+    require('website.website');
+    var ajax = require('web.ajax');
+
     if(!$('#payment_method').length) {
         return $.Deferred().reject("DOM doesn't contain '#payment_method'");
     }
