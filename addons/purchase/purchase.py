@@ -1154,8 +1154,8 @@ class purchase_order_line(osv.osv):
             if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
-
-        res['value'].update({'product_uom': uom_id})
+# set default to po_uom_id
+        res['value'].update({'product_uom': product_uom_po_id})
 
         # - determine product_qty and date_planned based on seller info
         if not date_order:
