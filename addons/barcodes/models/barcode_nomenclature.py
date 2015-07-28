@@ -1,11 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import re
 
-import openerp
-from openerp import tools, models, fields, api
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
+from openerp import models, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -17,18 +16,13 @@ UPC_EAN_CONVERSIONS = [
     ('always','Always'),
 ]
 
-class barcode_nomenclature(osv.osv):
+class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
-    _columns = {
-        'name': fields.char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature'),
-        'rule_ids': fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
-        'upc_ean_conv': fields.selection(UPC_EAN_CONVERSIONS, 'UPC/EAN Conversion', required=True,
-            help='UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.'),
-    }
 
-    _defaults = {
-        'upc_ean_conv': 'always',
-    }
+    name = fields.Char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature')
+    rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', 'Rules', help='The list of barcode rules')
+    upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, 'UPC/EAN Conversion', required=True, default='always',
+        help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
 
     # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
     def ean_checksum(self, ean):
@@ -126,14 +120,14 @@ class barcode_nomenclature(osv.osv):
     # It will return an object containing various information about the barcode.
     # most importantly : 
     #  - code    : the barcode
-    #  - type   : the type of the barcode: 
+    #  - types   : the types of the barcode: 
     #  - value  : if the id encodes a numerical value, it will be put there
     #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
     def parse_barcode(self, barcode):
         parsed_result = {
             'encoding': '', 
-            'type': 'error', 
+            'types': 'error', 
             'code': barcode, 
             'base_code': barcode, 
             'value': 0,
@@ -141,7 +135,7 @@ class barcode_nomenclature(osv.osv):
 
         rules = []
         for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
+            rules.append({'types': rule.types, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
             cur_barcode = barcode
@@ -155,12 +149,12 @@ class barcode_nomenclature(osv.osv):
 
             match = self.match_pattern(cur_barcode, rule['pattern'])
             if match['match']:
-                if rule['type'] == 'alias':
+                if rule['types'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
                 else:
                     parsed_result['encoding'] = rule['encoding']
-                    parsed_result['type'] = rule['type']
+                    parsed_result['types'] = rule['types']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
                     if rule['encoding'] == "ean13":
