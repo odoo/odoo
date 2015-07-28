@@ -94,6 +94,41 @@ class test_expression(common.TransactionCase):
         # self.assertTrue(a not in with_any_other_than_a, "Search for category_id with any other than cat_a failed (1).")
         # self.assertTrue(ab in with_any_other_than_a, "Search for category_id with any other than cat_a failed (2).")
 
+    def test_05_not_str_m2m(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+
+        partners = registry('res.partner')
+        categories = registry('res.partner.category')
+
+        cats = {}
+        for cat in 'A B AB'.split():
+            cats[cat] = categories.create(cr, uid, {'name': cat})
+
+        _partners = {
+            '0': [],
+            'a': [cats['A']],
+            'b': [cats['B']],
+            'ab': [cats['AB']],
+            'a b': [cats['A'], cats['B']],
+            'b ab': [cats['B'], cats['AB']],
+        }
+        pids = {}
+        for p in _partners:
+            pids[p] = partners.create(cr, uid, {'name': p, 'category_id': [(6, 0, _partners[p])]})
+
+        base_domain = [('id', 'in', pids.values())]
+
+        def test(op, value, expected):
+            ids = set(partners.search(cr, uid, base_domain + [('category_id', op, value)]))
+            expected_ids = set(map(pids.__getitem__, expected))
+            self.assertSetEqual(ids, expected_ids, '%s %r should return %r' % (op, value, expected))
+
+        test('=', 'A', ['a', 'a b'])
+        test('!=', 'B', ['0', 'a', 'ab'])
+        test('like', 'A', ['a', 'ab', 'a b', 'b ab'])
+        test('not ilike', 'B', ['0', 'a'])
+        test('not like', 'AB', ['0', 'a', 'b', 'a b'])
+
     def test_10_expression_parse(self):
         # TDE note: those tests have been added when refactoring the expression.parse() method.
         # They come in addition to the already existing test_osv_expression.yml; maybe some tests

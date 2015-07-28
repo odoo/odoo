@@ -142,7 +142,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
         this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
-            if(self.get("actual_mode") == "view" && self.$buttons) {
+            if(self.get("actual_mode") == "view" && self.$buttons && !$(e.target).is('[data-toggle]')) {
                 var $button = self.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
                 e.stopPropagation();
