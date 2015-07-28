@@ -870,17 +870,17 @@ class MonetaryConverter(osv.AbstractModel):
             from_currency = self.display_currency(cr, uid, options['from_currency'], options)
             from_amount = Currency.compute(cr, uid, from_currency.id, display_currency.id, from_amount)
 
-        current_user=self.pool['res.users'].browse(cr, uid, uid, context=context)
+        current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
         lang = self.pool['res.lang']
         lang_code = context.get('lang') or current_user.lang or 'en_US'
         lang_id = lang.search(cr, uid, [('code', '=', lang_code)], context=context)
-        lang_objs = lang.browse(cr, uid, lang_id, context=context)
+        language = lang.browse(cr, uid, lang_id, context=context)
         formatted_amount = lang.format(cr, uid, [lang_code],
             fmt, Currency.round(cr, uid, display_currency, from_amount),
             grouping=True, monetary=True)
 
         pre = post = u''
-        if lang_objs.position == 'before':
+        if language.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
         else:
             post = u'\N{NO-BREAK SPACE}{symbol}'
@@ -1039,12 +1039,12 @@ class QwebWidgetMonetary(osv.AbstractModel):
         current_user = self.pool['res.users'].browse(qwebcontext.cr, qwebcontext.uid, qwebcontext.uid, context=qwebcontext.context)
         lang_code = qwebcontext.context.get('lang') or current_user.lang or 'en_US'
         lang_id = self.pool['res.lang'].search(qwebcontext.cr, qwebcontext.uid, [('code', '=', lang_code)], context=qwebcontext.context)
-        lang_objs = self.pool['res.lang'].browse(qwebcontext.cr, qwebcontext.uid, lang_id, context=qwebcontext.context)
+        language = self.pool['res.lang'].browse(qwebcontext.cr, qwebcontext.uid, lang_id, context=qwebcontext.context)
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
         )
         pre = post = u''
-        if lang_objs.position == 'before':
+        if language.position == 'before':
             pre = u'{symbol}\N{NO-BREAK SPACE}'
         else:
             post = u'\N{NO-BREAK SPACE}{symbol}'

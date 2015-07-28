@@ -1859,12 +1859,12 @@
 </t>
 <t t-name="FieldMonetary" t-extend="FieldChar">
     <t t-jquery="t:first" t-operation="before">
-        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'before'">
+        <t t-if="widget.get('currency_info') and widget.lang_info.position === 'before'">
             <t t-esc="widget.get('currency_info').symbol"/>
         </t>
     </t>
     <t t-jquery="t:last" t-operation="after">
-        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'after'">
+        <t t-if="widget.get('currency_info') and widget.lang_info.position === 'after'">
             <t t-esc="widget.get('currency_info').symbol"/>
         </t>
     </t>

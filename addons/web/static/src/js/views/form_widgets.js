@@ -1489,6 +1489,7 @@ var FieldMonetary = FieldFloat.extend({
                 this.set({"currency": this.field_manager.get_field_value(currency_field)});
             });
         }
+        this.lang_info = {'position': session.currency_position};
         this.on("change:currency", this, this.get_currency_info);
         this.get_currency_info();
     },
