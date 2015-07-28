@@ -909,8 +909,10 @@
                 </span>
                 <t t-if="widget.order.get_client()">
                     <i class='fa fa-user'/>
+                    <t t-esc="widget.order.get_client_name()"/>
                 </t>
-                <t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'Unknown Customer: ') + widget.order.get('creationDate').toString('t')"/>
+                <t t-if="!widget.order.get_client()">Unknown Customer</t>:
+                <t t-esc="widget.order.get('creationDate').toString('t')"/>
             </t>
             <t t-if='!widget.selected'>
                 <span class='order-sequence'>
