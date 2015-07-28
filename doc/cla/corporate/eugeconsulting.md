@@ -13,3 +13,4 @@ E.R. Spada II er@eugeconsulting.com https://github.com/spadae22
 List of contributors:
 
 E.R. Spada II er@eugeconsulting.com https://github.com/spadae22
+E.R. Spada III support@eugeconsulting.com https://github.com/spadae22
