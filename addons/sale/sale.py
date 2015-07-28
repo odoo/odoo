@@ -104,6 +104,18 @@ class sale_order(osv.osv):
                 res[order.id]['invoiced'] = True
         return res
 
+    def _taxes_belong_to_company(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        for order in self.browse(cr, uid, ids, context=context):
+            for line in order.order_line:
+                for tax in line.tax_id:
+                    if tax.company_id != order.company_id:
+                        return False
+
+        return True
+
     _columns = {
         'name': fields.char('Order Reference', required=True, copy=False,
             readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
@@ -186,6 +198,9 @@ class sale_order(osv.osv):
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
+    ]
+    _constraints = [
+        (_taxes_belong_to_company, 'Sale order contains taxes that do not belong to the right company.', ['company_id','order_line']),
     ]
     _order = 'date_order desc, id desc'
 
