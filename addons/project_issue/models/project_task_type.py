@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models
+from odoo import models
 
 
 class ProjectStage(models.Model):
-    _name = "project.task.type"
     _inherit = ['project.task.type']
 
     def _get_mail_template_id_domain(self):
