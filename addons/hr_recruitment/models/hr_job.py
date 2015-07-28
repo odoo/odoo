@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import api, fields, models
+from openerp import _, api, fields, models
 
 
 class Job(models.Model):
@@ -23,7 +23,8 @@ class Job(models.Model):
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
     stage_ids = fields.Many2many(
         'hr.recruitment.stage', 'job_stage_rel', 'job_id', 'stage_id',
-        'Job Stages')
+        'Job Stages',
+        default=[(0, 0, {'name': _('New')})])
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
     survey_id = fields.Many2one(
