@@ -703,7 +703,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
                     attrs.widget = undefined;
                 }
 
-                var Obj = my.fields.get_any([attrs.widget, field.type]);
+                var Obj = core.search_widgets_registry.get_any([attrs.widget, field.type]);
                 if (Obj) {
                     self.search_fields.push(new (Obj) (filter.item, field, self));
                 }
