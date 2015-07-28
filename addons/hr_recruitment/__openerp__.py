@@ -26,6 +26,7 @@ You can define the different phases of interviews and easily rate the applicant 
         'fetchmail',
         'web_kanban_gauge',
         'utm',
+        'document',
     ],
     'data': [
         'security/hr_recruitment_security.xml',

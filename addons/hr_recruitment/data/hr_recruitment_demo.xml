@@ -193,6 +193,28 @@
         <field name="title_action">Send mail regarding our interview</field>
     </record>
 
+    <record id="hr_case_salesman0_cv" model="ir.attachment">
+        <field name="name">Jones_CV.pdf</field>
+        <field name="datas_fname">Jones_CV.pdf</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jones_cv.pdf"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0"/>
+    </record>
+    <record id="hr_case_fresher0_cv" model="ir.attachment">
+        <field name="name">Jose_CV.txt</field>
+        <field name="datas_fname">Jose_CV.txt</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_jose_cv.txt"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_fresher0"/>
+    </record>
+    <record id="hr_case_programmer_cv" model="ir.attachment">
+        <field name="name">Williams_CV.doc</field>
+        <field name="datas_fname">Williams_CV.doc</field>
+        <field name="datas" type="base64" file="hr_recruitment/data/hr_recruitment_demo_williams_cv.doc"></field>
+        <field name="res_model">hr.applicant</field>
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer"/>
+    </record>
+
     <record id="message_application_demo" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_advertisement"/>
