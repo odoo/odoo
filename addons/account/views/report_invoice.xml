@@ -79,7 +79,7 @@
                             <span t-field="l.discount"/>
                         </td>
                         <td>
-                            <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_ids))"/>
+                            <span t-esc="', '.join(map(lambda x: x.description, l.invoice_line_tax_ids))"/>
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal" 
@@ -125,7 +125,7 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="o.tax_line_ids" t-as="t">
-                                <td><span t-field="t.name"/></td>
+                                <td><span t-field="t.tax_id.description"/></td>
                                 <td class="text-right">
                                     <span t-field="t.amount"
                                         t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
