@@ -250,7 +250,6 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
                 index = value.lastIndexOf(".");
                 if(index > -1) {
                     if(value.length - (index + 1) < first_separator) {
-                        console.log(value);
                         value = value.substr(0,index) +
                         instance.web._t.database.parameters.decimal_point + value.substr(index+1);
                     }
