@@ -4,6 +4,7 @@ odoo.define('base_calendar.base_calendar', function (require) {
 var core = require('web.core');
 var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
+var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
 var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
@@ -23,7 +24,7 @@ function reload_favorite_list(result) {
     }
     new Model("res.users")
     .query(["partner_id"])
-    .filter([["id", "=",self.dataset.context.uid]])
+    .filter([["id", "=", self.dataset.context.uid]])
     .first()
     .done(function(result) {
         var sidebar_items = {};
@@ -36,8 +37,8 @@ function reload_favorite_list(result) {
             is_checked: true,
             is_remove: false,
         };
-
-        sidebar_items[0] = filter_item ;
+        sidebar_items[filter_value] = filter_item ;
+        
         filter_item = {
                 value: -1,
                 label: _lt("Everybody's calendars"),
@@ -64,8 +65,7 @@ function reload_favorite_list(result) {
             
             self.sidebar.filter.events_loaded(self.all_filters);
             self.sidebar.filter.set_filters();
-            self.sidebar.filter.set_distroy_filters();
-            self.sidebar.filter.addInputBox();
+            self.sidebar.filter.add_favorite_calendar();
             self.sidebar.filter.destroy_filter();
         }).done(function () {
             self.$calendar.fullCalendar('refetchEvents');
@@ -77,25 +77,16 @@ function reload_favorite_list(result) {
 }
 
 CalendarView.include({
-    extraSideBar: function(){
+    extraSideBar: function() {
         this._super();
-        if (this.useContacts){
-            new reload_favorite_list(this);
+        if (this.useContacts) {
+            reload_favorite_list(this);
         }
     }
 });
 
 widgets.SidebarFilter.include({
-    set_distroy_filters: function() {
-        var self = this;
-        // When mouse-enter the favorite list it will show the 'X' for removing partner from the favorite list.
-        if (self.view.useContacts){
-            self.$('.oe_calendar_all_responsibles').on('mouseenter mouseleave', function(e) {
-                self.$('.oe_remove_follower').toggleClass('hidden', e.type == 'mouseleave');
-            });
-        }
-    },
-    addInputBox: function() {
+    add_favorite_calendar: function() {
         var self = this;
         if (this.dfm)
             return;
@@ -108,14 +99,14 @@ widgets.SidebarFilter.include({
         var FieldMany2One = core.form_widget_registry.get('many2one');
         this.ir_model_m2o = new FieldMany2One(self.dfm, {
             attrs: {
-                class: 'oe_add_input_box',
+                class: 'o_add_favorite_calendar',
                 name: "partner_id",
                 type: "many2one",
                 options: '{"no_open": True}',
                 placeholder: _t("Add Favorite Calendar"),
             },
         });
-        this.ir_model_m2o.insertAfter($('div.oe_calendar_filter'));
+        this.ir_model_m2o.appendTo(this.$el);
         this.ir_model_m2o.on('change:value', self, function() { 
             self.add_filter();
         });
@@ -134,18 +125,22 @@ widgets.SidebarFilter.include({
                 }
             });
         });
-        new reload_favorite_list(this);
+        reload_favorite_list(this);
     },
     destroy_filter: function(e) {
-        var self= this;
+        var self = this;
         this.$(".oe_remove_follower").on('click', function(e) {
             self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-            if (! confirm(_t("Do you really want to delete this filter from favorite?"))) { return false; }
             var id = $(e.currentTarget)[0].dataset.id;
-            self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record){
-                return self.ds_message.unlink(record);
-            }).done(function() {
-                new reload_favorite_list(self);
+
+            Dialog.confirm(self, _t("Do you really want to delete this filter from favorite?"), {
+                confirm_callback: function() {
+                    self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record) {
+                        return self.ds_message.unlink(record);
+                    }).done(function() {
+                        reload_favorite_list(self);
+                    });
+                },
             });
         });
     },

@@ -199,6 +199,7 @@ var Sidebar = Widget.extend({
     }
 });
 var SidebarFilter = Widget.extend({
+    className: 'o_calendar_all_responsibles',
     events: {
         'change input:checkbox': 'filter_click',
         'click span.color_filter': 'select_previous',

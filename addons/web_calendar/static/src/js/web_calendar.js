@@ -155,14 +155,14 @@ var CalendarView = View.extend({
             this.open_popup_action = attrs.event_open_popup;
         }
         // If this field is set to true, we will use the calendar_friends model as filter and not the color field.
-        this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)) && (!isNullOrUndef(self.options.$sidebar));
+        this.useContacts = !isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts);
 
         // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
         // The color is the color of the attendee, so don't need to show again that it will be present
-        this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true))) && (!isNullOrUndef(self.options.$sidebar));
+        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-        if (isNullOrUndef(self.options.$sidebar)) {
+        if (isNullOrUndef(self.options.sidebar)) {
             this.useContacts = false;
             this.colorIsAttendee = false;
             this.attendee_people = undefined;
@@ -509,8 +509,7 @@ var CalendarView = View.extend({
         if (!all_day) {
             date_start = time.auto_str_to_date(evt[this.date_start]);
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop]) : null;
-        }
-        else {
+        } else {
             date_start = time.auto_str_to_date(evt[this.date_start].split(' ')[0],'start');
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop].split(' ')[0],'start') : null;
         }
@@ -613,17 +612,17 @@ var CalendarView = View.extend({
             'id': evt.id,
             'attendees':attendees
         };
-        if (!self.useContacts || self.all_filters[evt[this.color_field]] !== undefined) {
-            if (this.color_field && evt[this.color_field]) {
-                var color_key = evt[this.color_field];
+
+        var color_key = evt[this.color_field];
+        if (!self.useContacts || self.all_filters[color_key] !== undefined) {
+            if (color_key) {
                 if (typeof color_key === "object") {
                     color_key = color_key[0];
                 }
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
-        }
-        else  { // if form all, get color -1
-              r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+        } else { // if form all, get color -1
+            r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
         }
         return r;
     },

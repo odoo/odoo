@@ -13,25 +13,25 @@
         <div class="o_calendar_sidebar">
             <div class="o_calendar_mini"/>
             <div class="o_calendar_filter">
-                <h3><t t-esc="widget.getParent().color_string"/></h3>
+                <h3 t-if="widget.getParent().color_string"><t t-esc="widget.getParent().color_string"/></h3>
             </div>           
         </div>
      </t>
 
      <t t-name="CalendarView.sidebar.responsible">
-        <div class="o_calendar_all_responsibles"> 
-            <div t-foreach="filters" class="o_calendar_responsible" > 
-                <t t-if="filters_value.value"><!-- don't display if no value given (or undefined) -->
-                    <input type="checkbox" name="selection" t-att-value="filters_value.value" checked="checked" />
-                    <t t-if="filters_value.value == -1">
-                        <span><i t-attf-class="fa fa-users fa-fw o_cal_avatar"></i></span>
-                    </t>
-                    <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model ">
-                        <img t-att-src="'/web/binary/image?model=' + filters_value.avatar_model + '&amp;field=image_small&amp;id=' + filters_value.value"  class="o_cal_avatar"/>     
-                    </t>
-                    <span t-attf-class="color_filter o_underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+        <div t-foreach="filters" class="o_calendar_responsible" > 
+            <t t-if="filters_value.value"><!-- don't display if no value given (or undefined) -->
+                <div class="o_checkbox">
+                    <input type="checkbox" name="selection" t-att-value="filters_value.value" checked="checked" /><span/>
+                </div>
+                <t t-if="filters_value.value == -1">
+                    <span><i t-attf-class="fa fa-users fa-fw o_cal_avatar"></i></span>
                 </t>
-            </div>
+                <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model ">
+                    <img t-att-src="'/web/binary/image?model=' + filters_value.avatar_model + '&amp;field=image_small&amp;id=' + filters_value.value"  class="o_cal_avatar"/>     
+                </t>
+                <span t-attf-class="color_filter o_underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+            </t>
         </div>
      </t>
 
