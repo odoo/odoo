@@ -573,7 +573,7 @@ class calendar_alarm(osv.Model):
         'type': fields.selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True),
         'duration': fields.integer('Amount', required=True),
         'interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('days', 'Days')], 'Unit', required=True),
-        'duration_minutes': fields.function(_get_duration, type='integer', string='duration_minutes', store=True),
+        'duration_minutes': fields.function(_get_duration, type='integer', string='Duration in minutes', store=True),
     }
 
     _defaults = {
