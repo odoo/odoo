@@ -287,9 +287,8 @@ class google_calendar(osv.AbstractModel):
 
         try:
             st, content, ask_time = self.pool['google.service']._do_request(cr, uid, url, params, headers, type='GET', context=context)
-        except Exception, e:
-
-            if (e.code == 401):  # Token invalid / Acces unauthorized
+        except urllib2.HTTPError, e:
+            if e.code == 401:  # Token invalid / Acces unauthorized
                 error_msg = "Your token is invalid or has been revoked !"
 
                 registry = openerp.modules.registry.RegistryManager.get(request.session.db)
