@@ -462,7 +462,7 @@ class product_pricelist_item(osv.osv):
         'min_quantity': fields.integer('Min. Quantity', required=True,
             help="For the rule to apply, bought/sold quantity must be greater "
               "than or equal to the minimum quantity specified in this field.\n"
-              "Expressed in the default UoM of the product."
+              "Expressed in the default unit of measure of the product."
             ),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, 
