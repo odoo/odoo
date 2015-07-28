@@ -1113,6 +1113,9 @@ class purchase_order_line(osv.osv):
 
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
+            if not uom_id:
+                uom_id = self.default_get(cr, uid, ['product_uom'], context=context).get('product_uom', False)
+                res['value']['product_uom'] = uom_id
             return res
 
         product_product = self.pool.get('product.product')
