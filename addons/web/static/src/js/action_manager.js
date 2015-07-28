@@ -118,8 +118,10 @@ var WidgetAction = Action.extend({
      * Restores WidgetAction by calling do_show on its widget
      */
     restore: function() {
-        this.widget.do_show();
-        return this._super();
+        var self = this;
+        return $.when(this._super()).then(function() {
+            return self.widget.do_show();
+        });
     },
     /**
      * Destroys the widget
@@ -147,10 +149,9 @@ var ViewManagerAction = WidgetAction.extend({
      * @param {int} [view_index] the index of the view to select
      */
     restore: function(view_index) {
-        var self = this;
-        var _super = this._super;
+        var _super = this._super.bind(this);
         return this.widget.select_view(view_index).then(function() {
-            _super.call(self);
+            return _super();
         });
     },
     /**
