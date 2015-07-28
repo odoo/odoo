@@ -29,7 +29,8 @@ class ReportController(Controller):
         if docids:
             docids = [int(i) for i in docids.split(',')]
         if data.get('options'):
-            data['options'] = simplejson.loads(data['options'])
+            options_data = simplejson.loads(data['options'])
+            data.update(options_data)
         if data.get('context'):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
