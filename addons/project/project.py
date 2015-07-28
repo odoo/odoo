@@ -153,8 +153,6 @@ class project(osv.osv):
                  "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
             ondelete="cascade", required=True, auto_join=True),
         'label_tasks': fields.char('Use Tasks as', help="Gives label to tasks on project's kanaban view."),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
-            help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Task Activities"),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report", states={'close':[('readonly',True)]} ),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -386,27 +384,8 @@ class task(osv.osv):
             fold[stage.id] = stage.fold or False
         return result, fold
 
-    def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        if context is None:
-            context = {}
-        res_users = self.pool.get('res.users')
-        access_rights_uid = access_rights_uid or uid
-        if 'default_project_id' in context:
-            ids += self.pool.get('project.project').read(cr, access_rights_uid, context['default_project_id'], ['members'], context=context)['members']
-            order = res_users._order
-            # lame way to allow reverting search, should just work in the trivial case
-            if read_group_order == 'user_id desc':
-                order = '%s desc' % order
-            # de-duplicate and apply search order
-            ids = res_users._search(cr, uid, [('id','in',ids)], order=order, access_rights_uid=access_rights_uid, context=context)
-        result = res_users.name_get(cr, access_rights_uid, ids, context=context)
-        # restore order of the search
-        result.sort(lambda x,y: cmp(ids.index(x[0]), ids.index(y[0])))
-        return result, {}
-
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
-        'user_id': _read_group_user_id,
     }
 
     def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
