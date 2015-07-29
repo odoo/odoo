@@ -46,7 +46,7 @@ var getMatchedCSSRules = function (a) {
             if (style.parentRule) {
                 var style_obj = {};
                 for (var k=0, len=style.length; k<len; k++) {
-                    style_obj[style[k]] = style[style[k]];
+                    style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
                 }
                 rulesCache[r].style = style = style_obj;
             }
