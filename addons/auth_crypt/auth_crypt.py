@@ -11,7 +11,7 @@
 import hashlib
 import hmac
 import logging
-from random import sample
+import random
 from string import ascii_letters, digits
 
 import openerp
@@ -28,7 +28,7 @@ res_users.USER_PRIVATE_FIELDS.append('password_crypt')
 def gen_salt(length=8, symbols=None):
     if symbols is None:
         symbols = ascii_letters + digits
-    return ''.join(sample(symbols, length))
+    return ''.join(random.SystemRandom().sample(symbols, length))
 
 def md5crypt( raw_pw, salt, magic=magic_md5 ):
     """ md5crypt FreeBSD crypt(3) based on but different from md5
