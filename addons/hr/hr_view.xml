@@ -30,12 +30,20 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="work_email" class="oe_edit_only"/>
-                            <field name="work_email" widget="email"/>
-                            <label for="work_phone" class="oe_edit_only"/>
-                            <field name="work_phone"/>
-                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
-                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <div class="o_row">
+                                <div>
+                                    <label for="work_email" class="oe_edit_only"/>
+                                    <field name="work_email" widget="email"/>
+                                </div>
+                                <div>
+                                    <label for="work_phone" class="oe_edit_only"/>
+                                    <field name="work_phone"/>
+                                </div>
+                                <div groups="base.group_hr_user">
+                                    <label for="category_ids" class="oe_edit_only"/>
+                                    <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
+                                </div>
+                            </div>
                         </div>
                         <notebook>
                             <page name="public" string="Public Information">
