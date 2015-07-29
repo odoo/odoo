@@ -1,81 +1,108 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
 
-class procurement_order(osv.osv):
-    _name = "procurement.order"
+
+class ProcurementOrder(models.Model):
     _inherit = "procurement.order"
-    _columns = {
-        'task_id': fields.many2one('project.task', 'Task', copy=False),
-    }
 
-    def _is_procurement_task(self, cr, uid, procurement, context=None):
-        return procurement.product_id.type == 'service' and procurement.product_id.auto_create_task or False
+    task_id = fields.Many2one('project.task', string='Task', copy=False)
 
+    @api.multi
+    def _is_procurement_task(self):
+        self.ensure_one()
+        return self.product_id.type == 'service' and self.product_id.auto_create_task or False
+
+    # It is not possible to call v8 method from v7, as we need to pass self while calling super.
+    # Eg ProcurementOrder, self)._assign(self).So better to put two version method and removing v7 after procrument module migration
+
+    @api.v7
     def _assign(self, cr, uid, procurement, context=None):
-        res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
-        if not res:
+        res = super(ProcurementOrder, self)._assign(cr, uid, procurement, context=context)
+        if not res and procurement._is_procurement_task():
             #if there isn't any specific procurement.rule defined for the product, we may want to create a task
-            if self._is_procurement_task(cr, uid, procurement, context=context):
-                return True
+            return True
         return res
 
+    @api.v8
+    def _assign(self):
+        res = super(ProcurementOrder, self)._assign()
+        if not res and self._is_procurement_task():
+            #if there isn't any specific procurement.rule defined for the product, we may want to create a task
+            return True
+        return res
+
+    @api.v7
     def _run(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
+        if procurement._is_procurement_task() and not procurement.task_id:
             #create a task for the procurement
-            return self._create_service_task(cr, uid, procurement, context=context)
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+            return procurement._create_service_task()
+        return super(ProcurementOrder, self)._run(cr, uid, procurement, context=context)
 
+    @api.v8
+    def _run(self):
+        if self._is_procurement_task() and not self.task_id:
+            #create a task for the procurement
+            return self._create_service_task()
+        return super(ProcurementOrder, self)._run()
+
+    @api.v7
     def _check(self, cr, uid, procurement, context=None):
-        if self._is_procurement_task(cr, uid, procurement, context=context):
+        if procurement._is_procurement_task():
             return procurement.task_id and procurement.task_id.stage_id.closed or False
-        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
+        return super(ProcurementOrder, self)._check(cr, uid, procurement, context=context)
 
-    def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
-        product_uom = self.pool.get('product.uom')
-        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id
-        if procurement.product_uom.id != company_time_uom_id.id and procurement.product_uom.category_id.id == company_time_uom_id.category_id.id:
-            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id.id)
+    @api.v8
+    def _check(self):
+        if self._is_procurement_task():
+            return self.task_id and self.task_id.stage_id.closed or False
+        return super(ProcurementOrder, self)._check()
+
+    @api.multi
+    def _convert_qty_company_hours(self):
+        self.ensure_one()
+        company_time_uom = self.env.user.company_id.project_time_mode_id
+        if self.product_uom.id != company_time_uom.id and self.product_uom.category_id.id == company_time_uom.category_id.id:
+            planned_hours = self.env['product.uom']._compute_qty(self.product_uom.id, self.product_qty, company_time_uom.id)
         else:
-            planned_hours = procurement.product_qty
+            planned_hours = self.product_qty
         return planned_hours
 
-    def _get_project(self, cr, uid, procurement, context=None):
-        project_project = self.pool.get('project.project')
-        project = procurement.product_id.project_id
-        if not project and procurement.sale_line_id:
+    @api.multi
+    def _get_project(self):
+        self.ensure_one()
+        project = self.product_id.project_id
+        if not project and self.sale_line_id:
             # find the project corresponding to the analytic account of the sales order
-            account = procurement.sale_line_id.order_id.project_id
-            project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
-            projects = project_project.browse(cr, uid, project_ids, context=context)
-            project = projects and projects[0] or False
-        return project
+            account = self.sale_line_id.order_id.project_id
+            project = self.env['project.project'].search([('analytic_account_id', '=', account.id)], limit=1)
+        return project or False
 
-    def _create_service_task(self, cr, uid, procurement, context=None):
-        project_task = self.pool.get('project.task')
-        project = self._get_project(cr, uid, procurement, context=context)
-        planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
-        task_id = project_task.create(cr, uid, {
-            'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
-            'date_deadline': procurement.date_planned,
+    @api.one
+    def _create_service_task(self):
+        project = self._get_project()
+        planned_hours = self._convert_qty_company_hours()
+        task = self.env['project.task'].create({
+            'name': '%s:%s' % (self.origin or '', self.product_id.name),
+            'date_deadline': self.date_planned,
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
-            'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or procurement.partner_dest_id.id,
-            'user_id': procurement.product_id.product_manager.id,
-            'procurement_id': procurement.id,
-            'description': procurement.name + '\n',
+            'partner_id': self.sale_line_id and self.sale_line_id.order_id.partner_id.id or self.partner_dest_id.id,
+            'user_id': self.product_id.product_manager.id,
+            'procurement_id': self.id,
+            'description': self.name + '\n',
             'project_id': project and project.id or False,
-            'company_id': procurement.company_id.id,
-        },context=context)
-        self.write(cr, uid, [procurement.id], {'task_id': task_id}, context=context)
-        self.project_task_create_note(cr, uid, [procurement.id], context=context)
-        return task_id
+            'company_id': self.company_id.id,
+        })
+        self.task_id = task.id
+        self.project_task_create_note()
+        return task.id
 
-    def project_task_create_note(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def project_task_create_note(self):
+        for procurement in self:
             body = _("Task created")
-            self.message_post(cr, uid, [procurement.id], body=body, context=context)
+            self.message_post(body=body)
             if procurement.sale_line_id and procurement.sale_line_id.order_id:
                 procurement.sale_line_id.order_id.message_post(body=body)

@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record id="task_type_edit_mrp_inherit" model="ir.ui.view">
-            <field name="name">project.task.type.mrp.inherit</field>
-            <field name="model">project.task.type</field>
-            <field name="inherit_id" ref="project.task_type_edit"/>
-            <field name="arch" type="xml">
-                <field name="fold" position="after">
-                    <field name="closed"/>
-                </field>
+<odoo>
+    <record id="task_type_edit_mrp_inherit" model="ir.ui.view">
+        <field name="name">project.task.type.mrp.inherit</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <field name="fold" position="after">
+                <field name="closed"/>
             </field>
-        </record>
-        <record id="view_sale_service_inherit_form2" model="ir.ui.view">
-            <field name="name">sale.service.form.view.inherit</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="arch" type="xml">
-                <field name="company_id" position="before">
-                    <field name="sale_line_id" string="Order Line"/>
-                </field>
+        </field>
+    </record>
+    <record id="view_sale_service_inherit_form2" model="ir.ui.view">
+        <field name="name">sale.service.form.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="sale_line_id" string="Order Line"/>
             </field>
-        </record>
-    </data>
-</openerp>
+        </field>
+    </record>
+</odoo>

@@ -1,44 +1,33 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
 
 
-class ProjectTaskStageMrp(osv.Model):
+class ProjectTaskStageMrp(models.Model):
     """ Override project.task.type model to add a 'closed' boolean field allowing
         to know that tasks in this stage are considered as closed. Indeed since
         OpenERP 8.0 status is not present on tasks anymore, only stage_id. """
-    _name = 'project.task.type'
     _inherit = 'project.task.type'
 
-    _columns = {
-        'closed': fields.boolean('Is a close stage', help="Tasks in this stage are considered as closed."),
-    }
-
-    _defaults = {
-        'closed': False,
-    }
+    closed = fields.Boolean(string='Is a close stage', default=False, help="Tasks in this stage are considered as closed.")
 
 
-class project_task(osv.osv):
-    _name = "project.task"
+class ProjectTask(models.Model):
     _inherit = "project.task"
-    _columns = {
-        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
-        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
-    }
 
-    def _validate_subflows(self, cr, uid, ids, context=None):
-        proc_obj = self.pool.get("procurement.order")
-        for task in self.browse(cr, uid, ids, context=context):
-            if task.procurement_id:
-                proc_obj.check(cr, uid, [task.procurement_id.id], context=context)
+    procurement_id = fields.Many2one('procurement.order', string='Procurement', ondelete='set null')
+    sale_line_id = fields.Many2one(related='procurement_id.sale_line_id', relation='sale.order.line', store=True, string='Sales Order Line')
 
-    def write(self, cr, uid, ids, values, context=None):
+    @api.multi
+    def _validate_subflows(self):
+        for task in self.filtered(lambda task: task.procurement_id):
+            task.procurement_id.check()
+
+    @api.multi
+    def write(self, values):
         """ When closing tasks, validate subflows. """
-        res = super(project_task, self).write(cr, uid, ids, values, context=context)
-        if values.get('stage_id'):
-            stage = self.pool.get('project.task.type').browse(cr, uid, values.get('stage_id'), context=context)
-            if stage.closed:
-                self._validate_subflows(cr, uid, ids, context=context)
-        return res
+        result = super(ProjectTask, self).write(values)
+        if self.stage_id and self.stage_id.closed:
+            self._validate_subflows()
+        return result

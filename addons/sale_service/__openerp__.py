@@ -27,7 +27,7 @@ is updated accordingly. For example, if this procurement corresponds to a sale
 order line, the sale order line will be considered delivered when the task is
 completed.
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
     'data': [
@@ -41,5 +41,4 @@ completed.
         ],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
-    'auto_install': False,
 }

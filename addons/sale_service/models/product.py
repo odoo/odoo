@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
 
 
-class product_template(osv.osv):
+class ProductTemplate(models.Model):
     _inherit = "product.template"
-    _columns = {
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null',),
-        'auto_create_task': fields.boolean('Create Task Automatically', help="Tick this option if you want to create a task automatically each time this product is sold"),
-    }
 
-class product_product(osv.osv):
+    project_id = fields.Many2one('project.project', string='Project')
+    auto_create_task = fields.Boolean(string='Create Task Automatically', help="Tick this option if you want to create a task automatically each time this product is sold")
+
+
+class Product(models.Model):
     _inherit = "product.product"
 
-    def need_procurement(self, cr, uid, ids, context=None):
-        for product in self.browse(cr, uid, ids, context=context):
-            if product.type == 'service' and product.auto_create_task:
-                return True
-        return super(product_product, self).need_procurement(cr, uid, ids, context=context)
+    @api.multi
+    def need_procurement(self):
+        if self.filtered(lambda product: product.type == 'service' and product.auto_create_task):
+            return True
+        return super(Product, self).need_procurement()
