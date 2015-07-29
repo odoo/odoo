@@ -59,21 +59,8 @@ var WidgetButton = common.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = new Dialog(this, {
-                    title: _t('Confirm'),
-                    buttons: [
-                        {text: _t("Cancel"), close: true},
-                        {text: _t("Ok"), click: function() {
-                                var self2 = this;
-                                self.on_confirmed().always(function() {
-                                    self2.parents('.modal').modal('hide');
-                                });
-                            }
-                        }
-                    ],
-                    $content: $('<div/>').text(self.node.attrs.confirm)
-                }).open();
-                dialog.on("closed", null, function() {def.resolve();});
+                Dialog.confirm(self, self.node.attrs.confirm, { confirm_callback: self.on_confirmed })
+                      .on("closed", null, function() { def.resolve(); });
                 return def.promise();
             } else {
                 return self.on_confirmed();
