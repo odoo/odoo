@@ -321,6 +321,14 @@ class res_users(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+
+        if values.get('active') == False:
+            for current_id in ids:
+                if current_id == SUPERUSER_ID:
+                    raise UserError(_("You cannot unactivate the admin user."))
+                elif current_id == uid:
+                    raise UserError(_("You cannot unactivate the user you're currently logged in as."))
+
         if ids == [uid]:
             for key in values.keys():
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
