@@ -94,6 +94,7 @@ class lang(osv.osv):
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
             'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+            'position': 'before' if locale.nl_langinfo(locale.CRNCYSTR)[0] == '-' else 'after'
         }
         lang_id = False
         try:
@@ -137,6 +138,7 @@ class lang(osv.osv):
         'grouping':fields.char('Separator Format', required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
         'decimal_point':fields.char('Decimal Separator', required=True),
         'thousands_sep':fields.char('Thousands Separator'),
+        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Currency Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
@@ -147,6 +149,7 @@ class lang(osv.osv):
         'grouping': '[]',
         'decimal_point': '.',
         'thousands_sep': ',',
+        'position': 'after'
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),

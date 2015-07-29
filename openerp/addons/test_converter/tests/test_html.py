@@ -95,6 +95,7 @@ class TestCurrencyExport(TestExport):
         super(TestCurrencyExport, self).setUp()
         self.Currency = self.registry('res.currency')
         self.base = self.create(self.Currency, name="Source", symbol=u'source')
+        self.lang_en = self.registry['ir.model.data'].xmlid_to_object(self.cr, self.uid, 'base.lang_en')
 
     def create(self, model, context=None, **values):
         return model.browse(
@@ -119,6 +120,7 @@ class TestCurrencyExport(TestExport):
         return converted
 
     def test_currency_post(self):
+        self.lang_en.write({'position': 'after'})
         currency = self.create(self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=0.12)
 
@@ -136,8 +138,8 @@ class TestCurrencyExport(TestExport):
             ).encode('utf-8'),)
 
     def test_currency_pre(self):
-        currency = self.create(
-            self.Currency, name="Test", symbol=u"test", position='before')
+        self.lang_en.write({'position': 'before'})
+        currency = self.create(self.Currency, name="Test", symbol=u"test")
         obj = self.create(self.Model, value=0.12)
 
         converted = self.convert(obj, dest=currency)
@@ -157,6 +159,7 @@ class TestCurrencyExport(TestExport):
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
+        self.lang_en.write({'position': 'after'})
         currency = self.create(self.Currency, name="Test", symbol=u"test",)
         obj = self.create(self.Model, value=0.1234567)
 
