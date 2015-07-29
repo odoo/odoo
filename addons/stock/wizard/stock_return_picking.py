@@ -25,6 +25,10 @@ class stock_return_picking(osv.osv_memory):
     _columns = {
         'product_return_moves': fields.one2many('stock.return.picking.line', 'wizard_id', 'Moves'),
         'move_dest_exists': fields.boolean('Chained Move Exists', readonly=True, help="Technical field used to hide help tooltip if not needed"),
+        'original_location_id': fields.many2one('stock.location'),
+        'parent_location_id': fields.many2one('stock.location'),
+        'location_id': fields.many2one('stock.location', 'Return Location',
+            domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -72,6 +76,12 @@ class stock_return_picking(osv.osv_memory):
                 res.update({'product_return_moves': result1})
             if 'move_dest_exists' in fields:
                 res.update({'move_dest_exists': chained_move_exist})
+            if 'parent_location_id' in fields and pick.location_id.usage == 'internal':
+                res.update({'parent_location_id':pick.picking_type_id.warehouse_id and pick.picking_type_id.warehouse_id.view_location_id.id or False})
+            if 'original_location_id' in fields:
+                res.update({'original_location_id': pick.location_id.id})
+            if 'location_id' in fields:
+                res.update({'location_id': pick.location_id.id})
         return res
 
     def _create_returns(self, cr, uid, ids, context=None):
@@ -111,7 +121,7 @@ class stock_return_picking(osv.osv_memory):
             'state': 'draft',
             'origin': pick.name,
             'location_id': pick.location_dest_id.id,
-            'location_dest_id': pick.location_id.id,
+            'location_dest_id': data['location_id'] and data['location_id'][0] or pick.location_id.id,
         }, context=context)
 
         for data_get in data_obj.browse(cr, uid, data['product_return_moves'], context=context):
@@ -127,6 +137,7 @@ class stock_return_picking(osv.osv_memory):
                     move_dest_id = False
 
                 returned_lines += 1
+                location_id = data['location_id'] and data['location_id'][0] or move.location_id.id
                 move_obj.copy(cr, uid, move.id, {
                     'product_id': data_get.product_id.id,
                     'product_uom_qty': new_qty,
@@ -134,7 +145,7 @@ class stock_return_picking(osv.osv_memory):
                     'picking_id': new_picking,
                     'state': 'draft',
                     'location_id': move.location_dest_id.id,
-                    'location_dest_id': move.location_id.id,
+                    'location_dest_id': location_id,
                     'picking_type_id': pick_type_id,
                     'warehouse_id': pick.picking_type_id.warehouse_id.id,
                     'origin_returned_move_id': move.id,
