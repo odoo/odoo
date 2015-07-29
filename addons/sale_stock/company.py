@@ -7,7 +7,7 @@ class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'security_lead': fields.float(
-            'Security Days', required=True,
+            'Sales Safety Days', required=True,
             help="Margin of error for dates promised to customers. "\
                  "Products will be scheduled for procurement and delivery "\
                  "that many days earlier than the actual promised date, to "\
