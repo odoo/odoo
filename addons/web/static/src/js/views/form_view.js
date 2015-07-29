@@ -270,9 +270,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
      * Show or hide the sidebar according to the actual_mode
      */
     toggle_sidebar: function() {
-        var view_mode = this.get("actual_mode") === "view";
         if (this.sidebar) {
-            this.sidebar.$el.toggle(view_mode);
+            this.sidebar.do_toggle(this.get("actual_mode") === "view");
         }
     },
     widgetFocused: function() {

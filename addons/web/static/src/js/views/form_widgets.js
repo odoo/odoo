@@ -1069,7 +1069,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         }
         this.m2o.field.relation = this.get('value')[0];
         this.m2o.set_value(this.get('value')[1]);
-        this.m2o.$el.toggle(!!this.get('value')[0]);
+        this.m2o.do_toggle(!!this.get('value')[0]);
         this.reference_ready = true;
     },
 });

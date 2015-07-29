@@ -131,7 +131,7 @@ var ControlPanel = Widget.extend({
      * @param {Boolean} [visible] true to show the control panel, false to hide it
      */
     _toggle_visibility: function(visible) {
-        this.$el.toggle(visible);
+        this.do_toggle(visible);
         if (!visible && !this.$content) {
             this.$content = this.$el.contents().detach();
         } else if (this.$content) {

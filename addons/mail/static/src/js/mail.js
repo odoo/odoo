@@ -68,7 +68,7 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
     },
 
     _check_visibility: function () {
-        this.$el.toggle(this.view.get("actual_mode") !== "create");
+        this.do_toggle(this.view.get("actual_mode") !== "create");
     },
 
     render_value: function () {

@@ -346,17 +346,27 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, {
             return this.$el;
         return this.$el.find(selector);
     },
+    /**
+     * Displays the widget
+     */
     do_show: function () {
         this.$el.removeClass('o_hidden');
     },
+    /**
+     * Hides the widget
+     */
     do_hide: function () {
         this.$el.addClass('o_hidden');
     },
-    do_toggle: function () {
-        if (this.$el.hasClass('o_hidden')) {
-            this.do_show();
+    /**
+     * Displays or hides the widget
+     * @param {Boolean} [display] use true to show the widget or false to hide it
+     */
+    do_toggle: function (display) {
+        if (_.isBoolean(display)) {
+            display ? this.do_show() : this.do_hide();
         } else {
-            this.do_hide();
+            this.$el.hasClass('o_hidden') ? this.do_show() : this.do_hide();
         }
     },
     /**
