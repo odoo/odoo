@@ -241,6 +241,13 @@ class stock_picking(osv.osv):
         """
         return picking.partner_id and picking.partner_id.id
 
+    def check_move_to_invoice(self, cr, uid, move, key, todo, context=None):
+        if move.invoice_state == '2binvoiced':
+                    if (move.state != 'cancel') and not move.scrapped:
+                        todo.setdefault(key, [])
+                        todo[key].append(move)
+        return
+
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
@@ -258,10 +265,7 @@ class stock_picking(osv.osv):
             else:
                 key = picking.id
             for move in picking.move_lines:
-                if move.invoice_state == '2binvoiced':
-                    if (move.state != 'cancel') and not move.scrapped:
-                        todo.setdefault(key, [])
-                        todo[key].append(move)
+                self.check_move_to_invoice(cr, uid, move, key, todo, context=context)
         invoices = []
         for moves in todo.values():
             invoices += self._invoice_create_line(cr, uid, moves, journal_id, type, context=context)
