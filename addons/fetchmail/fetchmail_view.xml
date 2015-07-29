@@ -41,6 +41,7 @@
                                 <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Server Information">
                                     <field name="server" colspan="2" attrs="{'required' : [('type', '!=', 'local')]}" />
                                     <field name="port" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
+                                    <field name="timeout" required="1" attrs="{'required' : [('type', '!=', 'local')]}" />
                                     <field name="is_ssl" on_change="onchange_server_type(type, is_ssl)"/>
                                 </group>
                                 <group attrs="{'invisible' : [('type', '=', 'local')]}" string="Login Information">
