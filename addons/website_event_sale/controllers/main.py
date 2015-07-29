@@ -60,7 +60,7 @@ class website_event(website_event):
 
     def _add_event(self, event_name="New Event", context={}, **kwargs):
         try:
-            dummy, res_id = request.registry.get('ir.model.data').get_object_reference(request.cr, request.uid, 'event_sale', 'product_product_event')
+            res_id = request.env.ref('event_sale.product_product_event').id
             context['default_event_ticket_ids'] = [[0, 0, {
                 'name': _('Subscription'),
                 'product_id': res_id,
