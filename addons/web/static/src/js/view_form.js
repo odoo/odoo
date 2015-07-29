@@ -862,7 +862,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 );
                 values['sequence'] = prepend_on_create ? current - 1 : current + 1;
             }
-            if (form_invalid) {
+            // Supress invalid field messages if the record is not dirty
+            if (form_invalid && !_.isEmpty(values)) {
                 self.set({'display_invalid_fields': true});
                 first_invalid_field.focus();
                 self.on_invalid();
