@@ -39,6 +39,5 @@ completed.
         'data/sale_order_line_demo.xml',
         'data/project_task_type_demo.xml'
         ],
-    'test': ['test/project_task_procurement.yml'],
     'installable': True,
 }
