@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import socket
 import logging
 import poplib
 import time
@@ -61,6 +62,7 @@ class fetchmail_server(osv.osv):
         ], 'Status', select=True, readonly=True),
         'server' : fields.char('Server Name', size=256, readonly=True, help="Hostname or IP of the mail server", states={'draft':[('readonly', False)]}),
         'port' : fields.integer('Port', readonly=True, states={'draft':[('readonly', False)]}),
+        'timeout' : fields.integer('Timeout (in seconds)', readonly=True, states={'draft':[('readonly', False)]}),
         'type':fields.selection([
             ('pop', 'POP Server'),
             ('imap', 'IMAP Server'),
@@ -88,6 +90,7 @@ class fetchmail_server(osv.osv):
     }
     _defaults = {
         'state': "draft",
+        'timeout': 60,
         'type': "pop",
         'active': True,
         'priority': 5,
@@ -154,6 +157,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
+        # Add timeout on socket
+        connection.sock.settimeout(server.timeout)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
