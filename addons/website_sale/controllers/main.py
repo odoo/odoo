@@ -335,6 +335,9 @@ class website_sale(http.Controller):
             return {}
 
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        if not order.cart_quantity:
+            request.website.sale_reset()
+            return {}
         if not display:
             return None
         value['cart_quantity'] = order.cart_quantity
