@@ -149,7 +149,9 @@ var PlannerDialog = Widget.extend({
         }
 
         if (last_open_page) {
-            this._display_page(last_open_page);
+            if (this._find_page_by_id(last_open_page)) {
+                this._display_page(last_open_page);
+            }
         } else {
             this._display_page(this.pages[0].id);
         }
