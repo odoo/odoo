@@ -16,6 +16,9 @@ class crm_configuration(osv.TransientModel):
         'module_crm_claim': fields.boolean("Manage Customer Claims",
             help='Allows you to track your customers/vendors claims and grievances.\n'
                  '-This installs the module crm_claim.'),
+        'generate_sales_team_alias': fields.boolean(
+            "Automatically generate an email alias at the sales team creation",
+            help="Odoo will generate an email alias based on the sales team name"),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
         'alias_domain' : fields.char('Alias Domain')
     }
@@ -37,6 +40,14 @@ class crm_configuration(osv.TransientModel):
                 ], context=context)
             alias_id = alias_ids and alias_ids[0] or False
         return alias_id
+
+    def get_default_generate_sales_team_alias(self, cr, uid, ids, context=None):
+        return {'generate_sales_team_alias': self.pool['ir.values'].get_default(
+            cr, uid, 'sales.config.settings', 'generate_sales_team_alias')}
+
+    def set_default_generate_sales_team_alias(self, cr, uid, ids, context=None):
+        config_value = self.browse(cr, uid, ids, context=context).generate_sales_team_alias
+        self.pool['ir.values'].set_default(cr, uid, 'sales.config.settings', 'generate_sales_team_alias', config_value)
 
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
         alias_name = False

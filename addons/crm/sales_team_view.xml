@@ -87,8 +87,10 @@
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
-                        <field name="use_leads"/><label for="use_leads" string="Leads"/>
-                        <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
+                        <field name="use_leads" onchange="onchange_use_leads(use_leads)"/>
+                        <label for="use_leads" string="Leads"/>
+                        <field name="use_opportunities" class="oe_inline"/>
+                        <label for="use_opportunities"/>
                     </xpath>
                     <xpath expr="//page[@name='members']" position="after">
                         <page string="Stages" groups="base.group_no_one">
@@ -96,21 +98,22 @@
                                 <field name="stage_ids"/>
                         </page>
                    </xpath>
-                   <xpath expr="//group[@name='sales_team_more_info']" position="inside">
-                        <group name="alias_info" string="Leads Email Alias" class="oe_inline" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <label for="alias_name" string="Email Alias"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                            <div name="alias_def"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <field name="alias_id" class="oe_read_only oe_inline"
-                                    string="Email Alias" required="0"/>
-                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
+                   <xpath expr="//field[@name='code']" position="after">
+                        <label for="alias_name" string="Email Alias"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': [('use_leads', '=', False)]}"/>
+                        <div name="alias_def"
+                            groups="base.group_no_one"
+                            attrs="{'invisible': [('use_leads', '=', False)]}">
+                            <field name="alias_id" class="oe_read_only oe_inline"
+                                string="Email Alias" required="0"/>
+                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
-                            <field name="alias_contact" class="oe_inline"
-                                string="Accept Emails From"/>
-                        </group>
+                        </div>
+                        <field name="alias_contact" class="oe_inline"
+                           string="Accept Emails From"
+                           attrs="{'invisible': [('use_leads', '=', False)]}"/>
                    </xpath>
                 </field>
             </record>

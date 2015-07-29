@@ -29,20 +29,24 @@
                         <group>
                             <label for="id" string="Leads Email Alias"/>
                             <div>
-                                <div>
-                                    <label string="Each sales team has an email alias that can be defined on the sales team form view" class="oe_inline oe_form_label_help oe_align_right"/>
-                                    <span class="oe_inline">
-                                        <label string="Automatically create new leads when an email is sent to the following alias :" class="oe_inline oe_form_label_help oe_align_right"/>
-                                        <field name="alias_prefix" class="oe_inline"/>
-                                        <span>@</span>
-                                        <field name="alias_domain"  class="oe_inline" readonly="1"/>
-                                    </span>
-                                </div>
                                  <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
                                     <p>
-                                        <label string="To be able to set your Leads Email Alias, you need to fill your alias domain first."/>
-                                        <button type="action" name="base_setup.action_general_configuration" string="Configure your domain alias" icon="gtk-execute" class="oe_inline oe_link"/>
+                                        <label string="To be able to set your Leads Email Alias, you need to fill your alias domain first."/><br />
+                                        <button type="action" name="base_setup.action_general_configuration"
+                                                string="Configure your email alias domain" class="oe_inline oe_link"/>
                                     </p>
+                                </div>
+                                <div>
+                                    <span class="oe_inline">
+                                        <label string="Create new leads when an email is sent to the following alias:" class="oe_inline oe_form_label_help oe_align_right"/>
+                                        <field name="alias_prefix" class="oe_inline"/>
+                                        <span>@</span>
+                                        <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </span>
+                                </div>
+                                <div>
+                                    <field name="generate_sales_team_alias"/>
+                                    <label for="generate_sales_team_alias"/>
                                 </div>
                             </div>
                         </group>

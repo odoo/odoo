@@ -47,6 +47,7 @@ Dashboard for CRM will include:
         'data/crm_action_data.xml',
         'crm_data.xml',
         'data/crm_stage_data.xml',
+        'data/sales_config_settings_data.xml',
         'crm_lead_data.xml',
         'crm_tip_data.xml',
 

@@ -43,14 +43,21 @@ class crm_team(osv.Model):
 
     _defaults = {
         'stage_ids': _get_default_stage_ids,
-        'use_leads': True,
         'use_opportunities': True,
     }
+
+    def onchange_use_leads(self, cr, uid, ids, use_leads, context=None):
+        if not use_leads:
+            return {'values': {'alias_name': False}}
+        return {'values': {}}
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
         create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
+        generate_alias_name = self.pool['ir.values'].get_default(cr, uid, 'sales.config.settings', 'generate_sales_team_alias')
+        if generate_alias_name and not vals.get('alias_name'):
+            vals['alias_name'] = vals.get('name')
         team_id = super(crm_team, self).create(cr, uid, vals, context=create_context)
         team = self.browse(cr, uid, team_id, context=context)
         self.pool.get('mail.alias').write(cr, uid, [team.alias_id.id], {'alias_parent_thread_id': team_id, 'alias_defaults': {'team_id': team_id, 'type': 'lead'}}, context=context)
