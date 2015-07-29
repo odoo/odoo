@@ -189,7 +189,7 @@
     </record>
     
     <record model="ir.ui.view" id="view_calendar_event_form_popup">
-        <field name="name">Meetings Popup</field>
+        <field name="name">Meetings Dialog</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -197,8 +197,6 @@
                 <field name="state" invisible="1"/>
                 <field name="is_attendee" invisible="1"/>
                 <field name="attendee_status" invisible="1"/>
-                <label for="name"/>
-                <field name="name"/>
                 <group>
                     <group>
                         <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)]}"/>
