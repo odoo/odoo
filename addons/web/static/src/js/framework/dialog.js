@@ -158,6 +158,7 @@ Dialog.alert = function (owner, message, options) {
         $content: $('<div>', {
             text: message,
         }),
+        title: _t("Alert"),
     }, options)).open();
 };
 
@@ -182,6 +183,7 @@ Dialog.confirm = function (owner, message, options) {
         $content: $('<div>', {
             text: message,
         }),
+        title: _t("Confirmation"),
     }, options)).open();
 };
 
