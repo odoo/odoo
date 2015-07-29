@@ -44,7 +44,6 @@ class product_template(osv.osv):
             result['context'] = "{}"
         return result
 
-    
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -58,21 +57,16 @@ class product_product(osv.osv):
     _columns = {
         'mo_count': fields.function(_bom_orders_count, string='# Manufacturing Orders', type='integer'),
     }
-    
+
     def action_view_bom(self, cr, uid, ids, context=None):
-        tmpl_obj = self.pool.get("product.template")
-        products = set()
-        for product in self.browse(cr, uid, ids, context=context):
-            products.add(product.product_tmpl_id.id)
-        result = tmpl_obj._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
+        result = self.pool.get("product.template")._get_act_window_dict(cr, uid, 'mrp.product_open_bom', context=context)
+        templates = [product.product_tmpl_id.id for product in self.browse(cr, uid, ids, context=context)]
         # bom specific to this variant or global to template
-        domain = [
-            '|',
-                ('product_id', 'in', ids),
-                '&',
-                    ('product_id', '=', False),
-                    ('product_tmpl_id', 'in', list(products)),
-        ]
-        result['context'] = "{'default_product_id': active_id, 'search_default_product_id': active_id, 'default_product_tmpl_id': %s}" % (len(products) and products.pop() or 'False')
-        result['domain'] = str(domain)
+        context = {
+            'search_default_product_tmpl_id': templates[0],
+            'search_default_product_id': ids[0],
+            'default_product_tmpl_id': templates[0],
+            'default_product_id': ids[0],
+        }
+        result['context'] = str(context)
         return result
