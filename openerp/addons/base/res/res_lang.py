@@ -176,6 +176,17 @@ class lang(osv.osv):
         return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+             ids = [ids]
+
+        if vals.get('active') == False:
+            users = self.pool.get('res.users')
+
+            for current_id in ids:
+                current_language = self.browse(cr, uid, current_id, context=context)
+                if users.search(cr, uid, [('lang', '=', current_language.code)], context=context):
+                    raise UserError(_("Cannot unactivate a language that is currently used by users."))
+
         self._lang_get.clear_cache(self)
         self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
