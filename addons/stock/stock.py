@@ -200,12 +200,16 @@ class stock_location_route(osv.osv):
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the route without removing it."),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules', copy=True),
-        'product_selectable': fields.boolean('Applicable on Product'),
-        'product_categ_selectable': fields.boolean('Applicable on Product Category'),
-        'warehouse_selectable': fields.boolean('Applicable on Warehouse'),
+        'product_selectable': fields.boolean('Applicable on Product', help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. "),
+        'product_categ_selectable': fields.boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. "),
+        'warehouse_selectable': fields.boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement"),
         'supplied_wh_id': fields.many2one('stock.warehouse', 'Supplied Warehouse'),
-        'supplier_wh_id': fields.many2one('stock.warehouse', 'Vendor Warehouse'),
-        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this route is shared between all companies'),
+        'supplier_wh_id': fields.many2one('stock.warehouse', 'Supplying Warehouse'),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Leave this field empty if this route is shared between all companies'),
+        #Reverse many2many fields:
+        'product_ids': fields.many2many('product.template', 'stock_route_product', 'route_id', 'product_id', 'Products'),
+        'categ_ids': fields.many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories'),
+        'warehouse_ids': fields.many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses'),
     }
 
     _defaults = {
@@ -233,6 +237,27 @@ class stock_location_route(osv.osv):
             if pull_ids:
                 self.pool.get('procurement.rule').write(cr, uid, pull_ids, {'active': vals['active']}, context=context)
         return res
+
+    def view_product_ids(self, cr, uid, ids, context=None):
+        return {
+            'name': _('Products'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'product.template',
+            'type': 'ir.actions.act_window',
+            'domain': [('route_ids', 'in', ids[0])],
+        }
+
+    def view_categ_ids(self, cr, uid, ids, context=None):
+        return {
+            'name': _('Product Categories'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'product.category',
+            'type': 'ir.actions.act_window',
+            'domain': [('route_ids', 'in', ids[0])],
+        }
+
 
 #----------------------------------------------------------
 # Quants
@@ -3890,21 +3915,22 @@ class stock_location_path(osv.osv):
         'name': fields.char('Operation Name', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'route_id': fields.many2one('stock.location.route', 'Route'),
-        'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
-        'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Type of the new Operation', required=True, help="This is the picking type associated with the different pickings"), 
+        'location_from_id': fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True,
+                                            help="This rule can be applied when a move is confirmed that has this location as destination location"),
+        'location_dest_id': fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True,
+                                            help="The new location where the goods need to go"),
+        'delay': fields.integer('Delay (days)', help="Number of days needed to transfer the goods"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True,
+                                           help="This is the picking type that will be put on the stock moves"),
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
             required=True, select=1,
-            help="This is used to define paths the product has to follow within the location tree.\n" \
-                "The 'Automatic Move' value will create a stock move after the current one that will be "\
-                "validated automatically. With 'Manual Operation', the stock move has to be validated "\
-                "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+            help="The 'Automatic Move' / 'Manual Operation' value will create a stock move after the current one.  " \
+                 "With 'Automatic No Step Added', the location is replaced in the original move."
             ),
         'propagate': fields.boolean('Propagate cancel and split', help='If checked, when the previous move is cancelled or split, the move generated by this move will too'),
-        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
+        'active': fields.boolean('Active'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
             store={
