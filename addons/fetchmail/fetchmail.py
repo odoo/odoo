@@ -90,7 +90,7 @@ class fetchmail_server(osv.osv):
     }
     _defaults = {
         'state': "draft",
-        'timeout': 10,
+        'timeout': 60,
         'type': "pop",
         'active': True,
         'priority': 5,
