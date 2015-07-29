@@ -218,7 +218,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             if (self.action_manager) self.action_manager.trigger('history_back');
         });
         controller.on("change:title", this, function() {
-            if (self.action_manager) {
+            if (self.action_manager && !self.flags.headless) {
                 var breadcrumbs = self.action_manager.get_breadcrumbs();
                 self.update_control_panel({breadcrumbs: breadcrumbs}, {clear: false});
             }
