@@ -137,6 +137,7 @@ var style_to_class = function ($editable) {
     $editable.find("[class]").each(function () {
         classes = classes.concat(this.className.split(/\s+/));
     });
+    classes = _.compact(classes);
 
     var maybe_selector = _.filter(rulesCache, function (a) { return !!_.find(classes, function (b) { return a.selector.indexOf("."+b) !== -1; } ); });
     var selector = _.map(maybe_selector, function (a) { return a.selector;}).join(",");
