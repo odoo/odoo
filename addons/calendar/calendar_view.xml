@@ -30,9 +30,28 @@
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="duration"/>
-                <field name="interval"/>
+                <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="calendar_alarm_view_form" model="ir.ui.view">
+            <field name="name">calendar.alarm.form</field>
+            <field name="model">calendar.alarm</field>
+            <field name="arch" type="xml">
+                <form string="Calendar Alarm">
+                 <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="type" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <field name="interval" on_change="onchange_duration_interval(duration, interval)"/>
+                        <field name="duration" on_change="onchange_duration_interval(duration, interval)"/>
+                    </group>
+                </group>
+            </form>
         </field>
     </record>
 
@@ -225,12 +244,10 @@
             <tree string="Meetings" decoration-bf="message_unread==True">
                 <field name="name" string="Subject"/>
                 <field name="allday" invisible="True"/>
-                <field name="start_date" string="Date"/>
-                <field name="start_datetime" string="Date"/>
-                <field name="user_id"/>
+                <field name="start" string="Start Date"/>
+                <field name="stop" string="End Date"/>
+                <field name="partner_ids"/>
                 <field name="location"/>
-                <field name="show_as"/>
-                <field name="class" string="Privacy"/>
                 <field name="state" invisible="True"/>
                 <field name="duration"/>
                 <field name="message_unread" invisible="1"/>

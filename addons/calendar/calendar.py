@@ -569,19 +569,24 @@ class calendar_alarm(osv.Model):
                 res[alarm.id] = 0
         return res
 
+    _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
     _columns = {
         'name': fields.char('Name', required=True),
         'type': fields.selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True),
         'duration': fields.integer('Amount', required=True),
-        'interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('days', 'Days')], 'Unit', required=True),
-        'duration_minutes': fields.function(_get_duration, type='integer', string='duration_minutes', store=True),
+        'interval': fields.selection(list(_interval_selection.iteritems()), 'Unit', required=True),
+        'duration_minutes': fields.function(_get_duration, type='integer', string='Duration', store=True, help="Duration in minutes"),
     }
 
     _defaults = {
-        'type': 'notification',
+        'type': 'email',
         'duration': 1,
         'interval': 'hours',
     }
+
+    def onchange_duration_interval(self, cr, uid, ids, duration, interval, context=None):
+        display_interval = self._interval_selection.get(interval, '')
+        return {'value': {'name': str(duration) + ' ' + display_interval}}
 
     def _update_cron(self, cr, uid, context=None):
         try:
