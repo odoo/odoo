@@ -859,8 +859,12 @@ var MailThread = Attachment.extend ({
             this.nb_followers = 0;
             this.follower_ids = [];
 
-            this.ds_res = new data.DataSetSearch(this, this.model, this.context, [['id', '=', this.res_id]]);
-            this.ds_res.read_slice(['id', 'message_follower_ids']).then(function (data) {
+            var ctx = this.context;
+            ctx['active_test'] = true;
+            this.ds_res = new data.DataSet(this, this.model, ctx);
+            this.ds_res.read_ids([this.res_id], ['id', 'message_follower_ids'], {
+                'context': ctx,
+            }).then(function (data) {
                 self.follower_ids = data[0].message_follower_ids;
                 self.nb_followers = data[0].message_follower_ids.length;
                 self.followers_loaded.resolve();
