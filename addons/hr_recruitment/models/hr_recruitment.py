@@ -44,6 +44,7 @@ class RecruitmentSource(models.Model):
             source.alias_id = self.with_context(alias_model_name='hr.applicant', alias_parent_model_name='hr.job').env['mail.alias'].create(vals)
             source.name = source.source_id.name
 
+
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
     _description = "Stage of Recruitment"
