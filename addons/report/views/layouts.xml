@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<template id="report.assets_common">
+    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/website/static/src/css/website.css" rel="stylesheet"/>
+    <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
+    <link href="/base/static/src/css/description.css" rel="stylesheet"/>
+    <link href="/report/static/src/css/report.css" rel="stylesheet"/>
+</template>
+
+<template id="report.assets_pdf">
+    <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
+</template>
+
+<template id="report.assets_editor">
+    <link href="/report/static/src/css/report.editor.css" rel="stylesheet"/>
+    <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+    <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
+</template>
+
 <template id="layout" name="Report layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
           t-att-data-editable="'1' if editable else None"
@@ -14,12 +32,10 @@
             <meta charset="utf-8" />
             <meta name="viewport" content="initial-scale=1"/>
             <title><t t-esc="title or 'Odoo Report'"/></title>
-            <link rel='stylesheet' href='/report/static/src/css/report.css'/>
-            <link id="bootstrap_css" rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            <t t-call-assets="report.assets_common"/>
             <t t-if="editable">
                 <t t-call-assets="web_editor.assets_editor"/>
-                <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
-                <script type="text/javascript" src='/report/static/src/js/report.editor.js' />
+                <t t-call-assets="report.assets_editor"/>
             </t>
         </head>
         <body class="container" t-att-style="editable and 'margin-top: 40px;'">
@@ -144,12 +160,8 @@
     &lt;!DOCTYPE html&gt;
     <html style="height: 0;">
         <head>
-            <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
-            <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-            <link href="/website/static/src/css/website.css" rel="stylesheet"/>
-            <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet"/>
-            <link href="/base/static/src/css/description.css" rel="stylesheet"/>
-            <link href="/report/static/src/css/report.css" rel="stylesheet"/>
+            <t t-call-assets="report.assets_pdf"/>
+            <t t-call-assets="report.assets_common"/>
             <style type='text/css'><t t-raw="css"/></style>
             <t t-if="subst is True">
                 <script>
