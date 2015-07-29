@@ -254,7 +254,7 @@
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)"/>
                                     <field name="user_id"/>
                                     <field name="name" attrs="{'invisible': [('type', '=', 'in_invoice')]}"/>
-                                    <field name="payment_term" widget="selection"/>
+                                    <field name="payment_term" widget="selection" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                                 </group>
                                 <group>
                                     <field name="move_id" groups="account.group_account_user"/>
@@ -386,7 +386,7 @@
                                 <field name="reconciled" invisible="1"/>
                             </group>
                             <group>
-                                    <field name="payment_term" class="oe_inline"/>
+                                    <field name="payment_term" class="oe_inline" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             </group>
                             <div class="oe_clear">
                                 <label for="comment"/>
