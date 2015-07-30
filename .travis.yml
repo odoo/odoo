@@ -26,7 +26,7 @@ virtualenv:
 
 install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
-  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - git clone --depth=1 -b master-use_addon_path_in_dependencies https://github.com/hbrunn/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
   - pip install -q QUnitSuite flake8 coveralls pylint
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
