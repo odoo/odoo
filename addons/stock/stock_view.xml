@@ -835,7 +835,6 @@
                                     <field name="fresh_record" invisible="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('fresh_record', '=', False)]}" groups="product.group_uom"/>
                                     <field name="lots_visible" invisible="1"/>
-                                    <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
@@ -855,7 +854,6 @@
                             <field name="pack_operation_pack_ids" options="{'reload_on_button': True}" attrs="{'invisible': [('pack_operation_pack_ids', '=', []), ('picking_type_entire_packs', '=', False)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_picking_id': id}" groups="stock.group_tracking_lot">
                                 <tree editable="bottom" decoration-muted="qty_done&gt;0">
                                     <field name="package_id" required="1" string="Package To Move"/>
-                                    <field name="picking_id" invisible="1"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="from_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
                                     <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
