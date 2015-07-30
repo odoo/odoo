@@ -3,7 +3,7 @@
 {
     'name': 'HR Gamification',
     'version': '1.0',
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'category': 'hidden',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['gamification', 'hr'],
@@ -16,9 +16,10 @@ Badge received are displayed on the user profile.
     'data': [
         'security/ir.model.access.csv',
         'security/gamification_security.xml',
-        'wizard/grant_badge.xml',
-        'views/gamification.xml',
-        'views/hr_gamification.xml',
+        'wizard/gamification_badge_user_wizard_views.xml',
+        'views/gamification_views.xml',
+        'views/hr_employee_views.xml',
+        'views/gamification_templates.xml',
     ],
     'auto_install': True,
 }
