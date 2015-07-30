@@ -4,7 +4,7 @@ import datetime
 
 from openerp import models, fields, api, _
 import openerp.addons.decimal_precision as dp
-from openerp.exceptions import UserError
+from openerp.exceptions import AccessError, UserError
 
 
 class LunchOrder(models.Model):
@@ -36,7 +36,9 @@ class LunchOrder(models.Model):
                                          compute='_compute_get_previous_order_ids')
     company_id = fields.Many2one('res.company', related='user_id.company_id', store=True)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True, store=True)
-    cash_move_balance = fields.Monetary(compute='_compute_cash_balance_count')
+    cash_move_balance = fields.Monetary(compute='_compute_cash_move_balance', multi='cash_move_balance')
+    balance_visible = fields.Boolean(compute='_compute_cash_move_balance', multi='cash_move_balance')
+
     @api.one
     @api.depends('order_line_ids')
     def _compute_total(self):
@@ -90,11 +92,21 @@ class LunchOrder(models.Model):
 
     @api.one
     @api.depends('user_id')
-    def _compute_cash_balance_count(self):
-        # @api.depends is necessary to compute the field when retrieving default values
-        lunch_cash = self.env['lunch.cashmove'].read_group([('user_id', '=', self.env.uid)], ['amount', 'user_id'], ['user_id'])
-        if len(lunch_cash):
-            self.cash_move_balance = lunch_cash[0]['amount']
+    def _compute_cash_move_balance(self):
+        # To avoid hardcoding who can(not) see a given user's cash moves, searching
+        # in superuser then trying to access it in current user is the only way to
+        # know whether we have the right to see this or not. Trying to search with
+        # the current user directly would simply hide the records we are not supposed
+        # to see, preventing us from knowing whether we can't see those cash moves due
+        # to security reasons or we can see them but there aren't any for this user.
+        try:
+            domain = [('user_id', '=', self.user_id.id)]
+            lunch_move_ids = self.env['lunch.cashmove'].sudo().search(domain).sudo(self.env.uid)
+            self.cash_move_balance = sum(lunch_move_ids.mapped('amount'))
+            self.balance_visible = True
+        except AccessError:
+            self.cash_move_balance = 0
+            self.balance_visible = False
 
     @api.one
     @api.constrains('date')

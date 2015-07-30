@@ -368,7 +368,8 @@
                         <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
                     <sheet>
-                        <div class="alert alert-warning" role="alert" attrs="{'invisible': [('cash_move_balance', '&gt;', 0)]}">
+                        <field name="balance_visible" invisible="1"/>
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
                             Warning : Your balance is insufficient.
                         </div>
                         <group>
@@ -380,12 +381,13 @@
                             <group>
                                 <div class="oe_button_box" name="button_box">
                                     <button class="oe_stat_button"
+                                        attrs="{'invisible': [('balance_visible', '=', False)]}"
                                         name="%(lunch_cashmove_action_account)d"
                                         icon="fa-money"
                                         type="action">
                                         <div class="o_form_field o_stat_info">
                                             <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
-                                            <span class="o_stat_text">Your balance</span>
+                                            <span class="o_stat_text">Balance</span>
                                         </div>
                                     </button>
                                 </div>
