@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="view_currency_rate_search" model="ir.ui.view">
+            <field name="name">res.currency.rate.search</field>
+            <field name="model">res.currency.rate</field>
+            <field name="arch" type="xml">
+                <search string="Currency Rates">
+                    <field name="name" string="Date"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_currency_rate_tree" model="ir.ui.view">
+            <field name="name">res.currency.rate.tree</field>
+            <field name="model">res.currency.rate</field>
+            <field name="arch" type="xml">
+                <tree string="Currency Rates">
+                    <field name="name"/>
+                    <field name="rate"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <act_window
+           id="act_view_currency_rates"
+           name="Currency Rates"
+           view_mode='tree,form'
+           view_id='view_currency_rate_tree'
+           domain="[('currency_id','=', active_id)]"
+           res_model="res.currency.rate"/>
 
         <record id="view_currency_search" model="ir.ui.view">
             <field name="name">res.currency.search</field>
@@ -29,36 +58,34 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_currency_form" model="ir.ui.view">
             <field name="name">res.currency.form</field>
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <form string="Currency">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="rate"/>
-                        <field name="active"/>
-                    </group>
-
-                    <group>
-                        <group string="Price Accuracy">
-                            <field name="rounding"/>
-                            <field name="decimal_places"/>
-                        </group>
-
-                        <group string="Display">
-                            <field name="symbol"/>
-                            <field name="position"/>
-                        </group>
-                    </group>
-
-                    <field mode="tree" name="rate_ids">
-                        <tree string="Rates" editable="bottom">
+                    <header>
+                        <button name="%(act_view_currency_rates)d" string="View Rates" type="action"/>
+                    </header>
+                    <sheet>
+                        <group col="4">
                             <field name="name"/>
                             <field name="rate"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                        </tree>
-                    </field>
+                            <field name="active"/>
+                        </group>
+
+                        <group groups="base.group_no_one">
+                            <group string="Price Accuracy">
+                                <field name="rounding"/>
+                                <field name="decimal_places"/>
+                            </group>
+
+                            <group string="Display">
+                                <field name="symbol"/>
+                                <field name="position"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
