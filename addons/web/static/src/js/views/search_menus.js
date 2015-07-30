@@ -388,7 +388,7 @@ return Widget.extend({
     init: function (parent, groups, fields_def) {
         this._super(parent);
         this.groups = groups || [];
-        this.groupable_fields = {};
+        this.groupable_fields = [];
         this.searchview = parent;
         this.fields_def = fields_def.then(this.proxy('get_groupable_fields'));
     },
@@ -413,14 +413,14 @@ return Widget.extend({
         });
     },
     get_groupable_fields: function (fields) {
-        var self = this,
-            groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
-
-        _.each(fields, function (field, name) {
+        var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+        var filter_group_field = _.filter(fields, function(field, name) {
             if (field.store && _.contains(groupable_types, field.type)) {
-                self.groupable_fields[name] = field;
+                field.name = name;
+                return field;
             }
         });
+        this.groupable_fields = _.sortBy(filter_group_field, 'string');
     },
     toggle_add_menu: function (is_open) {
         this.$add_group
@@ -434,7 +434,7 @@ return Widget.extend({
     add_groupby_to_menu: function (field_name) {
         var filter = new search_inputs.Filter({attrs:{
             context:"{'group_by':'" + field_name + "''}",
-            name: this.groupable_fields[field_name].string,
+            name: _.find(this.groupable_fields, {name: field_name}).string,
         }}, this.searchview);
         var group = new search_inputs.FilterGroup([filter], this.searchview),
             divider = this.$('.divider').show();
