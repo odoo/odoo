@@ -383,7 +383,10 @@
                                         name="%(lunch_cashmove_action_account)d"
                                         icon="fa-money"
                                         type="action">
-                                        <field name="cash_move_balance" widget="statinfo" string="Your balance"/>
+                                        <div class="o_form_field o_stat_info">
+                                            <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
+                                            <span class="o_stat_text">Your balance</span>
+                                        </div>
                                     </button>
                                 </div>
                             </group>
