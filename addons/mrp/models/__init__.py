@@ -3,6 +3,10 @@
 
 import company
 import mrp
+import mrp_bom
+import mrp_production
+import mrp_routing
+import mrp_workcenter
 import procurement
 import product
 import res_config
