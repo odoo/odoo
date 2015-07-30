@@ -14,9 +14,7 @@ Price and Cost Price.
     """,
     'author':'Odoo S.A.',
     'depends':['sale'],
-    'demo':['data/inherited_sale_order_line_demo.xml'],
-    'test': ['test/sale_margin.yml'],
-    'data':['security/ir.model.access.csv','views/inherited_sale_order_views.xml'],
-    'auto_install': False,
+    'demo':['data/sale_order_line_demo.xml'],
+    'data':['security/ir.model.access.csv','views/sale_order_views.xml'],
     'installable': True,
 }
