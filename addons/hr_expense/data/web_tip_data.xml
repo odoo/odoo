@@ -3,17 +3,6 @@
 
     <record id="expense_tip_1" model="web.tip">
         <field name="title"></field>
-        <field name="description">Congratulations! you have created your first expense. Click here to add a new one.</field>
-        <field name="action_id" ref="hr_expense.expense_all"/>
-        <field name="model">hr.expense</field>
-        <field name="mode">form</field>
-        <field name="trigger_selector">.oe_form_buttons_view:visible > button</field>
-        <field name="highlight_selector">.oe_form_button_create:visible</field>
-        <field name="placement">bottom</field>
-    </record>
-
-    <record id="expense_tip_2" model="web.tip">
-        <field name="title"></field>
         <field name="description">Select the lines you want to submit to be reimbursed.</field>
         <field name="action_id" ref="hr_expense.expense_all"/>
         <field name="model">hr.expense</field>
@@ -23,7 +12,7 @@
         <field name="placement">bottom</field>
     </record>
 
-    <record id="expense_tip_3" model="web.tip">
+    <record id="expense_tip_2" model="web.tip">
         <field name="title"></field>
         <field name="description">Click on More to submit multiple expenses to your manager.</field>
         <field name="action_id" ref="hr_expense.expense_all"/>
@@ -34,7 +23,7 @@
         <field name="placement">bottom</field>
     </record>
 
-    <record id="expense_tip_4" model="web.tip">
+    <record id="expense_tip_3" model="web.tip">
         <field name="title"></field>
         <field name="description">Use the messaging tool to log a note about your expense or to attach a document</field>
         <field name="action_id" ref="hr_expense.expense_all"/>

@@ -27,7 +27,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
     """,
     'author': 'Odoo S.A.',
     'website': 'https://www.odoo.com/page/expenses',
-    'depends': ['hr', 'account_accountant', 'report'],
+    'depends': ['hr_contract', 'account_accountant', 'report'],
     'data': [
         'security/ir.model.access.csv',
         'data/hr_expense_data.xml',
