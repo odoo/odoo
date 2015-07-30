@@ -88,11 +88,11 @@ class AccountConfigSettings(models.TransientModel):
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
     module_account_bank_statement_import_ofx = fields.Boolean(string='Import of Bank Statements in .OFX Format',
-        help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
-            '-that installs the module account_bank_statement_import.')
+        help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
+            'This installs the module account_bank_statement_import_ofx.')
     module_account_bank_statement_import_qif = fields.Boolean(string='Import of Bank Statements in .QIF Format.',
-        help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
-            '-that installs the module account_bank_statement_import_qif.')
+        help='Get your bank statements from your bank and import them in Odoo in the .QIF format.\n'
+            'This installs the module account_bank_statement_import_qif.')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
