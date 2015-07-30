@@ -1039,7 +1039,10 @@
                             <field name="partner_id" context="{'contact_display':'partner'}" />
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                            <field name="reserved_quant_ids"/>
+                            <field name="reserved_quant_ids" nolabel="1"/>
+                        </group>
+                        <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                            <field name="quant_ids" readonly="1" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -1094,7 +1097,10 @@
                         <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
                     </group>
                     <group name="quants_grp" string="Reserved Quants" colspan="4" groups="base.group_no_one">
-                        <field name="reserved_quant_ids"/>
+                        <field name="reserved_quant_ids" nolabel="1"/>
+                    </group>
+                    <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <field name="quant_ids" readonly="1" nolabel="1"/>
                     </group>
                 </group>
                 </form>
