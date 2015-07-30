@@ -77,7 +77,7 @@ _schema = logging.getLogger(__name__ + '.schema')
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
-regex_order = re.compile('^( *([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
 # TODO for trunk, raise the value to 1000
