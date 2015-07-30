@@ -313,7 +313,7 @@ var KanbanView = View.extend({
                     // Reset the scroll position to the top on page changed only
                     if (!limit_changed) {
                         self.scrollTop = 0;
-                        core.bus.trigger('scrollTop_updated');
+                        self.trigger_up('scrollTo', {offset: 0});
                     }
                 })
                 .done(this.proxy('render'));
