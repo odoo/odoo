@@ -21,6 +21,32 @@
             <field name="name">Usability</field>
         </record>
 
+        <!-- Task Stages -->
+
+        <record id="project_stage_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">To Do</field>
+            <field name="legend_blocked">Not validated</field>
+            <field name="legend_priority">Use the priority for tasks related to gold customers</field>
+        </record>
+        <record id="project_stage_1" model="project.task.type">
+            <field name="sequence">10</field>
+            <field name="name">In Progress</field>
+            <field name="legend_blocked">Need functional or technical help</field>
+            <field name="legend_done">Buzz or set as done</field>
+        </record>
+        <record id="project_stage_2" model="project.task.type">
+            <field name="sequence">20</field>
+            <field name="name">Done</field>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="project_stage_3" model="project.task.type">
+            <field name="sequence">30</field>
+            <field name="name">Cancelled</field>
+            <field name="legend_done">Ready to reopen</field>
+            <field name="fold" eval="True"/>
+        </record>
+
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="state">open</field>
@@ -30,17 +56,10 @@
             <field name="partner_id" ref="base.res_partner_10"/>
             <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">public</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
-        </record>
-
-        <!-- We assign after so that default values applies -->
-        <record id="project_project_1" model="project.project">
-            <field name="type_ids" eval="[(4, ref('project_stage_0')) ,(4,ref('project_stage_1'))]"/>
+            <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -54,11 +73,6 @@
                     ref('base.partner_demo')])]"/>
         </record>
 
-        <!-- We assign after so that default values applies -->
-        <record id="project_project_2" model="project.project">
-            <field name="type_ids" eval="[(4, ref('project_stage_1'))]"/>
-        </record>
-
         <record id="project_project_3" model="project.project">
             <field name="sequence">10</field>
             <field name="parent_id" ref="all_projects_account"/>
@@ -67,11 +81,6 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
-            <field name="members" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
-        </record>
-
-        <record id="project_project_3" model="project.project">
-            <field name="type_ids" eval="[(4, ref('project_stage_1')),(4,ref('project_stage_2'))]"/>
         </record>
 
         <record id="project_project_4" model="project.project">
@@ -83,11 +92,6 @@
             <field name="privacy_visibility">followers</field>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">employees</field>
-            <field name="members" eval="[(4, ref('base.user_root')), (4,ref('base.user_demo'))]"/>
-        </record>
-
-        <record id="project_project_4" model="project.project">
-            <field name="type_ids" eval="[(4, ref('project_stage_1')),(4,ref('project_stage_2'))]"/>
         </record>
 
         <record id="project_project_5" model="project.project">
@@ -98,15 +102,7 @@
             <field name="label_tasks">Databases</field>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">followers</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
         </record>
-
-        <record id="project_project_5" model="project.project">
-            <field name="type_ids" eval="[(4, ref('project_stage_2'))]"/>
-        </record>
-
 
         <!-- Tasks -->
         <record id="project_task_1" model="project.task">

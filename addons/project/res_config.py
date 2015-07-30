@@ -11,8 +11,8 @@ class project_configuration(osv.osv_memory):
     _columns = {
         'module_sale_service': fields.boolean('Generate tasks from sale orders',
             help='This feature automatically creates project tasks from service products in sale orders. '
-                 'More precisely, tasks are created for procurement lines with product of type \'Service\', '
-                 'procurement method \'Make to Order\', and supply method \'Manufacture\'.\n'
+                 'In order to make it work,  the product has to be a service and \'Create Task Automatically\' '
+                 'has to be flagged on the procurement tab in the product form.\n'
                  '-This installs the module sale_service.'),
         'module_pad': fields.boolean("Use integrated collaborative note pads on task",
             help='Lets the company customize which Pad installation should be used to link to new pads '
