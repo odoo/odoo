@@ -67,18 +67,12 @@ class account_analytic_line(models.Model):
         if emp and emp.journal_id.id:
             return emp.journal_id.id
         else:
-            raise exceptions.ValidationError("This user or employee is not associated to a valid Journal ID")
+            journal = self.env['account.analytic.journal'].search([('type', '=', 'general')], limit=1)
 
-    @api.one
-    @api.constrains('user_id')
-    def check_user_id(self):
-        if self.is_timesheet:
-            emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id)], limit=1)
-            if not emp:
-                raise exceptions.ValidationError("There is no employee defined for user " + self.user_id.name)
+            if journal:
+                return journal.id
             else:
-                if not emp.journal_id.id:
-                    raise exceptions.ValidationError("The employee " + emp.name + " is not associated to a valid Analytic Journal. Please define one for him or select another user.")
+                return None
 
     @api.onchange('user_id')
     def V8_on_change_user_id(self):
