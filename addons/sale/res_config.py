@@ -119,6 +119,8 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):
+        if not task_work:
+            return {'value': {}}
         return {'value': {
             'module_project_timesheet': task_work,
             'module_project_mrp': task_work,
