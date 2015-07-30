@@ -22,6 +22,8 @@
             <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
             <field name="body_html"><![CDATA[
             
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+<img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
 <p>Hello,</p>
 
 
@@ -51,6 +53,7 @@ ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''
 % if not ctx['partner_id'].user_id:
 PS: It looks like you do not have an account manager assigned to you, please contact us.
 % endif
+</div>
             ]]></field>
         </record>
     </data>
