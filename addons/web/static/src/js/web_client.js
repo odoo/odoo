@@ -15,7 +15,6 @@ var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-var BarcodeEvents = require('web.BarcodeEvents');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -49,7 +48,6 @@ var WebClient = Widget.extend({
         this.menu_dm = new utils.DropMisordered();
         this.action_mutex = new utils.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
-        this.barcode_events = new BarcodeEvents(this);
     },
     start: function() {
         var self = this;
@@ -344,9 +342,6 @@ var WebClient = Widget.extend({
         this.$('.oe_webclient').toggleClass(
             'oe_content_full_screen', fullscreen);
     },
-    get_barcode_events: function() {
-        return this.barcode_events;
-    }
 });
 
 return WebClient;

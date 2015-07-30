@@ -658,7 +658,7 @@ ListView.include(/** @lends instance.web.ListView# */{
             return self.start_edition(record, options);
         });
     },
-    keypress_ENTER: function () {
+    keyup_ENTER: function () {
         return this._next();
     },
     keydown_ESCAPE: function (e) {
@@ -742,13 +742,13 @@ ListView.include(/** @lends instance.web.ListView# */{
         return this._next(record_direction, {focus_field: source_field});
 
     },
-    keydown_UP: function (e) {
+    keyup_UP: function (e) {
         var self = this;
         return this._key_move_record(e, 'pred', function (el, cursor) {
             return self._at_start(cursor, el);
         });
     },
-    keydown_DOWN: function (e) {
+    keyup_DOWN: function (e) {
         var self = this;
         return this._key_move_record(e, 'succ', function (el, cursor) {
             return self._at_end(cursor, el);
@@ -800,7 +800,7 @@ ListView.include(/** @lends instance.web.ListView# */{
         field.focus();
         return $.when();
     },
-    keydown_TAB: function (e) {
+    keyup_TAB: function (e) {
         var form = this.editor.form;
         var last_field = _(form.fields_order).chain()
             .map(function (name) { return form.fields[name]; })

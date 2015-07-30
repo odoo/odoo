@@ -3,7 +3,6 @@ odoo.define('point_of_sale.devices', function (require) {
 
 var core = require('web.core');
 var Session = require('web.Session');
-var web_client = require('web.web_client');
 
 var _t = core._t;
 
@@ -528,17 +527,6 @@ var BarcodeReader = core.Class.extend({
         } else {
             console.warn("Ignored Barcode Scan:", parsed_result);
         }
-    },
-
-    // starts catching keyboard events and tries to interpret codebar
-    // calling the callbacks when needed.
-    connect: function(){
-        web_client.get_barcode_events().start();
-    },
-
-    // stops catching keyboard events
-    disconnect: function(){
-        web_client.get_barcode_events().stop();
     },
 
     // the barcode scanner will listen on the hw_proxy/scanner interface for
