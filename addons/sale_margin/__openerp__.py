@@ -17,6 +17,5 @@ Price and Cost Price.
     'demo':['data/inherited_sale_order_line_demo.xml'],
     'test': ['test/sale_margin.yml'],
     'data':['security/ir.model.access.csv','views/inherited_sale_order_views.xml'],
-    'auto_install': False,
     'installable': True,
 }
