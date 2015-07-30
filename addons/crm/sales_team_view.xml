@@ -87,7 +87,7 @@
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
-                        <field name="use_leads" onchange="onchange_use_leads(use_leads)"/>
+                        <field name="use_leads" on_change="onchange_use_leads(use_leads)"/>
                         <label for="use_leads" string="Leads"/>
                         <field name="use_opportunities" class="oe_inline"/>
                         <label for="use_opportunities"/>

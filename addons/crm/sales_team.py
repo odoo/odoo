@@ -48,8 +48,8 @@ class crm_team(osv.Model):
 
     def onchange_use_leads(self, cr, uid, ids, use_leads, context=None):
         if not use_leads:
-            return {'values': {'alias_name': False}}
-        return {'values': {}}
+            return {'value': {'alias_name': False}}
+        return {'value': {}}
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
