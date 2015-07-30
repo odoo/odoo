@@ -505,7 +505,6 @@
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
                    <field name="name" string="Tasks Stages"/>
-                   <filter string="Common" name="common" domain="[('case_default', '=', 1)]" help="Stages common to all projects"/>
                 </search>
             </field>
         </record>
@@ -518,7 +517,6 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="case_default"/>
                             <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group>

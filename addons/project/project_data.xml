@@ -27,36 +27,6 @@
         
         <!-- alias domain: project.config.settings -->
         <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', True)"/>
-
-        <!-- Task Stages -->
-
-        <record id="project_stage_0" model="project.task.type">
-            <field name="sequence">1</field>
-            <field name="name">To Do</field>
-            <field name="legend_blocked">Not validated</field>
-            <field name="legend_priority">Use the priority for tasks related to gold customers</field>
-            <field name="case_default" eval="True"/>
-        </record>
-        <record id="project_stage_1" model="project.task.type">
-            <field name="sequence">10</field>
-            <field name="name">In Progress</field>
-            <field name="legend_blocked">Need functional or technical help</field>
-            <field name="legend_done">Buzz or set as done</field>
-            <field name="case_default" eval="True"/>
-        </record>
-        <record id="project_stage_2" model="project.task.type">
-            <field name="sequence">20</field>
-            <field name="name">Done</field>
-            <field name="case_default" eval="True"/>
-            <field name="fold" eval="True"/>
-        </record>
-        <record id="project_stage_3" model="project.task.type">
-            <field name="sequence">30</field>
-            <field name="name">Cancelled</field>
-            <field name="case_default" eval="True"/>
-            <field name="legend_done">Ready to reopen</field>
-            <field name="fold" eval="True"/>
-        </record>
     </data>
 
     <data>
@@ -91,7 +61,7 @@
             <field name="name">Task Opened</field>
             <field name="sequence">10</field>
             <field name="res_model">project.project</field>
-            <field name="default" eval="False"/>
+            <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('mt_task_new')"/>
             <field name="relation_field">project_id</field>
         </record>
@@ -107,6 +77,7 @@
             <field name="name">Task Ready</field>
             <field name="sequence">12</field>
             <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_task_ready')"/>
             <field name="relation_field">project_id</field>
         </record>

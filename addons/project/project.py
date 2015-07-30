@@ -21,8 +21,6 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, translate=True),
         'description': fields.text('Description', translate=True),
         'sequence': fields.integer('Sequence'),
-        'case_default': fields.boolean('Default for New Projects',
-                        help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'legend_priority': fields.char(
             'Priority Management Explanation', translate=True,
@@ -189,10 +187,12 @@ class project(osv.osv):
      }
 
     def _get_type_common(self, cr, uid, context):
-        ids = self.pool.get('project.task.type').search(cr, uid, [('case_default','=',1)], context=context)
-        return ids
+        return [(0, 0, {
+            'name': _('New'),
+            'sequence': 1,
+        })]
 
-    _order = "sequence, id"
+    _order = "sequence, name, id"
     _defaults = {
         'active': True,
         'type': 'contract',
@@ -369,11 +369,10 @@ class task(osv.osv):
         access_rights_uid = access_rights_uid or uid
         if read_group_order == 'stage_id desc':
             order = '%s desc' % order
-        search_domain = []
         if 'default_project_id' in context:
-            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
+            search_domain = ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain = [('id', 'in', ids)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
