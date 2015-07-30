@@ -77,7 +77,7 @@ class event_event(models.Model):
         oldname='register_prospect', string='Unconfirmed Seat Reservations',
         store=True, readonly=True, compute='_compute_seats')
     seats_used = fields.Integer(
-        oldname='register_attended', string='Number of Participations',
+        oldname='register_attended', string='Number of Participants',
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',

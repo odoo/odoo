@@ -6,8 +6,8 @@
     'version': '1.0',
     'category': 'Project Management',
     'description': """
-This module adds a PAD in all project kanban views.
-===================================================
+This module adds a PAD in all project form views.
+=================================================
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',

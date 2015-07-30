@@ -952,7 +952,7 @@ class calendar_event(osv.Model):
         'final_date': fields.date('Repeat Until'),  # The last event of a recurrence
 
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
-        'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="colorize", store=False),  # Color of creator
+        'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="Color index of creator", store=False),  # Color of creator
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
