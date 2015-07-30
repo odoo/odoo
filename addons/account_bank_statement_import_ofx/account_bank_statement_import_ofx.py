@@ -5,24 +5,17 @@ import StringIO
 
 from openerp import api, models, _
 from openerp.exceptions import UserError
+from ofxparse import OfxParser
 
 _logger = logging.getLogger(__name__)
-
-try:
-    from ofxparse import OfxParser as ofxparser
-except ImportError:
-    _logger.warn("ofxparse not found, OFX parsing disabled.")
-    ofxparser = None
 
 
 class AccountBankStatementImport(models.TransientModel):
     _inherit = 'account.bank.statement.import'
 
     def _check_ofx(self, file):
-        if ofxparser is None:
-            return False
         try:
-            ofx = ofxparser.parse(file)
+            ofx = OfxParser.parse(file)
         except:
             return False
         return ofx

@@ -17,7 +17,4 @@ creation of the Financial Accounting records).
     """,
     'installable': True,
     'auto_install': True,
-    'external_dependencies' : {
-        'python' : ['ofxparse'],
-    }
 }

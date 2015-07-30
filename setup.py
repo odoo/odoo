@@ -81,6 +81,7 @@ def py2exe_options():
                         'mako',
                         'markupsafe',
                         'mock',
+                        'ofxparse',
                         'openerp',
                         'openid',
                         'passlib',
@@ -139,6 +140,7 @@ setup(
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
         'mock',
+        'ofxparse',
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
