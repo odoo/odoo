@@ -1185,7 +1185,7 @@
 <t t-name="GroupByMenuSelector">
     <li><select class="form-control oe-add-group oe-group-selector">
         <t t-foreach="groupable_fields" t-as="field">
-            <option t-att-data-name="field"><t t-esc="groupable_fields[field].string"/></option>
+            <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>
     </select></li>
     <li><button type="button" class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
