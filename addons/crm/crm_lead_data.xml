@@ -78,12 +78,20 @@
             <field name="email_from">admin@example.com</field>
             <field name="email_to">${(object.user_id != False and object.user_id.email)|safe}</field>
             <field name="subject">Reminder on Lead: ${object.id} from ${object.partner_id != False and object.partner_id.name or object.contact_name}</field>
-            <field name="body_html"><![CDATA[<p>This opportunity did not have any activity since at least 5 days. Here are some details:</p>
-<ul>
-<li>Name: ${object.name}</li>
-<li>ID: ${object.id}</li>
-<li>Description: ${object.description}</li>
-</ul>]]></field>
+            <field name="body_html"><![CDATA[
+                <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+                    <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+                </div>
+                <p>Hello ${object.user_id and object.user_id.name or ''},</p>
+                <p>The opportunity <strong>${object.name}<i>(ID : ${object.id})</i></strong> did not have any activity since at least 5 days.</p>
+                %if object.description:
+                    <p>Here is the description about the opportunity : <br/><i>${object.description}</i>
+                %endif
+                <p>Thank you!</p>
+                % if user.signature:
+                    <br/><pre>${user.signature | safe}</pre>
+                % endif
+]]></field>
         </record>
 
     </data>
