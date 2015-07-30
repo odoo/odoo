@@ -677,13 +677,6 @@ class module(osv.osv):
             self._update_dependencies(cr, uid, mod, terp.get('depends', []))
             self._update_category(cr, uid, mod, terp.get('category', 'Uncategorized'))
 
-        # Trigger load_addons if new module have been discovered it exists on
-        # wsgi handlers, so they can react accordingly
-        if tuple(res) != (0, 0):
-            for handler in openerp.service.wsgi_server.module_handlers:
-                if hasattr(handler, 'load_addons'):
-                    handler.load_addons()
-
         return res
 
     def download(self, cr, uid, ids, download=True, context=None):

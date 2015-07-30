@@ -769,7 +769,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.service.db.exp_list(True)
+            db_names = openerp.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
