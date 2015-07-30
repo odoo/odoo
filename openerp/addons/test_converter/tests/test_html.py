@@ -95,6 +95,8 @@ class TestCurrencyExport(TestExport):
         super(TestCurrencyExport, self).setUp()
         self.Currency = self.registry('res.currency')
         self.base = self.create(self.Currency, name="Source", symbol=u'source')
+        self.Lang = self.registry['res.lang']
+        self.lang_id = self.Lang.search(self.cr, self.uid, [], limit=1)
 
     def create(self, model, context=None, **values):
         return model.browse(
@@ -119,44 +121,52 @@ class TestCurrencyExport(TestExport):
         return converted
 
     def test_currency_post(self):
-        currency = self.create(self.Currency, name="Test", symbol=u"test")
-        obj = self.create(self.Model, value=0.12)
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'after'})
 
-        converted = self.convert(obj, dest=currency)
-
-        self.assertEqual(
-            converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
-                      '<span class="oe_currency_value">0.12</span>'
-                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ).encode('utf-8'),)
+            currency = self.create(self.Currency, name="Test", symbol=u"test")
+            obj = self.create(self.Model, value=0.12)
+    
+            converted = self.convert(obj, dest=currency)
+            self.assertEqual(
+                converted,
+                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                      'data-oe-field="value" data-oe-type="monetary" '
+                      'data-oe-expression="obj.value">'
+                          '<span class="oe_currency_value">0.12</span>'
+                          u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
+                    obj=obj,
+                    symbol=currency.symbol.encode('utf-8')
+                ).encode('utf-8'),)
 
     def test_currency_pre(self):
-        currency = self.create(
-            self.Currency, name="Test", symbol=u"test", position='before')
-        obj = self.create(self.Model, value=0.12)
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'before'})
 
-        converted = self.convert(obj, dest=currency)
-
-        self.assertEqual(
-            converted,
-            '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
-                  'data-oe-field="value" data-oe-type="monetary" '
-                  'data-oe-expression="obj.value">'
-                      u'{symbol}\N{NO-BREAK SPACE}'
-                      '<span class="oe_currency_value">0.12</span>'
-                      '</span>'.format(
-                obj=obj,
-                symbol=currency.symbol.encode('utf-8')
-            ).encode('utf-8'),)
+            currency = self.create(
+                self.Currency, name="Test", symbol=u"test")
+            obj = self.create(self.Model, value=0.12)
+    
+            converted = self.convert(obj, dest=currency)
+    
+            self.assertEqual(
+                converted,
+                '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
+                      'data-oe-field="value" data-oe-type="monetary" '
+                      'data-oe-expression="obj.value">'
+                          u'{symbol}\N{NO-BREAK SPACE}'
+                          '<span class="oe_currency_value">0.12</span>'
+                          '</span>'.format(
+                    obj=obj,
+                    symbol=currency.symbol.encode('utf-8')
+                ).encode('utf-8'),)
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
         """
+        if self.lang_id:
+            self.Lang.write(self.cr, self.uid, self.lang_id, {'position': 'after'})
+
         currency = self.create(self.Currency, name="Test", symbol=u"test",)
         obj = self.create(self.Model, value=0.1234567)
 

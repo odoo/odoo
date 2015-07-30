@@ -287,7 +287,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, pricelists){ self.pricelist = pricelists[0]; },
     },{
         model: 'res.currency',
-        fields: ['name','symbol','position','rounding','accuracy'],
+        fields: ['name','symbol','rounding','accuracy'],
         ids:    function(self){ return [self.pricelist.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
@@ -297,6 +297,13 @@ exports.PosModel = Backbone.Model.extend({
                 self.currency.decimals = 0;
             }
 
+        },
+    },{
+        model: 'res.lang',
+        fields: ['position'],
+        domain: function(self){ return [['code','=', session.user_context.lang]]; },
+        loaded: function(self, currency_position){
+            self.currency_position = currency_position[0];
         },
     },{
         model: 'product.packaging',

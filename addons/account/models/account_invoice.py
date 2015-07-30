@@ -107,6 +107,7 @@ class AccountInvoice(models.Model):
 
     @api.one
     def _get_outstanding_info_JSON(self):
+        language = self.env['res.lang'].search([('code','=', self.env.context['lang'])])
         self.outstanding_credits_debits_widget = json.dumps(False)
         if self.state == 'open':
             domain = [('journal_id.type', 'in', ('bank', 'cash')), ('account_id', '=', self.account_id.id), ('partner_id', '=', self.partner_id.id), ('reconciled', '=', False), ('amount_residual', '!=', 0.0)]
@@ -130,7 +131,7 @@ class AccountInvoice(models.Model):
                         'amount': amount_to_show,
                         'currency': self.currency_id.symbol,
                         'id': line.id,
-                        'position': self.currency_id.position,
+                        'position': language.position,
                         'digits': [69, self.currency_id.decimal_places],
                     })
                 info['title'] = type_payment
@@ -140,6 +141,7 @@ class AccountInvoice(models.Model):
     @api.one
     @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
+        language = self.env['res.lang'].search([('code','=', self.env.context['lang'])])
         self.payments_widget = json.dumps(False)
         if self.payment_move_line_ids:
             info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
@@ -164,7 +166,7 @@ class AccountInvoice(models.Model):
                     'amount': amount_to_show,
                     'currency': self.currency_id.symbol,
                     'digits': [69, self.currency_id.decimal_places],
-                    'position': self.currency_id.position,
+                    'position': language.position,
                     'date': payment.date,
                 })
             self.payments_widget = json.dumps(info)

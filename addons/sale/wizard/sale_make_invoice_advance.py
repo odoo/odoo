@@ -58,6 +58,11 @@ class sale_advance_payment_inv(osv.osv_memory):
         invoice_obj = self.pool.get('account.invoice')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
+        lang = self.pool.get('res.lang')
+        current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        lang_code = context.get('lang') or current_user.lang or 'en_US'
+        lang_id = lang.search(cr, uid, [('code', '=', lang_code)], context=context)
+        language = lang.browse(cr, uid, lang_id, context=context)
 
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
@@ -100,7 +105,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 if not res.get('name'):
                     #TODO: should find a way to call formatLang() from rml_parse
                     symbol = sale.pricelist_id.currency_id.symbol
-                    if sale.pricelist_id.currency_id.position == 'after':
+                    if language.position == 'after':
                         symbol_order = (inv_amount, symbol)
                     else:
                         symbol_order = (symbol, inv_amount)

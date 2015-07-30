@@ -64,11 +64,9 @@ class res_currency(osv.osv):
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'decimal_places': fields.function(_decimal_places, string='Decimal Places', type='integer'),
         'active': fields.boolean('Active'),
-        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': 1,
-        'position' : 'after',
         'rounding': 0.01,
     }
     _sql_constraints = [
@@ -246,12 +244,15 @@ class res_currency(osv.osv):
             That function expects the number as first parameter and the currency id as second parameter.
             If the currency id parameter is false or undefined, the company currency is used.
         """
-        company_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        current_user_id = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        company_currency_id = current_user_id.company_id.currency_id.id
         function = ""
-        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places', 'position'], context=context):
+        current_lang_id = self.pool['res.lang'].search(cr, uid, [('code', '=', current_user_id.lang)], context=context)
+        current_lang_obj = self.pool['res.lang'].browse(cr, uid, current_lang_id, context=context)
+        for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'decimal_places'], context=context):
             symbol = row['symbol'] or row['name']
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(row['decimal_places']) + "]}, 0.00)"
-            if row['position'] == 'after':
+            if current_lang_obj.position == 'after':
                 return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
             else:
                 return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
