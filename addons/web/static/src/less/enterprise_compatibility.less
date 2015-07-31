@@ -226,14 +226,10 @@ div.o_checkbox {
 
     .o_row > * {
         width: auto!important; // oe_inline
-
-        &.oe_form_field_many2one, &.o_form_field_many2manytags {
-            width: 100%!important;
-        }
     }
 
     .o_form_field_many2manytags {
-        .o-flex-display();
+        .o-inline-flex-display();
         .o-flex-flow(row, wrap);
         .o-align-items(flex-start);
 
