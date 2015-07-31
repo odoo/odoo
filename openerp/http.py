@@ -1314,8 +1314,33 @@ class Root(object):
 
         if statics:
             _logger.info("HTTP Configuring static files")
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, statics, cache_timeout=STATIC_CACHE)
-        self.dispatch = DisableCacheMiddleware(app)
+
+        def build_static_app(dispatch_app):
+            def static_app(environ, start_response):
+                # See bug: https://github.com/mitsuhiko/werkzeug/issues/379
+                try:
+                    cleaned_path = werkzeug.wsgi.get_path_info(environ)
+                    cleaned_path = cleaned_path.encode(
+                        sys.getfilesystemencoding()
+                    )
+                except UnicodeError:
+                    # Avoid the SharedDataMiddleware if it is going to
+                    # fail.  We STRONGLY recommend static assets don't use
+                    # any char outside ASCII, so this SHOULD NOT happen
+                    # unless this recommendation is not followed.
+                    #
+                    # This way custom controllers may include URLs, which does
+                    # not comply with this but it's their task to properly
+                    # handle the encoding in the URL.
+                    return dispatch_app(environ, start_response)
+                return werkzeug.wsgi.SharedDataMiddleware(
+                    dispatch_app,
+                    statics,
+                    cache_timeout=STATIC_CACHE
+                )(environ, start_response)
+            return static_app
+
+        self.dispatch = DisableCacheMiddleware(build_static_app(self.dispatch))
 
     def setup_session(self, httprequest):
         # recover or create session
