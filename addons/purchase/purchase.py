@@ -990,6 +990,30 @@ class purchase_order(osv.osv):
 
         return orders_info
 
+    def _set_po_lines_invoiced(self, cr, uid, ids, context=None):
+        for po in self.browse(cr, uid, ids, context=context):
+            is_invoiced = []
+            if po.invoice_method == 'picking':
+                # We determine the invoiced state of the PO line based on the invoiced state
+                # of the associated moves. This should cover all possible cases:
+                # - all moves are done and invoiced
+                # - a PO line is split into multiple moves (e.g. if multiple pickings): some
+                #   pickings are done, some are in progress, some are cancelled
+                for po_line in po.order_line:
+                    if (po_line.move_ids and
+                            all(move.state in ('done', 'cancel') for move in po_line.move_ids) and
+                            not all(move.state == 'cancel' for move in po_line.move_ids) and
+                            all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')):
+                        is_invoiced.append(po_line.id)
+            else:
+                for po_line in po.order_line:
+                    if (po_line.invoice_lines and 
+                            all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
+                        is_invoiced.append(po_line.id)
+            if is_invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, is_invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', po.id, cr)
+
 
 class purchase_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
@@ -1583,22 +1607,9 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
-            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
-            invoiced = []
-            shipped = True
-            # for invoice method manual or order, don't care about shipping state
-            # for invoices based on incoming shippment, beware of partial deliveries
-            if (order.invoice_method == 'picking' and
-                    not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
-                shipped = False
-            for po_line in order.order_line:
-                if (po_line.invoice_lines and 
-                        all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
-                    invoiced.append(po_line.id)
-            if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
-            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
+            purchase_order_obj._set_po_lines_invoiced(cr, user_id, [po_id], context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):
