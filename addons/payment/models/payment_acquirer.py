@@ -2,7 +2,7 @@
 import logging
 
 from openerp.osv import osv, fields
-from openerp.tools import float_round, float_repr
+from openerp.tools import float_round, float_repr, image_get_resized_images, image_resize_image_big
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -55,12 +55,34 @@ class PaymentAcquirer(osv.Model):
     def _get_providers(self, cr, uid, context=None):
         return []
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        return dict((p.id, image_get_resized_images(p.image)) for p in self.browse(cr, uid, ids, context=context))
+
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write({'image': image_resize_image_big(value)})
+
     # indirection to ease inheritance
     _provider_selection = lambda self, *args, **kwargs: self._get_providers(*args, **kwargs)
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
         'provider': fields.selection(_provider_selection, string='Provider', required=True),
+        'image': fields.binary("Image", help="This field holds the image used for this provider, limited to 1024x1024px"),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image, string="Medium-sized image", type="binary", multi="_get_image",
+                                        store={
+                                            'payment.acquirer': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                                        },
+                                        help="Medium-sized image of this provider. It is automatically "\
+                                             "resized as a 128x128px image, with aspect ratio preserved. "\
+                                             "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+                                       string="Small-sized image", type="binary", multi="_get_image",
+                                       store={
+                                           'payment.acquirer': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                                       },
+                                       help="Small-sized image of this provider. It is automatically "\
+                                            "resized as a 64x64px image, with aspect ratio preserved. "\
+                                            "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Help Message', translate=True,
                                help='Message displayed to explain and help the payment process.'),
@@ -100,7 +122,6 @@ class PaymentAcquirer(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'environment': 'prod',
-        'validation': 'manual',
         'website_published': False,
         'auto_confirm': 'at_pay_confirm',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
@@ -158,7 +179,6 @@ class PaymentAcquirer(osv.Model):
                 'country_id': tx.partner_country_id.id,
                 'country': tx.partner_country_id,
                 'phone': tx.partner_phone,
-                'reference': tx.partner_reference,
                 'state': None,
             }
         else:
@@ -370,12 +390,20 @@ class PaymentTransaction(osv.Model):
     """
     _name = 'payment.transaction'
     _description = 'Payment Transaction'
-    _inherit = ['mail.thread']
     _order = 'id desc'
     _rec_name = 'reference'
 
+    def _lang_get(self, cr, uid, context=None):
+        lang_ids = self.pool['res.lang'].search(cr, uid, [], context=context)
+        languages = self.pool['res.lang'].browse(cr, uid, lang_ids, context=context)
+        return [(language.code, language.name) for language in languages]
+
+    def _default_partner_country_id(self, cr, uid, context=None):
+        comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
+        return comp.country_id.id
+
     _columns = {
-        'date_create': fields.datetime('Creation Date', readonly=True, required=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
         'date_validate': fields.datetime('Validation Date'),
         'acquirer_id': fields.many2one(
             'payment.acquirer', 'Acquirer',
@@ -396,32 +424,31 @@ class PaymentTransaction(osv.Model):
         'amount': fields.float('Amount', required=True,
                                digits=(16, 2),
                                track_visibility='always',
-                               help='Amount in cents'),
+                               help='Amount'),
         'fees': fields.float('Fees',
                              digits=(16, 2),
                              track_visibility='always',
                              help='Fees amount; set by the system because depends on the acquirer'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'reference': fields.char('Order Reference', required=True),
-        'acquirer_reference': fields.char('Acquirer Order Reference',
+        'reference': fields.char('Reference', required=True, help='Internal reference of the TX'),
+        'acquirer_reference': fields.char('Acquirer Reference',
                                           help='Reference of the TX as stored in the acquirer database'),
         # duplicate partner / transaction data to store the values at transaction time
         'partner_id': fields.many2one('res.partner', 'Partner', track_visibility='onchange',),
         'partner_name': fields.char('Partner Name'),
-        'partner_lang': fields.char('Lang'),
+        'partner_lang': fields.selection(_lang_get, 'Language'),
         'partner_email': fields.char('Email'),
         'partner_zip': fields.char('Zip'),
         'partner_address': fields.char('Address'),
         'partner_city': fields.char('City'),
         'partner_country_id': fields.many2one('res.country', 'Country', required=True),
         'partner_phone': fields.char('Phone'),
-        'partner_reference': fields.char('Partner Reference',
-                                         help='Reference of the customer in the acquirer database'),
         'html_3ds': fields.char('3D Secure HTML'),
 
-        's2s_cb_eval': fields.char('S2S Callback', help="""\
+        'callback_eval': fields.char('S2S Callback', help="""\
             Will be safe_eval with `self` being the current transaction. i.e.:
-                self.env['my.model'].payment_validated(self)"""),
+                self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval"),
+        'payment_method_id': fields.many2one('payment.method', 'Payment Method', domain="[('acquirer_id', '=', acquirer_id)]"),
     }
 
     def _check_reference(self, cr, uid, ids, context=None):
@@ -436,17 +463,18 @@ class PaymentTransaction(osv.Model):
     ]
 
     _defaults = {
-        'date_create': fields.datetime.now,
         'type': 'form',
         'state': 'draft',
         'partner_lang': 'en_US',
+        'partner_country_id': _default_partner_country_id,
+        'reference': lambda s, c, u, ctx=None: s.pool['ir.sequence'].next_by_code(c, u, 'payment.transaction', context=ctx),
     }
 
     def create(self, cr, uid, values, context=None):
         Acquirer = self.pool['payment.acquirer']
 
         if values.get('partner_id'):  # @TDENOTE: not sure
-            values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['values'])
+            values.update(self.on_change_partner_id(cr, uid, None, values.get('partner_id'), context=context)['value'])
 
         # call custom create method if defined (i.e. ogone_create for ogone)
         if values.get('acquirer_id'):
@@ -464,13 +492,17 @@ class PaymentTransaction(osv.Model):
             if hasattr(self, custom_method_name):
                 values.update(getattr(self, custom_method_name)(cr, uid, values, context=context))
 
-        return super(PaymentTransaction, self).create(cr, uid, values, context=context)
+        # Default value of reference is
+        tx_id = super(PaymentTransaction, self).create(cr, uid, values, context=context)
+        if not values.get('reference'):
+            self.write(cr, uid, [tx_id], {'reference': str(tx_id)}, context=context)
+        return tx_id
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         partner = None
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        return {'values': {
+        return {'value': {
             'partner_name': partner and partner.name or False,
             'partner_lang': partner and partner.lang or 'en_US',
             'partner_email': partner and partner.email or False,
@@ -543,7 +575,8 @@ class PaymentMethod(osv.Model):
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'acquirer_id': fields.many2one('payment.acquirer', 'Acquirer Account', required=True),
         'acquirer_ref': fields.char('Acquirer Ref.', required=True),
-        'active': fields.boolean('Active')
+        'active': fields.boolean('Active'),
+        'payment_ids': fields.one2many('payment.transaction', 'payment_method_id', 'Payment Transactions'),
     }
 
     _defaults = {

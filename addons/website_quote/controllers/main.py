@@ -190,7 +190,7 @@ class sale_quote(http.Controller):
                 'partner_country_id': order.partner_id.country_id.id,
                 'reference': order.name,
                 'sale_order_id': order.id,
-                's2s_cb_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
+                'callback_eval': "self.env['sale.order']._confirm_online_quote(self.sale_order_id.id, self)"
             }, context=context)
             tx = transaction_obj.browse(cr, SUPERUSER_ID, tx_id, context=context)
 

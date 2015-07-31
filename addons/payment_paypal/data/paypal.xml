@@ -4,6 +4,7 @@
 
         <record id="payment_acquirer_paypal" model="payment.acquirer">
             <field name="name">Paypal</field>
+            <field name="image" type="base64" file="payment_paypal/static/description/icon.png"/>
             <field name="provider">paypal</field>
             <field name="company_id" ref="base.main_company"/>
             <field name="view_template_id" ref="paypal_acquirer_button"/>
