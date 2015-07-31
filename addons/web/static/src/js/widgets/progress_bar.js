@@ -93,6 +93,11 @@ var ProgressBar = Widget.extend({
         }
     },
 
+    set_value: function(v) {
+        this.value = v;
+        this._render_value();
+    },
+
     _render_value: function(v) {
         var value = this.value;
         var max_value = this.max_value;

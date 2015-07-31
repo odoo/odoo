@@ -656,7 +656,10 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
                 self.set('value', update.changed_value);
             });
         });
-    }
+    },
+    render_value: function() {
+        this.progressbar.set_value(this.get('value'));
+    },
 });
 
 /**
