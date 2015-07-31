@@ -109,7 +109,7 @@ class product_product(osv.osv):
                     move_ids.append(move_id)
 
 
-                    if diff > 0:
+                    if diff*qty > 0:
                         if not stock_input_acc:
                             stock_input_acc = product.product_tmpl_id.\
                                 property_stock_account_input.id
@@ -135,7 +135,7 @@ class product_product(osv.osv):
                                     'credit': amount_diff,
                                     'move_id': move_id
                                     })
-                    elif diff < 0:
+                    elif diff*qty < 0:
                         if not stock_output_acc:
                             stock_output_acc = product.product_tmpl_id.\
                                 property_stock_account_output.id
