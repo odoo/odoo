@@ -3234,7 +3234,7 @@ class BaseModel(object):
             result = self.read(list(fnames), load='_classic_write')
 
         # check the cache, and update it if necessary
-        if not self._cache.contains(field):
+        if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
