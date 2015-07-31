@@ -321,12 +321,12 @@
         },
         // convert font awsome into image
         font_to_img: function () {
-            $("#wrapwrap .fa").each(function () {
+            $("#wrapwrap .o_editable .fa").each(function () {
                 var $font = $(this);
                 var content;
                 _.find(website.editor.fontIcons, function (font) {
                     return _.find(website.editor.getCssSelectors(font.parser), function (css) {
-                        if ($font.is(css[2])) {
+                        if ($font.is('.'+css[3].join(',.'))) {
                             content = css[1].match(/content:\s*['"](.)['"]/)[1];
                             return true;
                         }
