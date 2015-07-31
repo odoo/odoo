@@ -2,6 +2,7 @@ odoo.define('web_kanban.widgets', function (require) {
 "use strict";
 
 var core = require('web.core');
+var Priority = require('web.Priority');
 var ProgressBar = require('web.ProgressBar');
 var pyeval = require('web.pyeval');
 var Registry = require('web.Registry');
@@ -45,45 +46,40 @@ var AbstractField = Widget.extend(FieldInterface, {
     },
 });
 
-var Priority = AbstractField.extend({
+var KanbanPriority = AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
         this.name = $node.attr('name');
     },
-    prepare_priority: function() {
-        var self = this;
-        var selection = this.field.selection || [];
-        var init_value = selection && selection[0][0] || 0;
-        var data = _.map(selection.slice(1), function(element, index) {
-            var value = {
-                'value': element[0],
-                'name': element[1],
-                'click_value': element[0],
-            };
-            if (index === 0 && self.get('value') == element[0]) {
-                value.click_value = init_value;
-            }
-            return value;
-        });
-        return data;
-    },
     renderElement: function() {
-        this.priorities = this.prepare_priority();
-        var readonly = this.field && this.field.readonly;
-        if (readonly){
-            this.set('readonly', true);
-        }
-        this.$el = $(QWeb.render("Priority", {'widget': this}));
-        if (!readonly){
-            this.$el.on('click', 'a', this.do_action.bind(this));
-        }
+        this._super();
+        this.set('readonly', !!(this.field && this.field.readonly));
     },
-    do_action: function(event) {
-        event.preventDefault();
-        var $a = $(event.currentTarget);
-        var data = {};
-        data[this.name] = String($a.data('value'));
-        this.trigger_up('kanban_update_record', data);
+    start: function() {
+        this.priority = new Priority(this, {
+            readonly: this.get('readonly'),
+            value: this.get('value'),
+            values: this.field.selection || [],
+        });
+
+        this.priority.on('update', this, function(update) {
+            var data = {};
+            data[this.name] = update.value;
+            this.trigger_up('kanban_update_record', data);
+        });
+
+        this.on('change:readonly', this, function() {
+            this.priority.readonly = this.get('readonly');
+            var $div = $('<div/>').insertAfter(this.$el);
+            this.priority.replace($div);
+            this.setElement(this.priority.$el);
+        });
+
+        var self = this;
+        return $.when(this._super(), this.priority.appendTo('<div>').done(function() {
+            self.priority.$el.addClass(self.$el.attr('class'));
+            self.replaceElement(self.priority.$el);
+        }));
     },
 });
 
@@ -234,7 +230,7 @@ var KanbanProgressBar = AbstractField.extend({
 var fields_registry = new Registry();
 
 fields_registry
-    .add('priority', Priority)
+    .add('priority', KanbanPriority)
     .add('kanban_state_selection', KanbanSelection)
     .add("attachment_image", KanbanAttachmentImage)
     .add('progress', KanbanProgressBar);
