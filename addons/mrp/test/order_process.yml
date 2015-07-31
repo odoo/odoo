@@ -8,7 +8,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
-    order.action_compute(context=context)
+    order.action_compute()
 -
   I check production lines after compute.
 -

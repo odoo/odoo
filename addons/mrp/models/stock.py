@@ -1,52 +1,45 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from openerp.osv import fields
-from openerp.osv import osv
-from openerp.tools.translate import _
-from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
+from openerp.tools import float_compare
 
-class StockMove(osv.osv):
+
+class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    _columns = {
-        'production_id': fields.many2one('mrp.production', 'Production Order for Produced Products', select=True, copy=False),
-        'raw_material_production_id': fields.many2one('mrp.production', 'Production Order for Raw Materials', select=True),
-        'consumed_for': fields.many2one('stock.move', 'Consumed for', help='Technical field used to make the traceability of produced products'),
-    }
+    production_id = fields.Many2one('mrp.production', string='Production Order for Produced Products', select=True, copy=False)
+    raw_material_production_id = fields.Many2one('mrp.production', string='Production Order for Raw Materials', select=True)
+    consumed_for = fields.Many2one('stock.move', string='Consumed for', help='Technical field used to make the traceability of produced products')
 
-    def check_tracking(self, cr, uid, move, lot_id, context=None):
-        super(StockMove, self).check_tracking(cr, uid, move, lot_id, context=context)
+    @api.model
+    def check_tracking(self, move, lot_id):
+        super(StockMove, self).check_tracking(move, lot_id)
         if move.raw_material_production_id and move.product_id.tracking!='none' and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.tracking != 'none' and not move.consumed_for:
             raise UserError(_("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
-    def _action_explode(self, cr, uid, move, context=None):
+    @api.model
+    def _action_explode(self, move):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
         """
-        if context is None:
-            context = {}
-        bom_obj = self.pool.get('mrp.bom')
-        move_obj = self.pool.get('stock.move')
-        prod_obj = self.pool.get("product.product")
-        proc_obj = self.pool.get("procurement.order")
-        uom_obj = self.pool.get("product.uom")
+        BomObj = self.env['mrp.bom']
+        MoveObj = self.env['stock.move']
+        ProdObj = self.env['product.product']
+        ProcObj = self.env['procurement.order']
         to_explode_again_ids = []
-        property_ids = context.get('property_ids') or []
-        bis = bom_obj._bom_find(cr, SUPERUSER_ID, product_id=move.product_id.id, properties=property_ids)
-        bom_point = bom_obj.browse(cr, SUPERUSER_ID, bis, context=context)
+        property_ids = self.env.context.get('property_ids') or []
+        bis = BomObj.sudo()._bom_find(product_id=move.product_id.id, properties=property_ids)
+        bom_point = BomObj.sudo().browse(bis)
         if bis and bom_point.type == 'phantom':
             processed_ids = []
-            factor = uom_obj._compute_qty(cr, SUPERUSER_ID, move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
-            res = bom_obj._bom_explode(cr, SUPERUSER_ID, bom_point, move.product_id, factor, property_ids, context=context)
+            factor = self.env['product.uom'].sudo()._compute_qty(move.product_uom.id, move.product_uom_qty, bom_point.product_uom.id) / bom_point.product_qty
+            res = BomObj.sudo()._bom_explode(bom_point, move.product_id, factor, property_ids)
 
             for line in res[0]:
-                product = prod_obj.browse(cr, uid, line['product_id'], context=context)
+                product = ProdObj.browse(line['product_id'])
                 if product.type != 'service':
                     valdef = {
                         'picking_id': move.picking_id.id if move.picking_id else False,
@@ -60,10 +53,10 @@ class StockMove(osv.osv):
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
                     }
-                    mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
-                    to_explode_again_ids.append(mid)
+                    mid = MoveObj.browse(move.id).copy(default=valdef)
+                    to_explode_again_ids.append(mid.id)
                 else:
-                    if prod_obj.need_procurement(cr, uid, [product.id], context=context):
+                    if ProdObj.need_procurement():
                         valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,
@@ -79,49 +72,50 @@ class StockMove(osv.osv):
                             'partner_dest_id': move.partner_id.id,
                             }
                         if move.procurement_id:
-                            proc = proc_obj.copy(cr, uid, move.procurement_id.id, default=valdef, context=context)
+                            proc = ProcObj.browse(move.procurement_id.id).copy(default=valdef)
                         else:
-                            proc = proc_obj.create(cr, uid, valdef, context=context)
-                        proc_obj.run(cr, uid, [proc], context=context) #could be omitted
-            
+                            proc = ProcObj.create(valdef)
+                        ProcObj.run([proc])  # could be omitted
+
             #check if new moves needs to be exploded
             if to_explode_again_ids:
-                for new_move in self.browse(cr, uid, to_explode_again_ids, context=context):
-                    processed_ids.extend(self._action_explode(cr, uid, new_move, context=context))
-            
+                for new_move in self.browse(to_explode_again_ids):
+                    processed_ids.extend(self._action_explode(new_move))
+
             if not move.split_from and move.procurement_id:
                 # Check if procurements have been made to wait for
                 moves = move.procurement_id.move_ids
                 if len(moves) == 1:
-                    proc_obj.write(cr, uid, [move.procurement_id.id], {'state': 'done'}, context=context)
+                    move.procurement_id.write({'state': 'done'})
 
             if processed_ids and move.state == 'assigned':
                 # Set the state of resulting moves according to 'assigned' as the original move is assigned
-                move_obj.write(cr, uid, list(set(processed_ids) - set([move.id])), {'state': 'assigned'}, context=context)
-                
+                MoveObj.browse(list(set(processed_ids) - set([move.id]))).write({'state': 'assigned'})
+
             #delete the move with original product which is not relevant anymore
-            move_obj.unlink(cr, SUPERUSER_ID, [move.id], context=context)
+            MoveObj.browse(move.id).sudo().unlink()
             #return list of newly created move
             return processed_ids
 
         return [move.id]
 
-    def action_confirm(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_confirm(self):
         move_ids = []
-        for move in self.browse(cr, uid, ids, context=context):
+        for move in self:
             #in order to explode a move, we must have a picking_type_id on that move because otherwise the move
             #won't be assigned to a picking and it would be weird to explode a move into several if they aren't
             #all grouped in the same picking.
             if move.picking_type_id:
-                move_ids.extend(self._action_explode(cr, uid, move, context=context))
+                move_ids.extend(self.env['stock.move']._action_explode(move))
             else:
                 move_ids.append(move.id)
 
         #we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, self).action_confirm(cr, uid, move_ids, context=context)
+        return super(StockMove, self.browse(move_ids)).action_confirm()
 
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False,
-                       consumed_for=False, context=None):
+    @api.model
+    def action_consume(self, product_qty, location_id=False, restrict_lot_id=False, restrict_partner_id=False, consumed_for=False):
         """ Consumed product with specific quantity from specific source location.
         @param product_qty: Consumed/produced product quantity (= in quantity of UoM of product)
         @param location_id: Source location
@@ -130,108 +124,94 @@ class StockMove(osv.osv):
         @param consumed_for: optionnal parameter given to this function to make the link between raw material consumed and produced product, for a better traceability
         @return: New lines created if not everything was consumed for this line
         """
-        if context is None:
-            context = {}
         res = []
-        production_obj = self.pool.get('mrp.production')
 
         if product_qty <= 0:
             raise UserError(_('Please provide proper quantity.'))
         #because of the action_confirm that can create extra moves in case of phantom bom, we need to make 2 loops
         ids2 = []
-        for move in self.browse(cr, uid, ids, context=context):
+        for move in self:
             if move.state == 'draft':
-                ids2.extend(self.action_confirm(cr, uid, [move.id], context=context))
+                ids2.extend(self.action_confirm())
             else:
                 ids2.append(move.id)
 
         prod_orders = set()
-        for move in self.browse(cr, uid, ids2, context=context):
+        for move in self.browse(ids2):
             prod_orders.add(move.raw_material_production_id.id or move.production_id.id)
             move_qty = move.product_qty
             if move_qty <= 0:
                 raise UserError(_('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move_qty - product_qty
             # Compare with numbers of move uom as we want to avoid a split with 0 qty
-            quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
+            quantity_rest_uom = move.product_uom_qty - self.env['product.uom']._compute_qty_obj(move.product_id.uom_id, product_qty, move.product_uom)
             if float_compare(quantity_rest_uom, 0, precision_rounding=move.product_uom.rounding) != 0:
-                new_mov = self.split(cr, uid, move, quantity_rest, context=context)
+                new_mov = self.split(move, quantity_rest)
                 if move.production_id:
-                    self.write(cr, uid, [new_mov], {'production_id': move.production_id.id}, context=context)
+                    self.browse(new_mov).write({'production_id': move.production_id.id})
                 res.append(new_mov)
             vals = {'restrict_lot_id': restrict_lot_id,
                     'restrict_partner_id': restrict_partner_id,
                     'consumed_for': consumed_for}
             if location_id:
                 vals.update({'location_id': location_id})
-            self.write(cr, uid, [move.id], vals, context=context)
+            move.write(vals)
         # Original moves will be the quantities consumed, so they need to be done
-        self.action_done(cr, uid, ids2, context=context)
+        self.action_done()
         if res:
-            self.action_assign(cr, uid, res, context=context)
+            self.action_assign()
         if prod_orders:
-            production_obj.signal_workflow(cr, uid, list(prod_orders), 'button_produce')
+            self.env['mrp.production'].browse(prod_orders).signal_workflow('button_produce')
         return res
 
-    def action_scrap(self, cr, uid, ids, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False, context=None):
+    @api.one
+    def action_scrap(self, product_qty, location_id, restrict_lot_id=False, restrict_partner_id=False):
         """ Move the scrap/damaged product into scrap location
         @param product_qty: Scraped product quantity
         @param location_id: Scrap location
         @return: Scraped lines
         """
         res = []
-        production_obj = self.pool.get('mrp.production')
-        for move in self.browse(cr, uid, ids, context=context):
-            new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id,
-                                                            restrict_lot_id=restrict_lot_id,
-                                                            restrict_partner_id=restrict_partner_id, context=context)
+        for move in self:
+            new_moves = super(StockMove, self).action_scrap(product_qty, location_id, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id)
             #If we are not scrapping our whole move, tracking and lot references must not be removed
-            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            production_ids = self.env['mrp.production'].search([('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
-                production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
-            if move.production_id.id:
-                self.write(cr, uid, new_moves, {'production_id': move.production_id.id}, context=context)
-            res.append(new_moves)
+                prod_id.signal_workflow('button_produce')
+            for new_move in new_moves:
+                production_ids.write({'move_lines': [(4, new_move)]})
+                res.append(new_move)
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        res = super(StockMove, self).write(cr, uid, ids, vals, context=context)
+    @api.multi
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
         from openerp import workflow
         if vals.get('state') == 'assigned':
-            moves = self.browse(cr, uid, ids, context=context)
-            orders = list(set([x.raw_material_production_id.id for x in moves if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
+            orders = list(set([x.raw_material_production_id.id for x in self if x.raw_material_production_id and x.raw_material_production_id.state == 'confirmed']))
             for order_id in orders:
-                if self.pool.get('mrp.production').test_ready(cr, uid, [order_id]):
-                    workflow.trg_validate(uid, 'mrp.production', order_id, 'moves_ready', cr)
+                if self.env['mrp.production'].browse(order_id).test_ready():
+                    workflow.trg_validate(self.env.uid, 'mrp.production', order_id, 'moves_ready', self.env.cr)
         return res
 
-class stock_warehouse(osv.osv):
+class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
-    _columns = {
-        'manufacture_to_resupply': fields.boolean('Manufacture in this Warehouse', 
-                                                  help="When products are manufactured, they can be manufactured in this warehouse."),
-        'manufacture_pull_id': fields.many2one('procurement.rule', 'Manufacture Rule'),
-    }
 
-    _defaults = {
-        'manufacture_to_resupply': True,
-    }
+    manufacture_to_resupply = fields.Boolean(string='Manufacture in this Warehouse', default=True, help="When products are manufactured, they can be manufactured in this warehouse.")
+    manufacture_pull_id = fields.Many2one('procurement.rule', string='Manufacture Rule')
 
-    def _get_manufacture_pull_rule(self, cr, uid, warehouse, context=None):
-        route_obj = self.pool.get('stock.location.route')
-        data_obj = self.pool.get('ir.model.data')
+    @api.model
+    def _get_manufacture_pull_rule(self, warehouse):
         try:
-            manufacture_route_id = data_obj.get_object_reference(cr, uid, 'mrp', 'route_warehouse0_manufacture')[1]
+            manufacture_route_id = self.env.ref('mrp.route_warehouse0_manufacture').id
         except:
-            manufacture_route_id = route_obj.search(cr, uid, [('name', 'like', _('Manufacture'))], context=context)
+            manufacture_route_id = self.env['stock.location.route'].search([('name', 'like', _('Manufacture'))])
             manufacture_route_id = manufacture_route_id and manufacture_route_id[0] or False
         if not manufacture_route_id:
             raise UserError(_('Can\'t find any generic Manufacture route.'))
 
         return {
-            'name': self._format_routename(cr, uid, warehouse, _(' Manufacture'), context=context),
+            'name': self._format_routename(warehouse, _(' Manufacture')),
             'location_id': warehouse.lot_stock_id.id,
             'route_id': manufacture_route_id,
             'action': 'manufacture',
@@ -240,52 +220,48 @@ class stock_warehouse(osv.osv):
             'warehouse_id': warehouse.id,
         }
 
-    def create_routes(self, cr, uid, ids, warehouse, context=None):
-        pull_obj = self.pool.get('procurement.rule')
-        res = super(stock_warehouse, self).create_routes(cr, uid, ids, warehouse, context=context)
+    @api.multi
+    def create_routes(self, warehouse):
+        res = super(StockWarehouse, self).create_routes(warehouse)
         if warehouse.manufacture_to_resupply:
-            manufacture_pull_vals = self._get_manufacture_pull_rule(cr, uid, warehouse, context=context)
-            manufacture_pull_id = pull_obj.create(cr, uid, manufacture_pull_vals, context=context)
-            res['manufacture_pull_id'] = manufacture_pull_id
+            manufacture_pull_vals = self._get_manufacture_pull_rule(warehouse)
+            self.manufacture_pull_id = self.env['procurement.rule'].create(manufacture_pull_vals)
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        pull_obj = self.pool.get('procurement.rule')
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
+    @api.multi
+    def write(self, vals):
         if 'manufacture_to_resupply' in vals:
             if vals.get("manufacture_to_resupply"):
-                for warehouse in self.browse(cr, uid, ids, context=context):
+                for warehouse in self:
                     if not warehouse.manufacture_pull_id:
-                        manufacture_pull_vals = self._get_manufacture_pull_rule(cr, uid, warehouse, context=context)
-                        manufacture_pull_id = pull_obj.create(cr, uid, manufacture_pull_vals, context=context)
-                        vals['manufacture_pull_id'] = manufacture_pull_id
+                        manufacture_pull_vals = self._get_manufacture_pull_rule(warehouse)
+                        self.manufacture_pull_id = self.env['procurement.rule'].create(manufacture_pull_vals)
             else:
-                for warehouse in self.browse(cr, uid, ids, context=context):
+                for warehouse in self:
                     if warehouse.manufacture_pull_id:
-                        pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
-        return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
+                        self.env['procurement.rule'].browse(warehouse.manufacture_pull_id.id).unlink()
+        return super(StockWarehouse, self).write(vals)
 
-    def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
-        all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
+    @api.model
+    def get_all_routes_for_wh(self, warehouse):
+        all_routes = super(StockWarehouse, self).get_all_routes_for_wh(warehouse)
         if warehouse.manufacture_to_resupply and warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
             all_routes += [warehouse.manufacture_pull_id.route_id.id]
         return all_routes
 
-    def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
-        res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
-        pull_obj = self.pool.get('procurement.rule')
+    @api.model
+    def _handle_renaming(self, warehouse, name, code):
+        res = super(StockWarehouse, self)._handle_renaming(warehouse, name, code)
         #change the manufacture procurement rule name
         if warehouse.manufacture_pull_id:
-            pull_obj.write(cr, uid, warehouse.manufacture_pull_id.id, {'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)}, context=context)
+            warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-    def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
-        res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
+    def _get_all_products_to_resupply(self, warehouse):
+        res = super(StockWarehouse, self)._get_all_products_to_resupply(warehouse)
         if warehouse.manufacture_pull_id and warehouse.manufacture_pull_id.route_id:
             for product_id in res:
-                for route in self.pool.get('product.product').browse(cr, uid, product_id, context=context).route_ids:
+                for route in self.env['product.product'].browse(product_id).route_ids:
                     if route.id == warehouse.manufacture_pull_id.route_id.id:
                         res.remove(product_id)
                         break
