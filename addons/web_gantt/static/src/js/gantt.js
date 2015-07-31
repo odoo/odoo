@@ -17,7 +17,6 @@ var QWeb = core.qweb;
 
 var GanttView = View.extend({
     display_name: _lt('Gantt'),
-    template: "GanttView",
     view_type: "gantt",
     init: function() {
         this._super.apply(this, arguments);
@@ -196,8 +195,14 @@ var GanttView = View.extend({
         gantt.attachEvent("onTaskEndResize", function(task) {
             self.on_task_changed(task);
         });
+        // Horrible hack to make sure that something is in the dom with the required id.
+        // The problem is that the view manager renders the view in a document fragment.
+        var $div_with_id = $('<div>').addClass('o_gantt_container').attr('id', this.chart_id);
+        $div_with_id.prependTo(document.body);
         gantt.create(this.chart_id);
-        
+
+        this.$el.empty().append($div_with_id);
+
         // bind event to display task when we click the item in the tree
         $(".taskNameItem", self.$el).click(function(event) {
             var task_info = task_ids[event.target.id];
