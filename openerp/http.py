@@ -112,8 +112,6 @@ def dispatch_rpc(service_name, method, params):
             dispatch = openerp.service.model.dispatch
         elif service_name == 'report':
             dispatch = openerp.service.report.dispatch
-        else:
-            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
         result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
@@ -1446,13 +1444,19 @@ class Root(object):
                     try:
                         with openerp.tools.mute_logger('openerp.sql_db'):
                             ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError):
+                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
                         # psycopg2 error or attribute error while constructing
-                        # the registry. That means the database probably does
-                        # not exists anymore or the code doesnt match the db.
+                        # the registry. That means either
+                        # - the database probably does not exists anymore
+                        # - the database is corrupted
+                        # - the database version doesnt match the server version
                         # Log the user out and fall back to nodb
                         request.session.logout()
-                        result = _dispatch_nodb()
+                        # If requesting /web this will loop
+                        if request.httprequest.path == '/web':
+                            result = werkzeug.utils.redirect('/web/database/selector')
+                        else:
+                            result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
                         openerp.modules.registry.RegistryManager.signal_caches_change(db)
@@ -1471,7 +1475,7 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = dispatch_rpc("db", "list", [force])
+    dbs = openerp.service.db.list_dbs(force)
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
@@ -1621,6 +1625,5 @@ class CommonController(Controller):
         nsession = root.session_store.new()
         return nsession.sid
 
-# register main wsgi handler
+#  main wsgi handler
 root = Root()
-openerp.service.wsgi_server.register_wsgi_handler(root)

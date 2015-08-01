@@ -63,25 +63,4 @@ odoo.define_section('basic section', [], function (test, mock) {
             });
     });
 
-    test('JSON-RPC', ['web.DatabaseManager'], function (assert, DatabaseManager) {
-        assert.expect(3);
-        var fetched_dbs = false, fetched_langs = false;
-        mock.add('/web/database/get_list', function () {
-            fetched_dbs = true;
-            return ['foo', 'bar', 'baz'];
-        });
-        mock.add('/web/session/get_lang_list', function () {
-            fetched_langs = true;
-            return [['vo_IS', 'Hopelandic / Vonlenska']];
-        });
-
-        var dbm = new DatabaseManager({});
-        var $fix = $( "#qunit-fixture");
-
-        return dbm.appendTo($fix).then(function () {
-            assert.ok(fetched_dbs, "should have fetched databases");
-            assert.ok(fetched_langs, "should have fetched languages");
-            assert.deepEqual(dbm.db_list, ['foo', 'bar', 'baz']);
-        });
-    });
 });

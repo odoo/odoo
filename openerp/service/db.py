@@ -21,12 +21,20 @@ import openerp.release
 import openerp.sql_db
 import openerp.tools
 
-import security
-
 _logger = logging.getLogger(__name__)
 
 class DatabaseExists(Warning):
     pass
+
+#----------------------------------------------------------
+# Master password required
+#----------------------------------------------------------
+
+def check_super(passwd):
+    if passwd == openerp.tools.config['admin_passwd']:
+        return True
+    else:
+        raise openerp.exceptions.AccessDenied()
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(id, db_name, demo, lang, user_password):
@@ -55,22 +63,6 @@ def _initialize_db(id, db_name, demo, lang, user_password):
             cr.commit()
     except Exception, e:
         _logger.exception('CREATE DATABASE failed:')
-
-def dispatch(method, params):
-    if method in ['create', 'get_progress', 'drop', 'dump', 'restore', 'rename',
-                  'change_admin_password', 'migrate_databases',
-                  'create_database', 'duplicate_database']:
-        passwd = params[0]
-        params = params[1:]
-        security.check_super(passwd)
-    elif method in ['db_exist', 'list', 'list_lang', 'server_version']:
-        # params = params
-        # No security check for these methods
-        pass
-    else:
-        raise KeyError("Method not found: %s" % method)
-    fn = globals()['exp_' + method]
-    return fn(*params)
 
 def _create_empty_database(name):
     db = openerp.sql_db.db_connect('postgres')
@@ -122,9 +114,8 @@ def _drop_conn(cr, db_name):
     except Exception:
         pass
 
-
 def exp_drop(db_name):
-    if db_name not in exp_list(True):
+    if db_name not in list_dbs(True):
         return False
     openerp.modules.registry.RegistryManager.delete(db_name)
     openerp.sql_db.close_db(db_name)
@@ -287,12 +278,28 @@ def exp_rename(old_name, new_name):
         shutil.move(old_fs, new_fs)
     return True
 
+def exp_change_admin_password(new_password):
+    openerp.tools.config['admin_passwd'] = new_password
+    openerp.tools.config.save()
+    return True
+
+def exp_migrate_databases(databases):
+    for db in databases:
+        _logger.info('migrate database %s', db)
+        openerp.tools.config['update']['base'] = True
+        openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
+    return True
+
+#----------------------------------------------------------
+# No master password required
+#----------------------------------------------------------
+
 @openerp.tools.mute_logger('openerp.sql_db')
 def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
     return bool(openerp.sql_db.db_connect(db_name))
 
-def exp_list(document=False):
+def list_dbs(force=False):
     if not openerp.tools.config['list_db'] and not document:
         raise openerp.exceptions.AccessDenied()
     chosen_template = openerp.tools.config['db_template']
@@ -318,10 +325,10 @@ def exp_list(document=False):
     res.sort()
     return res
 
-def exp_change_admin_password(new_password):
-    openerp.tools.config['admin_passwd'] = new_password
-    openerp.tools.config.save()
-    return True
+def exp_list(document=False):
+    if not openerp.tools.config['list_db']:
+        raise openerp.exceptions.AccessDenied()
+    return list_dbs()
 
 def exp_list_lang():
     return openerp.tools.scan_languages()
@@ -332,9 +339,19 @@ def exp_server_version():
     """
     return openerp.release.version
 
-def exp_migrate_databases(databases):
-    for db in databases:
-        _logger.info('migrate database %s', db)
-        openerp.tools.config['update']['base'] = True
-        openerp.modules.registry.RegistryManager.new(db, force_demo=False, update_module=True)
-    return True
+#----------------------------------------------------------
+# db service dispatch
+#----------------------------------------------------------
+
+def dispatch(method, params):
+    g = globals()
+    exp_method_name = 'exp_' + method
+    if method in ['db_exist', 'list', 'list_lang', 'server_version']:
+        return g[exp_method_name](*params)
+    elif exp_method_name in g:
+        passwd = params[0]
+        params = params[1:]
+        check_super(passwd)
+        return g[exp_method_name](*params)
+    else:
+        raise KeyError("Method not found: %s" % method)
