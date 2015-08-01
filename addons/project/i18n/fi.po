@@ -4,6 +4,7 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
 # Kari Lindgren <karisatu@gmail.com>, 2015
 # Miku Laitinen <miku.laitinen@gmail.com>, 2015
 msgid ""
@@ -11,9 +12,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-10 20:25+0000\n"
+"PO-Revision-Date: 2015-07-23 21:01+0000\n"
 "Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/p/odoo-8/language/fi/)\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -58,7 +59,7 @@ msgid ""
 "                  projects or invite customers to share your activities.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                  Klikkaa aloittaaksesi uuden projektin.\n                </p><p>\n                  Projekteilla voit organisoida itsesi tai organisaatiosi työntekoa. Voit suunnitella tehtäviä, käsitellä ongelmatapauksia ja seurata ajankäyttöä. Voit luoda sisäisiä projekteja (esim. tutkimus & tuotekehitys, myyntiprosessien parantaminen), yksityisiä projekteja (henkilökohtainen tehtävälista) tai asiakasprojekteja.\n                </p><p>\n                  Organisaatiosi sisäisten projektien lisäksi voit kutsua asiakkaitasi projektien osapuoliksi.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                  Klikkaa aloittaaksesi uuden projektin.\n                </p><p>\n                  Projekteilla voit organisoida itsesi tai organisaatiosi työntekoa. Voit suunnitella tehtäviä, käsitellä ongelmatapauksia ja seurata ajankäyttöä. Voit luoda sisäisiä projekteja (esim. tutkimus &amp; tuotekehitys, myyntiprosessien parantaminen), yksityisiä projekteja (henkilökohtainen tehtävälista) tai asiakasprojekteja.\n                </p><p>\n                  Organisaatiosi sisäisten projektien lisäksi voit kutsua asiakkaitasi projektien osapuoliksi.\n                </p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_category_action
@@ -67,7 +68,7 @@ msgid ""
 "                Click to add a new tag.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa lisätäksesi uuden tunnisteen.\n</p>"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -81,7 +82,7 @@ msgid ""
 "                solving a task or an issue.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa tästä lisätäksesi uuden vaiheen tehtävän putkeen.\n</p><p>\nMäärittele projektissa käytettävät vaiheet, joiden kautta\ntehtävä kulkee putkessa aina luomisesta sulkemiseen saakka.\nVaiheiden avulla voit seurata tehtävän tai tapauksen etenemistä.\n</p>\n  "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -93,7 +94,7 @@ msgid ""
 "                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nOdoon projektinhallinta mahdollistaa tehokkaan tavan hallita tehtäviä. Voit esimerkiksi seurata tehtävien edistymistä, keskustella tehtävistä ja liittää tehtäviin dokumentteja.\n</p>"
 
 #. module: project
 #: help:project.task,kanban_state:0
@@ -102,7 +103,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready for next stage indicates the task is ready to be pulled to the next stage"
-msgstr "Tehtävän kanban-tila ilmaisee erikostilanteiden vaikutuksia siihen:\n * Normaali on vaiheen oletustila\n * Estetty ilmaisee, että jokin estää tehtävän edistymisen\n * Valmis seuraavaan vaiheeseen ilmaisee, että tehtävä voidaan siirtää eteenpäin seuraavaan vaiheeseen"
+msgstr "Tehtävän kanban-tila ilmaisee tehtävän suorittamiseen vaikuttavia erikostilanteita:\n * \"Normaali\" on vaiheen oletustila\n * \"Estetty\" ilmaisee, että jokin estää tehtävän edistymisen\n * \"Valmis seuraavaan vaiheeseen\" ilmaisee, että tehtävä voidaan siirtää eteenpäin seuraavaan vaiheeseen"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -137,7 +138,7 @@ msgstr "Nimimerkki"
 #. module: project
 #: field:project.project,alias_model:0
 msgid "Alias Model"
-msgstr ""
+msgstr "Sähköpostialiaksen käyttämä malli"
 
 #. module: project
 #: field:project.config.settings,group_manage_delegation_task:0
@@ -157,7 +158,7 @@ msgstr "Sallii sinun laskea tehtävien työmäärät."
 #. module: project
 #: help:project.config.settings,group_manage_delegation_task:0
 msgid "Allows you to delegate tasks to other users."
-msgstr ""
+msgstr "Sallii sinun siirtää tehtäviä toisille käyttäjille"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
@@ -172,7 +173,7 @@ msgstr "Analyyttinen tili"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
+msgstr "Yhdistä tämä projekti toiseen projektiin kustannuspaikan avulla"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -354,12 +355,12 @@ msgstr "Yhteystieto"
 #. module: project
 #: model:project.category,name:project.project_category_01
 msgid "Contact's suggestion"
-msgstr ""
+msgstr "Yhteyshenkilön ehdotus"
 
 #. module: project
 #: field:project.project,analytic_account_id:0
 msgid "Contract/Analytic"
-msgstr ""
+msgstr "Sopimus/kustannuspaikka"
 
 #. module: project
 #: field:project.task,create_date:0
@@ -412,12 +413,12 @@ msgstr "Päivämäärä"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Päivää toimeksiantoon"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -584,12 +585,12 @@ msgstr "Arvioitu aika tehtävän suorittamiseen, tämän asettaa yleensä projek
 #. module: project
 #: model:project.category,name:project.project_category_03
 msgid "Experiment"
-msgstr ""
+msgstr "Kokeilu"
 
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Laajennetut suodattimet"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -599,19 +600,19 @@ msgstr "Lisätiedot"
 #. module: project
 #: model:project.category,name:project.project_category_02
 msgid "Feature request"
-msgstr ""
+msgstr "Ominaisuuspyyntö"
 
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "Laskostettu kanban-näkymässä"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
+msgstr "Seuraa tätä projektia saadaksesi automaattisesti tiedon muutoksista tehtävissä ja tapauksissa."
 
 #. module: project
 #: field:project.project,message_follower_ids:0
@@ -622,7 +623,7 @@ msgstr "Seuraajat"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
-msgstr ""
+msgstr "GTD (Ajanhallintamenetelmä)"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -655,7 +656,7 @@ msgstr "Ryhmittele"
 #. module: project
 #: view:project.config.settings:project.view_config_settings
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Asiakastuki"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -752,12 +753,12 @@ msgstr "Käynnissä"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "Saapuvat sähköpostit luovat"
 
 #. module: project
 #: field:project.task,planned_hours:0
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Alunperin suunnitellut tunnit"
 
 #. module: project
 #: help:project.project,alias_id:0
@@ -765,13 +766,13 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr ""
+msgstr "Tämän projektin sisäinen sähköpostiosoite. Saapuvat viestit synkronoidaan automaattisesti tehtävien kanssa (tai myös tapausten kanssa jos Issue Tracker -moduuli on asennettu)."
 
 #. module: project
 #: code:addons/project/project.py:201
 #, python-format
 msgid "Internal project: all employees can access"
-msgstr ""
+msgstr "Sisäinen projekti: pääsy kaikilla työntekijöillä"
 
 #. module: project
 #: code:addons/project/project.py:171
@@ -782,7 +783,7 @@ msgstr "Virheellinen toiminto!"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr ""
+msgstr "Laskuta tapausten työmäärä"
 
 #. module: project
 #: field:project.project,message_is_follower:0
@@ -804,24 +805,24 @@ msgstr "Kanban tila"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "Viimeinen viesti"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Viimeksi muokattu"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Vaihe päivittynyt viimeksi"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -844,7 +845,7 @@ msgstr "Viimeksi päivitetty"
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "Yritys voi valita mitä Pad-sovellusta käytetään uusien Padien kanssa (esim. http://etherpad.com/). \n- Tämä asentaa moduulin pad."
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -852,7 +853,7 @@ msgid ""
 "Link this project to an analytic account if you need financial management on"
 " projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
+msgstr "Yhdistä projekti analyyttiseen tiliin (kustannuspaikkaan) jos haluat projektille  kustannusseurantaa. Tämä sallii projektibudjetoinnin, -suunnittelun, kustannus- ja kateanalyysin, tuntikorttien liittämisen projektille (käytetyn ajan seurannan) jne."
 
 #. module: project
 #: field:project.config.settings,group_tasks_work_on_tasks:0
@@ -939,7 +940,7 @@ msgstr "Uusi"
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "Uusi viesti"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1089,7 +1090,7 @@ msgstr "Näkyvyys"
 #: code:addons/project/project.py:202
 #, python-format
 msgid "Private project: followers Only"
-msgstr ""
+msgstr "Yksityinen projekti: näkyy vain seuraajille"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1202,20 +1203,20 @@ msgstr "Projektit"
 msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
-msgstr ""
+msgstr "Ota käyttöön tapausten- ja virheidenhallinta projekteissa. \n- Tämä toiminto asentaa moduulin project_issue."
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr ""
+msgstr "Ota käyttöön työmäärän seuranta (tuntikortit) tapauksille ja virheidenhallinnalle. \n- Tämä toiminto asentaa moduulin project_issue_sheet."
 
 #. module: project
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr ""
+msgstr "Julkinen projekti: näkyy kaikille käyttäjille"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1233,12 +1234,12 @@ msgstr "Valmis"
 #: selection:project.task.history.cumulative,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Valmis seuraavaan vaiheeseen"
 
 #. module: project
 #: field:project.config.settings,module_project_timesheet:0
 msgid "Record timesheet lines per tasks"
-msgstr "Kirjaa tuntikortin rivit tehtäville."
+msgstr "Kirjaa tehdyt työtunnit tehtäville"
 
 #. module: project
 #: help:project.task.delegate,new_task_description:0
@@ -1248,7 +1249,7 @@ msgstr "Sisällytä uudelleen tehtävän kuvaus käyttäjän tehtävään"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Remaining"
-msgstr ""
+msgstr "Jäljellä"
 
 #. module: project
 #: view:project.task:project.view_task_tree2
@@ -1279,7 +1280,7 @@ msgstr "Vastuuhenkilö"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "Tarkastaja"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1423,7 +1424,7 @@ msgstr "Tehtävän toimenpiteet"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "Annettu tehtäväksi"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1450,13 +1451,13 @@ msgstr "Tehtävän delegointi"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "Tehtäväputki"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "Tehtävä on valmis seuraavaan vaiheeseen"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1574,21 +1575,21 @@ msgstr "Testaus"
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
+msgstr "Luotavan dokumentin tyyppi, kun sähköpostia on vastaanotettu tämän projektin sähköpostialiaksella."
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "Tämä toiminto sallii tehtyjen työtuntien kirjaamisen projektin tehtäville siten, että kirjaukset ovat yhteydessä työntekijän tuntikorttiin. Muutokset projektin tehtävien työtuntikirjauksiin vaikuttavat suoraan tuntikorttiin, ja sama pätee myös toiseen suuntaan.\n- Tämä asentaa moduulin project_timesheet."
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
 "This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
-msgstr ""
+msgstr "Tämä ominaisuus luo automaattisesti tehtäviä projektille palvelutuotteiden myyntitilauksista. Toisin sanoen tehtävät luodaan hankintariveiltä joissa tuotetyyppi on 'palvelu', hankintatapa 'tilausohjautuva tuotanto' ja toimitustapa 'valmistus'.\n- Tämä asentaa moduulin sale_service."
 
 #. module: project
 #: help:project.task,active:0
@@ -1611,7 +1612,7 @@ msgstr "Tämän raportin avulla voit analysoida projektien ja käyttäjien tehok
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään näytettävää tietuetta."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1623,7 +1624,7 @@ msgstr "Tämä muuttaa projekteilla ja tehtävillä käytettävää mittayksikk�
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
-msgstr ""
+msgstr "Tämä asettaa mittayksikön projekteille ja tehtäville.\nJos käytät tuntikorttia projekteille (moduuli: project_timesheet), älä unohda asettaa oikeata mittayksikköa työntekijöille."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -1650,7 +1651,7 @@ msgstr "Tarkistustehtäväsi otsikko"
 msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
-msgstr ""
+msgstr "Laskuttaaksesi tai muokataksesi laskutusasetuksia, siirry projektiin liitettyyn sopimukseen:"
 
 #. module: project
 #: field:project.task,total_hours:0
@@ -1677,7 +1678,7 @@ msgstr "Jäljellä oleva aika yhteensä, voidaan uudelleenarvioida säännöllis
 #. module: project
 #: field:project.config.settings,module_project_issue:0
 msgid "Track issues and bugs"
-msgstr ""
+msgstr "Ota käyttöön tapausten- ja virheidenhallinta"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -1703,7 +1704,7 @@ msgstr "Käytettävyys"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "Tehtävät"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1766,17 +1767,17 @@ msgstr "Työaika"
 #. module: project
 #: field:project.task,progress:0
 msgid "Working Time Progress (%)"
-msgstr ""
+msgstr "Työajan edistyminen (%)"
 
 #. module: project
 #: field:project.config.settings,time_unit:0
 msgid "Working time unit"
-msgstr ""
+msgstr "Työajan yksikkö"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "Työmäärä"
 
 #. module: project
 #: code:addons/project/project.py:172
@@ -1785,13 +1786,13 @@ msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
 "project's tasks and then delete the project or simply deactivate the "
 "project."
-msgstr ""
+msgstr "Et voi poistaa projektia, jossa on tehtäviä. Voit joko poistaa projektin kaikki tehtävät ja sen jälkeen poistaa projektin tai deaktivoida projektin."
 
 #. module: project
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr ""
+msgstr "Sinun pitää määrittää jäseniä projektille: '%s'"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1818,7 +1819,7 @@ msgstr "tai"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "tehtävät"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0
