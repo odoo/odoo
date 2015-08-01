@@ -699,7 +699,7 @@ class Database(http.Controller):
     def create(self, master_pwd, name, lang, password, **post):
         try:
             request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
-            request.session.authenticate(name, login, password)
+            request.session.authenticate(name, 'admin', password)
             return http.local_redirect('/web/')
         except Exception, e:
             error = "Database creation error: %s" % e
