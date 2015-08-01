@@ -151,16 +151,6 @@
 
         </template>
 
-        <template id="web.assets_webclient_manifest">
-            <!-- This bundle can be used for module manifest asset declaration backward compatibility -->
-            <t t-foreach="manifest_list('css')" t-as="css_file">
-                <link rel="stylesheet" t-att-href="css_file"/>
-            </t>
-            <t t-foreach="manifest_list('js')" t-as="js_file">
-                <script type="text/javascript" t-att-src="js_file"></script>
-            </t>
-        </template>
-
         <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
             <html style="height: 100%">
                 <head>
@@ -175,6 +165,73 @@
                     <t t-raw="0"/>
                 </body>
             </html>
+        </template>
+
+        <template id="web.login_layout" name="Login Layout">
+            <t t-call="web.layout">
+                <t t-set="head">
+                  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+                  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                </t>
+                <t t-set="body_classname" t-value="'container'"/>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 o_database_list">
+                    <div class="text-center">
+                      <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                    </div>
+                    <t t-raw="0"/>
+                    <div class="text-center" t-if="not disable_footer">
+                        <t t-if="not disable_database_manager">
+                            <a class="" href="/web/database/manager">Manage Databases</a> |
+                        </t>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
+                    </div>
+
+                  </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="web.login" name="Login">
+            <t t-call="web.login_layout">
+
+                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+
+                    <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                        <label for="db" class="control-label">Database</label>
+                        <div class="input-group">
+                            <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
+                            <span class="input-group-btn">
+                              <a href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database"></i></a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Email</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
+                    </div>
+
+                    <div class="form-group field-password">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+                    </div>
+
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <p class="alert alert-success" t-if="message">
+                        <t t-esc="message"/>
+                    </p>
+
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="clearfix oe_login_buttons">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+
+                </form>
+            </t>
         </template>
 
         <template id="web.menu">
@@ -275,82 +332,6 @@
                         <t t-call="web.menu_secondary"/>
                     </div><div class="oe_application"/>
                 </div>
-            </t>
-        </template>
-
-        <template id="web.login_layout" name="Login Layout">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link href="/web/static/src/css/base.css" rel="stylesheet"/>
-                    <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-                </t>
-                <t t-set="body_classname" t-value="'oe_single_form'"/>
-                <div class="oe_single_form_container modal-content">
-                    <div class="oe_single_form_logo">
-                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
-                    </div>
-                    <hr/>
-                    <t t-raw="0"/>
-
-                    <div class="oe_single_form_footer" t-if="not disable_footer">
-                        <t t-if="not disable_database_manager">
-                            <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
-                            <span class="oe_footer_seperator"> | </span>
-                        </t>
-                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
-                    </div>
-                </div>
-            </t>
-        </template>
-
-        <template id="web.database_select" name="Database select widget">
-            <script type="text/javascript">
-                function dbchanged(db) {
-                    document.location = "/web/login?<t t-if="debug">debug&amp;</t>db=" + db;
-                }
-            </script>
-            <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
-                <label for="db" class="control-label">Database</label>
-                <select name="db" id="db" class="form-control" required="required" t-att-autofocus="'autofocus' if request.db not in databases else None" onchange="dbchanged(this.value)">
-                    <option></option>
-                    <t t-foreach="databases" t-as="db">
-                        <option t-att-selected="'selected' if db == request.db else None">
-                            <t t-esc="db"/>
-                        </option>
-                    </t>
-                </select>
-            </div>
-        </template>
-
-        <template id="web.login" name="Login">
-            <t t-call="web.login_layout">
-                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
-
-                    <t t-call="web.database_select"/>
-
-                    <div class="form-group field-login">
-                        <label for="login" class="control-label">Email</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
-                    </div>
-
-                    <div class="form-group field-password">
-                        <label for="password" class="control-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
-                    </div>
-
-                    <p class="alert alert-danger" t-if="error">
-                        <t t-esc="error"/>
-                    </p>
-                    <p class="alert alert-success" t-if="message">
-                        <t t-esc="message"/>
-                    </p>
-
-                    <input type="hidden" name="redirect" t-att-value="redirect"/>
-                    <div class="clearfix oe_login_buttons">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                    </div>
-
-                </form>
             </t>
         </template>
 
