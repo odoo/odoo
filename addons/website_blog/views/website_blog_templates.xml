@@ -101,6 +101,9 @@
 <!-- Blog Post List: Displaying a list of Blog Posts -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
+        <t t-set="head">
+            <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+        </t>
         <div class="container">
             <t t-call="website.pager" >
                 <t t-set="classname">pull-right</t>
@@ -453,6 +456,7 @@
                 <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
                 <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
                 <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+                <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
             </h2>
         </section>
     </xpath>
@@ -486,5 +490,24 @@
          <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
     </xpath>
 </template>
+
+<!-- Atom Feed -->
+<template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<feed t-att-xmlns="'http://www.w3.org/2005/Atom'">
+    <title t-esc="blog.name"/>
+    <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
+    <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
+    <updated t-esc="(posts[0] if posts else blog).write_date.replace(' ', 'T') + 'Z'"/>
+    <entry t-foreach="posts" t-as="post">
+        <title t-esc="post.name"/>
+        <link t-att-href="'%s/%s' % (base_url, post.website_url)"/>
+        <id t-esc="'%s/%s' % (base_url, post.website_url)"/>
+        <author><name t-esc="post.sudo().author_id.name"/></author>
+        <summary t-esc="post.subtitle"/>
+        <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>
+    </entry>
+</feed>
+</template>
+
 </data>
 </openerp>

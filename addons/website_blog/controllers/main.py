@@ -170,6 +170,15 @@ class WebsiteBlog(http.Controller):
         response = request.website.render("website_blog.blog_post_short", values)
         return response
 
+    @http.route(['/blog/<model("blog.blog"):blog>/feed'], type='http', auth="public")
+    def blog_feed(self, blog, limit='15'):
+        v = {}
+        v['blog'] = blog
+        v['base_url'] = request.env['ir.config_parameter'].get_param('web.base.url')
+        v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
+        r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
+        return r
+
     @http.route([
             '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog[0])]"):blog_post>''',
     ], type='http', auth="public", website=True)
