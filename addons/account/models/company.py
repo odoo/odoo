@@ -68,11 +68,12 @@ class ResCompany(models.Model):
     @api.multi
     def write(self, values):
         # Reflect the change on accounts
-        digits = values.get('accounts_code_digits') or self.accounts_code_digits
-        if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
-            new_bank_code = values.get('bank_account_code_prefix') or self.bank_account_code_prefix
-            self.reflect_code_prefix_change(self.bank_account_code_prefix, new_bank_code, digits)
-        if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
-            new_cash_code = values.get('cash_account_code_prefix') or self.cash_account_code_prefix
-            self.reflect_code_prefix_change(self.cash_account_code_prefix, new_cash_code, digits)
+        for company in self:
+            digits = values.get('accounts_code_digits') or company.accounts_code_digits
+            if values.get('bank_account_code_prefix') or values.get('accounts_code_digits'):
+                new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
+                company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code, digits)
+            if values.get('cash_account_code_prefix') or values.get('accounts_code_digits'):
+                new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
+                company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
         return super(ResCompany, self).write(values)
