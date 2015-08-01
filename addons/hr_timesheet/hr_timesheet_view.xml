@@ -6,7 +6,7 @@
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">                  
+                <tree editable="top" string="Timesheet Activities">
                     <field name="date"/>
                     <field name="user_id" required="1" options='{"no_open": True}'
                         context="{'default_groups_ref': ['base.group_user']}"/>
@@ -17,7 +17,7 @@
                     <field name="journal_id" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" domain="[('type','=','service')]" invisible="1"/>
                     <field name="is_timesheet" invisible="1"/>
                 </tree>
             </field>
@@ -43,7 +43,7 @@
                         <page string="Information">
                         <group>
                             <group string="Product">
-                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
+                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" domain="[('type','=','service')]"/>
                                 <label string="Duration" for="unit_amount"/>
                                 <div>
                                     <field name="unit_amount" class="oe_inline" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
@@ -108,7 +108,7 @@
             </field>
         </record>
 
- 
+
         <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
@@ -119,12 +119,12 @@
                     <label for="invoice_on_timesheets"/>
                 </xpath>
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d" 
+                    <button class="oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d"
                         icon="fa-usd"  string="Cost/Revenue" widget="statinfo" attrs="{'invisible': [('type','=','template')]}"/>
                 </div>
             </field>
         </record>
-        
+
         <record id="act_hr_timesheet_accounts_form" model="ir.actions.act_window">
             <field name="name">Timesheet Accounts</field>
             <field name="type">ir.actions.act_window</field>
@@ -137,7 +137,7 @@
 
         <menuitem name="Configuration" id="menu_hr_timesheet_config" sequence="100"
             parent="hr_attendance.timesheet_menu_root" groups="base.group_configuration" action="act_hr_timesheet_accounts_form"/>
-        
+
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
