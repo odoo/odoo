@@ -24,6 +24,7 @@
                             <field name="uom_id" groups="product.group_uom" class="oe_inline"/>
                         </div>
                         <field name="date_planned"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                     </group>
                     <footer>
                         <button name="make_procurement" string="Ask New Products" type="object"  class="oe_highlight"  />
