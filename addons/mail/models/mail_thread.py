@@ -1603,7 +1603,7 @@ class MailThread(models.AbstractModel):
             user_ids = [self._uid]
         result = self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
         if user_ids and result:
-            self.pool['ir.ui.menu'].clear_cache()
+            self.pool['ir.ui.menu'].clear_caches()
         return result
 
     @api.multi
@@ -1669,7 +1669,7 @@ class MailThread(models.AbstractModel):
         partner_ids = [user.partner_id.id for user in self.env['res.users'].browse(user_ids)]
         result = self.message_unsubscribe(partner_ids)
         if partner_ids and result:
-            self.pool['ir.ui.menu'].clear_cache()
+            self.pool['ir.ui.menu'].clear_caches()
         return result
 
     @api.multi
