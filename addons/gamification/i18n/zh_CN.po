@@ -3,15 +3,16 @@
 # * gamification
 # 
 # Translators:
+# leangjia <liangjia@qq.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-18 03:25+0000\n"
+"PO-Revision-Date: 2015-07-30 08:26+0000\n"
 "Last-Translator: leangjia <liangjia@qq.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -44,7 +45,7 @@ msgid ""
 "    \n"
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
-msgstr ""
+msgstr "\n<header>\n        <strong>提醒 ${object.name}</strong>\n    </header>\n    \n    <p> 最近 ${object.remind_update_delay} 天内，你没有更新你的目标进度 ${object.definition_id.name} (当前完成 ${object.completeness}%)。 不要忘记去做。</p>\n            "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.simple_report_template
@@ -222,7 +223,7 @@ msgstr ">="
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
-msgstr ""
+msgstr "当一个目标的当前值达到目标值时被视为已完成"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -272,7 +273,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,rule_auth_user_ids:0
 msgid "Authorized Users"
-msgstr ""
+msgstr "授权用户"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -294,34 +295,34 @@ msgstr ""
 #: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
-msgstr ""
+msgstr "勋章"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Badge Description"
-msgstr ""
+msgstr "勋章描述"
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr ""
+msgstr "授予勋章"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_list_view
 msgid "Badge List"
-msgstr ""
+msgstr "勋章列表"
 
 #. module: gamification
 #: field:gamification.badge.user,badge_name:0
 msgid "Badge Name"
-msgstr ""
+msgstr "勋章名字"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
 #: model:ir.ui.menu,name:gamification.gamification_badge_menu
 msgid "Badges"
-msgstr ""
+msgstr "勋章"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -335,17 +336,17 @@ msgstr ""
 #. module: gamification
 #: field:gamification.goal.definition,batch_mode:0
 msgid "Batch Mode"
-msgstr ""
+msgstr "批量模式"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_idea
 msgid "Brilliant"
-msgstr ""
+msgstr "天才"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "Can not grant"
-msgstr ""
+msgstr "不能授予"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:457
@@ -374,17 +375,17 @@ msgstr "分类"
 #: field:gamification.challenge.line,challenge_id:0
 #: field:gamification.goal,challenge_id:0
 msgid "Challenge"
-msgstr ""
+msgstr "任务"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_wizard
 msgid "Challenge Description"
-msgstr ""
+msgstr "任务描述"
 
 #. module: gamification
 #: field:gamification.goal,line_id:0
 msgid "Challenge Line"
-msgstr ""
+msgstr "任务行"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -440,23 +441,23 @@ msgstr "备注"
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
 msgid "Complete your Profile"
-msgstr ""
+msgstr "填写您的个人资料"
 
 #. module: gamification
 #: field:gamification.goal,completeness:0
 msgid "Completeness"
-msgstr ""
+msgstr "完整性"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_search_view
 #: field:gamification.goal.definition,computation_mode:0
 msgid "Computation Mode"
-msgstr ""
+msgstr "计算方式"
 
 #. module: gamification
 #: field:gamification.goal,computation_mode:0
 msgid "Computation mode"
-msgstr ""
+msgstr "计算方式"
 
 #. module: gamification
 #: field:gamification.challenge.line,condition:0
@@ -466,7 +467,7 @@ msgstr "条件"
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr ""
+msgstr "创建用户"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -517,7 +518,7 @@ msgstr "当前"
 #. module: gamification
 #: field:gamification.goal,current:0
 msgid "Current Value"
-msgstr ""
+msgstr "当前值"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -594,7 +595,7 @@ msgstr "显示模式"
 #. module: gamification
 #: field:gamification.goal.definition,display_mode:0
 msgid "Displayed as"
-msgstr ""
+msgstr "显示为"
 
 #. module: gamification
 #: field:gamification.goal.definition,batch_distinctive_field:0
@@ -686,22 +687,22 @@ msgstr "关注者"
 #. module: gamification
 #: field:gamification.challenge,reward_first_id:0
 msgid "For 1st user"
-msgstr ""
+msgstr "首位用户"
 
 #. module: gamification
 #: field:gamification.challenge,reward_second_id:0
 msgid "For 2nd user"
-msgstr ""
+msgstr "第二位用户"
 
 #. module: gamification
 #: field:gamification.challenge,reward_third_id:0
 msgid "For 3rd user"
-msgstr ""
+msgstr "第三位用户"
 
 #. module: gamification
 #: field:gamification.challenge,reward_id:0
 msgid "For Every Succeding User"
-msgstr ""
+msgstr "每一位成功的用户"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -721,22 +722,22 @@ msgstr ""
 #. module: gamification
 #: model:ir.module.category,name:gamification.module_goal_category
 msgid "Gamification"
-msgstr ""
+msgstr "游戏化"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr ""
+msgstr "游戏化工具"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification badge"
-msgstr ""
+msgstr "游戏化勋章"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "游戏化任务"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -829,34 +830,34 @@ msgstr "干得好"
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "Grant"
-msgstr ""
+msgstr "授予"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 msgid "Grant Badge"
-msgstr ""
+msgstr "授予奖章"
 
 #. module: gamification
 #: view:gamification.badge.user.wizard:gamification.view_badge_wizard_grant
 #: view:gamification.goal.wizard:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr ""
+msgstr "给予勋章"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr ""
+msgstr "授予这枚勋章"
 
 #. module: gamification
 #: view:gamification.badge.user:gamification.badge_user_kanban_view
 msgid "Granted by"
-msgstr ""
+msgstr "授予者"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Granting"
-msgstr ""
+msgstr "授予"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_search_view
@@ -891,7 +892,7 @@ msgstr "保存聊天摘要(消息数量,……等)。为了插入到看板视图
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
-msgstr ""
+msgstr "如何计算目标？"
 
 #. module: gamification
 #: field:gamification.badge,id:0 field:gamification.badge.user,id:0
@@ -1051,7 +1052,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Line List"
-msgstr ""
+msgstr "列表行"
 
 #. module: gamification
 #: field:gamification.challenge,line_ids:0
@@ -1071,7 +1072,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
 msgid "Mail Group Following"
-msgstr ""
+msgstr "以下邮件组"
 
 #. module: gamification
 #: model:res.groups,name:gamification.group_goal_manager
@@ -1099,7 +1100,7 @@ msgstr "模型"
 #. module: gamification
 #: field:gamification.challenge.line,definition_monetary:0
 msgid "Monetary"
-msgstr ""
+msgstr "货币"
 
 #. module: gamification
 #: field:gamification.goal.definition,monetary:0
@@ -1120,7 +1121,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_this_month:0
 msgid "Monthly total"
-msgstr ""
+msgstr "每月总数"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_search_view
@@ -1140,7 +1141,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_my:0
 msgid "My Total"
-msgstr ""
+msgstr "我的总数"
 
 #. module: gamification
 #: field:gamification.challenge.line,name:0
@@ -1196,7 +1197,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,stat_count_distinct:0
 msgid "Number of users"
-msgstr ""
+msgstr "用户数量"
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
@@ -1211,7 +1212,7 @@ msgstr ""
 #. module: gamification
 #: help:gamification.badge,rule_auth_user_ids:0
 msgid "Only these people can give this badge"
-msgstr ""
+msgstr "只有这些人能给这个勋章"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1221,7 +1222,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,owner_ids:0
 msgid "Owners"
-msgstr ""
+msgstr "拥有者"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -1340,7 +1341,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,rule_auth_badge_ids:0
 msgid "Required Badges"
-msgstr ""
+msgstr "需要勋章"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view
@@ -1362,7 +1363,7 @@ msgstr ""
 #: view:gamification.challenge:gamification.challenge_form_view
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "Reward"
-msgstr ""
+msgstr "奖励"
 
 #. module: gamification
 #: field:gamification.challenge,reward_failure:0
@@ -1377,7 +1378,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.badge,challenge_ids:0
 msgid "Reward of Challenges"
-msgstr ""
+msgstr "任务奖励"
 
 #. module: gamification
 #: field:gamification.badge,goal_definition_ids:0
@@ -1434,7 +1435,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge,report_message_group_id:0
 msgid "Send a copy to"
-msgstr ""
+msgstr "抄送"
 
 #. module: gamification
 #: field:gamification.badge.user,sender_id:0
@@ -1474,7 +1475,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "公司资料设置"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1613,7 +1614,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The higher the better"
-msgstr ""
+msgstr "越高越好"
 
 #. module: gamification
 #: help:gamification.badge,owner_ids:0
@@ -1628,7 +1629,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,condition:0
 msgid "The lower the better"
-msgstr ""
+msgstr "越低越好"
 
 #. module: gamification
 #: help:gamification.badge,rule_max_number:0
@@ -1775,7 +1776,7 @@ msgstr "更新"
 #: code:addons/gamification/models/goal.py:491
 #, python-format
 msgid "Update %s"
-msgstr ""
+msgstr "更新  %s"
 
 #. module: gamification
 #: field:gamification.badge.user,user_id:0
@@ -1845,7 +1846,7 @@ msgstr ""
 #: code:addons/gamification/wizard/grant_badge.py:43
 #, python-format
 msgid "You can not grant a badge to yourself"
-msgstr ""
+msgstr "你不能自己授予自己一个勋章"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
@@ -1867,7 +1868,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "badges this month"
-msgstr ""
+msgstr "本月的勋章"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
@@ -1883,7 +1884,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr ""
+msgstr "如.天"
 
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
@@ -1896,12 +1897,12 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
+msgstr "例如 user.partner_id.id"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
 msgid "granted,"
-msgstr ""
+msgstr "授予"
 
 #. module: gamification
 #. openerp-web

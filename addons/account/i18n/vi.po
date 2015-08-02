@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:39+0000\n"
+"PO-Revision-Date: 2015-08-01 06:30+0000\n"
 "Last-Translator: fanha99 <fanha99@hotmail.com>\n"
-"Language-Team: Vietnamese (http://www.transifex.com/p/odoo-8/language/vi/)\n"
+"Language-Team: Vietnamese (http://www.transifex.com/projects/p/odoo-8/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -127,17 +127,17 @@ msgstr "Số bút toán "
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "# Số hóa đơn"
 
 #. module: account
 #: field:account.entries.report,nbr:0
 msgid "# of Items"
-msgstr ""
+msgstr "# Số phát sinh"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "# Số lượng sản phẩm"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -147,13 +147,13 @@ msgstr "Số lượng giao dịch"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Hóa đơn (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (sao chép)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
@@ -206,7 +206,7 @@ msgstr "(cập nhật)"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Giao dịch"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -2381,7 +2381,7 @@ msgstr "Mẫu hệ thống tài khoản"
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr ""
+msgstr "Mẫu hệ thống tài khoản"
 
 #. module: account
 #: view:website:account.report_agedpartnerbalance
@@ -2396,14 +2396,14 @@ msgstr ""
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance
 msgid "Chart of Accounts:"
-msgstr ""
+msgstr "Hệ thống tài khoản:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr ""
+msgstr "Hệ thống tài khoản quản trị"
 
 #. module: account
 #: field:account.vat.declaration,chart_tax_id:0
@@ -2767,12 +2767,12 @@ msgstr "Loại tiền của Công ty"
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
-msgstr ""
+msgstr "Công ty có một hệ thống tài khoản"
 
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
 msgid "Company has a fiscal year"
-msgstr ""
+msgstr "Công ty có một năm tài chính"
 
 #. module: account
 #: help:account.journal,company_id:0
@@ -2782,7 +2782,7 @@ msgstr ""
 #. module: account
 #: view:accounting.report:account.accounting_report_view
 msgid "Comparison"
-msgstr ""
+msgstr "So sánh"
 
 #. module: account
 #: field:account.chart.template,complete_tax_set:0
@@ -2888,7 +2888,7 @@ msgstr ""
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
 msgid "Configure your Fiscal Year"
-msgstr ""
+msgstr "Cấu hình năm tài chính"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -2899,7 +2899,7 @@ msgstr "Cấu hình tài khoản ngân hàng của công ty"
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr ""
+msgstr "Xác nhận hóa đơn dự thảo"
 
 #. module: account
 #: view:account.invoice.confirm:account.account_invoice_confirm_view
@@ -3131,7 +3131,7 @@ msgstr "Tạo các bút toán"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Tạo bởi"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3253,7 +3253,7 @@ msgstr "Ngày tạo"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance view:website:account.report_vat
 msgid "Credit"
-msgstr ""
+msgstr "Số dư có"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3263,17 +3263,17 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr ""
+msgstr "Giấy báo có"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 msgid "Credit Notes"
-msgstr ""
+msgstr "Giấy báo có"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
 msgid "Credit amount"
-msgstr ""
+msgstr "Tổng số dư có"
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_prefix:0
@@ -3382,7 +3382,7 @@ msgstr "Các hóa đơn cho khách hàng"
 #. module: account
 #: field:res.partner,property_payment_term:0
 msgid "Customer Payment Term"
-msgstr ""
+msgstr "Điều khoản thanh toán của Khách hàng"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -3482,7 +3482,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Date from :"
-msgstr ""
+msgstr "Từ ngày :"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -3801,7 +3801,7 @@ msgstr "Nháp"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr ""
+msgstr "Bút toán dự thảo"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -3814,7 +3814,7 @@ msgstr "Hóa đơn nháp"
 #: view:account.invoice:account.view_account_invoice_filter
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Hóa đơn dự thảo"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -4319,7 +4319,7 @@ msgstr "Bộ lọc"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filter By:"
-msgstr ""
+msgstr "Lọc theo:"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -4347,7 +4347,7 @@ msgstr "Lọc theo"
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by date"
-msgstr ""
+msgstr "Được lọc theo ngày tháng"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -4359,7 +4359,7 @@ msgstr ""
 #: view:website:account.report_partnerledgerother
 #: view:website:account.report_trialbalance
 msgid "Filtered by period"
-msgstr ""
+msgstr "Được lọc theo kỳ kế toán"
 
 #. module: account
 #: view:account.common.report:account.account_common_report_view
@@ -4379,7 +4379,7 @@ msgstr "Kế toán tài chính"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Financial Manager"
-msgstr ""
+msgstr "Quản lý tài chính"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
@@ -4403,12 +4403,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr ""
+msgstr "Cấu trúc báo cáo tài chính"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "Báo cáo tài chính"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -4516,7 +4516,7 @@ msgstr "Năm tài chính để đóng"
 #: view:website:account.report_salepurchasejournal
 #: view:website:account.report_trialbalance view:website:account.report_vat
 msgid "Fiscal Year:"
-msgstr ""
+msgstr "Năm tài chính:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear
@@ -4567,7 +4567,7 @@ msgstr "Người theo dõi"
 #. module: account
 #: help:account.tax.template,amount:0
 msgid "For Tax Type percent enter % ratio between 0-1."
-msgstr ""
+msgstr "Tỷ lệ % cho loại thuế, nhập từ 0-1."
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -4875,12 +4875,12 @@ msgstr "Các nhóm"
 #. module: account
 #: field:account.installer,has_default_company:0
 msgid "Has Default Company"
-msgstr ""
+msgstr "Có công ty mặc định"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
 msgid "Has default company"
-msgstr ""
+msgstr "Có công ty mặc định"
 
 #. module: account
 #: help:account.bank.statement,message_summary:0
@@ -5154,7 +5154,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_immediate
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr ""
+msgstr "Thanh toán ngay lập tức"
 
 #. module: account
 #: view:account.statement.from.invoice.lines:account.view_account_statement_from_invoice_lines
@@ -6244,17 +6244,17 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,module_account_followup:0
 msgid "Manage customer payment follow-ups"
-msgstr ""
+msgstr "Quản lý theo dõi các khoản thanh toán của khách hàng"
 
 #. module: account
 #: field:account.config.settings,module_account_voucher:0
 msgid "Manage customer payments"
-msgstr ""
+msgstr "Quản lý thanh toán của khách hàng"
 
 #. module: account
 #: field:account.config.settings,module_account_payment:0
 msgid "Manage payment orders"
-msgstr ""
+msgstr "Quản lý thanh toán"
 
 #. module: account
 #: field:account.invoice.tax,manual:0
@@ -7245,7 +7245,7 @@ msgstr "Ngày thanh toán"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Tham chiếu thanh toán"
 
 #. module: account
 #: field:account.invoice.report,payment_term:0
@@ -7267,7 +7267,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Payment Term:"
-msgstr ""
+msgstr "Điều khoản thanh toán:"
 
 #. module: account
 #: field:account.invoice,payment_term:0

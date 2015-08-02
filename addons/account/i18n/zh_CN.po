@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-18 03:34+0000\n"
+"PO-Revision-Date: 2015-07-30 04:45+0000\n"
 "Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/p/odoo-8/language/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -101,7 +101,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr " * 当用户编辑一张新的未确认的发票时为“草稿\"状态。            \n* 当一张发票无发票号码时为“形式”状态。             \n* 当发票已创建，发票号已生成，但仍未发出，则为“启用”状态。             \n* 当发票已收款，则会自动配置为“已收款”状态，发票的相关会计分录可以关联或不关联。            \n* 当用户删除发票时为“删除”状态。"
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -426,7 +426,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击定义一个新的税号.\n              </p><p>\n                根据国家要求，是填写法定税报告通常以\n                税号为单位，OpenERP 允许您定义\n                税种组成，每种税的计算会计入\n                一个或多个税号。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击定义一个新的税金代码.\n              </p><p>\n                根据国家要求，是填写法定税报告通常以\n                税金代码.为单位，OpenERP 允许您定义\n                税种组成，每种税的计算会计入\n                一个或多个税金代码.。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -575,7 +575,7 @@ msgstr "选择的分录行早已调节"
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr "同样的税上面一次只能定义一个税务替换规则。"
+msgstr "一个税金财政位置在相同的税金上面只能定义一次。"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -864,24 +864,24 @@ msgstr "会计税金"
 #: view:account.tax.code:account.view_tax_code_search
 #: view:account.tax.code:account.view_tax_code_tree
 msgid "Account Tax Code"
-msgstr "会计税代码"
+msgstr "会计税金代码"
 
 #. module: account
 #: view:account.tax.code.template:account.view_tax_code_template_form
 #: view:account.tax.code.template:account.view_tax_code_template_tree
 msgid "Account Tax Code Template"
-msgstr "会计税代码模板"
+msgstr "会计税金代码模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 msgid "Account Tax Declaration"
-msgstr "会计税声明"
+msgstr "会计税金申报"
 
 #. module: account
 #: view:account.tax.template:account.view_account_tax_template_form
 #: view:account.tax.template:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "会计税模板"
+msgstr "会计税金模板"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_form
@@ -1003,12 +1003,12 @@ msgstr "会计税金"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr "会计税表"
+msgstr "会计税金图表"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid "Account tax charts"
-msgstr "会计税表"
+msgstr "会计税金图表"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -8304,7 +8304,7 @@ msgstr "根账户"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr "根税编码"
+msgstr "根税金代码."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
@@ -8494,7 +8494,7 @@ msgstr "搜索发票"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "搜索分类账项"
+msgstr "搜索日记账项"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -9242,7 +9242,7 @@ msgstr "税适用"
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr "税额计算的运行方式"
+msgstr "税金计算的舍入方法"
 
 #. module: account
 #: field:account.tax.code,name:0 field:account.tax.code.template,name:0
@@ -9255,33 +9255,33 @@ msgstr "税金专案名称"
 #: field:account.tax.template,tax_code_id:0
 #: model:ir.model,name:account.model_account_tax_code
 msgid "Tax Code"
-msgstr "税编码"
+msgstr "税金代码"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
 msgid "Tax Code Amount"
-msgstr "税金额"
+msgstr "税金代码总额"
 
 #. module: account
 #: field:account.tax,tax_sign:0 field:account.tax.template,tax_sign:0
 msgid "Tax Code Sign"
-msgstr "税编码符号(1为正数)"
+msgstr "税金代码.符号"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr "税编码模板"
+msgstr "税金代码.模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_code_template_form
 msgid "Tax Code Templates"
-msgstr "税编码模板"
+msgstr "税金代码.模板"
 
 #. module: account
 #: view:account.invoice.tax:account.view_invoice_tax_form
 msgid "Tax Codes"
-msgstr "税编码"
+msgstr "税金代码."
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -9389,7 +9389,7 @@ msgstr "税额的圆整方式"
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "税编码"
+msgstr "税金代码."
 
 #. module: account
 #: field:account.tax,child_depend:0 field:account.tax.template,child_depend:0
@@ -9517,7 +9517,7 @@ msgstr "内部类型用于对不同类型的科目进行控制：视图类型科
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
-msgstr "这科目可以是一个税基编码或税编码的科目。"
+msgstr "这科目可以是一个基础税金代码.或税金代码.科目。"
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -9828,7 +9828,7 @@ msgstr "税说明中的税基"
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "分录所属用户"
+msgstr "负责此日记账的用户"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move

@@ -3,6 +3,7 @@
 # * purchase_requisition
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
@@ -10,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:57+0000\n"
-"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/p/odoo-8/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-07-27 19:14+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,7 +33,7 @@ msgid ""
 "            compare them and you can validate some and cancel others.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para iniciar uma nova chamada para o processo de Licitações. \n          </p><p>\n            A licitação é um procedimento para a geração de ofertas concorrentes de\n             diferentes licitantes. No convite à apresentação de propostas, você pode gravar o\n             produtos que você precisa comprar e gerar a criação de RFQs para\n             fornecedores. Uma vez que as propostas tenham sido registrados, você pode revisar e\n             compará-los e você pode validar alguns e cancelar outros.\n          </p>\n        "
 
 #. module: purchase_requisition
 #: field:purchase.requisition,account_analytic_id:0
@@ -48,27 +49,27 @@ msgstr "Aprovado pelo Fornecedor"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_bid_line_qty
 msgid "Bid Line Qty"
-msgstr ""
+msgstr "Licitação Linha Qtde"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.purchase_line_tree
 msgid "Bid Lines"
-msgstr ""
+msgstr "Linhas da Licitação"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "Licitação Seleção"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Bid Selection Type"
-msgstr ""
+msgstr "Licitação Tipo de Seleção"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Bid Submission Deadline"
-msgstr ""
+msgstr "Prazo de apresentação da proposta"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
@@ -80,7 +81,7 @@ msgstr ""
 #: field:purchase.requisition.line,requisition_id:0
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bids"
-msgstr ""
+msgstr "Chamada de Licitação"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,name:0
@@ -90,23 +91,23 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids in negotiation"
-msgstr ""
+msgstr "Chamada para Propostas em negociação"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Call for Bids where bids are closed"
-msgstr ""
+msgstr "Convite à apresentação de propostas onde as ofertas são fechadas"
 
 #. module: purchase_requisition
 #: view:website:purchase_requisition.report_purchaserequisitions
 msgid "Call for Bif Reference:"
-msgstr ""
+msgstr "Referência de Chamada de Propostas"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Calls for Bids"
-msgstr ""
+msgstr "Convites à apresentação de propostas"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -122,7 +123,7 @@ msgstr "Cancelar ligação"
 #. module: purchase_requisition
 #: view:purchase.order.line:purchase_requisition.purchase_order_line_tree_tender
 msgid "Cancel Choice"
-msgstr ""
+msgstr "Escolha cancelar"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
@@ -139,18 +140,18 @@ msgstr "Cancelada"
 #, python-format
 msgid ""
 "Cancelled by the call for bids associated to this request for quotation."
-msgstr ""
+msgstr "Cancelado pela chamada de licitação associado a este pedido de cotação."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:85
 #, python-format
 msgid "Cancelled by the tender associated to this quotation."
-msgstr ""
+msgstr "Cancelado o concurso associado a essa cotação."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_bid_line_qty
 msgid "Change Bid line quantity"
-msgstr ""
+msgstr "Alterar a quantidade de linha oferta"
 
 #. module: purchase_requisition
 #: view:bid.line.qty:purchase_requisition.view_bid_line_qty
@@ -163,28 +164,28 @@ msgstr "Alterar Quantidade"
 msgid ""
 "Check this box to generate Call for Bids instead of generating requests for "
 "quotation from procurement."
-msgstr ""
+msgstr "Marque esta caixa para gerar o convite à apresentação de propostas em vez de gerar pedidos de cotação do compras."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
 #: view:purchase.requisition.partner:purchase_requisition.view_purchase_requisition_partner
 msgid "Choose Supplier"
-msgstr ""
+msgstr "Escolher o fornecedor"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Choose product lines"
-msgstr ""
+msgstr "Escolher as linhas de produtos"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_form
 msgid "Close Call for Bids"
-msgstr ""
+msgstr "Fechar Licitação"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:purchase_requisition.view_purchase_requisition_filter
 msgid "Closed Bids"
-msgstr ""
+msgstr "Licitações Fechadas"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
@@ -246,7 +247,7 @@ msgstr "Data da última mensagem para o registro."
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:39
 #, python-format
 msgid "Define product(s) you want to include in the call for bids."
-msgstr ""
+msgstr "Definir produto (s) que deseja incluir no edital de licitação."
 
 #. module: purchase_requisition
 #: field:purchase.requisition,description:0

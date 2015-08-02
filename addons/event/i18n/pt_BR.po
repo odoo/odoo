@@ -3,6 +3,7 @@
 # * event
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
@@ -10,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-18 04:25+0000\n"
-"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/p/odoo-8/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-07-25 01:34+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,7 +29,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p> Olá $ {} object.name, </ p>\n         <p> O evento $ {object.event_id.name} que você se cadastrou está confirmado e será realizado a partir de $ {object.event_id.date_begin_located.strftime ('% Y-% m-% d% H:% M:% S (% Z) ')} até $ {object.event_id.date_end_located.strftime ('% Y-% m-% d% H:% M:% S (% Z) ')}.\n         Para mais informações entre em contato com o nosso departamento de eventos. </ P>\n         <p> Obrigado por sua participação! </ p>\n         <p> Com os melhores cumprimentos </ p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -587,7 +588,7 @@ msgid ""
 "                Picture of the exhibition hall\n"
 "            </div>\n"
 "        "
-msgstr ""
+msgstr "<div>\n                <h2>Hall De Exibição</h2>\n            </div>\n            <div>\n                Imagem do hall de exibição\n            </div>\n        "
 
 #. module: event
 #: model:event.event,badge_innerleft:event.event_1
@@ -693,7 +694,7 @@ msgid ""
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Clique para adicionar um novo evento.\n             </p><p>\n               Odoo ajuda a programar de forma eficiente e organizar os seus eventos:\n                rastrear as subscrições e participações, automatizar os e-mails de confirmação,\n                vender bilhetes, etc.\n             </p>\n           "
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form

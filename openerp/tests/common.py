@@ -349,23 +349,6 @@ class HttpCase(TransactionCase):
                         openerp.tools.misc.dumpstacks()
                         t0 = t1
 
-    def phantom_jsfile(self, jsfile, timeout=60, **kw):
-        options = {
-            'timeout' : timeout,
-            'port': PORT,
-            'db': get_db_name(),
-            'session_id': self.session_id,
-        }
-        options.update(kw)
-        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        # phantom.args[0] == phantomtest path
-        # phantom.args[1] == options
-        cmd = [
-            'phantomjs',
-            jsfile, phantomtest, json.dumps(options)
-        ]
-        self.phantom_run(cmd, timeout)
-
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'

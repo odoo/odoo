@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-09 02:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-07-25 04:59+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,17 +27,17 @@ msgstr ""
 #: view:website:hr_attendance.report_attendanceerrors
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
-msgstr "(*) Positive 지연은 직원이 기록된 것보다 적게 일했음을 의미합니다."
+msgstr "(*) 지연값이 양수라면 기록된 것보다 직원이 적게 일했음을 의미합니다."
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr "결석"
+msgstr "결근"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0 selection:hr.attendance,action:0
 msgid "Action"
-msgstr "액션"
+msgstr "동작"
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
@@ -48,7 +48,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr "액션 유형"
+msgstr "동작 유형"
 
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
@@ -66,7 +66,7 @@ msgstr "분석 정보"
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr "참석"
+msgstr "근태"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
@@ -83,7 +83,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
 #: model:ir.actions.report.xml,name:hr_attendance.action_report_hrattendanceerror
 msgid "Attendance Error Report"
-msgstr "참석 에러 리포트"
+msgstr "근태 오류 보고서"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
@@ -94,19 +94,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr "참석 이유"
+msgstr "근태 사유"
 
 #. module: hr_attendance
 #: view:hr.action.reason:hr_attendance.view_attendance_reason
 msgid "Attendance reasons"
-msgstr "참석 이유"
+msgstr "근태 사유"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr "참석"
+msgstr "근태"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
@@ -129,13 +129,13 @@ msgstr ""
 #: field:hr.action.reason,create_uid:0 field:hr.attendance,create_uid:0
 #: field:hr.attendance.error,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: hr_attendance
 #: field:hr.action.reason,create_date:0 field:hr.attendance,create_date:0
 #: field:hr.attendance.error,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -145,7 +145,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr "나짜"
+msgstr "날짜"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
@@ -160,7 +160,7 @@ msgstr "서명 날짜"
 #. module: hr_attendance
 #: view:hr.action.reason:hr_attendance.edit_attendance_reason
 msgid "Define attendance reason"
-msgstr "참석 이유 저의"
+msgstr "근태 사유 정의"
 
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
@@ -172,19 +172,19 @@ msgstr "지연"
 #: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
-msgstr "직원"
+msgstr "임직원"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_attendance_form
 #: view:hr.attendance:hr_attendance.view_attendance_tree
 #: view:hr.attendance:hr_attendance.view_attendance_who
 msgid "Employee attendances"
-msgstr "직원 참석"
+msgstr "임직원 근태"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,end_date:0
 msgid "Ending Date"
-msgstr "종료 날짜"
+msgstr "마감일"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -194,7 +194,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr "분류 기준"
+msgstr "그룹화"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -217,13 +217,13 @@ msgstr ""
 #: field:hr.action.reason,write_uid:0 field:hr.attendance,write_uid:0
 #: field:hr.attendance.error,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: hr_attendance
 #: field:hr.action.reason,write_date:0 field:hr.attendance,write_date:0
 #: field:hr.attendance.error,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: hr_attendance
 #. openerp-web
@@ -267,7 +267,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:website:hr_attendance.report_attendanceerrors
 msgid "Operation"
-msgstr "오퍼레이션"
+msgstr "작업"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -292,7 +292,7 @@ msgstr ""
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
 msgid "Reason"
-msgstr "이유"
+msgstr "사유"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:175
@@ -313,7 +313,7 @@ msgstr ""
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr "출근"
+msgstr "로그인"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0

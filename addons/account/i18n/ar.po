@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-07 21:28+0000\n"
+"PO-Revision-Date: 2015-07-30 13:30+0000\n"
 "Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
-"Language-Team: Arabic (http://www.transifex.com/p/odoo-8/language/ar/)\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -355,7 +355,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء قيد يومية.\n</p><p>\nيتكون قيد اليومية من عدة عناصر يومية، إما أن\nيكون كل منها معاملة دائنة أو مدينة.\n</p><p>\nيقوم أودو بإنشاء قيود اليومية آلياً للمستندات المحاسبية:\nالفواتير، المرتجعات المدفوعات للموردين، كشوفات\nالحسابات البنكية، وغيرها. لهذا، يفترض بك أن تقوم بإنشاء\nالقيود آلياً فقط في حالة النثريات أو المتفرقات.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -382,7 +382,7 @@ msgid ""
 "                your bank statements.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء قالب كشف حساب جديد.\n</p><p>\nيمكنك استخدام هذه القوالب لإنشاء التسويات\nآلياً مع كشوفات الحسابات البنكية.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -425,7 +425,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتعريف وعاء ضريبي جديد.\n</p><p>\nوفقاً لقوانين الضرائب في دولتك، فإن الأوعية الضريبية\nعادة ما تمثل أحد الخلايا في الإقرار الضريبي. يسمح لك\nأودو بتعريف هيكل الإقرار الضريبي وكيفية احتسابها\nوكيفية تسجيلها في وعاء ضريبي أو أكثر.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -438,7 +438,7 @@ msgid ""
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتسجيل فاتورة مورد جديدة.\n</p><p>\nيمكنك التحكم في فواتير الموردين وفقاً لما تشتريه\nأو تستلمه من بضائع. سيقوم أودو آلياً بإنشاء مسودات\nالفواتير من أوامر الشراء أو عمليات الاستلام.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -454,7 +454,7 @@ msgid ""
 "                the related sale or puchase invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتسجيل كشف حساب بنكي جديد.\n</p><p>\nكشف الحساب البنكي هو موجز بمعاملات المالية التي\nأجريتها خلال فترة زمنية معينة على أحد حساباتك البنكية.\nعادة ما يرسل لك البنك كشف الحساب بشكل دوري.\n</p><p>\nيسمح لك أودو بتسوية بنود كشف الحساب البنكي\nمع فواتير المبيعات والمشتريات المقترنة.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -4435,7 +4435,7 @@ msgstr "الوضع المالي"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "ملاحظة الوضع المالي:"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -5605,7 +5605,7 @@ msgstr "هذا يشير أن الفاتورة قد تم ارسالها."
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "It took you"
-msgstr ""
+msgstr "استغرقك الأمر "
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5699,7 +5699,7 @@ msgstr "قيود اليومية"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr ""
+msgstr "قيود اليومية بالشهر"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -5761,7 +5761,7 @@ msgstr "عنصر يومية"
 msgid ""
 "Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not "
 "balanced!"
-msgstr ""
+msgstr "عنصر اليومية %s (المعرف: %s) لا يمكن استخدامه في التسوية لأنه غير موزون!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:888
@@ -5825,7 +5825,7 @@ msgstr "دفتر اليومية للقيود التحليلية"
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr ""
+msgstr "فواتير اليومية بفترة خلال السنة الحالية"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -6598,7 +6598,7 @@ msgstr "لا شريك معرف!"
 #: code:addons/account/account_move_line.py:1299
 #, python-format
 msgid "No Piece Number!"
-msgstr ""
+msgstr "قطعة بلا رقم!"
 
 #. module: account
 #: code:addons/account/installer.py:114
@@ -6809,7 +6809,7 @@ msgstr "يمكن لمديري النظام فقط تغيير الإعدادات"
 #: code:addons/account/static/src/js/account_widgets.js:539
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "استخدم فقط زري CTRL+Enter لاعتماد التسويات"
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -6924,7 +6924,7 @@ msgstr "تسوية القيود الافتتاحية"
 msgid ""
 "Opening Entries have already been generated.  Please run \"Cancel Closing "
 "Entries\" wizard to cancel those entries and then run this wizard."
-msgstr ""
+msgstr "تم إنشاء القيود الافتتاحية بالفعل. الرجاء تشغيل معالج \"إلغاء قيود الإقفال\" لإلغاء تلك القيود، ثم عد لتشغيل هذا المعالج مجدداً."
 
 #. module: account
 #: code:addons/account/account.py:905
@@ -7311,7 +7311,7 @@ msgid ""
 "you set a paypal account, the customer  will be able to pay your invoices or"
 " quotations with a button \"Pay with  Paypal\" in automated emails or "
 "through the Odoo portal."
-msgstr ""
+msgstr "حساب PayPal (عنوان البريد الإلكتروني) لاستلام المدفوعات الإلكترونية (باستخدام بطاقات الإئتمان وما شابهها). إذا حددت حساب PayPal، فسيمكن للعميل أن يسدد فواتيره وعروض الأسعار باستخدام زر \"السداد باستخدام PayPal\" في الرسائل الآلية التي يرسلها أودو عبر بوابة العملاء."
 
 #. module: account
 #: help:res.company,paypal_account:0
@@ -7347,7 +7347,7 @@ msgstr "النسبة"
 #. module: account
 #: selection:account.statement.operation.template,amount_type:0
 msgid "Percentage of open balance"
-msgstr ""
+msgstr "النسبة من الرصيد المفتوح"
 
 #. module: account
 #: selection:account.statement.operation.template,amount_type:0
@@ -7517,7 +7517,7 @@ msgstr "تحقق من أن الحساب معرف في اليومية."
 msgid ""
 "Please verify the price of the invoice!\n"
 "The encoded total does not match the computed total."
-msgstr ""
+msgstr "الرجاء التأكد من إجمالي قيمة الفاتورة!\nإجمالي القيمة المدخلة لا يساوي القيمة المحسوبة للفاتورة."
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -7571,7 +7571,7 @@ msgstr "المحافظه علي علامة التوازن"
 #: model:ir.model,name:account.model_account_statement_operation_template
 msgid ""
 "Preset for the lines that can be created in a bank statement reconciliation"
-msgstr ""
+msgstr "مجموعة البنود مسبقة الإعداد ليتم إنشاءها في تسويات كشوفات الحسابات البنكية."
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -8027,14 +8027,14 @@ msgstr "معاملات التسوية"
 #. module: account
 #: field:account.entries.report,reconcile_id:0
 msgid "Reconciliation number"
-msgstr ""
+msgstr "رقم التسوية"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 #: model:ir.ui.menu,name:account.menu_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "التسوية على كشف الحساب البنكي"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
@@ -9068,7 +9068,7 @@ msgstr "المجموع الفرعي"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Sum of opening balance and transactions."
-msgstr ""
+msgstr "مجموع الرصيد الافتتاحي والمعاملات"
 
 #. module: account
 #: field:account.bank.statement,message_summary:0
@@ -10467,7 +10467,7 @@ msgstr "إجمالي نقدية سطور العمليات"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "Total of closing cash control lines."
-msgstr ""
+msgstr "إجمالي بنود إقفال التحكم النقدي."
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2

@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:35+0000\n"
+"PO-Revision-Date: 2015-08-01 17:34+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
-"Language-Team: Slovenian (http://www.transifex.com/p/odoo-8/language/sl/)\n"
+"Language-Team: Slovenian (http://www.transifex.com/projects/p/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2541,7 +2541,7 @@ msgid ""
 "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nOsnovni modul za upravljanje kontnega plana Belgije v OpenERP.\n==============================================================================\n\nPo namestitvi modula se zažene čarovnik za knjigovodstvo.\n    * Kontne predloge so v pomoč pri ustvarjanju kontnega plana.\n    * Ob zagonu čarovnika dobite vprašanje za nastavitev naziva družbe,\n      kontnega plana, števila znakov kode plana, kodo konta in št.\n      bančnega računa ter valuto, da se ustvarijo dnevniki.\n\nUstvari se čista kopija kontne predloge.\n\nČarovniki, ki jih zagotovi ta modul:\n--------------------------------\n    * Partner DDV Intra: seznam partnerjev z njihovimi DDV št. in obračunanimi\n      zneski. Pripravi XML format datoteke.\n      \n        **Dostop :** Obračun/Poročanje/Uradna poročila/Belgijski izpiski/Partner DDV Intra\n    * Periodična DDV napoved: pripravi XML datoteko za DDV napoved\n      glavne družbe trenutno prijavljenega uporabnika.\n      \n        **Dostop :** Obračun/Poročanje/Uradna poročila/Belgijski izpiski/Periodična DDV napoved\n    * Letni seznam DDV zavezanih kupcev: pripravi XML datoteko za DDV\n      napoved glavne družbe trenutno prijavljenega uporabnika glede na\n      poslovno leto.\n      \n        **Dostop :** Obračun/Poročanje/Uradna poročila/Belgijski izpiski/Letni seznam DDV zavezanih kupcev\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -2600,7 +2600,7 @@ msgid ""
 "Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
-msgstr ""
+msgstr "\nOsnovni modul za upravljanje kontnega plana za Honduras.\n====================================================================\n    \nKontni plan, davki in valuta Lempira za Honduras."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -2613,7 +2613,7 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg\n"
 "    * default fiscal position for local, intracom, extracom "
-msgstr ""
+msgstr "\nOsnovni modul za upravljanje kontnega plana za Luksemburg\n======================================================================\n\n    * Uradni kontni plan za Luksemburg (zakon iz junija 2009 + 2011 kontni plan in davki),\n    * Davčni plan za Luksemburg\n    * glavni davki, ki se uporabljajo v Luksemburgu\n    * privzeti fiskalni položaj za lokalno, intracom, extracom"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -2627,7 +2627,7 @@ msgid ""
 "produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
-msgstr ""
+msgstr "\nOsnovni modul za upravljanje kontnega plana za Maroko.\n=================================================================\n\nMaroško knjigovodstvo (kontni plan, Bilan, CPC, splošna 6-stolpčna bilanca,\nglavna knjiga...).\nSkladna z računovodskim standardom 3 trimestra 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -2639,7 +2639,7 @@ msgid ""
 "    - VAT100-ready tax structure\n"
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
-msgstr ""
+msgstr "\nZadnja britanska lokalizacija za knjigovodstvo britanskih SME s:\n=================================================================================================\n    - CT600-združljivi kontni plan\n    - VAT100-združljiva davčna struktura\n    - InfoLogic seznam britanskih okrožij\n    - druge prilagoditve"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -2665,7 +2665,7 @@ msgid ""
 "\n"
 "Procurements in exception should be checked manually and can be re-run.\n"
 "    "
-msgstr ""
+msgstr "\nModul za obdelavo oskrbovanj.\n==============================================\n\nTa modul je odvisen le od modula 'product' in sam po sebi ne koristi ničemur.\nOskrbovanja predstavljajo potrebe, ki jih je potrebno zadovoljiti z oskrbovalnim\npravilom. Ob nastanku oskrbovanja, se potrdi. Kadar se najde pravilo,\nbo dano v stanje 'v teku'. Potem preveri, če je tisto, kar mora po pravilu biti\nnarejeno, bilo izvedeno. Nato preide v stanje 'opravljeno'. Oskrbovanje\nlahko, če npr. ne najde pravila, preide med izjeme in se lahko prekliče.\n\nMehanizem bo razširjen z raznimi moduli. Pravilo oskrbovanja zaloge bo\nustvarilo premik, oskrbovanje pa bo izpolnjeno, ko bo premik opravljen.\nPravilo oskrbovanja 'sale_service' ustvari opravilo. Pravila modulov 'purchase' ali\n'mrp' bodo ustvarila nabavni ali proizvodni nalog.\n\nRazporejevalnik bo preveril, če lahko dodeli pravilo potrjenim oskrbovanjem in če\nlahko prestavi oskrbovanja v teku v 'opravljeno'.\n\nOskrbovanja v izjemi se mora ročno preveriti pred ponovnim zagonom.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
@@ -2677,7 +2677,7 @@ msgid ""
 "\n"
 "Romanian accounting chart and localization.\n"
 "    "
-msgstr ""
+msgstr "\nModul za upravljanje kontnega plana, DDV strukture, davčnega položaja in davčnega mapiranja.\nDoda tudi št. registracije za Romunijo.\n================================================================================================================\n\nRomunski kontni plan in lokalizacija.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -2710,7 +2710,7 @@ msgid ""
 "provincial government and remit taxes themselves. On the supplier, do not set any fiscal \n"
 "position.\n"
 "    "
-msgstr ""
+msgstr "\nModul za upravljanje angleško in francosko - kanadskega kontnega plana.\n===========================================================================================\n\nKanadski kontni plan in lokalizacija.\n\nFiskalni položaji\n----------------\n\nOb uveljavljanju davkov je pomembna provinca, kamor se dostavlja. \nZato smo se odločili implementirati najobičajnejši primer fiskalnih položajev: dostava je \nodgovornost dobavitelja in opravljena na lokaciji kupca.\n\nNekaj primerov:\n\n1) Imate kupca iz druge province in dostavljate na njegovo lokacijo.\nPri kupcu nastavite fiskalni položaj na njegovo provinco.\n\n2) Imate kupca iz druge province, a kupec pride na vašo lokacijo\ns svojim tovornjakom prevzeti proizvode. Pri kupcu ne nastavite nobenega fiskalnega položaja.\n\n3) Mednarodni dobavitelj vam ne obračuna davkov. Davke obračunajo na carini \ncarinski uslužbenci. Pri dobavitelju nastavite fiskalni položaj na Mednarodni.\n\n4) Mednarodni dobavitelj vam obračuna vaš provincialni davek. Registriran je pri vaši\nprovincialni vladi in sam prijavlja davke. Pri dobavitelju ne nastavite nobenega fiskalnega\npoložaja.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -2726,7 +2726,7 @@ msgid ""
 "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
-msgstr ""
+msgstr "\nModul za upravljanje kontnega plana Poljske.\n==================================================================================\n\nModul ustvari standardni kontni plan, davke in fiskalne položaje ter\ndavčne zapise. Modul nastavi tudi konta za nakup in prodajo blaga\npod predpostavko, da gre za vele-prodajno blago.\n\nModul je namenjen odoo 8.0.\nInterna številka verzije 1.02 OpenGLOBE\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -2752,7 +2752,7 @@ msgid ""
 "configuration of their taxes and fiscal positions manually.\n"
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
-msgstr ""
+msgstr "\nModul za upravljanje kontnega plana za Francijo.\n========================================================================\n\nZajema družbe v celinski Franciji. Ne zajema družb s sedeži v\nčezmorskih teritorijih (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n\nTa modul ustvari DDV tipa 'davek vključen' za nabave\n(potrebno je, če se uporablja modul 'hr_expense'). Ta 'davek vključen'\n ni uravnavan s fiskalnimi položaji, ki jih ta modul zagotovi\n(ker je preveč zapleteno upravljati tako vključen kakor izključen davek\ns fiskalnimi položaji).\n\nTa modul ne primerno obravnava primerov, ko francoska (celinska)\ndružba prodaja storitve družbi v čezmorskih teritorijih. Lahko bi upravljali\ns fiskalnimi položaji, a bi to zahtevalo diferenciacijo med DDV izdelkov \n in storitev. Družbe, ki opravljajo storitve za čezmorske družbe, morajo\nprilagajati nastavitve davkov in fiskalnih položajev ročno..\n\n**Zasluge:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -2783,7 +2783,7 @@ msgid ""
 "De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nModul za upravljanje nizozemskega kontnega plana\n=============================================================================\n\nPreberite changelog v datoteki __openerp__.py za podatke o verziji.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -2795,7 +2795,7 @@ msgid ""
 "This module applies to companies based in Vietnamese Accounting Standard (VAS).\n"
 "\n"
 "**Credits:** General Solutions.\n"
-msgstr ""
+msgstr "\nModule za upravljanje kontnega plana za Vietnam\n=========================================================================\n\nModul se nanaša na družbe, ki poslujejo v sklopu vietnamskega računovodskega standarda (VAS).\n\n**Zasluge:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -2809,7 +2809,7 @@ msgid ""
 "Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned\n"
 "to an appropriate local partner, based on the distance and the weight that was assigned to the partner.\n"
 "    "
-msgstr ""
+msgstr "\nModul, ki ga OpenERP SA uporablja za preusmerjanje kupcev na svoje partnerje na osnovi geolokacije.\n======================================================================================================\n\nTa modul omogoča geolokacijo indicev, priložnosti in partnerjev glede na njihov naslov.\n\nKo so enkrat znane koordinate indica/priložnosti, se jih lahko samodejno dodeli\nprimernemu lokalnemu partnerju glede na razdaljo in 'težo', ki je bila partnerju dodeljena.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -2818,7 +2818,7 @@ msgid ""
 "This module adds a PAD in all project kanban views.\n"
 "===================================================\n"
 "    "
-msgstr ""
+msgstr "\nModul doda PAD v vse kanban prikaze projektov.\n===================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_sale
@@ -2841,7 +2841,7 @@ msgid ""
 "pay online on their Sale Orders and Invoices that are not paid yet. Paypal is included\n"
 "by default, you simply need to configure a Paypal account in the Accounting/Invoicing settings.\n"
 "    "
-msgstr ""
+msgstr "\nModul doda portalu meni prodaja, če sta tako modul 'sale' kakor modul portal nameščena.\n======================================================================================\n\nPo namestitvi bodo lahko uporabniki portala dostopali do svojih dokumentov\npreko naslednjih menijev:\n\n  - Predračuni\n  - Prodajni nalogi\n  - Dostavni nalogi\n  - Proizvodi (javni)\n  - Računi\n  - Plačila/Vračila\n\nČe so nastavljeni spletni prejemniki plačil, bodo uporabnik portala imeli tudi možnost\nspletnega plačevanje svojih prodajnih nalogov in še ne plačanih računov. Paypal je privzeto\nvključen, potrebno je le nastaviti Paypal račun v Knjigovodstvo/Obračunske nastavitve.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
@@ -2892,7 +2892,7 @@ msgid ""
 "    * Collated and book format support\n"
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
-msgstr ""
+msgstr "\nModul doda nov Report Engine na osnovi WebKit knjižnic (wkhtmltopdf) in podpira poročila v HTML + CSS.\n=====================================================================================================================\n\nStruktura modula in nekaj kode izhaja iz report_openoffice modula.\n\nModul omogoči:\n------------------\n    - definicija HTML poročila\n    - podpora za več glav\n    - več logotipov\n    - podpora za več podjetij\n    - HTML in CSS-3 podpora (v okviru dejanske verzije WebKIT)\n    - podpora za JavaScript\n    - razhroščevalnik Raw HTML\n    - sposobnost tiskanja knjig\n    - določanje robov\n    - določanje velikosti papirja\n\nZa posamezno družbo se lahko določi več glav in logotipov. CSS slog, glava,\ntelo in noga se določijo za vsako družbo.\n\nZa vzorec poročila poglejte tudi modul webkit_report_sample, in ta video:\n    http://files.me.com/nbessi/06n92k.mov\n\nZahteve in namestitev:\n------------------------------\nTa modul potrebuje ``wkhtmltopdf`` knjižnico za upodabljanje HTML dokumentov kot\nPDF. Verzijo 0.9.9 ali novejšo se dobi na\nhttp://code.google.com/p/wkhtmltopdf/ za Linux, Mac OS X (i386) in Windows (32bits).\n\nPo namestitvi knjižnice nastavite pot\ndo ``wkhtmltopdf`` izvršilne datoteke v sistemski parameter z nazivom\n``webkit_path`` v Nastavitve -> Prilagoditve -> Parametri -> Sistemski parametri\n\nČe na Linux doživljate izginjanje glave/noge se prepričajte, da ste namestili\n'statično' verzijo knjižnice. Za privzeto ``wkhtmltopdf`` je\nna Ubuntu znano, da ima to težavo.\n\n\nZa opraviti še:\n-----\n    * aktiviranje in de-aktiviranje JavaScript podpore\n    * formata zloženka in knjiga podprta\n    * Zip povratek za ločen PDF\n    * WYSIWYG spletnega odjemalca\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -2908,7 +2908,7 @@ msgid ""
 "We suggest you to install this module, if you installed both the sale and the crm\n"
 "modules.\n"
 "    "
-msgstr ""
+msgstr "\nTa modul doda bližnjico do enega ali več primera tipa 'priložnost' v CRM.\n===========================================================================\n\nTa bližnjica omogoči ustvarjanje prodajnega naloga glede na izbrani primer.\nČe so odprti različni primeri (seznam), ustvari po en prodajni nalog na primer.\nPrimer se takrat zapre in poveže z novo ustvarjenim prodajnim nalogom.\n\nPriporočamo vam, da ta modul namestite, če ste namestili modula 'sale' in\n'crm'.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_stock
@@ -2917,7 +2917,7 @@ msgid ""
 "This module adds access rules to your portal if stock and portal are installed.\n"
 "==========================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nModul doda pravila dostopa do portala, če sta modula stock in portal nameščena.\n==========================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_claim
@@ -2926,7 +2926,7 @@ msgid ""
 "This module adds claim menu and features to your portal if claim and portal are installed.\n"
 "==========================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nModul doda meni reklamacije in dodatne funkcije portalu, če sta modula claim in portal nameščena.\n==========================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_share
@@ -2945,7 +2945,7 @@ msgid ""
 "This is extremely useful for collaborative work, knowledge sharing,\n"
 "synchronization with other companies.\n"
 "    "
-msgstr ""
+msgstr "\nModul doda generična orodja souporabe v trenutno podatkovno bazo.\n========================================================================\n\nDoda se gumb 'souporaba', ki je v spletnem odjemalcu na voljo za souporabo kakršnihkoli podatkov s sodelavci, kupci, prijatelji.\n\nSistem sproti ustvari nove uporabnike in skupine s primernimi pravili dostopa, ki zagotovijo, da\nlahko ti uporabniki dostopajo le do podatkov, ki jih imajo v souporabi.\n\nTa opcija je izredno koristna za sodelovanje, delitev znanja in sinhronizacijo\nz drugimi družbami.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_project_issue
@@ -2972,7 +2972,7 @@ msgid ""
 "This module adds security rules for gamification to allow portal users to participate to challenges\n"
 "===================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nModul 'igrificiranju' doda varnostna pravila, da bi dovolil sodelovanje pri izzivih uporabnikom portala \n===================================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_operations
@@ -3005,7 +3005,7 @@ msgid ""
 "The field 'Working Hours' is the delay(stop date - start date).\n"
 "So, that we can compare the theoretic delay and real delay. \n"
 "    "
-msgstr ""
+msgstr "\nTa modul doda stanje, začetni in končni datum ter operativne postavke proizvodnega naloga (v razdelku 'Delovni nalogi').\n================================================================================================================\n\nStatus: osnutek, potrjeno, opravljeno, preklicano\nOb dokončanju/potrditvi, proizvodni nalogi nastavijo postavke v\nustrezno stanje.\n\nUstvari meni:\n-------------\n    **Proizvodnja** > **Proizvodnja** > **Delovni nalogi**\n\nki pelje do prikaza postavk 'delovnih nalogov' v proizvodnem nalogu.\n\nNa prikaz obrazec doda gumb proizvodni nalog pod razdelek delovni nalogi:\n-------------------------------------------------------------------------\n    * zagon (nastavi stanje na potrditev), nastavi datum zagona\n    * opravljeno (nastavi stanje na opravljeno), nastavi končni datum\n    * nastavi kot osnutek (nastavi stanje v osnutek)\n    * preklic nastavi stanje v preklicano\n\nKo proizvodni nalog postane 'pripravljeno na proizvodnjo', morajo operacije\npostati 'potrjene'. Ko je proizvodni nalog opravljen tudi operacije\npostanejo opravljene.\n\nPolje 'delovne ure' je zamik (končni datum - datum zagona),\nda lahko primerjamo teoretični zamik z dejanskim. \n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -3017,7 +3017,7 @@ msgid ""
 "This gives the profitability by calculating the difference between the Unit\n"
 "Price and Cost Price.\n"
 "    "
-msgstr ""
+msgstr "\nModul doda 'maržo' na prodajni nalog.\n=============================================\n\nPoda dobičkonosnost z izračunom razlike med prodajno\nin lastno ceno.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -3028,7 +3028,7 @@ msgid ""
 "\n"
 "Worklogs can be maintained to signify number of hours spent by users to handle an issue.\n"
 "                "
-msgstr ""
+msgstr "\nTa modul doda podporo za časovnice v obravnavi zadev/problematike v sklopu projekta.\n=================================================================================\n\nLahko se vodijo dnevniki dela za sledenje porabljenemu številu ur uporabnikov za obravnavo zadeve.\n                "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_wave
@@ -3037,7 +3037,7 @@ msgid ""
 "This module adds the picking wave option in warehouse management.\n"
 "=================================================================\n"
 "    "
-msgstr ""
+msgstr "\nModul upravljanju skladišča doda možnost zbirnika v serijah.\n=================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -3049,7 +3049,7 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Sign in/Sign out) performed by them.\n"
 "       "
-msgstr ""
+msgstr "\nModul za upravljanje prisotnosti kadrov.\n==================================================\n\nVodi evidenco prisotnosti kadrov na osnovi njihovih dejanj\n(Prijava/Odjava).\n       "
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -3068,7 +3068,7 @@ msgid ""
 "as possible and the scheduler time range is not taken into account anymore.\n"
 "In that case, you can not use priorities any more on the different picking.\n"
 "    "
-msgstr ""
+msgstr "\nTa modul omogoča obdelavo oskrbovalnih nalogov po metodi 'Just In Time'.\n==================================================================\n\nPo namestitvi tega modula ne bo več potrebno zaganjati razporejevalnika redne\noskrbe (bo pa še vedno potreben zagon razporejevalnika pravila minimalne točke naročanja, npr. dnevno).\nVsi oskrbovalni nalogi bodo takoj obdelani, kar lahko v nekaterih primerih privede\ndo vpliva na obratovanje.\n\nPoveča lahko tudi količino zalog, saj so proizvodi rezervirani takoj, ko je to\nmogoče, obseg časa razporejevalnika pa ni več upoštevan.\nV tem primeru lahko na drugem zbirniku ne uporabite več prioritet.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -3095,7 +3095,7 @@ msgid ""
 "\n"
 "    3. The last one is available from the Analytic Chart of Accounts. It gives \n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
-msgstr ""
+msgstr "\nModul računovodjem omogoča upravljanje analitičnih in navzkrižnih proračunov.\n==========================================================================\n\nKo se določi proračune (v Obračun/Proračuni/Proračuni),lahko upravitelji projektov \nnastavijo načrtovani znesek na vsak analitični konto.\n\nRačunovodja lahko vidi celotni znesek načrtovan za vsak\nproračun, da bi lahko zagotovi, da načrtovani znesek ni višji/nižji od tistega,\nki ga je načrtoval za ta proračun. Vsak seznam zapisov se lahko preklopi v grafični \nprikaz.\n\nNa voljo so tri poročila:\n----------------------------\n    1. Prvo je na voljo iz seznama proračunov. Poda razpredelnico za\n       te proračune v sklopu analitičnih kontov.\n\n    2. Drugo je povzetek prejšnjega, poda le razpredelnico\n       za izbrane proračune v sklopu analitičnih kontov.\n\n    3. Zadnje je na voljo iz analitičnega kontnega plana. Poda\n       razpredelnico za izbrane analitične konte proračunov.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -3110,7 +3110,7 @@ msgid ""
 "sales team, or an opportunity which still has status pending after 14 days might\n"
 "trigger an automatic reminder email.\n"
 "    "
-msgstr ""
+msgstr "\nModul omogoči uveljavitev akcijskih pravil za vsak objekt.\n============================================================\n\nUporaba avtomatiziranih akcij za samodejno sprožanje dejanj v različnih prikazih.\n\n**Primer:** Indic, ki ga je ustvaril določen uporabnik se lahko samodejno nastavi na določeno\nprodajno ekipo, ali priložnost, ki je po 14 dnevih še vedno na čakanju,\nsproži samodejni opomnik preko e-pošte.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_plans
@@ -3154,7 +3154,7 @@ msgid ""
 "\n"
 "The analytic plan validates the minimum and maximum percentage at the time of creation of distribution models.\n"
 "        "
-msgstr ""
+msgstr "\nModul omogoča uporabo več analitičnih planov glede na splošni dnevnik.\n==================================================================================\n\nOb nastanku računa ali potrditvi postavk ustvari več analitičnih postavk.\n\nDoločite lahko npr. naslednjo strukturo:\n-------------------------------------------------------------\n  * **Projekti**\n      * Projekt 1\n          + podProj 1.1\n          \n          + podProj 1.2\n\n      * Projekt 2\n      \n  * **Prodajalec**\n      * Eric\n      \n      * Fabien\n\nkjer imate dva plana: projekti in prodajalec. Postavki računa mora biti omogočen zapis analitičnih vnosov v 2 plana: podProj 1.1 in Fabien. Znesek se lahko tudi razdeli.\n \nNaslednji primer je za račun, ki se tiče obeh pod projektov in je dodeljen enemu prodajalcu:\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n**Plan1:**\n\n    * podProject 1.1 : 50%\n    \n    * podProject 1.2 : 50%\n    \n**Plan2:**\n    Eric: 100%\n\nOb potrditvi te postavke računa bodo ustvarjene 3 analitične postavke, po ena za vsak kontni vnos.\n\nAnalitični plan overja minimalni in maksimalni odstotek ob času nastanka distribucijskih modelov.\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -3170,7 +3170,7 @@ msgid ""
 "meeting minutes.\n"
 "\n"
 "Notes can be found in the 'Home' menu.\n"
-msgstr ""
+msgstr "\nModul omogoči uporabnikom ustvarjanje beležk v sklopu sistema\n=================================================================\n\nUporaba beležk za zapis minut sestanka, organizacijo idej, organizacijo seznamov\nopravkov, itd. Vsak uporabnik upravlja svoje lastne beležke. Beležke so na voljo\nle njihovim avtorjem, a se jih lahko souporablja z drugimi uporabniki, da lahko več\nljudi dela na isti beležki v realnem času. Zelo učinkovita je souporaba delovnih \nminute.\n\nBeležke najdemo v meniju 'Domov'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_profiling
@@ -3502,7 +3502,7 @@ msgid ""
 "      module, but this will also install the CRM application as it depends on\n"
 "      CRM Leads.\n"
 "    "
-msgstr ""
+msgstr "\nModul zagotovi avtomatizacijo indicev preko marketinških kampanj (kampanje se lahko določi kot katerikoli vir, ne samo CRM indici).\n=========================================================================================================================================\n\nKampanje so dinamične in več-kanalne. Proces:\n------------------------------------------------------------------------\n    * oblikovanje marketinške kampanje kot delotoki, vključno e-poštne predloge za\n      pošiljanje, poročila za tiskanje ali pošiljanje preko e-pošte, prilagojena dejanja\n    * določanje vhodnih segmentov, ki bo izbralo predmete, ki naj bi vstopili\n      v kampanjo (npr. indici iz nekaterih držav)\n    * zagon kampanj v načinu simulacija za preizkušanje v realnem času ali pospešeno,\n      za fine nastavitve\n    * zagon resnične kampanje v ročnem načinu, kjer vsako dejanje\n      zahteva ročno overjanje\n    * zagon lasne kampanje v živo in spremljanje statistike,\n      saj kampanja počne praktično vse samodejno.\n\nKo je kampanja v teku lahko seveda nadaljujete s finimi nastavitvami parametrov,\nvhodnih segmentov, delotoka.\n\n**Opomba:** Če potrebujete demonstracijske podatke, lahko namestite modul\n      marketing_campaign_crm_demo, a bo to namestilo tudi CRM aplikacijo, saj je odvisen od\n      CRM indicev.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at
@@ -3586,7 +3586,7 @@ msgid ""
 "    - alert date\n"
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
-msgstr ""
+msgstr "\nSledenje različnim datumom pri proizvodih in proizvodnih lotih.\n======================================================\n\nSledi se naslednjim datumom:\n-------------------------------\n    - rok trajanja\n    - uporabno do\n    - datum umika\n    - datum opozorila\n\nVgradi tudi strategijo umikanja Splošno se uporablja First Expiry First Out (FEFO), npr. v prehrambeni industriji.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -3629,7 +3629,7 @@ msgid ""
 "=======================================================\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nLokalizacija in kontni plan za Združene arabske emirate.\n=======================================================\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -3655,7 +3655,7 @@ msgid ""
 "Using this application you can manage Sales Team  with CRM and/or Sales \n"
 "=======================================================================\n"
 " "
-msgstr ""
+msgstr "\nS to aplikacijo lahko upravljate prodajne ekipe s CRM in/ali prodajnim modulom\n=======================================================================\n "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -3710,7 +3710,7 @@ msgid ""
 "* Add services, fuel log entry, odometer values for all vehicles\n"
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
-msgstr ""
+msgstr "\nVozila, leasing, zavarovanja, stroški\n==================================\nS tem modulom upravljate svoja vozila in pogodbe povezane\ns temi vozili, kakor tudi servisiranje, dnevnik porabe, stroške\nin mnoge druge funkcije, ki so potrebne za upravljanje vaše\nflote vozil\n\nGlavne funkcije\n-------------\n* Dodajanje vozil floti\n* Upravljanje pogodb za vozila\n* Opomnik pred iztekom pogodbe\n* Dodajanje servisnih pregledov, vnosov v dnevnik porabe goriva, odometer za vsa vozila\n* Prikaz vseh stroškov vezanih na vozilo ali tip servisiranja\n* Graf analize stroškov\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -3729,7 +3729,7 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
-msgstr ""
+msgstr "\nModul za materialno knjigovodstvo\n======================\nTa modul poveže modula 'stock' in 'account' in omogoči ustvarjanje knjigovodskih vnosov za vrednotenje premikov zalog\n\nKljučne funkcije\n------------\n* vrednotenje zalog (periodično ali samodejno)\n* obračun iz zbirnika\n\nNadzorna plošča / Poročila za upravljanje skladišča vključuje:\n------------------------------------------------------\n* Vrednost zalog na dani datum (podpira datume iz preteklosti)\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -3747,7 +3747,7 @@ msgid ""
 "\n"
 "Website for browsing Associations, Groups and Memberships\n"
 "=========================================================\n"
-msgstr ""
+msgstr "\nSpletna stran za brskanje po združenjih, skupinah in članstvih\n=========================================================\n"
 
 #. module: base
 #: code:addons/base/res/res_company.py:68
@@ -4045,7 +4045,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dodajanje stika v imenik.\n              </p><p>\n                Odoo omogoča sledenje vseh dejavnosti glede\n                kupca: razprave, zgodovina priložnosti,\n                dokumenti, ipd.\n              </p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -4058,7 +4058,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dodajanje stika v imenik.\n              </p><p>\n                Odoo omogoča sledenje vseh dejavnosti glede\n                kupca; razprave, zgodovina priložnosti,\n                dokumenti, ipd.\n              </p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -4071,7 +4071,7 @@ msgid ""
 "                documents, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Dodajanje stika v imenik.\n              </p><p>\n                Odoo omogoča sledenje vseh dejavnosti glede\n                dobavitelja: razprave, zgodovina nakupov,\n                dokumenti, ipd.\n              </p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -4086,7 +4086,7 @@ msgid ""
 "                If you use the accounting application of Odoo, journals and accounts will be created automatically based on these data.\n"
 "              </p>  \n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari bančni račun.\n              </p><p>\n                Nastavitev svojih bančnih računov in izbira tistih, ki se pojavljajo v nogi poročil.\n                Bančne račune lahko v seznamskem prikazu preurejate.\n              </p>\n              <p>\n                Če uporabljate računovodsko aplikacijo, so dnevniki in konti, ki se samodejno ustvarijo, osnovani na teh podatkih.\n              </p>  \n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_bank_form
@@ -4097,7 +4097,7 @@ msgid ""
 "                Manage bank records you want to be used in the system.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvarjanje nove banke.\n              </p><p>\n                Upravljanje bančnih vnosov, ki jih želite uporabljati v sistemu.\n              </p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
@@ -4109,7 +4109,7 @@ msgid ""
 "                A partner may have several tags and tags have a hierarchical structure: a partner with a tag has also the parent tags.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvarjanje novih oznak partnerja.\n              </p><p>\n                Upravljanje oznak partnerja za njihovo boljše razvrščanje v namen sledenja in analize.\n                Partner ima lahko več oznak, ki imajo hierarhično strukturo: partnerjeva oznaka ima tudi nadrejene oznake.\n              </p>\n            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
@@ -4117,7 +4117,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">Click here to create a customized "
 "view</p><p>Customized views are used when users reorganize the content of "
 "their dashboard views (via web client)</p>"
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">Ustvarjanje prikaza po meri</p><p>Prikazi po meri se uporabljajo, ko uporabniki reorganizirajo vsebine svojih nadzornih plošč (preko spletnega odjemalca)</p>"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -8579,7 +8579,7 @@ msgstr "URL ikone"
 msgid ""
 "If checked and the action is bound to a model, it will only appear in the "
 "More menu on list views"
-msgstr ""
+msgstr "Če je označeno in je na model vezana aktivnost, bo v seznamskih prikazih vidno le v meniju 'več'"
 
 #. module: base
 #: help:ir.mail_server,smtp_debug:0
@@ -8621,21 +8621,21 @@ msgid ""
 "If set, this field will be stored in the sparse structure of the "
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
-msgstr ""
+msgstr "Če nastavljeno, bo to polje shranjeno v razširjeno strukturo serializacijskega polja, namesto, da bi imelo svoj lasten stolpec podatkovne baze. Po nastanku se tega ne da spremeniti."
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "If several child actions return an action, only the last one will be executed.\n"
 "                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action."
-msgstr ""
+msgstr "Če več podrejenih aktivnosti vrne aktivnost, se izvede le zadnja.\n                                    To se lahko zgodi, ko strežniška dejanja izvajajo kodo, ki vrača dejanje ali strežniško dejanje, ki vrača dejanje odjemalca."
 
 #. module: base
 #: help:res.users,action_id:0
 msgid ""
 "If specified, this action will be opened at log on for this user, in "
 "addition to the standard menu."
-msgstr ""
+msgstr "Če je določeno, to dejanje odpre dnevnik zabeležb za tega uporabnika kot dodatke običajnemu meniju."
 
 #. module: base
 #: help:ir.ui.menu,needaction_enabled:0
@@ -8643,7 +8643,7 @@ msgid ""
 "If the menu entry action is an act_window action, and if this action is "
 "related to a model that uses the need_action mechanism, this field is set to"
 " true. Otherwise, it is false."
-msgstr ""
+msgstr "Če je menijsko dejanje okensko, in če je to povezano z modelom, ki uporablja mehanizem potrebuje_dejanje, se to polje nastavi kot TRUE. V nasprotnem primeru je FALSE."
 
 #. module: base
 #: help:res.partner,lang:0
@@ -8666,7 +8666,7 @@ msgid ""
 "* if True, the view always extends its parent\n"
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "             "
-msgstr ""
+msgstr "Ko se deduje ta prikaz,\n* če 'pravilno', prikaz vedno razširi sebi nadrejenega\n* če 'nepravilno', prikaz trenutno ne razširja sebi nadrejenega, a se to lahko omogoči\n             "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -8688,14 +8688,14 @@ msgstr "Če označite to polje, bodo prilagojeni prevodi prepisani in zamenjani 
 msgid ""
 "If you check this, then the second time the user prints with same attachment"
 " name, it returns the previous report."
-msgstr ""
+msgstr "Če označeno, bo ob naslednjem tiskanju istega naziva priponke vrnilo prejšnje poročilo."
 
 #. module: base
 #: help:base.language.import,overwrite:0
 msgid ""
 "If you enable this option, existing translations (including custom ones) "
 "will be overwritten and replaced by those in this file"
-msgstr ""
+msgstr "Če omogočeno, bodo vsi obstoječi prevodi (vključno prilagojeni) prepisani in zamenjani s tistimi v tej datoteki."
 
 #. module: base
 #: help:ir.ui.menu,groups_id:0
@@ -8703,7 +8703,7 @@ msgid ""
 "If you have groups, the visibility of this menu will be based on these "
 "groups. If this field is empty, Odoo will compute visibility based on the "
 "related object's read access."
-msgstr ""
+msgstr "Če imate skupine, bo ta meni viden glede na te skupine. Če je to polje prazno, bo Odoo izvršil vidnost glede na dostopne pravice branja povezanega objekta."
 
 #. module: base
 #: help:ir.model.access,active:0
@@ -8724,7 +8724,7 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade
 msgid "If you wish to cancel the process, press the cancel button below"
-msgstr ""
+msgstr "Če želite preklicati proces, pritisnite spodnji gumb 'preklic'"
 
 #. module: base
 #: field:res.country,image:0 field:res.partner,image:0
@@ -10926,7 +10926,7 @@ msgid ""
 "  different model than this one), then this view's inheritance specs\n"
 "  (<xpath/>) are applied, and the result is used as if it were this view's\n"
 "  actual arch.\n"
-msgstr ""
+msgstr "Nanaša se le na prikaze, ki dedujejo od drugih (inherit_id is not False/Null).\n\n* če je razširitev (privzeto), se ob zahtevi po tem pogledu poišče najbližji\n  primarni prikaz (preko inherit_id) in se nato izvedejo vsi modeli dedujočih pogledov\n* če je primarni, se popolnoma razreši najbližji primarni prikaz (tudi če uporablja\n  drugačen model od tega), takrat se uveljavi specifikacijo dedovanja\n  (<xpath/>) tega pogleda, rezultat pa se uporabi, kot, da je ta prikaz\n  dejansko arch.\n"
 
 #. module: base
 #: help:res.partner.bank,company_id:0
@@ -13817,14 +13817,14 @@ msgstr "Seznam modelov, ki razširjajo trenutni model."
 msgid ""
 "The menu action this filter applies to. When left empty the filter applies "
 "to all menus for this model."
-msgstr ""
+msgstr "Menijsko dejanje, na katerega se nanaša ta filter. Če se pusti prazno, se bo filter nanašal na vse menije tega modela."
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
 msgid ""
 "The model that will receive the workflow signal. Note that it should have a "
 "workflow associated with it."
-msgstr ""
+msgstr "Model, ki bo prejemal signal 'delotoka'. Upoštevajte, da mora biti povezan z delotokom."
 
 #. module: base
 #: help:ir.model.fields,model_id:0
@@ -13845,7 +13845,7 @@ msgstr "Naziv skupine se ne sme začeti z \"-\""
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "Naziv skupine mora biti v sklopu aplikacije unikaten!"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -13903,7 +13903,7 @@ msgstr ""
 msgid ""
 "The path to the main report file/controller (depending on Report Type) or "
 "NULL if the content is in another data field"
-msgstr ""
+msgstr "Pot do glavne datoteke/kontrolnika poročila (glede na tip poročila) ali NULL, če je vsebina v drugem podatkovnem polju"
 
 #. module: base
 #: help:ir.cron,priority:0
@@ -14081,7 +14081,7 @@ msgstr "Ta operacija bo trajno izbrisala vse podatke, ki so trenutno shranjeni v
 msgid ""
 "This module allows you to search job applications by content\n"
 "    of resumes and letters."
-msgstr ""
+msgstr "Modul omogoči iskanje prijav na delovno mesto po vsebini\n    življenjepisov in dopisov."
 
 #. module: base
 #: field:res.lang,thousands_sep:0
@@ -14379,7 +14379,7 @@ msgid ""
 "- 'Write on a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
 "- 'Send Email': automatically send an email (available in email_template)"
-msgstr ""
+msgstr "Tip strežniškega dejanja. Na voljo so naslednje vrednosti:\n- 'Izvedi Python kodo': blok python kode, ki bo izveden\n- 'Sproži signal delotoka': pošlji signal delotoku\n- 'Zagon dejanja odjemalca': izbira dejanja odjemalca za zagon\n- 'Ustvari ali kopiraj nov zapis': ustvari nov zapis z novimi vrednostmi ali kopira obstoječ zapis v podatkovno zbirko\n- 'Zapiši v zapis': posodobi vrednosti zapisa\n- 'Izvedi več dejanj': določi dejanje, ki sproži več drugih strežniških dejanj\n- 'Pošlji e-pošto': samodejno pošiljanje e-pošte (na voljo v email_template)"
 
 #. module: base
 #: help:ir.model.constraint,type:0
@@ -14646,7 +14646,7 @@ msgid ""
 "The HR officer can now manage challenges and badges.\n"
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
-msgstr ""
+msgstr "Kadrovski viri za proces igrificiranja.\n\nKadrovski uradnik zdaj lahko upravlja izzive in priponke.\nTo uporabniku omogoči pošiljanje priponk kadrom namesto uporabnikom.\nPrejete priponke so prikazane v uporabniškem profilu.\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -14898,7 +14898,7 @@ msgstr "Pogledi"
 msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
-msgstr ""
+msgstr "Pogledi omogočajo prilagajanje kateregakoli prikaza v Odoo. Polja lahko dodajate, premikate, preimenujete ali izbrišete tista, ki jih ne potrebujete."
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -15133,14 +15133,14 @@ msgid ""
 " node or arrow, you can only change fields that are empty or set to the "
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
-msgstr ""
+msgstr "Ob prilagajanju delotoka, se prepričajte, da ne spreminjate obstoječega vozlišča ali puščice, ampak raje dodajte nova vozlišča ali puščice. Če vam je absolutno potrebno spremeniti vozlišče ali puščico, lahko spreminjate le polja, ki so prazna ali nastavljena na privzeto vrednost. Če tega ne boste upoštevali, bodo vaše prilagoditve prepisane ob naslednji posodobitvi ali nadgradnji."
 
 #. module: base
 #: help:ir.actions.server,sequence:0
 msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
-msgstr ""
+msgstr "Ob ukvarjanju z več dejanji, je vrstni red osnovan na zaporedju. Nižja številka pomeni višjo prioriteto."
 
 #. module: base
 #: help:ir.mail_server,sequence:0
@@ -15283,14 +15283,14 @@ msgstr "Pravica pisanja"
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
-msgstr ""
+msgstr "Zapis python kode, ki jo bo dejanje izvedlo. Na voljo je nekaj spremenljivk; pomoč o python izrazu je v razdelku pomoč."
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "Write a python expression, beginning with object, that gives the record to "
 "update. An expression builder is available in the help tab. Examples:"
-msgstr ""
+msgstr "Zapis python izraza, ki se začne z objektom, ki zapis posodobi. Graditelj izrazov je na voljo v zavihku pomoč. Primeri:"
 
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
@@ -15328,7 +15328,7 @@ msgstr "Jemen"
 msgid ""
 "You are creating a new user. After saving, the user will receive an invite "
 "email containing a link to set its password."
-msgstr ""
+msgstr "Ustvarjate novega uporabnika. Po shranitvi bo uporabnik prejel e-poštno vabilo s povezavo za nastavitev gesla."
 
 #. module: base
 #: code:addons/base/res/res_partner.py:558
@@ -15336,7 +15336,7 @@ msgstr ""
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
 "with different companies."
-msgstr ""
+msgstr "Družbe ne morete spremeniti, ker ima partner/uporabnik več uporabnikov z različnimi družbami."
 
 #. module: base
 #: sql_constraint:res.users:0
@@ -15346,7 +15346,7 @@ msgstr "Ne morete imeti dveh uporabnikov z istim prijavnim imenom!"
 #. module: base
 #: sql_constraint:res.font:0
 msgid "You can not register two fonts with the same name"
-msgstr ""
+msgstr "Ne morete registrirati dveh pisav z istim imenom"
 
 #. module: base
 #: code:addons/base/res/res_users.py:347
@@ -15354,7 +15354,7 @@ msgstr ""
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by Odoo (updates, module installation, ...)"
-msgstr ""
+msgstr "Uporabnika admin ne morete odstraniti, ker ga sistem interno uporablja za vire (posodobitve, namestitev modulov, ...)"
 
 #. module: base
 #: help:res.country,address_format:0
@@ -15425,7 +15425,7 @@ msgstr "Poskušate nadgraditi modul, ki je odvisen od modula: %s.\na ta modul ni
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
-msgstr ""
+msgstr "Z urejanjem novo ustvarjenega uporabnika, boste lahko določili dodatne pravice dostopa v meniju Nastavitve / Uporabniki."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:234
@@ -15702,7 +15702,7 @@ msgstr "ne"
 #: view:ir.actions.server:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
-msgstr ""
+msgstr "object ali obj: browse_record zapisa, na katerem se izvede dejanje"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
