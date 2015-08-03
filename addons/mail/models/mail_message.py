@@ -32,10 +32,6 @@ class Message(models.Model):
     _rec_name = 'record_name'
 
     _message_read_limit = 30
-    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
-        'message_type', 'vote_user_ids', 'attachment_ids', 'tracking_value_ids' ,'author_id', 'partner_ids', 'record_name']
-    _message_record_name_length = 18
-    _message_read_more_limit = 1024
 
     @api.model
     def _get_default_from(self):

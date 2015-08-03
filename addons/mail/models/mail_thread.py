@@ -1590,12 +1590,6 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.multi
-    def message_get_subscription_data(self, user_pid=None):
-        # TDE CLEANME: is that method usefull ?
-        """ Wrapper to get subtypes data. """
-        return self._get_subscription_data(user_pid=user_pid)
-
-    @api.multi
     def message_subscribe_users(self, user_ids=None, subtype_ids=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """

@@ -1369,14 +1369,6 @@ class calendar_event(osv.Model):
             data['end_type'] = 'end_date'
         return data
 
-    def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
-        res = {}
-        for virtual_id in ids:
-            real_id = calendar_id2real_id(virtual_id)
-            result = super(calendar_event, self).message_get_subscription_data(cr, uid, [real_id], user_pid=None, context=context)
-            res[virtual_id] = result[real_id]
-        return res
-
     def _track_subtype(self, cr, uid, ids, init_values, context=None):
         record = self.browse(cr, uid, ids[0], context=context)
         if 'start' in init_values and record.start:

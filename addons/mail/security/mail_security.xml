@@ -45,17 +45,5 @@
             <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
 
-        <!--
-        This rule can not be uncommented, because we have a more wide method in mail.message. When we implement a many2one_variable field, we will be able to uncomment this.
-        <record id="mail_message_read_partner_or_author" model="ir.rule">
-            <field name="name">mail.message: read if notified or author</field>
-            <field name="model_id" ref="model_mail_message"/>
-            <field name="domain_force">['|', ('partner_ids', 'in', user.partner_id.id), ('author_id', '=', user.partner_id.id)]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-        -->
-
     </data>
 </openerp>
