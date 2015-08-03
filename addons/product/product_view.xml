@@ -12,17 +12,17 @@
                 <search string="Product">
                     <field name="name" string="Product" filter_domain="['|',('default_code','ilike',self),('name','ilike',self)]"/>
                     <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                    <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
+                    <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products"/>
                     <separator/>
-                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                    <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field string="Product Variant" name="product_variant_ids" filter_domain="['|', ('product_variant_ids.name','ilike',self), ('product_variant_ids.attribute_value_ids.attribute_id.name','ilike',self)]" groups="product.group_product_variant"/>
                     <field name="company_id"/>
                     <field name="pricelist_id" widget="selection" context="{'pricelist': self}" filter_domain="[]" groups="product.group_sale_pricelist"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand='0' name="group_by" string='Group by...'>
                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
-                       <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}"/>
-                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
+                       <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'uom_id'}"/>
+                       <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
                     </group>
                 </search>
             </field>

@@ -14,14 +14,14 @@
                 <field name="employee_id"/>
                 <field name="stage_id"/>
                 <separator/>
-                <filter string="My Requests" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Users' icon="terp-personal" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'category_id'}"/>
-                    <filter string='Stages' icon="terp-mrp" domain="[]" context="{'group_by' : 'stage_id'}"/>
-                    <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
+                    <filter string='Stages' domain="[]" context="{'group_by' : 'stage_id'}"/>
+                    <filter string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
                 </group>
             </search>
         </field>
@@ -338,20 +338,20 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="model"/>
-                <filter string="New" help="Unassigned" icon="terp-accessories-archiver" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
-                <filter string="To Do" help="Under Maintenance" icon="terp-accessories-archiver" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
-                <filter string="Assigned" icon="terp-accessories-archiver" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="New" help="Unassigned" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
+                <filter string="To Do" help="Under Maintenance" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
+                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
                 <separator/>
-                <filter string="My Equipments" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Users' icon="terp-personal" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'category_id'}"/>
-                    <filter string='Assigned to' help="Assigned to Employees and Departments" icon="terp-personal" domain="[]" context="{'group_by': 'equipment_assign_to'}"/>
-                    <filter string='Department' help="Assigned to Departments" icon="terp-personal" domain="[]" context="{'group_by': 'department_id'}"/>
-                    <filter string='Employee' help="Assigned to Employees" icon="terp-personal" domain="[]" context="{'group_by': 'employee_id'}"/>
-                    <filter string='Vendor' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter string='Assigned to' help="Assigned to Employees and Departments" domain="[]" context="{'group_by': 'equipment_assign_to'}"/>
+                    <filter string='Department' help="Assigned to Departments" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string='Employee' help="Assigned to Employees" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Vendor' domain="[]" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
         </field>
@@ -464,7 +464,7 @@
             <search string="Search">
                 <field name="name" string="Category Name" filter_domain="[('name','ilike',self)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Responsible' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string='Responsible' domain="[]" context="{'group_by' : 'user_id'}"/>
                 </group>
             </search>
         </field>

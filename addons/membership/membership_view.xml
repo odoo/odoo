@@ -13,11 +13,11 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" string="Membership Product"/>
-                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
+                    <filter string="Inactive" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='From Month' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -153,18 +153,18 @@
                     <field name="category_id"/>
                     <field name="membership_start" invisible="1"/>
                     <field name="membership_stop" string="End Membership Date"/>
-                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]"/>
+                    <filter string="Customers" name="customer" domain="[('customer','=',1)]"/>
                     <separator/>
-                    <filter string="Vendors" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]"/>
+                    <filter string="Vendors" name="supplier" domain="[('supplier','=',1)]"/>
                     <separator/>
-                    <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
-                    <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+                    <filter name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
+                    <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
-                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
-                        <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
-                        <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
-                        <filter string="Start Month" help="Starting Month Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
-                        <filter string="End Month" help="Ending Month Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+                        <filter string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
+                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member'}"/>
+                        <filter string=" Membership State" domain="[]" context="{'group_by':'membership_state'}"/>
+                        <filter string="Start Month" help="Starting Month Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
+                        <filter string="End Month" help="Ending Month Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
                     </group>
                 </search>
             </field>

@@ -38,7 +38,7 @@
             <field name="model">report.timesheet.line</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
-                    <filter icon="terp-personal" string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
+                    <filter string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
                     <field name="user_id"/>
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id"/>
@@ -47,13 +47,13 @@
                         <field name="invoice_id"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
-                        <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <filter string="Invoice" icon="terp-dolar" context="{'group_by':'invoice_id'}"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
+                        <filter string="User" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Account" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <filter string="Invoice" context="{'group_by':'invoice_id'}"/>
+                        <filter string="Day" context="{'group_by':'day'}"/>
+                        <filter string="Month" context="{'group_by':'month'}"/>
+                        <filter string="Year" context="{'group_by':'name'}"/>
                     </group>
                 </search>
             </field>

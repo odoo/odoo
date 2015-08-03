@@ -51,7 +51,7 @@
             <data>
                 <xpath expr="//field[@name='date_end']" position="after">
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="To Advice" domain="[('available_advice','=', False)]" help="Payslip Batches ready to be Adviced"/>
+                    <filter string="To Advice" domain="[('available_advice','=', False)]" help="Payslip Batches ready to be Adviced"/>
                 </xpath>
             </data>
             </field>
@@ -134,8 +134,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payment advice">
                     <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Advices"/>
-                        <filter icon="terp-camera_test" string="Confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
+                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Advices"/>
+                        <filter string="Confirm" domain="[('state','=','confirm')]" help="Confirm Advices"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
@@ -145,11 +145,11 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By">
-                        <filter string="Bank" name="bank_id" icon="terp-go-home" context="{'group_by':'bank_id'}"/>
+                        <filter string="Bank" name="bank_id" context="{'group_by':'bank_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Status" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="state" context="{'group_by':'state'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Company" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                        <filter string="Company" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     </group>
                 </search>
             </field>

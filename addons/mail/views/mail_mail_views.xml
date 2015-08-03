@@ -90,14 +90,14 @@
                 <search string="Email Search">
                     <field name="email_from" filter_domain="['|', '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
                     <field name="date"/>
-                    <filter icon="terp-camera_test" name="received" string="Received" domain="[('state','=','received')]"/>
-                    <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
-                    <filter icon="terp-check" name="sent" string="Sent" domain="[('state','=','sent')]"/>
-                    <filter icon="terp-gtk-stop" name="exception" string="Failed" domain="[('state','=','exception')]"/>
+                    <filter name="received" string="Received" domain="[('state','=','received')]"/>
+                    <filter name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
+                    <filter name="sent" string="Sent" domain="[('state','=','sent')]"/>
+                    <filter name="exception" string="Failed" domain="[('state','=','exception')]"/>
                     <separator/>
-                    <filter icon="terp-camera_test" name="type_email" string="Email" domain="[('message_type','=','email')]"/>
-                    <filter icon="terp-camera_test" name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
-                    <filter icon="terp-camera_test" name="type_notification" string="Notification" domain="[('message_type','=','notification')]"/>
+                    <filter name="type_email" string="Email" domain="[('message_type','=','email')]"/>
+                    <filter name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
+                    <filter name="type_notification" string="Notification" domain="[('message_type','=','notification')]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="author_id"/>
                         <field name="recipient_ids"/>

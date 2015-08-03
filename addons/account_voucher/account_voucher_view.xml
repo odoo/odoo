@@ -122,17 +122,17 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <separator/>
-                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
+                    <filter string="To Review" domain="[('state','=','posted')]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date','visible':True}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

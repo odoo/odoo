@@ -132,7 +132,7 @@
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
-                    <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                    <filter string="To Invoice" name="to_invoice" domain="[('invoice_state', '=', '2binvoiced')]"/>
                 </xpath>
             </field>
         </record>

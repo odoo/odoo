@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <filter name="Sales" position="after">
                     <separator/>
-                    <filter icon="terp-accessories-archiver" string="Picked" domain="[('shipped','=',True)]"/>
+                    <filter string="Picked" domain="[('shipped','=',True)]"/>
                 </filter>
                 <xpath expr="//group/filter[@name='status']" position="after">
                     <filter string="Warehouse" context="{'group_by':'warehouse_id'}"/>

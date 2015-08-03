@@ -126,7 +126,7 @@
                     <field name="composition"/>
                     <field name="group_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter string="Property Group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
             </field>
@@ -222,10 +222,10 @@
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <field name="resource_type"/>
-                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                    <filter string="Inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'resource_type'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -334,11 +334,11 @@
             <field name="arch" type="xml">
                 <search string="Work Order Operations">
                     <field name="name" string="Work Order Operations" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                    <filter string="Inactive" domain="[('active','=',False)]"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Production Location" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Production Location" domain="[]" context="{'group_by':'location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -469,11 +469,11 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="categ_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
-                        <filter string="Work Order Operations" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
+                        <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                         <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
                    </group>
                 </search>
@@ -552,12 +552,12 @@
                     <field name="bom_id"/>
                     <field name="product_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Bill Of Material" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'bom_id'}"/>
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}"/>
-                        <filter string="Work Order Operations" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string=" Valid From Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
+                        <filter string="Bill Of Material" domain="[]" context="{'group_by':'bom_id'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
+                        <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
@@ -856,24 +856,24 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                     <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                    <filter icon="terp-gtk-media-pause" string="Pending" name="pending" domain="[('state','=','confirmed')]"
+                    <filter string="Pending" name="pending" domain="[('state','=','confirmed')]"
                         help="Manufacturing Orders which are waiting for raw materials."/>
-                    <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','ready')]"
+                    <filter string="Ready" name="ready" domain="[('state','=','ready')]"
                         help="Manufacturing Orders which are ready to start production."/>
-                    <filter icon="terp-check" string="In Production" name="inprogress" domain="[('state','=','in_production')]"
+                    <filter string="In Production" name="inprogress" domain="[('state','=','in_production')]"
                         help="Manufacturing Orders which are currently in production."/>
                     <separator/>
-                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                    <filter string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                         help="Production started late"/>
                     <field name="product_tmpl_id"/>
                     <field name="product_id"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="categ_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Work Order Operations" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Scheduled Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
                         <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
                     </group>
                </search>
@@ -1002,7 +1002,7 @@
              <field name="arch" type="xml">
                  <xpath expr="//filter[@name='consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" icon="terp-accessories-archiver" domain="[('bom_ids','not in',[])]"/>
+                    <filter string="Components" name="components" domain="[('bom_ids','not in',[])]"/>
                  </xpath>
              </field>
         </record>

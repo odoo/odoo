@@ -64,25 +64,20 @@
                 <search string="Attachments">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
                     <field name="create_date"/>
-                    <filter icon="terp-stage"
-                        string="URL"
-                        domain="[('type','=','url')]"/>
-                    <filter icon="terp-stock_align_left_24"
-                        string="Binary"
-                        domain="[('type','=','binary')]"/>
+                    <filter string="URL" domain="[('type','=','url')]"/>
+                    <filter string="Binary" domain="[('type','=','binary')]"/>
                     <separator/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"
-                        icon="terp-personal"
                         domain="[('create_uid','=',uid)]"
                         help="Filter on my documents"/>
                     <field name="create_uid"/>
                     <field name="type"/>
                     <group expand="0" string="Group By">
-                        <filter name="owner" string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
-                        <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Creation Month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
             </field>

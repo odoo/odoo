@@ -92,7 +92,7 @@
                     <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
                 </field>
                 <filter name="consumable" position="before">
-                   <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
+                   <filter string="Products" domain="[('type','=','product')]" help="Stockable products"/>
                 </filter>
             </field>
         </record>

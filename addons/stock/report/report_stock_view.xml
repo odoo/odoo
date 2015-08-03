@@ -21,11 +21,11 @@
             <field name="arch" type="xml">
                 <search string="Dates of Inventories &amp; Moves">
                     <field name="date"/>
-                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable" domain="[('product_id.type','=', 'product')]"/>
-                    <filter icon="terp-accessories-archiver" string="Consumable" domain="[('product_id.type','=', 'consu')]"/>
+                    <filter name="stockable" string="Stockable" domain="[('product_id.type','=', 'product')]"/>
+                    <filter string="Consumable" domain="[('product_id.type','=', 'consu')]"/>
                     <separator/>
-                    <filter icon="terp-accessories-archiver-minus" string="No Inventory yet" domain="[('date','=', False)]"/>
-                    <filter icon="terp-accessories-archiver-minus" string="No Stock Move yet" domain="[('move_date','=', False)]"/>
+                    <filter string="No Inventory yet" domain="[('date','=', False)]"/>
+                    <filter string="No Stock Move yet" domain="[('move_date','=', False)]"/>
                     <field name="product_id"/>
                 </search>
             </field>

@@ -58,8 +58,8 @@
 			<field name="arch" type="xml">
 			<search string="Search Bank Transactions">
 				<field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Bank Transaction"/>
-				<filter name="debit" string="Debit" domain="[('amount','&gt;',0)]" icon="terp-folder-green" help="Debit Transactions."/>
-				<filter name="credit" string="Credit" domain="[('amount','&lt;',0)]" icon="terp-folder-orange" help="Credit Transactions."/>
+				<filter name="debit" string="Debit" domain="[('amount','&gt;',0)]" help="Debit Transactions."/>
+				<filter name="credit" string="Credit" domain="[('amount','&lt;',0)]" help="Credit Transactions."/>
 				<field name="statement_id"/>
 				<group expand="0" string="Extended Filters...">
 					<field name="partner_id"/>
@@ -68,8 +68,8 @@
 				</group>
 				<newline/>
 				<group string="Group By" expand="0">
-					<filter string="Partner" context="{'group_by':'partner_id'}" icon="terp-folder-green"/>
-					<filter string="Statement" context="{'group_by':'statement_id'}" icon="terp-folder-orange"/>
+					<filter string="Partner" context="{'group_by':'partner_id'}"/>
+					<filter string="Statement" context="{'group_by':'statement_id'}"/>
 				</group>
 			</search>
 			</field>

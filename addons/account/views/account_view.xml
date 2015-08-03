@@ -107,11 +107,11 @@
             <field name="arch" type="xml">
                 <search string="Accounts">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
-                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
-                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                    <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
+                    <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -220,10 +220,10 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
-                    <filter domain="[('type', '=', 'sale')]" string="Sale" icon="terp-camera_test"/>
-                    <filter domain="[('type', '=', 'purchase')]" string="Purchase" icon="terp-purchase"/>
-                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity" icon="terp-dolar"/>
-                    <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous" icon="terp-stock"/>
+                    <filter domain="[('type', '=', 'sale')]" string="Sale"/>
+                    <filter domain="[('type', '=', 'purchase')]" string="Purchase"/>
+                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
+                    <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
                     <separator/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
                 </search>
@@ -411,13 +411,13 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','open')]" icon="terp-document-new"/>
-                    <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                    <filter string="Draft" domain="[('state','=','open')]"/>
+                    <filter string="Confirmed" domain="[('state','=','confirm')]"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
-                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
-                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
-                        <filter string="Date" context="{'group_by': 'date'}" icon="terp-go-month"/>
+                        <filter string="Journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
@@ -1245,8 +1245,8 @@
                 <search string="Search Move">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
-                    <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
-                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
+                    <filter string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
+                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                     <separator/>
                     <filter string="Sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
                     <filter string="Purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
@@ -1430,7 +1430,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" domain="[]" context="{'group_by':'user_type_id'}"/>
                    </group>
                 </search>
             </field>
@@ -1483,10 +1483,10 @@
                     <field name="bank_account_code_prefix"/>
                     <field name="cash_account_code_prefix"/>
                     <group expand="0" string="Group By">
-                        <filter string="Receivable Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
-                        <filter string="Payable Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
-                        <filter string="Income Account" icon="terp-sale" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
-                        <filter string="Expense Account" icon="terp-purchase" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
+                        <filter string="Receivable Account" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
+                        <filter string="Payable Account" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
+                        <filter string="Income Account" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
+                        <filter string="Expense Account" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1589,8 +1589,8 @@
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax Template"/>
-                    <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
-                    <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
+                    <filter string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
+                    <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                     <field name="chart_template_id"/>
                 </search>
             </field>

@@ -95,7 +95,7 @@
                     <field name="name"
                         filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
                         string="Language"/>
-                    <filter string="Translatable" icon="terp-tools" domain="[('translatable','=',True)]"/>
+                    <filter string="Translatable" domain="[('translatable','=',True)]"/>
                     <field name="direction"/>
                 </search>
             </field>

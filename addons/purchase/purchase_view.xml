@@ -314,9 +314,9 @@
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
+                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
                 </search>
             </field>
@@ -340,9 +340,9 @@
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Order Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Expected Month" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
+                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
                     </group>
                 </search>
             </field>
@@ -567,10 +567,10 @@
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <filter name="hide_cancelled" string="Hide cancelled lines" domain="[('state', '!=', 'cancel')]"/>
                     <group expand="0" string="Group By">
-                        <filter name="groupby_supplier" string="Vendor" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
-                        <filter name="groupby_product" string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter icon="terp-gtk-jump-to-rtl" string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
+                        <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
+                        <filter string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
                 </search>
             </field>
@@ -647,7 +647,7 @@
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
                 <filter name="filter_to_sell" position="after">
-                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                   <filter name="filter_to_purchase" string="Can be Purchased" domain="[('purchase_ok', '=', 1)]"/>
                 </filter>
             </field>
         </record>

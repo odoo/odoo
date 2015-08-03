@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -145,18 +145,18 @@
                 <search string="Search Call for Tenders">
                     <field name="name" string="Call for Tenders"/>
                     <field name="exclusive" />
-                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
-                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
-                    <filter icon="terp-dialog-close" string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
+                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
+                    <filter string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
+                    <filter string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
                     <separator/>
-                    <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" icon="terp-go-month" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>

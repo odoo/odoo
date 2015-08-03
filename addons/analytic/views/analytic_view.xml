@@ -328,7 +328,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
                    <field name="type"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>

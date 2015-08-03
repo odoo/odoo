@@ -277,14 +277,14 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="class" string="Privacy"/>
-                <filter icon="terp-go-today" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
+                <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" icon="terp-locked" domain="[]" context="{'group_by':'class'}"/>                    
+                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" domain="[]" context="{'group_by':'class'}"/>
                 </group>
             </search>
         </field>

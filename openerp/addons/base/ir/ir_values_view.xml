@@ -68,8 +68,8 @@
                         filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
                         string="Client Action"/>
                     <group expand="0" string="Group By">
-                        <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'key2'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'key2'}"/>
                     </group>
                 </search>
             </field>
