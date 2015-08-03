@@ -121,7 +121,7 @@ class HrExpense(models.Model):
     def refuse_expenses(self, reason):
         self.write({'state': 'cancel'})
         if self.employee_id.user_id:
-            body = (_("Your Expense %s has been refused.<br>&nbsp; &nbsp; &nbsp; &bull; &nbsp; &nbsp;<b>Reason</b> : %s") % (self.name, reason))
+            body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (self.name, reason))
             self.message_post(body=body, partner_ids=[self.employee_id.user_id.partner_id.id])
 
     @api.multi
