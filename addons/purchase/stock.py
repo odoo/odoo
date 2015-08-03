@@ -44,15 +44,23 @@ class stock_move(osv.osv):
         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
         if vals.get('state') in ['done', 'cancel']:
+            po_to_check = []
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
-                    order_id = move.purchase_line_id.order_id.id
+                    order = move.purchase_line_id.order_id
+                    order_id = order.id
                     # update linked purchase order as superuser as the warehouse
                     # user may not have rights to access purchase.order
                     if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
                         workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_done', cr)
                     if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
                         workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_cancel', cr)
+                    if order_id not in po_to_check and vals['state'] == 'cancel' and order.invoice_method == 'picking':
+                        po_to_check.append(order_id)
+            # Some moves which are cancelled might be part of a PO line which is partially
+            # invoiced, so we check if some PO line can be set on "invoiced = True".
+            if po_to_check:
+                self.pool.get('purchase.order')._set_po_lines_invoiced(cr, uid, po_to_check, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
