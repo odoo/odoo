@@ -168,6 +168,7 @@ class TestMessagePost(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_author(self):
         original_followers = self.group_pigs.message_follower_ids
+        self.group_pigs.invalidate_cache()
         self.group_pigs.sudo(self.user_employee).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment')
         self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.user_employee.partner_id)

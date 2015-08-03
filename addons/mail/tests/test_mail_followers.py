@@ -36,6 +36,7 @@ class TestMailFollowers(TestMail):
         # Add 1 follower through the (0, 0, values) command
         self.group_pigs.write({'message_follower_ids': [(0, 0, {'name': 'Patrick Fiori'})]})
         partner_patrick = self.env['res.partner'].search([('name', '=', 'Patrick Fiori')], limit=1)
+        self.group_pigs.invalidate_cache()
         self.assertEqual(self.group_pigs.message_follower_ids,
                          self.partner_2 | self.env.user.partner_id | partner_patrick)
 
