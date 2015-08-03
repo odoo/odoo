@@ -167,35 +167,18 @@ div.o_checkbox {
 .openerp .oe_formview {
    .oe_button_box {
         .oe_stat_button {
-            .stat_button_icon {
-                display: inline-block;
-            }
-
-            // padding: @odoo-statbutton-vpadding @odoo-statbutton-spacing @odoo-statbutton-vpadding 0px;
             text-align: left;
 
             .o_button_icon {
-                // margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
+                width: 30%;
                 display: inline-block;
                 vertical-align: middle;
-                &:before {
-                    font-size: x-large;
-                    vertical-align: middle;
-                }
-
-                width: 30%;
             }
-
-            // .o_form_field_percent_pie {
-            //     margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
-            // }
 
             .o_stat_info { // contains the value and text
                 display: inline-block;
                 vertical-align: middle;
-
                 max-width: 70%;
-                // padding-right: @odoo-statbutton-spacing;
                 line-height: 1.2;
 
                 .o_stat_value {
