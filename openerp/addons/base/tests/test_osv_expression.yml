@@ -67,7 +67,7 @@
     Trying the "in" operator for list value
 -
     !python {model: res.partner }: |
-        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUStek'])])
+        ids = self.search(cr, uid, [('parent_id','in',['Agrolait','ASUSTeK'])])
         assert len(ids) >= 1, ids
 -
     Check we can use "in" operator for plain fields.
@@ -474,10 +474,10 @@
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on an untranslated field.
 -
     !python {model: res.partner }: |
-        all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
-        assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'v%')])
-        assert len(all_ids) >= 1, "Must match one partner (Vicking Direct), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=like', 'A_US_eK')])
+        assert len(all_ids) == 1, "Must match one partner (ASUSTeK), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'b%')])
+        assert len(all_ids) >= 1, "Must match one partner (Bista Solutions US), got %r"%all_ids
 -
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
 -
@@ -545,7 +545,7 @@
         # first install french language
         Modules = self.pool.get('ir.module.module')
         base = Modules.browse(cr, uid, Modules.search(cr, uid, [('name', '=', 'base')])[0])
-        
+
         # hack: mark module as installed to allow install of the translation
         base_state = base.state
         base.write({'state': 'installed'})

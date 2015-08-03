@@ -109,16 +109,16 @@
 -
   In order to test group invoicing by customer.
 -
-  I create an analytic account 'Sales Integration' for customer Asustek.
+  I create an analytic account 'Sales Integration' for customer ASUSTeK.
 -
   !record {model: account.analytic.account, id: analytic_asustek01}:
     name: Sales Integration
     partner_id: base.res_partner_1
 -
-  I create an analytic account 'Asustek Website' for customer Asustek.
+  I create an analytic account 'ASUSTeK Website' for customer ASUSTeK.
 -
   !record {model: account.analytic.account, id: analytic_asustek02}:
-    name: Asustek Website
+    name: ASUSTeK Website
     partner_id: base.res_partner_1
 -
  I create an account analytic line.
@@ -156,7 +156,7 @@
     time: 1
     group_by_partner: 1
 -
-  I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice and check that only one invoice is created for customer Asustek.
+  I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice and check that only one invoice is created for customer ASUSTeK.
 -
   !python {model: hr.timesheet.invoice.create}: |
     action_result = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_1")], {
@@ -166,5 +166,5 @@
     invoice_domain = action_result['domain']
     invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
     invoice_id = invoice_pool.browse(cr, uid, invoice_ids)[0]
-    assert len(invoice_ids) == 1,"only one invoice should be created for customer Asustek."
+    assert len(invoice_ids) == 1,"only one invoice should be created for customer ASUSTeK."
     assert invoice_id.amount_untaxed == 375.0, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed

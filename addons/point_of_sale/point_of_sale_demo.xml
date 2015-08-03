@@ -58,10 +58,6 @@
           <field name="name">Partner Services</field>
           <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
         </record>
-        <record id="partner_services" model="pos.category">
-          <field name="name">Partner Services</field>
-          <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
-        </record>
         <record id="fruits" model="pos.category">
           <field name="name">Fruits</field>
           <field name="image" type="base64" file="point_of_sale/static/img/fruits-image.jpg"/>
@@ -69,6 +65,10 @@
         <record id="vegetables" model="pos.category">
           <field name="name">Vegetables</field>
           <field name="image" type="base64" file="point_of_sale/static/img/legumes-image.jpg"/>
+        </record>
+        <record id="food" model="pos.category">
+          <field name="name">Food</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/food-image.jpg"/>
         </record>
 
         <!-- Resource: product.product -->
@@ -448,6 +448,64 @@
           <field name="pos_categ_id" ref="water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/evian_2l-image.jpg"/>
         </record>
+        <record id="spa_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.40</field>
+          <field name="name">Spa Reine 33cl</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_33cl-image.jpg"/>
+        </record>
+        <record id="spa_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.46</field>
+          <field name="name">Spa Reine 50cl</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_50cl-image.jpg"/>
+        </record>
+        <record id="spa_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.65</field>
+          <field name="name">Spa Reine 1L</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_1l-image.jpg"/>
+        </record>
+        <record id="spa_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.30</field>
+          <field name="name">Spa Reine 2L</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_2l-image.jpg"/>
+        </record>
+        <record id="dasani_plant_bottle_1_lt" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.34</field>
+          <field name="name">Dasani PlantBottle 1l</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_water_plant_bottle.jpg"/>
+        </record>
+        <record id="dasani_flavored_grape_1_lt" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.44</field>
+          <field name="barcode">5449000111715</field>
+          <field name="name">Dasani Flavored Grape Water 1l</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_grape.jpg"/>
+        </record>
+        <record id="dasani_flavored_lemon1,5_lt" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.86</field>
+          <field name="name">Dasani Flavored Lemon Water 1.5l</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_lemon.jpg"/>
+        </record>
+
+        <record id="spa_gazeuse_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.38</field>
+          <field name="name">Spa Barisart 33cl</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_gazeuse_33cl-image.jpg"/>
+        </record>
         <record id="spa_gazeuse_50cl" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">0.49</field>
@@ -468,6 +526,27 @@
           <field name="name">Chaudfontaine Petillante 1.5l</field>
           <field name="pos_categ_id" ref="water"/>
           <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_petillante_1,5l-image.jpg"/>
+        </record>
+        <record id="dasani_flavored_strawberry" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.41</field>
+          <field name="name">Dasani Flavored Strawberry Water</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_strawberry.jpg"/>
+        </record>
+        <record id="dasani_flavored_raspberry" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.57</field>
+          <field name="name">Dasani Flavored Raspberry Water</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_raspberry.jpg"/>
+        </record>
+        <record id="dasani_sparkling_lime_can_500ml" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.98</field>
+          <field name="name">Dasani Sparklink Lime Can 500ml</field>
+          <field name="pos_categ_id" ref="water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dasani_sparkling-lime.jpg"/>
         </record>
         <record id="perrier_50cl" model="product.product">
           <field name="available_in_pos">True</field>
@@ -534,12 +613,12 @@
           <field name="pos_categ_id" ref="beers"/>
           <field name="image" type="base64" file="point_of_sale/static/img/lindemans_kriek_37,5cl-image.jpg"/>
         </record>
-        <record id="grisette_cerise_25cl" model="product.product">
+        <record id="heineken_beer_500_ml" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.04</field>
-          <field name="name">Grisette Cherry 25cl</field>
+          <field name="name">Heineken Lager Beer 500ml</field>
           <field name="pos_categ_id" ref="beers"/>
-          <field name="image" type="base64" file="point_of_sale/static/img/grisette_cerise_25cl-image.jpg"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/heineken-can.jpg"/>
         </record>
         <record id="belle_vue_kriek_25cl" model="product.product">
           <field name="available_in_pos">True</field>
@@ -661,6 +740,112 @@
           <field name="pos_categ_id" ref="partner_services"/>
           <field name="image" type="base64" file="point_of_sale/static/img/partners/vauxoo.png"/>
         </record>
+        <record id="domino_deluxe" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Deluxe</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_deluxe.png"/>
+        </record>
+        <record id="domino_americano" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Americano</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_americano.png"/>
+        </record>
+        <record id="domino_bacon_mushroom" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Bacon Mushroom</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_bacon_mushroom.png"/>
+        </record>
+        <record id="domino_bbq_meat" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's BBQ Meat Lovers</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_bbq_meal_lovers.png"/>
+        </record>
+        <record id="domino_chicken_ham" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Chicken Ham</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_chicken_ham.png"/>
+        </record>
+        <record id="domino_funky_chicken" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Funky Chicken</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_funky_chicken.png"/>
+        </record>
+        <record id="domino_godfather" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Godfather</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_godfather.png"/>
+        </record>
+        <record id="domino_hot_chilly_beef" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Hot Chilly Beef</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_hot_chilli_beef.png"/>
+        </record>
+        <record id="domino_italiano" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Italiano</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_italiano.png"/>
+        </record>
+        <record id="domino_margherita" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Margherita</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_margheritta.png"/>
+        </record>
+        <record id="domino_prawn_feta" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Domino's Prawn Bacon &amp; Feta</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/dominos_prawn_feta.png"/>
+        </record>
+        <record id="domino_supreme" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.67</field>
+          <field name="name">Domino's Supreme</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/domino_supreme.png"/>
+        </record>
+
+        <record id="pringle_zesty_salsa" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.33</field>
+          <field name="name">Pringles Zesty Salsa</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pringles_zesty_salsa.png"/>
+        </record>
+        <record id="pringle_nacho_cheese" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.39</field>
+          <field name="name">Pringles Nacho Cheese</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pringles_nacho_cheese.png"/>
+        </record>
+        <record id="pringle_truly_original" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.78</field>
+          <field name="name">Pringles Truly Original</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pringles_truly_original.png"/>
+        </record>
 
         <record id="partner_product_7" model="product.product">
           <field name="available_in_pos">True</field>
@@ -821,6 +1006,41 @@
           <field name="type">service</field>
           <field name="pos_categ_id" ref="partner_services"/>
           <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+        <record id="b_and_j_half_baked_froyo" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">Ben &amp; Jerry's half baked froyo</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/B_and_J_half-baked-froyo.png"/>
+        </record>
+        <record id="b_and_j_hazed_and_confused" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">Ben &amp; Jerry's hazed and confused</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/B_and_J_hazed-and-confused.png"/>
+        </record>
+        <record id="b_and_j_peanut_butter_fudge" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.40</field>
+          <field name="name">Ben &amp; Jerry's peanut butter fudge</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/B_and_J_peanut-butter-fudge.png"/>
+        </record>
+        <record id="b_and_j_phish_food_froyo" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">8.40</field>
+          <field name="name">Ben &amp; Jerry's phish food froyo</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/B_and_J_phish-food-froyo.png"/>
+        </record>
+        <record id="b_and_j_salted-caramel" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">Ben &amp; Jerry's salted caramel</field>
+          <field name="pos_categ_id" ref="food"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/B_and_J_salted-caramel.png"/>
         </record>
 
 
