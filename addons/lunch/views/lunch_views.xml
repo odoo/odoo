@@ -67,6 +67,10 @@
                     <field name="date"/>
                     <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                    <separator/>
+                    <filter name="new" string="New" domain="[('state','=','new')]"/>
+                    <filter name="received" string="Received" domain="[('state','=','confirmed')]"/>
+                    <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                     <filter name='by_users' string="Users" context="{'group_by':'user_id'}"/>
                 </search>
             </field>
@@ -130,7 +134,7 @@
             <field name="res_model">lunch.order</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="lunch_order_view_search"/>
-            <field name="context">{"search_default_is_mine":1}</field>
+            <field name="context">{"search_default_is_mine":1, "search_default_received":1}</field>
             <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a lunch order.
@@ -150,7 +154,6 @@
             <field name="arch" type="xml">
                 <tree string="cashmove tree" create='false'>
                     <field name="date"/>
-                    <field name="user_id"/>
                     <field name="description"/>
                     <field name="amount" sum="Total"/>
                 </tree>
@@ -351,9 +354,8 @@
             <field name="arch" type="xml">
                 <tree string="Orders Tree">
                     <field name="date"/>
-                    <field name='user_id'/>
                     <field name="order_line_ids"/>
-                    <field name="state" />
+                    <field name="state"/>
                     <field name="total" sum="Total"/>
                 </tree>
             </field>
@@ -386,20 +388,19 @@
 
                         <group>
                             <group>
-                                <field name='user_id' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
+                                <field name='user_id' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}" class="oe_inline"/>
                                 <field name='date'/>
                             </group>
                             <div>
-                                <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
-                                    Warning : Your balance is insufficient.
-                                </div>
                                 <div attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="alert alert-danger oe_edit_only">
                                     <field name='alerts'/>
                                 </div>
                             </div>
                         </group>
                         
-                        <field name='previous_order_ids' widget='previous_order' class="oe_edit_only"/>
+                        <div>
+                            <field name='previous_order_ids' widget='previous_order'/>
+                        </div>
 
                         <separator string='Select your order'/>
                         <field name='order_line_ids'>
@@ -431,6 +432,24 @@
                     <field name="description"/>
                     <field name="price"/>
                 </tree>
+            </field>
+        </record>
+
+        <!-- Search for product -->
+        <record id="lunch_product_view_search" model="ir.ui.view">
+            <field name="name">lunch.product.search</field>
+            <field name="model">lunch.product</field>
+            <field name="arch" type="xml">
+                <search string="Product Search">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="supplier"/>
+                    <field name="description"/>
+                    <group expand="0" string="Group By">
+                        <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
+                        <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
