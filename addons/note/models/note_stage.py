@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from openerp import api, fields, models
 
-class note_stage(osv.osv):
+class NoteStage(models.Model):
     """ Category of Note """
     _name = "note.stage"
     _description = "Note Stage"
-    _columns = {
-        'name': fields.char('Stage Name', translate=True, required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the note stages"),
-        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, ondelete='cascade'),
-        'fold': fields.boolean('Folded by Default'),
-    }
     _order = 'sequence asc'
-    _defaults = {
-        'fold': 0,
-        'user_id': lambda self, cr, uid, ctx: uid,
-        'sequence' : 1,
-    }
+
+    name = fields.Char(string='Stage Name', translate=True, required=True)
+    sequence = fields.Integer(help="Used to order the note stages", default=1)
+    user_id = fields.Many2one('res.users', string='Owner', help="Owner of the note stage.", required=True, ondelete='cascade', default=lambda self: self.env.uid)
+    fold = fields.Boolean(string='Folded by Default', default=0)

@@ -1,102 +1,87 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
-from openerp.osv import osv, fields
+from openerp import api, fields, models
 from openerp.tools import html2plaintext
 
-class note_note(osv.osv):
+class NoteNote(models.Model):
     """ Note """
     _name = 'note.note'
     _inherit = ['mail.thread']
     _description = "Note"
-
-    #writing method (no modification of values)
-    def name_create(self, cr, uid, name, context=None):
-        rec_id = self.create(cr, uid, {'memo': name}, context=context)
-        return self.name_get(cr, uid, [rec_id], context)[0]
-
-    #read the first line (convert hml into text)
-    def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
-        res = {}
-        for note in self.browse(cr, uid, ids, context=context):
-            res[note.id] = (note.memo and html2plaintext(note.memo) or "").strip().replace('*','').split("\n")[0]
-
-        return res
-
-    def onclick_note_is_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': False, 'date_done': fields.date.today()}, context=context)
-
-    def onclick_note_not_done(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'open': True}, context=context)
-
-    #return the default stage for the uid user
-    def _get_default_stage_id(self,cr,uid,context=None):
-        ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
-        return ids and ids[0] or False
-
-    def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
-        note = self.browse(cr, uid, id, context=context)
-        if not value: return False
-        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
-        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
-
-    def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for stage in record.stage_ids:
-                if stage.user_id.id == uid:
-                    result[record.id] = stage.id
-        return result
-
-    _columns = {
-        'name': fields.function(_get_note_first_line, 
-            string='Note Summary', 
-            type='text', store=True),
-        'user_id': fields.many2one('res.users', 'Owner'),
-        'memo': fields.html('Note Content'),
-        'sequence': fields.integer('Sequence'),
-        'stage_id': fields.function(_get_stage_per_user, 
-            fnct_inv=_set_stage_per_user, 
-            string='Stage', 
-            type='many2one', 
-            relation='note.stage'),
-        'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'open': fields.boolean('Active', track_visibility='onchange'),
-        'date_done': fields.date('Date done'),
-        'color': fields.integer('Color Index'),
-        'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
-    }
-    _defaults = {
-        'user_id': lambda self, cr, uid, ctx=None: uid,
-        'open' : 1,
-        'stage_id' : _get_default_stage_id,
-    }
     _order = 'sequence'
 
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
-        if groupby and groupby[0]=="stage_id":
+    # return the default stage for the uid user
+    def _get_default_stage_id(self):
+        return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1).id
 
+    name = fields.Char(compute='_compute_note_first_line', string='Note Summary', store=True)
+    user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
+    memo = fields.Html(string='Note Content')
+    sequence = fields.Integer()
+    stage_id = fields.Many2one('note.stage', compute='_compute_stage_id', inverse='_set_stage_id', default=_get_default_stage_id, string='Stage')
+    stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id', string='Stages of Users')
+    active = fields.Boolean(track_visibility='onchange', default=1)
+    date_done = fields.Date()
+    color = fields.Integer('Color Index')
+    tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')
+
+    #read the first line (convert html into text)
+    @api.one
+    @api.depends('memo')
+    def _compute_note_first_line(self):
+        self.name = (self.memo and html2plaintext(self.memo) or "").strip().replace('*', '').split("\n")[0]
+
+    @api.depends('stage_ids.user_id')
+    def _compute_stage_id(self):
+        for record in self:
+            for stage in record.stage_ids.filtered(lambda stage: stage.user_id == self.env.user):
+                record.stage_id = stage
+
+    def _set_stage_id(self):
+        for record in self:
+            if record.stage_id:
+                record.stage_ids = record.stage_id + record.stage_ids.filtered(lambda stage: stage.user_id != self.env.user)
+
+    @api.one
+    def action_note_is_done(self):
+        self.active = 0
+        self.date_done = fields.Date.today()
+
+    @api.one
+    def action_note_not_done(self):
+        self.active = 1
+        self.date_done = fields.Date.today()
+
+    #writing method (no modification of values)
+    @api.model
+    def name_create(self, name):
+        record = self.create({'memo': name, })
+        return record.name_get()[0]
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None,
+     context=None, orderby=False, lazy=True):
+        if groupby and groupby[0] == "stage_id":
             #search all stages
-            current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+            stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
 
-            if current_stage_ids: #if the user have some stages
-                stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
+            if stages:  # if the user has some stages
 
-                result = [{ #notes by stage for stages user
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
-                        '__fold': stage.fold,
-                    } for stage in stages]
+                result = [{  # notes by stage for stages user
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                    'stage_id': (stage.id, stage.name),
+                    'stage_id_count': self.search_count(domain + [('stage_ids', '=', stage.id)]),
+                    '__fold': stage.fold,
+                } for stage in stages]
 
                 #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
+                nb_notes_ws = self.search_count(domain + [('stage_ids', 'not in', [stage.id for stage in stages])])
                 if nb_notes_ws:
                     # add note to the first column if it's the first stage
-                    dom_not_in = ('stage_ids', 'not in', current_stage_ids)
-                    if result and result[0]['stage_id'][0] == current_stage_ids[0]:
+                    dom_not_in = ('stage_ids', 'not in', [stage.id for stage in stages])
+                    if result and result[0]['stage_id'][0] == stages[0].id:
                         dom_in = result[0]['__domain'].pop()
                         result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
                         result[0]['stage_id_count'] += nb_notes_ws
@@ -106,25 +91,24 @@ class note_note(osv.osv):
                             '__context': {'group_by': groupby[1:]},
                             '__domain': domain + [dom_not_in],
                             'stage_id': (stages[0].id, stages[0].name),
-                            'stage_id_count':nb_notes_ws,
+                            'stage_id_count': nb_notes_ws,
                             '__fold': stages[0].name,
                         }] + result
 
-            else: # if stage_ids is empty
+            else:  # if stage_ids is empty
 
                 #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain, context=context, count=True)
+                nb_notes_ws = self.search_count(domain)
                 if nb_notes_ws:
-                    result = [{ #notes for unknown stage
+                    result = [{  # notes for unknown stage
                         '__context': {'group_by': groupby[1:]},
                         '__domain': domain,
                         'stage_id': False,
-                        'stage_id_count':nb_notes_ws
+                        'stage_id_count': nb_notes_ws
                     }]
                 else:
                     result = []
             return result
 
         else:
-            return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
-                offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
+            return super(NoteNote, self).read_group(domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)

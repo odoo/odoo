@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-  <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- New note Kanban View -->
-    <record model="ir.ui.view" id="view_note_note_kanban">
+    <record id="note_note_view_kanban" model="ir.ui.view">
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
@@ -11,7 +10,7 @@
           <field name="sequence"/>
           <field name="name"/>
           <field name="stage_id"/>
-          <field name="open"/>
+          <field name="active"/>
           <field name="memo"/>
           <field name="date_done"/>
           <field name="message_follower_ids"/>
@@ -31,11 +30,11 @@
                     </ul>
                 </div>
                   <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
+                    <a name="action_note_is_done" type="object" t-if="record.active.raw_value"><i class="fa fa-check"/></a>
+                    <a name="action_note_not_done" type="object" t-if="!record.active.raw_value"><i class="fa fa-undo"/></a>
                   </span>
                 <!-- kanban note -->
-                <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
+                <span t-attf-class="oe_kanban_content #{record.active.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </span>
@@ -53,13 +52,13 @@
     </record>
 
     <!-- New note Form View -->
-    <record model="ir.ui.view" id="view_note_note_tree">
+    <record id="note_note_view_tree" model="ir.ui.view">
       <field name="name">note.note.tree</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
         <tree string="Stages">
           <field name="name"/>
-          <field name="open"/>
+          <field name="active"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags"/>
         </tree>
@@ -67,7 +66,7 @@
     </record>
 
     <!-- New note Form View -->
-    <record model="ir.ui.view" id="view_note_note_form">
+    <record id="note_note_view_form" model="ir.ui.view">
         <field name="name">note.note.form</field>
         <field name="model">note.note</field>
         <field name="arch" type="xml">
@@ -88,15 +87,15 @@
     </record>
 
     <!-- Search note  -->
-    <record model="ir.ui.view" id="view_note_note_filter">
+    <record id="note_note_view_filter" model="ir.ui.view">
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
         <search string="Notes">
           <field name="memo" string="Note"/>
           <field name="tag_ids"/>
-          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
-          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <filter name="open_true" string="Active" domain="[('active', '=', True)]"/>
+          <filter name="open_false" string="Archive" domain="[('active', '=', False)]"/>
           <group expand="0" string="Group By">
             <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
@@ -105,12 +104,12 @@
     </record>
 
     <!-- Action -->
-    <record model="ir.actions.act_window" id="action_note_note">
+    <record id="note_note_action" model="ir.actions.act_window">
       <field name="name">Notes</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
-      <field name="search_view_id" ref="view_note_note_filter"/>
+      <field name="search_view_id" ref="note_note_view_filter"/>
       <field name="context">{}</field>
       <field name="help" type="html">
           <p class="oe_view_nocontent_create">
@@ -128,8 +127,7 @@
         </field>
     </record>
 
-    <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note" web_icon="note,static/description/icon.png"/>
-    <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_no_one"/>
+    <menuitem name="Notes" id="note_note_menu" sequence="3" action="note.note_note_action" web_icon="note,static/description/icon.png"/>
+    <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="note_note_menu" groups="base.group_no_one"/>
 
-  </data>
-</openerp>
+</odoo>

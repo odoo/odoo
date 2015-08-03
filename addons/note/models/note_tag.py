@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from openerp import api, fields, models
 
-class note_tag(osv.osv):
+class NoteTag(models.Model):
     _name = "note.tag"
     _description = "Note Tag"
-    _columns = {
-        'name' : fields.char('Tag Name', required=True),
-    }
+
+    name = fields.Char(string='Tag Name', required=True)
