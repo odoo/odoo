@@ -5,33 +5,6 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
-class note_stage(osv.osv):
-    """ Category of Note """
-    _name = "note.stage"
-    _description = "Note Stage"
-    _columns = {
-        'name': fields.char('Stage Name', translate=True, required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the note stages"),
-        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, ondelete='cascade'),
-        'fold': fields.boolean('Folded by Default'),
-    }
-    _order = 'sequence asc'
-    _defaults = {
-        'fold': 0,
-        'user_id': lambda self, cr, uid, ctx: uid,
-        'sequence' : 1,
-    }
-
-class note_tag(osv.osv):
-    _name = "note.tag"
-    _description = "Note Tag"
-    _columns = {
-        'name' : fields.char('Tag Name', required=True),
-    }
-    _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
 class note_note(osv.osv):
     """ Note """
     _name = 'note.note'
@@ -155,29 +128,3 @@ class note_note(osv.osv):
         else:
             return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
-
-
-#upgrade config setting page to configure pad
-class note_base_config_settings(osv.osv_memory):
-    _inherit = 'base.config.settings'
-    _columns = {
-        'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
-    }
-
-class res_users(osv.Model):
-    _name = 'res.users'
-    _inherit = ['res.users']
-    def create(self, cr, uid, data, context=None):
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
-        note_obj = self.pool['note.stage']
-        data_obj = self.pool['ir.model.data']
-        is_employee = self.has_group(cr, user_id, 'base.group_user')
-        if is_employee:
-            for n in range(5):
-                xmlid = 'note_stage_%02d' % (n,)
-                try:
-                    _model, stage_id = data_obj.get_object_reference(cr, SUPERUSER_ID, 'note', xmlid)
-                except ValueError:
-                    continue
-                note_obj.copy(cr, SUPERUSER_ID, stage_id, default={'user_id': user_id}, context=context)
-        return user_id

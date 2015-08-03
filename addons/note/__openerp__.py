@@ -28,7 +28,9 @@ Notes can be found in the 'Home' menu.
         'security/note_security.xml',
         'security/ir.model.access.csv',
         'data/note_data.xml',
+        'views/inherited_base_config_settings_view.xml',
         'views/note_note_views.xml',
+        'views/note_stage_views.xml',
         'views/note_templates.xml',
     ],
     'demo': [

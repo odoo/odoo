@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <!-- note Stage Form View -->
+    <record model="ir.ui.view" id="view_note_stage_form">
+      <field name="name">note.stage.form</field>
+      <field name="model">note.stage</field>
+      <field name="arch" type="xml">
+        <form string="Stage of Notes">
+          <group>
+            <field name="name"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- note Stage Tree View -->
+    <record model="ir.ui.view" id="view_note_stage_tree">
+      <field name="name">note.stage.tree</field>
+      <field name="model">note.stage</field>
+      <field name="field_parent"></field>
+      <field name="arch" type="xml">
+        <tree string="Stages of Notes" editable="bottom">
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="fold"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- note Stage Action -->
+    <record model="ir.actions.act_window" id="action_note_stage">
+        <field name="name">Stages</field>
+        <field name="res_model">note.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('user_id','=',uid)]</field>
+    </record>
+
+    <menuitem name="Stages" id="menu_notes_stage" parent="menu_note_configuration" action="note.action_note_stage" sequence="21" />
+
+  </data>
+</openerp>
