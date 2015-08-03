@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'inventory Management',
+    'name': 'Inventory Management',
     'version': '1.1',
     'author': 'OpenERP SA',
-    'summary': 'Inventory, Logistic, Storage',
+    'summary': 'Inventory, Logistics, Warehousing',
     'description': """
 Manage multi-warehouses, multi- and structured stock locations
 ==============================================================
