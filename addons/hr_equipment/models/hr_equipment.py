@@ -277,18 +277,11 @@ class HrEquipmentRequest(models.Model):
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the Maintenance Request changes.
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
-            new_stage = vals.get('stage_id')
-            vals_reset_kstate = dict(vals, kanban_state='normal')
-            for equipment_request in self:
-                write_vals = vals_reset_kstate if equipment_request.stage_id.id != new_stage else vals
-                equipment_request.write(write_vals)
+            vals['kanban_state'] = 'normal'
         if vals.get('employee_id'):
-            user = False
             employee = self.env['hr.employee'].browse(vals['employee_id'])
-            if employee:
-                user = employee.user
-                if user:
-                    self.message_subscribe_users(user_ids=[user.id])
+            if employee and employee.user_id:
+                self.message_subscribe_users(user_ids=[employee.user_id.id])
         return super(HrEquipmentRequest, self).write(vals)
 
     @api.multi
