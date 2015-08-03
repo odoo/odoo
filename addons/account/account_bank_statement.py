@@ -445,6 +445,7 @@ class account_bank_statement_line(osv.osv):
     def cancel(self, cr, uid, ids, context=None):
         account_move_obj = self.pool.get('account.move')
         move_ids = []
+        statement_ids = []
         for line in self.browse(cr, uid, ids, context=context):
             if line.journal_entry_id:
                 move_ids.append(line.journal_entry_id.id)
@@ -455,9 +456,12 @@ class account_bank_statement_line(osv.osv):
                         self.pool.get('account.move.reconcile').unlink(cr, uid, [aml.reconcile_id.id], context=context)
                         if len(move_lines) >= 2:
                             self.pool.get('account.move.line').reconcile_partial(cr, uid, move_lines, 'auto', context=context)
+            if line.statement_id.id not in statement_ids:
+                statement_ids.append(line.statement_id.id)
         if move_ids:
             account_move_obj.button_cancel(cr, uid, move_ids, context=context)
             account_move_obj.unlink(cr, uid, move_ids, context)
+        self.pool.get('account.bank.statement').write(cr, uid, statement_ids, {'state': 'draft'}, context=context)
 
     def get_data_for_reconciliations(self, cr, uid, ids, excluded_ids=None, search_reconciliation_proposition=True, context=None):
         """ Returns the data required to display a reconciliation, for each statement line id in ids """
