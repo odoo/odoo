@@ -429,6 +429,10 @@ class AccountTax(models.Model):
     _description = 'Tax'
     _order = 'sequence'
 
+    @api.model
+    def _default_tax_group(self):
+        return self.env['account.tax.group'].search([], limit=1)
+
     name = fields.Char(string='Tax Name', required=True, translate=True)
     type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
@@ -451,6 +455,7 @@ class AccountTax(models.Model):
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -649,3 +654,11 @@ class AccountOperationTemplate(models.Model):
     @api.onchange('name')
     def onchange_name(self):
         self.label = self.name
+
+
+class AccountTaxGroup(models.Model):
+    _name = 'account.tax.group'
+    _order = 'sequence asc'
+
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)

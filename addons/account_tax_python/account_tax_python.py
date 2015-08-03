@@ -12,12 +12,14 @@ class AccountTaxPython(models.Model):
             ":param base_amount: float, actual amount on which the tax is applied\n"
             ":param price_unit: float\n"
             ":param quantity: float\n"
+            ":param company: res.company recordset singleton\n"
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
     python_applicable = fields.Text(string='Applicable Code', default="result = True",
         help="Determine if the tax will be applied by setting the variable 'result' to True or False.\n\n"
             ":param price_unit: float\n"
             ":param quantity: float\n"
+            ":param company: res.company recordset singleton\n"
             ":param product: product.product recordset singleton or None\n"
             ":param partner: res.partner recordset singleton or None")
 
@@ -25,7 +27,8 @@ class AccountTaxPython(models.Model):
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         self.ensure_one()
         if self.amount_type == 'code':
-            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner}
+            company = self.env.user.company_id
+            localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
             exec self.python_compute in localdict
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
@@ -33,8 +36,9 @@ class AccountTaxPython(models.Model):
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
         taxes = self.env['account.tax']
+        company = self.env.user.company_id
         for tax in self:
-            localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner}
+            localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
             exec tax.python_applicable in localdict
             if localdict.get('result', False):
                 taxes += tax

@@ -848,8 +848,9 @@
                                         <field name="amount" class="oe_inline" />
                                         <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
                                     </div>
+                                    <field name="tax_group_id"/>
                                 </group>
-                                <group attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
+                                <group attrs="{'invisible':[('amount_type','=', 'group')]}">
                                     <field name="account_id"/>
                                     <field name="refund_account_id"/>
                                 </group>
@@ -882,6 +883,7 @@
                                                         <field name="amount" class="oe_inline" />
                                                         <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
                                                     </div>
+                                                    <field name="tax_group_id"/>
                                                 </group>
                                                 <group attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
                                                     <field name="account_id"/>

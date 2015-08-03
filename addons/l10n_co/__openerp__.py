@@ -24,6 +24,7 @@
         'data/account.account.template.csv',
         'data/account_chart_template.xml',
         'data/account.tax.template.csv',
+        'data/account_tax_group.xml',
         'data/account_chart_template.yml',
     ],
     'demo': [],

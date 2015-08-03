@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp import api, fields, models, _
 from openerp.tools import float_is_zero
+from openerp.tools.misc import formatLang
 
 from openerp.exceptions import UserError, RedirectWarning
 
@@ -948,6 +949,18 @@ class AccountInvoice(models.Model):
         elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
             return 'account.mt_invoice_created'
         return super(AccountInvoice, self)._track_subtype(init_values)
+
+    @api.multi
+    def _get_tax_amount_by_group(self):
+        self.ensure_one()
+        res = {}
+        currency = self.currency_id or self.company_id.currency_id
+        for line in self.tax_line_ids:
+            res.setdefault(line.tax_id.tax_group_id, 0.0)
+            res[line.tax_id.tax_group_id] += line.amount
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
+        res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
+        return res
 
 
 class AccountInvoiceLine(models.Model):
