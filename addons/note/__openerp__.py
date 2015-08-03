@@ -25,14 +25,14 @@ Notes can be found in the 'Home' menu.
         'mail',
     ],
     'data': [
-        'security/ir.rule.xml',
+        'security/note_security.xml',
         'security/ir.model.access.csv',
-        'note_data.xml',
-        'note_view.xml',
-        'views/note.xml',
+        'data/note_data.xml',
+        'views/note_note_views.xml',
+        'views/note_templates.xml',
     ],
     'demo': [
-        'note_demo.xml',
+        'data/note_demo.xml',
     ],
     'test': [
     ],
