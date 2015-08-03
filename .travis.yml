@@ -31,7 +31,7 @@ install:
   - pip install -q QUnitSuite flake8 coveralls pylint
   - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
   - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons)
-  - export EXCLUDE=hw_scanner
+  - export EXCLUDE=hw_scanner,hw_escpos
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
