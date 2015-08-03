@@ -37,7 +37,17 @@ class Followers(models.Model):
     @api.model
     def create(self, vals):
         res = super(Followers, self).create(vals)
-        self.invalidate_cache()
+        # TODO: Invalidate the cache properly.
+        #
+        # Invalidating the cache here causes trouble in children models of
+        # 'mail.thread'. The field 'message_follower_ids' in 'mail.thread' has
+        # an inverse field that creates records of this model. If another field
+        # has an inverse method, and 'message_follower_ids' is set before that
+        # field, the cache will be invalidated, and the other field will not
+        # find its value in cache! We choose to keep some inaccessible records
+        # in cache instead of screwing up other computed fields...
+        #
+        # self.invalidate_cache()
         return res
 
     @api.multi
