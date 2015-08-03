@@ -28,12 +28,12 @@
             <div class="container">
                 <h4 t-field="project.name"/>
                 <t t-call="website.kanban">
-                    <t t-set="model">project.task</t>
+                    <t t-set="model" translation="off">project.task</t>
                     <t t-set="domain" t-value="[('project_id', '=', project.id)]"/>
-                    <t t-set="column">stage_id</t>
-                    <t t-set="template">website_project.task_kanban_card</t>
-                    <t t-set="step">10</t>
-                    <t t-set="scope">3</t>
+                    <t t-set="column" translation="off">stage_id</t>
+                    <t t-set="template" translation="off">website_project.task_kanban_card</t>
+                    <t t-set="step" translation="off">10</t>
+                    <t t-set="scope" translation="off">3</t>
                 </t>
             </div>
             <div class="oe_structure"/>
