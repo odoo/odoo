@@ -30,7 +30,7 @@ class LunchOrder(models.Model):
                               ('confirmed', 'Received'),
                               ('cancelled', 'Cancelled')],
                              'Status', readonly=True, index=True, copy=False, default='new',
-                             compute='_compute_order_state')
+                             compute='_compute_order_state', store=True)
     alerts = fields.Text(compute='_compute_alerts_get', string="Alerts")
     previous_order_ids = fields.One2many(comodel_name='lunch.order.line',
                                          compute='_compute_get_previous_order_ids')
@@ -73,22 +73,6 @@ class LunchOrder(models.Model):
             (order.product_id, order.note): order.id
             for order in prev_order
         }.values()
-
-    @api.onchange('total')
-    def _onchange_total(self):
-        """
-        Calculates the forecasted balance of the user, taking into account the current order
-        """
-        prev_cashmove = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
-        balance = sum(cashmove.amount for cashmove in prev_cashmove)
-
-        if self.total > 0 and self.total > balance:
-            return {
-                'warning': {
-                    'title': _('Insufficient balance'),
-                    'message': ('%s (%s %s)' % (_('The total amount of the order is larger than the available balance'), balance, self.currency_id.name)),
-                },
-            }
 
     @api.one
     @api.depends('user_id')
