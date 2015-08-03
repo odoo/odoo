@@ -142,27 +142,19 @@
             <field name="email_to">${object.email|safe}</field>
             <field name="subject"><![CDATA[${object.company_id.name} Forums validation]]></field>
             <field name="body_html"><![CDATA[
-<p>
-    Hello ${object.name},
-</p>
-<p>
-    You have been invited to validate your email in order to get access to "${object.company_id.name}" Q/A Forums.
-</p>
-<p>
-    To validate your email, please click on the following link:
-</p>
-<ul>
-    <li><a href="${ctx.get('token_url')}">Validate my account for "${object.company_id.name}" Q/A Forums</a></li>
-</ul>
-<p>
-    Thanks,
-</p>
-<pre>
---
-${object.company_id.name or ''}
-${object.company_id.email or ''}
-${object.company_id.phone or ''}
-</pre>]]></field>
+                <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+                    <img src="/web/static/src/img/logo.png" style="padding: 0px; margin-left:-4px; height: auto; width: 80px;" alt="Your Logo">
+                    <p>Hello ${object.name},</p>
+                    <p>You have been invited to validate your email in order to get access to "${object.company_id.name}" Q/A Forums.</p>
+                    <p>To validate your email, please click on the following link:</p>
+                    <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#a24689; text-align:center; text-decoration:none; color:#F7FBFD;" href="${ctx.get('token_url')}">Validate my account for "${object.company_id.name}" Q/A Forums</a>
+                    <p>Thanks for your participation!</p>
+                    <br/><br/>
+                    % if user.signature:
+                        <pre>${user.signature | safe}</pre>
+                    % endif
+                </div>]]>
+            </field>
         </record>
 
     </data>
