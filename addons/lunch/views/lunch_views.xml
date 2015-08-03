@@ -122,6 +122,7 @@
             <field name="name">New Order</field>
             <field name="res_model">lunch.order</field>
             <field name="view_mode">form</field>
+            <field name="context">{'hide_state': True}</field>
         </record>
         <menuitem name="New Order" parent="menu_lunch_title" id="lunch_order_menu_form" action="lunch_order_action_form" sequence="1"/>
 
@@ -150,7 +151,6 @@
             <field name="arch" type="xml">
                 <tree string="cashmove tree" create='false'>
                     <field name="date"/>
-                    <field name="user_id"/>
                     <field name="description"/>
                     <field name="amount" sum="Total"/>
                 </tree>
@@ -351,9 +351,8 @@
             <field name="arch" type="xml">
                 <tree string="Orders Tree">
                     <field name="date"/>
-                    <field name='user_id'/>
                     <field name="order_line_ids"/>
-                    <field name="state" />
+                    <field name="state" invisible="1"/>
                     <field name="total" sum="Total"/>
                 </tree>
             </field>
@@ -365,7 +364,7 @@
             <field name="arch" type="xml">
                 <form string='Orders Form' class="o_lunch">
                     <header>
-                        <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
+                        <field name='state' widget='statusbar' statusbar_visible='new,confirmed' invisible="context.get('hide_state', False)"/>
                     </header>
                     <sheet>
                         <field name="balance_visible" invisible="1"/>
@@ -428,6 +427,25 @@
                 </tree>
             </field>
         </record>
+
+        <!-- Search for product -->
+        <record id="lunch_product_view_search" model="ir.ui.view">
+            <field name="name">lunch.product.search</field>
+            <field name="model">lunch.product</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="supplier"/>
+                    <field name="description"/>
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_supplier" string="Vendor" context="{'group_by':'supplier'}"/>
+                        <filter name="group_by_category" string="Category" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 
         <record id="lunch_product_view_form" model="ir.ui.view">
             <field name="name">lunch.product.form</field>

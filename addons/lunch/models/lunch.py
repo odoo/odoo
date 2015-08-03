@@ -74,22 +74,6 @@ class LunchOrder(models.Model):
             for order in prev_order
         }.values()
 
-    @api.onchange('total')
-    def _onchange_total(self):
-        """
-        Calculates the forecasted balance of the user, taking into account the current order
-        """
-        prev_cashmove = self.env['lunch.cashmove'].search([('user_id', '=', self.user_id.id)])
-        balance = sum(cashmove.amount for cashmove in prev_cashmove)
-
-        if self.total > 0 and self.total > balance:
-            return {
-                'warning': {
-                    'title': _('Insufficient balance'),
-                    'message': ('%s (%s %s)' % (_('The total amount of the order is larger than the available balance'), balance, self.currency_id.name)),
-                },
-            }
-
     @api.one
     @api.depends('user_id')
     def _compute_cash_move_balance(self):
