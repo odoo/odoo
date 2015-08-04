@@ -137,12 +137,7 @@ class res_partner_title(osv.osv):
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'shortcut': fields.char('Abbreviation', translate=True),
-        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True)
     }
-    _defaults = {
-        'domain': 'contact',
-    }
-
 
 @api.model
 def _lang_get(self):

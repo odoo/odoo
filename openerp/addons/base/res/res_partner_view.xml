@@ -36,36 +36,13 @@
                 </form>
             </field>
         </record>
-
-        <!--
-        <record id="action_partner_title" model="ir.actions.act_window">
-            <field name="name">Titles</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.title</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
-        -->
-
-        <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Company Titles</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.title</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('domain','=','partner')]</field>
-            <field name="context">{'default_domain': 'partner'}</field>
-            <field name="help">Manage the partner titles you want to have available in your system. The partner titles is the legal status of the company: Private Limited, SA, etc.</field>
-        </record>
-
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_config_address_book" sequence="2" groups="base.group_no_one"/>
-
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
-            <field name="domain">[('domain','=','contact')]</field>
-            <field name="context">{'default_domain': 'contact'}</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
@@ -250,11 +227,19 @@
                                                         <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                     </t>
                                                     <t t-if="!record.image.raw_value">
-                                                        <t t-if="record.is_company.raw_value === 'company'">
-                                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        <t t-if="record.type.raw_value === 'delivery'">
+                                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                                         </t>
-                                                        <t t-if="record.is_company.raw_value === 'person'">
-                                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        <t t-if="record.type.raw_value === 'invoice'">
+                                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        </t>
+                                                        <t t-if="record.type.raw_value != 'invoice' && record.type.raw_value != 'delivery'">
+                                                            <t t-if="record.is_company.raw_value === 'company'">
+                                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                            </t>
+                                                            <t t-if="record.is_company.raw_value === 'person'">
+                                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                                            </t>
                                                         </t>
                                                     </t>
                                                 </a>
@@ -266,6 +251,11 @@
                                                                 <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
                                                                     <field name="email"/>
                                                                 </a></div>
+                                                                <div t-if="! record.use_parent_address">
+                                                                    <field name="city"/>
+                                                                    <field name="state"/>
+                                                                    <field name="country_id"/>
+                                                                </div>
                                                                 <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
                                                                 <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
                                                                 <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
