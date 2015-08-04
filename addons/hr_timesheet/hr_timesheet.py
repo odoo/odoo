@@ -22,19 +22,6 @@ class HrEmployee(models.Model):
 class account_analytic_line(models.Model):
     _inherit = 'account.analytic.line'
 
-    def default_get(self, cr, uid, fields, context=None):
-        values = super(account_analytic_line, self).default_get(cr, uid, fields, context=context)
-        if values.get('is_timesheet'):
-            if 'product_id' in fields:
-                values['product_id'] = self._get_employee_product(cr, uid, context=context)
-            if 'product_uom_id' in fields:
-                values['product_uom_id'] = self._get_employee_unit(cr, uid, context=context)
-            if 'general_account_id' in fields:
-                values['general_account_id'] = self._get_general_account(cr, uid, context=context)
-            if 'journal_id' in fields:
-                values['journal_id'] = self._get_analytic_journal(cr, uid, context=context)
-        return values
-
     is_timesheet = fields.Boolean()
 
     @api.model
@@ -114,6 +101,19 @@ class account_analytic_line(models.Model):
     def on_change_date(self):
         if self.is_timesheet and self._origin.date and (self._origin.date != self.date):
             raise exceptions.Warning(_('Changing the date will let this entry appear in the timesheet of the new date.'))
+
+    @api.model
+    def create(self, values):
+        if values.get('is_timesheet'):
+            if not values.get('product_id'):
+                values['product_id'] = self._get_employee_product()
+            if not values.get('product_uom_id'):
+                values['product_uom_id'] = self._get_employee_unit()
+            if not values.get('general_account_id'):
+                values['general_account_id'] = self._get_general_account()
+            if not values.get('journal_id'):
+                values['journal_id'] = self._get_analytic_journal()
+        return super(account_analytic_line, self).create(values)
 
 
 class account_analytic_account(models.Model):
