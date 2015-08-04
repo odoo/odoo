@@ -8,9 +8,9 @@
     'description': """Ogone Payment Acquirer""",
     'depends': ['payment'],
     'data': [
-        'views/ogone.xml',
-        'views/payment_acquirer.xml',
-        'data/ogone.xml',
+        'views/ogone_templates.xml',
+        'views/payment_acquirer_views.xml',
+        'data/ogone_data.xml',
     ],
     'installable': True,
 }
