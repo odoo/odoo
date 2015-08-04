@@ -5785,13 +5785,10 @@ class BaseModel(object):
                     def __getattr__(self, name):
                         field = self._record._fields[name]
                         value = self._record[name]
-                        return field.convert_to_onchange(value)
+                        return field.convert_to_write(value)
                 record = self[self._context['field_parent']]
                 global_vars['parent'] = RawRecord(record)
-            field_vars = {
-                key: self._fields[key].convert_to_onchange(val)
-                for key, val in self._cache.iteritems()
-            }
+            field_vars = self._convert_to_write(self._cache)
             params = eval("[%s]" % params, global_vars, field_vars)
 
             # call onchange method with context when possible
@@ -5833,7 +5830,7 @@ class BaseModel(object):
         if not all(name in self._fields for name in names):
             return {}
 
-        # determine subfields for field.convert_to_write() below
+        # determine subfields for field.convert_to_onchange() below
         secondary = []
         subfields = defaultdict(set)
         for dotname in field_onchange:
@@ -5869,7 +5866,8 @@ class BaseModel(object):
                 continue
             record[name] = value
 
-        result = {'value': {}}
+        result = {}
+        dirty = set()
 
         # process names in order (or the keys of values if no name given)
         while todo:
@@ -5891,32 +5889,23 @@ class BaseModel(object):
                 for name, oldval in values.iteritems():
                     field = self._fields[name]
                     newval = record[name]
-                    if field.type in ('one2many', 'many2many'):
-                        if newval != oldval or newval._is_dirty():
-                            # put new value in result
-                            result['value'][name] = field.convert_to_write(
-                                newval, record._origin, subfields.get(name),
-                            )
-                            todo.append(name)
-                        else:
-                            # keep result: newval may have been dirty before
-                            pass
-                    else:
-                        if newval != oldval:
-                            # put new value in result
-                            result['value'][name] = field.convert_to_write(
-                                newval, record._origin, subfields.get(name),
-                            )
-                            todo.append(name)
-                        else:
-                            # clean up result to not return another value
-                            result['value'].pop(name, None)
+                    if newval != oldval or (
+                        field.type in ('one2many', 'many2many') and newval._is_dirty()
+                    ):
+                        todo.append(name)
+                        dirty.add(name)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
-        if field_name and not isinstance(field_name, list) and \
+        if isinstance(field_name, basestring) and \
                 self._fields[field_name].type in ('one2many', 'many2many'):
-            result['value'].pop(field_name, None)
+            dirty.discard(field_name)
+
+        # collect values from dirty fields
+        result['value'] = {
+            name: self._fields[name].convert_to_onchange(record[name], subfields.get(name))
+            for name in dirty
+        }
 
         return result
 

@@ -761,21 +761,20 @@ class Field(object):
         """
         return False if value is None else value
 
-    def convert_to_write(self, value, target=None, fnames=None):
+    def convert_to_write(self, value):
         """ convert ``value`` from the cache to a valid value for method
             :meth:`BaseModel.write`.
-
-            :param target: optional, the record to be modified with this value
-            :param fnames: for relational fields only, an optional collection of
-                field names to convert
         """
         return self.convert_to_read(value)
 
-    def convert_to_onchange(self, value):
-        """ convert ``value`` from the cache to a valid value for an onchange
-            method v7.
+    def convert_to_onchange(self, value, fnames=None):
+        """ convert ``value`` from the cache to a value as returned by method
+            :meth:`BaseModel.onchange`.
+
+            :param fnames: an optional collection of field names to convert
+                (for relational fields only)
         """
-        return self.convert_to_write(value)
+        return self.convert_to_read(value)
 
     def convert_to_export(self, value, env):
         """ convert ``value`` from the cache to a valid value for export. The
@@ -1115,18 +1114,13 @@ class Monetary(Field):
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        if target is not None:
-            currency = target[self.currency_field]
-            # FIXME @rco-odoo: currency may not be already initialized if it is
-            # a function or related field!
-            if currency:
-                return currency.round(float(value or 0.0))
-            return float(value or 0.0)
-        return value
-
     def convert_to_cache(self, value, record, validate=True):
-        return self.convert_to_write(value, record)
+        currency = record[self.currency_field]
+        # FIXME @rco-odoo: currency may not be already initialized if it is a
+        # function or related field!
+        if currency:
+            return currency.round(float(value or 0.0))
+        return float(value or 0.0)
 
 
 class _String(Field):
@@ -1649,10 +1643,7 @@ class Many2one(_Relational):
         else:
             return value.id
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        return value.id
-
-    def convert_to_onchange(self, value):
+    def convert_to_write(self, value):
         return value.id
 
     def convert_to_export(self, value, env):
@@ -1729,37 +1720,31 @@ class _RelationalMulti(_Relational):
     def convert_to_read(self, value, use_name_get=True):
         return value.ids
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        # remove/delete former records
-        if target is None:
-            set_ids = []
-            result = [(6, 0, set_ids)]
-            add_existing = lambda id: set_ids.append(id)
-        else:
-            tag = 2 if self.type == 'one2many' else 3
-            result = [(tag, record.id) for record in target[self.name] - value]
-            add_existing = lambda id: result.append((4, id))
-
-        if fnames is None:
-            # take all fields in cache, except the inverses of self
-            fnames = set(value._fields) - set(MAGIC_COLUMNS)
-            model = value.env[self.model_name]
-            for invf in model._field_inverses[self]:
-                fnames.discard(invf.name)
-
-        # add new and existing records
+    def convert_to_write(self, value):
+        # make result with new and existing records
+        result = [(5,)]
         for record in value:
             if not record.id:
-                values = {k: v for k, v in record._cache.iteritems() if k in fnames}
+                values = dict(record._cache)
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
-                values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
+                values = {k: record._cache[k] for k in record._get_dirty()}
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                add_existing(record.id)
+                result.append((4, record.id))
+        return result
 
+    def convert_to_onchange(self, value, fnames=None):
+        # return the recordset value as a list of dicts
+        fields = [(name, value._fields[name]) for name in (fnames or [])]
+        result = []
+        for record in value:
+            vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
+            if record.id:
+                vals['id'] = record.id
+            result.append(vals)
         return result
 
     def convert_to_export(self, value, env):
