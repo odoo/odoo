@@ -121,7 +121,7 @@ class Users(models.Model):
     def message_update(self, msg_dict, update_vals=None):
         return True
 
-    def message_subscribe(self, partner_ids, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
     @api.cr_uid_context

@@ -114,7 +114,7 @@ class WebsiteForum(http.Controller):
         if filters == 'unanswered':
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
-            domain += [('message_follower_ids', '=', request.env.user.partner_id.id)]
+            domain += [('message_partner_ids', '=', request.env.user.partner_id.id)]
         if post_type:
             domain += [('post_type', '=', post_type)]
 

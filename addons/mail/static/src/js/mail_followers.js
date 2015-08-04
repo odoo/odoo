@@ -77,7 +77,7 @@ var Followers = form_common.AbstractField.extend({
                 self.do_follow();
             }
             else {
-                self.do_unfollow();
+                self.do_unfollow([session.uid]);
             }
         });
 
@@ -145,15 +145,10 @@ var Followers = form_common.AbstractField.extend({
     },
 
     on_remove_follower: function (event) {
-        var partner_id = $(event.target).data('id');
-        var name = $(event.target).parent().find("a").html();
-        if (confirm(_.str.sprintf(_t("Warning! \n %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"), name))) {
-            var context = new data.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id],
-                                                              [partner_id],
-                                                              context])
-                .then(this.proxy('read_value'));
-        }
+        var res_model = $(event.target).parent().find('a').data('res-model');
+        var res_id = $(event.target).parent().find('a').data('res-id');
+        if (res_model == 'res.partner') { return this.do_unfollow(undefined, [res_id], undefined); }
+        else { return this.do_unfollow(undefined, undefined, [res_id]); }
     },
 
     on_follower_clicked: function  (event) {
@@ -245,19 +240,13 @@ var Followers = form_common.AbstractField.extend({
 
         // truncate number of displayed followers
         _(this.followers).each(function (record) {
-            var partner = {
-                'id': record['id'],
-                'name': record['name'],
-                'is_uid': record['is_uid'],
-                'is_editable': record['is_editable'],
-                'avatar_url': mail_utils.get_image(session, 'res.partner', 'image_small', record['id']),
-            }
-
-            $(qweb.render('mail_followers_partner', {'record': partner, 'widget': self}))
-                .appendTo(node_user_list);
+            $(qweb.render('mail_followers_partner', {
+                'record': _.extend(record, {'avatar_url': mail_utils.get_image(session, record['res_model'], 'image_small', record['id'])}),
+                'widget': self})
+            ).appendTo(node_user_list);
 
             // On mouse-enter it will show the edit_subtype pencil.
-            if (partner.is_editable) {
+            if (record.is_editable) {
                 self.$('.o_timeline_follower_list').on('mouseenter mouseleave', function(e) {
                     self.$('.o_timeline_edit_subtype')
                         .toggleClass('oe_hidden', e.type == 'mouseleave');
@@ -358,26 +347,33 @@ var Followers = form_common.AbstractField.extend({
             $(record).attr('checked', 'checked');
         });
     },
-    
-    do_unfollow: function (user_pid) {
-        if (confirm(_t("Warning! \nYou won't be notified of any email or discussion on this document. Do you really want to unfollow this document ?"))) {
+
+    do_unfollow: function (user_ids, partner_ids, channel_ids) {
+        if (confirm(_t("Warning! \n If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"))) {
             _(this.$('.o_timeline_msg_subtype_check')).each(function (record) {
                 $(record).attr('checked',false);
             });
 
-            var action_unsubscribe = 'message_unsubscribe_users';
             this.$('.o_timeline_subtype_list > .dropdown-toggle').attr('disabled', true);
-            var follower_ids = [session.uid];
-
-            if (user_pid) {
-                action_unsubscribe = 'message_unsubscribe';
-                follower_ids = [user_pid];
-            }
-
             var context = new data.CompoundContext(this.build_context(), {});
-            return this.ds_model.call(action_unsubscribe, [[this.view.datarecord.id], 
-                                                           follower_ids, context])
-                   .then(this.proxy('read_value'));
+
+            if (partner_ids || channel_ids) {
+                return this.ds_model.call(
+                    'message_unsubscribe', [
+                        [this.view.datarecord.id],
+                        partner_ids,
+                        channel_ids,
+                        context]
+                    ).then(this.proxy('read_value'));
+            }
+            else {
+                return this.ds_model.call(
+                    'message_unsubscribe_users', [
+                        [this.view.datarecord.id],
+                        user_ids,
+                        context]
+                    ).then(this.proxy('read_value'));
+            }
         }
         return false;
     },
@@ -404,7 +400,7 @@ var Followers = form_common.AbstractField.extend({
         });
 
         if (!checklist.length) {
-            if (!this.do_unfollow(user_pid)) {
+            if (!this.do_unfollow(undefined, [user_pid], undefined)) {
                 $(event.target).attr("checked", "checked");
             }
             else {

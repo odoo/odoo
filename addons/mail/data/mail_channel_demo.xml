@@ -7,22 +7,13 @@
             <field name="name">Best Sales Practices</field>
             <field name="description">Discussion about best sales practices and deals.</field>
         </record>
-        <record model="mail.channel" id="channel_1">
-            <field name="message_follower_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
-        </record>
         <record model="mail.channel" id="channel_2">
             <field name="name">Board meetings</field>
             <field name="description">Board meetings, budgets, strategic plans</field>
         </record>
-        <record model="mail.channel" id="channel_2">
-            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
-        </record>
         <record model="mail.channel" id="channel_3">
             <field name="name">R&amp;D</field>
             <field name="description">Research and development discussion group</field>
-        </record>
-        <record model="mail.channel" id="channel_3">
-            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
         </record>
 
         <!-- Best sales practices messages -->

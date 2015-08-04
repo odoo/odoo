@@ -17,9 +17,12 @@ class TestInvite(TestMail):
         mail_invite.add_followers()
 
         # Test: Pigs followers should contain Admin, Bert
-        self.assertEqual(self.group_pigs.message_follower_ids,
+        self.assertEqual(self.group_pigs.message_partner_ids,
                          self.user_portal.partner_id | self.partner_1,
                          'invite wizard: Pigs followers after invite is incorrect, should be Admin + added follower')
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'),
+                         self.env['mail.channel'],
+                         'invite wizard: Pigs followers after invite is incorrect, should not have channels')
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._mails), 2, 'invite wizard: sent email number incorrect, should be only for Bert')
