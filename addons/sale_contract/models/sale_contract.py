@@ -353,6 +353,16 @@ class account_analytic_account(osv.osv):
             res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
          return res
 
+    def _invoice_count(self, cr, uid, ids, name, arg, context=None):
+        inv_line_data = self.pool['account.invoice.line'].read_group(cr, uid, [('account_analytic_id', 'in', ids)], ['invoice_id', 'account_analytic_id'], ['account_analytic_id'])
+        mapped_data = dict([(m['account_analytic_id'][0], m['account_analytic_id_count']) for m in inv_line_data])
+        return mapped_data
+
+    def _to_invoice_count(self, cr, uid, ids, name, arg, context=None):
+        inv_line_data = self.pool['account.analytic.line'].read_group(cr, uid, [('account_id', 'in', ids), ('invoice_id','=',False)], ['account_id'], ['account_id'])
+        mapped_data = dict([(m['account_id'][0], m['account_id_count']) for m in inv_line_data])
+        return mapped_data
+
     _columns = {
         'ca_invoiced': fields.function(_ca_invoiced_calc, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
@@ -405,6 +415,8 @@ class account_analytic_account(osv.osv):
         'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
         'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
         'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
+        'invoice_count': fields.function(_invoice_count, type="integer", string="Invoices"),
+        'to_invoice_count': fields.function(_to_invoice_count, type="integer", string="To Invoice")
     }
 
     def open_sale_order_lines(self,cr,uid,ids,context=None):

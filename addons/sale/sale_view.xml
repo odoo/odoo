@@ -787,5 +787,23 @@
             <field name="context">{'search_default_month':1}</field>
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
         </record>
+
+            <!-- Customer Invoices -->
+        <record id="invoice_form_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/label[1]" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale_order" type="object"
+                            string="Sale Order" icon="fa-usd"
+                            class="oe_stat_button pull-right" help="Sale Order"
+                            attrs="{'invisible': [('type','not in',('out_invoice', 'out_refund'))]}"/>
+                    </div> 
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

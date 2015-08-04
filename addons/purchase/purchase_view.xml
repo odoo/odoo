@@ -755,5 +755,27 @@
                 </field>
             </field>
         </record>
+
+            <!-- Vendor Bills -->
+        <record id="invoice_supplier_form_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[1]" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_order" type="object"
+                            icon="fa-shopping-cart"
+                            class="oe_stat_button pull-right" help="Purchase Order"
+                            attrs="{'invisible': [('type','not in',('in_invoice', 'in_refund'))]}">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Purchase</span>
+                                <span class="o_stat_text">Order</span>
+                            </div>
+                        </button>
+                    </div> 
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

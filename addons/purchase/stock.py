@@ -164,8 +164,51 @@ class stock_picking(osv.osv):
                help='Does the picking contain some moves related to a purchase order invoiceable on the receipt?',
                store={
                    'stock.move': (_get_picking_to_recompute, ['purchase_line_id', 'picking_id'], 10),
-               }),
+               })
     }
+
+    def action_view_purchase_order(self, cr, uid, ids, context=None):
+        pur_ids = set()
+        picking = self.browse(cr, uid, ids)[0]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'purchase', 'purchase_form_action', context=context)
+        for move in picking.move_lines.filtered(lambda x: x.purchase_line_id):
+            pur_ids.add(move.purchase_line_id.order_id.id)
+        if not pur_ids:
+            raise UserError(_('No Purchase Order Associated with this Incoming Shipment!'))
+
+        if len(list(pur_ids)) > 1:
+            result['domain'] = [('id', 'in', list(pur_ids))]
+        else:
+            view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'purchase.purchase_order_form')
+            result['views'] = [(view_id, 'form')]
+            result['res_id'] = list(pur_ids)[0] or False
+        return result
+
+    def action_open_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given shipment ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        ModelData = self.pool['ir.model.data']
+        InvoicePool = self.pool['account.invoice']
+        if context.get('picking_type_code', False) == 'incoming':
+            view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree2')
+            result = self.pool['ir.actions.act_window'].read(cr, uid, [view_id], context=context)[0]
+            inv_ids = []
+
+            for in_ship in self.browse(cr, uid, ids, context=context):
+                inv_ids = InvoicePool.search(cr, uid, [('origin', '=', in_ship.name)])
+
+            if not inv_ids:
+                raise UserError(_('No invoices created for this Incoming Shipment.'))
+
+            #choose the view_mode according to invoices
+            if len(inv_ids)>1:
+                result['domain'] = ('id', 'in', inv_ids)
+            else:
+                view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+                result['views'] = [(view_id or False, 'form')]
+                result['res_id'] = inv_ids and inv_ids[0] or False
+            return result
 
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
         inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves, context=context)

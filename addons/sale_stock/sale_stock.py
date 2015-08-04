@@ -420,6 +420,50 @@ class stock_location_route(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
+    def action_view_sale_order(self, cr, uid, ids, context=None):
+        sale_ids = set()
+        picking = self.browse(cr, uid, ids)[0]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'sale', 'action_orders', context=context)
+        if picking.move_lines:
+            for move in picking.move_lines:
+                if move.procurement_id and move.procurement_id.sale_line_id:
+                    sale_ids.add(move.procurement_id.sale_line_id.order_id.id)
+        if not sale_ids:
+            raise UserError(_('No Sale Order Associated with this Delivery Order!'))
+
+        if len(list(sale_ids)) > 1:
+            result['domain'] = [('id', 'in', list(sale_ids))]
+        else:
+            view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sale.view_order_form')
+            result['views'] = [(view_id, 'form')]
+            result['res_id'] = list(sale_ids)[0] or False
+        return result
+
+
+    def action_view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given Transfer ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        ModelData = self.pool['ir.model.data']
+        InvoicePool = self.pool.get('account.invoice')
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account', 'action_invoice_tree1', context=context)
+        inv_ids = []
+
+        for do in self.browse(cr, uid, ids, context=context):
+            inv_ids = InvoicePool.search(cr, uid, [('origin', '=', do.name)])
+
+        if not inv_ids:
+            raise UserError(_('No invoices created for this Delivery Order.'))
+
+        #choose the view_mode according to invoices
+        if len(inv_ids)>1:
+            result['domain'] = ('id', 'in', inv_ids)
+        else:
+            view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+            result['views'] = [(view_id or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
+
     def _get_partner_to_invoice(self, cr, uid, picking, context=None):
         """ Inherit the original function of the 'stock' module
             We select the partner of the sales order as the partner of the customer invoice

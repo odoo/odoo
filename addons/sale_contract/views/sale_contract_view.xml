@@ -509,15 +509,18 @@
             <field name="arch" type="xml">
                 <div name="button_box" position='inside'>
                     <button class="oe_stat_button"
-                        string="To invoice"
                         icon="fa-money"
                         name="%(action_hr_tree_invoiced_all)d"
                         type="action" attrs="{'invisible': [('type','=','template')]}"
-                        context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"/>
-                    <button class="oe_stat_button" string="Invoices"
+                        context="{'search_default_account_id': [active_id], 'default_account_id': active_id}">
+                        <field name="to_invoice_count" widget="statinfo"/>
+                    </button>
+                    <button class="oe_stat_button"
                         icon="fa-book"
                         name="%(action_contract_invoices_all)d"
-                        type="action" attrs="{'invisible': [('type','=','template')]}"/>
+                        type="action" attrs="{'invisible': [('type','=','template')]}">
+                        <field name="invoice_count" widget="statinfo"/>
+                    </button>
                     <button class="oe_inline oe_stat_button" string="Contracts"
                         icon="fa-book"
                         name="%(action_account_analytic_overdue_all)d"

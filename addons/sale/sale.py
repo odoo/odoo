@@ -1166,6 +1166,26 @@ class account_invoice(osv.Model):
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
     }
 
+    def action_view_sale_order(self, cr, uid, ids, context=None):
+        ModelData = self.pool['ir.model.data']
+        sale_ids = []
+
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'sale', 'action_orders', context=context)
+
+        for invoice in self.browse(cr, uid, ids, context=context):
+            sale_ids += [so.id for so in invoice.sale_ids]
+
+        if not sale_ids:
+            raise UserError(_('No Sale Order referenced for this invoice.'))
+
+        if len(sale_ids) > 1:
+            result['domain'] = [('id', 'in', sale_ids)]
+        else:
+            res = ModelData.xmlid_to_res_id(cr, uid, 'sale.view_order_form')
+            result['views'] = [(res, 'form')]
+            result['res_id'] = sale_ids and sale_ids[0] or False
+        return result
+
     def confirm_paid(self, cr, uid, ids, context=None):
         sale_order_obj = self.pool.get('sale.order')
         res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
