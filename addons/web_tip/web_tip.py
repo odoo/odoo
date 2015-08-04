@@ -17,7 +17,6 @@ class tip(models.Model):
     action_id = fields.Many2one('ir.actions.act_window', string="Action",
         help="The action that will trigger the tip")
     model = fields.Char("Model", help="Model name on which to trigger the tip, e.g. 'res.partner'.")
-    type = fields.Char("Type", help="Model type, e.g. lead or opportunity for crm.lead")
     mode = fields.Char("Mode", help="Mode, e.g. kanban, form")
     trigger_selector = fields.Char('Trigger selector', help='CSS selectors used to trigger the tip, separated by a comma (ANDed).')
     highlight_selector = fields.Char('Highlight selector', help='CSS selector for the element to highlight')

@@ -18,7 +18,7 @@ var Tips = Class.extend({
         this.view = null;
 
         var Tips = new Model('web.tip');
-        Tips.query(['title', 'description', 'action_id', 'model', 'type', 'mode', 'trigger_selector',
+        Tips.query(['title', 'description', 'action_id', 'model', 'mode', 'trigger_selector',
             'highlight_selector', 'end_selector', 'end_event', 'placement', 'is_consumed'])
             .all().then(function(tips) {
                 self.tips = tips;
@@ -106,15 +106,6 @@ var Tips = Class.extend({
         filter.mode = mode;
         filter.is_consumed = false;
         tips = _.where(self.tips, filter);
-
-        if (type) {
-            tips = _.filter(tips, function(tip) {
-                if (!tip.type) {
-                    return true;
-                }
-                return tip.type === type;
-            });
-        }
 
         valid_tips = _.uniq(valid_tips.concat(tips));
         _.each(valid_tips, function(tip) {
