@@ -252,8 +252,11 @@
                                                                     <field name="email"/>
                                                                 </a></div>
                                                                 <div t-if="! record.use_parent_address">
-                                                                    <field name="city"/>
-                                                                    <field name="state"/>
+                                                                    <div>
+                                                                        <field name="zip"/>
+                                                                        <field name="city"/>
+                                                                    </div>
+                                                                    <field name="state_id" t-if="record.state_id.raw_value"/>
                                                                     <field name="country_id"/>
                                                                 </div>
                                                                 <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
@@ -297,6 +300,9 @@
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
                                             </group>
+                                        </group>
+                                        <group>
+                                            <field name="comment"/>
                                         </group>
                                         <field name="supplier" invisible="True"/>
                                         <field name="customer" invisible="True"/>
