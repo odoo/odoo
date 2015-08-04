@@ -41,6 +41,7 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 MAX_POP_MESSAGES = 50
+MAIL_TIMEOUT = 60
 
 # Workaround for Python 2.7.8 bug https://bugs.python.org/issue23906
 poplib._MAXLINE = 65536
@@ -154,6 +155,8 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
             #connection.user("recent:"+server.user)
             connection.user(server.user)
             connection.pass_(server.password)
+        # Add timeout on socket
+        connection.sock.settimeout(MAIL_TIMEOUT)
         return connection
 
     def button_confirm_login(self, cr, uid, ids, context=None):
