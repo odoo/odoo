@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!-- Marketing Workitems -->
+    <record model="ir.ui.view" id="view_marketing_campaign_workitem_tree">
+        <field name="name">marketing.campaign.workitem.tree</field>
+        <field name="model">marketing.campaign.workitem</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'exception'" decoration-muted="state == 'cancelled'" string="Marketing Campaign Activities">
+                <field name="campaign_id"/>
+                <field name="segment_id"/>
+                <field name="activity_id"/>
+                <field name="object_id" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <field name="res_name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="state"/>
+                <button string="Cancel" states="todo" name="button_cancel" type="object" icon="terp-gtk-stop"/>
+                <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
+                <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_workitem_form">
+        <field name="name">marketing.campaign.workitem.form</field>
+        <field name="model">marketing.campaign.workitem</field>
+        <field name="arch" type="xml">
+            <form string="Marketing Campaign Activities">
+            <header>
+                <button string="Process" states="todo" name="process" type="object"/>
+                <button string="Reset" states="exception,cancelled" name="button_draft" type="object"/>
+                <button string="Cancel Workitem" states="todo,exception" name="button_cancel" type="object"/>
+                <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
+                <button string="Preview" states="todo" name="preview" icon="gtk-zoom-fit" type="object"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="campaign_id"/>
+                        <field name="segment_id"/>
+                        <field name="activity_id" context="{'segment_id':segment_id}"/>
+                        <field name="date"/>
+                    </group>
+                    <group>
+                        <field name="object_id" readonly="True"/>
+                        <field name="res_name"/>
+                        <field name="res_id"/>
+                        <field name="partner_id"/>
+                    </group>
+                </group>
+                <group attrs="{'invisible':[('state','!=','exception')]}" string="Error Message">
+                    <field name="error_msg" nolabel="1" colspan="2"/>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_marketing_campaign_workitem_search" model="ir.ui.view">
+        <field name="name">marketing.campaign.workitem.search</field>
+        <field name="model">marketing.campaign.workitem</field>
+        <field name="arch" type="xml">
+            <search string="Marketing Campaign Activities">
+                <field name="res_name" string="Marketing Campaign Activity"/>
+                <field name="date"/>
+                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
+                <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
+                <field name="campaign_id"/>
+                <field name="segment_id"/>
+                <field name="object_id"/>
+                <field name="partner_id"/>
+                <field name="res_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}"/>
+                    <filter string="Segment" name="segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}"/>
+                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}"/>
+                    <filter string="Resource" name="resource" icon="terp-accessories-archiver" context="{'group_by':'object_id'}"/>
+                    <filter string="Resource ID" name="res_id" icon="terp-accessories-archiver" context="{'group_by':'res_id'}"/>
+                    <filter string="Status" name="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Execution Month" name="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
+        <field name="name">Follow-up</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">marketing.campaign.workitem</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_marketing_campaign_workitem_tree"/>
+        <field name="search_view_id" ref="view_marketing_campaign_workitem_search"/>
+        <field name="context">{'group_by': []}</field>
+    </record>
+
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="report_marketing_campaign" action="action_marketing_campaign_workitem" sequence="3"/>
+</data>
+</openerp>

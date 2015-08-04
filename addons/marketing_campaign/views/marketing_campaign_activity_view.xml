@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!--
+        Marketing Activities
+        These views are not intended to be used outside the campaign context.
+    -->
+    <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
+        <field name="name">marketing.campaign.activity.form</field>
+        <field name="model">marketing.campaign.activity</field>
+        <field name="arch" type="xml">
+            <form string="Activities">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="signal" groups="base.group_no_one"/>
+                        <field name="start"/>
+                        <field name="object_id" invisible="1"/>
+                        <field name="campaign_id" invisible="1" required="0"/>
+                    </group>
+                    <group>
+                        <field name="variable_cost"/>
+                        <field name="revenue" widget="monetary"/>
+                    </group>
+                </group>
+                <group >
+                    <group>
+                        <field name="condition" widget="char"/>
+                        <field name="keep_if_condition_not_met"/>
+                    </group>
+                    <group>
+                        <field name="type"/>
+                        <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
+                           context="{'default_model_id':object_id}"/>
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')],'invisible':[('type','!=','action')]}" domain="[('model_id','=',object_id)]"/>
+                        <field name="report_id" attrs="{'required':[('type','=','report')],'invisible':[('type','!=','report')]}" context="{'object_id':object_id}"/>
+                    </group>
+                </group>
+                <separator string="Previous Activities"/>
+                <field name="from_ids" mode="tree" context="{'default_activity_to_id': active_id}">
+                    <tree string="Incoming Transitions" editable="bottom">
+                        <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </tree>
+                    <form string="Incoming Transitions">
+                        <group col="4">
+                            <field name="activity_from_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </group>
+                    </form>
+                </field>
+                <separator string="Next Activities"/>
+                <field name="to_ids" mode="tree" context="{'default_activity_from_id': active_id}">
+                    <tree string="Outgoing Transitions" editable="bottom">
+                        <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
+                        <field name='trigger'/>
+                        <field name="interval_nbr"/>
+                        <field name="interval_type"/>
+                    </tree>
+                    <form string="Outgoing Transitions">
+                        <group col="4">
+                            <field name="activity_to_id" domain="[('campaign_id', '=', parent.campaign_id)]" options="{'no_create': True}" />
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </group>
+                    </form>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
+        <field name="name">marketing.campaign.activity.tree</field>
+        <field name="model">marketing.campaign.activity</field>
+        <field name="arch" type="xml">
+            <tree string="Activities">
+                <field name="name"/>
+                <field name="condition"/>
+                <field name="type"/>
+                <field name="start"/>
+            </tree>
+        </field>
+    </record>
+
+</data>
+</openerp>
