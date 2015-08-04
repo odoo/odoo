@@ -251,7 +251,7 @@ class res_partner(osv.Model, format_address):
         'mobile': fields.char('Mobile'),
         'birthdate': fields.char('Birthdate'),
         'is_company': fields.selection([
-                ('person', 'Person'),
+                ('person', 'Individual'),
                 ('company', 'Company')
             ], 'Is a Company'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
