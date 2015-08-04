@@ -21,6 +21,7 @@
 
 from datetime import datetime, timedelta
 import time
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -1130,7 +1131,14 @@ class sale_order_line(osv.osv):
         else:
             fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
         if update_tax: #The quantity only have changed
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
+            # The superuser is used by website_sale in order to create a sale order. We need to make
+            # sure we only select the taxes related to the company of the partner. This should only
+            # apply if the partner is linked to a company.
+            if uid == SUPERUSER_ID and partner.company_id:
+                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id == partner.company_id)
+            else:
+                taxes = product_obj.taxes_id
+            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
