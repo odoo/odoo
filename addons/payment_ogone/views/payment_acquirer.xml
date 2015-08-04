@@ -7,7 +7,7 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                <xpath expr='//group[@name="acquirer"]' position='after'>
                     <group attrs="{'invisible': [('provider', '!=', 'ogone')]}">
                         <field name="ogone_pspid"/>
                         <field name="ogone_userid"/>
@@ -15,6 +15,7 @@
                         <field name="ogone_shakey_in"/>
                         <field name="ogone_shakey_out"/>
                         <field name="ogone_alias_usage"/>
+                        <a colspan="2" href="http://payment-services.ingenico.com/int/en/ogone/support/guides/user%20guides/test-account-creation" target="_blank">How to configure your Ogone account?</a>
                     </group>
                 </xpath>
             </field>

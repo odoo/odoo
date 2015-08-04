@@ -89,7 +89,7 @@ class PaymentAcquirer(osv.Model):
         'cancel_msg': fields.html('Cancel Message', translate=True, help='Message displayed, if order is cancel during the payment process.'),
         'error_msg': fields.html('Error Message', translate=True, help='Message displayed, if error is occur during the payment process.'),
         # Fees
-        'fees_active': fields.boolean('Compute fees'),
+        'fees_active': fields.boolean('Add Extra Fees'),
         'fees_dom_fixed': fields.float('Fixed domestic fees'),
         'fees_dom_var': fields.float('Variable domestic fees (in percents)'),
         'fees_int_fixed': fields.float('Fixed international fees'),
@@ -100,7 +100,7 @@ class PaymentAcquirer(osv.Model):
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
         'environment': 'test',
-        'validation': 'automatic',
+        'validation': 'manual',
         'website_published': False,
         'auto_confirm': 'at_pay_confirm',
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
