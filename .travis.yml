@@ -2,57 +2,46 @@ cache: pip
 
 addons:
   apt:
+    sources:
+      - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
       - python-lxml # because pip installation is slow
-      - poppler-utils
-      - antiword
+      - poppler-utils # document index
+      - antiword # document index
+      - python-ldap # auth_ldap
+      - wkhtmltopdf # report_webkit
 
 language: python
+sudo: false
 
 python:
   - "2.7"
 
 env:
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^a"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^[b-g]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^([h-k]|l[^1])"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^m[a-q]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^m[r-z]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^[n-o]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^p[a-q]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^p[r-z]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^[q-r]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^s"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^[t-v]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^website_[a-m]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^website_[n-z]"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^w([^e]|(e[^b])|(eb[^s])|(ebs[^i])|(ebsi[^t])|(ebsit[^e])|(ebsite[^_]))"
-  - VERSION="8.0" ODOO_REPO="OCA/OCB" INCLUDE_REGEX="^[x-z]"
+  - VERSION="8.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0"
 
 virtualenv:
   system_site_packages: true
 
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
 install:
   - ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
-  - git clone https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
-  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
-  - pip install QUnitSuite flake8 coveralls python-ldap
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
   - pip install -r ${HOME}/maintainer-quality-tools/travis/requirements.txt
-    # document uses this
-    # wkhtmltopdf for report_webkit
-  - wget http://download.gna.org/wkhtmltopdf/0.12/0.12.1/wkhtmltox-0.12.1_linux-precise-amd64.deb 
-  - sudo dpkg -i wkhtmltox-0.12.1_linux-precise-amd64.deb
+  - pip install -q QUnitSuite flake8 coveralls pylint
+  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - export INCLUDE=$(getaddons.py -m ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons)
+  - export EXCLUDE=hw_scanner,hw_escpos
+  - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
   - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
-  - export EXCLUDE="hw_scanner,hw_escpos"
-  - export LINT_CHECK="0"
-  - export INSTALL_OPTIONS="--init base"
-  - export INCLUDE="$(getaddons.py -m ${SERVER_PATH}/addons ${SERVER_PATH}/openerp/addons | awk 'BEGIN { FS="," } {for(i=1;i<=NF;i++) {if($i ~ "'"${INCLUDE_REGEX}"'") {printf $i","}}}')"
-  - export INCLUDE=${INCLUDE%,}
   - export TRAVIS_BUILD_DIR=${SERVER_PATH}/openerp/addons
-  - if [ ! -z "${INCLUDE}" ]; then travis_run_tests; else exit 0; fi
+  - travis_run_tests
 
 after_success:
-  coveralls
+  - travis_after_tests_success
