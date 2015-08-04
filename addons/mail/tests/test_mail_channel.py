@@ -31,8 +31,8 @@ class TestMailGroup(TestMail):
         with self.assertRaises(except_orm):
             self.group_pigs.sudo(self.user_public).read()
 
-        # Read a private group when being a follower: ok
-        self.group_private.message_subscribe_users(user_ids=[self.user_public.id])
+        # Read a private group when being a member: ok
+        self.group_private.write({'channel_partner_ids': [(4, self.user_public.partner_id.id)]})
         self.group_private.sudo(self.user_public).read()
 
         # Create group: ko, no access rights
@@ -75,8 +75,8 @@ class TestMailGroup(TestMail):
             self.group_private.sudo(self.user_portal).name
 
     def test_access_rights_followers_portal(self):
-        # Do: Chell is added into Pigs followers and browse it -> ok for messages, ko for partners (no read permission)
-        self.group_private.message_subscribe_users(user_ids=[self.user_portal.id])
+        # Do: Chell is added into Pigs members and browse it -> ok for messages, ko for partners (no read permission)
+        self.group_private.write({'channel_partner_ids': [(4, self.user_portal.partner_id.id)]})
         chell_pigs = self.group_private.sudo(self.user_portal)
         trigger_read = chell_pigs.name
         for message in chell_pigs.message_ids:

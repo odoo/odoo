@@ -26,13 +26,13 @@ class TestInvite(TestMail):
 
         # Test: (pretend to) send email and check subject, body
         self.assertEqual(len(self._mails), 2, 'invite wizard: sent email number incorrect, should be only for Bert')
-        self.assertEqual(self._mails[0].get('subject'), 'Invitation to follow Discussion group: Pigs',
+        self.assertEqual(self._mails[0].get('subject'), 'Invitation to follow Discussion channel: Pigs',
                          'invite wizard: subject of invitation email is incorrect')
-        self.assertEqual(self._mails[1].get('subject'), 'Invitation to follow Discussion group: Pigs',
+        self.assertEqual(self._mails[1].get('subject'), 'Invitation to follow Discussion channel: Pigs',
                          'invite wizard: subject of invitation email is incorrect')
-        self.assertIn('%s invited you to follow Discussion group document: Pigs' % self.user_employee.name,
+        self.assertIn('%s invited you to follow Discussion channel document: Pigs' % self.user_employee.name,
                       self._mails[0].get('body'),
                       'invite wizard: body of invitation email is incorrect')
-        self.assertIn('%s invited you to follow Discussion group document: Pigs' % self.user_employee.name,
+        self.assertIn('%s invited you to follow Discussion channel document: Pigs' % self.user_employee.name,
                       self._mails[1].get('body'),
                       'invite wizard: body of invitation email is incorrect')

@@ -16,7 +16,7 @@ class TestMail(common.SavepointCase):
                            model=None, target_model='mail.channel', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
-        self.env['mail.thread'].message_process(model, mail)
+        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
 
     def setUp(self):
@@ -85,7 +85,8 @@ class TestMail(common.SavepointCase):
         # Create test groups without followers and messages by default
         TestMailGroup = cls.env['mail.channel'].with_context({
             'mail_create_nolog': True,
-            'mail_create_nosubscribe': True
+            'mail_create_nosubscribe': True,
+            'mail_channel_noautofollow': True,
         })
         # Pigs: base group for tests
         cls.group_pigs = TestMailGroup.create({
