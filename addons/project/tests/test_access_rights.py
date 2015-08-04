@@ -127,7 +127,9 @@ class TestPortalProject(TestPortalProjectBase):
         self.task_3.sudo(self.user_projectmanager).message_subscribe_users(user_ids=[self.user_portal.id, self.user_projectuser.id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
-        pigs.sudo(self.user_projectuser).read(['state'])
+        prout = pigs.sudo(self.user_projectuser)
+        prout.invalidate_cache()
+        prout.read(['state'])
         # Do: Chell reads project -> ok (follower ok follower)
         pigs.sudo(self.user_portal).read(['state'])
         # Do: Donovan reads project -> ko (public ko follower even if follower)

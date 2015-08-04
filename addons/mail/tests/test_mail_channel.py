@@ -81,7 +81,7 @@ class TestMailGroup(TestMail):
         trigger_read = chell_pigs.name
         for message in chell_pigs.message_ids:
             trigger_read = message.subject
-        for partner in chell_pigs.message_follower_ids:
+        for partner in chell_pigs.message_partner_ids:
             if partner.id == self.user_portal.partner_id.id:
                 # Chell can read her own partner record
                 continue

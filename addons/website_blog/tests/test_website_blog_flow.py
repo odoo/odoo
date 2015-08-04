@@ -21,7 +21,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'name': 'New Blog',
         })
         self.assertIn(
-            self.user_blogmanager.partner_id, test_blog.message_follower_ids,
+            self.user_blogmanager.partner_id, test_blog.message_partner_ids,
             'website_blog: blog create should be in the blog followers')
         test_blog.message_subscribe([self.user_employee.partner_id.id, self.user_public.partner_id.id])
 
@@ -31,10 +31,10 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'blog_id': test_blog.id,
         })
         self.assertNotIn(
-            self.user_employee.partner_id, test_blog_post.message_follower_ids,
+            self.user_employee.partner_id, test_blog_post.message_partner_ids,
             'website_blog: subscribing to a blog should not subscribe to its posts')
         self.assertNotIn(
-            self.user_public.partner_id, test_blog_post.message_follower_ids,
+            self.user_public.partner_id, test_blog_post.message_partner_ids,
             'website_blog: subscribing to a blog should not subscribe to its posts')
 
         # Publish the blog
@@ -55,5 +55,5 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             subtype='mt_comment',
         )
         self.assertIn(
-            self.user_employee.partner_id, test_blog_post.message_follower_ids,
+            self.user_employee.partner_id, test_blog_post.message_partner_ids,
             'website_blog: people commenting a post should follow it afterwards')

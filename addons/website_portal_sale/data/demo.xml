@@ -10,7 +10,7 @@
             <field name="state">sent</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="message_follower_ids" eval="[(4, ref('portal.partner_demo_portal'))]"/>
+            <field name="message_partner_ids" eval="[(4, ref('portal.partner_demo_portal'))]"/>
         </record>
 
         <record id="sale_order_line_1" model="sale.order.line">
@@ -52,7 +52,7 @@
             <field name="order_policy">manual</field>
             <field name="team_id" ref="sales_team.team_sales_department"/>
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-            <field name="message_follower_ids" eval="[(4, ref('portal.partner_demo_portal'))]"/>
+            <field name="message_partner_ids" eval="[(4, ref('portal.partner_demo_portal'))]"/>
         </record>
 
         <record id="sale_order_line_4" model="sale.order.line">

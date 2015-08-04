@@ -27,6 +27,7 @@ class Invite(models.TransientModel):
     res_model = fields.Char('Related Document Model', required=True, select=1, help='Model of the followed resource')
     res_id = fields.Integer('Related Document ID', select=1, help='Id of the followed resource')
     partner_ids = fields.Many2many('res.partner', string='Recipients', help="List of partners that will be added as follower of the current document.")
+    channel_ids = fields.Many2many('mail.channel', string='Channels', help='List of channels that will be added as listeners of the current document.')
     message = fields.Html('Message')
     send_mail = fields.Boolean('Send Email', default=True, help="If checked, the partners will receive an email warning they have been added in the document's followers.")
 
@@ -38,8 +39,9 @@ class Invite(models.TransientModel):
             document = Model.browse(wizard.res_id)
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
-            new_followers = wizard.partner_ids - document.message_follower_ids
-            document.message_subscribe(new_followers.ids)
+            new_partners = wizard.partner_ids - document.message_partner_ids
+            new_channels = wizard.channel_ids - document.message_channel_ids
+            document.message_subscribe(new_partners.ids, new_channels.ids)
 
             model_ids = self.env['ir.model'].search([('model', '=', wizard.res_model)])
             model_name = model_ids.name_get()[0][1]
@@ -62,5 +64,5 @@ class Invite(models.TransientModel):
                     'body_html': '%s' % wizard.message,
                     'auto_delete': True,
                     'message_id': self.env['mail.message']._get_message_id({'no_auto_thread': True}),
-                    'recipient_ids': [(4, id) for id in new_followers.ids]}).send()
+                    'recipient_ids': [(4, id) for id in new_partners.ids]}).send()
         return {'type': 'ir.actions.act_window_close'}

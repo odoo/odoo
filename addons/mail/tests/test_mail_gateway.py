@@ -278,7 +278,7 @@ class TestMailgateway(TestMail):
         self.assertIn('test.sylvie.lelitre@agrolait.com', new_groups.message_ids[0].email_from,
                       'message_process: unrecognized email -> email_from')
 
-        self.assertEqual(len(new_groups.message_follower_ids), 0,
+        self.assertEqual(len(new_groups.message_partner_ids), 0,
                          'message_process: newly create group should not have any follower')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
@@ -291,7 +291,7 @@ class TestMailgateway(TestMail):
         self.assertIn('Valid Lelitre <valid.lelitre@agrolait.com>', new_groups.message_ids[0].email_from,
                       'message_process: recognized email -> email_from')
 
-        self.assertEqual(new_groups.message_follower_ids, self.partner_1,
+        self.assertEqual(new_groups.message_partner_ids, self.partner_1,
                          'message_process: recognized email -> added as follower')
 
         self.assertEqual(len(self._mails), 0,
@@ -380,7 +380,7 @@ class TestMailgateway(TestMail):
         self.assertIn('valid.lelitre@agrolait.com', self._mails[0].get('email_to')[0],
                       'message_process: email should be sent to Sylvie')
         # Test: author (and not recipient) added as follower
-        self.assertEqual(self.group_public.message_follower_ids, self.partner_1 | self.partner_2,
+        self.assertEqual(self.group_public.message_partner_ids, self.partner_1 | self.partner_2,
                          'message_process: after reply, group should have 2 followers')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')

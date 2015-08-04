@@ -1395,11 +1395,17 @@ class calendar_event(osv.Model):
             del context['default_date']
         return super(calendar_event, self).message_post(cr, uid, thread_id, context=context, **kwargs)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
-        return super(calendar_event, self).message_subscribe(cr, uid, get_real_ids(ids), partner_ids, subtype_ids=subtype_ids, context=context)
+    def message_subscribe(self, cr, uid, ids, partner_ids=None, channel_ids=None, subtype_ids=None, force=True, context=None):
+        return super(calendar_event, self).message_subscribe(
+            cr, uid, get_real_ids(ids),
+            partner_ids=partner_ids,
+            channel_ids=channel_ids,
+            subtype_ids=subtype_ids,
+            force=force,
+            context=context)
 
-    def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
-        return super(calendar_event, self).message_unsubscribe(cr, uid, get_real_ids(ids), partner_ids, context=context)
+    def message_unsubscribe(self, cr, uid, ids, partner_ids=None, channel_ids=None, context=None):
+        return super(calendar_event, self).message_unsubscribe(cr, uid, get_real_ids(ids), partner_ids=partner_ids, channel_ids=channel_ids, context=context)
 
     def do_sendmail(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context):
