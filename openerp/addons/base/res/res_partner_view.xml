@@ -405,11 +405,19 @@
                                         <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
                                     </t>
                                     <t t-if="!record.image.raw_value">
-                                        <t t-if="record.is_company.raw_value === 'company'">
-                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                        <t t-if="record.type.raw_value === 'delivery'">
+                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                         </t>
-                                        <t t-if="record.is_company.raw_value === 'person'">
-                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                        <t t-if="record.type.raw_value === 'invoice'">
+                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                        </t>
+                                        <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                            <t t-if="record.is_company.raw_value === 'company'">
+                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                            </t>
+                                            <t t-if="record.is_company.raw_value === 'person'">
+                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                            </t>
                                         </t>
                                     </t>
                                 </div>
