@@ -216,8 +216,10 @@ class google_calendar(osv.AbstractModel):
             vstype = 'date'
         attendee_list = []
         for attendee in event.attendee_ids:
+            email = tools.email_split(attendee.email)
+            email = email[0] if email else 'NoEmail@mail.com'
             attendee_list.append({
-                'email': attendee.email or 'NoEmail@mail.com',
+                'email': email,
                 'displayName': attendee.partner_id.name,
                 'responseStatus': attendee.state or 'needsAction',
             })

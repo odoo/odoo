@@ -75,7 +75,7 @@ from .tools.translate import _
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
 
-regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
@@ -3234,7 +3234,7 @@ class BaseModel(object):
             result = self.read(list(fnames), load='_classic_write')
 
         # check the cache, and update it if necessary
-        if not self._cache.contains(field):
+        if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
