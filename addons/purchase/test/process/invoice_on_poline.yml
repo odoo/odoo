@@ -23,3 +23,40 @@
      purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
      for purchase_line in purchase_order.order_line:
        assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
+-
+ Now transfer picking list.
+-
+ !python {model: stock.picking}: |
+    po = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_6"))
+    po_line_ids = [line.id for line in po.order_line]
+    picking_ids = self.pool.get('stock.move').search_read(cr, uid, [('purchase_line_id','in', po_line_ids)], ['picking_id'])
+    pick_id = picking_ids[0]['picking_id'][0]
+    partial_id = self.do_transfer(cr, uid, [pick_id], context={'active_model': 'stock.picking','active_ids': pick_id})
+
+    #I check the state of picking list.
+    assert self.browse(cr, uid, pick_id).state == 'done', "Picking List should be in Transferred state"
+-
+  Purchase manager can pay an invoice therefore test with that user which have Purchase manager rights.
+-
+  !context
+    uid: 'res_users_purchase_manager'
+-
+ Now validate and pay the invoice and check the status.
+-
+ !python {model: purchase.order}: |
+    for invoice in self.browse(cr, uid, ref("purchase_order_6")).invoice_ids:
+        account_invoice_obj = self.pool.get('account.invoice')
+        invoice.signal_workflow('invoice_open')
+        invoice.pay_and_reconcile(
+            invoice.amount_total, ref('account.cash'), ref('account.period_10'),
+            ref('account.bank_journal'), ref('account.cash'),
+            ref('account.period_10'), ref('account.bank_journal'),
+            name='Payment for test customer invoice')
+        assert invoice.state == 'paid', "Invoice should be in paid state" 
+-
+ Now check that purchase order is invoiced and it's state is in done.
+-
+ !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
+    assert purchase_order.invoiced == True,"Purchase Order should be invoiced"
+    assert purchase_order.state == 'done', "Purchase order should be in done state"

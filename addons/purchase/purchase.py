@@ -125,7 +125,16 @@ class purchase_order(osv.osv):
         for purchase in self.browse(cursor, user, ids, context=context):
             res[purchase.id] = all(line.invoiced for line in purchase.order_line if line.state != 'cancel')
         return res
-    
+
+    def paid(self, cr, uid, ids, *args):
+        for purchase in self.browse(cr, uid, ids):
+            paid_invoice_ids = []
+            if purchase.invoiced_rate == 100.00:
+                paid_invoice_ids = [invoice.id for invoice in purchase.invoice_ids if invoice.state == 'paid']
+            if purchase.invoice_ids and len(paid_invoice_ids) == len(purchase.invoice_ids):
+                return True
+        return False
+
     def _get_journal(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -1769,6 +1778,7 @@ class account_invoice(osv.Model):
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
         for po_id in po_ids:
             purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice paid"), context=context)
+            workflow.trg_write(uid, 'purchase.order', po_id, cr)
         return res
 
 class account_invoice_line(osv.Model):
