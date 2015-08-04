@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="website_settings_payment" model="ir.ui.view">
-            <field name="name">website.form</field>
+            <field name="name">website.form.inherit</field>
             <field name="model">website</field>
             <field name="inherit_id" ref="website.view_website_form"/>
             <field name="arch" type="xml">
@@ -18,5 +17,4 @@
                 </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
