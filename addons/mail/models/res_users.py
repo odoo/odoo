@@ -10,6 +10,8 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
+        - if adding groups to an user, check mail.channels linked to this user
+          group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -18,6 +20,7 @@ class Users(models.Model):
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
+    chatter_needaction_auto = fields.Boolean('Automatically set needaction as Read')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -34,10 +37,8 @@ class Users(models.Model):
         return init_res
 
     def _auto_init(self, cr, context=None):
-        """ Installation hook: aliases, partner following themselves """
-        # create aliases for all users and avoid constraint errors
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init,
-            self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+        """ Installation hook: aliases """
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init, self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
 
     @api.model
     def create(self, values):

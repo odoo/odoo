@@ -70,8 +70,7 @@ class Channel(models.Model):
                                      "Use this field anywhere a small image is required.")
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
-        help="The email address associated with this group. New emails received will automatically "
-             "create new topics.")
+        help="The email address associated with this group. New emails received will automatically create new topics.")
 
     @api.one
     @api.depends('image')
@@ -122,6 +121,10 @@ class Channel(models.Model):
         if vals.get('group_ids'):
             self._subscribe_users()
         return result
+
+    def _notify(self, message):
+        # DO SOMETHING USEFULL
+        return True
 
     def _subscribe_users(self):
         for mail_channel in self:

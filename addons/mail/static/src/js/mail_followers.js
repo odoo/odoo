@@ -244,7 +244,6 @@ var Followers = form_common.AbstractField.extend({
                 'record': _.extend(record, {'avatar_url': mail_utils.get_image(session, record['res_model'], 'image_small', record['id'])}),
                 'widget': self})
             ).appendTo(node_user_list);
-
             // On mouse-enter it will show the edit_subtype pencil.
             if (record.is_editable) {
                 self.$('.o_timeline_follower_list').on('mouseenter mouseleave', function(e) {
@@ -409,11 +408,8 @@ var Followers = form_common.AbstractField.extend({
         } 
         else {
             var context = new data.CompoundContext(this.build_context(), {});
-            return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], 
-                                                          follower_ids, 
-                                                          checklist, 
-                                                          context])
-                  .then(this.proxy('read_value'));
+            return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, undefined, checklist, context])
+                .then(this.proxy('read_value'));
         }
     },
 });

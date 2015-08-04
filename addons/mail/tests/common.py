@@ -106,6 +106,11 @@ class TestMail(common.SavepointCase):
             'alias_contact': 'everyone'}
         ).with_context({'mail_create_nosubscribe': False})
 
+        # remove default followers
+        cls.env['mail.followers'].search([
+            ('res_model', '=', 'mail.channel'),
+            ('res_id', 'in', (cls.group_pigs | cls.group_public).ids)]).unlink()
+
         cls._init_mock_build_email()
 
     @classmethod

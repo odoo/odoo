@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
-<data>
+<odoo>
     
     <menuitem id="mail.mail_thread_menu_root" name="Chat"
               icon="fa-envelope" web_icon="mail,static/description/icon.png"
@@ -19,11 +18,7 @@
                          'view_inbox': True,
                          'show_write_to_followers': False}
         }</field>
-        <field name="domain">[
-            '|',
-             ('notification_ids.partner_id.user_ids', 'in', [uid]),
-             ('author_id.user_ids', 'in', [uid]),
-        ]</field>
+        <field name="domain">[('needaction', '=', True)]</field>
     </record>
 
     <menuitem id="mail.mail_inbox" name="Inbox" action="mail_message_action_inbox"
@@ -38,5 +33,4 @@
         <field name="type">ir.actions.server</field>
     </record>
 
-</data>
-</openerp>
+</odoo>

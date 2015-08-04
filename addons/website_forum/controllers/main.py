@@ -21,7 +21,7 @@ class WebsiteForum(http.Controller):
     def _get_notifications(self):
         badge_subtype = request.env.ref('gamification.mt_badge_granted')
         if badge_subtype:
-            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('to_read', '=', True)])
+            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
         else:
             msg = list()
         return msg

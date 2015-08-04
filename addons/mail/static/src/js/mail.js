@@ -39,7 +39,6 @@ var TimelineRecordThread = form_common.AbstractField.extend ({
 
         this.opts = _.extend({
             'show_reply_button': false,
-            'show_read_unread_button': true,
             'read_action': 'unread',
             'show_record_name': false,
             'show_compact_message': true,
@@ -117,7 +116,6 @@ var TimelineView = View.extend ({
         this.options = _.extend({
             'show_link': true,
             'show_reply_button': true,
-            'show_read_unread_button': true,
             'fetch_limit': 15,
             'fetch_child_limit': 5,
             }, this.options);
@@ -292,13 +290,8 @@ var MailThread = Attachment.extend ({
     template: 'MailThread',
 
     events: {
-        'click .o_timeline_msg .oe_read':'on_message_read',
-        'click .o_timeline_msg .oe_unread':'on_message_unread',
         'click .o_timeline_msg .oe_star':'on_star',
         'click .o_timeline_parent_message .oe_reply':'on_message_reply',
-        'click .o_timeline_parent_message .oe_read':'on_thread_read',
-        'click .o_timeline_vote':'on_vote',
-        'mouseenter .o_timeline_vote_count':'on_vote_count',
         'click .o_timeline_action_author':'on_record_author_clicked',
         'click .o_timeline_msg_expandable':'on_message_expandable',
         'click .o_timeline_parent_expandable':'on_thread_expandable',
@@ -503,74 +496,17 @@ var MailThread = Attachment.extend ({
     },
 
     /**
-     * set a message 'read' when click on Read in message
-     */
-    on_message_read: function (event) {
-        var msg_id = $(event.target).data('id');
-        var msg = _.findWhere(this.messages, {id: msg_id});
-        event.stopPropagation();
-        if (msg_id) {
-            this.on_message_read_unread([msg], true).then(function() {
-                $(event.target).replaceWith(QWeb.render("MessageReadUnread", {record: msg}));
-            });
-            
-        }
-    },
-
-    /**
-     * set a message 'unread' when click on Unread in message
-     */
-    on_message_unread: function (event) {
-        var msg_id = $(event.target).data('id');
-        var msg = _.findWhere(this.messages, {id: msg_id});
-        event.stopPropagation();
-        if (msg_id) {
-            this.on_message_read_unread([msg], false).then(function() {
-                $(event.target).replaceWith(QWeb.render("MessageReadUnread", {record: msg}));
-            });
-        }
-    },
-
-    /**
      * set all the messages of this thread 'read' when click on
      * Read in thread
      */
     on_thread_read: function (event) {
+        // TDE FIXME: to update with "set read channel"
         var self = this;
 
-        event.stopPropagation();
-        this.on_message_read_unread(_.filter(this.messages, function (val) {return val.type != 'expandable'}), true).then(function () {
-            self.check_for_rerender();
-        });
-    },
-
-    /**
-     * Set the selected message(s) to 'read' or 'unread'
-     * @param {messages} array of messages
-     * @param {boolean} read_value
-     */
-    on_message_read_unread: function (messages, read_value) {
-        var self = this;
-
-        // inside the inbox, when the user mark a message as read/done, don't apply this value
-        // for the starred/favorite message
-        if (this.options.view_inbox && read_value) {
-            messages = _.filter(messages, function (val) {return !val.is_favorite && val.id;});
-            if (!messages.length) {
-                return $.Deferred();
-            }
-        }
-        var message_ids = _.map(messages, function (val) {return val.id;});
-        return this.ds_message.call('set_message_read', [message_ids, read_value, true, this.context]).then(function (nb_read) {
-            // apply modification
-            _.each(messages, function (msg) {
-                msg.to_read = !read_value;
-                if (self.options.toggle_read) {
-                    msg.options.show_read = msg.to_read;
-                    msg.options.show_unread = !msg.to_read;
-                }
-            });
-        });
+        // event.stopPropagation();
+        // this.on_message_read_unread(_.filter(this.messages, function (val) {return val.type != 'expandable'}), true).then(function () {
+        //     self.check_for_rerender();
+        // });
     },
 
     /**
@@ -590,10 +526,6 @@ var MailThread = Attachment.extend ({
             }else {
                 button.removeClass('oe_starred');
             }
-
-            if (self.options.view_inbox && msg.is_favorite) {
-                self.on_message_read_unread([msg], true);                
-            }
         });
         return false;
     },
@@ -605,66 +537,6 @@ var MailThread = Attachment.extend ({
         event.stopPropagation();
         this.on_compose_message(event, 'reply');
         return false;
-    },
-
-    /**
-     * Add or remove a vote for a message and display the result
-     */
-    on_vote: function (event) {
-        var self = this;
-        var msg_id = $(event.target).data('id');
-        var msg = _.findWhere(this.messages, {id: msg_id});
-        event.stopPropagation();
-
-        this.ds_message.call('vote_toggle', [[msg_id]]).then(_.bind(function (vote) {
-            msg.has_voted = vote;
-            msg.vote_nb += msg.has_voted ? 1 : -1;
-        }, self)). then(function () {
-            $(event.target).html(QWeb.render("MessageVote", {record: msg}));
-        });
-
-        return false;
-    },
-
-    /**
-     * display users who voted for the message (tooltip)
-     */
-    on_vote_count : function (event) {
-        var voter = "";
-        var limit = 10;
-        var msg_id = $(event.target).data('id');
-        event.stopPropagation();
-
-        var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
-        // Note: We can set data-content attr on target element once we fetch data so that
-        // next time when one moves mouse on element it saves call
-        // But if there is new like comes then we'll not have new likes in popover in that case
-        if ($target.data('liker-list'))
-        {
-            voter = $target.data('liker-list');
-            mail_utils.bindTooltipTo($target, voter, 'top');
-            $target.tooltip('hide').tooltip('show');
-            $(".tooltip").on("mouseleave", function () {
-                $(this).remove();
-            });
-        } else {
-            this.ds_message.call('get_likers_list', [msg_id, limit]).done(function (data) {
-                _.each(data, function(people, index) {
-                    voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
-                    if (index != data.length-1) {
-                        voter = voter + "<br/>";
-                    }
-                });
-                $target.data('liker-list', voter);
-                mail_utils.bindTooltipTo($target, voter, 'top');
-                $target.tooltip('hide').tooltip('show');
-                $(".tooltip").on("mouseleave", function () {
-                    $(this).remove();
-                });
-            });
-        }
-
-        return true;
     },
 
     /**
@@ -768,6 +640,7 @@ var MailThread = Attachment.extend ({
      * get and display the users following the document (tooltip)
      */
     on_display_followers: function (event) {
+        // TDE/ check this method + deferred
         var self = this;
         var $target = $(event.target);
         event.stopPropagation();
@@ -916,21 +789,7 @@ var MailThread = Attachment.extend ({
         msg.parent_thread = this;
 
         msg.options = _.clone(this.options);
-        msg.options.show_read = false;
-        msg.options.show_unread = false;
 
-        if (this.options.show_read_unread_button) {
-            if (this.options.read_action == 'read') {
-                msg.options.show_read = true;
-            }else{
-                if (this.options.read_action == 'unread') {
-                    msg.options.show_unread = true;
-                }else {
-                    msg.options.show_read = msg.to_read;
-                    msg.options.show_unread = !msg.to_read;
-                }
-            }
-        }
         return msg;
     },
 

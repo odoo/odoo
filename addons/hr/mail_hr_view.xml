@@ -15,9 +15,7 @@
                              'show_write_to_followers': True}
             }</field>
             <field name="domain">[
-                '|',
-                 ('notification_ids.partner_id.user_ids', 'in', [uid]),
-                 ('author_id.user_ids', 'in', [uid]),
+                ('needaction', '=', True)
             ]</field>
         </record>
     </data>
