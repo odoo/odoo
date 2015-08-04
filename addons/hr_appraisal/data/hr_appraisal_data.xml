@@ -28,15 +28,15 @@
             <field name="body_html">
                 <![CDATA[
                 <div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); ">
-                    <p>Hello ${ctx.get('employee').name},</p>
+                    <p>Dear ${ctx.get('employee').name},</p>
                     % if ctx.get('employee').id == object.employee_id.id:
-                        <p>We are conducting your Appraisal and your response would be appreciated.</p>
+                        <p>Please fill out the following survey related to your appraisal.</p>
                     % else:
-                        <p>We are conducting an Appraisal for ${object.employee_id.name}, and your response would be appreciated.</p>
+                        <p>Please fill out the following survey related to ${object.employee_id.name}'s appraisal.</p>
                     % endif
-                    <p><a href="__URL__">Please, click here to start Appraisal</a></p>
-                    <p>Kindly post your response for the appraisal till : ${object.date_close}</p>
-                    <p>Thanks for your participation!</p>
+                    <p><a href="__URL__">Click here to access the survey.</a></p>
+                    <p>Post your response for the appraisal till : ${object.date_close}</p>
+                    <p>Thank you for your participation.</p>
                 </div>
                 ]]>
             </field>

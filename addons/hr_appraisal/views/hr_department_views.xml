@@ -7,29 +7,18 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//templates" position="before">
-                    <field name="appraisal_start_ids"/>
-                    <field name="appraisal_process_ids"/>
+                    <field name="appraisals_to_process_count"/>
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.appraisal_process_ids.raw_value.length" class="row">
-                        <div class="col-xs-9">
-                            <a name="action_number_of_answers" type="object">
-                                Appraisal(s) to Process
-                            </a>
-                        </div>
-                        <div class="col-xs-3">
-                            <t t-esc="record.appraisal_process_ids.raw_value.length or 0"/>
-                        </div>
-                    </div>
-                    <div t-if="record.appraisal_start_ids.raw_value.length > 0" class="row">
+                    <div t-if="record.appraisals_to_process_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
                             <a name="%(hr_appraisal_action_from_department)d" type="action">
-                                Appraisal(s) to Start
+                                Appraisal(s)
                             </a>
                         </div>
                         <div class="col-xs-3">
-                            <t t-esc="record.appraisal_start_ids.raw_value.length or 0"/>
+                            <t t-esc="record.appraisals_to_process_count.raw_value"/>
                         </div>
                     </div>
                 </xpath>
@@ -37,16 +26,8 @@
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_to_do')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
-                            <a name="action_number_of_answers" type="object">
-                                <t t-esc="record.appraisal_process_ids.raw_value.length or 0"/> Appraisal(s) to Process
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-12 text-left">
                             <a name="%(hr_appraisal_action_from_department)d" type="action">
-                                <t t-esc="record.appraisal_start_ids.raw_value.length or 0"/> Appraisal(s) to Start
+                                <t t-esc="record.appraisals_to_process_count.raw_value"/> Appraisal(s)
                             </a>
                         </div>
                     </div>

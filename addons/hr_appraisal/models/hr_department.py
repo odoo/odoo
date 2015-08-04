@@ -8,12 +8,11 @@ class hr_department(models.Model):
     _inherit = 'hr.department'
 
     @api.multi
-    def action_number_of_answers(self):
-        self.ensure_one()
-        action_hr_appraisal = self.env.ref('hr_appraisal.hr_appraisal_action_from_department').read()[0]
-        action_hr_appraisal['display_name'] = _('Appraisal to Process')
-        action_hr_appraisal['domain'] = str([('id', 'in', self.appraisal_process_ids.ids)])
-        return action_hr_appraisal
+    def _compute_appraisals_to_process(self):
+        appraisals = self.env['hr.appraisal'].read_group(
+            [('department_id', 'in', self.ids), ('state', 'in', ['new', 'pending'])], ['department_id'], ['department_id'])
+        result = dict((data['department_id'][0], data['department_id_count']) for data in appraisals)
+        for department in self:
+            department.appraisals_to_process_count = result.get(department.id, 0)
 
-    appraisal_process_ids = fields.One2many('hr.appraisal', 'department_id', domain=['&', ('state', '=', 'pending'), '|', ('date_close', '<=', fields.Datetime.now()), ('completed_user_input_ids.state', '=', 'done')], string='Appraisal to Process')
-    appraisal_start_ids = fields.One2many('hr.appraisal', 'department_id', domain=[('state', '=', 'new')], string='Appraisal to Start')
+    appraisals_to_process_count = fields.Integer(compute='_compute_appraisals_to_process', string='Appraisals to Process')

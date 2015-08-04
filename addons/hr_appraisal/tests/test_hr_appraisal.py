@@ -36,9 +36,9 @@ class TestHrAppraisal(TransactionCase):
             appraisal_self=True,
             appraisal_self_survey_id=self.env.ref('hr_appraisal.appraisal_form').id,
             periodic_appraisal=True,
-            appraisal_repeat_number=1,
-            appraisal_repeat_delay='year',
-            appraisal_date=fields.Date.today()
+            appraisal_frequency=1,
+            appraisal_frequency_unit='year',
+            appraisal_date=date.today() + relativedelta(days=5)
         ))
 
         # I run the scheduler
@@ -48,11 +48,8 @@ class TestHrAppraisal(TransactionCase):
         appraisals = self.HrAppraisal.search([('employee_id', '=', self.hr_employee.id)])
         self.assertTrue(appraisals, "Appraisal not created")
 
-        # I check next appraisal date
-        self.assertEqual(self.hr_employee.appraisal_date, str(date.today() + relativedelta(years=1)), 'Next appraisal date is wrong')
-
         # I start the appraisal process by click on "Start Appraisal" button.
-        appraisals.write({'date_close': str(date.today() + relativedelta(days=5)), 'state': 'pending'})
+        appraisals.button_send_appraisal()
 
         # I check that state is "Appraisal Sent".
         self.assertEqual(appraisals.state, 'pending', "appraisal should be 'Appraisal Sent' state")
