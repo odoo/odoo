@@ -193,6 +193,9 @@ var BuildingBlock = Widget.extend({
         return ajax.jsonRpc(url, 'call', {}).then(function (html) {
             self.compute_snippet_templates(html);
             self.trigger("snippets:ready");
+        }, function () {
+            self.$snippet.hide();
+            console.warn('Snippets template not found:', url);
         });
     },
     compute_snippet_templates: function (html) {
