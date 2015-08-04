@@ -288,17 +288,6 @@ class res_partner(osv.Model, format_address):
         category_id = self.env.context.get('category_id', False)
         return [category_id] if category_id else False
 
-    @api.model
-    def _get_default_image(self, is_company, colorize=False):
-        img_path = openerp.modules.get_module_resource(
-            'base', 'static/src/img', 'company_image.png' if (is_company=='company') else 'avatar.png')
-        with open(img_path, 'rb') as f:
-            image = f.read()
-        # colorize user avatars
-        if is_company=='person':
-            image = tools.image_colorize(image)
-        return tools.image_resize_image_big(image.encode('base64'))
-
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
             view_id = self.pool['ir.model.data'].get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]

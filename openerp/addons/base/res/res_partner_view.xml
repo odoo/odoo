@@ -202,10 +202,12 @@
                                     <field name="color"/>
                                     <field name="name"/>
                                     <field name="title"/>
+                                    <field name="type"/>
                                     <field name="email"/>
                                     <field name="parent_id"/>
                                     <field name="is_company"/>
                                     <field name="function"/>
+                                    <field name="use_parent_address"/>
                                     <field name="phone"/>
                                     <field name="street"/>
                                     <field name="street2"/>
@@ -251,12 +253,14 @@
                                                                 <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
                                                                     <field name="email"/>
                                                                 </a></div>
-                                                                <div t-if="! record.use_parent_address">
+                                                                <div t-if="! record.use_parent_address.raw_value">
                                                                     <div>
                                                                         <field name="zip"/>
                                                                         <field name="city"/>
                                                                     </div>
-                                                                    <field name="state_id" t-if="record.state_id.raw_value"/>
+                                                                    <div t-if="record.state_id.raw_value">
+                                                                        <field name="state_id"/>
+                                                                    </div>
                                                                     <field name="country_id"/>
                                                                 </div>
                                                                 <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>

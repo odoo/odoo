@@ -268,7 +268,11 @@ class res_users(osv.osv):
         return result
 
     def _get_default_image(self, cr, uid, context=None):
-        return self.pool['res.partner']._get_default_image(cr, uid, False, colorize=True, context=context)
+        img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')
+        with open(img_path, 'rb') as f:
+            image = f.read()
+        image = tools.image_colorize(image)
+        return tools.image_resize_image_big(image.encode('base64'))
 
     _defaults = {
         'password': '',
