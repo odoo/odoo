@@ -188,8 +188,6 @@
         </field>
     </record>
 
-    <!-- We need to have 2 tree views to display different labels according to the asset type -->
-    <!-- Purchase -->
     <record model="ir.ui.view" id="view_account_asset_asset_purchase_tree">
         <field name="name">account.asset.asset.purchase.tree</field>
         <field name="model">account.asset.asset</field>
@@ -199,24 +197,6 @@
                 <field name="category_id"/>
                 <field name="date"/>
                 <field name="partner_id" string="Vendor"/>
-                <field name="value"/>
-                <field name="value_residual" widget="monetary"/>
-                <field name="currency_id" groups="base.group_multi_currency"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-    <!-- Sale -->
-    <record model="ir.ui.view" id="view_account_asset_asset_sale_tree">
-        <field name="name">account.asset.asset.sale.tree</field>
-        <field name="model">account.asset.asset</field>
-        <field name="arch" type="xml">
-            <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
-                <field name="name" string="Revenue Name"/>
-                <field name="category_id"/>
-                <field name="date"/>
-                <field name="partner_id" string="Customer"/>
                 <field name="value"/>
                 <field name="value_residual" widget="monetary"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
@@ -254,14 +234,11 @@
             <xpath expr="//group[@name='properties']" position="before">
                 <group name="asset types">
                     <field name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}"/>
-                    <field name="deferred_revenue_category_id" domain="[('type','=','sale')]" context="{'default_type':'sale'}"/>
                 </group>
             </xpath>
         </field>
     </record>
 
-
-    
     <record id="view_account_move_form_asset_inherit" model="ir.ui.view">
         <field name="name">Journal Entries (form)</field>
         <field name="model">account.move</field>
@@ -293,18 +270,6 @@
         <field name="context">{'default_type': 'purchase', 'default_category_id_type': 'purchase'}</field>
     </record>
 
-    <!-- Deferred Revenues Action -->
-
-    <record model="ir.actions.act_window" id="action_account_revenue_form">
-        <field name="name">Deferred Revenues</field>
-        <field name="res_model">account.asset.asset</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="view_account_asset_asset_sale_tree"/>
-        <field name="domain">[('category_id.type', '=', 'sale')]</field>
-        <field name="context">{'default_type': 'sale', 'default_category_id_type': 'sale'}</field>
-    </record>
-
-    <menuitem parent="account.menu_finance_entries" id="menu_action_account_revenue_recognition" action="action_account_revenue_form" sequence="102" groups="account.group_account_user"/>
     <menuitem parent="account.menu_finance_entries" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
 
 
@@ -312,7 +277,7 @@
 
     <menuitem id="menu_finance_config_assets" name="Assets and Revenues" parent="account.menu_finance_configuration" sequence="25"/>
 
-    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_sale">
+    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_purchase">
         <field name="name">Asset Types</field>
         <field name="res_model">account.asset.category</field>
         <field name="domain">[('type', '=', 'purchase')]</field>
@@ -320,16 +285,7 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{'default_type': 'purchase'}</field>
     </record>
-    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_purchase">
-        <field name="name">Deferred Revenues Types</field>
-        <field name="res_model">account.asset.category</field>
-        <field name="domain">[('type', '=', 'sale')]</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'default_type': 'sale'}</field>
-    </record>
 
-    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_sale" action="action_account_asset_asset_list_normal_sale" sequence="1"/>
-    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="2"/>
+    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="1"/>
 
 </odoo>
