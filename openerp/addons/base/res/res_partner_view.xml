@@ -303,10 +303,8 @@
                                                 <field name="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
+                                                <field name="comment" placeholder="internal note..."/>
                                             </group>
-                                        </group>
-                                        <group>
-                                            <field name="comment"/>
                                         </group>
                                         <field name="supplier" invisible="True"/>
                                         <field name="customer" invisible="True"/>
@@ -315,7 +313,7 @@
                             </field>
                         </page>
                         <page name='internal_notes' string="Internal Notes">
-                            <field name="comment" placeholder="Put an internal note..."/>
+                            <field name="comment" placeholder="internal note..."/>
                         </page>
                         <page name='sales_purchases' string="Sales &amp; Purchases">
                             <group name="container_row_1">
