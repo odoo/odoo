@@ -202,7 +202,11 @@ class res_partner(osv.osv):
         # If not defined by latest follow-up level, it will be the default template if it can find it
         mtp = self.pool.get('email.template')
         unknown_mails = 0
-        for partner in self.browse(cr, uid, partner_ids, context=ctx):
+        partners = self.browse(cr, uid, partner_ids, context=ctx)
+        inv_id = self.search(cr, uid, [('type', '=', 'invoice'), ('id', 'in', partners[0].child_ids.ids)], context=ctx)
+        if inv_id:
+            partners = self.browse(cr, uid, inv_id, context=ctx)
+        for partner in partners:
             if partner.email and partner.email.strip():
                 level = partner.latest_followup_level_id_without_lit
                 if level and level.send_email and level.email_template_id and level.email_template_id.id:
