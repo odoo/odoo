@@ -55,6 +55,37 @@
     </t>
 </template>
 
+<template id="FieldTextHtmlPopupContent" name="Editor layout">
+    <t t-set="head">
+        <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor.css" type="text/css"/>
+        <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_editor_thumb.css" type="text/css"/>
+        <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_popup.css" type="text/css"/>
+     </t>
+    <t t-call="web_editor.layout">
+        <div class="modal-dialog modal-md show" id="o_newsletter_popup">
+            <div class="modal-content o_popup_modal_content">
+                <div class="o_popup_modal_body text-center">
+                    <div class="o_popup_content_dev">
+                        <div class="o_editable" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
+                            <!-- Can be removed once default values are ok for the editor -->
+                            <t t-raw="content">
+                                <div class="o_popup_modal_header text-center">
+                                    <h3 class="o_popup_modal_title mt8">Odoo Presents</h3>
+                                </div>
+                                <div class="o_popup_message">
+                                    <font>7</font>
+                                    <strong>Business Hacks</strong>
+                                    <span> to<br/>boost your marketing</span>
+                                </div>
+                                <p class="o_message_paragraph">Join our Marketing newsletter and get <strong>this white paper instantly</strong></p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+ </template>
 
     </data>
 </openerp>
