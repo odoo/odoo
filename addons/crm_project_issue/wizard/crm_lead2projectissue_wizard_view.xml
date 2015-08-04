@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<openerp>
-<data>
-
-    <!-- action of converting, via wizard -->
-    <record model="ir.actions.act_window" id="convert_lead2projectissue_wizard_action" >
-        <field name="name">Convert to Issue</field>
-        <field name="res_model">crm.lead2projectissue.wizard</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
+<odoo>
 
     <!-- view of the Wizard Form --> 
-    <record model="ir.ui.view" id="view_crm_lead2projectissue_wizard" >
+    <record id="view_crm_lead2projectissue_wizard" model="ir.ui.view">
         <field name="name">crm.lead2projectissue.wizard.form</field>
         <field name="model">crm.lead2projectissue.wizard</field>
         <field name="arch" type="xml">
@@ -28,5 +18,13 @@
         </field>
     </record>
 
-</data>
-</openerp>
+    <!-- action of converting, via wizard -->
+    <record id="convert_lead2projectissue_wizard_action" model="ir.actions.act_window">
+        <field name="name">Convert to Issue</field>
+        <field name="res_model">crm.lead2projectissue.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
