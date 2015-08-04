@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_appraisal_report_pivot" model="ir.ui.view">
+            <field name="name">hr.appraisal.report.pivot</field>
+            <field name="model">hr.appraisal.report</field>
+            <field name="arch" type="xml">
+            <pivot string="Appraisal Analysis" disable_linking="True">
+                 <field name="employee_id" type="row"/>
+                 <field name="create_date" interval="month" type="col"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_appraisal_report_graph" model="ir.ui.view">
+            <field name="name">hr.appraisal.report.graph</field>
+            <field name="model">hr.appraisal.report</field>
+            <field name="arch" type="xml">
+            <graph string="Appraisal Analysis">
+                 <field name="employee_id" type="row"/>
+                 <field name="create_date" interval="month" type="col"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_appraisal_report_search" model="ir.ui.view">
+        <field name="name">hr.appraisal.report.search</field>
+        <field name="model">hr.appraisal.report</field>
+        <field name="arch" type="xml">
+            <search string="Appraisal Analysis">
+                <filter string="To Start" icon="terp-camera_test" domain="[('state', '=' ,'new')]" help = "In progress Evaluations"/>
+                <filter string="Appraisal Sent" icon="terp-camera_test" domain="[('state','=','pending')]" help = "Final Interview Date"/>
+                <filter string="Done" domain="[('state','=','done')]"/>
+                <field name="employee_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="deadline"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                    <field name="final_interview"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Month" context="{'group_by':'create_date:month'}" help="Creation Month"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_appraisal_report_all" model="ir.actions.act_window">
+        <field name="name">Appraisal Analysis</field>
+        <field name="res_model">hr.appraisal.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="context">{'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_appraisal_report_search"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_appraisal_view_report_pivot">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_appraisal_report_pivot"/>
+        <field name="act_window_id" ref="action_appraisal_report_all"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_appraisal_view_report_graph">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_appraisal_report_graph"/>
+        <field name="act_window_id" ref="action_appraisal_report_all"/>
+    </record>
+
+
+    <menuitem id="menu_hr_appraisal_report" parent="menu_hr_appraisal_root" sequence="99"
+        name="Reports" action="action_appraisal_report_all" groups="base.group_hr_manager"/>
+    
+
+</odoo>

@@ -100,7 +100,7 @@ class WebsiteSurvey(http.Controller):
 
         # Select the right page
         if user_input.state == 'new':  # Intro page
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
+            data = {'survey': survey, 'page': None, 'token': user_input.token, 'user_input': user_input}
             return request.website.render('survey.survey_init', data)
         else:
             return request.redirect('/survey/fill/%s/%s' % (survey.id, user_input.token))
@@ -137,7 +137,7 @@ class WebsiteSurvey(http.Controller):
         # Select the right page
         if user_input.state == 'new':  # First page
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, 0, go_back=False, context=context)
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'user_input': user_input}
             if last:
                 data.update({'last': True})
             return request.website.render('survey.survey', data)
@@ -153,7 +153,7 @@ class WebsiteSurvey(http.Controller):
             if not page:
                 page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=True, context=context)
 
-            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
+            data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token, 'user_input': user_input}
             if last:
                 data.update({'last': True})
             return request.website.render('survey.survey', data)

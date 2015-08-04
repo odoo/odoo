@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="hr_appraisal assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr_appraisal/static/src/js/hr_appraisal.js"></script>
+        </xpath>
+    </template>
+    <template id="back_inherit" name="Survey" inherit_id="survey.back">
+        <xpath expr="//div[@name='Back_to_survey']" position="inside">
+            <t t-if="user_input and user_input.appraisal_id">
+                <a t-attf-href="/web#id=#{user_input.appraisal_id.id}&amp;view_type=form&amp;model=hr.appraisal&amp;action=hr_appraisal.open_view_hr_appraisal_tree" class="btn btn-default">Back to Appraisal</a>
+            </t>
+        </xpath>
+    </template>
+</odoo>
