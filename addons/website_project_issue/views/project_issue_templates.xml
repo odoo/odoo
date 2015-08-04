@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_project_issue" name="Portal Project Issues" inherit_id="website_portal.account">
+        <xpath expr="//div[@id='documents_list']/*[last()]" position="after">
+            <h3 class="page-header">Your Issues</h3>
+            <t t-if="not issues">
+                <p>There are currently no issues for your account.</p>
+            </t>
+            <t t-if="issues">
+                <table class="table table-hover status_table">
+                    <thead>
+                        <tr class="active">
+                            <th>Issue #</th>
+                            <th>Description</th><th/>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="issues" t-as="issue">
+                        <tr t-att-class="'hidden to_hide' if issue_index &gt; 4 else ''">
+                            <td><a t-attf-href="/my/issues/#{issue.id}"><t t-esc="issue.id"/></a></td>
+                            <td><span t-field="issue.name"/></td><td/>
+                            <td><span t-field="issue.stage_id.name"/></td>
+                        </tr>
+                    </t>
+                    <tr t-att-class="'hidden' if len(issues) &lt; 6 else ''">
+                        <td colspan="4">
+                            <a href="" class="wp_show_more btn btn-xs btn-default"><span>Show more</span><span class="hidden">Show less</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="issues_followup" name="Project Issues">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="container">
+                    <div class="oe_structure">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <ol class="breadcrumb mt8">
+                                    <li><a href="/my/home">My Account</a></li>
+                                    <li>Issue <span t-field="issue.id"/></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Issue <span t-field="issue.id"/> ( <span t-field="issue.name"/> )</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="mb8">
+                                    <strong>Date:</strong> <span t-field="issue.create_date" t-field-options='{"widget": "date"}'/>
+                                </div>
+                                <div class='row'>
+                                    <div class="col-md-6">
+                                        <strong>Company Contact</strong>
+                                        <div t-if="issue.user_id">
+                                            <address t-field="issue.user_id" t-field-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": true}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Your Contact</strong>
+                                        <div t-if="issue.partner_id">
+                                            <address t-field="issue.partner_id" t-field-options='{"widget": "contact", "fields": ["name", "email"], "no_marker": true}'/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span t-field="issue.stage_id.name" class="pull-right label label-danger" title="Current stage of this issue"/>
+                                <t t-if="has_timesheet_enabled and issue.timesheet_ids">
+                                    <hr/>
+                                    <strong>Timesheets</strong>
+                                    <table class="table table-hover">
+                                        <thead>
+                                          <tr class="active">
+                                            <th>Date</th>
+                                            <th>Responsible</th>
+                                            <th>Description</th>
+                                          </tr>
+                                        </thead>
+                                        <tr t-foreach="issue.timesheet_ids" t-as="timesheet">
+                                            <td><span t-esc="timesheet.date"/></td>
+                                            <td><span t-esc="timesheet.user_id.name"/></td>
+                                            <td><span t-esc="timesheet.name"/></td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-md-12">
+                                <h4><strong>Message and communication history</strong></h4>
+                            </div>
+                            <div class="col-md-10 col-md-offset-1 mt16">
+                                <section class="mb32 css_editable_mode_hidden hidden-print">
+                                    <form id="comment" class="js_website_submit_form" t-attf-action="/issue/#{issue.id}/post" method="POST">
+                                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                                        <div class="pull-left mb32" style="width: 75%%">
+                                            <textarea name="comment" required="true" class="form-control" placeholder="Write a comment..."/>
+                                            <button type="submit" class="btn btn-primary mt8">Send</button>
+                                        </div>
+                                    </form>
+                                </section>
+                                <div class="clearfix"/>
+                                <ul class="media-list" id="comments-list">
+                                    <t t-foreach="messages" t-as="message">
+                                        <li class="media" t-if="message.body">
+                                            <div class="media-body">
+                                                <img class="media-object pull-left" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">
+                                                        <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                                                    </h5>
+                                                    <span t-field="message.body"/>
+                                                </div>
+                                            </div>
+                                       </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
