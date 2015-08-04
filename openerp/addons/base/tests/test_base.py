@@ -68,7 +68,7 @@ class test_base(common.TransactionCase):
                                                                               'phone': '123456789',
                                                                               'email': 'info@ghoststep.com',
                                                                               'vat': 'BE0477472701',
-                                                                              'type': 'default'}))
+                                                                              'type': 'contact'}))
         p1 = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
         self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
