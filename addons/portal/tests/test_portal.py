@@ -57,10 +57,10 @@ class test_portal(TestMail):
         self.assertEqual(len(self._mails), 1, 'sent email number incorrect, should be only for Bert')
         for sent_email in self._mails:
             self.assertEqual(
-                sent_email.get('subject'), 'Invitation to follow Discussion group: Pigs',
+                sent_email.get('subject'), 'Invitation to follow Discussion channel: Pigs',
                 'invite: subject of invitation email is incorrect')
             self.assertIn(
-                'Administrator invited you to follow Discussion group document: Pigs', sent_email.get('body'),
+                'Administrator invited you to follow Discussion channel document: Pigs', sent_email.get('body'),
                 'invite: body of invitation email is incorrect')
             self.assertIn(
                 partner_carine.signup_token, sent_email.get('body'),

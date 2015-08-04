@@ -13,7 +13,6 @@ import mail_template
 import res_partner
 import res_users
 import res_config
-import ir_ui_menu
 import update
 import ir_actions
 import html2text
