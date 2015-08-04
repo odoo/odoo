@@ -7,11 +7,12 @@
             <field name="model">payment.acquirer</field>
             <field name="inherit_id" ref="payment.acquirer_form"/>
             <field name="arch" type="xml">
-                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                <xpath expr='//group[@name="acquirer"]' position='after'>
                     <group attrs="{'invisible': [('provider', '!=', 'adyen')]}">
                         <field name="adyen_merchant_account"/>
                         <field name="adyen_skin_code"/>
                         <field name="adyen_skin_hmac_key"/>
+                        <a colspan="2" href="https://www.adyen.com/home/payment-services/online-payments" target="_blank">How to configure your Adyen account?</a>
                     </group>
                 </xpath>
             </field>

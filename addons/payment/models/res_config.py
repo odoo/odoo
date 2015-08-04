@@ -7,6 +7,9 @@ class AccountPaymentConfig(osv.TransientModel):
     _inherit = 'account.config.settings'
 
     _columns = {
+        'module_payment_transfer': fields.boolean(
+            'Wire Transfer',
+            help='-It installs the module payment_transfer.'),
         'module_payment_paypal': fields.boolean(
             'Paypal',
             help='-It installs the module payment_paypal.'),
@@ -22,4 +25,8 @@ class AccountPaymentConfig(osv.TransientModel):
         'module_payment_authorize': fields.dummy(
             'Authorize.Net',
             help='-It installs the module payment_authorize.'),
+    }
+
+    _defaults = {
+        'module_payment_transfer': True
     }

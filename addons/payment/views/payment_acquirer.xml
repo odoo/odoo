@@ -2,6 +2,8 @@
 <openerp>
     <data>
 
+        <!-- Acquirer -->
+
         <menuitem
             name='Payments'
             id='root_payment_menu'
@@ -14,49 +16,44 @@
                 <form string="Payment Acquirer">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="website_publish_button"
-                                type="object" icon="fa-globe">
+                            <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
                                 <field name="website_published" widget="website_button"/>
                             </button>
                         </div>
                         <group name="acquirer_base">
-                            <group>
+                            <group name="acquirer_left">
                                 <field name="name"/>
-                                <field name="provider"/>
-                                <field name="company_id"/>
-                                <field name="environment"/>
-                                <field name="validation"/>
-                                <field name="auto_confirm"/>
+                                <field name="environment" groups="base.group_no_one"/>
                             </group>
-                            <group>
-                                <field name="fees_active"/>
-                                <field name="fees_dom_fixed"
-                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_dom_var"
-                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_fixed"
-                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                <field name="fees_int_var"
-                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                            <group name="acquirer_right">
+                                <field name="provider"/>
+                                <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Message">
+                            <page string="Credentials">
+                                <group name="acquirer">
+                                </group>
+                            </page>
+                            <page string="Messages">
                                 <group>
                                     <field name="pre_msg"/>
                                     <field name="post_msg"/>
-                                </group>
-                            </page>
-                            <page string="Status">
-                                <group>
                                     <field name="pending_msg"/>
                                     <field name="done_msg"/>
                                     <field name="cancel_msg"/>
                                     <field name="error_msg"/>
                                 </group>
                             </page>
-                            <page string="Configuration">
-                                <group name="acquirer_display">
+                            <page string="Configuration"  groups="base.group_no_one">
+                                <group name="acquirer_config">
+                                    <field name="validation"/>
+                                    <field name="auto_confirm"/>
+                                    <field name="fees_active"/>
+                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <label for="view_template_id"/>
                                     <div>
                                         <field name="view_template_id" nolabel="1"/>
@@ -77,7 +74,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                            <field name="registration_view_template_id"/>
+                                    <field name="registration_view_template_id"/>
                                 </group>
                             </page>
                         </notebook>
@@ -126,6 +123,8 @@
             id='payment_acquirer_menu'
             parent='root_payment_menu'
             sequence='10' />
+
+        <!-- Transactions -->
 
         <record id="transaction_form" model="ir.ui.view">
             <field name="name">payment.transaction.form</field>
@@ -211,7 +210,8 @@
             parent='root_payment_menu'
             sequence='20' />
 
-        <!-- Payment Methods -->
+        <!-- Methods -->
+
         <record model='ir.ui.view' id='payment_method_tree_view'>
             <field name='name'>payment.method.tree</field>
             <field name='model'>payment.method</field>
@@ -225,7 +225,6 @@
                 </tree>
             </field>
         </record>
-
 
         <record model='ir.actions.act_window' id='payment_method_act'>
             <field name='name'>Saved Payment Data</field>
