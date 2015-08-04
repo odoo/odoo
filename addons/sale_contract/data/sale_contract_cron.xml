@@ -11,65 +11,135 @@
             <field name="model_id" ref="base.model_res_users"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
-Hello ${object.name},
+                <div class="snippet_row bg-color" style="padding:0px;width:600px;margin:auto;background: #A24689 repeat top /100%" data-snippet-theme="odoo">
+                    <table style="margin: 0 auto;border-collapse:collapse;width:600px;height:100px" cellpadding="0" cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td valign="center" style="text-align:center">
+                                    <a href="http://www.example.com" style="text-decoration:none"><img src="/web/static/src/img/logo_inverse_white_206px.png" style="padding: 10px; height: auto; width: 110px; max-width: 600px; -webkit-animation: none;" alt="Your Logo"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center;font-size:12px;font-family: Arial,Helvetica,sans-serif;padding-bottom:20px;">
+                                    <a href="#" style="color:#fff;" class="o_default_snippet_text">Catch Up</a>
+                                    <a href="https://www.odoo.com/apps" style="color:#fff;margin:0 15px 0 15px;" class="o_default_snippet_text">Apps Store</a>
+                                    <a href="mailto:info@odoo.com" style="color:#fff;" class="o_default_snippet_text">Contact Us</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #fff repeat top /100%;color: #555;" data-snippet-theme="odoo">
+                    <table style="width:100%;text-align:justify;margin:0 auto;inherit;border-collapse:collapse;color:inherit">
+                        <tbody>
+                            <tr>
+                                <td style="padding:10px 30px;font-size:14px;line-height:20px">
+                                    <p style="margin:0">Hello ${object.name},</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 30px;font-size:14px;line-height:20px">
+                                    <center>
+                                        <table cellspacing="0" cellpadding="0" style="margin:20px auto;width:80%;border-collapse:collapse">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        % macro account_table(values):
+                                                            <table cellspacing="0" cellpadding="0" style="width:100%;padding-top:30px;text-indent:10px;border-collapse:collapse" data-max-width="500px">
+                                                                <thead>
+                                                                    <tr style="color: #fff;background: #89898D" class="row col bg-color">
+                                                                        <th style="padding: 10px 0px;width:100px;border-left:none;text-align:left;font-size:14px" class="mv">Customer</th>
+                                                                        <th style="padding: 10px 0px;width:100px;border-left:none;text-align:left;font-size:14px" class="mv">Contract</th>
+                                                                        <th style="padding: 10px 0px;width:100px;border-left:none;text-align:left;font-size:14px" class="mv">Dates</th>
+                                                                        <th style="padding: 10px 0px;width:100px;border-left:none;text-align:left;font-size:14px" class="mv">Prepaid Units</th>
+                                                                        <th style="padding: 10px 0px;width:100px;border-left:none;text-align:left;font-size:14px" class="mv">Contact</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody style="color:#89898D">
+                                                                    % for partner, accounts in values:
+                                                                        % for account in accounts:
+                                                                            <tr class="row bg-color">
+                                                                                <td style="padding:10px 0px;font-size:14px">${partner.name}</td>
+                                                                                <td style="padding:10px 0px;font-size:14px">
+                                                                                    <a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${account.id}&view_type=form" style="text-decoration: none;color: #A24689;">${account.name}</a>
+                                                                                </td>
+                                                                                <td style="padding:10px 0px;font-size:14px">
+                                                                                    ${account.date_start} to ${account.date and account.date or '???'}
+                                                                                </td>
+                                                                                <td style="padding:10px 0px;font-size:14px">
+                                                                                    % if account.quantity_max != 0.0:
+                                                                                        ${account.remaining_hours}/${account.quantity_max} units
+                                                                                    % endif
+                                                                                </td>
+                                                                                <td style="padding:10px 0px;font-size:14px">${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>
+                                                                            </tr>
+                                                                        % endfor
+                                                                    % endfor
+                                                                </tbody>
+                                                            </table>
+                                                        % endmacro
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px 30px;font-size:14px;line-height:20px">
+                                    <p style="margin:0">
+                                        % if "new" in ctx["data"]:
+                                            <strong style="font-size:18px;color:#89898d;text-align:center">The following contracts just expired:</strong>
+                                            ${account_table(ctx["data"]["new"].iteritems())}
+                                        % endif
 
-% macro account_table(values):
-<table cellspacing="1" border="1" cellpadding="4">
-    <tr>
-        <th>Customer</th>
-        <th>Contract</th>
-        <th>Dates</th>
-        <th>Prepaid Units</th>
-        <th>Contact</th>
-    </tr>
-    % for partner, accounts in values:
-        % for account in accounts:
-        <tr>
-            <td>${partner.name}</td>
-            <td><a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${account.id}&view_type=form">${account.name}</a></td>
-            <td>${account.date_start} to ${account.date and account.date or '???'}</td>
-            <td>
-            % if account.quantity_max != 0.0:
-                ${account.remaining_hours}/${account.quantity_max} units
-            % endif
-            </td>
-            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>
-        </tr>
-        % endfor
-    % endfor
-</table>
-% endmacro 
+                                        % if "old" in ctx["data"]:
+                                            <strong style="font-size:18px;color:#89898d;text-align:center">The following expired contracts are still not processed:</strong>
+                                            ${account_table(ctx["data"]["old"].iteritems())}
+                                        % endif
 
-% if "new" in ctx["data"]:
-    <h2>The following contracts just expired: </h2>
-    ${account_table(ctx["data"]["new"].iteritems())}
-% endif
-
-% if "old" in ctx["data"]:
-    <h2>The following expired contracts are still not processed: </h2>
-    ${account_table(ctx["data"]["old"].iteritems())}
-% endif
-
-% if "future" in ctx["data"]:
-    <h2>The following contracts will expire in less than one month: </h2>
-    ${account_table(ctx["data"]["future"].iteritems())}
-% endif
-
-<p>
-    You can check all contracts to be renewed using the menu:
-</p>
-<ul>
-    <li>Sales / Invoicing / Contracts to Renew</li>
-</ul>
-<p>
-    Thanks,
-</p>
-
-<pre>
--- 
-Odoo Automatic Email
-</pre>
-
+                                        % if "future" in ctx["data"]:
+                                            <strong style="font-size:18px;color:#89898d;text-align:center">The following contracts will expire in less than one month:</strong>
+                                            ${account_table(ctx["data"]["future"].iteritems())}
+                                        % endif
+                                    </p>
+                                    <p style="margin:0">
+                                        You can check all contracts to be renewed using the menu:
+                                    </p>
+                                    <p style="margin:0">
+                                        <li>Sales / Invoicing / Contracts to Renew</li>
+                                    </p>
+                                    <p style="margin:0">
+                                        Thanks,
+                                    </p>
+                                    <p style="margin:0">
+                                        Odoo Automatic Email
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="snippet_row bg-color" style="padding:0;width:600px;max-width:600px;margin:0 auto;background: #A24689 repeat top /100%;color:#37302d">
+                    <div style="padding:10px 30px;font-size:12px;color:#fff;float:left">
+                        <p style="margin:0"><t t-esc="website.company_id.name"/></p>
+                        <p style="margin:0"><t t-esc="website.company_id.street"/></p>
+                        <p style="margin:0"><t t-esc="website.company_id.city"/> <t t-esc="website.company_id.country_id.name"/></p>
+                        <p style="margin:0;color:#ccc"><t t-esc="website.company_id.email"/></p>
+                    </div>
+                    <table style="width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;color:inherit">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" style="font-size:12px;text-align:center;padding-top:10px;color:#fff">
+                                    <p style="margin:0" class="o_default_snippet_text">This email was sent to ${object.email}</p>
+                                    <p style="margin:0" class="o_default_snippet_text">You received this email because you are registered with Odoo</p>
+                                    <p style="margin:0" class="o_default_snippet_text">We respect your privacy.</p>
+                                    <p style="margin:0"><a href="/unsubscribe_from_list" style="color:#fff;" class="o_default_snippet_text">Unsubscribe here</a></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             ]]></field>
         </record>
         <!--
