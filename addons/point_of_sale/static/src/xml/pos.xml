@@ -1208,10 +1208,8 @@
                             </span>
                             <t t-if="order.get_client()">
                                 <i class='fa fa-user'/>
-                                <t t-esc="widget.order.get_client_name()"/>
                             </t>
-                            <t t-if="!order.get_client()">Unknown Customer</t>:
-                            <t t-esc="order.get('creationDate').toString('t')"/>
+                            <t t-esc="(order.get_client() ? order.get_client_name()+' : ':'') + moment(order.creation_date).format('hh:mm')"/>
                         </span>
                     </t>
                     <t t-if='order !== widget.pos.get_order()'>
