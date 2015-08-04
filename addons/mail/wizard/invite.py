@@ -48,7 +48,7 @@ class Invite(models.TransientModel):
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 # add signature
                 # FIXME 8.0: use notification_email_send, send a wall message and let mail handle email notification + message box
-                signature_company = self.env['mail.notification'].get_signature_footer(user_id=self._uid, res_model=wizard.res_model, res_id=wizard.res_id)
+                signature_company = self.env['res.partner'].get_signature_footer(user_id=self._uid, res_model=wizard.res_model, res_id=wizard.res_id)
                 wizard.message = tools.append_content_to_html(wizard.message, signature_company, plaintext=False, container_tag='div')
 
                 # send mail to new followers
