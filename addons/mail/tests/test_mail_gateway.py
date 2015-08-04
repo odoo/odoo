@@ -382,6 +382,8 @@ class TestMailgateway(TestMail):
         # Test: author (and not recipient) added as follower
         self.assertEqual(self.group_public.message_partner_ids, self.partner_1 | self.partner_2,
                          'message_process: after reply, group should have 2 followers')
+        self.assertEqual(self.group_public.message_channel_ids, self.env['mail.channel'],
+                         'message_process: after reply, group should have 2 followers (0 channels)')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
     def test_message_process_in_reply_to(self):
@@ -544,8 +546,6 @@ class TestMailgateway(TestMail):
         msg = self.env['mail.message'].browse(msg1.id)
         self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
-        self.assertEqual(msg.notified_partner_ids, self.env.user.partner_id | self.partner_1,
-                         'message_post: private discussion: incorrect notified recipients')
         self.assertEqual(msg.model, False,
                          'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
         # Test: message-id
@@ -563,8 +563,6 @@ class TestMailgateway(TestMail):
                          'message_post: private discussion: wrong author through mailgatewya based on email')
         self.assertEqual(msg2.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg2.notified_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
-                         'message_post: private discussion: incorrect notified recipients when replying')
 
         # Do: Bert replies through chatter (is a customer)
         msg3 = self.env['mail.thread'].message_post(author_id=self.partner_1.id, parent_id=msg1.id, subtype='mail.mt_comment')
@@ -573,7 +571,7 @@ class TestMailgateway(TestMail):
         msg = self.env['mail.message'].browse(msg3.id)
         self.assertEqual(msg.partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect recipients when replying')
-        self.assertEqual(msg.notified_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
+        self.assertEqual(msg.needaction_partner_ids, self.user_employee.partner_id | self.env.user.partner_id,
                          'message_post: private discussion: incorrect notified recipients when replying')
 
         # Do bert forward it to an alias

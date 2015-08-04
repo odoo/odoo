@@ -187,7 +187,7 @@ class TestMailMessage(TestMail):
             'name': 'doc.txt',
             'datas_fname': 'doc.txt'})
         self.message.write({'attachment_ids': [(4, attachment.id)]})
-        self.env['mail.notification'].create({'message_id': self.message.id, 'partner_id': self.user_employee.partner_id.id})
+        self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.message.sudo(self.user_employee).read()
         # Test: Bert downloads attachment, ok because he can read message
         self.message.sudo(self.user_employee).download_attachment(attachment.id)
@@ -231,7 +231,7 @@ class TestMailMessage(TestMail):
         self.env['mail.message'].sudo(self.user_employee).create({'body': 'Test'})
 
     def test_mail_message_access_create_reply(self):
-        self.env['mail.notification'].create({'message_id': self.message.id, 'partner_id': self.user_employee.partner_id.id})
+        self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_message_set_star(self):
@@ -240,61 +240,13 @@ class TestMailMessage(TestMail):
 
         # Admin set as starred
         msg.set_message_starred(True)
-        notification = self.env['mail.notification'].search([('partner_id', '=', self.env.user.partner_id.id), ('message_id', '=', msg.id)])
-        self.assertEqual(len(notification), 1)
-        self.assertTrue(notification.starred)
         self.assertTrue(msg.starred)
 
         # Employee set as starred
         msg_emp.set_message_starred(True)
-        notification = self.env['mail.notification'].search([('partner_id', '=', self.user_employee.partner_id.id), ('message_id', '=', msg.id)])
-        self.assertEqual(len(notification), 1)
-        self.assertTrue(notification.starred)
         self.assertTrue(msg_emp.starred)
 
         # Do: Admin unstars msg
         msg.set_message_starred(False)
         self.assertFalse(msg.starred)
         self.assertTrue(msg_emp.starred)
-
-    def test_message_set_read(self):
-        msg = self.group_pigs.message_post(body='My Body', subject='1')
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
-
-        # Admin set as read
-        msg.set_message_read(True)
-        notification = self.env['mail.notification'].search([('partner_id', '=', self.env.user.partner_id.id), ('message_id', '=', msg.id)])
-        self.assertEqual(len(notification), 1)
-        self.assertTrue(notification.is_read)
-        self.assertFalse(msg.to_read)
-
-        # Employee set as read
-        msg_emp.set_message_read(True)
-        notification = self.env['mail.notification'].search([('partner_id', '=', self.user_employee.partner_id.id), ('message_id', '=', msg.id)])
-        self.assertEqual(len(notification), 1)
-        self.assertTrue(notification.is_read)
-        self.assertFalse(msg_emp.to_read)
-
-        # Do: Admin unreads msg
-        msg.set_message_read(False)
-        self.assertTrue(msg.to_read)
-        self.assertFalse(msg_emp.to_read)
-
-    def test_message_vote(self):
-        msg = self.group_pigs.message_post(body='My Body', subject='1')
-        msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
-
-        # Do: Admin vote for msg
-        msg.vote_toggle()
-        self.assertEqual(msg.vote_user_ids, self.user_admin)
-
-        # Do: Bert vote for msg
-        msg_emp.vote_toggle()
-        # Test: msg has Admin and Bert as voters
-        self.assertEqual(msg_emp.vote_user_ids, self.user_admin | self.user_employee)
-
-        # Do: Admin unvote for msg
-        msg.vote_toggle()
-        # Test: msg has Bert as voter
-        self.assertEqual(msg.vote_user_ids, self.user_employee)
-        self.assertEqual(msg_emp.vote_user_ids, self.user_employee)

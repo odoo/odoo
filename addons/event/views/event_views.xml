@@ -132,7 +132,7 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" decoration-bf="message_unread==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
+                <tree string="Events" decoration-bf="message_needaction==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="event_type_id"/>
                     <field name="date_begin"/>
@@ -142,7 +142,7 @@
                     <field name="seats_max" invisible="1"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -226,7 +226,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -279,14 +279,14 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" decoration-bf="message_unread==True">
+                <tree string="Registration" decoration-bf="message_needaction==True">
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="name"/>
                     <field name="email"/>
                     <field name="event_id" />
                     <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <button name="confirm_registration" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
                     <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                     <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
@@ -369,7 +369,7 @@
                 <search string="Event Registration">
                     <field name="id" string="Registration ID"/>
                     <field name="name" string="Participant" filter_domain="['|', '|', ('name', 'ilike', self), ('email', 'ilike', self), ('origin', 'ilike', self)]"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Expected" name="expected" domain="[('state', 'in', ['draft', 'open', 'done'])]"/>
                     <separator/>
                     <field name="event_id"/>

@@ -125,8 +125,8 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree decoration-bf="message_unread==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
-                <field name="message_unread" invisible="1"/>
+            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
                 <field name="user_id"/>

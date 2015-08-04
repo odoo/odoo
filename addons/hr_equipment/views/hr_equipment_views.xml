@@ -16,7 +16,7 @@
                 <separator/>
                 <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
@@ -82,7 +82,7 @@
                 <field name="user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
-                <field name="message_unread_counter"/>
+                <field name="message_needaction_counter"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -111,8 +111,8 @@
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
@@ -136,8 +136,8 @@
         <field name="name">hr.equipment.request.tree</field>
         <field name="model">hr.equipment.request</field>
         <field name="arch" type="xml">
-            <tree string="maintenance Request" decoration-bf="message_unread==True">
-                <field name="message_unread" invisible="1"/>
+            <tree string="maintenance Request" decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="employee_id"/>
@@ -259,7 +259,6 @@
                 <field name="category_id"/>
                 <field name="serial_no"/>
                 <field name="model"/>
-                <field name="message_unread_counter"/>
                 <field name="maintenance_ids"/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -310,8 +309,8 @@
         <field name="name">hr.equipment.tree</field>
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
-            <tree string="Assign To Employee"  decoration-bf="message_unread==True">
-                <field name="message_unread" invisible="1"/>
+            <tree string="Assign To Employee"  decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="employee_id" string="Employee"/>
                 <field name="department_id" string="Department"/>
@@ -341,7 +340,7 @@
                 <separator/>
                 <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>

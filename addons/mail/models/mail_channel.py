@@ -13,7 +13,7 @@ class ChannelPartner(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Recipient')
     channel_id = fields.Many2one('mail.channel', string='Channel')
-    seen_datetime = fields.Datetime('Last Seen Datetime')
+    seen_message_id = fields.Many2one('mail.message', string='Last Seen')
 
 
 class Channel(models.Model):
@@ -37,7 +37,7 @@ class Channel(models.Model):
         'Channel Type', default='channel')
     description = fields.Text('Description')
     uuid = fields.Char('UUID', size=50, select=True, default=lambda self: '%s' % uuid.uuid4())
-    email_send = fields.Boolean('Email Sent', default=True)  # True for mail.channel
+    email_send = fields.Boolean('Email Sent', default=True)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
@@ -70,8 +70,7 @@ class Channel(models.Model):
                                      "Use this field anywhere a small image is required.")
     alias_id = fields.Many2one(
         'mail.alias', 'Alias', ondelete="restrict", required=True,
-        help="The email address associated with this group. New emails received will automatically "
-             "create new topics.")
+        help="The email address associated with this group. New emails received will automatically create new topics.")
 
     @api.one
     @api.depends('image')
@@ -122,6 +121,10 @@ class Channel(models.Model):
         if vals.get('group_ids'):
             self._subscribe_users()
         return result
+
+    def _notify(self, message):
+        # DO SOMETHING USEFULL
+        return True
 
     def _subscribe_users(self):
         for mail_channel in self:

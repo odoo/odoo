@@ -24,6 +24,7 @@ class Partner(models.Model):
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels')
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -35,6 +36,11 @@ class Partner(models.Model):
     @api.multi
     def message_get_default_recipients(self):
         return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
+
+    @api.multi
+    def _notify(self, message, force_send=False, user_signature=True):
+        email_recipients = self.get_partners_to_email(message, self)
+        return email_recipients._notify_email(message, force_send=force_send, user_signature=user_signature)
 
     def get_partners_to_email(self, message, recipients):
         """ Return the list of partners to notify, based on their preferences.
@@ -148,22 +154,3 @@ class Partner(models.Model):
                 getattr(threading.currentThread(), 'testing', False)):
             emails.send()
         return True
-
-    @api.multi
-    def _notify(self, message, force_send=False, user_signature=True):
-        """ Send by email the notification depending on the user preferences
-
-            :param list partners_to_notify: optional list of partner ids restricting
-                the notifications to process
-            :param bool force_send: if True, the generated mail.mail is
-                immediately sent after being created, as if the scheduler
-                was executed for this message only.
-            :param bool user_signature: if True, the generated mail.mail body is
-                the body of the related mail.message with the author's signature
-        """
-        if self.ids:
-            recipients = self
-        else:
-            recipients = message.notified_partner_ids
-        email_recipients = self.get_partners_to_email(message, recipients)
-        email_recipients._notify_email(message, force_send=force_send, user_signature=user_signature)

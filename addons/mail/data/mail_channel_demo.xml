@@ -43,7 +43,6 @@
             <field name="parent_id" ref="mail_message_channel_1_2"/>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
@@ -149,7 +148,6 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 

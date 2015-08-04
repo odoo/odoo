@@ -241,7 +241,7 @@
         <field name="name">CRM - Meetings Tree</field>
         <field name="model">calendar.event</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" decoration-bf="message_unread==True">
+            <tree string="Meetings" decoration-bf="message_needaction==True">
                 <field name="name" string="Subject"/>
                 <field name="allday" invisible="True"/>
                 <field name="start" string="Start Date"/>
@@ -250,7 +250,7 @@
                 <field name="location"/>
                 <field name="state" invisible="True"/>
                 <field name="duration"/>
-                <field name="message_unread" invisible="1"/>
+                <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -296,7 +296,7 @@
                 <field name="class" string="Privacy"/>
                 <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>

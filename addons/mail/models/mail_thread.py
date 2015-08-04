@@ -82,11 +82,17 @@ class MailThread(models.AbstractModel):
         help="Messages and communication history")
     message_last_post = fields.Datetime('Last Message Date', help='Date of the last message posted on the record.')
     message_unread = fields.Boolean(
-        'Unread Messages', compute='_get_message_unread', search='_search_message_unread',
+        'Unread Messages', compute='_get_message_unread',
         help="If checked new messages require your attention.")
     message_unread_counter = fields.Integer(
-        'Unread Messages', compute='_get_message_unread',
+        'Unread Messages Counter', compute='_get_message_unread',
         help="Number of unread messages")
+    message_needaction = fields.Boolean(
+        'Need Action', compute='_get_message_needaction', search='_search_message_needaction',
+        help="If checked new messages require your attention.")
+    message_needaction_counter = fields.Integer(
+        'Need Action Counter', compute='_get_message_needaction',
+        help="Number of needaction messages")
 
     @api.one
     @api.depends('message_follower_ids')
@@ -100,6 +106,8 @@ class MailThread(models.AbstractModel):
 
         Do not use with operator 'not in'. Use instead message_is_followers
         """
+        # TOFIX make it work with not in
+        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('partner_id', operator, operand)])
@@ -111,6 +119,8 @@ class MailThread(models.AbstractModel):
 
         Do not use with operator 'not in'. Use instead message_is_followers
         """
+        # TOFIX make it work with not in
+        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('channel_id', operator, operand)])
@@ -133,10 +143,12 @@ class MailThread(models.AbstractModel):
         res = dict((res_id, 0) for res_id in self.ids)
 
         # search for unread messages, directly in SQL to improve performances
-        self._cr.execute(""" SELECT m.res_id FROM mail_message m
-                             RIGHT JOIN mail_notification n
-                             ON (n.message_id = m.id AND n.partner_id = %s AND (n.is_read = False or n.is_read IS NULL))
-                             WHERE m.model = %s AND m.res_id in %s""",
+        self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
+                             RIGHT JOIN mail_message_mail_channel_rel rel
+                             ON rel.mail_message_id = msg.id
+                             RIGHT JOIN mail_channel_partner cp
+                             ON (cp.channel_id = rel.mail_channel_id AND cp.partner_id = %s AND (cp.seen_message_id < msg.id))
+                             WHERE msg.model = %s AND msg.res_id in %s""",
                          (self.env.user.partner_id.id, self._name, tuple(self.ids),))
         for result in self._cr.fetchall():
             res[result[0]] += 1
@@ -145,9 +157,26 @@ class MailThread(models.AbstractModel):
             record.message_unread_counter = res.get(record.id, 0)
             record.message_unread = bool(record.message_unread_counter)
 
+    @api.multi
+    def _get_message_needaction(self):
+        res = dict((res_id, 0) for res_id in self.ids)
+
+        # search for unread messages, directly in SQL to improve performances
+        self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
+                             RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                             ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s
+                             WHERE msg.model = %s AND msg.res_id in %s""",
+                         (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+        for result in self._cr.fetchall():
+            res[result[0]] += 1
+
+        for record in self:
+            record.message_needaction_counter = res.get(record.id, 0)
+            record.message_needaction = bool(record.message_unread_counter)
+
     @api.model
-    def _search_message_unread(self, operator, operand):
-        return [('message_ids.to_read', operator, operand)]
+    def _search_message_needaction(self, operator, operand):
+        return [('message_ids.needaction', operator, operand)]
 
     # ------------------------------------------------------
     # CRUD overrides for automatic subscription and logging
@@ -418,7 +447,7 @@ class MailThread(models.AbstractModel):
     @api.model
     def _needaction_domain_get(self):
         if self._needaction:
-            return [('message_unread', '=', True)]
+            return [('message_needaction', '=', True)]
         return []
 
     @api.model
@@ -1080,8 +1109,9 @@ class MailThread(models.AbstractModel):
         model = self._context.get('thread_model') or self._name
         RecordModel = self.env[model]
         fields = RecordModel.fields_get()
-        if 'name' in fields and not data.get('name'):
-            data['name'] = msg_dict.get('subject', '')
+        name_field = RecordModel._rec_name or 'name'
+        if name_field in fields and not data.get('name'):
+            data[name_field] = msg_dict.get('subject', '')
         res = RecordModel.create(data)
         return res.id
 
@@ -1665,37 +1695,17 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_auto_subscribe_notify(self, partner_ids):
-        """ Send notifications to the partners automatically subscribed to the thread
-            Override this method if a custom behavior is needed about partners
-            that should be notified or messages that should be sent
-        """
-        # find first email message, set it as unread for auto_subscribe fields for them to have a notification
+        """ Notify newly subscribed followers of the last posted message. """
         if not partner_ids:
             return
         for record_id in self.ids:
-            # TDE FIXME: is sudo necessary / a goot option ?
-            MailMessage = self.env['mail.message'].sudo()
-            messages = MailMessage.search([
+            messages = self.env['mail.message'].sudo().search([
                 ('model', '=', self._name),
                 ('res_id', '=', record_id),
-                ('message_type', '=', 'email')], limit=1)
-            if not messages:
-                messages = MailMessage.search([
-                    ('model', '=', self._name),
-                    ('res_id', '=', record_id)], limit=1)
+                ('subtype_id', '!=', False),
+                ('subtype_id.internal', '=', False)], limit=1)
             if messages:
-                message = messages[0]
-                notification_obj = self.env['mail.notification']
-                partners = self.env['res.partner'].sudo().browse(partner_ids)
-                notification_obj._notify(message, recipients=partners)
-                if message.parent_id:
-                    partner_ids_to_parent_notify = set(partner_ids).difference(partner.id for partner in message.parent_id.notified_partner_ids)
-                    for partner_id in partner_ids_to_parent_notify:
-                        notification_obj.create({
-                            'message_id': message.parent_id.id,
-                            'partner_id': partner_id,
-                            'is_read': True,
-                        })
+                messages.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
     def message_auto_subscribe(self, updated_fields, values=None):
@@ -1777,31 +1787,9 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.multi
-    def message_mark_as_unread(self):
-        """ Set as unread. """
-        partner_id = self.env.user.partner_id.id
-        self._cr.execute('''
-            UPDATE mail_notification SET
-                is_read=false
-            WHERE
-                message_id IN (SELECT id from mail_message where res_id=any(%s) and model=%s limit 1) and
-                partner_id = %s
-        ''', (self.ids, self._name, partner_id))
-        self.env['mail.notification'].invalidate_cache(['is_read'])
-        return True
-
-    @api.multi
-    def message_mark_as_read(self):
-        """ Set as read. """
-        partner_id = self.env.user.partner_id.id
-        self._cr.execute('''
-            UPDATE mail_notification SET
-                is_read=true
-            WHERE
-                message_id IN (SELECT id FROM mail_message WHERE res_id=ANY(%s) AND model=%s) AND
-                partner_id = %s
-        ''', (self.ids, self._name, partner_id))
-        self.env['mail.notification'].invalidate_cache(['is_read'])
+    def message_set_read(self):
+        # Nothing done here currently. Will be implemented with the final
+        # slack modeling.
         return True
 
     @api.multi

@@ -25,7 +25,7 @@
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
+                <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="date"/>
@@ -34,7 +34,7 @@
                     <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -167,7 +167,7 @@
                     <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>

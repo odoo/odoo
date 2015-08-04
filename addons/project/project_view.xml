@@ -34,7 +34,7 @@
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -173,7 +173,7 @@
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
@@ -190,9 +190,9 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
                     <field name="sequence" widget="handle"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
@@ -317,7 +317,7 @@
                     <field name="sequence"/>
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="displayed_image_id"/>
                     <templates>
@@ -348,8 +348,8 @@
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -376,8 +376,8 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>

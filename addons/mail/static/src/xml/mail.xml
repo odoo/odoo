@@ -223,20 +223,12 @@
 </t>
 
 <t t-name="MessageReadUnread">
-    <i t-if="record.options.show_read" title="Done" 
+    <i t-if="record.options.show_read" title="Done"
        class="oe_read fa fa-check" t-att-data-id="record.id"/>
-    <i t-if="record.is_favorite and record.options.show_unread" title="Set back to Todo" 
+    <i t-if="record.is_favorite and record.options.show_unread" title="Set back to Todo"
        class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
-    <i t-if="!record.is_favorite and record.options.show_unread" title="Move to Inbox" 
+    <i t-if="!record.is_favorite and record.options.show_unread" title="Move to Inbox"
        class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
-</t>
-
-<t t-name="MessageVote">
-    <span class="o_timeline_vote_count" t-att-data-id="record.id" t-if='record.vote_nb > 0'>
-        <t t-esc='record.vote_nb'/><i class="fa fa-thumbs-o-up" t-att-data-id="record.id"></i>
-    </span>
-    <t t-if="!record.has_voted">Like</t>
-    <t t-if="record.has_voted">Unlike</t>
 </t>
 
 <t t-name="NoMessage">

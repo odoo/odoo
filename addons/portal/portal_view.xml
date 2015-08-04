@@ -25,11 +25,7 @@
                              'show_link': 'False',
                              'show_write_to_followers': False}
             }</field>
-            <field name="domain">[
-                '|',
-                 ('notification_ids.partner_id.user_ids', 'in', [uid]),
-                 ('author_id.user_ids', 'in', [uid]),
-            ]</field>
+            <field name="domain">[('needaction', '=', True)]</field>
         </record>
 
         <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"

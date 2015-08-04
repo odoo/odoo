@@ -28,22 +28,43 @@
                         <group>
                             <group>
                                 <field name="subject"/>
-                                <field name="author_id"/>
-                                <field name="email_from"/>
-                                <field name="reply_to"/>
                                 <field name="date"/>
-                                <field name="message_type"/>
+                                <field name="email_from"/>
+                                <field name="author_id"/>
                             </group>
                             <group>
+                                <field name="parent_id"/>
                                 <field name="model"/>
                                 <field name="res_id"/>
-                                <field name="parent_id"/>
-                                <field name="partner_ids" widget="many2many_tags"/>
-                                <field name="notified_partner_ids" widget="many2many_tags"/>
+                                <field name="message_type"/>
                                 <field name="subtype_id"/>
                             </group>
                         </group>
-                        <field name="body" options="{'style-inline': true}"/>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body" options="{'style-inline': true}"/>
+                            </page>
+                            <page string="Gateway">
+                                <group>
+                                    <group>
+                                        <field name="reply_to"/>
+                                        <field name="no_auto_thread"/>
+                                    </group>
+                                    <group>
+                                        <field name="message_id"/>
+                                        <field name="mail_server_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Recipients">
+                                <group>
+                                    <field name="partner_ids" widget="many2many_tags"/>
+                                    <field name="channel_ids" widget="many2many_tags"/>
+                                    <field name="needaction_partner_ids" widget="many2many_tags"/>
+                                    <field name="starred_partner_ids" widget="many2many_tags"/>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -64,16 +85,13 @@
                     <field name="model"/>
                     <field name="res_id"/>
                     <field name="parent_id"/>
-                    <filter string="To Read"
-                            name="message_unread" help="Show messages to read"
-                            domain="[('to_read', '=', True)]"/>
+                    <filter string="Need Action"
+                            name="message_needaction" help="Important messages"
+                            domain="[('needaction', '=', True)]"/>
                     <separator/>
                     <filter string="Has attachments"
                             name="attachments"
                             domain="[('attachment_ids', '!=', False)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Type" name="thread" domain="[]" context="{'group_by':'message_type'}"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -141,8 +159,6 @@
                     <field name="tracking_value_ids"/>
                     <field name="subtype_id"/>
                     <field name="message_type"/>
-                    <field name="vote_user_ids"/>
-                    <field name="to_read"/>
                     <field name="starred"/>
                     <templates>
                     <t t-name="timeline-message"> 
@@ -218,18 +234,6 @@
                                                              <t t-raw="record.author_id[2]"/>
                                                         </a>
                                                     </span>
-                                                    
-                                                    <span t-if="!record.options.readonly and !(record.message_type == 'notification')" 
-                                                          class='oe_subtle oe_sep text-muted'>•</span>
-                                                    <span t-if="!record.options.readonly and !(record.message_type == 'notification')" 
-                                                          class="o_timeline_vote" t-att-data-id="record.id"> 
-                                                            <span class="o_timeline_vote_count" t-att-data-id="record.id" t-if='record.vote_nb > 0'>
-                                                                <t t-esc='record.vote_nb'/>
-                                                                <i class="fa fa-thumbs-o-up" t-att-data-id="record.id"></i>
-                                                            </span>
-                                                            <t t-if="!record.has_voted">Like</t>
-                                                            <t t-if="record.has_voted">Unlike</t>
-                                                    </span>
                                                 </span>
 
                                                 <div t-attf-class="o_timeline_msg_icons #{record.tracking_values ? 
@@ -244,7 +248,7 @@
                                                            class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
                                                     </span>
                                                     <span>
-                                                        <i title="Mark as Todo" t-attf-class="oe_star #{record.is_favorite ? 'oe_starred':''} fa fa-star" 
+                                                        <i title="To Do" t-attf-class="oe_star #{record.is_favorite ? 'oe_starred':''} fa fa-star" 
                                                            t-att-data-id="record.id"/>
                                                     </span>
                                                 </div> <!-- *** icons *** -->

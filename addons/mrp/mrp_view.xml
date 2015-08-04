@@ -757,8 +757,8 @@
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-info="state in ('draft','confirmed')" decoration-danger="date_planned&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-info="state in ('draft','confirmed')" decoration-danger="date_planned&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name"/>
                     <field name="date_planned"/>
                     <field name="product_id"/>

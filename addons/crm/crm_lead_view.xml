@@ -240,7 +240,7 @@
             <field name="name">Leads</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" decoration-bf="message_unread==True" decoration-muted="probability == 100">
+                <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Lead"/>
@@ -256,7 +256,7 @@
                     <field name="campaign_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
                     <field name="medium_id" invisible="1"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -289,7 +289,7 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
                     <field name="active"/>
@@ -330,8 +330,8 @@
                                     </div>
                                     <div class="o_kanban_footer">
                                         <field name="priority" widget="priority" groups="base.group_user"/>
-                                        <t t-if="record.message_unread_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
@@ -375,7 +375,7 @@
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
                     <separator />
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator />
                     <filter string="Exclude Opt Out"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -573,7 +573,7 @@
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-bf="message_unread==True" decoration-muted="probability == 100" decoration-danger="date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
@@ -591,7 +591,7 @@
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
                 </tree>
@@ -633,7 +633,7 @@
                             domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>

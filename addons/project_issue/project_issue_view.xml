@@ -78,8 +78,8 @@
             <field name="name">Project Issue Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" decoration-bf="message_unread==True">
-                    <field name="message_unread" invisible="1"/>
+                <tree string="Issue Tracker Tree" decoration-bf="message_needaction==True">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="id"/>
                     <field name="name"/>
                     <field name="partner_id"/>
@@ -111,7 +111,7 @@
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By" >
                         <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
                         <filter string="Project" name="project" context="{'group_by':'project_id'}" />
@@ -152,7 +152,7 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -181,8 +181,8 @@
                                     </div>
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
-                                        <t t-if="record.message_unread_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
@@ -229,9 +229,9 @@
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree" decoration-bf="message_unread==True">
+                <tree string="Feature Tracker Tree" decoration-bf="message_needaction==True">
                     <field name="id"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Priority"/>

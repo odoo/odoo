@@ -84,24 +84,20 @@ class Message(models.Model):
     author_avatar = fields.Binary("Author's avatar", related='author_id.image_small')
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
-    notified_partner_ids = fields.Many2many(
-        'res.partner', 'mail_notification',
-        'message_id', 'partner_id', 'Notified partners',
-        help='Partners that have a notification pushing this message in their mailboxes')
-    notification_ids = fields.One2many(
-        'mail.notification', 'message_id',
-        string='Notifications', auto_join=True,
-        help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.')
-    # chatter
-    to_read = fields.Boolean(
-        'To read', compute='_get_to_read', search='_search_to_read',
-        help='Current user has an unread notification linked to this message')
+    needaction_partner_ids = fields.Many2many(
+        'res.partner', 'mail_message_res_partner_needaction_rel', string='Need Action')
+    needaction = fields.Boolean(
+        'Need Action', compute='_get_needaction', search='_search_needaction',
+        help='Need Action')
+    channel_ids = fields.Many2many(
+        'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
+    # user interface
+    starred_partner_ids = fields.Many2many(
+        'res.partner', 'mail_message_res_partner_starred_rel', string='Favorited By')
     starred = fields.Boolean(
         'Starred', compute='_get_starred', search='_search_starred',
         help='Current user has a starred notification linked to this message')
-    vote_user_ids = fields.Many2many(
-        'res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
-        help='Users that voted for this message')
+    # tracking
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
@@ -115,55 +111,36 @@ class Message(models.Model):
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server', readonly=1)
 
-    @api.depends('notification_ids')
-    def _get_to_read(self):
-        """ Compute if the message is unread by the current user. """
-        partner_id = self.env.user.partner_id.id
-        notifications = self.env['mail.notification'].sudo().search([
-            ('partner_id', '=', partner_id),
-            ('message_id', 'in', self.ids),
-            ('is_read', '=', False)])
+    @api.multi
+    def _get_needaction(self):
+        """ Need action on a mail.message = notified on my channel """
+        my_messages = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.needaction_partner_ids)
         for message in self:
-            message.to_read = message in notifications.mapped('message_id')
+            message.needaction = message in my_messages
 
-    def _search_to_read(self, operator, operand):
-        """ Search for messages to read by the current user. Condition is
-        inversed because we search unread message on a is_read column. """
-        return ['&', ('notification_ids.partner_id.user_ids', 'in', [self.env.uid]), ('notification_ids.is_read', operator, not operand)]
+    @api.model
+    def _search_needaction(self, operator, operand):
+        if operator == '=' and operand:
+            return [('needaction_partner_ids', 'in', self.env.user.partner_id.id)]
+        return [('needaction_partner_ids', 'not in', self.env.user.partner_id.id)]
 
-    @api.depends('notification_ids')
+    @api.depends('starred_partner_ids')
     def _get_starred(self):
         """ Compute if the message is starred by the current user. """
-        partner_id = self.env.user.partner_id.id
-        notifications = self.env['mail.notification'].sudo().search([
-            ('partner_id', '=', partner_id),
-            ('message_id', 'in', self.ids),
-            ('starred', '=', True)])
+        # TDE FIXME: use SQL
+        starred = self.sudo().filtered(lambda msg: self.env.user.partner_id in msg.starred_partner_ids)
         for message in self:
-            message.starred = message in notifications.mapped('message_id')
+            message.starred = message in starred
 
+    @api.model
     def _search_starred(self, operator, operand):
-        """ Search for starred messages by the current user."""
-        return ['&', ('notification_ids.partner_id.user_ids', 'in', [self.env.uid]), ('notification_ids.starred', operator, operand)]
+        if operator == '=' and operand:
+            return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
+        return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
 
     @api.model
     def _needaction_domain_get(self):
-        return [('to_read', '=', True)]
-
-    #------------------------------------------------------
-    # Vote/Like
-    #------------------------------------------------------
-
-    @api.multi
-    def vote_toggle(self):
-        ''' Toggles vote. Performed using read to avoid access rights issues. '''
-        for message in self.sudo():
-            new_has_voted = not (self._uid in message.vote_user_ids.ids)
-            if new_has_voted:
-                self.browse(message.id).write({'vote_user_ids': [(4, self._uid)]})  # tde: todo with user access rights
-            else:
-                self.browse(message.id).write({'vote_user_ids': [(3, self._uid)]})  # tde: todo with user access rights
-        return new_has_voted or False
+        return [('needaction', '=', True)]
 
     #------------------------------------------------------
     # download an attachment
@@ -186,33 +163,19 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def set_message_read(self, read, create_missing=True):
-        """ Set messages as (un)read. Technically, the notifications related
-            to uid are set to (un)read. If for some msg_ids there are missing
-            notifications (i.e. due to load more or thread parent fetching),
-            they are created.
-
-            :param bool read: set notification as (un)read
-            :param bool create_missing: create notifications for missing entries
-                (i.e. when acting on displayed messages not notified)
-
-            :return number of message mark as read
-        """
-        notifications = self.env['mail.notification'].search([
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ('message_id', 'in', self.ids),
-            ('is_read', '=', not read)])
-        notifications.write({'is_read': read})
-
-        # some messages do not have notifications: find which one, create notification, update read status
-        if len(notifications) < len(self) and create_missing:
-            for message in self - notifications.mapped('message_id'):
-                self.env['mail.notification'].create({'partner_id': self.env.user.partner_id.id, 'is_read': read, 'message_id': message.id})
-
-        return len(notifications)
+    def set_message_needaction(self, partner_ids=None):
+        if not partner_ids:
+            partner_ids = [self.env.user.partner_id.id]
+        return self.write({'needaction_partner_ids': [(4, pid) for pid in partner_ids]})
 
     @api.multi
-    def set_message_starred(self, starred, create_missing=True):
+    def set_message_done(self, partner_ids=None):
+        if not partner_ids:
+            partner_ids = [self.env.user.partner_id.id]
+        return self.write({'needaction_partner_ids': [(3, pid) for pid in partner_ids]})
+
+    @api.multi
+    def set_message_starred(self, starred):
         """ Set messages as (un)starred. Technically, the notifications related
             to uid are set to (un)starred.
 
@@ -220,22 +183,10 @@ class Message(models.Model):
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
         """
-        values = {'starred': starred}
         if starred:
-            values['is_read'] = False
-        notifications = self.env['mail.notification'].search([
-            ('partner_id', '=', self.env.user.partner_id.id),
-            ('message_id', 'in', self.ids),
-            ('starred', '=', not starred)])
-        notifications.write(values)
-
-        # some messages do not have notifications: find which one, create notification, update starred status
-        if len(notifications) < len(self) and create_missing:
-            values['partner_id'] = self.env.user.partner_id.id
-            for message in self - notifications.mapped('message_id'):
-                values['message_id'] = message.id
-                self.env['mail.notification'].create(values)
-
+            self.write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+        else:
+            self.write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
         return starred
 
     #------------------------------------------------------
@@ -259,8 +210,8 @@ class Message(models.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partners |= message.author_id
-            if message.subtype_id and message.notified_partner_ids:  # take notified people of message with a subtype
-                partners |= message.notified_partner_ids
+            if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
+                partners |= message.partner_ids
             elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
                 partners |= message.partner_ids
             if message.attachment_ids:
@@ -298,7 +249,7 @@ class Message(models.Model):
                 author = (0, message.email_from)
             partner_ids = []
             if message.subtype_id:
-                partner_ids = [partner_tree[partner.id] for partner in message.notified_partner_ids
+                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
@@ -336,9 +287,6 @@ class Message(models.Model):
         is_private = False
         if not self.model or not self.res_id:
             is_private = True
-        # votes and favorites: res.users ids, no prefetching should be done
-        vote_nb = len(self.vote_user_ids)
-        has_voted = self._uid in [user.id for user in self.vote_user_ids]
 
         return {'id': self.id,
                 'message_type': self.message_type,
@@ -349,15 +297,13 @@ class Message(models.Model):
                 'record_name': self.record_name,
                 'subject': self.subject,
                 'date': self.date,
-                'to_read': self.to_read,
+                'needaction': self.needaction,
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
                 'author_avatar': self.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
-                'vote_nb': vote_nb,
-                'has_voted': has_voted,
                 'is_favorite': self.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
@@ -498,17 +444,6 @@ class Message(models.Model):
 
         return {'nb_read': nb_read, 'threads': parent_list}
 
-    @api.multi
-    def get_like_names(self, limit=10):
-        """ Return the people list who liked this message. """
-        self.ensure_one()
-        voter_names = [voter.name for voter in self.vote_user_ids[:limit]]
-        if len(self.vote_user_ids) > limit:
-            voter_names.append(_("and %s others like this") % (len(self.vote_user_ids) - limit))
-        return voter_names
-    # compat
-    get_likers_list = get_like_names
-
     #------------------------------------------------------
     # mail_message internals
     #------------------------------------------------------
@@ -536,14 +471,17 @@ class Message(models.Model):
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        """ Override that adds specific access rights of mail.message, to remove ids uid could not see according to our custom rules. Please refer to check_access_rule for more details about those rules.
+        """ Override that adds specific access rights of mail.message, to remove
+        ids uid could not see according to our custom rules. Please refer to
+        check_access_rule for more details about those rules.
 
-            Non employees users see only message with subtype (aka do not see
-            internal logs).
+        Non employees users see only message with subtype (aka do not see
+        internal logs).
 
         After having received ids of a classic search, keep only:
         - if author_id == pid, uid is the author, OR
-        - a notification (id, pid) exists, uid has been notified, OR
+        - uid belongs to a notified channel, OR
+        - uid is in the specified recipients, OR
         - uid have read access to the related document is model, res_id
         - otherwise: remove the id
         """
@@ -565,26 +503,36 @@ class Message(models.Model):
             return ids
 
         pid = self.env.user.partner_id.id
-        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
+        author_ids, partner_ids, channel_ids, allowed_ids = set([]), set([]), set([]), set([])
         model_ids = {}
 
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, n.partner_id
-            FROM "%s" m LEFT JOIN "mail_notification" n
-            ON n.message_id=m.id AND n.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, ids,))
-        for id, rmod, rid, author_id, partner_id in self._cr.fetchall():
+        self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+            FROM "%s" m
+            LEFT JOIN "mail_message_res_partner_rel" partner_rel
+            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+            LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+            ON channel_rel.mail_message_id = m.id
+            LEFT JOIN "mail_channel" channel
+            ON channel.id = channel_rel.mail_channel_id
+            LEFT JOIN "mail_channel_partner" channel_partner
+            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
+            WHERE m.id = ANY (%%s)""" % self._table, (pid, pid, ids,))
+        for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
             elif partner_id == pid:
                 partner_ids.add(id)
+            elif channel_id:
+                channel_ids.add(id)
             elif rmod and rid:
                 model_ids.setdefault(rmod, {}).setdefault(rid, set()).add(id)
 
         allowed_ids = self._find_allowed_doc_ids(model_ids)
-        final_ids = author_ids | partner_ids | allowed_ids
+
+        final_ids = author_ids | partner_ids | channel_ids | allowed_ids
 
         if count:
             return len(final_ids)
@@ -597,14 +545,15 @@ class Message(models.Model):
     def check_access_rule(self, operation):
         """ Access rules of mail.message:
             - read: if
-                - author_id == pid, uid is the author, OR
-                - mail_notification (id, pid) exists, uid has been notified, OR
+                - author_id == pid, uid is the author OR
+                - uid is in the recipients (partner_ids) OR
+                - uid is member of a listern channel (channel_ids.partner_ids) OR
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
             - create: if
-                - no model, no res_id, I create a private message OR
+                - no model, no res_id (private message) OR
                 - pid in message_follower_ids if model, res_id OR
-                - mail_notification (parent_id.id, pid) exists, uid has been notified of the parent, OR
+                - uid can read the parent OR
                 - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
@@ -643,21 +592,33 @@ class Message(models.Model):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                     (self._description, operation))
 
-        Notification = self.env['mail.notification']
-        Followers = self.env['mail.followers']
-        partner_id = self.env.user.partner_id.id
-
         # Read mail_message.ids to have their values
         message_values = dict((res_id, {}) for res_id in self.ids)
-        self._cr.execute('SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (self.ids,))
-        for mid, rmod, rid, author_id, parent_id in self._cr.fetchall():
-            message_values[mid] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
 
-        # Author condition (READ, WRITE, CREATE (private)) -> could become an ir.rule ?
+        if operation == 'read':
+            self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+                FROM "%s" m
+                LEFT JOIN "mail_message_res_partner_rel" partner_rel
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+                ON channel_rel.mail_message_id = m.id
+                LEFT JOIN "mail_channel" channel
+                ON channel.id = channel_rel.mail_channel_id
+                LEFT JOIN "mail_channel_partner" channel_partner
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
+                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, self.ids,))
+            for mid, rmod, rid, author_id, parent_id, partner_id, channel_id in self._cr.fetchall():
+                message_values[mid] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id, 'partner_id': partner_id, 'channel_id': channel_id}
+        else:
+            self._cr.execute("""SELECT DISTINCT id, model, res_id, author_id, parent_id FROM "%s" WHERE id = ANY (%%s)""" % self._table, (self.ids,))
+            for mid, rmod, rid, author_id, parent_id in self._cr.fetchall():
+                message_values[mid] = {'model': rmod, 'res_id': rid, 'author_id': author_id, 'parent_id': parent_id}
+
+        # Author condition (READ, WRITE, CREATE (private))
         author_ids = []
         if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
-                          if message.get('author_id') and message.get('author_id') == partner_id]
+                          if message.get('author_id') and message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.iteritems()
                           if not message.get('model') and not message.get('res_id')]
@@ -665,10 +626,20 @@ class Message(models.Model):
         # Parent condition, for create (check for received notifications for the created message parent)
         notified_ids = []
         if operation == 'create':
+            # TDE: probably clean me
             parent_ids = [message.get('parent_id') for mid, message in message_values.iteritems()
                           if message.get('parent_id')]
-            notifications = Notification.sudo().search([('message_id.id', 'in', parent_ids), ('partner_id', '=', partner_id)])
-            not_parent_ids = [notif.message_id.id for notif in notifications]
+            self._cr.execute("""SELECT DISTINCT m.id FROM "%s" m
+                LEFT JOIN "mail_message_res_partner_rel" partner_rel
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+                LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+                ON channel_rel.mail_message_id = m.id
+                LEFT JOIN "mail_channel" channel
+                ON channel.id = channel_rel.mail_channel_id
+                LEFT JOIN "mail_channel_partner" channel_partner
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
+                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, parent_ids,))
+            not_parent_ids = [mid[0] for mid in self._cr.fetchall()]
             notified_ids += [mid for mid, message in message_values.iteritems()
                              if message.get('parent_id') in not_parent_ids]
 
@@ -676,16 +647,14 @@ class Message(models.Model):
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation == 'read':
-            notifications = Notification.sudo().search([
-                ('partner_id', '=', partner_id),
-                ('message_id', 'in', self.ids)])
-            notified_ids = [notification.message_id.id for notification in notifications]
+            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('partner_id') or message.get('channel_id')]
         elif operation == 'create':
             for doc_model, doc_ids in model_record_ids.items():
-                followers = Followers.sudo().search([
+                followers = self.env['mail.followers'].sudo().search([
                     ('res_model', '=', doc_model),
                     ('res_id', 'in', list(doc_ids)),
-                    ('partner_id', '=', partner_id)])
+                    ('partner_id', '=', self.env.user.partner_id.id),
+                    ])
                 fol_mids = [follower.res_id for follower in followers]
                 notified_ids += [mid for mid, message in message_values.iteritems()
                                  if message.get('model') == doc_model and message.get('res_id') in fol_mids]
@@ -746,7 +715,9 @@ class Message(models.Model):
 
     @api.model
     def create(self, values):
-        default_starred = self.env.context.get('default_starred')
+        # coming from mail.js that does not have pid in its values
+        if self.env.context.get('default_starred'):
+            self = self.with_context({'default_starred_partner_ids': [(4, self.env.user.partner_id.id)]})
 
         if 'email_from' not in values:  # needed to compute reply_to
             values['email_from'] = self._get_default_from()
@@ -761,14 +732,6 @@ class Message(models.Model):
 
         message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
                         user_signature=self.env.context.get('mail_notify_user_signature', True))
-        # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
-        # Because starred will call set_message_starred, that looks for notifications.
-        # When creating a new mail_message, it will create a notification to a message
-        # that does not exist, leading to an error (key not existing). Also this
-        # this means unread notifications will be created, yet we can not assure
-        # this is what we want.
-        if default_starred:
-            message.set_message_starred(True)
         return message
 
     @api.multi
@@ -797,8 +760,8 @@ class Message(models.Model):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
-        self.ensure_one()  # tde: not sure, just for testinh, will see
-        partners_to_notify = self.env['res.partner']
+        # TDE CHECK: add partners / channels as arguments to be able to notify a message with / without computation ??
+        self.ensure_one()  # tde: not sure, just for testing, will see
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal
@@ -807,31 +770,34 @@ class Message(models.Model):
                 ('res_model', '=', self.model),
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
-            if self.subtype_id.internal:
-                followers.filtered(lambda fol: fol.partner_id.user_ids and fol.partner_id.user_ids[0].has_group('base.group_user'))
-            partners_to_notify |= followers.mapped('partner_id')
+            # if self.subtype_id.internal:
+            #     followers.filtered(lambda fol: fol.partner_id.user_ids and fol.partner_id.user_ids[0].has_group('base.group_user'))
+            channels = self.channel_ids | followers.mapped('channel_id')
+            partners = self.partner_ids | followers.mapped('partner_id')
+        else:
+            channels = self.channel_ids
+            partners = self.partner_ids
 
-        # remove me from notified partners, unless the message is written on my own wall
-        if self.subtype_id and self.author_id and self.model == "res.partner" and self.res_id == self.author_id.id:
-            partners_to_notify |= self.author_id
-        elif self.author_id:
-            partners_to_notify -= self.author_id
+        # remove me from notified partners
+        if self.author_id:
+            partners = partners - self.author_id
 
-        # all partner_ids of the mail.message have to be notified regardless of the above (even the author if explicitly added!)
-        partners_to_notify |= self.partner_ids
-
-        # notify
-        self.env['mail.notification']._notify(self, recipients=partners_to_notify, force_send=force_send, user_signature=user_signature)
+        # notify partners
+        # TDE TODO: model-dependant ? (like customer -> always email ?)
+        email_channels = channels.filtered(lambda channel: channel.email_send)
+        self.env['res.partner'].sudo().search([
+            '|',
+            ('id', 'in', partners.ids),
+            ('channel_ids', 'in', email_channels.ids),
+            ('notify_email', '!=', 'none')]
+        )._notify(self, force_send=force_send, user_signature=user_signature)  # TDE: clean those parameters
+        # notify partners and channels
+        channels._notify(self)
 
         # An error appear when a user receive a notification without notifying
         # the parent message -> add a read notification for the parent
         if self.parent_id:
-            # all notified_partner_ids of the mail.message have to be notified for the parented messages
-            partners_to_parent_notify = self.notified_partner_ids - self.parent_id.notified_partner_ids
             self.parent_id.invalidate_cache()  # avoid access rights issues, as notifications are used for access
-            Notification = self.env['mail.notification'].sudo()
-            for partner in partners_to_parent_notify:
-                Notification.create({
-                    'message_id': self.parent_id.id,
-                    'partner_id': partner.id,
-                    'is_read': True})
+
+        # update message
+        return self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})

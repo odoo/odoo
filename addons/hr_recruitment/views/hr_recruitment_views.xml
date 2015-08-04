@@ -25,8 +25,8 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" decoration-bf="message_unread==True">
-                <field name="message_unread" invisible="1"/>
+            <tree string="Applicants" decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
                 <field name="create_date"/>
                 <field name="date_last_stage_update" invisible="1"/>
@@ -213,7 +213,7 @@
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <separator/>
-                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -267,7 +267,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
-                <field name="message_unread_counter"/>
+                <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -307,8 +307,8 @@
                                     </div>
                                 </div>
                                 <div class="oe_kanban_bottom_left oe_margin_top_4">
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                     <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
                                 </div>
@@ -365,7 +365,7 @@
         <field name="arch" type="xml">
             <field name="department_id" positon="after">
                 <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
             </field>
         </field>
     </record>

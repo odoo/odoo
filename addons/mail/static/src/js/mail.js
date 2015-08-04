@@ -298,8 +298,6 @@ var MailThread = Attachment.extend ({
         'click .o_timeline_msg .oe_star':'on_star',
         'click .o_timeline_parent_message .oe_reply':'on_message_reply',
         'click .o_timeline_parent_message .oe_read':'on_thread_read',
-        'click .o_timeline_vote':'on_vote',
-        'mouseenter .o_timeline_vote_count':'on_vote_count',
         'click .o_timeline_action_author':'on_record_author_clicked',
         'click .o_timeline_msg_expandable':'on_message_expandable',
         'click .o_timeline_parent_expandable':'on_thread_expandable',
@@ -563,7 +561,13 @@ var MailThread = Attachment.extend ({
             }
         }
         var message_ids = _.map(messages, function (val) {return val.id;});
-        return this.ds_message.call('set_message_read', [message_ids, read_value, true, this.context]).then(function (nb_read) {
+        if (read_value) {
+            var method = 'set_message_done';
+        }
+        else {
+            var method = 'set_message_needaction';
+        }
+        return this.ds_message.call(method, [message_ids, undefined, this.context]).then(function (nb_read) {
             // apply modification
             _.each(messages, function (msg) {
                 msg.to_read = !read_value;
@@ -585,7 +589,7 @@ var MailThread = Attachment.extend ({
         var button = self.$('.oe_star:first');
         event.stopPropagation();
 
-        this.ds_message.call('set_message_starred', [[msg_id], !msg.is_favorite, true]).then(function (star) {
+        this.ds_message.call('set_message_starred', [[msg_id], !msg.is_favorite]).then(function (star) {
             msg.is_favorite = star;
             if (msg.is_favorite) {
                 button.addClass('oe_starred');
@@ -607,66 +611,6 @@ var MailThread = Attachment.extend ({
         event.stopPropagation();
         this.on_compose_message(event, 'reply');
         return false;
-    },
-
-    /**
-     * Add or remove a vote for a message and display the result
-     */
-    on_vote: function (event) {
-        var self = this;
-        var msg_id = $(event.target).data('id');
-        var msg = _.findWhere(this.messages, {id: msg_id});
-        event.stopPropagation();
-
-        this.ds_message.call('vote_toggle', [[msg_id]]).then(_.bind(function (vote) {
-            msg.has_voted = vote;
-            msg.vote_nb += msg.has_voted ? 1 : -1;
-        }, self)). then(function () {
-            $(event.target).html(QWeb.render("MessageVote", {record: msg}));
-        });
-
-        return false;
-    },
-
-    /**
-     * display users who voted for the message (tooltip)
-     */
-    on_vote_count : function (event) {
-        var voter = "";
-        var limit = 10;
-        var msg_id = $(event.target).data('id');
-        event.stopPropagation();
-
-        var $target = $(event.target).hasClass("fa-thumbs-o-up") ? $(event.target).parent() : $(event.target);
-        // Note: We can set data-content attr on target element once we fetch data so that
-        // next time when one moves mouse on element it saves call
-        // But if there is new like comes then we'll not have new likes in popover in that case
-        if ($target.data('liker-list'))
-        {
-            voter = $target.data('liker-list');
-            mail_utils.bindTooltipTo($target, voter, 'top');
-            $target.tooltip('hide').tooltip('show');
-            $(".tooltip").on("mouseleave", function () {
-                $(this).remove();
-            });
-        } else {
-            this.ds_message.call('get_likers_list', [msg_id, limit]).done(function (data) {
-                _.each(data, function(people, index) {
-                    voter = voter + people.substring(0,1).toUpperCase() + people.substring(1);
-                    if (index != data.length-1) {
-                        voter = voter + "<br/>";
-                    }
-                });
-                $target.data('liker-list', voter);
-                mail_utils.bindTooltipTo($target, voter, 'top');
-                $target.tooltip('hide').tooltip('show');
-                $(".tooltip").on("mouseleave", function () {
-                    $(this).remove();
-                });
-            });
-        }
-
-        return true;
     },
 
     /**

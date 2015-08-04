@@ -373,7 +373,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
@@ -424,8 +424,8 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" decoration-danger="state in ('except_invoice','except_picking')" string="Purchase Order">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" decoration-danger="state in ('except_invoice','except_picking')" string="Purchase Order">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
                     <field name="partner_id"/>
