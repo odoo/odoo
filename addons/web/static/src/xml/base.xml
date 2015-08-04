@@ -881,26 +881,10 @@
 <t t-name="FieldRadio">
     <span t-attf-class="oe_form_field oe_form_field_radio #{widget.options.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
         <span t-if="!widget.get('effective_readonly')">
-            <t t-if="widget.options.horizontal">
-                <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>
-                <t t-if="!widget.options.no_radiolabel">
-                    <t t-foreach="widget.selection" t-as="selection">
-                        <label t-att-for="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></label>
-                    </t>
-                    <br/>
-                </t>
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div t-att-style="'width: ' + width + '%;'">
-                        <span class="oe_radio_input"><input type="radio" t-att-name="widget.uniqueId" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-value="selection[0]"/></span>
-                    </div>
-                </t>
-            </t>
-            <t t-if="!widget.options.horizontal">
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div>
-                        <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
-                    </div>
-                </t>
+            <t t-foreach="widget.selection" t-as="selection">
+                <div>
+                    <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
+                </div>
             </t>
         </span>
         <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"><t t-esc="widget.get('value')[1]"/></span>
