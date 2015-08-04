@@ -73,8 +73,7 @@ class test_base(common.TransactionCase):
         self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
         p1.write({'phone': p1phone,
-                  'parent_id': ghoststep.id,
-                  'use_parent_address': True})
+                  'parent_id': ghoststep.id})
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -84,13 +83,13 @@ class test_base(common.TransactionCase):
         # turn off sync
         p1street = 'Different street, 42'
         p1.write({'street': p1street,
-                  'use_parent_address': False})
+                  'type': 'invoice'})
         p1.refresh(), ghoststep.refresh() 
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
-        # turn on sync again       
-        p1.write({'use_parent_address': True})
+        # turn on sync again
+        p1.write({'type': 'contact'})
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -117,7 +116,6 @@ class test_base(common.TransactionCase):
         cr, uid = self.cr, self.uid
         ironshield = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'IronShield')[0])
         self.assertEqual(ironshield.is_company, 'person', 'Partners are not companies by default')
-        self.assertFalse(ironshield.use_parent_address, 'use_parent_address defaults to False')
         self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
         ironshield.write({'type': 'default'}) # force default type to double-check sync 
         p1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
