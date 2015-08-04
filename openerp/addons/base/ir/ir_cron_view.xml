@@ -6,6 +6,9 @@
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
                 <form string="Scheduled Actions">
+                    <header>
+                        <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight"/> 
+                    </header>
                    <sheet>
                     <group col="4">
                         <field name="name"/>
