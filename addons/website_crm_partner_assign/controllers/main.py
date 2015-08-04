@@ -30,7 +30,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         country_obj = request.registry['res.country']
         search = post.get('search', '')
 
-        base_partner_domain = [('is_company', '=', True), ('grade_id', '!=', False), ('website_published', '=', True)]
+        base_partner_domain = [('is_company', '=', 'company'), ('grade_id', '!=', False), ('website_published', '=', True)]
         if not request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_website_publisher'):
             base_partner_domain += [('grade_id.website_published', '=', True)]
         if search:

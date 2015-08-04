@@ -125,7 +125,7 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         ironshield.refresh()
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
-        self.assertEqual(ironshield.is_company, 'company', 'Company flag should be turned on after first contact creation')
+        self.assertEqual(ironshield.is_company, 'person', 'Company flag should be turned on after first contact creation')
 
     def test_40_res_partner_address_getc(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,
@@ -157,7 +157,7 @@ class test_base(common.TransactionCase):
                                                                                     'parent_id': branch2.id}))
         leaf23 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 23',
                                                                                     'parent_id': branch2.id,
-                                                                                    'type': 'contact'}))
+                                                                                    'type': 'invoice'}))
         # go up, stop at branch1
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf111.id,
@@ -187,11 +187,12 @@ class test_base(common.TransactionCase):
                           'contact': branch1.id,
                           'other': branch11.id,
                           }, 'Invalid address resolution')
+
         self.assertEqual(self.res_partner.address_get(cr, uid, [branch2.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
                           'invoice': leaf23.id,
                           'contact': branch2.id,
-                          'other': leaf23.id
+                          'other': branch2.id
                           }, 'Invalid address resolution')
 
         # go up then down through siblings
@@ -199,19 +200,19 @@ class test_base(common.TransactionCase):
                          {'delivery': leaf21.id,
                           'invoice': leaf23.id,
                           'contact': branch2.id,
-                          'other': leaf23.id
+                          'other': branch2.id
                           }, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf22.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
                           'invoice': leaf23.id,
                           'contact': leaf22.id,
-                          'other': leaf23.id
+                          'other': leaf22.id
                           }, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf23.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
                           'invoice': leaf23.id,
                           'contact': branch2.id,
-                          'other': leaf23.id
+                          'other': branch2.id
                           }, 'Invalid address resolution, `default` should only override if no partner with specific type exists')
 
     def test_50_res_partner_commercial_sync(self):    

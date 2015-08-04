@@ -85,7 +85,7 @@ class mrp_repair(osv.osv):
         for data in self.browse(cr, uid, ids, context=context):
             adr_id = False
             if data.partner_id:
-                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['contact'])['contact']
             res[data.id] = adr_id
         return res
 
@@ -232,11 +232,11 @@ class mrp_repair(osv.osv):
                         'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
                     }
             }
-        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
+        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': addr['delivery'] or addr['default'],
+                    'address_id': addr['delivery'] or addr['contact'],
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }

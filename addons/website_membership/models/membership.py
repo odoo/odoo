@@ -10,8 +10,8 @@ class membership_membership_line(osv.Model):
         if not ids:
             return []
         limit_clause = '' if limit is None else ' LIMIT %d' % limit
-        cr.execute('SELECT DISTINCT p.id \
+        cr.execute("SELECT DISTINCT p.id \
                     FROM res_partner p INNER JOIN membership_membership_line m \
                     ON  p.id = m.partner \
-                    WHERE website_published AND is_company AND m.id IN %s ' + limit_clause, (tuple(ids),))
+                    WHERE website_published AND is_company='company' AND m.id IN %s " + limit_clause,(tuple(ids),))
         return [partner_id[0] for partner_id in cr.fetchall()]

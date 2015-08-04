@@ -673,8 +673,8 @@ class res_partner(osv.Model, format_address):
         Defaults to partners of type ``'default'`` when the exact type is not found, or to the
         provided partner itself if no type ``'default'`` is found either. """
         adr_pref = set(adr_pref or [])
-        if 'default' not in adr_pref:
-            adr_pref.add('default')
+        if 'contact' not in adr_pref:
+            adr_pref.add('contact')
         result = {}
         visited = set()
         if isinstance(ids, (int, long)):
@@ -700,8 +700,8 @@ class res_partner(osv.Model, format_address):
                     break
                 current_partner = current_partner.parent_id
 
-        # default to type 'default' or the partner itself
-        default = result.get('default', ids and ids[0] or False)
+        # default to type 'contact' or the partner itself
+        default = result.get('contact', ids and ids[0] or False)
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default 
         return result

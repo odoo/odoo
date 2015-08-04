@@ -5,7 +5,7 @@
         <!-- Create a transporter -->
         <record id="res_partner_delivery" model="res.partner">
             <field name="name">Transporter (Delivery provider)</field>
-            <field name="is_company" eval="True"/>
+            <field name="is_company">company</field>
             <field name="supplier" eval="True"/>
             <field name="customer" eval="False"/>
         </record>

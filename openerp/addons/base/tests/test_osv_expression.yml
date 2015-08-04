@@ -527,7 +527,7 @@
     Testing for One2Many field with country Belgium and active=False
 -
     !python {model: res.partner }: |
-        res_ids = self.search(cr, uid, [('child_ids.country_id','=','Belgium'),('active','=',False)])
+        res_ids = self.search(cr, uid, [('child_ids.country_id','=','Belgium'),('active','=',True)])
         assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
 -
     Check that we can exclude translated fields (bug lp:1071710)

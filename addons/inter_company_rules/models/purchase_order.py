@@ -74,7 +74,7 @@ class purchase_order(models.Model):
             :param direct_delivery_address : the address of the SO
             :rtype direct_delivery_address : res.partner record
         """
-        partner_addr = partner.sudo().address_get(['default', 'invoice', 'delivery', 'contact'])
+        partner_addr = partner.sudo().address_get(['invoice', 'delivery', 'contact'])
         return {
             'name': self.env['ir.sequence'].sudo().next_by_code('sale.order') or '/',
             'company_id': company.id,
