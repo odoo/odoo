@@ -152,7 +152,7 @@
                                 placeholder="Company"
                                 domain="[('is_company', '=', 'company')]" context="{'default_is_company': 'company', 'default_supplier': supplier, 'default_customer': customer}"
                                 attrs="{'invisible': [('is_company','=', 'company'),('parent_id', '=', False)]}"
-                                on_change="onchange_address(use_parent_address, parent_id)"/>
+                                on_change="onchange_address(parent_id)"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                     </div>
@@ -164,20 +164,15 @@
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
                                 <div class="oe_edit_only">
-                                    <field name="use_parent_address" class="oe_inline"
-                                           on_change="onchange_address(use_parent_address, parent_id)"
-                                           groups="base.group_no_one"/>
-                                    <label for="use_parent_address" 
-                                           groups="base.group_no_one"/>
                                     <button name="open_parent" type="object" string="(edit)" class="oe_link"
-                                        attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                        attrs="{'invisible': ['|',('parent_id','=', False),('type','not in',('contact',))]}"/>
                                 </div>
-                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
-                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="street" placeholder="Street..." class="o_address_street" attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street" attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city" attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' attrs="{'readonly': [('type','=','contact'),('parent_id','&lt;&gt;', False)]}"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                         </group>
@@ -197,7 +192,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts &amp; Addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -207,7 +202,6 @@
                                     <field name="parent_id"/>
                                     <field name="is_company"/>
                                     <field name="function"/>
-                                    <field name="use_parent_address"/>
                                     <field name="phone"/>
                                     <field name="street"/>
                                     <field name="street2"/>
@@ -253,7 +247,7 @@
                                                                 <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
                                                                     <field name="email"/>
                                                                 </a></div>
-                                                                <div t-if="! record.use_parent_address.raw_value">
+                                                                <div t-if="record.type.raw_value != 'contact'">
                                                                     <div>
                                                                         <field name="zip"/>
                                                                         <field name="city"/>
@@ -276,12 +270,11 @@
                                 <form string="Contact / Address">
                                     <sheet>
                                         <field name="type" required="1"
-                                            widget="radio" on_change="onchange_address_type(type)"
+                                            widget="radio"
                                             options="{'horizontal': true}"/>
                                         <hr/>
                                         <group>
                                             <group attrs="{'invisible': [('type','=', 'contact')]}">
-                                                <field name="use_parent_address" groups="base.group_no_one"/>
                                                 <label for="street" string="Address"/>
                                                 <div>
                                                     <div class="o_address_format" name="div_address">
@@ -358,8 +351,8 @@
                    <filter string="Persons" name="type_person" domain="[('is_company','=','person')]"/>
                    <filter string="Companies" name="type_company" domain="[('is_company','=','company')]"/>
                    <separator/>
-                   <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
-                   <filter string="Vendors" name="supplier" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                   <filter string="Customers" name="customer" domain="[('customer','=',1),('parent_id','=',False)]"/>
+                   <filter string="Vendors" name="supplier" domain="[('supplier','=',1),('parent_id','=',False)]"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
@@ -382,6 +375,7 @@
                     <field name="color"/>
                     <field name="display_name"/>
                     <field name="title"/>
+                    <field name="type"/>
                     <field name="email"/>
                     <field name="parent_id"/>
                     <field name="is_company"/>

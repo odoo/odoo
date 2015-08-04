@@ -144,7 +144,6 @@ def _lang_get(self):
     languages = self.env['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
-# fields copy if 'use_parent_address' is checked
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 
 
@@ -254,7 +253,6 @@ class res_partner(osv.Model, format_address):
                 ('person', 'Individual'),
                 ('company', 'Company')
             ], 'Is a Company'),
-        'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
             help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
@@ -310,7 +308,6 @@ class res_partner(osv.Model, format_address):
         'company_id': _default_company,
         'color': 0,
         'is_company': 'person',
-        'use_parent_address': False,
         'image': False,
     }
 
@@ -325,22 +322,11 @@ class res_partner(osv.Model, format_address):
         return super(res_partner, self).copy(default)
 
     @api.multi
-    def onchange_address_type(self, adr_type):
-        if adr_type in ['delivery','invoice','other']:
-            return {'value': {'use_parent_address': False}}
-        return {}
-
-    @api.multi
     def onchange_type(self, is_company):
         value = {'title': False}
-        if is_company=='company':
-            value['use_parent_address'] = False
-            domain = {'title': [('domain', '=', 'partner')]}
-        else:
-            domain = {'title': [('domain', '=', 'contact')]}
-        return {'value': value, 'domain': domain}
+        return {'value': value}
 
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def onchange_address(self, cr, uid, ids, parent_id, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
@@ -354,12 +340,10 @@ class res_partner(osv.Model, format_address):
                                                       'was never correctly set. If an existing contact starts working for a new '
                                                       'company then a new contact should be created under that new '
                                                       'company. You can use the "Discard" button to abandon this change.')}
-            if use_parent_address:
-                parent = self.browse(cr, uid, parent_id, context=context)
-                address_fields = self._address_fields(cr, uid, context=context)
-                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
-        else:
-            result['value'] = {'use_parent_address': False}
+                if partner.type=='contact':
+                    parent = self.browse(cr, uid, parent_id, context=context)
+                    address_fields = self._address_fields(cr, uid, context=context)
+                    result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
         return result
 
     @api.multi
@@ -385,8 +369,6 @@ class res_partner(osv.Model, format_address):
         return values
 
     def _address_fields(self, cr, uid, context=None):
-        """ Returns the list of address fields that are synced from the parent
-        when the `use_parent_address` flag is set. """
         return list(ADDRESS_FIELDS)
 
     def update_address(self, cr, uid, ids, vals, context=None):
@@ -440,14 +422,13 @@ class res_partner(osv.Model, format_address):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if update_values.get('parent_id') or update_values.get('use_parent_address'):
+        if update_values.get('parent_id') or update_values.get('type', 'contact'):
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
-            if partner.parent_id and partner.use_parent_address:
+            if partner.parent_id and (partner.type=='contact'):
                 onchange_vals = self.onchange_address(cr, uid, [partner.id],
-                                                      use_parent_address=partner.use_parent_address,
                                                       parent_id=partner.parent_id.id,
                                                       context=context).get('value', {})
                 partner.update_address(onchange_vals)
@@ -464,7 +445,7 @@ class res_partner(osv.Model, format_address):
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields(cr, uid, context=context)
             if any(field in update_values for field in address_fields):
-                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
+                domain_children = [('parent_id', '=', partner.id), ('type', '=', 'contact')]
                 update_ids = self.search(cr, uid, domain_children, context=context)
                 self.update_address(cr, uid, update_ids, update_values, context=context)
 
@@ -479,14 +460,6 @@ class res_partner(osv.Model, format_address):
             parent.update_address(addr_vals)
             if parent.is_company=='person':
                 parent.write({'is_company': 'company'})
-
-    def unlink(self, cr, uid, ids, context=None):
-        orphan_contact_ids = self.search(cr, uid,
-            [('parent_id', 'in', ids), ('id', 'not in', ids), ('use_parent_address', '=', True)], context=context)
-        if orphan_contact_ids:
-            # no longer have a parent address
-            self.write(cr, uid, orphan_contact_ids, {'use_parent_address': False}, context=context)
-        return super(res_partner, self).unlink(cr, uid, ids, context=context)
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
