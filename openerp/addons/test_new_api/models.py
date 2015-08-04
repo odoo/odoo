@@ -60,10 +60,11 @@ class Category(models.Model):
         # assign name of last category, and reassign display_name (to normalize it)
         self.name = names[-1].strip()
 
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
             raise AccessError('Sorry')
-        return super(Category, self).read(fields, load)
+        return super(Category, self).read(fields=fields, load=load)
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'
