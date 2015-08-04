@@ -146,14 +146,14 @@ var Followers = form_common.AbstractField.extend({
 
     on_remove_follower: function (event) {
         var partner_id = $(event.target).data('id');
-            var name = $(event.target).parent().find("a").html();
-            if (confirm(_.str.sprintf(_t("Warning! \n %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"), name))) {
-                var context = new data.CompoundContext(this.build_context(), {});
-                return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id], 
-                                                                  [partner_id], 
-                                                                  context])
-                    .then(this.proxy('read_value'));
-            }
+        var name = $(event.target).parent().find("a").html();
+        if (confirm(_.str.sprintf(_t("Warning! \n %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"), name))) {
+            var context = new data.CompoundContext(this.build_context(), {});
+            return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id],
+                                                              [partner_id],
+                                                              context])
+                .then(this.proxy('read_value'));
+        }
     },
 
     on_follower_clicked: function  (event) {
@@ -192,7 +192,7 @@ var Followers = form_common.AbstractField.extend({
 
     fetch_followers: function (value_) {
         this.value = value_ || [];
-        ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
+        return ajax.jsonRpc('/mail/read_followers', 'call', {'follower_ids': this.value})
             .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
             .then(this.proxy('display_buttons'))
             .then(this.proxy('fetch_subtypes'));
