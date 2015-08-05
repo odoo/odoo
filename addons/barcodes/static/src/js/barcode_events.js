@@ -26,7 +26,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         this.__handler = this.handler.bind(this);
         // Bind event handler once the DOM is loaded
         // TODO: find a way to be active only when there are listeners on the bus
-        $(this.start.bind(this));
+        $(this.start.bind(this, false));
     },
 
     handle_buffered_keys: function() {
@@ -151,7 +151,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
 
     start: function(prevent_key_repeat){
         document.body.addEventListener('keypress', this.__handler, true);
-        if (prevent_key_repeat) {
+        if (prevent_key_repeat === true) {
             document.body.addEventListener('keydown', this.__keydown_handler, true);
             document.body.addEventListener('keyup', this.__keyup_handler, true);
         }
