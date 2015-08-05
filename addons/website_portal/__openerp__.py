@@ -9,16 +9,10 @@ Allows your customers to manage their account from a beautiful web interface.
     'author': 'Odoo SA',
     'website': 'https://www.odoo.com/',
     'depends': [
-        'sale',
         'website',
     ],
     'data': [
         'views/templates.xml',
-    ],
-    'qweb': [
-    ],
-    'demo': [
-        'data/demo.xml'
     ],
     'installable': True,
 }

@@ -1435,7 +1435,7 @@
 </template>
 
 <!-- Add a link to the product page in the portal orders followup page -->
-<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal.orders_followup">
+<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
     <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
         <a t-att-href="ol.product_id.website_url">
             <span t-esc="ol.product_id.name"/>
