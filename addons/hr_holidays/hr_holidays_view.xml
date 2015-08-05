@@ -30,7 +30,7 @@
                     <separator/>
                     <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leave Requests"/>
                     <separator/>
-                    <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <filter string="My Department Leaves" help="My Department Leaves" domain="[('department_id.manager_id.user_id','=',uid)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
