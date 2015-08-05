@@ -56,6 +56,7 @@ var KanbanRecord = Widget.extend({
             record: this.record,
             widget: this,
             read_only_mode: this.read_only_mode,
+            user_context: session.user_context,
         };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
