@@ -13,8 +13,8 @@
         'website_portal',
     ],
     'data': [
+        'views/website_payment_view.xml',
         'views/website_payment_templates.xml',
-        'views/website_settings_payment.xml',
     ],
     'auto_install': False,
 }

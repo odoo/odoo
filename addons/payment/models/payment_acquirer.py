@@ -99,7 +99,7 @@ class PaymentAcquirer(osv.Model):
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
-        'environment': 'test',
+        'environment': 'prod',
         'validation': 'manual',
         'website_published': False,
         'auto_confirm': 'at_pay_confirm',
@@ -335,7 +335,7 @@ class PaymentAcquirer(osv.Model):
 
     def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, company_id=None, context=None):
         html_forms = []
-        domain = [('website_published', '=', True), ('validation', '=', 'automatic')]
+        domain = [('validation', '=', 'automatic')]
         if company_id:
             domain.append(('company_id', '=', company_id))
         acquirer_ids = self.search(cr, uid, domain, context=context)
@@ -351,9 +351,6 @@ class PaymentAcquirer(osv.Model):
         html_block = '\n'.join(filter(None, html_forms))
         return self._wrap_payment_block(cr, uid, html_block, amount, currency_id, context=context)
 
-    def website_publish_button(self, cr, uid, ids, context=None):
-        for i in self.browse(cr, uid, ids, context=context):
-            i.website_published = not i.website_published
 
 class PaymentTransaction(osv.Model):
     """ Transaction Model. Each specific acquirer can extend the model by adding
