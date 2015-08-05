@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="acquirer_form_paypal" model="ir.ui.view">
             <field name="name">acquirer.form.paypal</field>
             <field name="model">payment.acquirer</field>
@@ -12,10 +11,10 @@
                         <field name="paypal_email_account"/>
                         <field name="paypal_seller_account"/>
                         <field name="paypal_use_ipn"/>
-                        <field name="paypal_api_enabled" invisible="1"/>
-                        <field name="paypal_api_username" invisible="1"/>
-                        <field name="paypal_api_password" invisible="1"/>
                         <a colspan="2" href="https://www.paypal.com/in/cgi-bin/webscr?cmd=xpt/Marketing/general/how-to-set-up-a-paypal-account-outside" target="_blank">How to configure your paypal account?</a>
+
+                        <field name="paypal_client_id"/>
+                        <field name="paypal_client_secret" password="True"/>
                     </group>
                 </xpath>
             </field>
@@ -35,6 +34,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

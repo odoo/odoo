@@ -39,5 +39,39 @@
             </form>
         </template>
 
+        <template id="paypal_direct_form">
+            <form method="post" t-att-action="'/payment/paypal/s2s/create' if not json else '/payment/paypal/s2s/create_json'">
+                <div t-att-class="'row' if bootstrap_formatting else ''">
+                    <div t-att-class="'form-group col-md-8' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_number">Card number</label>
+                        <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;"/>
+                        <div class="card_placeholder"></div>
+                        <div class="visa"></div>
+                        <input type="hidden" name="cc_brand" value=""/>
+                    </div>
+                    <div t-att-class="'form-group col-md-4' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_cvv">CVV</label>
+                        <input type="text" name="cc_cvv" id="cc_cvv" class="form-control" maxlength="4" placeholder="CVV"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-7' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_holder_name">Name</label>
+                        <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-5' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_expires_mm">Expires</label>
+                        <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="MM / YY"/>
+                    </div>
+                    <input class="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="acquirer_id" t-att-value="id"/>
+                    <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                    <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                    <div class="clearfix"/>
+                </div>
+                <button t-att-class="submit_class" class="btn btn-primary" type="submit">
+                    <span t-if="not submit_txt">Confirm <span class="fa fa-long-arrow-right"></span></span>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
+            </form>
+        </template>
     </data>
 </openerp>
