@@ -19,7 +19,6 @@ var _lt = core._lt;
 var QWeb = core.qweb;
 
 function get_fc_defaultOptions() {
-    var shortTimeformat = moment._locale._longDateFormat.LT;
     var dateFormat = time.strftime_to_moment_format(_t.database.parameters.date_format);
 
     // adapt format for fullcalendar v1.
@@ -38,13 +37,6 @@ function get_fc_defaultOptions() {
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
         weekNumbers: true,
-        axisFormat : shortTimeformat.replace(/:mm/,'(:mm)'),
-        timeFormat : {
-           // for agendaWeek and agendaDay               
-           agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
-            // for all other views
-            '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
-        },
         titleFormat: {
             month: 'MMMM yyyy',
             week: "W",
@@ -56,7 +48,6 @@ function get_fc_defaultOptions() {
             day: 'dddd ' + dateFormat,
         },
         weekMode : 'liquid',
-        aspectRatio: 1.8,
         snapMinutes: 15,
     };
 }
@@ -276,8 +267,7 @@ var CalendarView = View.extend({
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var self = this;
-        return  $.extend({}, get_fc_defaultOptions(), {
-            
+        return $.extend({}, get_fc_defaultOptions(), {
             defaultView: (this.mode == "month")? "month" : ((this.mode == "week")? "agendaWeek" : ((this.mode == "day")? "agendaDay" : "agendaWeek")),
             header: false,
             selectable: !this.options.read_only_mode && this.create_right,
@@ -286,7 +276,6 @@ var CalendarView = View.extend({
             droppable: true,
 
             // callbacks
-
             viewRender: function(view) {
                 var mode = (view.name == "month")? "month" : ((view.name == "agendaWeek") ? "week" : "day");
                 if(self.$buttons !== undefined) {
@@ -296,6 +285,8 @@ var CalendarView = View.extend({
 
                 var title = self.title + ' (' + ((mode === "week")? _t("Week ") : "") + view.title + ")"; 
                 self.set({'title': title});
+
+                self.$calendar.fullCalendar('option', 'height', parseInt(self.$('.o_calendar_view').height()));
             },
             eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                 var data = self.get_event_data(event);
@@ -348,16 +339,14 @@ var CalendarView = View.extend({
     },
 
     init_calendar: function() {
-        var self = this;
-
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
             this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
 
-            this.$small_calendar = self.$(".o_calendar_mini");
+            this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
-                onSelect: self.calendarMiniChanged(self),
+                onSelect: this.calendarMiniChanged(this),
                 dayNamesMin : translate.dayNamesShort,
                 monthNames: translate.monthNamesShort,
                 firstDay: translate.firstDay,
@@ -365,12 +354,11 @@ var CalendarView = View.extend({
 
             this.extraSideBar();                
         }
-        self.$calendar.fullCalendar(self.get_fc_init_options());
-        
+        this.$calendar.fullCalendar(this.get_fc_init_options());
+
         return $.when();
     },
-    extraSideBar: function() {
-    },
+    extraSideBar: function() {},
 
     get_quick_create_class: function () {
         return widgets.QuickCreate;

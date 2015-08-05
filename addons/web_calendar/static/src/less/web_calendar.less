@@ -2,6 +2,7 @@
 @nb-calendar-colors: 24;
 
 .o_calendar_container {
+    height: 100%;
     padding: @o-calendar-div-padding (@odoo-horizontal-padding - @o-calendar-div-padding);
 
     .calendar_color_loop(@index) when (@index < @nb-calendar-colors+1) {
@@ -24,6 +25,7 @@
     .underline_color_loop(1);
 
     .o_calendar_view {
+        height: 100%;
         padding: @o-calendar-div-padding;
 
         .o_calendar_widget {
