@@ -829,11 +829,11 @@ class website_sale(http.Controller):
             else:
                 tx = request.registry['payment.transaction'].browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
                 state = tx.state
-                flag = True if state == 'pending' and tx.acquirer_id.validation == 'automatic' else False
+                flag = state == 'pending'
                 values.update({
                     'tx_ids': True,
                     'state': state,
-                    'validation' : tx.acquirer_id.validation,
+                    'validation': tx.acquirer_id.auto_confirm == 'none',
                     'tx_post_msg': tx.acquirer_id.post_msg or None
                 })
 

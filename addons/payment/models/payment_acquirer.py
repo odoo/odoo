@@ -87,10 +87,6 @@ class PaymentAcquirer(osv.Model):
         'pre_msg': fields.html('Help Message', translate=True,
                                help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
-        'validation': fields.selection(
-            [('manual', 'Manual'), ('automatic', 'Automatic')],
-            string='Process Method',
-            help='Static payments are payments like transfer, that require manual steps.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'registration_view_template_id': fields.many2one('ir.ui.view', 'S2S Form Template',
                                                          domain=[('type', '=', 'qweb')],
@@ -337,39 +333,6 @@ class PaymentAcquirer(osv.Model):
             method = getattr(self, cust_method_name)
             return method(cr, uid, id, data, context=context)
         return True
-
-    def _wrap_payment_block(self, cr, uid, html_block, amount, currency_id, context=None):
-        payment_header = _('Pay safely online')
-        currency = self.pool['res.currency'].browse(cr, uid, currency_id, context=context)
-        amount_str = float_repr(amount, currency.decimal_places)
-        currency_str = currency.symbol or currency.name
-        amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))
-        result = u"""<div class="payment_acquirers">
-                         <div class="payment_header">
-                             <div class="payment_amount">%s</div>
-                             %s
-                         </div>
-                         %%s
-                     </div>""" % (amount, payment_header)
-        return result % html_block.decode("utf-8")
-
-    def render_payment_block(self, cr, uid, reference, amount, currency_id, tx_id=None, partner_id=False, partner_values=None, tx_values=None, company_id=None, context=None):
-        html_forms = []
-        domain = [('validation', '=', 'automatic')]
-        if company_id:
-            domain.append(('company_id', '=', company_id))
-        acquirer_ids = self.search(cr, uid, domain, context=context)
-        for acquirer_id in acquirer_ids:
-            button = self.render(
-                cr, uid, acquirer_id,
-                reference, amount, currency_id,
-                tx_id, partner_id, partner_values, tx_values,
-                context)
-            html_forms.append(button)
-        if not html_forms:
-            return ''
-        html_block = '\n'.join(filter(None, html_forms))
-        return self._wrap_payment_block(cr, uid, html_block, amount, currency_id, context=context)
 
 
 class PaymentTransaction(osv.Model):
