@@ -1,4 +1,4 @@
-odoo.define('web_tests.tour', function (require) {
+odoo.define('web.test.x2many', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
