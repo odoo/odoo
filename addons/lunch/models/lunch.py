@@ -93,20 +93,11 @@ class LunchOrder(models.Model):
     @api.one
     @api.depends('user_id')
     def _compute_cash_move_balance(self):
-        # To avoid hardcoding who can(not) see a given user's cash moves, searching
-        # in superuser then trying to access it in current user is the only way to
-        # know whether we have the right to see this or not. Trying to search with
-        # the current user directly would simply hide the records we are not supposed
-        # to see, preventing us from knowing whether we can't see those cash moves due
-        # to security reasons or we can see them but there aren't any for this user.
-        try:
-            domain = [('user_id', '=', self.user_id.id)]
-            lunch_move_ids = self.env['lunch.cashmove'].sudo().search(domain).sudo(self.env.uid)
-            self.cash_move_balance = sum(lunch_move_ids.mapped('amount'))
-            self.balance_visible = True
-        except AccessError:
-            self.cash_move_balance = 0
-            self.balance_visible = False
+        domain = [('user_id', '=', self.user_id.id)]
+        lunch_cash = self.env['lunch.cashmove'].read_group(domain, ['amount', 'user_id'], ['user_id'])
+        if len(lunch_cash):
+            self.cash_move_balance = lunch_cash[0]['amount']
+        self.balance_visible = (self.user_id == self.env.user) or self.user_has_groups('lunch.group_lunch_manager')
 
     @api.one
     @api.constrains('date')
