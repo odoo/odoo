@@ -299,7 +299,7 @@ class WebsiteForum(http.Controller):
 
     # Post
     # --------------------------------------------------
-    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="user", methods=['POST'], website=True)
+    @http.route(['/forum/<model("forum.forum"):forum>/ask'], type='http', auth="user", website=True)
     def forum_post(self, forum, post_type=None, **post):
         user = request.env.user
         if post_type not in ['question', 'link', 'discussion']:  # fixme: make dynamic
