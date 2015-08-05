@@ -40,6 +40,10 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+# workaround https://bugs.launchpad.net/openobject-server/+bug/947231
+# related to http://bugs.python.org/issue7980
+from datetime import datetime
+datetime.strptime('2012-01-01', '%Y-%m-%d')
 
 class EscposDriver(Thread):
     def __init__(self):
