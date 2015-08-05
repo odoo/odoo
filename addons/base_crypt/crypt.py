@@ -138,10 +138,10 @@ class users(osv.osv):
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
 
         obj = pooler.get_pool(cr.dbname).get('res.users')
-        if not hasattr(obj, "_salt_cache"):
-            obj._salt_cache = {}
+        if not hasattr(obj, "_salt_cache__"):
+            obj._salt_cache__ = {}
 
-        salt = obj._salt_cache[id] = gen_salt()
+        salt = obj._salt_cache__[id] = gen_salt()
         encrypted = encrypt_md5(value, salt)
         cr.execute('update res_users set password=%s where id=%s',
             (encrypted.encode('utf-8'), int(id)))
@@ -203,9 +203,9 @@ class users(osv.osv):
         # Calculate an encrypted password from the user-provided
         # password.
         obj = pooler.get_pool(db).get('res.users')
-        if not hasattr(obj, "_salt_cache"):
-            obj._salt_cache = {}
-        salt = obj._salt_cache[id] = stored_pw[len(magic_md5):11]
+        if not hasattr(obj, "_salt_cache__"):
+            obj._salt_cache__ = {}
+        salt = obj._salt_cache__[id] = stored_pw[len(magic_md5):11]
         encrypted_pw = encrypt_md5(password, salt)
     
         # Check if the encrypted password matches against the one in the db.
@@ -227,17 +227,17 @@ class users(osv.osv):
 
         # Get a chance to hash all passwords in db before using the uid_cache.
         obj = pooler.get_pool(db).get('res.users')
-        if not hasattr(obj, "_salt_cache"):
-            obj._salt_cache = {}
-            self._uid_cache.get(db, {}).clear()
+        if not hasattr(obj, "_salt_cache__"):
+            obj._salt_cache__ = {}
+            self._uid_cache__.get(db, {}).clear()
 
-        cached_pass = self._uid_cache.get(db, {}).get(uid)
+        cached_pass = self._uid_cache__.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
         cr = pooler.get_db(db).cursor()
         try:
-            if uid not in self._salt_cache.get(db, {}):
+            if uid not in self._salt_cache__.get(db, {}):
                 # If we don't have cache, we have to repeat the procedure
                 # through the login function.
                 cr.execute( 'SELECT login FROM res_users WHERE id=%s', (uid,) )
@@ -249,7 +249,7 @@ class users(osv.osv):
                 if not res:
                     raise security.ExceptionNoTb('AccessDenied')
             else:
-                salt = self._salt_cache[db][uid]
+                salt = self._salt_cache__[db][uid]
                 cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active', 
                     (int(uid), encrypt_md5(passwd, salt)))
                 res = cr.fetchone()[0]
@@ -260,11 +260,11 @@ class users(osv.osv):
             raise security.ExceptionNoTb('AccessDenied')
 
         if res:
-            if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
+            if self._uid_cache__.has_key(db):
+                ulist = self._uid_cache__[db]
                 ulist[uid] = passwd
             else:
-                self._uid_cache[db] = {uid: passwd}
+                self._uid_cache__[db] = {uid: passwd}
         return bool(res)
     
     def maybe_encrypt(self, cr, pw, id):

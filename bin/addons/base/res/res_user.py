@@ -95,7 +95,7 @@ def _tz_get(self,cr,uid, context=None):
 
 class users(osv.osv):
     __admin_ids = {}
-    _uid_cache = {}
+    _uid_cache__ = {}
     _name = "res.users"
     _order = 'name'
 
@@ -380,10 +380,10 @@ class users(osv.osv):
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self._uid_cache__:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
+                if id in self._uid_cache__[db]:
+                    del self._uid_cache__[db][id]
 
         return res
 
@@ -391,10 +391,10 @@ class users(osv.osv):
         if 1 in ids:
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self._uid_cache__:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
+                if id in self._uid_cache__[db]:
+                    del self._uid_cache__[db][id]
         return super(users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -487,7 +487,7 @@ class users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise security.ExceptionNoTb('AccessDenied')
-        if self._uid_cache.get(db, {}).get(uid) == passwd:
+        if self._uid_cache__.get(db, {}).get(uid) == passwd:
             return
         cr = pooler.get_db(db).cursor()
         try:
@@ -496,11 +496,11 @@ class users(osv.osv):
             res = cr.fetchone()[0]
             if not res:
                 raise security.ExceptionNoTb('AccessDenied')
-            if self._uid_cache.has_key(db):
-                ulist = self._uid_cache[db]
+            if self._uid_cache__.has_key(db):
+                ulist = self._uid_cache__[db]
                 ulist[uid] = passwd
             else:
-                self._uid_cache[db] = {uid:passwd}
+                self._uid_cache__[db] = {uid:passwd}
         finally:
             cr.close()
 

@@ -170,7 +170,7 @@ class users(osv.osv):
                             # but these have been rejected above, so we're safe to use bind()
                             if l.bind_s(dn, passwd):
                                 l.unbind()
-                                self._uid_cache.setdefault(db, {})[uid] = passwd
+                                self._uid_cache__.setdefault(db, {})[uid] = passwd
                                 cr.close()
                                 return True
                         l.unbind()
