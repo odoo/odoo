@@ -193,10 +193,10 @@ class account_voucher(osv.osv):
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
             if isinstance(l, dict):
-                debit += l['amount']
+                debit += l['amount_unreconciled']
         for l in line_cr_ids:
             if isinstance(l, dict):
-                credit += l['amount']
+                credit += l['amount_unreconciled']
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
@@ -230,9 +230,9 @@ class account_voucher(osv.osv):
             debit = credit = 0.0
             sign = voucher.type == 'payment' and -1 or 1
             for l in voucher.line_dr_ids:
-                debit += l.amount
+                debit += l.amount_unreconciled
             for l in voucher.line_cr_ids:
-                credit += l.amount
+                credit += l.amount_unreconciled
             currency = voucher.currency_id or voucher.company_id.currency_id
             res[voucher.id] =  currency_obj.round(cr, uid, currency, voucher.amount - sign * (credit - debit))
         return res
@@ -1213,6 +1213,7 @@ class account_voucher(osv.osv):
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
             amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher.id, context=ctx)
+            amount_with_writeoff = self._convert_amount(cr, uid, line.amount_unreconciled, voucher.id, context=ctx) if voucher.payment_option == 'with_writeoff' else 0.0
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
@@ -1245,10 +1246,10 @@ class account_voucher(osv.osv):
 
             if (line.type=='dr'):
                 tot_line += amount
-                move_line['debit'] = amount
+                move_line['debit'] = amount_with_writeoff or amount
             else:
                 tot_line -= amount
-                move_line['credit'] = amount
+                move_line['credit'] = amount_with_writeoff or amount
 
             if voucher.tax_id and voucher.type in ('sale', 'purchase'):
                 move_line.update({
@@ -1325,8 +1326,8 @@ class account_voucher(osv.osv):
         voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
 
-        if not currency_obj.is_zero(cr, uid, current_currency_obj, line_total):
-            diff = line_total
+        diff = voucher.writeoff_amount if voucher.payment_option == 'with_writeoff' else line_total
+        if not currency_obj.is_zero(cr, uid, current_currency_obj, diff):
             account_id = False
             write_off_name = ''
             if voucher.payment_option == 'with_writeoff':
