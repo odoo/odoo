@@ -5,7 +5,6 @@ class TestPayment(AccountingTestCase):
 
     def setUp(self):
         super(TestPayment, self).setUp()
-        self.register_payments_model = self.env['account.register.payments']
         self.payment_model = self.env['account.payment']
         self.invoice_model = self.env['account.invoice']
         self.invoice_line_model = self.env['account.invoice.line']
@@ -119,12 +118,11 @@ class TestPayment(AccountingTestCase):
         inv_2 = self.create_invoice(amount=200, currency_id=self.currency_eur_id)
 
         ctx = { 'active_model': 'account.invoice', 'active_ids': [inv_1.id, inv_2.id] }
-        register_payments = self.register_payments_model.with_context(ctx).create({
+        self.payment_model.with_context(ctx).create({
             'payment_date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
-        })
-        register_payments.create_payment()
+        }).post()
         payment = self.payment_model.search([], order="id desc", limit=1)
 
         self.assertAlmostEquals(payment.amount, 300)
@@ -134,7 +132,8 @@ class TestPayment(AccountingTestCase):
 
         self.check_journal_items(payment.move_line_ids, [
             {'account_id': self.account_eur.id, 'debit': 300.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 300.0, 'amount_currency': 00, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 100.0, 'amount_currency': 00, 'currency_id': False},
+            {'account_id': inv_2.account_id.id, 'debit': 0.0, 'credit': 200.0, 'amount_currency': 00, 'currency_id': False},
         ])
 
         liquidity_aml = payment.move_line_ids.filtered(lambda r: r.account_id == self.account_eur)

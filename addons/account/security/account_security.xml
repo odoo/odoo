@@ -113,5 +113,12 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="account_payment_invoice_allocation_comp_rule">
+        <field name="name">Account payment invoice allocation company rule</field>
+        <field name="model_id" ref="model_account_payment_invoice_allocation"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('payment_id.company_id','=',False),('payment_id.company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </openerp>
