@@ -706,7 +706,7 @@ def parse_m2m(commands):
     for command in commands:
         if isinstance(command, (tuple, list)):
             if command[0] in (1, 4):
-                ids.append(command[2])
+                ids.append(command[1])
             elif command[0] == 5:
                 ids = []
             elif command[0] == 6:

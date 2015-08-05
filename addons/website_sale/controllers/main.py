@@ -766,8 +766,8 @@ class website_sale(http.Controller):
                 message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
-            else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+            elif state == 'error':
+                message = '<p>%s</p>' % _('An error occured during the transaction.')
             validation = tx.acquirer_id.validation
 
         return {
