@@ -1,1 +1,1 @@
-import picking_to_wave
+import stock_picking_to_wave
