@@ -465,6 +465,7 @@ class Home(http.Controller):
         if kw.get('redirect'):
             return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
+        request.uid = request.session.uid
         menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
         return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
 
