@@ -13,7 +13,7 @@
                 <button name="button_send_appraisal" string="Start Appraisal and Send Forms" states="new" type="object" class="oe_highlight"  groups="base.group_hr_user"/>
                 <button name="button_done_appraisal" string="Done" states="pending" type="object"  groups="base.group_hr_user"/>
                 <button name="button_cancel_appraisal" string="Cancel" states="pending" type="object"  groups="base.group_hr_user"/>
-                <field name="state" widget="statusbar" statusbar_visible="new,pending,done" />
+                <field name="state" widget="statusbar" statusbar_visible="new,pending,done" options="{'fold_field': 'fold'}"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -35,7 +35,7 @@
                         <field name="date_close" attrs="{'readonly':[('state','in', ('pending','done'))]}"/>
                     </group>
                     <group>
-                        <field name="date_final_interview"/>
+                        <field name="date_final_interview" attrs="{'readonly':[('state', 'in', ['done','cancel'])]}"/>
                         <field name="mail_template_id" attrs="{'readonly':[('state', '!=', 'new')]}" groups="base.group_no_one"/>
                         <field name="meeting_id" invisible="True"/>
                         <field name="company_id" invisible="True"/>

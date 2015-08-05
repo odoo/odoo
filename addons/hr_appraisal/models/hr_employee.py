@@ -58,8 +58,8 @@ class HrEmployee(models.Model):
 
     @api.onchange('appraisal_by_colleagues')
     def onchange_colleagues(self):
-        if self.appraisal_by_colleagues and self.department_id:
-            self.appraisal_colleagues_ids = self.search([('department_id', '=', self.department_id.id), ('id', '!=', self._origin.id)])
+        if self.appraisal_by_colleagues and self.department_id and self.parent_id:
+            self.appraisal_colleagues_ids = self.search([('department_id', '=', self.department_id.id), ('id', '!=', self._origin.id), ('parent_id', '=', self.parent_id.id)])
         else:
             self.appraisal_colleagues_ids = False
 

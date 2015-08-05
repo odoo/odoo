@@ -79,16 +79,23 @@ class HrAppraisal(models.Model):
             self.collaborators_survey_id = self.employee_id.appraisal_collaborators_survey_id
 
     @api.multi
-    def subscribe_employee(self):
+    def subscribe_employees(self):
+        """
+        Subscribes the employee and his manager to the appraisal thread.
+        Also subscribes other employees designed as manager for this appraisal, and the manager of the employee's department if he's different from the employee's direct manager.
+        """
         for appraisal in self:
-            emp_partner_ids = [emp.related_partner_id.id for emp in appraisal.manager_ids if emp.related_partner_id]
+            partner_ids = [emp.related_partner_id.id for emp in appraisal.manager_ids if emp.related_partner_id]
+
             if appraisal.employee_id.related_partner_id:
-                emp_partner_ids.append(appraisal.employee_id.related_partner_id.id)
-            if appraisal.employee_id.department_id.manager_id.related_partner_id:
-                emp_partner_ids.append(appraisal.employee_id.department_id.manager_id.related_partner_id.id)
+                partner_ids.append(appraisal.employee_id.related_partner_id.id)
             if appraisal.employee_id.parent_id.related_partner_id:
-                emp_partner_ids.append(appraisal.employee_id.parent_id.related_partner_id.id)
-            appraisal.message_subscribe(partner_ids=emp_partner_ids)
+                partner_ids.append(appraisal.employee_id.parent_id.related_partner_id.id)
+            if appraisal.employee_id.department_id.manager_id.related_partner_id:
+                partner_ids.append(appraisal.employee_id.department_id.manager_id.related_partner_id.id)
+
+            partner_ids = list(set(partner_ids))
+            appraisal.message_subscribe(partner_ids=partner_ids)
         return True
 
     @api.multi
@@ -170,7 +177,7 @@ class HrAppraisal(models.Model):
     @api.model
     def create(self, vals):
         result = super(HrAppraisal, self.with_context(mail_create_nolog=True)).create(vals)
-        result.subscribe_employee()
+        result.subscribe_employees()
         date_final_interview = vals.get('date_final_interview')
         if date_final_interview:
             # creating employee meeting and interview date
@@ -179,10 +186,8 @@ class HrAppraisal(models.Model):
 
     @api.multi
     def write(self, vals):
-        if vals.get('date_close') and fields.Date.from_string(vals.get('date_close')) < datetime.date.today():
-            raise UserError(_("The appraisal deadline cannot be in the past"))
         result = super(HrAppraisal, self).write(vals)
-        self.subscribe_employee()
+        self.subscribe_employees()
         date_final_interview = vals.get('date_final_interview')
         if date_final_interview:
             # creating employee meeting and interview date
@@ -216,6 +221,8 @@ class HrAppraisal(models.Model):
                 if not res:
                     res = filter(lambda x: x['state'] == state_value, read_group_all_states)
                 res[0]['state'] = [state_value, state_name]
+                if res[0]['state'][0] == 'done' or res[0]['state'][0] == 'cancel':
+                    res[0]['__fold'] = True
                 result.append(res[0])
             return result
         else:
@@ -251,6 +258,8 @@ class HrAppraisal(models.Model):
 
     @api.multi
     def button_send_appraisal(self):
+        if self.date_close <= fields.Date.today():
+            raise UserError(_("The appraisal deadline must be in the future to allow employees to answer the survey."))
         self.send_appraisal()
         self.state = 'pending'
 
