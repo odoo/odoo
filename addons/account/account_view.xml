@@ -1197,8 +1197,8 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
-                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="period_id" options='{"no_open":True}'/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>

@@ -76,11 +76,12 @@ class document_file(osv.osv):
         super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
         
         if ids:
-            self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
-
             # use SQL to avoid recursive loop on read
             cr.execute('SELECT DISTINCT parent_id from ir_attachment WHERE id in %s AND parent_id is not NULL', (tuple(ids),))
-            self.pool.get('document.directory').check_access_rule(cr, uid, [parent_id for (parent_id,) in cr.fetchall()], mode, context=context)
+            parent_ids = [parent_id for (parent_id,) in cr.fetchall()]
+            if parent_ids:
+                self.pool.get('ir.model.access').check(cr, uid, 'document.directory', mode)
+                self.pool.get('document.directory').check_access_rule(cr, uid, parent_ids, mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # Grab ids, bypassing 'count'

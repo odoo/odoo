@@ -92,7 +92,7 @@
             <t t-if="attachment.file_type_icon !== 'webimage'">
                 <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
                     <a t-att-href='attachment.url' target="_blank">
-                        <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
+                        <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon or 'unknown')  + '.png'"></img>
                         <div class='oe_name'><t t-raw='attachment.name' /></div>
                     </a>
                     <div t-if="!attachment.upload" class='oe_delete oe_e' title="Delete this attachment" t-att-data-id="attachment.id">[</div>

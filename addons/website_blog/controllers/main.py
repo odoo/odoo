@@ -5,6 +5,7 @@ import werkzeug
 
 from openerp import tools
 from openerp.addons.web import http
+from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
 from openerp.osv.orm import browse_record
@@ -255,15 +256,19 @@ class WebsiteBlog(http.Controller):
             context=context)
         return message_id
 
-    @http.route(['/blogpost/comment'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/blogpost/comment'], type='http', auth="public", website=True)
     def blog_post_comment(self, blog_post_id=0, **post):
         cr, uid, context = request.cr, request.uid, request.context
+        if not request.session.uid:
+            return login_redirect()
         if post.get('comment'):
+
             user = request.registry['res.users'].browse(cr, uid, uid, context=context)
             blog_post = request.registry['blog.post']
             blog_post.check_access_rights(cr, uid, 'read')
             self._blog_post_message(user, blog_post_id, **post)
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+        blog_post = request.registry['blog.post'].browse(cr, uid, int(blog_post_id), context=context)
+        return werkzeug.utils.redirect("/blog/%s/post/%s#comments" % (slug(blog_post.blog_id), slug(blog_post)))
 
     def _get_discussion_detail(self, ids, publish=False, **post):
         cr, uid, context = request.cr, request.uid, request.context

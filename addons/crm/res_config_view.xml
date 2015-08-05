@@ -47,6 +47,13 @@
                                 will create a new lead.
                             </p>
                         </div>
+                        <div attrs="{'invisible': [('alias_domain', '!=', False)]}">
+                            <p>
+                                To be able to set your Leads Email Alias, you need to fill your alias domain first.
+                            </p>
+                            <button type="action" name="%(base_setup.action_general_configuration)d"
+                                string="Configure alias domain" class="oe_link" />
+                        </div>
                     </group>
                 </xpath>
                 </data>

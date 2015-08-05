@@ -128,6 +128,8 @@
                     on_change="on_change_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
+                <field name="partner_mobile"
+                    invisible="1"/>
                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"

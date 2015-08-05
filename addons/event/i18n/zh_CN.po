@@ -3,14 +3,16 @@
 # * event
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# leangjia <liangjia@qq.com>, 2015
+# SHOM <shanmuxin@yeah.net>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 13:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-07-30 06:48+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr ""
+msgstr "\n        <p> ${object.name},你好。</p>\n        <p>你报名参加的活动 ${object.event_id.name} 已确认。活动开始时间为 ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} ，结束时间为 ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}。\n        若您想了解本次活动的详细信息，烦请联系我们有关部门。</p>\n        <p>感谢您的参与!</p>\n        <p>敬祝安好</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -586,7 +588,7 @@ msgid ""
 "                Picture of the exhibition hall\n"
 "            </div>\n"
 "        "
-msgstr ""
+msgstr "<div>\n                <h2>展厅</h2>\n            </div>\n            <div>\n                展厅图片\n            </div>\n        "
 
 #. module: event
 #: model:event.event,badge_innerleft:event.event_1
@@ -715,7 +717,7 @@ msgstr "参加活动"
 #. module: event
 #: field:event.event,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "可用席位"
 
 #. module: event
 #: view:event.confirm:event.view_event_confirm
@@ -919,7 +921,7 @@ msgstr "事件日期"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Event Description..."
-msgstr ""
+msgstr "活动描述..."
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -929,12 +931,12 @@ msgstr "事件详情"
 #. module: event
 #: view:report.event.registration:event.view_report_event_registration_search
 msgid "Event Month"
-msgstr ""
+msgstr "活动月份"
 
 #. module: event
 #: field:event.event,name:0
 msgid "Event Name"
-msgstr ""
+msgstr "活动名称"
 
 #. module: event
 #: view:event.event:event.view_event_calendar
@@ -953,7 +955,7 @@ msgstr "活动登记记录"
 #: code:addons/event/event.py:348
 #, python-format
 msgid "Event Registration confirmed."
-msgstr ""
+msgstr "事件登记已确认。"
 
 #. module: event
 #: field:report.event.registration,user_id:0
@@ -1220,7 +1222,7 @@ msgstr "没有可用的入场券"
 #. module: event
 #: field:report.event.registration,nbevent:0
 msgid "Number of Events"
-msgstr ""
+msgstr "活动数量"
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -1230,7 +1232,7 @@ msgstr "参与者数目"
 #. module: event
 #: field:event.event,seats_used:0
 msgid "Number of Participations"
-msgstr ""
+msgstr "参与者人数"
 
 #. module: event
 #: field:report.event.registration,nbregistration:0
@@ -1322,7 +1324,7 @@ msgstr "活动日期"
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Day"
-msgstr ""
+msgstr "登记日期"
 
 #. module: event
 #: view:event.registration:event.view_registration_search

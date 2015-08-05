@@ -1,0 +1,187 @@
+
+
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400,900,300italic,400italic);
+
+// Typography
+@font-size-base: 16px;
+@text-color: @doc_text;
+
+@headings-font-family : Lato, sans-serif;
+@headings-color       : @doc_heading;
+@headings-font-weight : 300;
+
+//** Global textual link color.
+a {.transition(color 0.1s linear); }
+@link-color:            darken(@doc_accent,10%);
+@link-hover-color:      @doc_heading;
+@link-hover-decoration: underline;
+
+
+main, #navClone {
+  font-size: 0.875em;
+  line-height: 1.642857143em;
+}
+main article {
+  h1, .h1 {
+    font-size: 4.214285714em;
+    line-height: 1.169491527em;
+    margin-top: 0.77966102em;
+    margin-bottom: 0.38983051em;
+  }
+  h2, .h2 {
+    font-size: 2.642857143em;
+    line-height: 1.243243244em;
+    margin-top: 1.24324324em;
+    margin-bottom: 0.62162162em;
+    code{font-size: .5em;}
+  }
+  h3, .h3 {
+    font-size: 1.642857143em;
+    line-height: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    code{font-size: .5em;}
+  }
+  h4, .h4 {
+    font-size: 1em;
+    line-height: 1.642857143em;
+    margin-top: 1.64285714em;
+    margin-bottom: 1.64285714em;
+  }
+  p, ul, ol, table, blockquote, .alert, .doc-code, .admonition {
+    margin-top: 1.64285714em;
+    margin-bottom: 1.64285714em;
+  }
+
+  a{
+    font-weight: bold;
+  }
+
+  /* Sanitation */
+
+  hr {
+    margin: -1px 0;
+    border-top: 1px solid @doc_bg;
+  }
+  ul ul, ol ol, ul ol, ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: .5em;
+    padding-left: .5em;
+
+  }
+  ul, ol {
+    padding-left: 1em;
+    margin-left: .5em;
+    li {
+      margin-top: .5em;
+      p {margin:0;}
+      pre, .highlight{ display: inline; border-radius: 0}
+      pre{
+        font-size: .8em;
+        padding: 0.3em .5em;
+      }
+    }
+  }
+  .alert, .doc-content {
+    pre{
+      font-size: .8em;
+      padding: 0.3em .5em;
+    }
+  }
+  b, strong, em, small, code {
+    line-height: 1;
+  }
+  sup, sub {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+  }
+  sub {
+    top: 0.4em;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .doc-body {
+    font-size: 1em;
+    line-height: 1.5em;
+    h2 {
+      font-size: 3.565em;
+      line-height: 1.058823528em;
+      margin-top: 1.3em;
+      margin-bottom: 0.505882em;
+      padding-bottom: .2em;
+      border-bottom: 1px solid #EAEAEA;
+    }
+    h3 {
+      font-size: 2.625em;
+      line-height: 1.142857142em;
+      margin-top: 1.14285714em;
+      margin-bottom: 10px;
+    }
+    h4 {
+      font-size: 1.625em;
+      line-height: 1.846153846em;
+      margin-top: 0.92307692em;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+    h5 {
+      font-size: 1.5em;
+      line-height: 1.7em;
+      margin-top: 1.5em;
+      margin-bottom: 10px;
+    }
+    p, ul, ol, table, blockquote {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+
+    pre{
+      margin-top: .1em;
+      margin-bottom: 0em;
+    }
+
+    /* Sanitation */
+    hr {
+      border: 1px solid;
+      margin: -1px 0;
+    }
+    ul ul, ol ol, ul ol, ol ul {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    ul, ol {
+      padding-left: 1em;
+      margin-left: .5em;
+      li {
+        margin-top: .5em;
+        p { margin:.5em 0;}
+        pre, .highlight{ display: inline; border-radius: 0}
+        pre{
+          font-size: .8em;
+          padding: 0.3em .5em;
+        }
+      }
+    }
+    .alert, .doc-content {
+      pre{
+        font-size: .8em;
+        padding: 0.3em .5em;
+      }
+    }
+
+    b, strong, em, small, code {
+      line-height: 1;
+    }
+    sup, sub {
+      vertical-align: baseline;
+      position: relative;
+      top: -0.4em;
+    }
+    sub {
+      top: 0.4em;
+    }
+  }
+}

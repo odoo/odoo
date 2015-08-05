@@ -1,3 +1,5 @@
+:banner: banners/installing_odoo.jpg
+
 .. _setup/install:
 
 ===============
@@ -221,7 +223,7 @@ There are two way to get the odoo source source zip or git.
 
   The git repository is https://github.com/odoo/odoo.git.
 
-  Downloading it requires a `a git client <http://git-scm.com/download/>`_
+  Downloading it requires a `git client <http://git-scm.com/download/>`_
   (which may be available via your distribution on linux) and can be performed
   using the following command:
 
@@ -289,7 +291,7 @@ Source installation requires manually installing dependencies:
     ldap) it may be necessary to install development tools and native
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
-    Postgres, libxml2, libxslt, libevent and libsasl2. Then the Python
+    Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
     dependecies can themselves be installed:
 
     .. code-block:: console
