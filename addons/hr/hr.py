@@ -270,13 +270,10 @@ class hr_employee(osv.osv):
         """ Overwrite of the original method to always follow user_id field,
         even when not track_visibility so that a user will follow it's employee
         """
-        if auto_follow_fields is None:
-            auto_follow_fields = ['user_id']
-        user_field_lst = []
-        for name, field in self._fields.items():
-            if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
-                user_field_lst.append(name)
-        return user_field_lst
+        res = super(hr_employee, self)._message_get_auto_subscribe_fields(cr, uid, updated_fields, auto_follow_fields=auto_follow_fields, context=context)
+        if 'user_id' not in res:
+            res.append('user_id')
+        return res
 
     _constraints = [(osv.osv._check_recursion, _('Error! You cannot create recursive hierarchy of Employee(s).'), ['parent_id']),]
 

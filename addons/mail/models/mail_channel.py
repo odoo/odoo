@@ -54,6 +54,7 @@ class Channel(models.Model):
     group_ids = fields.Many2many(
         'res.groups', rel='mail_channel_res_group_rel',
         id1='mail_channel_id', id2='groups_id', string='Auto Subscription',
+        track_subscribe=lambda self: self.mapped('users').mapped('partner_id'),
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
