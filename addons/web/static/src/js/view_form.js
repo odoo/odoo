@@ -1808,6 +1808,7 @@ instance.web.form.NotebookInvisibilityChanger = instance.web.form.InvisibilityCh
     // called again when view content will be loaded (event view_content_has_changed)
     start: function() {
         this.on("change:effective_invisible", this, this._check_visibility);
+        this.$el.toggleClass('oe_form_invisible', this.get("effective_invisible"));
     },
     _check_visibility: function() {
         this._super();
