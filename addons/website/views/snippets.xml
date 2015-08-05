@@ -280,6 +280,65 @@
     </div>
 </template>
 
+<template id="s_countdown" name="Countdown">
+    <section class="countdown">
+        <div class="container">
+            <div class="o_countdown_start">
+                <div class="row">
+                    <a class="o_show_release btn btn-primary btn-sm pull-right css_non_editable_mode_hidden" contenteditable="false"> <i class="fa fa-rocket"></i> Switch to Release Content </a>
+                    <div class="col-md-12 col-sm-12">
+                        <h1 class="text-center">New feature is coming soon...</h1>
+                        <h3 class="text-center text-muted">Set your release date from customize</h3>
+                    </div>
+                </div>
+                <div class="row countdown_main">
+                    <div class="col-md-2 col-sm-12 col-xs-12">
+                    </div>
+                    <div class="col-md-2 col-sm-3 col-xs-6 text-center mb16">
+                        <div class="o_counter_day o_countdown-text img-circle col-xs-12 text-center"><p> <font class="o_count_val" contenteditable="false">00</font></p><p><font>Days</font></p></div>
+                    </div>
+                    <div class="col-md-2 col-sm-3 col-xs-6 text-center mb16">
+                        <div class="o_counter_hour o_countdown-text img-circle col-xs-12 text-center"><p> <font class="o_count_val" contenteditable="false">00</font></p><p><font>Hours</font></p></div>
+                    </div>
+                    <div class="col-md-2 col-sm-3 col-xs-6 text-center mb16">
+                        <div class="o_counter_min o_countdown-text img-circle col-xs-12 text-center"><p> <font class="o_count_val" contenteditable="false">00</font></p><p><font>Minutes</font></p></div>
+                    </div>
+                    <div class="col-md-2 col-sm-3 col-xs-6 text-center mb16">
+                        <div class="o_counter_sec o_countdown-text img-circle col-xs-12 text-center"><p> <font class="o_count_val" contenteditable="false">00</font></p><p><font>Seconds</font></p></div>
+                    </div>
+                    <div class="col-last col-md-2 col-sm-12 col-xs-12">
+                    </div>
+                </div>
+            </div>
+            <div class="row o_countdown_over hidden mb8">
+                <a class="o_show_counter btn btn-primary btn-sm pull-right css_non_editable_mode_hidden" contenteditable="false"> <i class="fa fa-clock-o"></i> Switch to Counter </a> 
+                <div class="col-md-12 mb16">
+                    <h1 class="text-center">Your wait is finally over !!!!</h1>
+                    <h3 class="text-muted text-center">This part will be displayed after countdown finish</h3>
+                </div>
+                <div class="col-md-4 text-center mb8">
+                    <span class="fa fa-suitcase fa-5x"></span>
+                    <h3 class="mt8 mb0">First Feature</h3>
+                    <div class="text-muted">Tell what's the value for the</div>
+                    <div class="text-muted">customer for this feature.</div>
+                </div>
+                <div class="col-md-4 text-center mb8">
+                    <span class="fa fa-lock fa-5x"></span>
+                    <h3 class="mt8 mb0">Second Feature</h3>
+                    <div class="text-muted">Write what the customer would like to know,</div>
+                    <div class="text-muted">not what you want to show.</div>
+                </div>
+                <div class="col-md-4 text-center mb8">
+                    <span class="fa fa-heart fa-5x"></span>
+                    <h3 class="mt8 mb0">Third Feature</h3>
+                    <div class="text-muted">A small explanation of this great</div>
+                    <div class="text-muted">feature, in clear words.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_quote" name="Quote">
     <blockquote class="s_quote">
         <p>
@@ -867,6 +926,7 @@
     </div>
     <div class="o_panel_body">
         <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
+        <t t-snippet="website.s_countdown" t-thumbnail="/website/static/src/img/blocks/countdown.png"/>
         <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
         <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
         <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
@@ -911,7 +971,7 @@
     </div>
 
     <div data-js='background'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax">
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, div.o_countdown-text">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#">Background</a>
             <ul class="dropdown-menu">
@@ -1036,6 +1096,21 @@
         <li data-remove_slide="true"> <a href="#" >Remove Slide</a></li>
     </div>
 
+    <div data-js='countdown'
+        data-selector=".countdown">
+        <li class="divider"></li>
+        <li data-on_set_countdown="true"><a href="#">Set Release Date</a></li>
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#">Add Timer Element</a>
+            <ul class="dropdown-menu">
+                <li data-add_timer_element="o_counter_day"><a>Days</a></li>
+                <li data-add_timer_element="o_counter_hour"><a>Hours</a></li>
+                <li data-add_timer_element="o_counter_min"><a>Minutes</a></li>
+                <li data-add_timer_element="o_counter_sec"><a>Seconds</a></li>
+           </ul>
+        </li>
+    </div>
+
     <div data-js='margin-y'
         data-selector="section, .row > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
@@ -1104,9 +1179,23 @@
     </div>
 
     <div data-js='transform'
-        data-selector=":not([data-oe-field='image']) > img, .media_iframe_video, span.fa, i.fa">
+        data-selector=":not([data-oe-field='image']) > img, .media_iframe_video, span.fa, i.fa, div.o_countdown">
         <li data-style=""><a>Transform</a></li>
         <li data-clear_style=""><a>Reset Transformation</a></li>
+    </div>
+
+    <div data-js='transform'
+            data-selector="div.o_countdown-text">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Style</a>
+            <ul class="dropdown-menu" name="parallax-scroll">
+                <li data-toggle_class="img-rounded"><a>Rounded corners</a></li>
+                <li data-toggle_class="img-thumbnail"><a>Box</a></li>
+                <li data-toggle_class="img-circle"><a>Circle</a></li>
+                <li data-toggle_class="shadow"><a>Shadow</a></li>
+                <li data-toggle_class="fa-spin"><a>Spin</a></li>
+            </ul>
+        </li>
     </div>
 
     <div data-js='ul'

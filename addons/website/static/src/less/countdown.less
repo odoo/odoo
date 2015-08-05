@@ -1,0 +1,109 @@
+// classes used for countdown widget 
+
+.define-variable(){
+  @navbar-default-bg: #f8f8f8;
+  @navbar-default-border: darken(@navbar-default-bg, 6.5%);
+  @navbar-default-link-active-color:#555;
+} .define-variable();
+.o_countdown-text {
+  height: 0;
+  padding: 50% 0;
+  background: @navbar-default-bg;
+  border: 3px solid @navbar-default-border;
+}
+.o_countdown-text p{
+  color: @navbar-default-link-active-color;
+}
+.o_countdown-text p:first-child {
+  font-size: 4em;
+  margin-top: -50px;
+  margin-bottom: -0.2em;
+}
+.o_countdown-text p:last-child {
+  font-size: 1.4em;
+}
+.readable .o_countdown-text p:first-child {
+  font-size: 2em;
+  margin-top: -30px;
+  margin-bottom: -0.2em;
+}
+.readable .o_countdown-text p:last-child {
+  font-size: 0.8em;
+}
+.img-thumbnail{
+  line-height:1.728571 !important;
+}
+.img-thumbnail p:first-child {
+  padding-top: 1.3em;
+}
+.img-thumbnail p:last-child{
+  padding-bottom:0.5em;
+}
+.readable .img-thumbnail p:first-child{
+  padding-top: 1em !important;
+}
+.readable .img-thumbnail p:last-child{
+  padding-bottom: 0 !important;
+}
+
+// classes to make text-size responsive along with timer element (will be only applied to big devices)
+
+@media (min-width: 400px) {
+  .col-md-1 .o_countdown-text p:first-child {
+    margin-top: -25px;
+    font-size: 2em;
+  }
+  .col-md-1 .o_countdown-text p:last-child {
+    font-size: 0.8em;
+  }
+  .col-md-3 .o_countdown-text p:first-child {
+    margin-top: -90px;
+    font-size: 7em;
+  }
+  .col-md-3 .o_countdown-text p:last-child {
+    font-size: 2.4em;
+  }
+  .col-md-4 .o_countdown-text p:first-child {
+    margin-top: -150px;
+    font-size: 12em;
+  }
+  .col-md-4 .o_countdown-text p:last-child {
+    font-size: 3.2em;
+  }
+  .col-md-5 .o_countdown-text p:first-child,
+  .col-md-6 .o_countdown-text p:first-child {
+    margin-top: -190px;
+    font-size: 15em;
+  }
+  .col-md-5 .o_countdown-text p:last-child,
+  .col-md-6 .o_countdown-text p:last-child {
+    font-size: 3.8em;
+  }
+  .col-md-7 .o_countdown-text p:first-child,
+  .col-md-8 .o_countdown-text p:first-child {
+    margin-top: -230px;
+    font-size: 20em;
+  }
+  .col-md-7 .o_countdown-text p:last-child,
+  .col-md-8 .o_countdown-text p:last-child {
+    font-size: 5em;
+  }
+  .col-md-9 .o_countdown-text p:first-child,
+  .col-md-10 .o_countdown-text p:first-child {
+    margin-top: -300px;
+    font-size: 24em;
+  }
+  .col-md-9 .o_countdown-text p:last-child,
+  .col-md-10 .o_countdown-text p:last-child {
+    font-size: 8em;
+  }
+  .col-md-11 .o_countdown-text p:first-child,
+  .col-md-12 .o_countdown-text p:first-child {
+    margin-top: -370px;
+    font-size: 28em;
+  }
+  .col-md-11 .o_countdown-text p:last-child,
+  .col-md-12 .o_countdown-text p:last-child {
+    font-size: 10em;
+  }
+}
