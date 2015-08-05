@@ -825,7 +825,7 @@ def trans_generate(lang, modules, cr):
             constraints = getattr(cls, '_local_' + cons_type, [])
             for constraint in constraints:
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
-            
+
     for (_, model, module) in cr.fetchall():
         if model not in registry:
             _logger.error("Unable to find object %r", model)
@@ -929,6 +929,8 @@ def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None)
 
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, module_name=None, context=None):
     """Populates the ir_translation table."""
+    from openerp.modules import get_module_resource
+
     if verbose:
         _logger.info('loading translation file for language %s', lang)
     if context is None:
@@ -970,11 +972,22 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     # and we try to find the corresponding
                     # /path/to/xxx/i18n/xxx.pot file.
                     # (Sometimes we have 'i18n_extra' instead of just 'i18n')
-                    addons_module_i18n, _ = os.path.split(fileobj.name)
-                    addons_module, i18n_dir = os.path.split(addons_module_i18n)
-                    addons, module = os.path.split(addons_module)
-                    pot_handle = misc.file_open(os.path.join(
-                        addons, module, i18n_dir, module + '.pot'))
+                    # hum ...
+                    # when module_name is set, use get_module_resource()
+                    # to get the right .pot file
+                    if module_name:
+                        for subdir in ('i18n', 'i18n_extra'):
+                            path = get_module_resource(module_name, subdir,
+                                                       module_name + '.pot')
+                            if path:
+                                break
+                        pot_handle = misc.file_open(path)
+                    else:
+                        addons_module_i18n, _ = os.path.split(fileobj.name)
+                        addons_module, i18n_dir = os.path.split(addons_module_i18n)
+                        addons, module = os.path.split(addons_module)
+                        pot_handle = misc.file_open(os.path.join(
+                            addons, module, i18n_dir, module + '.pot'))
                     pot_reader = TinyPoFile(pot_handle)
                 except:
                     pass
@@ -1115,4 +1128,3 @@ def load_language(cr, lang):
     language_installer.lang_install(cr, SUPERUSER_ID, [oid], context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
