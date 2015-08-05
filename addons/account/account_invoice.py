@@ -1533,7 +1533,7 @@ class account_invoice_tax(models.Model):
             currency = self.env['res.currency'].browse(currency_id)
             currency = currency.with_context(date=date_invoice or fields.Date.context_today(self))
             amount = currency.compute(amount, company.currency_id, round=False)
-        tax_sign = self.tax_amount/self.amount
+        tax_sign = self.tax_amount/self.amount if not self.amount == 0 else 1
         return {'value': {'tax_amount': amount * tax_sign}}
 
     @api.v8
