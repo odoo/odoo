@@ -25,5 +25,5 @@ This module allows you to...
         'demo/website_crm_score_demo.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
 }
