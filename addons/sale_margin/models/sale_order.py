@@ -1,0 +1,54 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from openerp import api, fields, models
+import openerp.addons.decimal_precision as dp
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    margin = fields.Float(compute='_product_margin', digits=dp.get_precision('Product Price'), store=True)
+    purchase_price = fields.Float(string='Cost Price', digits=dp.get_precision('Product Price'))
+
+    @api.multi
+    def product_id_change(self, pricelist_id, product_id, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False):
+        result = super(SaleOrderLine, self).product_id_change(pricelist_id, product_id, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag)
+        if not pricelist_id:
+            return result
+        from_currency = self.env.user.company_id.currency_id
+        to_currency = self.env['product.pricelist'].browse(pricelist_id).currency_id
+        if product_id:
+            product = self.env['product.product'].browse(product_id)
+            purchase_price = product.standard_price
+            to_uom = result.get('product_uom', uom)
+            if to_uom != product.uom_id.id:
+                purchase_price = self.env['product.uom']._compute_price(product.uom_id.id, purchase_price, to_uom)
+            ctx = dict(self._context)
+            ctx['date'] = date_order
+            price = from_currency.with_context(ctx).compute(purchase_price, to_currency, round=False)
+            result['value']['purchase_price'] = price
+        return result
+
+    @api.one
+    @api.depends('purchase_price', 'product_uom_qty', 'price_unit')
+    def _product_margin(self):
+        currency = self.order_id.pricelist_id.currency_id
+        self.margin = currency.round(self.price_subtotal - ((self.purchase_price or self.product_id.standard_price) * self.product_uos_qty))
+
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    margin = fields.Monetary(compute='_product_margin', help="It gives profitability by calculating the difference between the Unit Price and the cost price.", currency_field='currency_id', digits=dp.get_precision('Product Price'), store=True)
+
+    @api.one
+    @api.depends('order_line.margin')
+    def _product_margin(self):
+        margin_data = self.env['sale.order.line'].read_group([('state', '!=', 'cancel'), ('order_id', '=', self.id)], ['margin', 'order_id'], ['order_id'])
+        if margin_data:
+            self.margin = margin_data[0]['margin']
