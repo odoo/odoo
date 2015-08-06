@@ -67,10 +67,21 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
                 // since the last kitchen print
                 this.mp_dirty = true;
             } 
-            if (!this.mp_skip) {
+            if (typeof this.mp_skip === 'undefined') {
                 // mp_skip is true if the cashier want this orderline
                 // not to be sent to the kitchen
-                this.mp_skip  = false;
+
+                // We loop on all the product categories of the available printers to check whether
+                // the corresponding product category should be printed.
+                var categories = _.uniq(_.flatten(_.map(this.pos.printers, function (p) {
+                    return p.config.product_categories_ids;
+                })));
+                if (_.contains(categories, this.product.pos_categ_id[0])) {
+                    this.mp_skip  = false;
+                }
+                else {
+                    this.mp_skip  = true;
+                }
             }
         },
         init_from_JSON: function(json) {
@@ -342,4 +353,3 @@ openerp.pos_restaurant.load_multiprint = function(instance,module){
     });
 
 };
-
