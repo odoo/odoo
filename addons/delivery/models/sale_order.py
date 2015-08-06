@@ -26,7 +26,7 @@ from openerp.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price')
+    delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price', store=True)
 
     @api.depends('carrier_id', 'partner_id', 'order_line')
     def _compute_delivery_price(self):
