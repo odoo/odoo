@@ -305,6 +305,24 @@ class res_users(osv.osv):
 
         return result
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if uid != SUPERUSER_ID:
+            groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+            if groupby_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid groupby')
+        return super(res_users, self).read_group(
+            cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        if user != SUPERUSER_ID and args:
+            domain_terms = [term for term in args if isinstance(term, (tuple, list))]
+            domain_fields = set(left for (left, op, right) in domain_terms)
+            if domain_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid search criterion')
+        return super(res_users, self)._search(
+            cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count,
+            access_rights_uid=access_rights_uid)
+
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
