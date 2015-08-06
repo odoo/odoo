@@ -32,11 +32,5 @@ It allows the manager to quickly check the issues, assign them and decide on the
         'views/project_dashboard.xml',
     ],
     'demo': ['data/project_issue_demo.xml'],
-    'test': [
-        'test/issue_users.yml',
-        'test/subscribe_issue.yml',
-        'test/issue_process.yml',
-        'test/issue_demo.yml'
-    ],
     'application': True,
 }
