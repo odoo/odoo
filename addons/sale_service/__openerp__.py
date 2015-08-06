@@ -29,10 +29,10 @@ completed.
 """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
+    'depends': ['project', 'sale'],
     'data': ['views/sale_service_view.xml'],
     'demo': ['demo/sale_service_demo.xml'],
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }

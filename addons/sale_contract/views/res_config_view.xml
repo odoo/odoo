@@ -7,10 +7,10 @@
             <field name="model">sale.config.settings</field>
             <field name="inherit_id" ref="sale.view_sales_config"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='module_analytic_user_function']" position="inside">
+                <xpath expr="//group[@id='contract']" position="inside">
+                    <label for="group_template_required"/>
                     <div>
-                        <field name="group_template_required" class="oe_inline"/>
-                        <label for="group_template_required"/>
+                        <field name="group_template_required" widget="radio"/>
                     </div>
                 </xpath>
             </field>

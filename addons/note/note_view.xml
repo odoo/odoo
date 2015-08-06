@@ -139,27 +139,6 @@
       </field>
     </record>
 
-
-    <!-- general settings -->
-    <record model="ir.ui.view" id="view_general_settings_note_form">
-      <field name="name">note.view.general_settings.form</field>
-      <field name="model">base.config.settings</field>
-      <field name="inherit_id" ref="base_setup.view_general_configuration"/>
-      <field name="arch" type="xml">
-        <xpath expr="//group[@name='authentication']" position="after">
-          <group>
-              <label for="id" string="Notes"/>
-              <div name="note">
-                  <div>
-                      <field name="module_note_pad" class="oe_inline"/>
-                      <label for="module_note_pad"/>
-                  </div>
-              </div>
-          </group>
-        </xpath>
-      </field>
-    </record>
-
     <!-- Action -->
     <record model="ir.actions.act_window" id="action_note_note">
       <field name="name">Notes</field>

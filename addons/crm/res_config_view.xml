@@ -7,51 +7,37 @@
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <data>
-	            <div name="config_sale" position="inside">
-	                <separator string="Sale Services"/>
-                    <group>
-                        <label for="id" string="After-Sale Services"/>
+                <div id="main" position="inside">
+                    <group string="CRM" name="config_alias">
+                        <label for="id" string="Leads Email Alias"/>
                         <div>
-                            <div>
-                                <field name="module_crm_claim" class="oe_inline"/>
-                                <label for="module_crm_claim"/>
+                            <div attrs="{'invisible': [('alias_domain', 'in', ['localhost', '', False])]}">
+                                <p class="text-muted">
+                                    Each sales team has an email alias that
+                                    could be setup on the sales team form. You
+                                    can setup a generic email alias to create
+                                    incoming leads.
+                                </p>
+                                <field name="alias_prefix" class="oe_inline"/>
+                                <span>@</span>
+                                <field name="alias_domain"  class="oe_inline" readonly="1"/>
+                            </div>
+                            <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
+                                <p>
+                                    <button type="action"
+                                        name="base_setup.action_general_configuration"
+                                        string="Setup your domain alias" class="oe_link"/>
+                                </p>
                             </div>
                         </div>
+
+                        <label for="group_multi_salesteams"/>
+                        <div>
+                            <field name="group_multi_salesteams" widget="radio"/>
+                        </div>
+
                     </group>
                 </div>
-                <div name="config_sale" position="after">
-                    <div name="config_alias">
-                        <separator string="Emails Integration"/>
-                        <p name="config_email_integration">
-                            Odoo allows to automatically create leads
-                            from incoming emails.
-                        </p> 
-                        <group>
-                            <label for="id" string="Leads Email Alias"/>
-                            <div>
-                                 <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
-                                    <p>
-                                        <label string="To be able to set your Leads Email Alias, you need to fill your alias domain first."/><br />
-                                        <button type="action" name="base_setup.action_general_configuration"
-                                                string="Configure your email alias domain" class="oe_inline oe_link"/>
-                                    </p>
-                                </div>
-                                <div>
-                                    <span class="oe_inline">
-                                        <label string="Create new leads when an email is sent to the following alias:" class="oe_inline oe_form_label_help oe_align_right"/>
-                                        <field name="alias_prefix" class="oe_inline"/>
-                                        <span>@</span>
-                                        <field name="alias_domain" class="oe_inline" readonly="1"/>
-                                    </span>
-                                </div>
-                                <div>
-                                    <field name="generate_sales_team_alias"/>
-                                    <label for="generate_sales_team_alias"/>
-                                </div>
-                            </div>
-                        </group>
-                    </div>
-	            </div>
                 </data>
             </field>
         </record>

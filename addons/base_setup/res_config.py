@@ -80,12 +80,10 @@ class base_config_settings(osv.osv_memory):
             self.pool['ir.rule'].write(cr, uid, [partner_rule.id], {'active': not bool(wizard.company_share_partner)}, context=context)
 
 
-# Preferences wizard for Sales & CRM.
-# It is defined here because it is inherited independently in modules sale, crm.
+# Empty class but required since it's overrided by sale & crm
 class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_crm': fields.boolean('CRM'),
-        'module_sale' : fields.boolean('SALE'),
     }
+

@@ -16,13 +16,14 @@ with the effect of creating, editing and deleting either ways.
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
-    'depends': ['resource', 'project', 'sale_contract', 'procurement'],
+    'depends': ['resource', 'project', 'sale_contract'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
         'report/project_report_view.xml',
         'project_timesheet_view.xml',
         'project_dashboard.xml',
+        'res_config_view.xml',
     ],
     'demo': ['project_timesheet_demo.xml'],
     'test': [

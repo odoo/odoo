@@ -24,89 +24,93 @@
                     </header>
                     <separator string="Traceability"/>
                     <group name="traceability">
-                        <label for="id" string="Traceability"/>
+                        <label for="group_stock_production_lot"/>
                         <div>
-                            <div>
-                                <field name="group_stock_production_lot" class="oe_inline"/>
-                                <label for="group_stock_production_lot"/>
-                            </div>
-                            <div attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
-                                <field name="module_product_expiry" class="oe_inline"/>
-                                <label for="module_product_expiry"/>
-                            </div>
-                            <div>
-                                <field name="group_stock_tracking_lot" class="oe_inline"/>
-                                <label for="group_stock_tracking_lot"/>
-                            </div>
-                            <div>
-                                <field name="group_stock_tracking_owner" class="oe_inline"/>
-                                <label for="group_stock_tracking_owner"/>
-                             </div>
-                        </div>    
+                            <field name="group_stock_production_lot" widget="radio"/>
+                        </div>
+
+                        <label for="module_product_expiry" attrs="{'invisible': [('group_stock_production_lot','=',0)]}"/>
+                        <div attrs="{'invisible': [('group_stock_production_lot','=', 0)]}">
+                            <field name="module_product_expiry" widget="radio"/>
+                        </div>
+
+                        <label for="group_stock_tracking_lot"/>
+                        <div>
+                            <field name="group_stock_tracking_lot" widget="radio"/>
+                        </div>
+                        
+                        <label for="group_stock_tracking_owner"/>
+                        <div>
+                            <field name="group_stock_tracking_owner" widget="radio"/>
+                        </div>
                     </group>
                     <separator string="Location &amp; Warehouse"/>
                     <group>
-                        <label for="id" string="Logistic"/>
+                        <label for="group_product_variant"/>
                         <div>
-                            <div>
-                                <field name="module_procurement_jit" class="oe_inline"/>
-                                <label for="module_procurement_jit"/>
-                            </div>
-                            <div>
-                                <field name="group_stock_multiple_locations" class="oe_inline"/>
-                                <label for="group_stock_multiple_locations"/>  
-                            </div>
-                            <div>
-                                <field name="group_stock_adv_location" class="oe_inline" on_change="onchange_adv_location(group_stock_adv_location)"/>
-                                <label for="group_stock_adv_location"/>
-                            </div>
-                            <div attrs="{'invisible': [('group_stock_adv_location', '=', False)]}">
-                                <label for="propagation_minimum_delta"/>
-                                <field name="propagation_minimum_delta" class="oe_inline"/>
-                            </div>
+                            <field name="group_product_variant" widget="radio"/>
+                        </div>
+
+                         <label for="module_procurement_jit"/>
+                        <div>
+                            <field name="module_procurement_jit" widget="radio"/>
+                        </div>
+
+                        <label for="group_stock_multiple_locations"/>
+                        <div>
+                            <field name="group_stock_multiple_locations" widget="radio"/>
+                        </div>
+
+                        <label for="group_stock_adv_location"/>
+                        <div>
+                            <field name="group_stock_adv_location" widget="radio"/>
+                            <label for="propagation_minimum_delta" attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}"/>
+                            <field name="propagation_minimum_delta" class="oe_inline" attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}"/>
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Products"/>
-                        <div>
+                        <label for="id" string="Products" groups="base.group_no_one"/>
+                        <div groups="base.group_no_one">
                             <div>
-                                <field name="group_stock_packaging" class="oe_inline"/>
-                                <label for="group_stock_packaging"/>
-                            </div>
-                             <div>
                                 <label for="decimal_precision"/>
                                 <field name="decimal_precision" class="oe_inline"/>
                             </div>
-                            <div>
-                                <field name="group_uom" class="oe_inline"/>
-                                <label for="group_uom"/>
-                            </div>
-                            <div>
-                                <field name="group_uos" class="oe_inline"/>
-                                <label for="group_uos" />
-                            </div>
                         </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Additional Features"/>
-                            <div>
-                                <div>
-                                    <field name="module_claim_from_delivery" class="oe_inline"/>
-                                    <label for="module_claim_from_delivery"/>
-                                </div>
-                                <div>
-                                    <field name="module_stock_dropshipping" class="oe_inline"/>
-                                    <label for="module_stock_dropshipping"/>
-                                </div>
-                                <div>
-                                    <field name="module_stock_picking_wave" class="oe_inline"/>
-                                    <label for="module_stock_picking_wave"/>
-                                </div>
-                                <div>
-                                    <field name="module_stock_calendar" class="oe_inline"/>
-                                    <label for="module_stock_calendar"/>
-                                </div>
-                            </div>
+
+                        <label for="group_stock_packaging"/>
+                        <div>
+                            <field name="group_stock_packaging" widget="radio"/>
+                        </div>
+
+                        <label for="group_uom"/>
+                        <div>
+                            <field name="group_uom" widget="radio"/>
+                        </div>
+
+                        <label for="group_uos"/>
+                        <div>
+                            <field name="group_uos" widget="radio"/>
+                        </div>
+
+                        <label for="module_claim_from_delivery"/>
+                        <div>
+                            <field name="module_claim_from_delivery" widget="radio"/>
+                        </div>
+
+                        <label for="module_stock_dropshipping"/>
+                        <div>
+                            <field name="module_stock_dropshipping" widget="radio"/>
+                        </div>
+
+                        <label for="module_stock_picking_wave"/>
+                        <div>
+                            <field name="module_stock_picking_wave" widget="radio"/>
+                        </div>
+
+                        <label for="module_stock_calendar"/>
+                        <div>
+                            <field name="module_stock_calendar" widget="radio"/>
+                        </div>
                     </group>
                 </form>
             </field>

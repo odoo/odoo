@@ -14,10 +14,10 @@
                 <group name="hr_equipment_grp">
                     <label for="id" string="Requests Alias"/>
                     <div>
-                        <field name="alias_manage" class="oe_inline"/>
                         <label for="equipment_alias_prefix" class="oe_inline"/>
-                        <div attrs="{'invisible': [('alias_manage', '=', False)]}">
-                            <field name="equipment_alias_prefix" class="oe_inline" attrs="{'required': [('alias_manage', '=', True)]}"/>@
+                        <div>
+                            <label for="id" id="the following alias to report internal equipment issue"/> 
+                            <field name="equipment_alias_prefix" class="oe_inline"/>@
                             <field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
                     </div>

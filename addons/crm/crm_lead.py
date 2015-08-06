@@ -236,7 +236,6 @@ class crm_lead(format_address, osv.osv):
         'function': fields.char('Function'),
         'title': fields.many2one('res.partner.title', 'Title'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        'planned_cost': fields.float('Planned Costs'),
         'meeting_count': fields.function(_meeting_count, string='# Meetings', type='integer'),
         'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', select=True, track_visibility='onchange'),
     }
@@ -1001,7 +1000,6 @@ class crm_lead(format_address, osv.osv):
         if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             update_vals['priority'] = msg.get('priority')
         maps = {
-            'cost':'planned_cost',
             'revenue': 'planned_revenue',
             'probability':'probability',
         }

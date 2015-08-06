@@ -20,15 +20,6 @@
                         </p>
                     </div>
                     <group>
-                        <label for="id" string="Options"/>
-                        <div>
-                            <div name="multi_company">
-                                <field name="module_multi_company" class="oe_inline"/>
-                                <label for="module_multi_company"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group>
                         <label for="id" string="Email" name="email_label"/>
                         <div name="email">
                             <div name="email.outgoing_server">
@@ -38,7 +29,7 @@
                             </div>
                         </div>
                     </group>
-                    <group>
+                    <group groups="base.group_no_one">
                         <label for="id" string="Portal access"/>
                         <div>
                             <div>
@@ -72,6 +63,42 @@
                             </div>
                         </div>
                     </group>
+                    <group groups="base.group_no_one">
+                        <label for="font" />
+                        <div>
+                            <div>
+                                <field name="font" class="oe_inline" />
+                                <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Multi Company"/>
+                        <div>
+                            <div name="multi_company">
+                                <field name="module_multi_company" class="oe_inline"/>
+                                <label for="module_multi_company"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group attrs="{'invisible': [('module_multi_company','=',False)]}">
+                        <label for="module_inter_company_rules" string="Inter company"/>
+                        <div name="inter_company">
+                            <div name="module_inter_company_rules">
+                                <field name="module_inter_company_rules" class="oe_inline"/>
+                                <label for="module_inter_company_rules"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Shared ressources" name="company_share_ressources" attrs="{'invisible': [('module_multi_company','=',False)]}">
+                        <label for="company_share_partner" />
+                        <div>
+                            <div>
+                                <field name="company_share_partner" class="oe_inline" />
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Google Integration" name="google"/>
                     <group>
                         <label for="id" string="Google Drive"/>
                         <div name="google_drive">
@@ -93,32 +120,6 @@
                                         </p>
                                     </div>
                                 </div>
-                        </div>
-                    </group>
-                    <group>
-                        <label for="font" />
-                        <div>
-                            <div>
-                                <field name="font" class="oe_inline" />
-                                <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group>
-                        <label for="module_inter_company_rules" string="Inter company"/>
-                        <div name="inter_company">
-                            <div name="module_inter_company_rules">
-                                <field name="module_inter_company_rules" class="oe_inline"/>
-                                <label for="module_inter_company_rules"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group string="Shared ressources" name="company_share_ressources">
-                        <label for="company_share_partner" />
-                        <div>
-                            <div>
-                                <field name="company_share_partner" class="oe_inline" />
-                            </div>
                         </div>
                     </group>
                 </form>
@@ -145,20 +146,9 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <div name="customer feature" attrs="{'invisible': [('module_sale','=',False)]}">
-                        <field name="module_sale" invisible="1"/>
-                        <separator string="Quotations and Sales Orders"/>
-                        <group name="Customer">
-                            <label for="id" string="Customer Features"/>
-                            <div name="Customer Features"/>
-                        </group>
-                        <group name="Sale">
-                            <label for="id" string="Sale Features"/>
-                            <div name="Sale Features"/>
-                        </group>
+                    <div id="main">
+
                     </div>
-                    <div name="config_sale"/>
-                    <div name="config_pos"/>
                 </form>
             </field>
         </record>

@@ -402,6 +402,10 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
+        *   For a selection field like 'module_XXX' composed of 2 integers values ('0' and '1'), 
+            ``execute`` triggers the immediate installation of the module named 'XXX' 
+            if the field has the integer value ``1``.
+
         *   For the other fields, the method ``execute`` invokes all methods with a name
             that starts with 'set_'; such methods can be defined to implement the effect
             of those fields.
@@ -493,7 +497,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'implied_group'):
                 field_groups = getattr(field, 'group', 'base.group_user').split(',')
                 groups.append((name, map(ref, field_groups), ref(field.implied_group)))
-            elif name.startswith('module_') and isinstance(field, fields.boolean):
+            elif name.startswith('module_') and (isinstance(field, fields.boolean) or isinstance(field, fields.selection)):
                 mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
                 record = ir_module.browse(cr, uid, mod_ids[0], context) if mod_ids else None
                 modules.append((name, record))
@@ -521,6 +525,8 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         # modules: which modules are installed/to install
         for name, module in classified['module']:
             res[name] = module and module.state in ('installed', 'to install', 'to upgrade')
+            if self._fields[name].type == 'selection':
+                res[name] = int(res[name])
 
         # other fields: call all methods that start with 'get_default_'
         for method in dir(self):

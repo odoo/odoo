@@ -8,21 +8,20 @@
                 <xpath expr="//group[@name='traceability']" position="after">
                     <separator string="Accounting"/>
                     <group>
-                        <label for="id" string="Accounting"/>
+                        <label for="module_stock_landed_costs"/>
                         <div>
-                            <div>
-                                <field name="group_stock_inventory_valuation" class="oe_inline"/>
-                                <label for="group_stock_inventory_valuation"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_invoice_directly" class="oe_inline"/>
-                                <label for="module_stock_invoice_directly"/>
-                            </div>
-                            <div>
-                                <field name="module_stock_landed_costs" on_change="onchange_landed_costs(module_stock_landed_costs)" class="oe_inline"/>
-                                <label for="module_stock_landed_costs"/>
-                            </div>
-                         </div>
+                            <field name="module_stock_landed_costs" widget="radio" on_change="onchange_landed_costs(module_stock_landed_costs)"/>
+                        </div>
+
+                        <label for="group_stock_inventory_valuation"/>
+                        <div>
+                            <field name="group_stock_inventory_valuation" widget="radio"/>
+                        </div>
+
+                        <label for="module_stock_invoice_directly"/>
+                        <div>
+                            <field name="module_stock_invoice_directly" widget="radio"/>
+                        </div>
                     </group>
                 </xpath>
             </field>

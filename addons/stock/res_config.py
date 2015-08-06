@@ -71,58 +71,107 @@ class stock_config_settings(osv.osv_memory):
         return True
 
     _columns = {
+        'group_product_variant': fields.selection([
+            (0, "No variants on products"),
+            (1, 'Products can have several attributes, defining variants (Example: size, color,...)')
+            ], "Product Variants",
+            help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
+            implied_group='product.group_product_variant'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'module_procurement_jit': fields.boolean("Generate procurement in real time",
+        'module_procurement_jit': fields.selection([
+            (1, 'Schedule orders in real time'),
+            (0, 'Run scheduler once a day')
+            ], "Procurements",
             help="""This allows Just In Time computation of procurement orders.
                 All procurement orders will be processed immediately, which could in some
                 cases entail a small performance impact.
                 This installs the module procurement_jit."""),
-        'module_claim_from_delivery': fields.boolean("Allow claim on deliveries",
+        'module_claim_from_delivery': fields.selection([
+            (0, 'Do not manage claims'),
+            (1, 'Allow claims on deliveries')
+            ], "Claims",
             help='Adds a Claim link to the delivery order.\n'
                  '-This installs the module claim_from_delivery.'),
-        'module_product_expiry': fields.boolean("Expiry date on serial numbers",
+        'module_product_expiry': fields.selection([
+            (0, 'Do not use expiry date'),
+            (1, 'Define expiry date on serial numbers')
+            ], "Expiry Dates",
             help="""Track different dates on products and serial numbers.
-The following dates can be tracked:
-    - end of life
-    - best before date
-    - removal date
-    - alert date.
-This installs the module product_expiry."""),
-        'group_uom': fields.boolean("Manage different units of measure for products",
+                    The following dates can be tracked:
+                    - end of life
+                    - best before date
+                    - removal date
+                    - alert date.
+                    This installs the module product_expiry."""),
+        'group_uom': fields.selection([
+            (0, 'Products have only one unit of measure (easier)'),
+            (1, 'Some products may be sold/purchased in different unit of measures (advanced)')
+            ], "Unit of Measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.boolean("Store products in a different unit of measure than the sales order",
+        'group_uos': fields.selection([
+            (0, 'Use the same product unit of measure in the stocks than in the sales order'),
+            (1, 'Store products in a different unit of measure than the sales order')
+            ], "Unit of Sales",
             implied_group='product.group_uos',
             help='Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n'
                  'For instance, you can store pieces of meat that you sell and invoice based on their weight.'),
-        'group_stock_packaging': fields.boolean("Allow to define several packaging methods on products",
+        'group_stock_packaging': fields.selection([
+            (0, 'Do not manage packaging'),
+            (1, 'Manage available packaging options per products')
+            ], "Packaging Methods",
             implied_group='product.group_stock_packaging',
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
-        'group_stock_production_lot': fields.boolean("Track lots or serial numbers",
+        'group_stock_production_lot': fields.selection([
+            (0, 'Do not track individual product items'),
+            (1, 'Track lots or serial numbers')
+            ], "Lots and Serial Numbers",
             implied_group='stock.group_production_lot',
             help="""This allows you to assign a lot (or serial number) to the pickings and moves.  This can make it possible to know which production lot was sent to a certain client, ..."""),
-        'group_stock_tracking_lot': fields.boolean("Use packages: pallets, boxes, ...",
+        'group_stock_tracking_lot': fields.selection([
+            (0, 'Do not manage packaging'),
+            (1, 'Record packages used on packing: pallets, boxes, ...)')
+            ], "Packages",
             implied_group='stock.group_tracking_lot',
             help="""This allows to manipulate packages.  You can put something in, take something from a package, but also move entire packages and put them even in another package.  """),
-        'group_stock_tracking_owner': fields.boolean("Manage owner on stock",
+        'group_stock_tracking_owner': fields.selection([
+            (0, 'All products in your warehouse belong to your company'),
+            (1, 'Manage consignee stocks (advanced)')
+            ], "Product Owners",
             implied_group='stock.group_tracking_owner',
             help="""This way you can receive products attributed to a certain owner. """),
-        'group_stock_multiple_locations': fields.boolean("Manage multiple locations",
+        'group_stock_multiple_locations': fields.selection([
+            (0, 'Do not record internal moves within a warehouse'),
+            (1, 'Manage several locations per warehouse')
+            ], "Multi Locations",
             implied_group='stock.group_locations',
             help="""This will show you the locations and allows you to define multiple picking types and warehouses."""),
         'group_stock_single_location': fields.boolean("Manage only one location per warehouse",
             implied_group='stock.group_single_location',
             help="""This implies that you manage one location per warehouse, i.e. no internal transfer is possible."""),
-        'group_stock_adv_location': fields.boolean("Manage routes for your warehouse",
+        'group_stock_adv_location': fields.selection([
+            (0, 'No automatic routing of products'),
+            (1, 'Advanced routing of products using rules')
+            ], "Routes",
             implied_group='stock.group_adv_location',
             help="""This option supplements the warehouse application by effectively implementing Push and Pull inventory flows through Routes."""),
         'decimal_precision': fields.integer('Decimal precision on weight', help="As an example, a decimal precision of 2 will allow weights like: 9.99 kg, whereas a decimal precision of 4 will allow weights like:  0.0231 kg."),
         'propagation_minimum_delta': fields.related('company_id', 'propagation_minimum_delta', type='integer', string="Minimum days to trigger a propagation of date change in pushed/pull flows."),
-        'module_stock_dropshipping': fields.boolean("Manage dropshipping",
+        'module_stock_dropshipping': fields.selection([
+            (0, 'Suppliers always deliver to your warehouse(s)'),
+            (1, "Allow suppliers to deliver directly to your customers")
+            ], "Dropshipping",
             help='\nCreates the dropship route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
-        'module_stock_picking_wave': fields.boolean('Manage picking wave', help='Install the picking wave module which will help you grouping your pickings and processing them in batch'),
-        'module_stock_calendar': fields.boolean('Manage minimum stock rules according to the purchase and delivery calendars',
+        'module_stock_picking_wave': fields.selection([
+            (0, 'Manage pickings one at a time'),
+            (1, 'Manage picking in batch per worker')
+            ], "Picking Waves",
+            help='Install the picking wave module which will help you grouping your pickings and processing them in batch'),
+        'module_stock_calendar': fields.selection([
+            (0, 'Set lead times in calendar days (easy)'),
+            (1, "Adapt lead times using the suppliers' open days calendars (advanced)")
+            ], "Minimun Stock Rules",
             help='This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n-This installs the module stock_calendar.'),
     }
 

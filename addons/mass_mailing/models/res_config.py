@@ -8,8 +8,10 @@ class MassMailingConfiguration(osv.TransientModel):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'group_mass_mailing_campaign': fields.boolean(
-            'Manage Mass Mailing using Campaign',
+        'group_mass_mailing_campaign': fields.selection([
+            (0, "Do not organize and schedule mail campaigns (easy)"),
+            (1, "Allow using marketing campaigns (advanced)")
+            ], "Campaigns",
             implied_group='mass_mailing.group_mass_mailing_campaign',
             help="""Manage mass mailign using Campaigns"""),
     }

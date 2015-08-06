@@ -10,17 +10,16 @@ class crm_configuration(osv.TransientModel):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'group_fund_raising': fields.boolean("Manage Fund Raising",
-            implied_group='crm.group_fund_raising',
-            help="""Allows you to trace and manage your activities for fund raising."""),
-        'module_crm_claim': fields.boolean("Manage Customer Claims",
-            help='Allows you to track your customers/vendors claims and grievances.\n'
-                 '-This installs the module crm_claim.'),
         'generate_sales_team_alias': fields.boolean(
             "Automatically generate an email alias at the sales team creation",
             help="Odoo will generate an email alias based on the sales team name"),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
-        'alias_domain' : fields.char('Alias Domain')
+        'alias_domain' : fields.char('Alias Domain'),
+        'group_multi_salesteams': fields.selection([
+            (0, 'One sales team only'),
+            (1, 'Activate multiple sales teams')
+            ], "Multiple Sales Teams",
+            implied_group='base.group_multi_salesteams'),
     }
 
     _defaults = {

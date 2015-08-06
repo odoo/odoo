@@ -27,5 +27,5 @@ In that case, you can not use priorities any more on the different picking.
     'demo': [],
     'test': ['test/procurement_jit.yml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
 }

@@ -25,48 +25,36 @@
                     </header>
                     <separator string="Manufacturing Order"/>
                     <group>
-                        <label for="id" string="Order"/>
+                        <label for="group_product_variant"/>
                         <div>
-                            <div>
-                                <field name="module_mrp_byproduct" class="oe_inline"/>
-                                <label for="module_mrp_byproduct"/>
-                            </div>
-                            <div>
-                                <field name="module_mrp_repair" class="oe_inline"/>
-                                <label for="module_mrp_repair"/>
-                            </div>
+                            <field name="group_product_variant" widget="radio"/>
                         </div>
-                    </group>
-                    <group >
-                        <label for="id" string="Planning"/>
+
+                        <label for="module_mrp_byproduct"/>
                         <div>
-                            <div>
-                                <field name="group_mrp_routings" class="oe_inline"/>
-                                <label for="group_mrp_routings"/>
-                            </div>
-                             <div>
-                                <field name="module_mrp_operations" class="oe_inline"/>
-                                <label for="module_mrp_operations" />
-                            </div>
+                            <field name="module_mrp_byproduct" widget="radio"/>
+                        </div>
+
+                        <label for="module_mrp_repair"/>
+                        <div>
+                            <field name="module_mrp_repair" widget="radio"/>
+                        </div>
+
+                        <label for="group_mrp_routings"/>
+                        <div>
+                            <field name="group_mrp_routings" widget="radio"/>
+                        </div>
+
+                        <label for="module_mrp_operations"/>
+                         <div>
+                            <field name="module_mrp_operations" widget="radio"/>
                         </div>
                     </group>
                     <separator string="Master Data"/>
                     <group >
-                        <label for="id" string="Products"/>
+                        <label for="group_rounding_efficiency"/>
                         <div>
-                            <div>
-                                <field name="group_mrp_properties" class="oe_inline"/>
-                                <label for="group_mrp_properties" />
-                            </div>
-                        </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Bill of Materials"/>
-                        <div>
-                            <div>
-                                <field name="group_rounding_efficiency" class="oe_inline"/>
-                                <label for="group_rounding_efficiency" />
-                            </div>
+                            <field name="group_rounding_efficiency" widget="radio"/>
                         </div>
                     </group>
                 </form>

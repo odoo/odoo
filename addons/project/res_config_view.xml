@@ -25,65 +25,32 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Project Management"/>
-                    <group>
-                        <label for="id" string="Task"/>
+                    <group name="project_management">
+                        <label for="module_sale_service"/>
                         <div>
-                            <div>
-                                <field name="module_project_timesheet" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks, module_project_timesheet)" class="oe_inline"/>
-                                <label for="module_project_timesheet"/>
-                            </div>
-                            <div>
-                                <field name="module_sale_service" class="oe_inline"/>
-                                <label for="module_sale_service"/>
-                            </div>
-                            <div>
-                                <field name="module_pad" class="oe_inline"/>
-                                <label for="module_pad"/>
-                            </div>
+                            <field name="module_sale_service" widget="radio"/>
                         </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Planning"/>
+
+                        <label for="module_pad"/>
                         <div>
-                             <div>
-                                <field name="group_time_work_estimation_tasks" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks, module_project_timesheet)" class="oe_inline"/>
-                                <label for="group_time_work_estimation_tasks"/>
-                            </div>
-                            <div>
-                                <label for="time_unit"/>
-                                <field name="time_unit" class="oe_inline" domain="[('category_id.name','=','Working Time')]"/>
-                            </div>
-                            <div attrs="{'invisible': [('module_project_timesheet','=',False)]}">
-                                <field name="group_tasks_work_on_tasks" class="oe_inline"/>
-                                <label for="group_tasks_work_on_tasks" />
-                            </div>
+                            <field name="module_pad" widget="radio"/>
                         </div>
-                    </group>
-                    <group>
-                        <label for="id" string="Communication"/>
+
+                        <label for="group_time_work_estimation_tasks"/>
                         <div>
-                            <div>
-                                <field name="generate_project_alias" class="oe_inline"/>
-                                <label for="generate_project_alias" />
-                            </div>
+                            <field name="group_time_work_estimation_tasks" on_change="onchange_time_estimation_project_timesheet(group_time_work_estimation_tasks)" widget="radio"/>
                         </div>
                     </group>
                     <separator string="Helpdesk &amp; Support"/>
                     <group>
-                        <label for="id" string="Support"/>
+                        <label for="module_rating_project"/>
                         <div>
-                            <div>
-                                <field name="module_project_issue" class="oe_inline"/>
-                                <label for="module_project_issue"/>
-                            </div>
-                            <div>
-                                <field name="module_rating_project" class="oe_inline"/>
-                                <label for="module_rating_project"/>
-                            </div>
-                            <div name="module_project_issue_sheet">
-                                <field name="module_project_issue_sheet" class="oe_inline"/>
-                                <label for="module_project_issue_sheet"/>
-                            </div>
+                            <field name="module_rating_project" widget="radio"/>
+                        </div>
+
+                        <label for="module_project_issue_sheet"/>
+                        <div>
+                            <field name="module_project_issue_sheet" widget="radio"/>
                         </div>
                     </group>
                 </form>

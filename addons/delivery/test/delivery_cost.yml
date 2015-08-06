@@ -84,7 +84,6 @@
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
     assert float_compare(line_data.price_subtotal, 0, precision_digits=2) == 0, "Delivey cost is not correspond."
-
 -
   I set default delivery policy.
 -

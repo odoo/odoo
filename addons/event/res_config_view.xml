@@ -12,30 +12,31 @@
                         or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Mass Mailing"/>
+                    <separator string="Events"/>
                     <group>
-                        <label for="id" string="Settings"/>
-                        <div>                        
-                            <div name="module_event_sale">    
-                                <field name="module_event_sale" class="oe_inline"/>
-                                <label for="module_event_sale"/>
-                            </div>
-                            <div name="module_website_event_track">
-                                <field name="module_website_event_track"/>
-                                <label for="module_website_event_track"/>
-                            </div>
-                            <div name="div_website_event_questions">
-                                <field name="module_website_event_questions"/>
-                                <label for="module_website_event_questions"/>
-                            </div>
-                            <div name="div_auto_confirmation">
-                                <field name="auto_confirmation"/>
-                                <label for="auto_confirmation"/>
-                            </div>
-                            <div name="div_email_scheduling">
-                                <field name="group_email_scheduling"/>
-                                <label for="group_email_scheduling"/>
-                            </div>
+                        <label for="module_event_sale"/>
+                        <div>
+                            <field name="module_event_sale" widget="radio"/>
+                        </div>
+
+                        <label for="module_website_event_track"/>
+                        <div>
+                            <field name="module_website_event_track" widget="radio"/>
+                        </div>
+
+                        <label for="module_website_event_questions"/>
+                        <div>
+                            <field name="module_website_event_questions" widget="radio"/>
+                        </div>
+
+                        <label for="auto_confirmation"/>
+                        <div>
+                            <field name="auto_confirmation" widget="radio"/>
+                        </div>
+
+                        <label for="group_email_scheduling"/>
+                        <div>
+                            <field name="group_email_scheduling" widget="radio"/>
                         </div>
                     </group>
                 </form>
