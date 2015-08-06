@@ -9,6 +9,7 @@ import datetime
 import functools
 import hashlib
 import hmac
+import importlib
 import inspect
 import logging
 import mimetypes
@@ -43,6 +44,7 @@ except ImportError:
     psutil = None
 
 import openerp
+from openerp import exceptions
 from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
@@ -1470,9 +1472,33 @@ class Root(object):
     @lazy_property
     def session_store(self):
         # Setup http sessions
-        path = openerp.tools.config.session_dir
-        _logger.debug('HTTP sessions stored in: %s', path)
-        return werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
+        if 'session_store' in openerp.tools.config.options and \
+                openerp.tools.config['session_store']:
+            module_name = '.'.join(
+                openerp.tools.config['session_store'].split('.')[:-1])
+            class_name = '.'.join(
+                openerp.tools.config['session_store'].split('.')[-1:])
+
+            try:
+                module_ = importlib.import_module(module_name)
+                try:
+                    class_ = getattr(module_, class_name)
+                except AttributeError:
+                    raise exceptions.UserError(
+                        'Class of session store not found: %s' % class_name)
+                session_store = class_(session_class=OpenERPSession)
+                _logger.debug('HTTP sessions stored via: %s',
+                              openerp.tools.config['session_store'])
+            except ImportError:
+                raise exceptions.UserError(
+                    'Module of session store not found: %s' % module_name)
+        else:
+            path = openerp.tools.config.session_dir
+            _logger.debug('HTTP sessions stored in: %s', path)
+            session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
+                path, session_class=OpenERPSession)
+
+        return session_store
 
     @lazy_property
     def nodb_routing_map(self):

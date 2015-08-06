@@ -253,6 +253,8 @@ class configmanager(object):
                          help="Use the unaccent function provided by the database when available.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLiteCity.dat',
                          help="Absolute path to the GeoIP database file.")
+        group.add_option("--session-store", dest="session_store", my_default=False,
+                         help="Class name with module path to the session storage manager.")
         parser.add_option_group(group)
 
         if os.name == 'posix':
