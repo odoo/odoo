@@ -276,6 +276,23 @@ class users(osv.osv):
                 result = map(override_password, result)
         return result
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if uid != 1:
+            groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+            if 'password' in groupby_fields:
+                raise security.ExceptionNoTb('Invalid groupby')
+        return super(users, self).read_group(
+            cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        if user != 1 and args:
+            domain_terms = [term for term in args if isinstance(term, (tuple, list))]
+            domain_fields = set(left for (left, op, right) in domain_terms)
+            if 'password' in domain_fields:
+                raise security.ExceptionNoTb('Invalid search criterion')
+        return super(users, self)._search(
+            cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count,
+            access_rights_uid=access_rights_uid)
 
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
