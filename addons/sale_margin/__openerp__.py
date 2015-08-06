@@ -14,6 +14,5 @@ Price and Cost Price.
     """,
     'depends':['sale'],
     'demo':['data/sale_margin_demo.xml'],
-    'test': ['test/sale_margin.yml'],
     'data':['security/ir.model.access.csv','views/sale_margin_view.xml'],
 }
