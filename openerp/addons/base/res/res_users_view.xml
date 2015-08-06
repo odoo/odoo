@@ -145,8 +145,8 @@
                                 <field name="login" on_change="on_change_login(login)"
                                         placeholder="email@yourcompany.com"/>
                             </h2>
-                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                            <label for="company_id" class="oe_edit_only" groups="base.group_light_multi_company"/>
+                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_light_multi_company"/>
                         </div>
                         <group>
                             <label for="groups_id" string="Access Rights"
@@ -180,8 +180,6 @@
                             <field name="email" invisible="1"/>
                             <label for="login" class="oe_edit_only" string="Email Address"/>
                             <h2><field name="login" on_change="on_change_login(login)"/></h2>
-                            <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
-                            <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                             <group>
                                 <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
                                         attrs="{'invisible': [('id', '=', False)]}"/>
@@ -190,8 +188,9 @@
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
-                                <group string="Allowed Companies" groups="base.group_multi_company">
-                                    <field name="company_ids" nolabel="1" widget="many2many_tags"/>
+                                <group string="Multi Companies" groups="base.group_light_multi_company">
+                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags"/>
+                                    <field string="Main Company" name="company_id" context="{'user_preference': 0}"/>
                                 </group>
                                 <field name="groups_id"/>
                             </page>
@@ -234,7 +233,7 @@
             <field name="arch" type="xml">
                 <search string="Users">
                     <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('login','ilike',self), ('email','ilike',self)]" string="User"/>
-                    <field name="company_ids" string="Company" groups="base.group_multi_company"/>
+                    <field name="company_ids" string="Company" groups="base.group_light_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
                 </search>
@@ -289,7 +288,7 @@
                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" readonly="0"/>
                         <field name="tz_offset" invisible="1"/>
                         <field name="company_id" options="{'no_create': True}" readonly="0"
-                            groups="base.group_multi_company"/>
+                            groups="base.group_light_multi_company"/>
                     </group>
                     <group string="Email Preferences">
                         <field name="email" widget="email" readonly="0"/>

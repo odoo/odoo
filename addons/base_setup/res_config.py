@@ -10,9 +10,9 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_multi_company': fields.boolean('Manage multiple companies',
-            help='Work in multi-company environments, with appropriate security access between companies.\n'
-                 '-This installs the module multi_company.'),
+        'group_light_multi_company': fields.boolean('Manage multiple companies',
+            help='Work in multi-company environments, with appropriate security access between companies.',
+            implied_group='base.group_light_multi_company'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of Odoo."""),
         'module_portal': fields.boolean('Activate the customer portal',
