@@ -78,10 +78,10 @@ class AccountVoucher(models.Model):
              ('proforma', 'Pro-forma'),
              ('posted', 'Posted')
             ], 'Status', readonly=True, track_visibility='onchange', copy=False, default='draft',
-            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
-                        \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
-                        \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' status is used when user cancel voucher.')
+            help=" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+                 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+                 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+                 " * The 'Cancelled' status is used when user cancel voucher.")
     reference = fields.Char('Bill Reference', readonly=True, states={'draft': [('readonly', False)]},
                                  help="The partner reference of this document.", copy=False)
     amount = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_total')
