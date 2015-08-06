@@ -436,7 +436,7 @@ openerp.mail = function (session) {
         */
         on_attachment_loaded: function (event, result) {
 
-            if (result.erorr || !result.id ) {
+            if (result.error || !result.id ) {
                 this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
             } else {

@@ -49,7 +49,7 @@ class test_integer_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0),
-            [[False]])
+            [[u'0']])
 
     def test_basic_value(self):
         self.assertEqual(
@@ -72,7 +72,7 @@ class test_float_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0.0),
-            [[False]])
+            [[u'0.0']])
 
     def test_epsilon(self):
         self.assertEqual(
@@ -100,14 +100,14 @@ class test_decimal_field(CreatorCase):
     def test_0(self):
         self.assertEqual(
             self.export(0.0),
-            [[False]])
+            [[u'0.0']])
 
     def test_epsilon(self):
         """ epsilon gets sliced to 0 due to precision
         """
         self.assertEqual(
             self.export(0.000000000027),
-            [[False]])
+            [[u'0.0']])
 
     def test_negative(self):
         self.assertEqual(
@@ -129,7 +129,7 @@ class test_string_field(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_within_bounds(self):
         self.assertEqual(
             self.export("foobar"),
@@ -148,7 +148,7 @@ class test_unbound_string_field(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
@@ -170,7 +170,7 @@ class test_text(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(""),
-            [[False]])
+            [['']])
     def test_small(self):
         self.assertEqual(
             self.export("foobar"),
@@ -190,7 +190,7 @@ class test_date(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07'),
@@ -202,7 +202,7 @@ class test_datetime(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
     def test_basic(self):
         self.assertEqual(
             self.export('2011-11-07 21:05:48'),
@@ -265,7 +265,7 @@ class test_selection_function(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[None]])
+            [['']])
 
     def test_value(self):
         # FIXME: selection functions export the *value* itself
@@ -278,7 +278,7 @@ class test_selection_function(CreatorCase):
         # fucking hell
         self.assertEqual(
             self.export(0),
-            [[None]])
+            [['']])
 
 class test_m2o(CreatorCase):
     model_name = 'export.many2one'

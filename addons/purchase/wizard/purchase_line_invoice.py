@@ -30,6 +30,41 @@ class purchase_line_invoice(osv.osv_memory):
     _name = 'purchase.order.line_invoice'
     _description = 'Purchase Order Line Make Invoice'
 
+    def _make_invoice_by_partner(self, cr, uid, partner, orders, lines_ids, context=None):
+        """
+            create a new invoice for one supplier
+            @param cr : Cursor
+            @param uid : Id of current user
+            @param partner : The object partner
+            @param orders : The set of orders to add in the invoice
+            @param lines : The list of line's id
+        """
+        purchase_obj = self.pool.get('purchase.order')
+        account_jrnl_obj = self.pool.get('account.journal')
+        invoice_obj = self.pool.get('account.invoice')
+        name = orders and orders[0].name or ''
+        journal_id = account_jrnl_obj\
+            .search(cr, uid, [('type', '=', 'purchase')], context=None)
+        journal_id = journal_id and journal_id[0] or False
+        a = partner.property_account_payable.id
+        inv = {
+            'name': name,
+            'origin': name,
+            'type': 'in_invoice',
+            'journal_id': journal_id,
+            'reference': partner.ref,
+            'account_id': a,
+            'partner_id': partner.id,
+            'invoice_line': [(6, 0, lines_ids)],
+            'currency_id': orders[0].currency_id.id,
+            'comment': " \n".join([order.notes for order in orders if order.notes]),
+            'payment_term': orders[0].payment_term_id.id,
+            'fiscal_position': partner.property_account_position.id
+        }
+        inv_id = invoice_obj.create(cr, uid, inv, context=context)
+        purchase_obj.write(cr, uid, [order.id for order in orders], {'invoice_ids': [(4, inv_id)]}, context=context)
+        return inv_id
+
     def makeInvoices(self, cr, uid, ids, context=None):
 
         """
@@ -48,49 +83,9 @@ class purchase_line_invoice(osv.osv_memory):
         if record_ids:
             res = False
             invoices = {}
-            invoice_obj = self.pool.get('account.invoice')
             purchase_obj = self.pool.get('purchase.order')
             purchase_line_obj = self.pool.get('purchase.order.line')
             invoice_line_obj = self.pool.get('account.invoice.line')
-            account_jrnl_obj = self.pool.get('account.journal')
-
-            def multiple_order_invoice_notes(orders):
-                notes = ""
-                for order in orders:
-                    notes += "%s \n" % order.notes
-                return notes
-
-
-
-            def make_invoice_by_partner(partner, orders, lines_ids):
-                """
-                    create a new invoice for one supplier
-                    @param partner : The object partner
-                    @param orders : The set of orders to add in the invoice
-                    @param lines : The list of line's id
-                """
-                name = orders and orders[0].name or ''
-                journal_id = account_jrnl_obj.search(cr, uid, [('type', '=', 'purchase')], context=None)
-                journal_id = journal_id and journal_id[0] or False
-                a = partner.property_account_payable.id
-                inv = {
-                    'name': name,
-                    'origin': name,
-                    'type': 'in_invoice',
-                    'journal_id':journal_id,
-                    'reference' : partner.ref,
-                    'account_id': a,
-                    'partner_id': partner.id,
-                    'invoice_line': [(6,0,lines_ids)],
-                    'currency_id' : orders[0].currency_id.id,
-                    'comment': multiple_order_invoice_notes(orders),
-                    'payment_term': orders[0].payment_term_id.id,
-                    'fiscal_position': partner.property_account_position.id
-                }
-                inv_id = invoice_obj.create(cr, uid, inv)
-                for order in orders:
-                    order.write({'invoice_ids': [(4, inv_id)]})
-                return inv_id
 
             for line in purchase_line_obj.browse(cr, uid, record_ids, context=context):
                 if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
@@ -108,7 +103,7 @@ class purchase_line_invoice(osv.osv_memory):
                 il = map(lambda x: x[1], result)
                 orders = list(set(map(lambda x : x[0].order_id, result)))
 
-                res.append(make_invoice_by_partner(orders[0].partner_id, orders, il))
+                res.append(self._make_invoice_by_partner(cr, uid, orders[0].partner_id, orders, il, context=context))
 
         return {
             'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
