@@ -56,7 +56,7 @@ For any further information please contact our event department.</p>
             <field name="body_html"><![CDATA[<p>Hello ${object.name},</p>
 <p>We would like to thank you for your presence at our event ${object.event_id.name}.
 <br/><br/>
-    % if object.event_id.organizer_id and object.event_id.organizer_id.is_company:
+    % if object.event_id.organizer_id and object.event_id.organizer_id.company_type == 'company':
         <strong>The ${object.event_id.organizer_id.name} Team</strong>
     % elif object.event_id.organizer_id:
         <strong>${object.event_id.organizer_id.name}</strong>

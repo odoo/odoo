@@ -63,7 +63,7 @@ class test_base(common.TransactionCase):
         cr, uid = self.cr, self.uid
         ghoststep = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                              {'name': 'GhostStep',
-                                                                              'is_company': 'company',
+                                                                              'company_type': 'company',
                                                                               'street': 'Main Street, 10',
                                                                               'phone': '123456789',
                                                                               'email': 'info@ghoststep.com',
@@ -115,7 +115,7 @@ class test_base(common.TransactionCase):
         company """
         cr, uid = self.cr, self.uid
         ironshield = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'IronShield')[0])
-        self.assertEqual(ironshield.is_company, 'person', 'Partners are not companies by default')
+        self.assertEqual(ironshield.company_type, 'person', 'Partners are not companies by default')
         self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
         ironshield.write({'type': 'contact'}) # force default type to double-check sync 
         p1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
@@ -125,18 +125,18 @@ class test_base(common.TransactionCase):
         self.assertEquals(p1.type, 'contact', 'Default type must be "contact", not the copied parent type')
         ironshield.refresh()
         self.assertEqual(ironshield.street, p1.street, 'Address fields should be copied to company')
-        self.assertEqual(ironshield.is_company, 'person', 'Company flag should be turned on after first contact creation')
+        self.assertEqual(ironshield.company_type, 'person', 'Company flag should be turned on after first contact creation')
 
     def test_40_res_partner_address_getc(self):
         """ Test address_get address resolution mechanism: it should first go down through descendants,
         stopping when encountering another is_copmany entity, then go up, stopping again at the first
-        is_company entity or the root ancestor and if nothing matches, it should use the provided partner
+        company_type entity or the root ancestor and if nothing matches, it should use the provided partner
         itself """
         cr, uid = self.cr, self.uid
         elmtree = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'Elmtree')[0])
         branch1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Branch 1',
                                                                                      'parent_id': elmtree.id,
-                                                                                     'is_company': 'company'}))
+                                                                                     'company_type': 'company'}))
         leaf10 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 10',
                                                                                     'parent_id': branch1.id,
                                                                                     'type': 'invoice'}))
@@ -146,10 +146,10 @@ class test_base(common.TransactionCase):
         leaf111 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 111',
                                                                                     'parent_id': branch11.id,
                                                                                     'type': 'delivery'}))
-        branch11.write({'is_company': 'person'}) # force is_company after creating 1rst child
+        branch11.write({'company_type': 'person'}) # force company_type after creating 1rst child
         branch2 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Branch 2',
                                                                                      'parent_id': elmtree.id,
-                                                                                     'is_company': 'company'}))
+                                                                                     'company_type': 'company'}))
         leaf21 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 21',
                                                                                     'parent_id': branch2.id,
                                                                                     'type': 'delivery'}))
@@ -222,7 +222,7 @@ class test_base(common.TransactionCase):
                                                                        'email': 'ssunknife@gmail.com'}))
         sunhelm = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                            {'name': 'Sunhelm',
-                                                                            'is_company': 'company',
+                                                                            'company_type': 'company',
                                                                             'street': 'Rainbow Street, 13',
                                                                             'phone': '1122334455',
                                                                             'email': 'info@sunhelm.com',
@@ -262,20 +262,18 @@ class test_base(common.TransactionCase):
             p.refresh()
             self.assertEquals(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
 
-        # promote p1 to commercial entity
-        vals = p1.onchange_type(is_company='company')['value']
-        p1.write(dict(vals, parent_id=sunhelm.id,
-                      is_company='company',
+        p1.write(dict(parent_id=sunhelm.id,
+                      company_type='company',
                       name='Sunhelm Subsidiary'))
         p1.refresh()
-        self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
-        self.assertEquals(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')
+        self.assertEquals(p1.vat, p1vat, 'Setting company_type should stop auto-sync of commercial fields')
+        self.assertEquals(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting company_type')
 
         # writing on parent should not touch child commercial entities
         sunhelmvat2 = 'BE0112233445'
         sunhelm.write({'vat': sunhelmvat2})
         p1.refresh()
-        self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
+        self.assertEquals(p1.vat, p1vat, 'Setting company_type should stop auto-sync of commercial fields')
         p0.refresh()
         self.assertEquals(p0.vat, sunhelmvat2, 'Commercial fields must be automatically synced')
 

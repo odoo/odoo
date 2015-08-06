@@ -318,7 +318,7 @@ class ResPartner(models.Model):
     @api.one
     def _compute_has_unreconciled_entries(self):
         # Avoid useless work if has_unreconciled_entries is not relevant for this partner
-        if not self.active or not self.is_company and self.parent_id:
+        if not self.active or self.company_type == 'person' and self.parent_id:
             return
         self.env.cr.execute(
             """ SELECT 1 FROM(

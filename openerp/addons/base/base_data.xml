@@ -20,12 +20,12 @@
 
         <function name="install_lang" model="res.lang"/>
 
-        <record id="main_partner" model="res.partner" context="{'default_is_company': 'company'}">
+        <record id="main_partner" model="res.partner" context="{'default_company_type': 'company'}">
             <field name="name">Your Company</field>
             <field name="company_id" eval="None"/>
             <field name="image" eval="False"/>
             <field name="customer" eval="False"/>
-            <field name="is_company">company</field>
+            <field name="company_type">company</field>
             <field name="street"></field>
             <field name="city"></field>
             <field name="zip"></field>

@@ -350,7 +350,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         context['active_test'] = False
         ids = proxy_partner.search(cr, uid, [], context=context)
 
-        fields = ['name', 'var' 'partner_id' 'is_company', 'email']
+        fields = ['name', 'var' 'partner_id' 'company_type', 'email']
         partners = proxy_partner.read(cr, uid, ids, fields, context=context)
 
         partners.sort(key=operator.itemgetter('id'))
@@ -643,7 +643,7 @@ class MergePartnerAutomatic(osv.TransientModel):
             UPDATE
                 res_partner
             SET
-                is_company = NULL,
+                company_type = 'person',
                 parent_id = NULL
             WHERE
                 parent_id = id
@@ -694,10 +694,10 @@ class MergePartnerAutomatic(osv.TransientModel):
             UPDATE
                 res_partner
             SET
-                is_company = NULL
+                company_type = 'person'
             WHERE
                 parent_id IS NOT NULL AND
-                is_company IS NOT NULL
+                company_type IS NOT NULL
         """)
 
         # cr.execute("""

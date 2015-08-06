@@ -484,7 +484,7 @@
                                     <field name="journal_entry_ids" invisible="1"/>
                                     <field name="date" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=','company')]"
+                                    <field name="partner_id" domain="['|',('parent_id','=',False),('company_type','=','company')]"
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
@@ -951,7 +951,7 @@
                                 <field name="name"/>
                                 <field name="ref"/>
                                 <field name="partner_id"
-                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', 'company')]"/>
+                                    domain="['|', ('parent_id', '=', False), ('company_type', '=', 'company')]"/>
                             </group>
                             <group>
                                 <field name="journal_id"/>
@@ -1018,7 +1018,7 @@
                                 <field name="journal_id" readonly="False"/>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="partner_id"
-                                    domain="['|', ('parent_id', '=', False), ('is_company', '=', 'company')]"/>
+                                    domain="['|', ('parent_id', '=', False), ('company_type', '=', 'company')]"/>
                                 <newline/>
                                 <field name="debit"/>
                                 <field name="credit"/>
@@ -1207,7 +1207,7 @@
                             <field name="journal_id"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
                             <field name="partner_id"
-                                domain="['|', ('parent_id', '=', False), ('is_company', '=', 'company')]"/>
+                                domain="['|', ('parent_id', '=', False), ('company_type', '=', 'company')]"/>
                         </group>
                         <group>
                             <field name="ref"/>

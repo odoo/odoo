@@ -178,7 +178,7 @@ class res_partner(osv.Model, format_address):
         result = dict.fromkeys(ids, False)
         for partner in self.browse(cr, uid, ids, context=context):
             current_partner = partner 
-            while not (current_partner.is_company=='company') and current_partner.parent_id:
+            while not (current_partner.company_type=='company') and current_partner.parent_id:
                 current_partner = current_partner.parent_id
             result[partner.id] = current_partner.id
         return result
@@ -196,11 +196,11 @@ class res_partner(osv.Model, format_address):
 
     _commercial_partner_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
-                        ['parent_id', 'is_company'], 10)
+                        ['parent_id', 'company_type'], 10)
     }
     _display_name_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)], context=dict(active_test=False)),
-                        ['parent_id', 'is_company', 'name'], 10)
+                        ['parent_id', 'company_type', 'name'], 10)
     }
 
     _order = "display_name"
@@ -249,10 +249,10 @@ class res_partner(osv.Model, format_address):
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
         'birthdate': fields.char('Birthdate'),
-        'is_company': fields.selection([
+        'company_type': fields.selection([
                 ('person', 'Individual'),
                 ('company', 'Company')
-            ], 'Is a Company'),
+            ], 'Company Type'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
             help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
@@ -307,7 +307,7 @@ class res_partner(osv.Model, format_address):
         'category_id': _default_category,
         'company_id': _default_company,
         'color': 0,
-        'is_company': 'person',
+        'company_type': 'person',
         'image': False,
     }
 
@@ -320,11 +320,6 @@ class res_partner(osv.Model, format_address):
         default = dict(default or {})
         default['name'] = _('%s (copy)') % self.name
         return super(res_partner, self).copy(default)
-
-    @api.multi
-    def onchange_type(self, is_company):
-        value = {'title': False}
-        return {'value': value}
 
     def onchange_address(self, cr, uid, ids, parent_id, context=None):
         def value_or_id(val):
@@ -413,7 +408,7 @@ class res_partner(osv.Model, format_address):
             commercial_partner = self.browse(cr, uid, commercial_partner_id, context=context)
         sync_vals = self._update_fields_values(cr, uid, commercial_partner,
                                                commercial_fields, context=context)
-        sync_children = [c for c in partner.child_ids if c.is_company=='person']
+        sync_children = [c for c in partner.child_ids if c.company_type=='person']
         for child in sync_children:
             self._commercial_sync_to_children(cr, uid, child, context=context)
         return self.write(cr, uid, [c.id for c in sync_children], sync_vals, context=context)
@@ -454,12 +449,12 @@ class res_partner(osv.Model, format_address):
         was meant to be company address """
         parent = partner.parent_id
         address_fields = self._address_fields(cr, uid, context=context)
-        if parent and ((parent.is_company=='company') or not parent.parent_id) and len(parent.child_ids) == 1 and \
+        if parent and ((parent.company_type=='company') or not parent.parent_id) and len(parent.child_ids) == 1 and \
             any(partner[f] for f in address_fields) and not any(parent[f] for f in address_fields):
             addr_vals = self._update_fields_values(cr, uid, partner, address_fields, context=context)
             parent.update_address(addr_vals)
-            if parent.is_company=='person':
-                parent.write({'is_company': 'company'})
+            if parent.company_type=='person':
+                parent.write({'company_type': 'company'})
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -532,7 +527,7 @@ class res_partner(osv.Model, format_address):
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name or ''
-            if record.parent_id and record.is_company=='person':
+            if record.parent_id and record.company_type=='person':
                 name = "%s, %s" % (record.parent_name, name)
             if context.get('show_address_only'):
                 name = self._display_address(cr, uid, record, without_company=True, context=context)
@@ -668,7 +663,7 @@ class res_partner(osv.Model, format_address):
 
     def address_get(self, cr, uid, ids, adr_pref=None, context=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
-        through descendants within company boundaries (stop at entities flagged ``is_company``)
+        through descendants within company boundaries (stop at entities flagged ``company_type``)
         then continuing the search at the ancestors that are within the same company boundaries.
         Defaults to partners of type ``'default'`` when the exact type is not found, or to the
         provided partner itself if no type ``'default'`` is found either. """
@@ -693,10 +688,10 @@ class res_partner(osv.Model, format_address):
                         return result
                     to_scan = [c for c in record.child_ids
                                  if c not in visited
-                                 if c.is_company=='person'] + to_scan
+                                 if c.company_type=='person'] + to_scan
 
                 # Continue scanning at ancestor if current_partner is not a commercial entity
-                if (current_partner.is_company=='company') or not current_partner.parent_id:
+                if (current_partner.company_type=='company') or not current_partner.parent_id:
                     break
                 current_partner = current_partner.parent_id
 

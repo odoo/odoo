@@ -259,10 +259,10 @@ class crm_lead(format_address, osv.osv):
         values = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
+            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.company_type == 'company' and partner.name) or False
             values = {
                 'partner_name': partner_name,
-                'contact_name': (not partner.is_company and partner.name) or False,
+                'contact_name': (partner.company_type == 'person' and partner.name) or False,
                 'title': partner.title and partner.title.id or False,
                 'street': partner.street,
                 'street2': partner.street2,
@@ -705,7 +705,7 @@ class crm_lead(format_address, osv.osv):
 
         return True
 
-    def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+    def _lead_create_contact(self, cr, uid, lead, name, company_type, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
         vals = {'name': name,
             'user_id': lead.user_id.id,
@@ -724,7 +724,7 @@ class crm_lead(format_address, osv.osv):
             'city': lead.city,
             'country_id': lead.country_id and lead.country_id.id or False,
             'state_id': lead.state_id and lead.state_id.id or False,
-            'is_company': is_company,
+            'company_type': company_type,
             'type': 'contact'
         }
         partner = partner.create(cr, uid, vals, context=context)

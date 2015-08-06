@@ -60,7 +60,7 @@
                     <field name="phone"/>
                     <field name="email"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="is_company" invisible="1"/>
+                    <field name="company_type" invisible="1"/>
                     <field name="country_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
@@ -74,14 +74,14 @@
                 <form string="Contact">
                     <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
-                        <field name="is_company" on_change="onchange_type(is_company)" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
+                        <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" />
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
-                            domain="[('is_company', '=', 'company')]" context="{'default_is_company': 'company'}"
-                            attrs="{'invisible': [('is_company','=', 'company')]}"/>
+                            domain="[('company_type', '=', 'company')]" context="{'default_company_type': 'company'}"
+                            attrs="{'invisible': [('company_type','=', 'company')]}"/>
                     </div>
                     <group>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
@@ -143,15 +143,15 @@
                     <div class="oe_button_box" name="button_box"/>
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
-                        <field name="is_company" on_change="onchange_type(is_company)" class="oe_edit_only" options="{'horizontal': true}" widget="radio"/>
+                        <field name="company_type" class="oe_edit_only" options="{'horizontal': true}" widget="radio"/>
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" required="1"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
                                 placeholder="Company"
-                                domain="[('is_company', '=', 'company')]" context="{'default_is_company': 'company', 'default_supplier': supplier, 'default_customer': customer}"
-                                attrs="{'invisible': [('is_company','=', 'company'),('parent_id', '=', False)]}"
+                                domain="[('company_type', '=', 'company')]" context="{'default_company_type': 'company', 'default_supplier': supplier, 'default_customer': customer}"
+                                attrs="{'invisible': [('company_type','=', 'company'),('parent_id', '=', False)]}"
                                 on_change="onchange_address(parent_id)"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
@@ -178,14 +178,14 @@
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
-                                attrs="{'invisible': [('is_company','=', 'company')]}"/>
+                                attrs="{'invisible': [('company_type','=', 'company')]}"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" options='{"no_open": True}'
-                                attrs="{'invisible': [('is_company','=', 'company')]}"/>
+                                attrs="{'invisible': [('company_type','=', 'company')]}"/>
                             <field name="lang"/>
                         </group>
                     </group>
@@ -200,7 +200,7 @@
                                     <field name="type"/>
                                     <field name="email"/>
                                     <field name="parent_id"/>
-                                    <field name="is_company"/>
+                                    <field name="company_type"/>
                                     <field name="function"/>
                                     <field name="phone"/>
                                     <field name="street"/>
@@ -230,10 +230,10 @@
                                                             <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                                         </t>
                                                         <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
-                                                            <t t-if="record.is_company.raw_value === 'company'">
+                                                            <t t-if="record.company_type.raw_value === 'company'">
                                                                 <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                                             </t>
-                                                            <t t-if="record.is_company.raw_value === 'person'">
+                                                            <t t-if="record.company_type.raw_value === 'person'">
                                                                 <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                                             </t>
                                                         </t>
@@ -348,15 +348,15 @@
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
                    <filter help="My Partners" domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Persons" name="type_person" domain="[('is_company','=','person')]"/>
-                   <filter string="Companies" name="type_company" domain="[('is_company','=','company')]"/>
+                   <filter string="Persons" name="type_person" domain="[('company_type','=','person')]"/>
+                   <filter string="Companies" name="type_company" domain="[('company_type','=','company')]"/>
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1),('parent_id','=',False)]"/>
                    <filter string="Vendors" name="supplier" domain="[('supplier','=',1),('parent_id','=',False)]"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
-                   <field name="parent_id" domain="[('is_company','=','company')]" operator="child_of"/>
+                   <field name="parent_id" domain="[('company_type','=','company')]" operator="child_of"/>
                    <group expand="0" name="group_by" string="Group By">
                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
@@ -378,7 +378,7 @@
                     <field name="type"/>
                     <field name="email"/>
                     <field name="parent_id"/>
-                    <field name="is_company"/>
+                    <field name="company_type"/>
                     <field name="function"/>
                     <field name="phone"/>
                     <field name="street"/>
@@ -406,10 +406,10 @@
                                             <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                         </t>
                                         <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
-                                            <t t-if="record.is_company.raw_value === 'company'">
+                                            <t t-if="record.company_type.raw_value === 'company'">
                                                 <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
                                             </t>
-                                            <t t-if="record.is_company.raw_value === 'person'">
+                                            <t t-if="record.company_type.raw_value === 'person'">
                                                 <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
                                             </t>
                                         </t>

@@ -12,7 +12,7 @@ class res_partner(osv.osv):
         # the user may not have access rights for opportunities or meetings
         try:
             for partner in self.browse(cr, uid, ids, context):
-                if partner.is_company == 'company':
+                if partner.company_type == 'company':
                     operator = 'child_of'
                 else:
                     operator = '='
