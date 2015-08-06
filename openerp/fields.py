@@ -320,10 +320,7 @@ class Field(object):
         'change_default': False,        # whether the field may trigger a "user-onchange"
         'deprecated': None,             # whether the field is deprecated
 
-        'inverse_fields': (),           # collection of inverse fields (objects)
-        'computed_fields': (),          # fields computed with the same method as self
         'related_field': None,          # corresponding related field
-        '_triggers': (),                # invalidation and recomputation triggers
     }
 
     def __init__(self, string=None, **kwargs):
@@ -385,9 +382,6 @@ class Field(object):
         if self.setup_full_done and not self.related:
             # optimization for regular fields: keep the base setup
             self.setup_full_done = False
-            self.inverse_fields = ()
-            self.computed_fields = ()
-            self._triggers = ()
         else:
             # do the base setup from scratch
             self._setup_attrs(model, name)
@@ -608,11 +602,6 @@ class Field(object):
     # See method ``modified`` below for details.
     #
 
-    def add_trigger(self, trigger):
-        """ Add a recomputation trigger on ``self``. """
-        if trigger not in self._triggers:
-            self._triggers += (trigger,)
-
     def setup_triggers(self, env):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         model = env[self.model_name]
@@ -640,22 +629,18 @@ class Field(object):
                 continue
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
-            field.add_trigger((self, '.'.join(path0 or ['id'])))
+            model._field_triggers.add(field, (self, '.'.join(path0 or ['id'])))
 
             # add trigger on inverse fields, too
-            for invf in field.inverse_fields:
+            for invf in model._field_inverses[field]:
                 #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invf.add_trigger((self, '.'.join(path0 + [head])))
+                invm = env[invf.model_name]
+                invm._field_triggers.add(invf, (self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
                 comodel = env[field.comodel_name]
                 self._setup_dependency(path0 + [head], comodel, tail)
-
-    @property
-    def dependents(self):
-        """ Return the computed fields that depend on ``self``. """
-        return (field for field, path in self._triggers)
 
     ############################################################################
     #
@@ -867,7 +852,7 @@ class Field(object):
             # set value in cache, inverse field, and mark record as dirty
             record._cache[self] = value
             if env.in_onchange:
-                for invf in self.inverse_fields:
+                for invf in record._field_inverses[self]:
                     invf._update(value, record)
                 record._set_dirty(self.name)
 
@@ -889,11 +874,12 @@ class Field(object):
     def _compute_value(self, records):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
-        for field in self.computed_fields:
+        computed = records._field_computed[self]
+        for field in computed:
             records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
         self.compute(records)
-        for field in self.computed_fields:
+        for field in computed:
             records.env.computed[field].difference_update(records._ids)
 
     def compute_value(self, records):
@@ -923,10 +909,11 @@ class Field(object):
                     self.compute_value(recs)
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
+                        computed = record._field_computed[self]
                         for source, target in zip(recs, recs.with_env(env)):
                             try:
                                 values = target._convert_to_cache({
-                                    f.name: source[f.name] for f in self.computed_fields
+                                    f.name: source[f.name] for f in computed
                                 }, validate=False)
                             except MissingError as e:
                                 values = FailedValue(e)
@@ -981,7 +968,7 @@ class Field(object):
         """
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
-        for field, path in self._triggers:
+        for field, path in records._field_triggers[self]:
             if path and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
@@ -1007,7 +994,7 @@ class Field(object):
         # invalidate the fields on the records in cache that depend on
         # ``records``, except fields currently being computed
         spec = []
-        for field, path in self._triggers:
+        for field, path in records._field_triggers[self]:
             target = env[field.model_name]
             computed = target.browse(env.computed[field])
             if path == 'id':
@@ -1591,11 +1578,11 @@ class _Relational(Field):
         return env[self.comodel_name]
 
     def modified(self, records):
-        # Invalidate cache for self.inverse_fields, too. Note that recomputation
-        # of fields that depend on self.inverse_fields is already covered by the
-        # triggers (see above).
+        # Invalidate cache for inverse fields, too. Note that the recomputation
+        # of fields that depend on inverse fields is already covered by the
+        # triggers.
         spec = super(_Relational, self).modified(records)
-        for invf in self.inverse_fields:
+        for invf in records._field_inverses[self]:
             spec.append((invf, None))
         return spec
 
@@ -1772,7 +1759,8 @@ class _RelationalMulti(_Relational):
         if fnames is None:
             # take all fields in cache, except the inverses of self
             fnames = set(value._fields) - set(MAGIC_COLUMNS)
-            for invf in self.inverse_fields:
+            model = value.env[self.model_name]
+            for invf in model._field_inverses[self]:
                 fnames.discard(invf.name)
 
         # add new and existing records
@@ -1853,8 +1841,8 @@ class One2many(_RelationalMulti):
             # (res_model/res_id pattern). Only inverse the field if this is
             # a ``Many2one`` field.
             if isinstance(invf, Many2one):
-                self.inverse_fields += (invf,)
-                invf.inverse_fields += (self,)
+                model._field_inverses.add(self, invf)
+                comodel._field_inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1927,8 +1915,9 @@ class Many2many(_RelationalMulti):
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:
-                self.inverse_fields += (invf,)
-                invf.inverse_fields += (self,)
+                comodel = model.env[self.comodel_name]
+                model._field_inverses.add(self, invf)
+                comodel._field_inverses.add(invf, self)
             else:
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self

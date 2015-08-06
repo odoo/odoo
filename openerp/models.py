@@ -47,7 +47,7 @@ from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
-from .tools import frozendict, lazy_property, ormcache
+from .tools import frozendict, lazy_property, ormcache, Collector
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -2962,6 +2962,11 @@ class BaseModel(object):
             self.env[parent]._setup_base(partial)
         self._add_inherited_fields()
 
+        # 4. initialize more field metadata
+        cls._field_computed = {}            # fields computed with the same method
+        cls._field_inverses = Collector()   # inverse fields for related fields
+        cls._field_triggers = Collector()   # list of (field, path) to invalidate
+
         cls._setup_done = True
 
     @api.model
@@ -2977,15 +2982,12 @@ class BaseModel(object):
             if column:
                 cls._columns[name] = column
 
-        # determine field.computed_fields
-        computed_fields = defaultdict(list)
+        # map each field to the fields computed with the same method
+        groups = defaultdict(list)
         for field in cls._fields.itervalues():
             if field.compute:
-                computed_fields[field.compute].append(field)
-
-        for fields in computed_fields.itervalues():
-            for field in fields:
-                field.computed_fields = fields
+                cls._field_computed[field] = group = groups[field.compute]
+                group.append(field)
 
     @api.model
     def _setup_complete(self):
@@ -2998,13 +3000,12 @@ class BaseModel(object):
 
         # add invalidation triggers on model dependencies
         if cls._depends:
-            triggers = [(field, None) for field in cls._fields.itervalues()]
             for model_name, field_names in cls._depends.iteritems():
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    for trigger in triggers:
-                        field.add_trigger(trigger)
+                    for dependent in cls._fields.itervalues():
+                        model._field_triggers.add(field, (dependent, None))
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
@@ -5427,7 +5428,7 @@ class BaseModel(object):
             for name in values:
                 field = self._fields.get(name)
                 if field:
-                    for invf in field.inverse_fields:
+                    for invf in self._field_inverses[field]:
                         invf._update(record[name], record)
 
         return record
@@ -5633,7 +5634,7 @@ class BaseModel(object):
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in f.inverse_fields]
+               [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.invalidate(spec)
 
     @api.multi
@@ -5683,11 +5684,8 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [
-                f.name
-                for f in field.computed_fields
-                if f.store and self.env.field_todo(f)
-            ]
+            computed = self.env[field.model_name]._field_computed[field]
+            names = [f.name for f in computed if f.store and self.env.field_todo(f)]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({
@@ -5698,7 +5696,7 @@ class BaseModel(object):
                 except MissingError:
                     pass
             # mark the computed fields as done
-            map(recs._recompute_done, field.computed_fields)
+            map(recs._recompute_done, computed)
 
     #
     # Generic onchange method
@@ -5711,7 +5709,7 @@ class BaseModel(object):
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
         return field.name in self._onchange_methods or \
-            any(dep in other_fields for dep in field.dependents)
+            any(dep in other_fields for dep, _ in self._field_triggers[field])
 
     @api.model
     def _onchange_spec(self, view_info=None):
