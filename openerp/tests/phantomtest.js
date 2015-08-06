@@ -93,8 +93,8 @@ function PhantomTest() {
                            "\nreferrer: " + document.referrer +
                            "\n\n" + (document.body && document.body.innerHTML)).replace(/[^a-z0-9\s~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, "*");
             console.log('<phantomLog>error ' + message + '</phantomLog>');
-            phantom.exit(1);
         });
+        phantom.exit(1);
     }, self.timeout);
 
     // ----------------------------------------------------

@@ -1431,6 +1431,7 @@ class stock_picking(models.Model):
             'name': _('Extra Move: ') + name,
             'state': 'draft',
             'restrict_partner_id': op.owner_id,
+            'group_id': picking.group_id.id,
             }
         return res
 
