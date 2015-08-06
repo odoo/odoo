@@ -97,9 +97,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             this.render_editable();
     },
     destroy_content: function () {
-        if (this.$drop_down) {
-            this.$drop_down.off('click');
-            delete this.$drop_down;
+        if (this.$dropdown) {
+            this.$dropdown.off('click');
+            delete this.$dropdown;
         }
         if (this.$input) {
             this.$input.closest(".modal .modal-content").off('scroll');
@@ -135,7 +135,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             self.hide_error_displayer();
         });
 
-        this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
+        this.$dropdown = this.$el.find(".oe_m2o_drop_down_button");
         this.$follow_button = $(".oe_m2o_cm_button", this.$el);
 
         this.$follow_button.click(function(ev) {
@@ -179,7 +179,7 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
         };
         this.$input.keydown(input_changed);
         this.$input.change(input_changed);
-        this.$drop_down.click(function() {
+        this.$dropdown.click(function() {
             self.$input.focus();
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");                

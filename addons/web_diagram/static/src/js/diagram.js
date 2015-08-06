@@ -261,7 +261,7 @@ var DiagramView = View.extend({
                 if (!(fld in form_controller.fields)) { return; }
                 var field = form_controller.fields[fld];
                 field.$input.prop('disabled', true);
-                field.$drop_down.unbind();
+                field.$dropdown.unbind();
             });
         });
     },

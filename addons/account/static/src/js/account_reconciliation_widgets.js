@@ -1834,9 +1834,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
         $.when(self.changePartner(false)).then(function(){
             self.$(".change_partner_container").show();
             self.$(".partner_name").hide();
-            // Old design uses drop_down and new design uses dropdown
-            var m2o_widget_dropdown = self.change_partner_field.$drop_down || self.change_partner_field.$dropdown;
-            m2o_widget_dropdown.trigger("click");
+            self.change_partner_field.$dropdown.trigger("click");
         });
     },
 
