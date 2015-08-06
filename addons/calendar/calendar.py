@@ -644,41 +644,6 @@ class ir_values(osv.Model):
                                           meta, context, res_id_req, without_user, key2_req)
 
 
-class ir_model(osv.Model):
-
-    _inherit = 'ir.model'
-
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        new_ids = isinstance(ids, (basestring, int, long)) and [ids] or ids
-        if context is None:
-            context = {}
-        data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, context=context, load=load)
-        if data:
-            for val in data:
-                val['id'] = calendar_id2real_id(val['id'])
-        return isinstance(ids, (basestring, int, long)) and data[0] or data
-
-
-original_exp_report = openerp.service.report.exp_report
-
-
-def exp_report(db, uid, object, ids, datas=None, context=None):
-    """
-    Export Report
-    """
-    if object == 'printscreen.list':
-        original_exp_report(db, uid, object, ids, datas, context)
-    new_ids = []
-    for id in ids:
-        new_ids.append(calendar_id2real_id(id))
-    if datas.get('id', False):
-        datas['id'] = calendar_id2real_id(datas['id'])
-    return original_exp_report(db, uid, object, new_ids, datas, context)
-
-
-openerp.service.report.exp_report = exp_report
-
-
 class calendar_event_type(osv.Model):
     _name = 'calendar.event.type'
     _description = 'Meeting Type'
@@ -1758,6 +1723,7 @@ class calendar_event(osv.Model):
                 res = self.write(cr, uid, id_to_exclure, {'active': False}, context=context)
 
         return res
+
 
 class mail_message(osv.Model):
     _inherit = "mail.message"
