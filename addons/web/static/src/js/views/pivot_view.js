@@ -21,6 +21,7 @@ var total = _t("Total");
 
 var PivotView = View.extend({
     template: 'PivotView',
+    icon: 'fa-table',
     display_name: _lt('Pivot'),
     view_type: 'pivot',
     events: {

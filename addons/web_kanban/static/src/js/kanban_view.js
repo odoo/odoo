@@ -27,6 +27,7 @@ var KanbanView = View.extend({
     accesskey: "K",
     className: "o_kanban_view",
     display_name: _lt("Kanban"),
+    icon: 'fa-th-large',
     mobile_friendly: true,
     view_type: "kanban",
 

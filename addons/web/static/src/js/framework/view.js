@@ -23,6 +23,8 @@ var View = Widget.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
+    // icon is the font-awesome icon to display in the view switcher
+    icon: 'fa-question',
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
         this.ViewManager = parent;

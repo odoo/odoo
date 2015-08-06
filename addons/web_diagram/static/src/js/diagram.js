@@ -15,6 +15,7 @@ var QWeb = core.qweb;
 
 var DiagramView = View.extend({
     display_name: _lt('Diagram'),
+    icon: 'fa-code-fork',
     view_type: 'diagram',
     searchable: false,
     multi_record: false,

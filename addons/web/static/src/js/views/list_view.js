@@ -35,6 +35,7 @@ var row_decoration = [
 var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
     accesskey: 'L',
+    icon: 'fa-list-ul',
     display_name: _lt('List'),
     defaults: {
         // records can be selected one by one

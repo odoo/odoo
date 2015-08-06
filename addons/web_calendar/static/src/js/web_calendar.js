@@ -63,6 +63,7 @@ function isNullOrUndef(value) {
 var CalendarView = View.extend({
     template: "CalendarView",
     display_name: _lt('Calendar'),
+    icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
 
     init: function (parent, dataset, view_id, options) {

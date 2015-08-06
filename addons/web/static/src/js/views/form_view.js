@@ -35,6 +35,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
     view_type: "form",
     multi_record: false,
     accesskey: "F",
+    icon: 'fa-edit',
     /**
      * @constructs instance.web.FormView
      * @extends instance.web.View

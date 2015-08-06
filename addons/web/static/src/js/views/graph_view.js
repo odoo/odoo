@@ -16,6 +16,7 @@ var QWeb = core.qweb;
 var GraphView = View.extend({
     className: 'oe_graph',
     display_name: _lt('Graph'),
+    icon: 'fa-bar-chart',
     view_type: 'graph',
 
     init: function(parent, dataset, view_id, options) {
