@@ -844,7 +844,7 @@ class task(osv.osv):
         users_obj = self.pool.get('res.users')
         if context is None: context = {}
 
-        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
+        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
 
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
