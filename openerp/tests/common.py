@@ -332,6 +332,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
                 phantom.wait()
             self._wait_remaining_requests()
+            # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):
