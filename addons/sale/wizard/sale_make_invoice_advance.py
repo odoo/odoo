@@ -82,7 +82,8 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
-                    False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+                    False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id,
+                    company_id=sale.company_id.id)
             res = val['value']
 
             # determine and check income account
