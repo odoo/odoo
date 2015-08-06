@@ -55,7 +55,7 @@
             <field name="inherit_id" ref="account.view_account_payment_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='state_sent']" position="before">
-                    <filter string="Checks To Send" domain="[('payment_method.code', '=', 'check_writing'), ('state','=','posted')]" name="checks_to_send"/>
+                    <filter string="Checks To Send" domain="[('payment_method_id.code', '=', 'check_writing'), ('state','=','posted')]" name="checks_to_send"/>
                 </xpath>
             </field>
         </record>
