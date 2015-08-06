@@ -299,18 +299,6 @@ class website_sale(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="user", methods=['POST'], website=True)
-    def product_comment(self, product_template_id, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        if post.get('comment'):
-            request.registry['product.template'].message_post(
-                cr, uid, product_template_id,
-                body=post.get('comment'),
-                message_type='comment',
-                subtype='mt_comment',
-                context=dict(context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)
-
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
         cr, uid, pool, context = request.cr, request.uid, request.registry, request.context
