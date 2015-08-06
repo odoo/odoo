@@ -55,3 +55,57 @@
     z-index: 1011 !important;
     position: relative;
 }
+
+.oe_breathing {
+  background:transparent url(/web_tip/static/src/img/tip_throbber.png) no-repeat center center;
+  cursor : pointer;
+  height: 58px;
+  width: 58px;
+  position: absolute;
+  z-index: 1;
+  -webkit-animation: bounce .5s steps(12) alternate infinite;
+     -moz-animation: bounce .5s steps(12) alternate infinite;
+       -o-animation: bounce .5s steps(12) alternate infinite;
+          animation: bounce .5s steps(12) alternate infinite;
+}
+
+@-webkit-keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@-moz-keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@-o-keyframes explode {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+@keyframes bounce {
+  from{ background-position: 0 0}
+  to{ background-position: -696px 0}
+}
+
+.oe_explode {
+  opacity: 0;
+  -webkit-animation: explode .5s;
+     -moz-animation: explode .5s;
+          animation: explode .5s;
+}
+
+@-webkit-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1); }
+  to{ opacity: 0; transform: scale(2, 2); }
+}
+@-moz-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}
+@-o-keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}
+@keyframes explode {
+  from{ opacity: 1; transform: scale(1, 1);}
+  to{ opacity: 0; transform: scale(2, 2);}
+}

@@ -175,7 +175,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$el.addClass('oe_list');
+        this.$el.addClass('oe_list o_list_view');
         return this._super();
     },
     /**
