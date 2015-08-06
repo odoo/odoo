@@ -21,7 +21,7 @@ class WebsiteForum(http.Controller):
     def _get_notifications(self):
         badge_subtype = request.env.ref('gamification.mt_badge_granted')
         if badge_subtype:
-            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('to_read', '=', True)])
+            msg = request.env['mail.message'].search([('subtype_id', '=', badge_subtype.id), ('needaction', '=', True)])
         else:
             msg = list()
         return msg
@@ -114,7 +114,7 @@ class WebsiteForum(http.Controller):
         if filters == 'unanswered':
             domain += [('child_ids', '=', False)]
         elif filters == 'followed':
-            domain += [('message_follower_ids', '=', request.env.user.partner_id.id)]
+            domain += [('message_partner_ids', '=', request.env.user.partner_id.id)]
         if post_type:
             domain += [('post_type', '=', post_type)]
 

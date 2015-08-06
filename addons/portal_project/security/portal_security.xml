@@ -8,7 +8,7 @@
                                             ('privacy_visibility', 'in', ['public', 'portal', 'employees']),
                                             '&amp;',
                                                 ('privacy_visibility', '=', 'followers'),
-                                                ('message_follower_ids', 'in', [user.partner_id.id]),
+                                                ('message_partner_ids', 'in', [user.partner_id.id]),
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         </record>
@@ -22,10 +22,10 @@
                         ('privacy_visibility', '=', 'public'),
                         '&amp;',
                             ('privacy_visibility', '=', 'portal'),
-                            ('message_follower_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                            ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                     '&amp;',
                         ('privacy_visibility', '=', 'followers'),
-                        ('message_follower_ids', 'in', [user.partner_id.id])
+                        ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
@@ -45,9 +45,9 @@
                 '|',
                     '&amp;',
                         ('project_id.privacy_visibility', '=', 'followers'),
-                        ('project_id.message_follower_ids', 'in', [user.partner_id.id]),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                     '|',
-                        ('message_follower_ids', 'in', [user.partner_id.id]),
+                        ('message_partner_ids', 'in', [user.partner_id.id]),
                         ('user_id', '=', user.id)
             ]</field>
         </record>
@@ -62,14 +62,14 @@
                         ('project_id.privacy_visibility', '=', 'public'),
                         '&amp;',
                             ('project_id.privacy_visibility', '=', 'portal'),
-                            ('project_id.message_follower_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                            ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                     '&amp;',
                         ('project_id.privacy_visibility', '=', 'followers'),
-                        ('project_id.message_follower_ids', 'in', [user.partner_id.id]),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '&amp;',
                     # on employee project can receive messages but not access the object
                     ('project_id.privacy_visibility', '!=', 'employees'),
-                    ('message_follower_ids', 'in', [user.partner_id.id])
+                    ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>

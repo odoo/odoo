@@ -42,14 +42,17 @@
     <span> <img class="oe_mail_thumbnail oe_mail_frame" t-att-src="record.avatar_url"/> </span>
     <span class="oe_partner_name"> 
         <a t-attf-href="#model=res.partner&amp;id=#{record.id}" 
-           t-att-title="record.name" t-att-data-partner="record.id">
-               <t t-esc="record.name"/> </a>
+           t-att-title="record.name"
+           t-att-data-res-model="record.res_model"
+           t-att-data-res-id="record.res_id"
+           t-att-data-id="record.id">
+            <t t-esc="record.name"/></a>
     </span>
     <i t-if="record.is_editable and (widget.records_length &gt; 1)" 
        class="oe_edit_subtype fa fa-pencil oe_hidden" title="Edit subscription" 
        t-att-data-id="record.id"/>
     <i t-if="widget.view_is_editable" class="oe_remove_follower fa fa-remove" 
-       title="Remove this follower" t-att-data-id="record.id"/>
+       title="Remove this follower"/>
 </li>
 
 <t t-name="mail_followers_add_more">
@@ -66,7 +69,7 @@
 <t t-name="mail_followers_subtype"> 
     <li class="oe_subtype">
         <input type="checkbox" t-att-checked="record.followed" 
-               t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')" 
+               t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
                t-att-data-id="record.id" t-att-name="record.name" class="o_timeline_msg_subtype_check"/>
    
         <label t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">

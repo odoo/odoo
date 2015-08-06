@@ -136,7 +136,6 @@ class survey_mail_compose_message(osv.TransientModel):
                 'body_html': wizard.body.replace("__URL__", url),
                 'parent_id': None,
                 'partner_ids': partner_id and [(4, partner_id)] or None,
-                'notified_partner_ids': partner_id and [(4, partner_id)] or None,
                 'attachment_ids': wizard.attachment_ids or None,
                 'email_from': wizard.email_from or None,
                 'email_to': email,

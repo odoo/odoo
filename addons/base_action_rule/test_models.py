@@ -30,5 +30,5 @@ class lead_test(osv.Model):
     def message_post(self, cr, uid, thread_id, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         pass
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+    def message_subscribe(self, cr, uid, ids, partner_ids=None, channel_ids=None, subtype_ids=None, force=True, context=None):
         pass

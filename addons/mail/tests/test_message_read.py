@@ -52,6 +52,7 @@ class TestMessageRead(TestMail):
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('message_type') != 'expandable']
         read_ancestor_ids = [msg.get('parent_id') if msg.get('parent_id') != 0 else msg.get('id') for msg in read_msg_list if msg.get('message_type') != 'expandable']
         type_list = [msg.get('message_type') for msg in read_msg_list]
+
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
         self.assertEqual(len(type_list), 4, 'message_read on last Pigs message should return 2 messages and 2 expandables')
         self.assertEqual(set([self.msg_2.id, self.msg_10.id]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
