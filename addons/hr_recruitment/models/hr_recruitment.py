@@ -486,4 +486,8 @@ class applicant_category(models.Model):
     _name = "hr.applicant.category"
     _description = "Category of applicant"
 
-    name = fields.Char("Name", required=True, translate=True)
+    name = fields.Char("Name", required=True)
+
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]

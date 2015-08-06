@@ -1043,15 +1043,16 @@ class crm_lead(format_address, osv.osv):
                     break
         return res
 
-
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
         'team_id': fields.many2one('crm.team', 'Sales Team'),
     }
-
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class crm_lost_reason(osv.Model):
     _name = "crm.lost.reason"

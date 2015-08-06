@@ -59,6 +59,9 @@ class BlogTag(osv.Model):
             'blog.post', string='Posts',
         ),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 
 class BlogPost(osv.Model):

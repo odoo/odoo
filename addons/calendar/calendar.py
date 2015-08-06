@@ -648,9 +648,11 @@ class calendar_event_type(osv.Model):
     _name = 'calendar.event.type'
     _description = 'Meeting Type'
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
     }
-
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class calendar_event(osv.Model):
     """ Model for Calendar Event """

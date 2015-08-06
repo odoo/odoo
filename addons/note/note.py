@@ -28,6 +28,9 @@ class note_tag(osv.osv):
     _columns = {
         'name' : fields.char('Tag Name', required=True),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class note_note(osv.osv):
     """ Note """

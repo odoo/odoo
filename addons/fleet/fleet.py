@@ -77,8 +77,12 @@ class fleet_vehicle_cost(osv.Model):
 class fleet_vehicle_tag(osv.Model):
     _name = 'fleet.vehicle.tag'
     _columns = {
-        'name': fields.char('Name', required=True, translate=True),
+        'name': fields.char('Name', required=True),
     }
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
+
 
 class fleet_vehicle_state(osv.Model):
     _name = 'fleet.vehicle.state'
@@ -88,6 +92,7 @@ class fleet_vehicle_state(osv.Model):
         'sequence': fields.integer('Sequence', help="Used to order the note stages")
     }
     _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
+
 
 
 class fleet_vehicle_model(osv.Model):

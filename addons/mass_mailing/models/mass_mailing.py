@@ -23,7 +23,9 @@ class MassMailingTag(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
     }
-
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
 class MassMailingList(osv.Model):
     """Model of a contact list. """

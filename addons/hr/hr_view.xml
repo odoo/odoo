@@ -10,13 +10,10 @@
             web_icon="hr,static/description/icon.png"
             sequence="75"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
-        <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_user,base.group_configuration" sequence="50"/>
-        <menuitem id="menu_hr_configuration_recruitment" name="Recruitment" parent="hr.menu_hr_configuration" groups="base.group_hr_user" sequence="2"/>
+        <menuitem id="menu_hr_reporting_timesheet" name="Reports" parent="menu_hr_root" sequence="99"/>
+        <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root" sequence="100" groups="base.group_configuration,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_reporting_timesheet" name="Reports"
-            parent="menu_hr_root" sequence="99"/>
-
-        <!--Employee form view -->
+        <!-- Employee -->
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
@@ -147,7 +144,6 @@
              </field>
          </record>
 
-    <!-- HR Kanban View  -->
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
@@ -203,6 +199,7 @@
 
         </field>
     </record>
+
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
@@ -244,7 +241,7 @@
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_root"/>
 
-        <!-- Employee architecture -->
+        <!-- Employee tree by manager -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
@@ -287,64 +284,31 @@
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
             <field name="arch" type="xml">
-                <form string="Employee Category">
+                <form string="Employee Tags">
                     <group>
                         <field name="name"/>
-                        <field name="parent_id"/>
                     </group>
                 </form>
             </field>
         </record>
-
         <record id="view_employee_category_list" model="ir.ui.view">
             <field name="name">hr.employee.category.list</field>
             <field name="model">hr.employee.category</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Employees Categories">
-                    <field name="complete_name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_employee_category_tree" model="ir.ui.view">
-            <field name="name">hr.employee.category.tree</field>
-            <field name="model">hr.employee.category</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Employees Categories">
+                <tree string="Employees Tags">
                     <field name="name"/>
                 </tree>
             </field>
         </record>
-
         <record id="open_view_categ_form" model="ir.actions.act_window">
             <field name="name">Employee Tags</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <menuitem id="menu_human_resources_configuration" name="Configuration" parent="menu_hr_root"
-            sequence="100" groups="base.group_configuration"/>
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_human_resources_configuration" sequence="1" groups="base.group_no_one,base.group_hr_manager"/>
-
-        <record id="hr_employee_normal_action_tree" model="ir.actions.act_window">
-            <field name="name">Employees</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('category_ids','=', active_ids)]</field>
-        </record>
-
-        <record id="hr_employee_category_open" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'hr.employee.category'" name="model"/>
-            <field name="name">Employees by Categories</field>
-            <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
-        </record>
+            parent="menu_human_resources_configuration" sequence="1" groups="base.group_no_one"/>
 
         <!-- hr.job -->
         <record id="view_hr_job_form" model="ir.ui.view">

@@ -14,34 +14,14 @@ _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.Model):
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     _name = "hr.employee.category"
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Employee Tag", required=True),
-        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
-        'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
         'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
-
-    _constraints = [
-        (osv.osv._check_recursion, _('Error! You cannot create recursive category.'), ['parent_id'])
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
 
 

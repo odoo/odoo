@@ -32,7 +32,7 @@ class TestForum(TestForumCommon):
         Post.sudo(self.user_portal).create({
             'name': " Q0",
             'forum_id': self.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': self.forum.id})]
+            'tag_ids': [(0, 0, {'name': 'Tag1', 'forum_id': self.forum.id})]
         })
         self.assertEqual(self.user_portal.karma, KARMA['ask'] + KARMA['gen_que_new'], 'website_forum: wrong karma generation when asking question')
 
