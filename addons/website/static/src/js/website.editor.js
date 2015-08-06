@@ -183,6 +183,8 @@ define(['summernote/summernote'], function () {
         $container.find('button[data-event="undo"]').attr('disabled', !history.hasUndo());
         $container.find('button[data-event="redo"]').attr('disabled', !history.hasRedo());
 
+        $container.find('.note-color').removeClass("hidden");
+
         if (oStyle.image) {
             $container.find('[data-event]').parent().removeClass("active");
 
@@ -193,7 +195,6 @@ define(['summernote/summernote'], function () {
             $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
             if (dom.isImgFont(oStyle.image)) {
-
                 $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-event="imageShape"])').addClass("hidden");
                 $container.find('.only_fa').removeClass("hidden");
                 $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
@@ -203,11 +204,7 @@ define(['summernote/summernote'], function () {
                 $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
 
                 $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
-                
-                $container.find('.note-color').removeClass("hidden");
-
             } else {
-
                 $container.find('.hidden:not(.only_fa)').removeClass("hidden");
                 $container.find('.only_fa').addClass("hidden");
                 var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);

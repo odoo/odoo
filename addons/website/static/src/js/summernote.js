@@ -1831,7 +1831,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
 
         // If ico fa
         if (rng.isCollapsed()) {
-            node.push(startPoint.node);
+            nodes.push(startPoint.node);
         }
 
         // apply font: foreColor, backColor, size (the color can be use a class text-... or bg-...)
