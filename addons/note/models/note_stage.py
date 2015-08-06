@@ -11,5 +11,4 @@ class NoteStage(models.Model):
 
     name = fields.Char(string='Stage Name', translate=True, required=True)
     sequence = fields.Integer(help="Used to order the note stages", default=1)
-    user_id = fields.Many2one('res.users', string='Owner', help="Owner of the note stage.", required=True, ondelete='cascade', default=lambda self: self.env.uid)
     fold = fields.Boolean(string='Folded by Default', default=0)
