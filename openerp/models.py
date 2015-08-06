@@ -4897,6 +4897,24 @@ class BaseModel(object):
                     return False
         return True
 
+    # _constraint method making all tag a unique case and accent insensitive
+    @api.v7
+    def _check_unique(self, cr, uid, ids, context=None):
+        rec = self.browse(cr, uid, ids, context=context)
+        try:
+            return rec._check_unique_accent()
+        except ValidationError:
+            return False
+
+    @api.v8
+    def _check_unique_accent(self):
+        unaccent = expression.get_unaccent_wrapper(self._cr)
+        query = ("""SELECT id from {table_name} WHERE lower({name}) = lower({tag}) and id != {current_id} LIMIT 1""".format(table_name=str(self._table), name=unaccent('name'), tag=unaccent('%s'), current_id=('%s')))
+        self._cr.execute(query, [self.name, self.id])
+        if self._cr.fetchall():
+            raise ValidationError(_('Error! Tag name already exists.'))
+        return True
+
     def _check_m2m_recursion(self, cr, uid, ids, field_name):
         """
         Verifies that there is no loop in a hierarchical structure of records,

@@ -16,6 +16,7 @@ from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import UserError
+from openerp.osv.expression import get_unaccent_wrapper
 
 _logger = logging.getLogger(__name__)
 
@@ -147,23 +148,27 @@ class Forum(models.Model):
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
-        User = self.env['res.users']
-        Tag = self.env['forum.tag']
+        user = self.env.user
         post_tags = []
         existing_keep = []
+        unaccent = get_unaccent_wrapper(self.env.cr)
+        query = ("""SELECT id from forum_tag WHERE lower({name}) = lower({tag})""".format(name=unaccent('name'), tag=unaccent('%s')))
         for tag in filter(None, tags.split(',')):
             if tag.startswith('_'):  # it's a new tag
-                # check that not arleady created meanwhile or maybe excluded by the limit on the search
-                tag_ids = Tag.search([('name', '=', tag[1:])])
-                if tag_ids:
-                    existing_keep.append(int(tag_ids[0]))
-                else:
-                    # check if user have Karma needed to create need tag
-                    user = User.sudo().browse(self._uid)
-                    if user.exists() and user.karma >= self.karma_retag:
+                # check that not already created meanwhile or maybe excluded by the limit on the search
+                self.env.cr.execute(query,[tag[1:]])
+                existing_tag_ids = self.env.cr.fetchall()
+                if existing_tag_ids and existing_tag_ids[0][0] not in existing_keep:
+                    existing_keep.append(existing_tag_ids[0][0])
+                # check if not found in existing tag and user have Karma to create needed tag
+                elif not existing_tag_ids and user.exists() and user.karma >= self.karma_retag:
+                    if post_tags:
+                        [post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id})) for post_tag in post_tags if not tools.remove_accents(post_tag[2]['name']).lower() == tools.remove_accents(tag[1:]).lower()]
+                    else:
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
-                existing_keep.append(int(tag))
+                if int(tag) not in existing_keep:
+                    existing_keep.append(int(tag))
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
@@ -717,8 +722,31 @@ class Tags(models.Model):
     post_ids = fields.Many2many('forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id', string='Posts')
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
+    @api.one
+    @api.constrains('name')
+    def _check_unique_name(self):
+        return self._check_unique_accent()
+
     @api.multi
     @api.depends("post_ids.tag_ids")
     def _get_posts_count(self):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
+
+    @api.v8
+    @api.multi
+    def copy_data(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        default['name'] = _("%s (copy)") % self.name
+        return super(Tags, self).copy_data(default=default)
+
+    @api.v7
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(Tags, self).copy_data(cr, uid, id, default=default, context=context)

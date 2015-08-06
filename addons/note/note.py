@@ -4,6 +4,7 @@
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
+from openerp.tools.translate import _
 
 class note_stage(osv.osv):
     """ Category of Note """
@@ -28,6 +29,15 @@ class note_tag(osv.osv):
     _columns = {
         'name' : fields.char('Tag Name', required=True),
     }
+    _constraints = [(osv.osv._check_unique, _('Error! Tag name already exists.'), ['name'])]
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(note_tag, self).copy_data(cr, uid, id, default=default, context=context)
 
 class note_note(osv.osv):
     """ Note """

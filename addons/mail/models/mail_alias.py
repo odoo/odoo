@@ -4,24 +4,13 @@ import logging
 import re
 import unicodedata
 
-from openerp import _, api, fields, models, SUPERUSER_ID
+from openerp import _, api, fields, models, SUPERUSER_ID, tools
 from openerp.exceptions import UserError
 from openerp.modules.registry import RegistryManager
 from openerp.tools import ustr
 from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
-
-
-# Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
-    """Suboptimal-but-better-than-nothing way to replace accented
-    latin letters by an ASCII equivalent. Will obviously change the
-    meaning of input_str and work only for some cases"""
-    input_str = ustr(input_str)
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
-
 
 class Alias(models.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
@@ -161,7 +150,7 @@ class Alias(models.Model):
     @api.model
     def _clean_and_make_unique(self, name, alias_ids=False):
         # when an alias name appears to already be an email, we keep the local part only
-        name = remove_accents(name).lower().split('@')[0]
+        name = tools.remove_accents(name).lower().split('@')[0]
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 

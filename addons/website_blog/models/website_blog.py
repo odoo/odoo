@@ -59,7 +59,15 @@ class BlogTag(osv.Model):
             'blog.post', string='Posts',
         ),
     }
+    _constraints = [(osv.Model._check_unique, _('Error! Tag name already exists.'), ['name'])]
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(BlogTag, self).copy_data(cr, uid, id, default=default, context=context)
 
 class BlogPost(osv.Model):
     _name = "blog.post"

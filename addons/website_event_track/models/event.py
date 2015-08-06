@@ -10,9 +10,31 @@ class event_track_tag(models.Model):
     _description = 'Track Tag'
     _order = 'name'
 
-    name = fields.Char('Tag', translate=True)
+    name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
 
+    @api.one
+    @api.constrains('name')
+    def _check_unique_name(self):
+        return self._check_unique_accent()
+
+    @api.v8
+    @api.multi
+    def copy_data(self, default=None):
+        self.ensure_one()
+        if default is None:
+            default = {}
+        default['name'] = _("%s (copy)") % self.name
+        return super(event_track_tag, self).copy_data(default)
+
+    @api.v7
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(event_track_tag, self).copy_data(cr, uid, id, default=default, context=context)
 
 class event_track_location(models.Model):
     _name = "event.track.location"

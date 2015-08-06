@@ -106,9 +106,12 @@
     3. Duplicate the children then reassign them to the new parent (1st method) and check the parent_store structure.
 -
     !python {model: res.partner.category}: |
-        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
-        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
-        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        child1_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_1')).name + ' (copy)')])
+        new_child1_id = self.copy(cr, uid, child1_id[0])
+        child2_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_2')).name + ' (copy)')])
+        new_child2_id = self.copy(cr, uid, child2_id[0])
+        parent_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_0')).name + ' (copy)')])
+        new_id = self.copy(cr, uid, parent_id[0], {'child_ids': []})
         self.write(cr, uid, [new_child1_id, new_child2_id], {'parent_id': new_id})
         new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
         assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
@@ -119,10 +122,12 @@
     4. Duplicate the children then reassign them to the new parent (2nd method) and check the parent_store structure.
 -
     !python {model: res.partner.category}: |
-        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
-        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
-        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
-        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': [(6,0,[new_child1_id, new_child2_id])]})
+        child1_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_1')).name + ' (copy)' + ' (copy)')])
+        new_child1_id = self.copy(cr, uid, child1_id[0])
+        child2_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_2')).name + ' (copy)' + ' (copy)')])
+        new_child2_id = self.copy(cr, uid, child2_id[0])
+        parent_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_0')).name + ' (copy)' + ' (copy)')])
+        new_id = self.copy(cr, uid, parent_id[0], {'child_ids': [(6,0,[new_child1_id, new_child2_id])]})
         new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
         assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
         old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
@@ -132,9 +137,12 @@
     5. Duplicate the children then reassign them to the new parent (3rd method) and make sure the parent_store structure is still right.
 -
     !python {model: res.partner.category}: |
-        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
-        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
-        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        child1_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_1')).name + ' (copy)' + ' (copy)' + ' (copy)')])
+        new_child1_id = self.copy(cr, uid, child1_id[0])
+        child2_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_2')).name + ' (copy)' + ' (copy)' + ' (copy)')])
+        new_child2_id = self.copy(cr, uid, child2_id[0])
+        parent_id = self.search(cr, uid, [('name', '=', self.browse(cr, uid, ref('test_categ_0')).name + ' (copy)' + ' (copy)' + ' (copy)')])
+        new_id = self.copy(cr, uid, parent_id[0], {'child_ids': []})
         self.write(cr, uid, [new_id], {'child_ids': [(4,new_child1_id), (4,new_child2_id)]})
         new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
         assert len(new_struct) == 4, "After duplication, the new object must have the childs records"

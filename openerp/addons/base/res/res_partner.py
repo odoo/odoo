@@ -111,7 +111,7 @@ class res_partner_category(osv.Model):
     _description = 'Partner Categories'
     _name = 'res.partner.category'
     _columns = {
-        'name': fields.char('Category Name', required=True, translate=True),
+        'name': fields.char('Category Name', required=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
@@ -121,7 +121,8 @@ class res_partner_category(osv.Model):
         'partner_ids': fields.many2many('res.partner', id1='category_id', id2='partner_id', string='Partners'),
     }
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, _('Error ! You can not create recursive categories.'), ['parent_id']),
+        (osv.Model._check_unique, _('Error! Tag name already exists.'), ['name']),
     ]
     _defaults = {
         'active': 1,
@@ -130,6 +131,13 @@ class res_partner_category(osv.Model):
     _parent_order = 'name'
     _order = 'parent_left'
 
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if not default.get('name'):
+            current = self.browse(cr, uid, id, context=context)
+            default['name'] = _("%s (copy)") % current.name
+        return super(res_partner_category, self).copy_data(cr, uid, id, default=default, context=context)
 
 class res_partner_title(osv.osv):
     _name = 'res.partner.title'
