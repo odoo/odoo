@@ -14,7 +14,7 @@ class delivery_carrier(orm.Model):
         'website_description': fields.text('Description for the website'),
     }
     _defaults = {
-        'website_published': True
+        'website_published': False
     }
 
 
