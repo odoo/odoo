@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 
     <record model="ir.ui.view" id="sale_margin_sale_order">
         <field name="name">sale.order.margin.view.form</field>
@@ -9,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale_total']" position="after">
                 <group name="sale_margin_grp">
-                    <field name="margin" widget='monetary' options="{'currency_field': 'currency_id'}" groups="base.group_user"/>
+                    <field name="margin" groups="base.group_user"/>
                 </group>
             </xpath>
         </field>
@@ -37,5 +36,4 @@
         </field>
     </record>
 
-</data>
-</openerp>
+</odoo>
