@@ -761,9 +761,9 @@ class Field(object):
         """ convert ``value`` from the cache to a valid value for export. The
             parameter ``env`` is given for managing translations.
         """
-        if env.context.get('export_raw_data'):
-            return value
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return value if env.context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record=None):
         """ convert ``value`` from the cache to a suitable display name. """
@@ -1015,6 +1015,11 @@ class Integer(Field):
         # special case, when an integer field is used as inverse for a one2many
         records._cache[self] = value.id or 0
 
+    def convert_to_export(self, value, env):
+        if value or value == 0:
+            return value if env.context.get('export_raw_data') else ustr(value)
+        return ''
+
 
 class Float(Field):
     """ The precision digits are given by the attribute
@@ -1061,6 +1066,11 @@ class Float(Field):
         value = float(value or 0.0)
         digits = self.digits
         return float_round(value, precision_digits=digits[1]) if digits else value
+
+    def convert_to_export(self, value, env):
+        if value or value == 0.0:
+            return value if env.context.get('export_raw_data') else ustr(value)
+        return ''
 
 
 class Monetary(Field):
@@ -1152,11 +1162,6 @@ class _String(Field):
         else:
             return value
     
-    def convert_to_export(self, value, env):
-        if env.context.get('export_raw_data'):
-            return value if value else None
-        return bool(value) and ustr(value)
-
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
@@ -1282,9 +1287,9 @@ class Date(Field):
         return self.to_string(value)
 
     def convert_to_export(self, value, env):
-        if value and env.context.get('export_raw_data'):
-            return self.from_string(value) or None
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
 
 
 class Datetime(Field):
@@ -1351,9 +1356,9 @@ class Datetime(Field):
         return self.to_string(value)
 
     def convert_to_export(self, value, env):
-        if value and env.context.get('export_raw_data'):
-            return self.from_string(value) or None
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record=None):
         assert record, 'Record expected'
@@ -1461,7 +1466,7 @@ class Selection(Field):
     def convert_to_export(self, value, env):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
-            return value or None
+            return value if value else ''
         for item in self._description_selection(env):
             if item[0] == value:
                 return item[1]
@@ -1498,7 +1503,7 @@ class Reference(Selection):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value, env):
-        return value.name_get()[0][1] if value else None
+        return value.name_get()[0][1] if value else ''
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value and value.display_name)
@@ -1638,7 +1643,7 @@ class Many2one(_Relational):
         return value.id
 
     def convert_to_export(self, value, env):
-        return value.name_get()[0][1] if value else None
+        return value.name_get()[0][1] if value else ''
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
@@ -1744,7 +1749,7 @@ class _RelationalMulti(_Relational):
         return result
 
     def convert_to_export(self, value, env):
-        return ','.join(name for id, name in value.name_get()) if value else None
+        return ','.join(name for id, name in value.name_get()) if value else ''
 
     def convert_to_display_name(self, value, record=None):
         raise NotImplementedError()

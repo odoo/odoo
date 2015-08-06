@@ -3,6 +3,8 @@
 from openerp.osv import orm, fields
 from openerp import SUPERUSER_ID
 from openerp.addons import decimal_precision
+from openerp.exceptions import ValidationError
+from openerp.tools.translate import _
 
 
 class delivery_carrier(orm.Model):
@@ -114,14 +116,22 @@ class SaleOrder(orm.Model):
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
         for delivery_id in carrier_obj.browse(cr, SUPERUSER_ID, delivery_ids, context=dict(context, order_id=order.id)):
-            if not delivery_id.available:
+            try:
+                if not delivery_id.available:
+                    delivery_ids.remove(delivery_id.id)
+            except ValidationError:
+            # RIM: hack to remove in master, because available field should not depend on a SOAP call to external shipping provider
+            # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
                 delivery_ids.remove(delivery_id.id)
         return delivery_ids
 
     def _get_errors(self, cr, uid, order, context=None):
         errors = super(SaleOrder, self)._get_errors(cr, uid, order, context=context)
         if not self._get_delivery_methods(cr, uid, order, context=context):
-            errors.append(('No delivery method available', 'There is no available delivery method for your order'))            
+            errors.append(
+                (_('Sorry, we are unable to ship your order'),
+                 _('No shipping method is available for your current order and shipping address. '
+                   'Please contact us for more information.')))
         return errors
 
     def _get_website_data(self, cr, uid, order, context=None):

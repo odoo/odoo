@@ -373,11 +373,12 @@ class PaymentTxOgone(osv.Model):
 
     def _ogone_s2s_validate(self, tx):
         tree = self._ogone_s2s_get_tx_status(tx)
-        return self.ogone_s2s_validate(tx, tree)
+        return self._ogone_s2s_validate_tree(tx, tree)
 
     def _ogone_s2s_validate_tree(self, tx, tree, tries=2):
         if tx.state not in ('draft', 'pending'):
-            return True     # already validated
+            _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
+            return True
 
         status = int(tree.get('STATUS', '0'))
         if status in self._ogone_valid_tx_status:

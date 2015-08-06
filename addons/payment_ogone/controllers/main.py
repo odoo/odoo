@@ -44,7 +44,7 @@ class OgoneController(http.Controller):
         acquirer.s2s_process(post)
         return werkzeug.utils.redirect(post.get('return_url', '/'))
 
-    @http.route(['/payment/ogone/s2s/feedback'])
+    @http.route(['/payment/ogone/s2s/feedback'], auth='none')
     def feedback(self, **kwargs):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         payment = request.registry.get('payment.transaction')

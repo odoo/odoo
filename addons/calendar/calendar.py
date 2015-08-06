@@ -575,7 +575,7 @@ class calendar_alarm(osv.Model):
         'type': fields.selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True),
         'duration': fields.integer('Amount', required=True),
         'interval': fields.selection(list(_interval_selection.iteritems()), 'Unit', required=True),
-        'duration_minutes': fields.function(_get_duration, type='integer', string='Duration', store=True, help="Duration in minutes"),
+        'duration_minutes': fields.function(_get_duration, type='integer', string='Duration in minutes', store=True, help="Duration in minutes"),
     }
 
     _defaults = {
@@ -958,7 +958,7 @@ class calendar_event(osv.Model):
 
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="Color index of creator", store=False),  # Color of creator
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),

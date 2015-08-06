@@ -177,16 +177,16 @@ class account_analytic_line(osv.osv):
             if factor.customer_name:
                 factor_name += ' - ' + factor.customer_name
 
-                general_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
-                if not general_account:
-                    raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
-                taxes = product.taxes_id or general_account.tax_ids
-                tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position_id, taxes)
-                curr_invoice_line.update({
-                    'invoice_line_tax_ids': [(6, 0, tax)],
-                    'name': factor_name,
-                    'account_id': general_account.id,
-                })
+            general_account = product.property_account_income_id or product.categ_id.property_account_income_categ_id
+            if not general_account:
+                raise UserError(_("Configuration Error!") + '\n' + _("Please define income account for product '%s'.") % product.name)
+            taxes = product.taxes_id or general_account.tax_ids
+            tax = self.pool['account.fiscal.position'].map_tax(cr, uid, account.partner_id.property_account_position_id, taxes)
+            curr_invoice_line.update({
+                'invoice_line_tax_ids': [(6, 0, tax)],
+                'name': factor_name,
+                'account_id': general_account.id,
+            })
 
             note = []
             for line in analytic_line_ids:

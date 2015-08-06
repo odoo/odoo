@@ -43,7 +43,7 @@ class crm_team(osv.Model):
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True, string="Full Name"),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
-                        "true, it will allow you to hide the sales team without removing it."),
+                        "false, it will allow you to hide the sales team without removing it."),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids': fields.many2many('res.users', 'sale_member_rel', 'team_id', 'member_id', 'Team Members'),

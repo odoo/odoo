@@ -16,7 +16,7 @@ Delivery Costs
         'security/ir.model.access.csv',
     ],
     'demo': [
-        'demo/website_sale_delivery_demo.xml',
+        'data/website_sale_delivery_demo.xml'
     ],
     'qweb': [],
     'installable': True,

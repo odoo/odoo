@@ -170,7 +170,7 @@ class account_analytic_account(osv.osv):
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
                                   "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."),
-        'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
+        'template_id': fields.many2one('account.analytic.account', 'Template of Contract', ondelete='restrict'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts', copy=True),

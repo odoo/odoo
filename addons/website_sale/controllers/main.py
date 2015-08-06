@@ -365,6 +365,9 @@ class website_sale(http.Controller):
             return {}
 
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        if not order.cart_quantity:
+            request.website.sale_reset()
+            return {}
         if not display:
             return None
         value['cart_quantity'] = order.cart_quantity
@@ -882,6 +885,8 @@ class website_sale(http.Controller):
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)
+        if tx and tx.state == 'draft':
+            return request.redirect('/shop')
 
         return request.redirect('/shop/confirmation')
 

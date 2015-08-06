@@ -690,7 +690,7 @@
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_new_transfer" states="draft,partially_available,assigned" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="action_assign" states="confirmed,waiting" string="Reserve" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="rereserve_pick" states="waiting,partially_available" string="Recheck Reservation" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="rereserve_pick" string="Recheck Availability" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'partially_available')), ('pack_operation_exist','=',True)]}"/>
                     <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="base.group_user"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('assigned', 'partially_available'))]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
@@ -1246,6 +1246,9 @@
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one">
                             <field name="string_availability_info"/>
                         </group>
+                        <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                            <field name="quant_ids" readonly="1" nolabel="1"/>
+                        </group>
                     </group>
                 </sheet>
                 </form>
@@ -1298,6 +1301,9 @@
                     </group>
                     <group name="quants_grp" string="Reserved">
                         <field name="string_availability_info"/>
+                    </group>
+                    <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <field name="quant_ids" readonly="1" nolabel="1"/>
                     </group>
                 </group>
                 </form>

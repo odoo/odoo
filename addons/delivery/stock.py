@@ -64,7 +64,7 @@ class stock_picking(osv.osv):
         """
         carrier_obj = self.pool.get('delivery.carrier')
         grid_obj = self.pool.get('delivery.grid')
-        fpos_obj = self.pool['account.fiscal.position']
+        currency_obj = self.pool.get('res.currency')
         if not picking.carrier_id or \
             any(inv_line.product_id.id == picking.carrier_id.product_id.id
                 for inv_line in invoice.invoice_line_ids):
@@ -77,6 +77,9 @@ class stock_picking(osv.osv):
         price = grid_obj.get_price_from_picking(cr, uid, grid_id,
                 invoice.amount_untaxed, picking.weight, picking.volume,
                 quantity, context=context)
+        if invoice.company_id.currency_id.id != invoice.currency_id.id:
+            price = currency_obj.compute(cr, uid, invoice.company_id.currency_id.id, invoice.currency_id.id,
+                price, context=dict(context or {}, date=invoice.date_invoice))
         account_id = picking.carrier_id.product_id.property_account_income_id.id
         if not account_id:
             account_id = picking.carrier_id.product_id.categ_id\
