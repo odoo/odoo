@@ -452,9 +452,11 @@ var AbstractManyField = common.AbstractField.extend({
                 self.trigger("change:commands");
             }
         });
-        this.on("change:commands", this, function () {
+        this.on("change:commands", this, function (options) {
             self.has_not_committed_changes = false;
+            self._inhibit_on_change_flag = !!(options||{})._inhibit_on_change_flag;
             self.set({'value': self.dataset.ids.slice()});
+            self._inhibit_on_change_flag = false;
         });
     },
 
@@ -472,11 +474,23 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.reset_ids([]);
-            return this.send_commands(ids);
+            this.dataset.reset_ids([], {keep_read_data: true});
+            ids = _.map(ids, function(command) {
+                if (command instanceof Array) {
+                    return command;
+                } else {
+                    // command is a dictionary, convert it to a command
+                    if (command.id) {
+                        return COMMANDS.update(command.id, command);
+                    } else {
+                        return COMMANDS.create(command);
+                    }
+                }
+            });
+            return this.send_commands(ids, {'_inhibit_on_change_flag': this._inhibit_on_change_flag});
         }
         this.dataset.reset_ids(ids);
-        this._super(ids);
+        return $.when(this._super(ids));
     },
 
     internal_set_value: function(ids) {
@@ -614,7 +628,7 @@ var AbstractManyField = common.AbstractField.extend({
         });
 
         this.mutex.def.then(function () {
-            self.trigger("change:commands");
+            self.trigger("change:commands", options);
             def.resolve(res);
         });
         return def;
@@ -632,17 +646,27 @@ var AbstractManyField = common.AbstractField.extend({
             command_list = [],
             id, index, alter_order;
         
+        function format_many2one (values) {
+            values = _.clone(values);
+            for (var k in values) {
+                if ((values[k] instanceof Array) && values[k].length === 2 && typeof values[k][0] === "number" && typeof values[k][1] === "string") {
+                    values[k] = values[k][0];
+                }
+            }
+            return values;
+        }
+
         _.each(this.get('value'), function (id) {
             index = starting_ids.indexOf(id);
             if (index !== -1) {
                 starting_ids.splice(index, 1);
             }
             if (alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;})) {
-                command_list.push(COMMANDS.create(alter_order.values));
+                command_list.push(COMMANDS.create(format_many2one(alter_order.values)));
                 return;
             }
             if (alter_order = _.detect(self.dataset.to_write, function(x) {return x.id === id;})) {
-                command_list.push(COMMANDS.update(alter_order.id, alter_order.values));
+                command_list.push(COMMANDS.update(alter_order.id, format_many2one(alter_order.values)));
                 return;
             }
             if (!is_one2many || self.dataset.delete_all) {
@@ -830,10 +854,12 @@ var FieldX2Many = AbstractManyField.extend({
         return (this.viewmanager && this.viewmanager.active_view);
     },
     set_value: function(value_) {
-        this._super(value_);
-        if (this.is_started && !this.no_rerender) {
-            return this.reload_current_view();
-        }
+        var self = this;
+        this._super(value_).then(function () {
+            if (self.is_started && !self.no_rerender) {
+                return self.reload_current_view();
+            }
+        });
     },
     commit_value: function() {
         var view = this.get_active_view();

@@ -5,6 +5,7 @@ var core = require('web.core');
 var Model = require('web.Model');
 var session = require('web.session');
 var pyeval = require('web.pyeval');
+var utils = require('web.utils');
 
 var Class = core.Class;
 var mixins = core.mixins;
@@ -730,6 +731,7 @@ var BufferedDataSet = DataSetStatic.extend({
         this.reset_ids([]);
         this.last_default_get = {};
         this.running_reads = [];
+        this.mutex = new utils.Mutex();
     },
     default_get: function(fields, options) {
         var self = this;
@@ -737,43 +739,126 @@ var BufferedDataSet = DataSetStatic.extend({
             self.last_default_get = res;
         });
     },
+    _update_cache: function (id, options) {
+        // One should call this method after modifying this.from_read,
+        // this.to_create or this.to_write. It updates this.cache and
+        // this.from_readonly.
+        var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        if (!cached) {
+            this.cache.push(cached = {id: id});
+        }
+        var record = _.detect(this.from_read, function(x) {return x.id === id;});
+        if (record) {
+            cached.values = _.clone(record.values);
+        } else if (record = _.detect(this.to_create, function(x) {return x.id === id;})) {
+            cached.values = _.clone(record.values);
+            cached.values = _.extend(cached.values, record.defaults);
+        } else {
+            record = {};
+        }
+
+        var record_to_write = _.detect(this.to_write, function(x) {return x.id === id;});
+        if (record_to_write) {
+            _.extend(cached.values, record_to_write.values);
+        }
+
+        var record_from_readonly = _.detect(this.from_readonly, function(x) {return x.id === id;});
+        if (options && options.readonly_fields) {
+            if (!record_from_readonly) {
+                this.from_readonly.push(record_from_readonly = {id: id, values: {}});
+            }
+            _.extend(record_from_readonly.values, options.readonly_fields);
+        }
+        if (record_from_readonly) {
+            _.extend(cached.values, record_from_readonly.values);
+        }
+        return cached;
+    },
     create: function(data, options) {
         var cached = {
             id:_.uniqueId(this.virtual_id_prefix),
             values: _.extend({}, data, (options || {}).readonly_fields || {}),
             defaults: this.last_default_get
         };
-        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(data)}));
-        this.cache.push(cached);
+        this.to_create.push(_.clone(cached));
+        this._update_cache(cached.id, options);
         return $.Deferred().resolve(cached.id).promise();
     },
     write: function (id, data, options) {
         var self = this;
-        var record = _.detect(this.to_create, function(x) {return x.id === id;});
-        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
-        var dirty = false;
-        if (record) {
-            for (var k in data) {
-                if (record.values[k] === undefined || record.values[k] !== data[k]) {
-                    dirty = true;
-                    break;
-                }
+        var cached = this._update_cache(id, options);
+
+        // read missing field to create the to_write diff
+        var def_read = $.Deferred();
+        this.mutex.def.then(function () {
+            if (typeof id !== "number" && id.indexOf(self.virtual_id_prefix) === 0) {
+                return def_read.resolve();
             }
-            $.extend(record.values, data);
-        } else {
-            dirty = true;
-            record = {id: id, values: data};
-            self.to_write.push(record);
-        }
-        var cached = _.detect(this.cache, function(x) {return x.id === id;});
-        if (!cached) {
-            cached = {id: id, values: {}};
-            this.cache.push(cached);
-        }
-        $.extend(cached.values, _.extend({}, record.values, (options || {}).readonly_fields || {}));
-        if (dirty)
-            this.trigger("dataset_changed", id, data, options);
-        return $.Deferred().resolve(data).promise();
+            var data_fields = _.keys(data);
+            var record_fields = _.keys((_.detect(self.from_read, function(x) {return x.id === id;}) || {}).values);
+            var fields = _.union(data_fields, record_fields);
+            if (fields.length !== data_fields.length || fields.length !== record_fields.length) {
+                self.read_ids(self.ids, fields).always(function () {
+                    def_read.resolve();
+                });
+            } else {
+                def_read.resolve();
+            }
+        });
+
+        // apply change
+        var def = $.Deferred();
+        def_read.then(function () {
+            self.mutex.exec(function () {
+                var dirty = false;
+
+                var record_to_create = _.detect(self.to_create, function(x) {return x.id === id;});
+                if (record_to_create) {
+                    // update record in self.to_create
+                    _.each(data, function (v, k) {
+                        if (!_.isEqual(v, cached.values[k])) {
+                            record_to_create.values[k] = v;
+                            dirty = true;
+                        } else {
+                            delete data[k];
+                        }
+                    });
+                } else {
+                    // check if the record has changed, and update self.to_write accordingly
+                    var record_to_write = _.detect(self.to_write, function(x) {return x.id === id;});
+                    if (!record_to_write) {
+                        self.to_write.push(record_to_write = {id: id, values: {}});
+                    }
+
+                    var record_from_read = _.detect(self.from_read, function(x) {return x.id === id;});
+                    _.each(data, function (v, k) {
+                        if (!_.isEqual(v, cached.values[k])) {
+                            dirty = true;
+                            if (_.isEqual(v, record_from_read.values[k])) { // clean changes
+                                delete record_to_write.values[k];
+                            } else {
+                                record_to_write.values[k] = v;
+                            }
+                        } else {
+                            delete data[k];
+                        }
+                    });
+                    if (_.isEmpty(record_to_write.values)) {
+                        self.to_write.splice(self.to_write.indexOf(record_to_write), 1);
+                    }
+                }
+
+                self._update_cache(id, options);
+
+                if (dirty) {
+                    self.trigger("dataset_changed", id, data, options);
+                }
+
+                return def.resolve(data).promise();
+            });
+        });
+
+        return def;
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
@@ -782,6 +867,7 @@ var BufferedDataSet = DataSetStatic.extend({
                 self.to_delete.push({id: id});
             }
         });
+        this.from_read = _.reject(this.from_read, function(x) { return _.include(ids, x.id);});
         this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
         this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
@@ -789,11 +875,15 @@ var BufferedDataSet = DataSetStatic.extend({
         this.trigger("dataset_changed", ids, callback, error_callback);
         return $.async_when({result: true}).done(callback);
     },
-    reset_ids: function(ids) {
+    reset_ids: function(ids, options) {
         this.set_ids(ids);
         this.to_delete = [];
         this.to_create = [];
         this.to_write = [];
+        if (!options || !options.keep_read_data) {
+            this.from_read = [];
+            this.from_readonly = [];
+        }
         this.cache = [];
         this.delete_all = false;
         _.each(_.clone(this.running_reads), function(el) {
@@ -801,23 +891,24 @@ var BufferedDataSet = DataSetStatic.extend({
         });
     },
     read_ids: function (ids, fields, options) {
+        // read what is necessary from the server to have ids and the given
+        // fields in this.from_read
         var self = this;
         var to_get = [];
+        options = options || {};
         _.each(ids, function(id) {
-            var cached = _.detect(self.cache, function(x) {return x.id === id;});
-            var created = _.detect(self.to_create, function(x) {return x.id === id;});
-            if (created) {
-                _.each(fields, function(x) {if (cached.values[x] === undefined)
-                    cached.values[x] = created.defaults[x] || false;});
-            } else {
-                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined;}))
+            if (typeof id === 'number' || id.indexOf(self.virtual_id_prefix) === -1) {
+                var record = _.detect(self.from_read, function(x) {return x.id === id;});
+                if (!record || !_.all(fields, function(x) {return record.values[x] !== undefined;})) {
                     to_get.push(id);
+                }
             }
         });
+
         var return_records = function() {
             var records = _.map(ids, function(id) {
-                var c = _.find(self.cache, function(c) {return c.id === id;});
-                return _.isUndefined(c) ? c : _.extend({}, c.values, {"id": id});
+                var cache = _.find(self.cache, function(cache) {return cache.id === id;});
+                return _.extend({}, cache.values, {"id": id}, options.readonly_fields || {});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
@@ -863,21 +954,26 @@ var BufferedDataSet = DataSetStatic.extend({
             def.always(function() {
                 self.running_reads = _.without(self.running_reads, def);
             });
-            this._super(to_get, fields, options).then(function() {
-                def.resolve.apply(def, arguments);
-            }, function() {
-                def.reject.apply(def, arguments);
+            var _super = this._super;
+            this.mutex.exec(function () {
+                _super.call(self, to_get, fields, options).then(function() {
+                    def.resolve.apply(def, arguments);
+                }, function() {
+                    def.reject.apply(def, arguments);
+                });
+                return def;
             });
             return def.then(function(records) {
                 _.each(records, function(record, index) {
+                    // add information into from_read
                     var id = to_get[index];
-                    var cached = _.detect(self.cache, function(x) {return x.id === id;});
-                    if (!cached) {
-                        self.cache.push({id: id, values: record});
+                    var record_from_read = _.detect(self.from_read, function(x) {return x.id === id;});
+                    if (record_from_read) {
+                        _.extend(record_from_read.values, record);
                     } else {
-                        // I assume cache value is prioritary
-                        cached.values = _.defaults(_.clone(cached.values), record);
+                        self.from_read.push({id: id, values: record});
                     }
+                    self._update_cache(id, options);
                 });
                 return return_records();
             });
@@ -900,19 +996,8 @@ var BufferedDataSet = DataSetStatic.extend({
         // and this breaks the assumptions of other methods (that the data
         // for new and altered records is both in the cache and in the to_write
         // or to_create collection)
-        if (_(this.to_create.concat(this.to_write)).find(function (record) {
-                return record.id === id; })) {
-            return;
-        }
-        for(var i=0, len=this.cache.length; i<len; ++i) {
-            var record = this.cache[i];
-            // if record we call the button upon is in the cache
-            if (record.id === id) {
-                // evict it so it gets reloaded from server
-                this.cache.splice(i, 1);
-                break;
-            }
-        }
+        this.from_read = _.reject(this.from_read, function(x) { return x.id === id;});
+        this._update_cache(id);
     },
     call_button: function (method, args) {
         this.evict_record(args[0][0]);
