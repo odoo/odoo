@@ -1185,7 +1185,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         #      By storing them in the session store, we ensure every worker (even ones on other
         #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
         for f in req.files.values():
-            storename = 'file-{0}-{1}'.format(self.sid, uuid.uuid4().hex)
+            storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
             path = os.path.join(root.session_store.path, storename)
             with open(path, 'w') as fp:
                 f.save(fp)
