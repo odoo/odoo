@@ -1708,7 +1708,9 @@ class account_invoice_tax(osv.osv):
             company_currency = company_obj.read(cr, uid, [company_id], ['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
             amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or fields.date.context_today(self, cr, uid)}, round=False)
-        return {'value': {'tax_amount': amount}}
+        tax_rec = self.browse(cr, uid, ids)
+        tax_sign = (tax_rec[0].tax_amount / tax_rec[0].amount) if tax_rec and tax_rec[0].amount else 1
+        return {'value': {'tax_amount': amount * tax_sign}}
 
     _order = 'sequence'
     _defaults = {
