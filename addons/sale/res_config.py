@@ -44,7 +44,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             help='This adds the \'Margin\' on sales order.\n'
                  'This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n'
                  '-This installs the module sale_margin.'),
-        'module_sale_layout': fields.boolean("Allow to categorize sale order lines",
+        'module_sale_layout': fields.boolean("Manage your sale reports and allow the sale order lines categorization",
             help='Allows to create categories to structure lines in pdf reports.\n'
                  '-This installs the module sale_layout.'),
         'module_website_quote': fields.boolean("Allow online quotations and templates",
@@ -65,6 +65,23 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sales order."),
+        'module_product_visible_discount': fields.boolean("Allows you to compute a discount by sale order line",
+            help='This module allows you to calculate discounts on sale order lines and invoice lines based on the partner pricelists.\n'
+                 '-This installs the module product_visible_discount'),
+        'module_delivery': fields.boolean("Allows you to add delivery methods and shipping costs in sale orders and pickings",
+            help='Allows you to add delivery methods in sales orders and delivery orders.\n'
+                 'You can define your own carrier and delivery grids for prices.\n'
+                 '-This installs the module delivery.'),
+        'module_website_sale_options': fields.boolean("Allows you to link optional products on your online products",
+            help='-This installs the module website_sale_option'),
+        'module_website_sale': fields.boolean("Allows you to sale your products online via an ecommerce platform",
+            help='Allows you to sale products online \n'
+                 '-This installs the module website_sale'),
+        'module_website_sale_delivery': fields.boolean("Add delivery costs to online sales",
+            help='-This installs the module website_sale_delivery'),
+        'module_sale_order_dates': fields.boolean("Allows you to request a delivery date on a sale order",
+            help='This will add a requested date, a commitment date and an effective date on the sales order.\n'
+                '-This installs the module sale_order_dates'),
     }
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
