@@ -1616,7 +1616,7 @@ class procurement_order(osv.osv):
                 'pricelist_id': partner.property_product_pricelist_purchase.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position': fp,
+                'fiscal_position': fp.id,
                 'payment_term_id': partner.property_supplier_payment_term.id,
                 'dest_address_id': procurement.partner_dest_id.id,
                 'group_id': group,
