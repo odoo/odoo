@@ -226,13 +226,13 @@ class hr_employee(osv.osv):
             value['parent_id'] = department.manager_id.id
         return {'value': value}
 
-    def onchange_user(self, cr, uid, ids, user_id, context=None):
+    def onchange_user(self, cr, uid, ids, name, image, user_id, context=None):
         if user_id:
             user = self.pool['res.users'].browse(cr, uid, user_id, context=context)
             values = {
-                'name': user.name,
+                'name': name or user.name,
                 'work_email': user.email,
-                'image': user.image,
+                'image': image or user.image,
             }
             return {'value': values}
 
