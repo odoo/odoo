@@ -271,7 +271,7 @@ class mrp_bom(osv.osv):
                 return True
         return False
 
-    def _prepare_conssumed_line(self, cr, uid, bom_line, quantity, context=None):
+    def _prepare_conssumed_line(self, cr, uid, bom_line, quantity, factor, context=None):
         vals = {
             'name': bom_line.product_id.name,
             'product_id': bom_line.product_id.id,
@@ -332,7 +332,7 @@ class mrp_bom(osv.osv):
 
             #If BoM should not behave like PhantoM, just add the product, otherwise explode further
             if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
-                result.append(self._prepare_conssumed_line(cr, uid, bom_line_id, quantity, context))
+                result.append(self._prepare_conssumed_line(cr, uid, bom_line_id, quantity, factor, context))
             elif bom_id:
                 all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
