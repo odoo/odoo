@@ -125,7 +125,7 @@
 
     <t t-name="reconciliation_move_line">
         <tr t-att-class="'mv_line'+(line.already_paid ? ' already_reconciled' : '')" t-att-data-lineid="line.id" t-att-data-selected="selected">
-            <td class="cell_action"><span class="fa fa-add-remove"></span></td>
+            <td class="cell_action"><i class="fa fa-add-remove"></i></td>
             <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
             <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
             <td class="cell_label"><t t-esc="line.q_label"/></td>

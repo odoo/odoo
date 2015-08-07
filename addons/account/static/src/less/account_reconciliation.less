@@ -384,13 +384,17 @@
                 color: #bbb;
             }
 
-            tr .toggle_create, .toggle_match, .fa-add-remove {
-                visibility: hidden;
-                color: #555;
-            }
+            tr {
+                .toggle_create, .toggle_match, .fa-add-remove {
+                    visibility: hidden;
+                    color: #555;
+                }
 
-            tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove, tr:hover .toggle_create, tr:focus .toggle_match, tr.active .fa-add-remove {
-                visibility: visible;
+                &:hover, &:active, &:focus {
+                    .toggle_create, .toggle_match, .fa-add-remove {
+                        visibility: visible;
+                    }
+                }
             }
 
             tr .do_partial_reconcile_button {
