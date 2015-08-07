@@ -9,6 +9,8 @@ import datetime
 import time
 
 from openerp.tools.translate import _
+from openerp.addons.website_mail.controllers.main import _message_post_helper
+
 
 class sale_quote(http.Controller):
     @http.route([
@@ -28,7 +30,7 @@ class sale_quote(http.Controller):
             if request.session.get('view_quote',False)!=now:
                 request.session['view_quote'] = now
                 body=_('Quotation viewed by customer')
-                self.__message_post(body, order_id, message_type='comment')
+                _message_post_helper(res_model='sale.order', res_id=order.id, message=body, token=token, token_field="access_token", message_type='notification')
         days = 0
         if order.validity_date:
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
@@ -51,7 +53,8 @@ class sale_quote(http.Controller):
             'tx_id': tx_id,
             'tx_state': tx.state if tx else False,
             'tx_post_msg': tx.acquirer_id.post_msg if tx else False,
-            'need_payment': not tx_id and order.state == 'manual'
+            'need_payment': not tx_id and order.state == 'manual',
+            'token': token,
         }
 
         if order.require_payment or (not tx_id and order.state == 'manual'):
@@ -85,7 +88,7 @@ class sale_quote(http.Controller):
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
         order_obj.action_button_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
-        self.__message_post(message, order_id, message_type='comment', subtype='mt_comment', attachments=attachments)
+        _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
         return True
 
     @http.route(['/quote/<int:order_id>/<token>/decline'], type='http', auth="public", website=True)
@@ -97,36 +100,8 @@ class sale_quote(http.Controller):
         request.registry.get('sale.order').action_cancel(request.cr, SUPERUSER_ID, [order_id])
         message = post.get('decline_message')
         if message:
-            self.__message_post(message, order_id, message_type='comment', subtype='mt_comment')
+            _message_post_helper(message=message, res_id=order_id, res_model='sale.order', **{'token': token, 'token_field': 'access_token'} if token else {})
         return werkzeug.utils.redirect("/quote/%s/%s?message=2" % (order_id, token))
-
-    @http.route(['/quote/<int:order_id>/<token>/post'], type='http', auth="public", website=True)
-    def post(self, order_id, token, **post):
-        # use SUPERUSER_ID allow to access/view order for public user
-        order_obj = request.registry.get('sale.order')
-        order = order_obj.browse(request.cr, SUPERUSER_ID, order_id)
-        message = post.get('comment')
-        if token != order.access_token:
-            return request.website.render('website.404')
-        if message:
-            self.__message_post(message, order_id, message_type='comment', subtype='mt_comment')
-        return werkzeug.utils.redirect("/quote/%s/%s?message=1" % (order_id, token))
-
-    def __message_post(self, message, order_id, message_type='comment', subtype=False, attachments=[]):
-        request.session.body =  message
-        cr, uid, context = request.cr, request.uid, request.context
-        user = request.registry['res.users'].browse(cr, SUPERUSER_ID, uid, context=context)
-        if 'body' in request.session and request.session.body:
-            request.registry.get('sale.order').message_post(cr, SUPERUSER_ID, order_id,
-                    body=request.session.body,
-                    message_type=message_type,
-                    subtype=subtype,
-                    author_id=user.partner_id.id,
-                    context=context,
-                    attachments=attachments
-                )
-            request.session.body = False
-        return True
 
     @http.route(['/quote/update_line'], type='json', auth="public", website=True)
     def update(self, line_id, remove=False, unlink=False, order_id=None, token=None, **post):

@@ -547,7 +547,6 @@
 </template>
 
 <!-- Product options: OpenChatter -->
-
 <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion">
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
@@ -561,46 +560,10 @@
                         </a>
                     </h3>
                 </div>
-                <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
-                    <li t-foreach="product.website_message_ids" t-as="message" class="media">
-                        <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                            <div class="media-body oe_msg_content">
-                                <t t-call="website.publish_short">
-                                    <t t-set="object" t-value="message"/>
-                                </t>
-                                <h5 class="media-heading">
-                                    <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                                </h5>
-                                <div t-field="message.body"/>
-                                <div>
-                                    <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
-                                        <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
-                                            <t t-if="attachment.file_type_icon == 'webimage'">
-                                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
-                                                    class='oe_attachment_embedded'></img>
-                                            </t>
-                                            <t t-if="attachment.file_type_icon != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
-                                                    class='oe_attachment_webimage'></img>
-                                            </t>
-                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="css_editable_mode_hidden">
-                    <form id="comment" class="js_website_submit_form" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                        <div class="pull-left mb32" style="width: 75%%">
-                            <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <a class="btn btn-primary mt8 a-submit">Post</a>
-                        </div>
-                    </form>
-                </div>
+                <t t-call="website_mail.message_thread">
+                  <t t-set="object" t-value="product"/>
+                  <t t-set="chatter_mode" t-value="'json'"/>
+                </t>
             </div>
         </section>
     </xpath>
@@ -1435,7 +1398,7 @@
 </template>
 
 <!-- Add a link to the product page in the portal orders followup page -->
-<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal.orders_followup">
+<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
     <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
         <a t-att-href="ol.product_id.website_url">
             <span t-esc="ol.product_id.name"/>
