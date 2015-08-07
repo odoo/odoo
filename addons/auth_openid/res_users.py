@@ -82,7 +82,7 @@ class res_users(osv.osv):
                            WHERE id=%s
                              AND openid_key=%s
                              AND active=%s''',
-                        (int(uid), passwd, True))
+                        (int(uid), password, True))
             if not cr.fetchone()[0]:
                 raise
 
