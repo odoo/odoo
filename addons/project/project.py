@@ -115,9 +115,9 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('public', _('Public project')),
-                ('employees', _('Internal project: all employees can access')),
-                ('followers', _('Private project: followers Only'))]
+        return [('portal', _('Customer Project: visible in portal if the customer is a follower')),
+                ('employees', _('All Employees Project: all employees can access')),
+                ('followers', _('Private Project: followers only'))]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -170,10 +170,7 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
             help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                    "- Public: everybody sees everything; if portal is activated, portal users\n"
-                    "   see all tasks or issues; if anonymous portal is activated, visitors\n"
-                    "   see all tasks or issues\n"
-                    "- Portal (only available if Portal is installed): employees see everything;\n"
+                    "- Portal : employees see everything;\n"
                     "   if portal is activated, portal users see the tasks or issues followed by\n"
                     "   them or by someone of their company\n"
                     "- Employees Only: employees see all tasks or issues\n"

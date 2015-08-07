@@ -32,7 +32,7 @@ class TestProjectBase(TestMail):
         # Test 'Pigs' project
         cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs',
-            'privacy_visibility': 'public',
+            'privacy_visibility': 'portal',
             'alias_name': 'project+pigs',
             'partner_id': cls.partner_1.id})
         # Already-existing tasks in Pigs
