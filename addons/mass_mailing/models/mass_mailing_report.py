@@ -1,29 +1,25 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp import tools
+from odoo import fields, models, tools
 
 
-class MassMailingReport(osv.Model):
+class MassMailingReport(models.Model):
     _name = 'mail.statistics.report'
     _auto = False
     _description = 'Mass Mailing Statistics'
 
-    _columns = {
-        'scheduled_date': fields.datetime('Scheduled Date', readonly=True),
-        'name': fields.char('Mass Mail', readonly=True),
-        'campaign': fields.char('Mass Mail Campaign', readonly=True),
-        'sent': fields.integer('Sent', readonly=True),
-        'delivered': fields.integer('Delivered', readonly=True),
-        'opened': fields.integer('Opened', readonly=True),
-        'bounced': fields.integer('Bounced', readonly=True),
-        'replied': fields.integer('Replied', readonly=True),
-        'state': fields.selection(
-            [('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
-            string='Status', readonly=True,
-        ),
-        'email_from': fields.char('From', readonly=True),
-    }
+    scheduled_date = fields.Datetime(stirng='Scheduled Date', readonly=True)
+    name = fields.Char(string='Mass Mail', readonly=True)
+    campaign = fields.Char(string='Mass Mail Campaign', readonly=True)
+    sent = fields.Integer(readonly=True)
+    delivered = fields.Integer(readonly=True)
+    opened = fields.Integer(readonly=True)
+    bounced = fields.Integer(readonly=True)
+    replied = fields.Integer(readonly=True)
+    state = fields.Selection([('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
+        string='Status', readonly=True)
+    email_from = fields.Char('From', readonly=True)
 
     def init(self, cr):
         """Mass Mail Statistical Report: based on mail.mail.statistics that models the various

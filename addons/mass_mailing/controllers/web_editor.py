@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import http
-from openerp.http import request
-from openerp.addons.web_editor.controllers.main import Web_Editor
+from odoo import http
+from odoo.http import request
+from odoo.addons.web_editor.controllers.main import Web_Editor
 
 
 class Web_Editor(Web_Editor):

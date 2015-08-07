@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--  MAIL MAIL STATISTICS !-->
-    <record model="ir.ui.view" id="view_mail_mail_statistics_search">
+    <record id="view_mail_mail_statistics_search" model="ir.ui.view">
         <field name="name">mail.mail.statistics.search</field>
         <field name="model">mail.mail.statistics</field>
         <field name="arch" type="xml">
@@ -24,7 +24,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mail_statistics_tree">
+    <record id="view_mail_mail_statistics_tree" model="ir.ui.view">
         <field name="name">mail.mail.statistics.tree</field>
         <field name="model">mail.mail.statistics</field>
         <field name="arch" type="xml">
@@ -41,7 +41,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_mail_mail_statistics_form">
+    <record id="view_mail_mail_statistics_form" model="ir.ui.view">
         <field name="name">mail.mail.statistics.form</field>
         <field name="model">mail.mail.statistics</field>
         <field name="arch" type="xml">
@@ -97,7 +97,7 @@
     </record>
 
     <!-- Add in Technical/Email -->
-    <menuitem name="Mail Statistics" id="menu_email_statistics"
+    <menuitem id="menu_email_statistics" name="Mail Statistics"
         parent="base.menu_email" sequence="50"
         action="action_view_mail_mail_statistics"/>
 </odoo>

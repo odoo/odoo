@@ -24,7 +24,6 @@ professional emails and reuse templates in a few clicks.
         'security/mass_mailing_security.xml',
         'data/mail_data.xml',
         'data/mass_mailing_data.xml',
-        'security/mass_mailing_security.xml',
         'wizard/mail_compose_message_views.xml',
         'wizard/test_mailing_views.xml',
         'views/mass_mailing_report_views.xml',
@@ -40,11 +39,8 @@ professional emails and reuse templates in a few clicks.
         'views/snippets_themes_options.xml',
         'views/theme_list.xml',
     ],
-    'qweb': [],
     'demo': [
         'data/mass_mailing_demo.xml',
     ],
-    'installable': True,
-    'auto_install': False,
     'application': True,
 }

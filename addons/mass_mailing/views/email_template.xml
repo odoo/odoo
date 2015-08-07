@@ -1,9 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <!-- Email Templates -->
-        <record model="ir.ui.view" id="email_template_form_minimal">
+        <record id="email_template_form_minimal" model="ir.ui.view">
             <field name="name">email.template.form.minimal</field>
             <field name="model">mail.template</field>
             <field name="priority">32</field>
@@ -20,7 +18,6 @@
                             <group>
                                 <field name="name" required="True"/>
                                 <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
-                                    on_change="onchange_model_id(model_id)"
                                     domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
                                 <field name="model" invisible="True"/>
                                 <field name="use_default_to" invisible="1"/>
@@ -37,7 +34,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_email_template_kanban">
+        <record id="view_email_template_kanban" model="ir.ui.view">
             <field name="name">email.template.kanban</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
@@ -76,7 +73,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_email_template_marketing">
+        <record id="action_email_template_marketing" model="ir.actions.act_window">
             <field name="name">Templates</field>
             <field name="res_model">mail.template</field>
             <field name="view_type">form</field>
@@ -88,9 +85,7 @@
         </record>
 
         <!-- Add Templates in Marketing / Mass mailing menu -->
-        <menuitem name="Mail Templates" id="menu_email_template"
+        <menuitem id="menu_email_template" name="Mail Templates"
             parent="menu_mass_mailing_configuration" sequence="3"
             action="action_email_template_marketing"/>
-
-    </data>
-</openerp>
+</odoo>

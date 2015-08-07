@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import werkzeug
 
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
+from odoo import http
+from odoo.http import request
 
 
 class MassMailController(http.Controller):
@@ -11,8 +12,7 @@ class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
     def track_mail_open(self, mail_id, **post):
         """ Email tracking. """
-        mail_mail_stats = request.registry.get('mail.mail.statistics')
-        mail_mail_stats.set_opened(request.cr, SUPERUSER_ID, mail_mail_ids=[mail_id])
+        request.env['mail.mail.statistics'].sudo().set_opened(mail_mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
         response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
@@ -21,6 +21,5 @@ class MassMailController(http.Controller):
 
     @http.route('/r/<string:code>/m/<int:stat_id>', type='http', auth="none")
     def full_url_redirect(self, code, stat_id, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        request.registry['link.tracker.click'].add_click(cr, uid, code, request.httprequest.remote_addr, request.session['geoip'].get('country_code'), stat_id=stat_id, context=context)
-        return werkzeug.utils.redirect(request.registry['link.tracker'].get_url_from_code(cr, uid, code, context=context), 301)
+        request.env['link.tracker.click'].add_click(code, request.httprequest.remote_addr, request.session['geoip'].get('country_code'), stat_id=stat_id)
+        return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)

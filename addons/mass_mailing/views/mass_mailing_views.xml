@@ -1,6 +1,5 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <template id="assets_backend" name="mass_mailing assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/mass_mailing/static/src/less/mass_mailing.less"/>
@@ -10,11 +9,11 @@
         </template>
 
         <!-- Marketing / Mass Mailing -->
-        <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
-        <menuitem name="Mailings" id="mass_mailing_menu"
+        <menuitem id="mass_mailing_menu_root" name="Mass Mailing" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
+        <menuitem id="mass_mailing_menu" name="Mailings"
             parent="mass_mailing_menu_root" sequence="1" groups="mass_mailing.group_mass_mailing_user"/>
         <!-- Marketing / Configuration -->
-        <menuitem name="Configuration" id="mass_mailing_configuration"
+        <menuitem id="mass_mailing_configuration" name="Configuration"
             parent="mass_mailing_menu_root" sequence="100" groups="base.group_configuration"/>
 
         <!-- After installation of the module, open the related menu -->
@@ -45,7 +44,7 @@
             <field name="context">{'group_by': ['unsubscription_date:month'], 'col_group_by': ['list_id']}</field>
         </record>
         
-        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
+        <record id="view_mail_mass_mailing_contact_search" model="ir.ui.view">
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
             <field name="arch" type="xml">
@@ -67,7 +66,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_tree">
+        <record id="view_mail_mass_mailing_contact_tree" model="ir.ui.view">
             <field name="name">mail.mass_mailing.contact.tree</field>
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
@@ -79,12 +78,12 @@
                     <field name="message_bounce"/>
                     <field name="create_date"/>
                     <field name="unsubscription_date" readonly="1"/>
-                    <field name="opt_out" on_change="on_change_opt_out(opt_out)"/>
+                    <field name="opt_out"/>
                 </tree>
             </field>
         </record>
         
-        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
+        <record id="view_mail_mass_mailing_contact_graph" model="ir.ui.view">
             <field name="name">mail.mass_mailing.contact.graph</field>
             <field name="model">mail.mass_mailing.contact</field>
             <field name="priority">10</field>
@@ -96,7 +95,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts">
+        <record id="action_view_mass_mailing_contacts" model="ir.actions.act_window">
             <field name="name">Mailing List Subscribers</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
@@ -104,7 +103,7 @@
             <field name="context">{'search_default_not_opt_out': 1}</field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
+        <record id="action_view_mass_mailing_contacts_from_list" model="ir.actions.act_window">
             <field name="name">Recipients</field>
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
@@ -117,12 +116,12 @@
             </field>
         </record>
 
-        <menuitem name="Contacts" id="menu_email_mass_mailing_contacts"
+        <menuitem id="menu_email_mass_mailing_contacts" name="Contacts"
             parent="mass_mailing_menu" sequence="4" groups="base.group_no_one"
             action="action_view_mass_mailing_contacts"/>
 
         <!--  MASS MAILING LIST -->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_search">
+        <record id="view_mail_mass_mailing_list_search" model="ir.ui.view">
             <field name="name">mail.mass_mailing.list.search</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
@@ -138,7 +137,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_tree">
+        <record id="view_mail_mass_mailing_list_tree" model="ir.ui.view">
             <field name="name">mail.mass_mailing.list.tree</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="priority">10</field>
@@ -151,7 +150,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_form">
+        <record id="view_mail_mass_mailing_list_form" model="ir.ui.view">
             <field name="name">mail.mass_mailing.list.form</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
@@ -187,7 +186,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
+        <record id="action_view_mass_mailing_lists" model="ir.actions.act_window">
             <field name="name">Mailing Lists</field>
             <field name="res_model">mail.mass_mailing.list</field>
             <field name="view_type">form</field>
@@ -201,12 +200,12 @@
                 </p></field>
         </record>
 
-        <menuitem name="Mailing Lists" id="menu_email_mass_mailing_lists"
+        <menuitem id="menu_email_mass_mailing_lists" name="Mailing Lists"
             parent="mass_mailing_menu" sequence="3"
             action="action_view_mass_mailing_lists"/>
 
         <!--  MASS MAILING !-->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_search">
+        <record id="view_mail_mass_mailing_search" model="ir.ui.view">
             <field name="name">mail.mass_mailing.search</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
@@ -227,7 +226,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_tree">
+        <record id="view_mail_mass_mailing_tree" model="ir.ui.view">
             <field name="name">mail.mass_mailing.tree</field>
             <field name="model">mail.mass_mailing</field>
             <field name="priority">10</field>
@@ -244,7 +243,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_form">
+        <record id="view_mail_mass_mailing_form" model="ir.ui.view">
             <field name="name">mail.mass_mailing.form</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
@@ -318,8 +317,7 @@
                             <field name="name"/>
                             <label for="mailing_model" string="Recipients"/>
                             <div>
-                                <field name="mailing_model" widget="radio" style="margin-bottom: 8px"
-                                    on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
+                                <field name="mailing_model" widget="radio" style="margin-bottom: 8px"/>
 
                                 <field name="mailing_domain" widget="char_domain"
                                     placeholder="Select recipients"
@@ -330,8 +328,7 @@
                                 <div attrs="{'invisible': [('mailing_model', '&lt;&gt;', 'mail.mass_mailing.contact')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                     <field name="contact_list_ids" widget="many2many_tags"
-                                        placeholder="Select mailing lists..." class="oe_inline"
-                                        on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
+                                        placeholder="Select mailing lists..." class="oe_inline"/>
                                 </div>
                             </div>
                             <label for="attachment_ids"/>
@@ -359,7 +356,7 @@
                                         <field name="sent_date" readonly="1" attrs="{'invisible': [('sent_date', '=', False)]}"/>
                                     </group>
                                     <group string="Campaign">
-                                        <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign" string="Campaign" on_change="onchange_mass_mailing_campaign_id(mass_mailing_campaign_id)"/>
+                                        <field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign" string="Campaign"/>
                                         <label for="contact_ab_pc"/>
                                         <div>
                                             <field name="contact_ab_pc" class="oe_inline"/> %
@@ -380,7 +377,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
+        <record id="view_mail_mass_mailing_kanban" model="ir.ui.view">
             <field name="name">mail.mass_mailing.kanban</field>
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
@@ -529,12 +526,12 @@
 </p></field>
         </record>
 
-        <menuitem name="Mass Mailings" id="menu_email_mass_mailings"
+        <menuitem id="menu_email_mass_mailings" name="Mass Mailings"
             parent="mass_mailing_menu" sequence="2"
             action="action_view_mass_mailings"/>
 
         <!--  MASS MAILING CAMPAIGN STAGE !-->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_stage_search">
+        <record id="view_mail_mass_mailing_stage_search" model="ir.ui.view">
             <field name="name">mail.mass_mailing.stage.search</field>
             <field name="model">mail.mass_mailing.stage</field>
             <field name="arch" type="xml">
@@ -544,7 +541,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_stage_tree">
+        <record id="view_mail_mass_mailing_stage_tree" model="ir.ui.view">
             <field name="name">mail.mass_mailing.stage.tree</field>
             <field name="model">mail.mass_mailing.stage</field>
             <field name="priority">10</field>
@@ -565,13 +562,13 @@
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
             sequence="100" groups="mass_mailing.group_mass_mailing_user,base.group_configuration"/>
 
-        <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
+        <menuitem id="menu_view_mass_mailing_stages" name="Campaign Stages"
             parent="menu_mass_mailing_configuration" sequence="1"
             groups="mass_mailing.group_mass_mailing_campaign"
             action="action_view_mass_mailing_stages"/>
 
         <!--  MASS MAILING CAMPAIGNS !-->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_search">
+        <record id="view_mail_mass_mailing_campaign_search" model="ir.ui.view">
             <field name="name">mail.mass_mailing.campaign.search</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
@@ -589,7 +586,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_tree">
+        <record id="view_mail_mass_mailing_campaign_tree" model="ir.ui.view">
             <field name="name">mail.mass_mailing.campaign.tree</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="priority">10</field>
@@ -603,7 +600,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_form">
+        <record id="view_mail_mass_mailing_campaign_form" model="ir.ui.view">
             <field name="name">mail.mass_mailing.campaign.form</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
@@ -644,7 +641,7 @@
                             </button>
                         </div>
                         <group>
-                            <field name="name" string="Campaign Name" on_change="on_change_campaign_name(name)"/>
+                            <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
@@ -676,7 +673,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_campaign_kanban">
+        <record id="view_mail_mass_mailing_campaign_kanban" model="ir.ui.view">
             <field name="name">mail.mass_mailing.campaign.kanban</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
@@ -764,10 +761,9 @@
             <field name="args">()</field>
         </record>
 
-        <menuitem name="Campaigns" id="menu_email_campaigns"
+        <menuitem id="menu_email_campaigns" name="Campaigns"
             parent="mass_mailing_menu_root" sequence="5"
             action="action_view_mass_mailing_campaigns"
             groups="mass_mailing.group_mass_mailing_campaign"/>
 
-    </data>
-</openerp>
+</odoo>
