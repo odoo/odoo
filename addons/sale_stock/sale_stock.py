@@ -196,6 +196,13 @@ class SaleOrderLine(models.Model):
             }
         return {}
 
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty=qty)
+        moves = self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.invoiced)
+        res['move_ids'] = [(6, 0, moves.ids)]
+        return res
+
 
 class StockLocationRoute(models.Model):
     _inherit = "stock.location.route"
@@ -224,6 +231,15 @@ class ProcurementOrder(models.Model):
 
 class StockMove(models.Model):
     _inherit = "stock.move"
+
+    invoiced = fields.Boolean(compute='_compute_invoiced', string='Invoiced')
+
+    def _compute_invoiced(self):
+        self.env.cr.execute("select move_id from invoice_line_stock_move_rel")
+        move_ids = map(lambda d: d['move_id'], self.env.cr.dictfetchall())
+        for line in self:
+            if line.id in move_ids:
+                line.invoiced = True
 
     @api.multi
     def action_done(self):
@@ -257,6 +273,13 @@ class StockPicking(models.Model):
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
+
+    move_ids = fields.Many2many('stock.move', 'invoice_line_stock_move_rel', 'invoice_line_id', 'move_id', string="Move line")
+    lot_ids = fields.Many2many(comodel_name='stock.production.lot', compute='_compute_lot_ids', string='Lot/Serial Number', readonly=True)
+
+    def _compute_lot_ids(self):
+        for line in self:
+            line.lot_ids = line.mapped('move_ids.lot_ids').ids
 
     def _get_anglo_saxon_price_unit(self):
         price_unit = super(AccountInvoiceLine,self)._get_anglo_saxon_price_unit()

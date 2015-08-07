@@ -10,6 +10,11 @@
                 <field name="incoterms_id" widget="selection" groups="sale.group_display_incoterm"/>
                 </xpath>
             </data>
+            <data>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="after">
+                    <field name="lot_ids" widget="many2many_tags" groups="stock.group_production_lot" invisible="1"/>
+                </xpath>
+            </data>
         </field>
     </record>
 
