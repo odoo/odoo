@@ -317,7 +317,6 @@
             var theme = ($("#o_left_bar .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
             var $theme = $("#wrapwrap .o_editable:first [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
             $editable.children().first().attr("data-snippet-theme", theme);
-            $editable.find(":hidden").remove();
         },
         // convert font awsome into image
         font_to_img: function () {
