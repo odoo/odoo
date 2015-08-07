@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.tools.translate import _
+from openerp import api, models, _
 from openerp.exceptions import UserError
 
-class pos_open_statement(osv.osv_memory):
+
+class PosOpenStatement(models.TransientModel):
     _name = 'pos.open.statement'
     _description = 'Open Statements'
 
-    def open_statement(self, cr, uid, ids, context=None):
+    @api.multi
+    def open_statement(self):
         """
              Open the statements
              @param self: The object pointer.
@@ -18,41 +19,34 @@ class pos_open_statement(osv.osv_memory):
              @param context: A standard dictionary
              @return : Blank Directory
         """
+        self.ensure_one()
         data = {}
-        mod_obj = self.pool.get('ir.model.data')
-        statement_obj = self.pool.get('account.bank.statement')
-        sequence_obj = self.pool.get('ir.sequence')
-        journal_obj = self.pool.get('account.journal')
-        if context is None:
-            context = {}
+        Statement = self.env['account.bank.statement']
+        Journal = self.env['account.journal']
 
         st_ids = []
-        j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
-        if not j_ids:
+        account_journal = Journal.search([('journal_user', '=', True)])
+        if not account_journal:
             raise UserError(_('You have to define which payment method must be available in the point of sale by reusing existing bank and cash through "Accounting / Configuration / Journals / Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend / Configuration / Payment Methods".'))
 
-        for journal in journal_obj.browse(cr, uid, j_ids, context=context):
-            ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
+        for journal in account_journal:
 
             if journal.sequence_id:
-                number = sequence_obj.next_by_id(cr, uid, journal.sequence_id.id, context=context)
+                number = journal.sequence_id.next_by_id()
             else:
                 raise UserError(_("No sequence defined on the journal"))
 
             data.update({
                 'journal_id': journal.id,
-                'user_id': uid,
+                'user_id': self.env.uid,
                 'name': number
             })
-            statement_id = statement_obj.create(cr, uid, data, context=context)
+            statement_id = Statement.create(data)
             st_ids.append(int(statement_id))
 
-        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
-        tree_id = tree_res and tree_res[1] or False
-        form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form')
-        form_id = form_res and form_res[1] or False
-        search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_search')
-        search_id = search_res and search_res[1] or False
+        tree_id = self.env.ref('account.view_bank_statement_tree').id or False
+        form_id = self.env.ref('account.view_bank_statement_form').id or False
+        search_id = self.env.ref('account.view_bank_statement_search').id or False
 
         return {
             'type': 'ir.actions.act_window',

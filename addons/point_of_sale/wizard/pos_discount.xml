@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!--  Add  Product -->
-
-        <record id="view_pos_discount" model="ir.ui.view">
+        <record id="pos_discount_view_form" model="ir.ui.view">
             <field name="name">Apply Discount</field>
             <field name="model">pos.discount</field>
             <field name="arch" type="xml">
@@ -20,7 +18,7 @@
             </field>
         </record>
 
-        <record id="action_pos_discount" model="ir.actions.act_window">
+        <record id="pos_discount_action" model="ir.actions.act_window">
             <field name="name">Apply Discount</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.discount</field>
@@ -29,5 +27,4 @@
             <field name="target">new</field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!--   pos.details -->
 
-        <record id="view_pos_details" model="ir.ui.view">
+        <record id="pos_details_view_form" model="ir.ui.view">
             <field name="name">POS Details</field>
             <field name="model">pos.details</field>
             <field name="arch" type="xml">
@@ -23,7 +22,7 @@
         </record>
 
 
-        <record id="action_report_pos_details" model="ir.actions.act_window">
+        <record id="pos_details_action" model="ir.actions.act_window">
             <field name="name">Sale Details</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.details</field>
@@ -32,6 +31,4 @@
             <field name="target">new</field>
         </record>
 
-
-    </data>
-</openerp>
+</odoo>

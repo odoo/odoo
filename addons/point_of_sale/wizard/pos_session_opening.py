@@ -1,63 +1,58 @@
+# -*- coding: utf-8 -*-
+from openerp import api, fields, models, _
 
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
-
-from openerp.addons.point_of_sale.point_of_sale import pos_session
+from openerp.addons.point_of_sale.models.point_of_sale_session import PosSession
 
 
-class pos_session_opening(osv.osv_memory):
+class PosSessionOpening(models.TransientModel):
     _name = 'pos.session.opening'
 
-    _columns = {
-        'pos_config_id' : fields.many2one('pos.config', string='Point of Sale', required=True),
-        'pos_session_id' : fields.many2one('pos.session', string='PoS Session'),
-        'pos_state' : fields.related('pos_session_id', 'state',
-                                     type='selection',
-                                     selection=pos_session.POS_SESSION_STATE,
-                                     string='Session Status', readonly=True),
-        'pos_state_str' : fields.char('Status', readonly=True),
-        'show_config' : fields.boolean('Show Config', readonly=True),
-        'pos_session_name' : fields.related('pos_session_id', 'name', string="Session Name",
-                                            type='char', size=64, readonly=True),
-        'pos_session_username' : fields.related('pos_session_id', 'user_id', 'name',
-                                                type='char', size=64, readonly=True)
-    }
+    pos_config_id = fields.Many2one('pos.config', string='Point of Sale', required=True)
+    pos_session_id = fields.Many2one('pos.session', string='PoS Session')
+    pos_state = fields.Selection(related='pos_session_id.state',
+                                 selection=PosSession.POS_SESSION_STATE,
+                                 string='Session Status', readonly=True)
+    pos_state_str = fields.Char(string='Status', readonly=True)
+    show_config = fields.Boolean(string='Show Config', readonly=True)
+    pos_session_name = fields.Char(related='pos_session_id.name', string="Session Name", size=64, readonly=True)
+    pos_session_username = fields.Char(related='pos_session_id.user_id.name', size=64, readonly=True)
 
-    def open_ui(self, cr, uid, ids, context=None):
-        data = self.browse(cr, uid, ids[0], context=context)
-        context = dict(context or {})
-        context['active_id'] = data.pos_session_id.id
+    @api.multi
+    def open_ui(self):
+        self.ensure_one()
+        self.env.context = dict(self.env.context or {})
+        self.env.context['active_id'] = self.pos_session_id.id
         return {
-            'type' : 'ir.actions.act_url',
-            'url':   '/pos/web/',
+            'type': 'ir.actions.act_url',
+            'url': '/pos/web/',
             'target': 'self',
         }
 
-    def open_existing_session_cb_close(self, cr, uid, ids, context=None):
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        wizard.pos_session_id.signal_workflow('cashbox_control')
-        return self.open_session_cb(cr, uid, ids, context)
+    @api.multi
+    def open_existing_session_cb_close(self):
+        self.ensure_one()
+        self.pos_session_id.signal_workflow('cashbox_control')
+        return self.open_session_cb()
 
-    def open_session_cb(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "you can open only one session at a time"
-        proxy = self.pool.get('pos.session')
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        if not wizard.pos_session_id:
+    @api.multi
+    def open_session_cb(self):
+        self.ensure_one()
+        assert len(self.ids) == 1, "you can open only one session at a time"
+        if not self.pos_session_id:
             values = {
-                'user_id' : uid,
-                'config_id' : wizard.pos_config_id.id,
+                'user_id': self.env.uid,
+                'config_id': self.pos_config_id.id,
             }
-            session_id = proxy.create(cr, uid, values, context=context)
-            s = proxy.browse(cr, uid, session_id, context=context)
-            if s.state=='opened':
-                return self.open_ui(cr, uid, ids, context=context)
-            return self._open_session(session_id)
-        return self._open_session(wizard.pos_session_id.id)
+            session_id = self.env['pos.session'].create(values)
+            if session_id.state == 'opened':
+                return self.open_ui()
+            return session_id._open_session()
+        return self._open_session(self.pos_session_id.id)
 
-    def open_existing_session_cb(self, cr, uid, ids, context=None):
-        assert len(ids) == 1
-        wizard = self.browse(cr, uid, ids[0], context=context)
-        return self._open_session(wizard.pos_session_id.id)
+    @api.multi
+    def open_existing_session_cb(self):
+        assert len(self.ids) == 1
+        return self._open_session(self.pos_session_id.id)
 
     def _open_session(self, session_id):
         return {
@@ -70,47 +65,44 @@ class pos_session_opening(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-    def on_change_config(self, cr, uid, ids, config_id, context=None):
+    @api.onchange('pos_config_id')
+    def on_change_config(self):
         result = {
             'pos_session_id': False,
             'pos_state': False,
-            'pos_state_str' : '',
-            'pos_session_username' : False,
-            'pos_session_name' : False,
+            'pos_state_str': '',
+            'pos_session_username': False,
+            'pos_session_name': False,
         }
-        if not config_id:
-            return {'value' : result}
-        proxy = self.pool.get('pos.session')
-        session_ids = proxy.search(cr, uid, [
+        if not self.pos_config_id:
+            return {'value': result}
+        session = self.env['pos.session'].search([
             ('state', '!=', 'closed'),
-            ('config_id', '=', config_id),
-            ('user_id', '=', uid),
-        ], context=context)
-        if session_ids:
-            session = proxy.browse(cr, uid, session_ids[0], context=context)
-            result['pos_state'] = str(session.state)
-            result['pos_state_str'] = dict(pos_session.POS_SESSION_STATE).get(session.state, '')
-            result['pos_session_id'] = session.id
-            result['pos_session_name'] = session.name
-            result['pos_session_username'] = session.user_id.name
+            ('config_id', '=', self.pos_config_id.id),
+            ('user_id', '=', self.env.uid),
+        ], limit=1)
+        if session:
+            self.pos_state = str(session.state)
+            self.pos_state_str = dict(PosSession.POS_SESSION_STATE).get(session.state, '')
+            self.pos_session_id = session.id
+            self.pos_session_name = session.name
+            self.pos_session_username = session.user_id.name
 
-        return {'value' : result}
+        return {'value': result}
 
-    def default_get(self, cr, uid, fieldnames, context=None):
-        so = self.pool.get('pos.session')
-        session_ids = so.search(cr, uid, [('state','<>','closed'), ('user_id','=',uid)], context=context)
-        if session_ids:
-            result = so.browse(cr, uid, session_ids[0], context=context).config_id.id
+    @api.model
+    def default_get(self, fieldnames):
+        session = self.env['pos.session'].search([('state', '<>', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
+        if session:
+            result = session.config_id.id
         else:
-            current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            result = current_user.pos_config and current_user.pos_config.id or False
+            result = self.env.user.pos_config and self.env.user.pos_config.id or False
         if not result:
-            r = self.pool.get('pos.config').search(cr, uid, [], context=context)
-            result = r and r[0] or False
+            pos_confid = self.env['pos.config'].search([], limit=1)
+            result = pos_confid.id or False
 
-        count = self.pool.get('pos.config').search_count(cr, uid, [('state', '=', 'active')], context=context)
-        show_config = bool(count > 1)
+        count = self.env['pos.config'].search_count([('state', '=', 'active')])
         return {
-            'pos_config_id' : result,
-            'show_config' : show_config,
+            'pos_config_id': result,
+            'show_config': bool(count > 1),
         }

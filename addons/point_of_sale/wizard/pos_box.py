@@ -1,62 +1,54 @@
-
-from openerp.osv import osv
-from openerp.tools.translate import _
+# -*- coding: utf-8 -*-
 from openerp.exceptions import UserError
+from openerp import api, _
 
 from openerp.addons.account.wizard.pos_box import CashBox
+
 
 class PosBox(CashBox):
     _register = False
 
-    def run(self, cr, uid, ids, context=None):
-        if not context:
-            context = dict()
+    @api.multi
+    def run(self):
 
-        active_model = context.get('active_model', False) or False
-        active_ids = context.get('active_ids', []) or []
+        active_model = self.env.context.get('active_model', False) or False
+        active_ids = self.env.context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
-            bank_statements = [record.cash_register_id for record in records if record.cash_register_id]
+            pos_session = self.env[active_model].browse(active_ids)
+            bank_statements = [session.cash_register_id for session in pos_session if session.cash_register_id]
 
             if not bank_statements:
                 raise UserError(_("There is no cash register for this PoS Session"))
 
-            return self._run(cr, uid, ids, bank_statements, context=context)
+            return self._run(bank_statements)
         else:
-            return super(PosBox, self).run(cr, uid, ids, context=context)
+            return super(PosBox, self).run()
+
 
 class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
-        
-        if context is None:
-            context = {}
-    
-        values = super(PosBoxIn, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
-
-        active_model = context.get('active_model', False) or False
-        active_ids = context.get('active_ids', []) or []
-
+    @api.model
+    def _compute_values_for_statement_line(self, box, record):
+        values = super(PosBoxIn, self)._compute_values_for_statement_line(box, record)
+        active_model = self.env.context.get('active_model', False) or False
+        active_ids = self.env.context.get('active_ids', []) or []
         if active_model == 'pos.session':
-            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
+            session = self.env[active_model].browse(active_ids)[0]
             values['ref'] = session.name
-
         return values
 
 
 class PosBoxOut(PosBox):
     _inherit = 'cash.box.out'
 
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
-        values = super(PosBoxOut, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
-
-        active_model = context.get('active_model', False) or False
-        active_ids = context.get('active_ids', []) or []
-
+    @api.model
+    def _compute_values_for_statement_line(self, box, record):
+        values = super(PosBoxOut, self)._compute_values_for_statement_line(box, record)
+        active_model = self.env.context.get('active_model', False) or False
+        active_ids = self.env.context.get('active_ids', []) or []
         if active_model == 'pos.session':
-            session = self.pool[active_model].browse(cr, uid, active_ids, context=context)[0]
+            session = self.env[active_model].browse(active_ids)[0]
             values['ref'] = session.name
-
         return values

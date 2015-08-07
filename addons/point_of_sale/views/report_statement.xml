@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_statement">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -71,7 +70,7 @@
                             <table class="table table-condensed">
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
-                                    <td class="text-right"><span t-esc="formatLang(get_total(o.line_ids), currency_obj=res_company.currency_id)"/></td>
+                                    <td class="text-right"><span t-esc="get_total(o.line_ids)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                                 </tr>
                             </table>
                         </div>
@@ -81,5 +80,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>
