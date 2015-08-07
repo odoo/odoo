@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <template id="report_mrprepairorder">
     <t t-call="report.html_container">
         <t t-foreach="docs" t-as="o">
@@ -66,20 +65,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-if="o.operations">
+                            <t t-if="o.operations_ids">
                                 <tr><td colspan="5"><strong>Operation Line(s)</strong></td></tr>
-                                <tr t-foreach="o.operations" t-as="line">
+                                <tr t-foreach="o.operations_ids" t-as="line">
                                     <t t-if="(line.to_invoice is True)">
                                         <td>
-                                            <p t-if="line.type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
-                                            <p t-if="line.type == 'remove'">(<i>Remove</i>) <span t-field="line.name"/></p>
+                                            <p t-if="line.repair_type == 'add'"><i>(Add)</i> <span t-field="line.name" /></p>
+                                            <p t-if="line.repair_type == 'remove'">(<i>Remove</i>) <span t-field="line.name"/></p>
                                         </td>
                                         <td class="text-center">
                                             <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="line.product_uom_qty"/>
-                                            <span groups="product.group_uom" t-field="line.product_uom.name"/>
+                                            <span groups="product.group_uom" t-field="line.product_uom_id.name"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="line.price_unit"/>
@@ -91,9 +90,9 @@
                                     </t>
                                 </tr>
                             </t>
-                            <t t-if="o.fees_lines">
+                            <t t-if="o.fees_lines_ids">
                                 <tr><td colspan="5"><strong>Fees Line(s)</strong></td></tr>
-                                <tr t-foreach="o.fees_lines" t-as="fees">
+                                <tr t-foreach="o.fees_lines_ids" t-as="fees">
                                    <t t-if="fees.to_invoice is True">
                                         <td>
                                             <span t-field="fees.name"/>
@@ -103,7 +102,7 @@
                                         </td>
                                         <td class="text-right">
                                             <span t-field="fees.product_uom_qty"/>
-                                            <span groups="product.group_uom" t-field="fees.product_uom.name"/>
+                                            <span groups="product.group_uom" t-field="fees.product_uom_id.name"/>
                                         </td>
                                         <td class="text-right">
                                             <span t-field="fees.price_unit"/>
@@ -153,5 +152,4 @@
         </t>
     </t>
 </template>
-</data>
-</openerp>
+</odoo>

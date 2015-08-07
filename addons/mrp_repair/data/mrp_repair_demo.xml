@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mrp_repair_rmrp1" model="mrp.repair">
+            <field name="address_id" ref="base.res_partner_address_1"/>
+            <field name="guarantee_limit" eval='datetime.today().strftime("%Y-%m-%d")'/>
+            <field name="invoice_method">none</field>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+            <field name="location_dest_id" ref="stock.stock_location_14"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+        </record>
+        <record id="mrp_repair_operation1" model="mrp.repair.line">
+            <field name="location_dest_id" ref="stock.location_production"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="name">[M-Las] Mouse, Laser</field>
+            <field name="price_unit">50.0</field>
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_qty">1.0</field>
+            <field name="state">draft</field>
+            <field name="to_invoice">1</field>
+            <field name="repair_type">add</field>
+            <field name="repair_id" ref="mrp_repair_rmrp1"/>
+        </record>
+        <record id="mrp_repair_fees1" model="mrp.repair.fee">
+            <field name="name">Mouse repair fees</field>
+            <field name="product_id" ref="product.product_product_11"></field>
+            <field name="product_uom_qty">1.0</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"></field>
+            <field name="price_unit">50.0</field>
+            <field name="repair_id" ref="mrp_repair_rmrp1"/>
+        </record>
+
+        <record id="mrp_repair_rmrp0" model="mrp.repair">
+            <field name="product_id" ref="product.product_product_5"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="address_id" ref="base.res_partner_address_1"/>
+            <field name="guarantee_limit" eval='datetime.today().strftime("%Y-%m-%d")'/>
+            <field name="invoice_method">after_repair</field>
+            <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+            <field name="location_dest_id" ref="stock.stock_location_14"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+        </record>
+        <record id="mrp_repair_operation0" model="mrp.repair.line">
+            <field name="location_dest_id" ref="stock.location_production"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="name">[M-Wir] Mouse, Wireless</field>
+            <field name="price_unit">50.0</field>
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_qty">1.0</field>
+            <field name="state">draft</field>
+            <field name="to_invoice">1</field>
+            <field name="repair_type">add</field>
+            <field name="repair_id" ref="mrp_repair_rmrp0"/>
+        </record>
+        <record id="mrp_repair_fees0" model="mrp.repair.fee">
+            <field name="name">Mouse repair fees</field>
+            <field name="product_id" ref="product.product_product_12"></field>
+            <field name="product_uom_qty">1.0</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"></field>
+            <field name="price_unit">50.0</field>
+            <field name="repair_id" ref="mrp_repair_rmrp0"/>
+        </record>
+        <record id="mrp_repair_rmrp2" model="mrp.repair">
+            <field name="product_id" ref="product.product_product_6"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="address_id" ref="base.res_partner_address_1"/>
+            <field name="guarantee_limit" eval='datetime.today().strftime("%Y-%m-%d")'/>
+            <field name="invoice_method">b4repair</field>
+            <field name="partner_invoice_id" ref="base.res_partner_address_1"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="location_id" ref="stock.stock_location_14"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+        </record>
+        <record id="mrp_repair_operation2" model="mrp.repair.line">
+            <field name="location_dest_id" ref="stock.location_production"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="name">[RAM-SR5] RAM DDR SR5</field>
+            <field name="price_unit">50.0</field>
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_qty">1.0</field>
+            <field name="state">draft</field>
+            <field name="to_invoice">1</field>
+            <field name="repair_type">add</field>
+            <field name="repair_id" ref="mrp_repair_rmrp2"/>
+        </record>
+        <record id="mrp_repair_fees2" model="mrp.repair.fee">
+            <field name="name">RAM fees</field>
+            <field name="product_id" ref="product.product_product_13"></field>
+            <field name="product_uom_qty">1.0</field>
+            <field name="product_uom_id" ref="product.product_uom_unit"></field>
+            <field name="price_unit">50.0</field>
+            <field name="repair_id" ref="mrp_repair_rmrp2"/>
+        </record>
+    </data>
+</odoo>

@@ -31,10 +31,9 @@ The following topics should be covered by this module:
         'views/mrp_repair_view.xml',
         'views/mrp_repair_workflow.xml',
         'views/mrp_repair_report.xml',
-
         'views/report_mrprepairorder.xml',
     ],
-    'demo': ['data/mrp_repair_demo.yml'],
+    'demo': ['data/mrp_repair_demo.xml'],
     'test': ['../account/test/account_minimal_test.xml',
              'tests/mrp_repair_users.yml',
              'tests/test_mrp_repair_noneinv.yml',
