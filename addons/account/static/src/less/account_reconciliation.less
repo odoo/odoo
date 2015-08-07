@@ -7,6 +7,10 @@
 // Warning, this value is also specified in the abstractReconciliation widget
 @aestetic_animation_speed: 300ms;
 
+.oe_application .o_reconciliation {
+    height: 100%;
+    overflow: auto;
+}
 
 .o_reconciliation {
     -webkit-user-select: none;
@@ -16,7 +20,6 @@
     user-select: none;
     cursor: default;
     font-size: 12px;
-    overflow: auto;
 
     // Why on earth does bootstrap set font-size to 14px in popovers ?
     .popover {
