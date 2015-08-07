@@ -59,7 +59,7 @@ then cloning it for each new child.
 
 */
 var abstractReconciliation = Widget.extend(ControlPanelMixin, {
-    className: 'oe_reconciliation o_reconciliation',
+    className: 'o_reconciliation',
 
     events: {
         "click *[rel='do_action']": "doActionClickHandler",
@@ -372,7 +372,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
 });
 
 var abstractReconciliationLine = Widget.extend({
-    className: 'oe_reconciliation_line o_reconciliation_line',
+    className: 'o_reconciliation_line',
 
     events: {
         "click .mv_line": "moveLineClickHandler",
@@ -1094,7 +1094,7 @@ var abstractReconciliationLine = Widget.extend({
 });
 
 var bankStatementReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_bank_statement_reconciliation o_bank_statement_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_bank_statement_reconciliation',
 
     events: _.defaults({
         "click .statement_name span": "statementNameClickHandler",
@@ -1582,7 +1582,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
 });
 
 var bankStatementReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line o_bank_statement_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_bank_statement_reconciliation_line',
 
     events: _.defaults({
         "click .change_partner": "changePartnerClickHandler",
@@ -2086,7 +2086,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 });
 
 var manualReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_manual_reconciliation o_manual_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_manual_reconciliation',
 
     events: _.defaults({
         "change input[name='modeselektor']": "modeSelektorHandler",
@@ -2341,7 +2341,7 @@ var manualReconciliation = abstractReconciliation.extend({
 });
 
 var manualReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line o_manual_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_manual_reconciliation_line',
 
     events: _.defaults({
         "click .accounting_view thead": "headerClickHandler",
