@@ -100,6 +100,7 @@ var ColumnQuickCreate = Widget.extend({
         this.update();
         if (!this.folded) {
             this.$input.focus();
+            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         }
     },
 

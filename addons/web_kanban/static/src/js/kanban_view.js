@@ -665,6 +665,7 @@ var KanbanView = View.extend({
             var column = new KanbanColumn(self, group_data, options, record_options);
             column.insertBefore(self.$('.o_column_quick_create'));
             self.widgets.push(column);
+            self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
         });
     },
 

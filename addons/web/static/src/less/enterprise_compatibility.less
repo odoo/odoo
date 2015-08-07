@@ -16,43 +16,40 @@
 @odoo-horizontal-padding: 16px;
 @odoo-list-grey: #e2e2e0;  // FIXME: listview thead background color
 @odoo-main-color-muted: #a8a8a8;
-@odoo-main-text-color: #666666;
-@odoo-webclient-background-color: @odoo-brand-secondary;
+@odoo-main-text-color: #555555;
+@odoo-webclient-background-color: #F0EEEE;
 @odoo-view-background-color: white;
 @odoo-shadow-color: #303030;
 @brand-primary: @odoo-brand-primary;
 
 .oe-view-manager {
-    background-color: #f0eeee !important;
+    background-color: @odoo-webclient-background-color !important;
 }
 
 .o_kanban_view {
-    background-color: #f0eeee;
-    .o_kanban_header {
-        color: black !important;
-    }
+    background-color: @odoo-webclient-background-color;
 
     .o_kanban_config i, .o_kanban_quick_add i {
-        color: #555 !important;
+        color: @odoo-main-text-color !important;
         &:hover {
-            background-color: darken(#f0eeee, 10%) !important;
+            background-color: darken(@odoo-webclient-background-color, 10%) !important;
         }
+    }
+    .o_column_title, .o_kanban_title, .o_kanban_add_column, .o_column_unfold {
+        color: @odoo-main-text-color !important;
     }
 
     .o_column_folded {
-        background-color: #f0eeee !important;
-        border: none !important;
-        span.o_column_title, span.o_column_unfold {
-            // color: white !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 5%) !important;
+        border-color: darken(@odoo-webclient-background-color, 10%) !important;
     }
 
     .o_column_quick_create {
-        background-color: #f0eeee !important;
-        .o_kanban_add_column, .o_kanban_title {
-            color: black !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 10%) !important;
+    }
 
+    .o_kanban_header {
+        margin-bottom: 2px; // For the buttons not to overlap first record's box shaddow on hover
     }
 }
 

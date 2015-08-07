@@ -116,20 +116,20 @@
         }
     }
 
+    .o_kanban_quick_create {
+        margin: 0 @o-kanban-record-margin 8px @o-kanban-record-margin;
+        padding: 3px;
+        input {
+            width: 100%;
+            margin: 4px 0;
+        }
+    }
+
     .o_kanban_group {
         .o-flex(0, 0, auto);
         margin: 0 4px;
         &:not(.o_column_folded) {
             width: @o-kanban-default-record-width + 2*@o-kanban-record-margin;
-        }
-
-        .o_kanban_quick_create {
-            margin: 0 @o-kanban-record-margin 8px @o-kanban-record-margin;
-            padding: 3px;
-            input {
-                width: 100%;
-                margin: 4px 0;
-            }
         }
 
         .o_kanban_header + .o_kanban_record {
@@ -229,20 +229,13 @@
             }
         }
 
-        &.o_kanban_dragged {
-            > * {
-                visibility: hidden;
-            }
-            background-color: @odoo-main-text-color;
-        }
-
         &.oe_kanban_global_click, &.oe_kanban_global_click_edit {
             cursor: pointer;
         }
 
         &.ui-sortable-helper {
             transform: rotate(3deg);
-            opacity: 0.9,
+            opacity: 0.9;
         }
 
         &.o_kanban_two_column_tags {
@@ -353,6 +346,10 @@
     }
 
     .o_kanban_group {
+        &:nth-child(odd) {
+            background-color: darken(@odoo-webclient-background-color, 3%);
+        }
+
         &.o_kanban_dragged {
             background-color: @odoo-main-text-color;
             .o_kanban_record {
