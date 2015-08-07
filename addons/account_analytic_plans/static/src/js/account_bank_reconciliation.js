@@ -17,7 +17,6 @@ widgets.bankStatementReconciliation.include({
             corresponding_property: "analytics_id",
             label: _t("Analytic Distribution"),
             required: false,
-            tabindex: 14,
             group: "analytic.group_analytic_accounting",
             constructor: FieldMany2One,
             field_properties: {

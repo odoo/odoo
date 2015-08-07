@@ -97,7 +97,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "account_id", // a account.move.line field name
                 label: _t("Account"),
                 required: true,
-                tabindex: 10,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.account",
@@ -112,7 +111,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "label",
                 label: _t("Label"),
                 required: true,
-                tabindex: 15,
                 constructor: FieldChar,
                 field_properties: {
                     string: _t("Label"),
@@ -125,7 +123,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "tax_id",
                 label: _t("Tax"),
                 required: false,
-                tabindex: 20,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.tax",
@@ -140,7 +137,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "amount",
                 label: _t("Amount"),
                 required: true,
-                tabindex: 25,
                 constructor: FieldFloat,
                 field_properties: {
                     string: _t("Amount"),
@@ -153,7 +149,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "analytic_account_id",
                 label: _t("Analytic Acc."),
                 required: false,
-                tabindex: 30,
                 group:"analytic.group_analytic_accounting",
                 constructor: FieldMany2One,
                 field_properties: {
@@ -573,12 +568,11 @@ var abstractReconciliationLine = Widget.extend({
             field.appendTo($field_container.find("td"));
             self.$(".create_form").prepend($field_container);
 
-            // now that widget's dom has been created (appendTo does that), bind events and adds tabindex
+            // now that widget's dom has been created (appendTo does that), bind events
             if (field_data.field_properties.type != "many2one") {
                 // Triggers change:value TODO : moche bind ?
                 field.$el.find("input").keyup(function(e, field){ field.commit_value(); }.bind(null, null, field));
             }
-            field.$el.find("input").attr("tabindex", field_data.tabindex);
 
             // Hide the field if group not OK
             if (field_data.group !== undefined) {
@@ -2146,7 +2140,6 @@ var manualReconciliation = abstractReconciliation.extend({
                 corresponding_property: "journal_id", // a account.move field name
                 label: _t("Journal"),
                 required: true,
-                tabindex: 11,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.journal",
