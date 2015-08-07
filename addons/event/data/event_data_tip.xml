@@ -10,4 +10,17 @@
         <field name="highlight_selector">div.oe_button_box:visible > button.oe_event_attendee_button</field>
         <field name="placement">bottom</field>
     </record>
+
+     <record model="web.tip" id="event_tip_2">
+         <field name="title"></field>
+         <field name="description">Click here to send email to selected Attendee(s).</field>
+         <field name="action_id" ref="event.action_registration"/>
+         <field name="model">event.registration</field>
+         <field name="mode">tree</field>
+         <field name="trigger_selector">th.oe_list_record_selector</field>
+         <field name="highlight_selector">div.oe_form_dropdown_section:last-child</field>
+         <field name="end_selector">div.oe_form_dropdown_section:visible</field>
+         <field name="placement">bottom</field>
+    </record>
+
 </odoo>
