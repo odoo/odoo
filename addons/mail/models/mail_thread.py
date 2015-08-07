@@ -97,36 +97,19 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _set_followers(self):
-        # read the old set of followers, and determine the new set of followers
-        old = self.env['mail.followers'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', self.ids)]).mapped('partner_id')
-        new = self.env['res.partner']
-        Partner = self.env['res.partner']
+        # first determine the old followers for each record
+        old = dict.fromkeys(self.ids, self.env['res.partner'])
+        followers = self.env['mail.followers'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', self.ids)])
+        for follower in followers:
+            old[follower.res_id] |= follower.partner_id
 
-        old_style_commands = self._fields['message_follower_ids'].convert_to_write(self.message_follower_ids)
-        for command in old_style_commands:
-            if command[0] == 0:
-                new |= Partner.create(command[2])
-            elif command[0] == 1:
-                partner = Partner.browse(command[1])
-                partner.write(command[2])
-                new |= partner
-            elif command[0] == 2:
-                partner = Partner.browse(command[1])
-                new -= partner
-                partner.unlink()
-            elif command[0] == 3:
-                new -= Partner.browse(command[1])
-            elif command[0] == 4:
-                new |= Partner.browse(command[1])
-            elif command[0] == 5:
-                new = self.env['res.partner']
-            elif command[0] == 6:
-                new = self.env['res.partner'].browse(command[2])
-
-        # remove partners that are no longer followers
-        self.message_unsubscribe((old-new).ids)
-        # add new followers
-        self.message_subscribe((new-old).ids)
+        # set the new followers for each record
+        for record in self:
+            new = record.message_follower_ids
+            # remove partners that are no longer followers
+            record.message_unsubscribe((old[record.id] - new).ids)
+            # add new followers
+            record.message_subscribe((new - old[record.id]).ids)
 
     @api.model
     def _search_followers(self, operator, operand):
