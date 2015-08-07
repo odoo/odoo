@@ -152,35 +152,11 @@ $(document).ready(function () {
         var social_urls = {
             'linkedin': 'https://www.linkedin.com/countserv/count/share?url=',
             'twitter': 'https://cdn.api.twitter.com/1/urls/count.json?url=',
-            'fb': 'https://graph.facebook.com/?id=',
+            'facebook': 'https://graph.facebook.com/?id=',
             'gplus': 'https://clients6.google.com/rpc'
         }
-        var socialgatter = function (app_url, url, callback) {
-            $.ajax({
-                url: app_url + url,
-                dataType: 'jsonp',
-                success: callback
-            });
-        };
+
         var update_statistics = function(social_site, slide_url) {
-            if (social_site == 'linkedin') {
-                socialgatter(social_urls['linkedin'], slide_url, function(data) {
-                    $('#linkedin-badge').text(data.count || 0);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#linkedin-badge').text()));
-                });
-            }
-            if (social_site == 'twitter') {
-                socialgatter(social_urls['twitter'], slide_url, function(data) {
-                    $('#twitter-badge').text(data.count || 0);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#twitter-badge').text()));
-                });
-            }
-            if (social_site == 'fb') {
-                socialgatter(social_urls['fb'], slide_url, function(data) {
-                    $('#facebook-badge').text(data.shares || 0);
-                    $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#facebook-badge').text()));
-                });
-            }
             if (social_site == 'gplus') {
                 $.ajax({
                     url: social_urls['gplus'],
@@ -206,33 +182,37 @@ $(document).ready(function () {
                         $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#google-badge').text()));
                     },
                 });
+            } else {
+                $.ajax({
+                    url: social_urls[social_site] + slide_url,
+                    dataType: 'jsonp',
+                    success: function(data) {
+                        var shareCount = (social_site === 'facebook' ? data.shares : data.count) || 0;
+                        $('#' + social_site + '-badge').text(shareCount);
+                        $('#total-share').text(parseInt($('#total-share').text()) + parseInt($('#' + social_site+ '-badge').text()));
+                    },
+                });
             }
         };
 
         $.each(social_urls, function(key, value) {
-            update_statistics(key, slide_url)
+            update_statistics(key, slide_url);
         });
 
         $("a.o_slides_social_share").on('click', function(ev) {
             ev.preventDefault();
             var key = $(ev.currentTarget).attr('social-key');
-            var win_url = $(ev.currentTarget).attr('href');
-            var win = window.open(
-                win_url,
+            var popUpURL = $(ev.currentTarget).attr('href');
+            var popUp = window.open(
+                popUpURL,
                 'Share Dialog',
                 'width=626,height=436');
-            var interval = window.setInterval(function() {
-                try {
-                    if (win.closed) {
-                        window.clearInterval(interval);
-                        setTimeout(function() {
-                            update_statistics(key, slide_url);
-                        }, 3000);
-                    }
-                } catch (e) {
-                    window.clearInterval(interval);
+            $(window).on('focus', function() {
+                if (popUp.closed) {
+                    update_statistics(key, slide_url);
+                    $(window).off('focus');
                 }
-            }, 1000);
+            });
         });
     }
 });

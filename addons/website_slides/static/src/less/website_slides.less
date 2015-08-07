@@ -9,6 +9,7 @@
     @navbar-default-link-color: #777;
     @navbar-default-link-hover-color: #333;
     @navbar-default-bg: #f8f8f8;
+    @MAX-Z-INDEX : 2147483647;
 } .define-color-if-not-defined();
 
 .oe_slides_panel_footer {
@@ -166,6 +167,10 @@ textarea.o_slides_comment {
 
 .oe_slides_panel_footer #page_number {
     width: 45px;
+}
+
+.oe_show_footer {
+    z-index: @MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
 }
 // Display Slide Navigation Footer bit clear on mobile preview
 @media screen and (max-width: 300px) {

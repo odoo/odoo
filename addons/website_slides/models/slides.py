@@ -213,7 +213,7 @@ class Slide(models.Model):
     _description = 'Slides'
 
     _PROMOTIONAL_FIELDS = [
-        '__last_update', 'name', 'image_thumb', 'slide_type', 'total_views', 'category_id',
+        '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
         'channel_id', 'description', 'tag_ids', 'write_date', 'create_date',
         'website_published', 'website_url', 'website_meta_title', 'website_meta_description', 'website_meta_keywords']
 
@@ -359,13 +359,13 @@ class Slide(models.Model):
     def check_field_access_rights(self, operation, fields):
         """ As per channel access configuration (visibility)
          - public  ==> no restriction on slides access
-         - private ==> restrict all slides of channel base on access group defined on channel group_ids field
+         - private ==> restrict all slides of channel based on access group defined on channel group_ids field
          - partial ==> show channel, but presentations based on groups means any user can see channel but not slide's content.
         For private: implement using record rule
         For partial: user can see channel, but channel gridview have slide detail so we have to implement
         partial field access mechanism for public user so he can have access of promotional field (name, view_count) of slides,
         but not all fields like data (actual pdf content)
-        all fields should be accessible only for user group define on channel group_ids
+        all fields should be accessible only for user group defined on channel group_ids
         """
         if self.env.uid == SUPERUSER_ID:
             return fields or list(self._fields)
