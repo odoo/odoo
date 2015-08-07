@@ -604,43 +604,25 @@ class Field(object):
 
     def setup_triggers(self, env):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
-        model = env[self.model_name]
-        for path in self.depends:
-            self._setup_dependency([], model, path.split('.'))
+        for path_str in self.depends:
+            path = path_str.split('.')
 
-    def _setup_dependency(self, path0, model, path1):
-        """ Make ``self`` depend on ``model``; `path0 + path1` is a dependency of
-            ``self``, and ``path0`` is the sequence of field names from ``self.model``
-            to ``model``.
-        """
-        env = model.env
-        head, tail = path1[0], path1[1:]
+            # traverse path and add triggers on fields along the way
+            field = None
+            for i, name in enumerate(path):
+                model = env[field.comodel_name if field else self.model_name]
+                field = model._fields[name]
+                # env[self.model_name] --- path[:i] --> model with field
 
-        if head == '*':
-            # special case: add triggers on all fields of model (except self)
-            fields = set(model._fields.itervalues()) - set([self])
-        else:
-            fields = [model._fields[head]]
+                if field is self:
+                    self.recursive = True
+                    continue
 
-        for field in fields:
-            if field == self:
-                _logger.debug("Field %s is recursively defined", self)
-                self.recursive = True
-                continue
-
-            #_logger.debug("Add trigger on %s to recompute %s", field, self)
-            model._field_triggers.add(field, (self, '.'.join(path0 or ['id'])))
-
-            # add trigger on inverse fields, too
-            for invf in model._field_inverses[field]:
-                #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invm = env[invf.model_name]
-                invm._field_triggers.add(invf, (self, '.'.join(path0 + [head])))
-
-            # recursively traverse the dependency
-            if tail:
-                comodel = env[field.comodel_name]
-                self._setup_dependency(path0 + [head], comodel, tail)
+                # add trigger on field and its inverses to recompute self
+                model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
+                for invf in model._field_inverses[field]:
+                    invm = env[invf.model_name]
+                    invm._field_triggers.add(invf, (self, '.'.join(path[:i+1])))
 
     ############################################################################
     #
