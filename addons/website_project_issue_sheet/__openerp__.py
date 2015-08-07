@@ -3,20 +3,20 @@
 
 
 {
-    'name': 'Website Project Issue',
+    'name': 'Timesheet on Website Project Issue',
     'version': '0.1',
     'category': 'Tools',
     'complexity': 'easy',
     'description': """
-This module adds project issues inside your account's page on website if project_issue and website_portal are installed.
+Add timesheet support on issue in the frontend.
 ==================================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['project_issue', 'website_portal'],
+    'depends': ['website_project_issue', 'project_issue_sheet'],
     'data': [
-        'security/portal_security.xml',
-        'security/ir.model.access.csv',
         'views/project_issue_templates.xml',
+        'security/ir.model.access.csv',
+        'security/portal_security.xml',
     ],
     'installable': True,
     'auto_install': True,
