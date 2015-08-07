@@ -488,21 +488,24 @@ class Field(object):
         def make_depends(deps):
             return tuple(deps(model) if callable(deps) else deps)
 
+        def make_callable(name):
+            return lambda recs, *args, **kwargs: getattr(recs, name)(*args, **kwargs)
+
         # convert compute into a callable and determine depends
         if isinstance(self.compute, basestring):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
             for method in resolve_all_mro(model, self.compute, reverse=True):
                 self.depends += make_depends(getattr(method, '_depends', ()))
-            self.compute = getattr(type(model), self.compute)
+            self.compute = make_callable(self.compute)
         else:
             self.depends = make_depends(getattr(self.compute, '_depends', ()))
 
         # convert inverse and search into callables
         if isinstance(self.inverse, basestring):
-            self.inverse = getattr(type(model), self.inverse)
+            self.inverse = make_callable(self.inverse)
         if isinstance(self.search, basestring):
-            self.search = getattr(type(model), self.search)
+            self.search = make_callable(self.search)
 
     def _setup_regular_full(self, model):
         """ Setup the inverse field(s) of ``self``. """
