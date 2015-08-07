@@ -3034,7 +3034,7 @@ class stock_warehouse(osv.osv):
         'crossdock_route_id': fields.many2one('stock.location.route', 'Crossdock Route'),
         'reception_route_id': fields.many2one('stock.location.route', 'Receipt Route'),
         'delivery_route_id': fields.many2one('stock.location.route', 'Delivery Route'),
-        'resupply_from_wh': fields.boolean('Resupply From Other Warehouses'),
+        'resupply_from_wh': fields.boolean('Resupply From Other Warehouses', help='unused field'),
         'resupply_wh_ids': fields.many2many('stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id', 'Resupply Warehouses'),
         'resupply_route_ids': fields.one2many('stock.location.route', 'supplied_wh_id', 'Resupply Routes', 
                                               help="Routes will be created for these resupply warehouses and you can select them on products and product categories"),
