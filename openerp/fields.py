@@ -1685,10 +1685,11 @@ class _RelationalMulti(_Relational):
             comodel = record.env[self.comodel_name]
             ids = OrderedSet(record[self.name].ids)
             # modify ids with the commands
+            create = comodel.create if validate else comodel.new
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
-                        ids.add(comodel.new(command[2]).id)
+                        ids.add(create(command[2]).id)
                     elif command[0] == 1:
                         comodel.browse(command[1]).update(command[2])
                         ids.add(command[1])
@@ -1704,7 +1705,7 @@ class _RelationalMulti(_Relational):
                     elif command[0] == 6:
                         ids = OrderedSet(command[2])
                 elif isinstance(command, dict):
-                    ids.add(comodel.new(command).id)
+                    ids.add(create(command).id)
                 else:
                     ids.add(command)
             # return result as a recordset
