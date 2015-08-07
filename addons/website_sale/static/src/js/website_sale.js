@@ -84,7 +84,7 @@ $('.oe_website_sale').each(function () {
                     return;
                 }
                 if (!data.quantity) {
-                    location.reload();
+                    location.reload(true);
                     return;
                 }
                 var $q = $(".my_cart_quantity");
