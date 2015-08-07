@@ -568,10 +568,11 @@ var abstractReconciliationLine = Widget.extend({
             field.appendTo($field_container.find("td"));
             self.$(".create_form").prepend($field_container);
 
-            // now that widget's dom has been created (appendTo does that), bind events
-            if (field_data.field_properties.type != "many2one") {
-                // Triggers change:value TODO : moche bind ?
-                field.$el.find("input").keyup(function(e, field){ field.commit_value(); }.bind(null, null, field));
+            // Change field value on keypress instead of blur
+            if (field_data.field_properties.type !== "many2one") {
+                field.$el.find('input').andSelf().filter('input').keyup(function() {
+                    this.store_dom_value();
+                }.bind(field));
             }
 
             // Hide the field if group not OK
