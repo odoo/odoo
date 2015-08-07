@@ -24,7 +24,7 @@
 <!-- Tools template: share on social networkds -->
 <template id='slides_share' name="Slides Media Share">
     <div class="form-group">
-        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.website_url}" class="o_slides_social_share" social-key="fb"><i class="fa fa-facebook-square fa-2x"/></a>
+        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{slide.website_url}" class="o_slides_social_share" social-key="facebook"><i class="fa fa-facebook-square fa-2x"/></a>
         <a t-attf-href="https://twitter.com/intent/tweet?text=#{slide.name}&amp;url=#{slide.website_url}" class="o_slides_social_share"  social-key="twitter"><i class="fa fa-twitter fa-2x"/></a>
         <a t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{slide.website_url}&amp;title=#{slide.name}&amp;" social-key="linkedin" class="o_slides_social_share"><i class="fa fa-linkedin fa-2x"/></a>
         <a t-attf-href="https://plus.google.com/share?url=#{slide.website_url}" class="o_slides_social_share" social-key="gplus"><i class="fa fa-google-plus-square fa-2x"/></a>
@@ -246,7 +246,7 @@
             </section>
             <section>
                 <div class="container mt16">
-                    <div class="row o_promote_box">
+                    <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-left: 15px;padding-right: 15px;" t-if="channel.total == 0">
                             <div class="jumbotron">
                                 <h1>No presentation published yet.</h1>

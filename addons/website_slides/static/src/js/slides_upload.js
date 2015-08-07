@@ -208,22 +208,19 @@ var SlideDialog = Widget.extend({
                 }
                 return data.text;
             },
-            check_unique_tag: function(term, tags) {
-                return _.filter(tags, function(tag) {
-                    return tag.text.toLowerCase() === term.toLowerCase()
-                }).length === 0;
-            },
             createSearchChoice: function(term, data) {
                 var added_tags = $(this.opts.element).select2('data');
-                if (this.opts.check_unique_tag(term, _.union(added_tags, data))) {
+                if (_.filter(_.union(added_tags, data), function(tag) {
+                    return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
+                }).length === 0) {
                     return {
                         id: _.uniqueId('tag_'),
                         create: true,
                         tag: term,
-                        text: _.str.sprintf(_t("Create New %s '%s'"), tag, term)
+                        text: _.str.sprintf(_t("Create new tag '%s'"), term),
                     };
                 }
-             },
+            },
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
@@ -302,7 +299,8 @@ var SlideDialog = Widget.extend({
     svg_to_png: function() {
         var img = this.$el.find("img#slide-image")[0];
         var canvas = document.createElement("canvas");
-        canvas.width = img.width, canvas.height = img.height;
+        canvas.width = img.width;
+        canvas.height = img.height;
         canvas.getContext("2d").drawImage(img, 0, 0);
         return canvas.toDataURL("image/png").split(',')[1];
     },

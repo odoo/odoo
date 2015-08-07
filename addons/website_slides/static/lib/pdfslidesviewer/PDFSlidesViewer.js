@@ -145,25 +145,14 @@ var PDFSlidesViewer = (function(){
         return this.queueRenderPage(this.pdf_page_total);
     }
 
+    PDFSlidesViewer.prototype.toggleFullScreenFooter = function(){
+        if(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            $('div#PDFViewer > div.navbar-fixed-bottom').toggleClass('oe_show_footer');
+        }
+    }
+
     PDFSlidesViewer.prototype.toggleFullScreen = function(){
         var el = this.canvas;
-
-        var $PDFViewer = $("div#PDFSlideViewer");
-        var $navigation_footer = $('div#PDFViewer > div.navbar-fixed-bottom');
-
-        $(document).unbind('webkitfullscreenchange mozfullscreenchange fullscreenchange')
-            .bind('webkitfullscreenchange mozfullscreenchange fullscreenchange', function() {
-                var state = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullScreen;
-                if (!state) {
-                    $navigation_footer.removeAttr('style');
-                    $PDFViewer.unbind('click');
-                } else {
-                    $navigation_footer.css('z-index', 2147483647);
-                    $PDFViewer.on('click', function() {
-                        $navigation_footer.fadeToggle();
-                    });
-                }
-            });
 
         var isFullscreenAvailable = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled || false;
         if(isFullscreenAvailable){ // Full screen supported
