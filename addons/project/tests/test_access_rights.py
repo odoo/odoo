@@ -33,53 +33,6 @@ class TestPortalProjectBase(TestProjectBase):
 class TestPortalProject(TestPortalProjectBase):
 
     @mute_logger('openerp.addons.base.ir.ir_model')
-    def test_public_project_access_rights(self):
-        pigs = self.project_pigs
-
-        # Do: Alfred reads project -> ok (employee ok public)
-        pigs.sudo(self.user_projectuser.id).read(['state'])
-        # Test: all project tasks visible
-        tasks = self.env['project.task'].sudo(self.user_projectuser.id).search([('project_id', '=', pigs.id)])
-        self.assertEqual(tasks, self.task_1 | self.task_2 | self.task_3 | self.task_4 | self.task_5 | self.task_6,
-                         'access rights: project user should see all tasks of public project')
-        # Test: all project tasks readable
-        tasks.read(['name'])
-        # Test: all project tasks writable
-        tasks.write({'description': 'TestDescription'})
-
-        # Need to check assertRaises
-        # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, pigs.sudo(self.user_noone).read, ['state'])
-        # Test: no project task visible
-        self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_noone).search, [('project_id', '=', pigs.id)])
-        # Test: no project task readable
-        self.assertRaises(AccessError, tasks.sudo(self.user_noone).read, ['name'])
-        # Test: no project task writable
-        self.assertRaises(AccessError, tasks.sudo(self.user_noone).write, {'description': 'TestDescription'})
-
-        # Do: Chell reads project -> ok (portal ok public)
-        pigs.sudo(self.user_portal).read(['state'])
-        # Test: all project tasks visible
-        tasks = self.env['project.task'].sudo(self.user_portal).search([('project_id', '=', pigs.id)])
-        self.assertEqual(tasks, self.task_1 | self.task_2 | self.task_3 | self.task_4 | self.task_5 | self.task_6,
-                         'access rights: portal user should see all tasks of a public project')
-        # Test: all project tasks readable
-        tasks.read(['name'])
-        # Test: no project task writable
-        self.assertRaises(AccessError, tasks.write, {'description': 'TestDescription'})
-
-        # Do: Donovan reads project -> ok (public)
-        pigs.sudo(self.user_public).read(['state'])
-        # Test: all project tasks visible
-        tasks = self.env['project.task'].sudo(self.user_public.id).search([('project_id', '=', pigs.id)])
-        self.assertEqual(tasks, self.task_1 | self.task_2 | self.task_3 | self.task_4 | self.task_5 | self.task_6,
-                         'access rights: public user should see all tasks of a public project')
-        # Test: all project tasks readable
-        tasks.read(['name'])
-        # Test: no project task writable
-        self.assertRaises(AccessError, tasks.write, {'description': 'TestDescription'})
-
-    @mute_logger('openerp.addons.base.ir.ir_model')
     def test_portal_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'portal'})
@@ -106,9 +59,8 @@ class TestPortalProject(TestPortalProjectBase):
         # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
         # which still generate exception in except_orm.)
         self.assertRaises(except_orm, pigs.sudo(self.user_public).read, ['state'])
-        # Test: no project task visible
-        tasks = self.env['project.task'].sudo(self.user_public).search([('project_id', '=', pigs.id)])
-        self.assertFalse(tasks, 'access rights: public user should not see tasks of a portal project')
+        # Test: no access right to project.task
+        self.assertRaises(AccessError, self.env['project.task'].sudo(self.user_public).search, [])
         # Data: task follower cleaning
         self.task_1.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_portal.id])
         self.task_3.sudo(self.user_projectuser).message_unsubscribe_users(user_ids=[self.user_portal.id])
@@ -136,10 +88,6 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Donovan reads project -> ko (public ko employee)
         # TODO Change the except_orm to Warning
         self.assertRaises(except_orm, pigs.sudo(self.user_public).read, ['state'])
-        # Test: no project task visible
-        tasks = self.env['project.task'].sudo(self.user_public).search([('project_id', '=', pigs.id)])
-        self.assertFalse(tasks.ids, 'access rights: public user should not see tasks of an employees project')
-
         # Do: project user is employee and can create a task
         tmp_task = self.env['project.task'].sudo(self.user_projectuser).with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs task',
@@ -172,9 +120,6 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: Donovan reads project -> ko (public ko employee)
         # TODO Change the except_orm to Warning
         self.assertRaises(except_orm, pigs.sudo(self.user_public).read, ['state'])
-        # Test: no project task visible
-        tasks = self.env['project.task'].sudo(self.user_public).search([('project_id', '=', pigs.id)])
-        self.assertFalse(tasks, 'access rights: public user should not see tasks of a followers project')
 
         # Data: subscribe Alfred, Chell and Donovan as follower
         pigs.message_subscribe_users(user_ids=[self.user_projectuser.id, self.user_portal.id, self.user_public.id])
@@ -200,4 +145,3 @@ class TestPortalProject(TestPortalProjectBase):
         # Do: project user can create a task without project
         self.assertRaises(except_orm, self.env['project.task'].sudo(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
-

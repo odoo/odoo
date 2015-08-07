@@ -2,7 +2,8 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_project_project,project.project,model_project_project,project.group_project_user,1,0,0,0
 access_project_project_manager,project.project,model_project_project,project.group_project_manager,1,1,1,1
 access_account_analytic_account_user,account.analytic.account,analytic.model_account_analytic_account,project.group_project_user,1,0,0,0
-access_account_analytic_account,account.analytic.account,analytic.model_account_analytic_account,project.group_project_manager,1,1,1,1
+access_account_analytic_account_manager,account.analytic.account,analytic.model_account_analytic_account,project.group_project_manager,1,1,1,1
+access_account_analytic_account_portal,account_analytic_account,analytic.model_account_analytic_account,base.group_portal,1,0,0,0
 access_account_analytic_journal_project_manager,account.analytic.journal.project.manager,analytic.model_account_analytic_journal,project.group_project_manager,1,1,1,1
 access_account_analytic_journal_project_user,account.analytic.journal.project.user,analytic.model_account_analytic_journal,project.group_project_user,1,1,1,0
 access_project_task_type_user,project.task.type user,model_project_task_type,project.group_project_user,1,0,0,0
@@ -26,11 +27,7 @@ access_resource_calendar_leaves_user,resource.calendar.leaves user,resource.mode
 access_project_tags_all,project.project_tags_all,model_project_tags,,1,0,0,0
 access_project_tags_manager,project.project_tags_manager,model_project_tags,project.group_project_manager,1,1,1,1
 access_project_tags_portal,project_tags_portal,project.model_project_tags,base.group_portal,1,0,0,0
-access_project_tags_public,project_tags_public,project.model_project_tags,base.group_public,1,0,0,0
 access_mail_alias,mail.alias,mail.model_mail_alias,project.group_project_manager,1,1,1,1
 access_project_portal,project__portal,project.model_project_project,base.group_portal,1,0,0,0
 access_task_portal,task_portal,project.model_project_task,base.group_portal,1,0,0,0
 access_task_type_portal,task_type_portal,project.model_project_task_type,base.group_portal,1,0,0,0
-access_project_public,project_public,project.model_project_project,base.group_public,1,0,0,0
-access_task_public,task_public,project.model_project_task,base.group_public,1,0,0,0
-access_task_type_public,task_type_public,project.model_project_task_type,base.group_public,1,0,0,0
