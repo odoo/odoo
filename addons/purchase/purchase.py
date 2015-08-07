@@ -1605,8 +1605,6 @@ class procurement_order(osv.osv):
             gpo = procurement.rule_id.group_propagation_option
             group = (gpo == 'fixed' and procurement.rule_id.group_id.id) or (gpo == 'propagate' and procurement.group_id.id) or False
             fp = acc_pos_obj.get_fiscal_position(cr, uid, None, partner.id, context=context)
-            if fp:
-                fp = acc_pos_obj.browse(cr, uid, fp, context=context)
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
@@ -1616,7 +1614,7 @@ class procurement_order(osv.osv):
                 'pricelist_id': partner.property_product_pricelist_purchase.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'fiscal_position': fp.id,
+                'fiscal_position': fp,
                 'payment_term_id': partner.property_supplier_payment_term.id,
                 'dest_address_id': procurement.partner_dest_id.id,
                 'group_id': group,
