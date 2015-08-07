@@ -604,9 +604,9 @@ class BaseModel(object):
         ModelClass = type(name, tuple(bases), {
             '_name': name,
             '_register': False,
-            '_columns': None,           # recomputed in _setup_fields()
-            '_defaults': None,          # recomputed in _setup_base()
-            '_fields': frozendict(),    # idem
+            '_columns': {},             # recomputed in _setup_fields()
+            '_defaults': {},            # recomputed in _setup_base()
+            '_fields': {},              # idem
             '_inherits': inherits,
             '_depends': depends,
             '_constraints': constraints.values(),
@@ -2930,11 +2930,34 @@ class BaseModel(object):
         if cls._setup_done:
             return
 
-        # 1. determine the proper fields of the model; duplicate them on cls to
-        # avoid clashes with inheritance between different models
-        proper_fields = getattr(cls, '_proper_fields', None)
-        if proper_fields is None:
-            # retrieve fields from parent classes, and add magic fields
+        # 1. determine the proper fields of the model: the fields defined on the
+        # class and magic fields, not the inherited or custom ones
+        cls0 = cls.pool.model_cache.get(cls.__bases__)
+        if cls0:
+            # cls0 is either a model class from another registry, or cls itself.
+            # The point is that it has the same base classes. We retrieve stuff
+            # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
+            # properly set up: registries are loaded under a global lock,
+            # therefore two registries are never set up at the same time.
+
+            # remove fields that are not proper to cls
+            for name in set(cls._fields) - cls0._proper_fields:
+                delattr(cls, name)
+                cls._fields.pop(name, None)
+                cls._defaults.pop(name, None)
+            # collect proper fields on cls0, and add them on cls
+            for name in cls0._proper_fields:
+                field = cls0._fields[name]
+                if field.related:
+                    # only regular fields are shared, related fields are copied
+                    field = field.new(**field.args)
+                assert not (field.setup_full_done and field.related)
+                self._add_field(name, field)
+            cls._proper_fields = set(cls._fields)
+
+        else:
+            # retrieve fields from parent classes, and duplicate them on cls to
+            # avoid clashes with inheritance between different models
             cls._fields = {}
             cls._defaults = {}
             for name, field in getmembers(cls, Field.__instancecheck__):
@@ -2942,15 +2965,7 @@ class BaseModel(object):
             self._add_magic_fields()
             cls._proper_fields = set(cls._fields)
 
-        else:
-            # redo base setup on proper fields, and remove other fields
-            for name in set(cls._fields) - proper_fields:
-                delattr(cls, name)
-                del cls._fields[name]
-                cls._defaults.pop(name, None)
-            for name, field in cls._fields.iteritems():
-                field.setup_base(self, name)
-            assert proper_fields == set(cls._fields)
+            cls.pool.model_cache[cls.__bases__] = cls
 
         # 2. add custom fields
         self._add_manual_fields(partial)

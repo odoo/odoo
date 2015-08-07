@@ -32,6 +32,12 @@ class LRU(object):
     def __contains__(self, obj):
         return obj in self.d
 
+    def get(self, obj, val=None):
+        try:
+            return self[obj]
+        except KeyError:
+            return val
+
     @synchronized()
     def __getitem__(self, obj):
         a = self.d[obj].me
