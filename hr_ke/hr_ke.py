@@ -19,7 +19,7 @@ class hr_ke_benefits_type(models.Model):
 	taxable = fields.Boolean('Taxable ?', default=True)
 	formula = fields.Text('Formula')
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Pay', required=True)
-	rule_id = fields.Integer('Rule Number')
+	rule_id = fields.Many2one('hr.salary.rule','Rule Number')
 	sequence = fields.Integer('Sequence in Payslip', 
 		help="This is the rule sequence to be used in payslip processing.For Benefits, put an integer between 20-29 inclusive", default=20)
 
@@ -97,7 +97,12 @@ result = contract.benefits.search([('code', '=', '""" + code + """' ), ('contrac
 	    rule = self.env['hr.salary.rule'].create(rule_vals)
 	    benefit.write({'rule_id': rule.id})
 	    return benefit
-	    	
+
+	@api.multi
+	def unlink(self):
+	    for record in self:
+		record.rule_id.unlink()
+	    return super(hr_ke_benefits_type, self).unlink()
 
 class hr_ke_earnings_type(models.Model):
 	_name = "ke.earnings.type"
@@ -110,7 +115,7 @@ class hr_ke_earnings_type(models.Model):
 	taxable = fields.Boolean('Taxable ?', default=True)
 	formula = fields.Text('Formula')
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Pay', required=True)
-	rule_id = fields.Integer('Rule Number')
+	rule_id = fields.Many2one('hr.salary.rule','Rule Number')
 	sequence = fields.Integer('Sequence in Payslip', 
 		help="This is the rule sequence to be used in payslip processing.For Earnings, put an integer between 5-9 inclusive", default=5)
 
@@ -177,6 +182,12 @@ result = 0.00
 	    return res
 
 
+	@api.multi
+	def unlink(self):
+	    for record in self:
+		record.rule_id.unlink()
+	    return super(hr_ke_earnings_type, self).unlink()
+
 	def ke_fetch_formula(self, code):
 	    return """
 # Available variables:
@@ -202,7 +213,7 @@ class hr_ke_relief_type(models.Model):
 	code = fields.Char('Code', required=True, size=10, help="Enter a unique CODE that will be used to identify this Tax Relief type in the payslip")
 	formula = formula = fields.Text('Formula')
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Deduction', required=True)
-	rule_id = fields.Integer('Rule Number')
+	rule_id = fields.Many2one('hr.salary.rule','Rule Number')
 	sequence = fields.Integer('Sequence in Payslip', 
 		help="This is the rule sequence to be used in payslip processing.For Tax reliefs, put an integer between 65-69 inclusive", default=65)
 
@@ -263,6 +274,13 @@ result = 0.00
 	    res.write({'rule_id': rule.id})
 	    return res
 
+
+	@api.multi
+	def unlink(self):
+	    for record in self:
+		record.rule_id.unlink()
+	    return super(hr_ke_relief_type, self).unlink()
+
 	def ke_fetch_formula(self, code):
 	    return """
 # Available variables:
@@ -289,7 +307,7 @@ class hr_ke_deductions_type(models.Model):
 	net_pay = fields.Boolean('Deduct from Net-Pay ?', default=False)
 	frequency = fields.Selection([('month', 'Monthly'),('day', 'Daily')], 'Frequency of Deduction', required=True)
 	formula = formula = fields.Text('Formula')
-	rule_id = fields.Integer('Rule Number')
+	rule_id = fields.Many2one('hr.salary.rule','Rule Number')
 	sequence = fields.Integer('Sequence in Payslip', 
 		help="This is the rule sequence to be used in payslip processing.For Pre-tax Deductions, put an integer between 40-49 inclusive. For Post-Tax Deduction use interger between 80-89 inclusive", required=True)
 
@@ -361,6 +379,13 @@ result = 0.00
 	    rule = self.env['hr.salary.rule'].create(rule_vals)
 	    res.write({'rule_id': rule.id})
 	    return res
+
+
+	@api.multi
+	def unlink(self):
+	    for record in self:
+		record.rule_id.unlink()
+	    return super(hr_ke_deductions_type, self).unlink()
 
 	def ke_fetch_formula(self, code):
 	    return """

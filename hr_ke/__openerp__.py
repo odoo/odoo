@@ -35,7 +35,10 @@
 	'hr_overtime.xml',
 	'workflow.xml',
 	'hr_advance.xml',
-	'report/payslip.xml',
+	'views/payslip.xml',
+	'views/reports.xml',
+	'views/muster_roll.xml',
+	'views/hr_ke_muster_view.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

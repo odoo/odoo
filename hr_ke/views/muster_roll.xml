@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <template id="report_muster_roll_document">
+    		<!-- Multicompany -->
+	    	<t t-if="o and 'company_id' in o">
+        	    <t t-set="company" t-value="o.company_id"></t>
+    	   	</t>
+           	<t t-if="not o or not 'company_id' in o">
+        	    <t t-set="company" t-value="res_company"></t>
+           	</t>
+	        <div class="header col-xs-12 mus-black mus-bg-grey" style="padding-bottom:28px;">
+		  <!--<div class="mus-wrapper"> -->
+		       <div class="col-xs-3">
+			    <img src="/hr_ke/static/description/logo.png"/> 
+		       </div>
+		       <div class="col-xs-4 mb8 mus-black mus-right" >
+		            <h5 class="mus-nomargin mus-green" t-field="company.name"/>
+                            <p class="mus-nomargin"><span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="company.street"/>
+			    </p>
+                            <p class="mus-nomargin"><span class="fa fa-map-marker fa-lg"/>&#160;
+					<span t-field="company.city"/>,&#160;
+					<span t-field="company.country_id"/>
+			    </p>
+                            <p class="mus-nomargin">
+					<span class="fa fa-phone-square fa-lg"/>&#160;
+					<span t-field="company.phone"/>
+			    </p>
+                            <p class="mus-nomargin">
+					<span class="fa fa-envelope-square fa-lg"/>&#160;
+					<span t-field="company.email"/>
+			    </p>
+                            <p class="mus-nomargin">
+					<span class="fa fa-globe fa-lg"/>&#160;
+					<span t-field="company.website"/>
+			    </p>
+		       </div>
+		  <!--</div>--> <!--end of wrapper-->
+		  <div class="col-xs-8 mus-black mus-bg-green">
+			 <span class="mus-social fa fa-twitter fa-lg"/>&#160;<span t-field="company.twitter"/>
+			 <span class="mus-social fa fa-facebook-square fa-lg"/>&#160;<span t-field="company.facebook"/>
+			 <span class="mus-social fa fa-google-plus fa-lg"/>&#160;<span t-field="company.googleplus" />
+		  </div>
+                </div> <!--end of Header-->
+               <div class="page col-xs-12 mus-black mus-bg-grey" style="margin-top:0px; padding-top:0px;">  <!--start of PAGE-->
+	         <!--<div class="col-xs-4 mt32 mus-bg-green mus-nofloat" >
+			<h4><span class="fa fa-user fa-lg"/>&#160;Customer</h4>
+		 </div> -->
+		 <div><!--start of wrapper -->
+		   <!--<div class="col-xs-4 mus-black">
+		            <p class="mus-nomargin"  t-field="o.partner_id"/>
+			    <p class="mus-nomargin" t-field="o.partner_id.street"/>
+			    <p class="mus-nomargin"><span t-esc="o.partner_id.city"/></p>
+			    <p class="mus-nomargin" t-field="o.partner_id.country_id"/>
+			    <p class="mus-nomargin" t-field="o.partner_id.email"/>
+ 			    <span t-if="o.partner_id.vat">VAT: <span t-field="o.partner_id.vat"/></span>
+		   </div>-->
+		   <div class="col-xs-5 mt8 mb8 mus-bg-green mus-right">
+			   <h3>
+                		<span>Muster Payroll</span><span> (<t t-esc="company.currency_id.name"/>)</span>
+			   </h3>
+			   <p t-if="o.name" class="mus-nomargin"><span t-field="o.name"/></p>
+			   <p t-if="o.date_from" class="mus-nomargin">From: <strong><span t-field="o.date_from"/></strong> 
+				To: <strong><span t-field="o.date_to"/></strong></p>
+	     	   </div>
+		 </div> <!--end of wrapper2-->
+		 <div class="col-xs-12 mt8 mb8 mus-bg-grey"> <!--start of DATA-->
+                    <table class="table  table-condensed mus-black mus-tr-test">
+                        <thead class="mus-bg-green" style="page-break-inside: avoid">
+                            <tr>
+                                <th>No.</th>
+                                <th>Emp No.</th>
+                                <th>Name</th>
+                                <th>Number</th>
+                                <th class="text-right">Basic Pay</th>
+                                <th class="text-right" >Gross Pay</th>
+                                <th class="text-right">NHIF</th>
+                                <th class="text-right">NSSF</th>
+                                <th class="text-right">PAYE</th>
+                                <th class="text-right">Net Pay</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			  <t t-foreach="slips" t-as="l">
+	                    <tr t-attf-class="mus-{{l_parity}}">
+        	                <td><span t-esc="l_index + 1"/></td>
+        	                <td><span t-esc="l['number']"/></td>
+                	        <td>
+                        	    <span t-esc="l['employee']"/>
+                        	</td>
+                	        <td>
+                        	    <span t-esc="l['slip']"/>
+                        	</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['basic'])"/>
+                        	</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['gross'])"/>
+				</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['nhif'])"/>
+                        	</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['nssf'])"/>
+                        	</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['paye'])"/>
+                        	</td>
+                        	<td class="text-right">
+                        	    <span t-esc="'{0:,.2f}'.format(l['net'])"/>
+                        	</td>
+                    	    </tr>
+			  </t> 
+			    <t- t-set="totals" t-value="totals"/>
+	                    <strong>
+			      <tr>
+        	                <td colspan="4" class="text-right"> <strong>Grand Totals:</strong></td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tbasic'])"/>
+                        	</td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tgross'])"/>
+				</td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tnhif'])"/>
+                        	</td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tnssf'])"/>
+                        	</td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tpaye'])"/>
+                        	</td>
+                        	<td class="text-right mus-last-True">
+                        	    <span t-esc="'{0:,.2f}'.format(totals['tnet'])"/>
+                        	</td>
+                    	    </tr>
+			  </strong>
+			  <!--<t t-foreach="docs" t-as="l">
+				<tr>
+                        	   <td> <span t-esc="l.name"/></td>
+                    	    
+                        	    <td><span t-esc="l.date_to"/></td>
+				</tr>
+			  </t>-->
+                        </tbody>
+                    </table>
+		 </div><!--End of DATA-->
+	        <!-- <div class="row">
+        	   <div class="col-xs-5 pull-right mus-nosplit">
+                    <table class="table table-condensed mus-black mus-tr-test"><tbody>
+                        <tr class="border-black">
+                            <td><strong>Total Without Taxes (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Taxes (<span t-esc="company.currency_id.name"/>)</td>
+                            <td class="text-right">
+                                <span t-field="o.amount_tax"/>
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td><strong>Total (<span t-esc="company.currency_id.name"/>)</strong></td>
+                            <td class="text-right">
+                                 <strong><span  class="mus-last-True" t-field="o.amount_total"/></strong>
+                            </td>
+                        </tr></tbody>
+                    </table>
+                   </div>
+            	</div> -->
+                <!--<div class="row" t-if="o.tax_line">
+                  <div class="col-xs-6 mus-nosplit">
+                    <table class="table table-condensed mus-black">
+                        <thead>
+                            <tr class="mus-bg-green">
+                                <th>Tax</th>
+                                <th class="text-right">Base (<span t-esc="company.currency_id.name"/>)</th>
+                                <th class="text-right">Amount (<span t-esc="company.currency_id.name"/>)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+			   <t t-foreach="o.tax_line" t-as="t">
+                            <tr t-attf-class="mus-{{t_parity}}">
+                                <td><span t-field="t.name"/></td>
+                                <td class="text-right">
+                                    <span t-field="t.base"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="t.amount"/>
+                                </td>
+                            </tr>
+			   </t>
+                        </tbody>
+                    </table>
+                  </div>
+                </div> -->
+		<!--<div class="mus-nosplit">
+                <p t-if="o.payment_term.note" class="mus-green">
+                  <strong>Payment Terms:</strong>
+                  <span t-field="o.payment_term.note"/>
+                </p>
+                <p t-if="o.fiscal_position.note">
+                  <strong>Fiscal Position Remark:</strong>
+                  <span t-field="o.fiscal_position.note"/>
+                </p>
+                <p t-if="o.comment">
+                  <strong>Comment:</strong>
+                  <span t-field="o.comment"/>
+                </p>
+		</div> -->
+
+	       </div><!--End of PAGE-->
+	       <div class="footer col-xs-12 mus-black mus-bg-green mus-nopad">
+                 <div class="text-center" style="border-top: 1px solid black;">
+                    <ul t-if="not company.custom_footer" class="list-inline">
+                      <li t-if="company.phone"> <span class="fa fa-phone-square fa-lg"/> <span t-field="company.phone"/></li>
+                      <li  t-if="company.fax and company.phone">&amp;bull;</li>
+                      <li t-if="company.fax"><span class="fa fa-phone-square fa-lg"/> <span t-field="company.fax"/></li>
+                      <li t-if="company.email">&amp;bull;</li>
+                      <li t-if="company.email"><span class="fa fa-envelope-o fa-lg"/> <span t-field="company.email"/></li>
+                      <li t-if="company.website">&amp;bull;</li>
+                      <li t-if="company.website"><span class="fa fa-globe fa-lg"/> <span t-field="company.website"/></li>
+                    </ul>
+                    <t t-if="company.custom_footer">
+                       <span t-raw="company.rml_footer"/>
+                    </t>
+
+                    <ul class="list-inline">
+                      <li>Page:</li>
+                      <li><span class="page"/></li>
+                      <li>/</li>
+                      <li><span class="topage"/></li>
+                    </ul>
+                 </div>
+               </div><!--End of FOOTER-->
+    </template>
+<template id="hr_ke.report_muster_roll">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-raw="translate_doc(doc_ids, doc_model, 'env.lang', 'hr_ke.report_muster_roll_document')"/>
+        </t>
+    </t>
+</template>
+
+         <!--custome Styles for the report -->
+    <template id="ke_muster_assets_backend" name="payslip_css" inherit_id="report.layout">
+         <xpath expr="//style" position="after">
+                <style type="text/css">
+                .mus-odd {
+                        background-color:#EBEAE9;
+                }
+                .mus-even {
+                        background-color:#D8D8D8;
+                }
+                .mus-last-True {
+                        font-weight:bold;
+                        text-decoration:underline;
+                        /*border-bottom: 1px solid #000;*/
+                }
+		.mus-bg-grey{
+			background:#EBEAE9 ! important; padding-right:0px; padding-left:0px; margin-top:0px;
+		}
+		.mus-bg-green{
+			background:#9ABE00;
+		}
+		.mus-bg-black{
+			background:#545454;
+		}
+		.mus-wrapper{
+			overflow:hidden;
+		}
+		.mus-black{
+			color:#545454 !important;
+		}
+		.mus-right{
+			float:right;
+		}
+		.mus-nofloat{
+			float:none;
+		}
+		.mus-nomargin{
+			margin:0px;
+		}
+		.mus-green{
+			color:#9ABE00 !important;
+		}
+		.mus-social{
+			padding-left:15px;
+		}
+		.mus-nopad{
+			 padding-right:0px; padding-left:0px;
+		}
+		.mus-th-pad > th{
+			 padding-top:15px ! important; padding-bottom: 5px ! important;
+		}
+		.table-condensed > thead > tr > th,
+		.table-condensed > tbody > tr > th,
+		.table-condensed > tfoot > tr > th,
+		.table-condensed > thead > tr > td,
+		.table-condensed > tbody > tr > td,
+		.table-condensed > tfoot > tr > td {
+		  padding: 2px;
+		}
+		.mus-td-pad > td{
+			 padding-top:15px ! important; padding-bottom: 2px ! important;
+		}
+		.mus-tr-test > thead > tr,
+		.mus-tr-test > tbody > tr {
+		  page-break-inside: avoid ! important;
+		}
+		.table-condensed > thead > tr > th {
+         		border-bottom: 1px solid black !important;
+     		}
+		.mus-nosplit {
+		   page-break-inside: avoid ! important;
+		}
+                </style>
+       </xpath>
+    </template>
+</data>
+</openerp>

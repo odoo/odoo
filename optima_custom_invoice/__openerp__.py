@@ -8,6 +8,9 @@
     'description': """
         This module will install a customized client invoice report for accounting module.
     """,
+    'price': 8,
+    'currency': 'EUR',
+
 
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",

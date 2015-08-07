@@ -1,0 +1,49 @@
+<openerp>
+    <data>
+        <!-- muster roll Action-->
+        <record id="ke_muster_action" model="ir.actions.act_window">
+         <field name="name">Muster Roll</field>
+         <field name="res_model">ke.muster</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+	<menuitem id="ke_menu_muster_roll" parent="hr_payroll.menu_hr_root_payroll" name="Muster Roll" action="ke_muster_action"/>
+
+<!-- overtime  Form view-->
+	 <record id="ke_muster_form" model="ir.ui.view">
+         <field name="name">ke.muster.form</field>
+         <field name="model">ke.muster</field>
+         <field name="arch" type="xml">
+           <form>
+		<sheet>
+			<group>
+				  <field name="name"/>
+			</group>
+			<group>
+				<group>
+				  <field name="date_from"/>
+				</group>
+				<group>
+				  <field name="date_to"/>
+				</group>
+			</group>
+		</sheet>
+	   </form>
+	</field>
+	</record>
+
+<!-- Overtime Tree view-->
+        <record id="ke_muster_tree" model="ir.ui.view">
+         <field name="name">ke.muster.tree</field>
+         <field name="model">ke.muster</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="date_from"/>
+                 <field name="date_to"/>
+           </tree>
+         </field>
+        </record>
+
+    </data>
+</openerp>
+

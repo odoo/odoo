@@ -6,11 +6,12 @@
         Social Media usernames for the company""",
 
     'description': """
-        This modules adds the fields for social media IDs for the company. facebook Id, Twitter Handle and Google-Plus Id
+        This modules adds the fields for social media IDs for the company. facebook Id, Twitter Handle and Google-Plus Id. These Ids can then be dispalyed in the reports such as invoice, payslips etc
     """,
-
-    'author': "Your Company",
-    'website': "http://www.yourcompany.com",
+    'price': 2,
+    'currency': 'EUR',
+    'author': "Optima ICT",
+    'website': "http://www.optima.co.ke",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
