@@ -628,7 +628,7 @@ instead of a single view its ``arch`` field is composed of any number of
         <field name="arch" type="xml">
             <!-- find field description inside tree, and add the field
                  idea_ids after it -->
-            <xpath expr="/tree/field[@name='description']" position="after">
+            <xpath expr="//field[@name='description']" position="after">
               <field name="idea_ids" string="Number of ideas"/>
             </xpath>
         </field>
