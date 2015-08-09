@@ -237,7 +237,9 @@ class account_analytic_line(osv.osv):
                     details.append(line['date'])
                 if data.get('time', False):
                     if line['product_uom_id']:
-                        details.append("%s %s" % (line.unit_amount, line.product_uom_id.name))
+                        # line browsed with user lang while want in partner lang
+                        uom = self.pool['product.uom'].browse(cr, uid, line.product_uom_id.id, context=context)
+                        details.append("%s %s" % (line.unit_amount, uom.name))
                     else:
                         details.append("%s" % (line['unit_amount'], ))
                 if data.get('name', False):
@@ -303,9 +305,10 @@ class account_analytic_line(osv.osv):
 
             # finally creates the invoice line
             for (product_id, uom, user_id, factor_id, account, journal_type), lines_to_invoice in invoice_lines_grouping.items():
+                partner_context = dict(context, lang=account.partner_id.lang)
                 curr_invoice_line = self._prepare_cost_invoice_line(cr, uid, last_invoice,
                     product_id, uom, user_id, factor_id, account, lines_to_invoice,
-                    journal_type, data, context=context)
+                    journal_type, data, context=partner_context)
 
                 invoice_line_obj.create(cr, uid, curr_invoice_line, context=context)
             self.write(cr, uid, [l.id for l in analytic_lines], {'invoice_id': last_invoice}, context=context)
