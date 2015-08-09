@@ -8,7 +8,7 @@
     'description': """
         This module will install a customized client invoice report for accounting module.
     """,
-    'price': 8,
+    'price': 3,
     'currency': 'EUR',
 
 
