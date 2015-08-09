@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-30 23:10+0000\n"
+"PO-Revision-Date: 2015-08-08 21:34+0000\n"
 "Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/odoo-8/language/gl/)\n"
+"Language-Team: Galician (http://www.transifex.com/odoo/odoo-8/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -126,7 +126,7 @@ msgstr "Nº de entradas"
 #. module: account
 #: field:account.invoice.report,nbr:0
 msgid "# of Invoices"
-msgstr ""
+msgstr "Nº de facturas"
 
 #. module: account
 #: field:account.entries.report,nbr:0
@@ -136,7 +136,7 @@ msgstr "Nº de elementos"
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_tree
 msgid "# of Products Qty"
-msgstr ""
+msgstr "Nº de cantidade de productos"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -146,13 +146,13 @@ msgstr "Nº de transacción"
 #. module: account
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name|safe} Factura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/account.py:1861
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (Copia)"
 
 #. module: account
 #: code:addons/account/account.py:635 code:addons/account/account.py:786
@@ -171,13 +171,13 @@ msgstr "Nome (de Conta/Empresa)"
 msgid ""
 "(If you do not select a specific fiscal year, all open fiscal years will be "
 "selected.)"
-msgstr ""
+msgstr "(Se non selecciona un exercicio fiscal específico, seleccionaranse tódolos exercicios fiscais abertos.)"
 
 #. module: account
 #: view:account.tax.chart:account.view_account_tax_chart
 msgid ""
 "(If you do not select a specific period, all open periods will be selected)"
-msgstr ""
+msgstr "(Se non selecciona un período específico, seleccionaranse tódolos períodos abertos.)"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -193,25 +193,25 @@ msgstr "(deixalo vacío para abrir a situación actual)"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "(change)"
-msgstr ""
+msgstr "(cambiar)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 #: view:account.invoice:account.invoice_form
 #: view:account.invoice:account.invoice_supplier_form
 msgid "(update)"
-msgstr ""
+msgstr "(actualizar)"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "+ Transactions"
-msgstr ""
+msgstr "+ Transaccións"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15 días"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -229,23 +229,23 @@ msgstr "30 días fin do mes"
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30 días netos"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr ""
+msgstr "30% por adiantado despois de 30 días"
 
 #. module: account
 #: view:website:account.report_generalledger
 msgid ": General ledger"
-msgstr ""
+msgstr ": Libro maior"
 
 #. module: account
 #: view:website:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr ""
+msgstr ": Balance de sumas e saldos"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period
@@ -257,7 +257,7 @@ msgid ""
 "                usually corresponds to the periods of the tax declaration.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nFaga clic para engadir un período fiscal.\n</p><p>\nUn período fiscal é habitualmente un mes ou un trimestre. \nNormalmente corresponde cos períodos de presentación de impostos.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -273,7 +273,7 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPrema para engadir un diario.\n</p><p>\nOs diarios úsanse para rexistrar transaccións de tódolos datos contables relacionados co negocio do día a día.\n</p><p>\nUnha compañía típica pode usar un diario por método de pagamento (efectivo, contas bancarias, cheques), un diario de compra, un de vendas e un para información diversa.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -289,7 +289,7 @@ msgid ""
 "                to disclose a certain amount of information.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPrema para engadir unha conta.\n</p><p>\nAs contas son parte dun libro maior que permiten á compañía rexistrar tódolos tipos de transaccións de débito ou crédito. As compañías presentan as súas contas anuais en duos partes principais: o balance de situación e a conta de pérdidas e ganancias. A lei esixe presenta-las contas anuais da compañía para revelar certa cantidade de información.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_gain_loss
@@ -520,7 +520,7 @@ msgid ""
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nNo se atoparon asentos no diario.\n</p>"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -544,7 +544,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "= Saldo teórico de peche"
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -577,7 +577,7 @@ msgstr ""
 #. module: account
 #: view:website:account.report_centraljournal
 msgid "A/C No."
-msgstr ""
+msgstr "Nº conta"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -2004,12 +2004,12 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_country
 msgid "By Country"
-msgstr ""
+msgstr "Por país"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
 msgid "By Product"
-msgstr ""
+msgstr "Por producto"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
@@ -2024,7 +2024,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Por comercial"
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -2683,7 +2683,7 @@ msgstr "Comentario"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Comment:"
-msgstr ""
+msgstr "Comentario:"
 
 #. module: account
 #: field:account.invoice,commercial_partner_id:0
@@ -3130,7 +3130,7 @@ msgstr "Crear asentos"
 #: field:validate.account.move.lines,create_uid:0
 #: field:wizard.multi.charts.accounts,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: account
 #: field:account.account,create_date:0
@@ -3376,7 +3376,7 @@ msgstr "Factura de Cliente"
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Facturas de cliente"
 
 #. module: account
 #: field:res.partner,property_payment_term:0
@@ -4288,7 +4288,7 @@ msgstr ""
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Features"
-msgstr ""
+msgstr "Características"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6042,7 +6042,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_uid:0
 #: field:wizard.multi.charts.accounts,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización de"
 
 #. module: account
 #: field:account.account,write_date:0
@@ -6129,7 +6129,7 @@ msgstr ""
 #: field:validate.account.move.lines,write_date:0
 #: field:wizard.multi.charts.accounts,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización en"
 
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
@@ -6493,7 +6493,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:113
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -6549,7 +6549,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr ""
+msgstr "¡Non hai diario analítico!"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -7622,7 +7622,7 @@ msgstr ""
 #: view:website:account.report_analyticcostledger
 #: view:website:account.report_analyticcostledgerquantity
 msgid "Printing Date:"
-msgstr ""
+msgstr "Data impresión:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9144,6 +9144,11 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
 msgstr "Provedores"
+
+#. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr ""
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -10774,7 +10779,7 @@ msgstr "Usuario"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "¡Erro de usuário!"
 
 #. module: account
 #: help:account.tax,base_sign:0 help:account.tax,ref_base_sign:0
@@ -11493,13 +11498,13 @@ msgstr "account.analytic.line.extended"
 #. module: account
 #: field:account.move,balance:0
 msgid "balance"
-msgstr ""
+msgstr "saldo"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:693
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "cambio"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -11509,22 +11514,22 @@ msgstr "días"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
-msgstr ""
+msgstr "p.ex. vendas@odoo.com"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "Facturación electrónica e pagamentos"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "entries"
-msgstr ""
+msgstr "entradas"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "force period"
-msgstr ""
+msgstr "forzar período"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -11591,7 +11596,7 @@ msgstr "Peche de período"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:45
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
-msgstr ""
+msgstr "Conciliacións co atallo Ctrl+Enter"
 
 #. module: account
 #. openerp-web
@@ -11610,12 +11615,12 @@ msgstr "res_config_contents"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "seconds per transaction."
-msgstr ""
+msgstr "Segundos por transacción."
 
 #. module: account
 #: view:res.partner:account.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "Compañía matriz"
 
 #. module: account
 #: view:account.installer:account.view_account_configuration_installer
@@ -11627,14 +11632,14 @@ msgstr "título"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "to reconcile"
-msgstr ""
+msgstr "Para conciliar"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:43
 #, python-format
 msgid "transactions."
-msgstr ""
+msgstr "transaccións."
 
 #. module: account
 #: field:account.cashbox.line,bank_statement_id:0

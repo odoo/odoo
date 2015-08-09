@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-27 19:26+0000\n"
+"PO-Revision-Date: 2015-08-04 00:17+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -205,7 +205,7 @@ msgstr "Erro!"
 #. module: stock_account
 #: field:stock.inventory,period_id:0
 msgid "Force Valuation Period"
-msgstr ""
+msgstr "Força Valorização do Período"
 
 #. module: stock_account
 #: field:stock.config.settings,group_stock_inventory_valuation:0
@@ -308,7 +308,7 @@ msgstr "Faturamento"
 #. module: stock_account
 #: field:stock.invoice.onshipping,journal_type:0
 msgid "Journal Type"
-msgstr ""
+msgstr "Tipo de Diário"
 
 #. module: stock_account
 #: field:stock.change.standard.price,write_uid:0
@@ -350,7 +350,7 @@ msgstr "Nenhuma diferença entre o preço padrão e o novo preço!"
 #: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
 #, python-format
 msgid "No invoice created!"
-msgstr ""
+msgstr "Nenhuma fatura criada!"
 
 #. module: stock_account
 #: selection:stock.return.picking,invoice_state:0
@@ -383,12 +383,12 @@ msgid ""
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
+msgstr "Uma das seguintes informações está ausente da categoria do produto ou do produto e impede que as entradas avaliação contábeis a serem criados:\n     Produto:%s\n     Conta da entrada:%s\n     Conta da saída:%s\n     Conta da Avaliação:%s\n     Diário: %s\n    "
 
 #. module: stock_account
 #: field:stock.history,date:0
 msgid "Operation Date"
-msgstr ""
+msgstr "Data de Operação"
 
 #. module: stock_account
 #: selection:product.template,valuation:0
@@ -413,7 +413,7 @@ msgstr "Aquisições"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regras de Compras"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -451,7 +451,7 @@ msgstr "Quants"
 #. module: stock_account
 #: selection:product.template,cost_method:0
 msgid "Real Price"
-msgstr ""
+msgstr "Preço Real"
 
 #. module: stock_account
 #: selection:product.template,valuation:0
@@ -461,22 +461,22 @@ msgstr "Tempo Real (automatizado)"
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Purchase"
-msgstr ""
+msgstr "Reembolso de Compra"
 
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Sale"
-msgstr ""
+msgstr "Reembolso de Venda"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Retrieve the Inventory Value"
-msgstr ""
+msgstr "Recuperar o valor do inventário"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
 msgid "Retrieve the stock valuation of your products at current day"
-msgstr ""
+msgstr "Recuperar a avaliação de estoque de seus produtos no dia atual"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -498,7 +498,7 @@ msgstr "Preço Padrão"
 #: code:addons/stock_account/product.py:144
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "Preço padrão mudou"
 
 #. module: stock_account
 #: help:product.template,cost_method:0
@@ -540,7 +540,7 @@ msgstr "Conta de Saída do Estoque"
 #: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Avaliação de Estoque "
 
 #. module: stock_account
 #: field:product.category,property_stock_valuation_account_id:0
@@ -564,14 +564,14 @@ msgstr "Conta de Valorização do Estoque (Saindo)"
 #: view:stock.history:stock_account.view_stock_history_report_tree
 #, python-format
 msgid "Stock Value At Date"
-msgstr ""
+msgstr "Valor de Estoque na Data "
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_invoice_directly:0
 msgid ""
 "This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
+msgstr "Isto permite iniciar automaticamente o assistente de faturação, caso a entrega deve ser faturado quando você enviar ou entregar mercadorias.%s\n-Instala o módulo stock_invoice_directly."
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
