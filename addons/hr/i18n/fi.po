@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-31 08:13+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Finnish (http://www.transifex.com/projects/p/odoo-8/language/fi/)\n"
+"PO-Revision-Date: 2015-08-02 18:31+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,7 +37,7 @@ msgid ""
 "                contact data, job position, availability, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nValitse lisätäksesi uuden työntekijän.\n</p><p>\nNopealla vilkaisulla Odoo työntekijänäkymään, voit\nhelposti löytää kaiken informaation jokaisesta henkilöstä; yhteystiedot, toimenkuva, läsnäolo (paikalla/lomalla) jne.\n</p>"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -81,7 +81,7 @@ msgid ""
 "                position.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nValitse määritelläksesi uuden toimenkuvan.\n</p><p>\nToimenkuvia käytetään määrittämään työn sisältöä ja vaatimuksia.\nVoit mm. seurata jokaiseen toimenkuvaan kuuluvien työntekijöiden lukumäärää \nja sen kehitystä suunniteltuun.\n</p><p>\nVoit myös liittää kyselytutkimuksen toimenkuvaan. Kyselyä käytetään\nrekrytointiprosessissa työnhakijoiden arvioinnissa ko. työtehtävään.\n</p>"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -129,7 +129,7 @@ msgstr "Syntymäaika"
 msgid ""
 "By default 'Closed', set it to 'In Recruitment' if recruitment process is "
 "going on for this job position."
-msgstr ""
+msgstr "Oletuksena tilassa \"Suljettu\". Aseta tilaan \"Käynnissä\", jos rekrytointiprosessi on käynnissä tähän tehtävään."
 
 #. module: hr
 #: view:hr.config.settings:hr.view_human_resources_configuration
@@ -230,7 +230,7 @@ msgstr "Syntymäaika"
 #. module: hr
 #: help:hr.employee,message_last_post:0 help:hr.job,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Viimeisen viestin päivämäärä"
 
 #. module: hr
 #: view:hr.department:hr.view_department_filter
@@ -254,7 +254,7 @@ msgstr "Osastot"
 #. module: hr
 #: field:res.users,display_employees_suggestions:0
 msgid "Display Employees Suggestions"
-msgstr ""
+msgstr "Näytä työntekijöiden aloitteet/ehdotukset"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -264,7 +264,7 @@ msgstr "Eronnut"
 #. module: hr
 #: field:hr.config.settings,module_hr_gamification:0
 msgid "Drive engagement with challenges and badges"
-msgstr ""
+msgstr "Sitouta haastetehtävien ja tunnustusten avulla"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -335,7 +335,7 @@ msgstr "Virhe! Et voi luoda rekursiivista työntekijähierarkiaa!"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected New Employees"
-msgstr ""
+msgstr "Oletettu uusien työtekijöiden lukumäärä"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
@@ -493,7 +493,7 @@ msgstr "Työt"
 #. module: hr
 #: field:hr.employee,message_last_post:0 field:hr.job,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Viimeinen viestipvm"
 
 #. module: hr
 #: field:hr.config.settings,write_uid:0 field:hr.department,write_uid:0
@@ -585,7 +585,7 @@ msgid ""
 "Medium-sized photo of the employee. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Keskikokoinen kuva työntekijästä. Kuva skaalataan automaattisesti kokoon 128x128px, kuvasuhde säilyttäen. Käytä tätä kenttää lomake- ja kanban näkymissä."
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -633,7 +633,7 @@ msgstr "Tässä työtehtävässä parhaillaan olevien työntekijöiden lukumää
 msgid ""
 "Number of hired employee must be less than expected number of employee in "
 "recruitment."
-msgstr ""
+msgstr "Työtehtävään palkattujen työntekijöiden määrän pitää olla pienempi kuin työntekijöiden määrä rekrytointivaiheessa."
 
 #. module: hr
 #: help:hr.job,no_of_hired_employee:0
@@ -679,7 +679,7 @@ msgstr "Ylempi osasto"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Employee Tag"
-msgstr ""
+msgstr "Esimiehen tunniste"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -719,12 +719,12 @@ msgstr "Tallenna sopimistiedot työntekijälle"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment Closed"
-msgstr ""
+msgstr "Rekrytointi on päättynyt"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "Rekrytointiprosessi käynnissä"
 
 #. module: hr
 #: view:hr.employee:hr.view_employee_form
@@ -815,7 +815,7 @@ msgstr "Alaiset"
 #: code:addons/hr/static/src/xml/suggestions.xml:15
 #, python-format
 msgid "Suggested Employees"
-msgstr ""
+msgstr "Ehdotetut työntekijät"
 
 #. module: hr
 #: field:hr.employee,message_summary:0 field:hr.job,message_summary:0
@@ -835,7 +835,7 @@ msgstr "Osaamisenhallinta"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
+msgstr "Tehtävänimikkeen yrityksen osaston sisällä pitää olla yksilöllinen!"
 
 #. module: hr
 #: help:hr.employee,image:0
@@ -874,7 +874,7 @@ msgstr "Tämä asentaa moduulin hr_expense."
 #. module: hr
 #: help:hr.config.settings,module_hr_gamification:0
 msgid "This installs the module hr_gamification."
-msgstr ""
+msgstr "Tämä asentaa moduulin hr_gamification."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
@@ -935,7 +935,7 @@ msgstr "Käyttäjät"
 #: code:addons/hr/hr.py:273
 #, python-format
 msgid "Welcome to %s! Please help him/her take the first steps with Odoo!"
-msgstr ""
+msgstr "Tervetuloa %s! Ole ystävällinen ja auta häntä pääsemään alkuun Odoo'n kanssa!"
 
 #. module: hr
 #: selection:hr.employee,marital:0

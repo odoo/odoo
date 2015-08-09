@@ -3,16 +3,18 @@
 # * purchase
 # 
 # Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-30 23:43+0000\n"
-"Last-Translator: Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-08-07 16:06+0000\n"
+"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -433,7 +435,7 @@ msgstr "Você tem certeza de que deseja mesclar estas ordens?"
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
 msgid "Associated procurements"
-msgstr ""
+msgstr "Aquisições Associadas"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -448,7 +450,7 @@ msgstr "Preço Médio"
 #. module: purchase
 #: field:stock.warehouse,buy_pull_id:0
 msgid "BUY rule"
-msgstr ""
+msgstr "Regra de Compra"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -483,17 +485,17 @@ msgstr "Baseado em linhas da ordem de compra"
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr ""
+msgstr "Oferta Recebida"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr ""
+msgstr "Oferta Recebida Em"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "Oferta Válida até"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -526,13 +528,13 @@ msgstr "Pode ser Comprado"
 msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
-msgstr ""
+msgstr "Não é possível cancelar esta aquisição pois a ordem de compra relacionada já foi confirmada. Por favor, cancele a ordem de compra primeiro."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Não foi possível encontrar uma rota de Compra genérica"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -552,7 +554,7 @@ msgstr "Cancelada"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Não é possível excluir uma linha do pedido de compras no estado '%s'."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -562,7 +564,7 @@ msgstr "Categoria"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Category of product"
-msgstr ""
+msgstr "Categoria do Produto"
 
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
@@ -730,12 +732,12 @@ msgstr "Defina o diário de compras para esta empresa \"%s\" (id:%d)."
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Entregar para"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Entregas & Faturas"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -1218,7 +1220,7 @@ msgstr "Data da Ordem"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Data do Pedido:"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -1261,7 +1263,7 @@ msgstr "Pedidos"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
-msgstr ""
+msgstr "Nossa Referência do Pedido de Compra:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
@@ -1277,7 +1279,7 @@ msgstr "PO: %s"
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "OC_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
