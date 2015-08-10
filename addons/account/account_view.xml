@@ -872,6 +872,7 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="sum_period"/>
@@ -891,6 +892,7 @@
                             <field name="code"/>
                             <field name="parent_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
                         </group>
                         <group string="Reporting Configuration">
                             <field name="notprintable"/>
@@ -2147,6 +2149,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code Template" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="parent_id" invisible="1"/>
@@ -2176,6 +2179,7 @@
                         <field name="code"/>
                         <field name="parent_id"/>
                         <field name="sign"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Description"/>
                     <field name="info"/>

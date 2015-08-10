@@ -982,7 +982,8 @@ class stock_picking(osv.osv):
             move_obj = self.pool.get("stock.move")
             move_obj.write(cr, uid, backorder_move_ids, {'picking_id': backorder_id}, context=context)
 
-            self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+            if not picking.date_done:
+                self.write(cr, uid, [picking.id], {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
             self.action_confirm(cr, uid, [backorder_id], context=context)
             return backorder_id
         return False
