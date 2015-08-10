@@ -7,6 +7,7 @@ import werkzeug
 
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
+from openerp.tools import single_email_re
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
 from openerp.tools.translate import _
@@ -194,7 +195,8 @@ class res_users(osv.Model):
             if partner_user:
                 # user exists, modify it according to values
                 values.pop('login', None)
-                values.pop('name', None)
+                if single_email_re.match(partner_user.name) == None:
+                    values.pop('name', None)
                 partner_user.write(values)
                 return (cr.dbname, partner_user.login, values.get('password'))
             else:
