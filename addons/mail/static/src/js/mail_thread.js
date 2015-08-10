@@ -552,6 +552,7 @@ var MailThreadMixin = {
             'display_needaction_button': false,
             'internal_subtypes': [],
             'emoji_list': [],
+            'default_username': _t('Anonymous'),
         });
     },
     start: function(){

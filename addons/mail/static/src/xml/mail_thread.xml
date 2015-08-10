@@ -153,14 +153,18 @@
                             Note by
                         </t>
                         <!-- author : partner or email_from -->
-                        <t t-if="message.author_id">
-                            <strong class="o_mail_redirect" data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"><t t-esc="message.author_id[1]"/></strong> -
+                        <t t-if="message.author_id &amp;&amp; message.author_id[1]">
+                            <strong class="o_mail_redirect" data-oe-model="res.partner" t-att-data-oe-id="message.author_id[0]"><t t-esc="message.author_id[1]"/></strong>
                         </t>
-                        <t t-if="!message.author_id">
-                            <strong><t t-esc="message.email_from"/></strong> -
+                        <t t-if="message.author_id &amp;&amp; !message.author_id[1] &amp;&amp; message.email_from">
+                            <strong><t t-esc="message.email_from"/></strong>
                         </t>
+                        <t t-if="message.author_id &amp;&amp; !message.author_id[1] &amp;&amp; !message.email_from">
+                            <strong><t t-esc="widget.options.default_username"/></strong>
+                        </t>
+
                         <small t-att-title="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LLL')">
-                            <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
+                            - <t t-esc="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('hh:mm')"/>
                         </small>
                         <t t-if="message.model &amp;&amp; (message.model != 'mail.channel') &amp;&amp; widget.options.display_document_link">
                             on <a class="o_mail_redirect" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" href="#"><t t-esc="message.record_name"/></a>

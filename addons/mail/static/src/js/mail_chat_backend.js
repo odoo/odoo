@@ -411,6 +411,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
             'display_document_link': true,
             'display_needaction_button': true,
             'emoji_list': this.conv_manager.emoji_list,
+            'default_username': _t('Anonymous'),
         });
         this.emoji_set_substitution(this.conv_manager.emoji_list);
         // channel business

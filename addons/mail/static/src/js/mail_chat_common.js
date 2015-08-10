@@ -27,7 +27,7 @@ var ConversationManager = Widget.extend({
         this.options = _.clone(options) || {};
         _.defaults(this.options, {
             placeholder: _t("Say something..."),
-            default_username: _t("Visitor"),
+            default_username: _t("Anonymous"),
             load_history: true,
             focus: false,
         });
@@ -171,6 +171,7 @@ var Conversation = Widget.extend({
         this._super(parent);
         this.options = _.defaults(options || {}, {
             'emoji': {},
+            'default_username': _t('Anonymous'),
             'placeholder': _t('Write something ...'),
             'loading_history': true,
             'focus': true,

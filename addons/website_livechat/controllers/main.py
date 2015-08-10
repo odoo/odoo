@@ -19,7 +19,7 @@ class WebsiteLivechat(http.Controller):
     @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True)
     def channel_rating(self, channel, **kw):
         # get the last 100 ratings and the repartition per grade
-        ratings = request.env['rating.rating'].search([('res_model', '=', 'im_chat.session'), ('res_id', 'in', channel.sudo().session_ids.ids)], order='create_date desc', limit=100)
+        ratings = request.env['rating.rating'].search([('res_model', '=', 'mail.channel'), ('res_id', 'in', channel.sudo().session_ids.ids)], order='create_date desc', limit=100)
         repartition = channel.sudo().session_ids.rating_get_grades()
 
         # compute percentage

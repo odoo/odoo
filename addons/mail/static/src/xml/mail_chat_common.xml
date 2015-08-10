@@ -41,8 +41,11 @@
                     <div class="o_mail_chat_im_message_core">
                         <!-- author -->
                         <span class="text-muted">
-                            <t t-if="message.author_id">
+                            <t t-if="message.author_id &amp;&amp; message.author_id[0]">
                                 <strong><t t-esc="message.author_id[1]"/></strong> -
+                            </t>
+                            <t t-if="!message.author_id || !message.author_id[0]">
+                                <strong><t t-esc="default_username || widget.options.default_username"/></strong> -
                             </t>
                             <t t-if="!message.author_id">
                                 <strong><t t-esc="message.email_from"/></strong> -

@@ -3,79 +3,69 @@ from openerp import api, fields, models
 from openerp import SUPERUSER_ID
 
 
-class ImChatSession(models.Model):
+class MailChannel(models.Model):
     """ Chat Session
         Reprensenting a conversation between users.
         It extends the base method for anonymous usage.
     """
 
-    _name = 'im_chat.session'
-    _inherit = ['im_chat.session', 'rating.mixin']
-
+    _name = 'mail.channel'
+    _inherit = ['mail.channel', 'rating.mixin']
 
     anonymous_name = fields.Char('Anonymous Name')
     create_date = fields.Datetime('Create Date', required=True)
-    channel_id = fields.Many2one('im_livechat.channel', 'Channel')
-    fullname = fields.Char('Complete Name', compute='_compute_fullname')
+    channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
+    livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
 
     @api.multi
-    @api.depends('anonymous_name', 'user_ids')
-    def _compute_fullname(self):
-        """ built the complete name of the session """
-        for session in self:
-            names = []
-            for user in session.user_ids:
-                names.append(user.name)
-            if session.anonymous_name:
-                names.append(session.anonymous_name)
-            session.fullname = ', '.join(names)
-
-    @api.multi
-    def is_in_session(self):
-        """ Return True if the current user is in the user_ids of the session. False otherwise.
-            If this is executed as sudo, this might be the anonymous user.
+    def _channel_message_notifications(self, message):
+        """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
+            clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
+            should be added to the notification, since the user cannot be listining to the channel.
         """
-        self.ensure_one()
-        if self.anonymous_name and self._uid == SUPERUSER_ID:
-            return True
-        else:
-            return super(ImChatSession, self).is_in_session()
+        notifications = super(MailChannel, self)._channel_message_notifications(message)
+        if not message.author_id:
+            unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
+            if unpinned_channel_partner:
+                unpinned_channel_partner.write({'is_pinned': True})
+                notifications = self._channel_channel_notifications(unpinned_channel_partner.mapped('partner_id').ids) + notifications
+        return notifications
 
     @api.multi
-    def session_user_info(self):
-        """ Get the user infos for all the identified user in the session + the anonymous if anonymous session
-            :returns a list of user infos
+    def channel_info(self):
+        """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        self.ensure_one()
-        users_infos = super(ImChatSession, self).session_user_info()
-        # identify the operator for the 'welcome message'
-        for user_profile in users_infos:
-            user_profile['is_operator'] = bool(user_profile['id'] == self.env.context.get('im_livechat_operator_id'))
-        if self.anonymous_name:
-            users_infos.append({'id': False, 'name': self.anonymous_name, 'im_status': 'online', 'is_operator': False})
-        return users_infos
+        channel_infos = super(MailChannel, self).channel_info()
+        # add the operator id
+        if self.env.context.get('im_livechat_operator_partner_id'):
+            partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
+            for channel_info in channel_infos:
+                channel_info['operator_pid'] = partner_name
+        # add the anonymous name
+        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        for channel in self:
+            if channel.anonymous_name:
+                channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
+        return channel_infos_dict.values()
 
     @api.model
-    def quit_user(self, uuid):
-        """ Remove the current user from the given session.
-            Note : an anonymous user cannot leave the session, since he is not registered.
-            Required to modify the base comportement, since a session can contain only 1 identified user.
-            :param uuid : the uuid of the session to quit
-        """
-        session = self.search([('uuid', '=', uuid)], limit=1)
-        if session.anonymous_name:
-            # an identified user can leave an anonymous session if there is still another idenfied user in it
-            if self._uid and self._uid in [u.id for u in session.user_ids] and len(session.user_ids) > 1:
-                self._remove_user()
-                return True
-            return False
-        else:
-            return super(ImChatSession, self).quit_user(uuid)
+    def channel_fetch_slot(self):
+        values = super(MailChannel, self).channel_fetch_slot()
+        pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
+        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('public', 'in', ['public']), ('id', 'in', pinned_channels.ids)]).channel_info()
+        return values
 
     @api.model
     def cron_remove_empty_session(self):
-        groups = self.env['im_chat.message'].read_group([], ['to_id'], ['to_id'])
-        not_empty_session_ids = [group['to_id'][0] for group in groups]
-        empty_sessions = self.search([('id', 'not in', not_empty_session_ids), ('channel_id', '!=', False)])
-        empty_sessions.unlink()
+        self.env.cr.execute("""
+            SELECT id as id
+            FROM mail_channel C
+            WHERE NOT EXISTS (
+                SELECT *
+                FROM mail_message_mail_channel_rel R
+                WHERE R.mail_channel_id = C.id
+            ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL;
+        """)
+        empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
+        self.browse(empty_channel_ids).unlink()

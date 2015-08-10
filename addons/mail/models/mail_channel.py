@@ -174,7 +174,7 @@ class Channel(models.Model):
         self.filtered(lambda channel: channel.channel_type == 'direct_message').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
         # apply shortcode (text only) subsitution
         body = self.env['mail.shortcode'].apply_shortcode(body, shortcode_type='text')
-        message = super(Channel, self).message_post(body=body, message_type=message_type, subtype=subtype, content_subtype=content_subtype, **kwargs)
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
         return message
 
     #------------------------------------------------------
@@ -192,13 +192,22 @@ class Channel(models.Model):
         """ Broadcast the current channel header to the given partner ids
             :param partner_ids : the partner to notify
         """
+        notifications = self._channel_channel_notifications(partner_ids)
+        self.env['bus.bus'].sendmany(notifications)
+
+    @api.multi
+    def _channel_channel_notifications(self, partner_ids):
+        """ Generate the bus notifications of current channel for the given partner ids
+            :param partner_ids : the partner to send the current channel header
+            :returns list of bus notifications (tuple (bus_channe, message_content))
+        """
         notifications = []
         for partner in self.env['res.partner'].browse(partner_ids):
             user_id = partner.user_ids and partner.user_ids[0] or False
             if user_id:
                 for channel_info in self.sudo(user_id).channel_info():
                     notifications.append([(self._cr.dbname, 'res.partner', partner.id), channel_info])
-        self.env['bus.bus'].sendmany(notifications)
+        return notifications
 
     @api.multi
     def _notify(self, message):
@@ -209,8 +218,16 @@ class Channel(models.Model):
             :param : mail.message to broadcast
         """
         message.ensure_one()
-        message_values = message.message_format()[0]
+        notifications = self._channel_message_notifications(message)
+        self.env['bus.bus'].sendmany(notifications)
 
+    @api.multi
+    def _channel_message_notifications(self, message):
+        """ Generate the bus notifications for the given message
+            :param message : the mail.message to sent
+            :returns list of bus notifications (tuple (bus_channe, message_content))
+        """
+        message_values = message.message_format()[0]
         notifications = []
         for channel in self:
             message_values['channel_ids'] = [channel.id]
@@ -218,7 +235,7 @@ class Channel(models.Model):
             # add uuid to allow anonymous to listen
             if channel.public == 'public':
                 notifications.append([channel.uuid, dict(message_values)])
-        self.env['bus.bus'].sendmany(notifications)
+        return notifications
 
     @api.multi
     def channel_info(self):
@@ -335,7 +352,6 @@ class Channel(models.Model):
             session_state.write({
                 'fold_state': state,
                 'is_minimized': bool(state != 'closed'),
-                'seen_datetime': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),  # TODO JEM (to check) set seen_datetime to read needaction
             })
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), session_state.channel_id.channel_info()[0])
 

@@ -2,6 +2,15 @@
 <odoo>
     <data>
 
+        <!--
+            Integrate Livechat Conversation in the Mail Chat Client Action
+        -->
+        <template id="assets_backend" name="im_livechat assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+            </xpath>
+        </template>
+
         <!-- Template rendering the external HTML support page -->
         <template id="support_page" name="Livechat Support Page">
             &lt;!DOCTYPE html&gt;
@@ -76,9 +85,9 @@
             <!-- css style -->
             <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" async="async" />
+            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" />
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" async="async" />
+            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
         </template>
 
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
@@ -128,17 +137,17 @@
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- IM module -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-            <script type="text/javascript" src="/im_chat/static/src/js/im_chat_common.js"></script>
+            <script type="text/javascript" src="/mail/static/src/js/mail_utils.js"></script>
+            <script type="text/javascript" src="/mail/static/src/js/mail_chat_common.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
             <!-- CSS -->
-            <link rel="stylesheet" href="/im_chat/static/src/css/im_chat_common.css"></link>
+            <link rel="stylesheet" href="/mail/static/src/css/mail_chat_common.css"></link>
             <link rel="stylesheet" href="/im_livechat/static/src/css/im_livechat.css"/>
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
             <t t-translate="off">
-            $(function() {
                 odoo.define('im_livechat.livesupport', function (require) {
                     var im_livechat = require('im_livechat.im_livechat');
                     window.livesupport = new im_livechat.LiveSupport(
@@ -155,7 +164,6 @@
                         <t t-raw="rule"/>
                     );
                 });
-            });
             </t>
         </template>
 

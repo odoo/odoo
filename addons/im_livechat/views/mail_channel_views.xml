@@ -2,9 +2,9 @@
 <openerp>
     <data>
 
-        <record id="im_chat_session_view_search" model="ir.ui.view">
-            <field name="name">im_chat.session.search</field>
-            <field name="model">im_chat.session</field>
+        <record id="mail_channel_view_search" model="ir.ui.view">
+            <field name="name">mail.channel.search</field>
+            <field name="model">mail.channel</field>
             <field name="arch" type="xml">
                 <search string="Search history">
                     <filter name="id" string="My sessions" domain="[('user_ids','in', uid)]"/>
@@ -20,28 +20,28 @@
             </field>
         </record>
 
-        <record id="im_chat_session_view_tree" model="ir.ui.view">
-            <field name="name">im_chat.session.tree</field>
-            <field name="model">im_chat.session</field>
+        <record id="mail_channel_view_tree" model="ir.ui.view">
+            <field name="name">mail.channel.tree</field>
+            <field name="model">mail.channel</field>
             <field name="arch" type="xml">
                 <tree string="History" create="false">
                     <field name="id"/>
-                    <field name="fullname"/>
+                    <field name="name"/>
                     <field name="create_date"/>
                 </tree>
             </field>
         </record>
 
-        <record id="im_chat_session_view_form" model="ir.ui.view">
-            <field name="name">im_chat.session.form</field>
-            <field name="model">im_chat.session</field>
+        <record id="mail_channel_view_form" model="ir.ui.view">
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
             <field name="arch" type="xml">
                 <form string="Session Form" create="false" edit="false">
                     <sheet>
                         <group>
                             <group string="General">
                                 <field name="id"/>
-                                <field name="fullname" />
+                                <field name="name" />
                                 <field name="create_date" readonly="1"/>
                             </group>
                             <group string="Feedback">
@@ -68,8 +68,8 @@
                         <field name="message_ids" type="tree">
                             <tree string="History">
                                 <field name="create_date" />
-                                <field name="from_id" />
-                                <field name="message" />
+                                <field name="author_id" />
+                                <field name="body" />
                             </tree>
                         </field>
                     </sheet>
@@ -78,25 +78,25 @@
         </record>
 
 
-        <record id="im_chat_session_action" model="ir.actions.act_window">
+        <record id="mail_channel_action" model="ir.actions.act_window">
             <field name="name">History</field>
-            <field name="res_model">im_chat.session</field>
+            <field name="res_model">mail.channel</field>
             <field name="view_type">form</field>
             <field name="view_mode">list,form</field>
-            <field name="domain">[('channel_id', '!=', None)]</field>
-            <field name="context">{'group_by': ['channel_id', 'create_date:month']}</field>
+            <field name="domain">[('livechat_channel_id', '!=', None)]</field>
+            <field name="context">{'group_by': ['livechat_channel_id', 'create_date:month']}</field>
         </record>
 
-        <record id="im_chat_session_action_from_channel" model="ir.actions.act_window">
+        <record id="mail_channel_action_from_livechat_channel" model="ir.actions.act_window">
             <field name="name">Sessions</field>
-            <field name="res_model">im_chat.session</field>
+            <field name="res_model">mail.channel</field>
             <field name="view_mode">list,form</field>
-            <field name="domain">[('channel_id', 'in', [active_id])]</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id])]</field>
             <field name="context">{
-                'search_default_channel_id': [active_id],
-                'default_channel_id': active_id,
+                'search_default_livechat_channel_id': [active_id],
+                'default_livechat_channel_id': active_id,
             }</field>
-            <field name="search_view_id" ref="im_chat_session_view_search"/>
+            <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>
 
     </data>

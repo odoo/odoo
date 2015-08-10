@@ -7,7 +7,7 @@ var user_session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
-var im_chat_common = require('mail.chat_common');
+var mail_chat_common = require('mail.chat_common');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -19,11 +19,12 @@ var COOKIE_NAME = 'livechat_conversation';
 The state of anonymous session is hold by the client and not the server.
 Override the method managing the state of normal conversation.
 */
-im_chat_common.Conversation.include({
-    init: function(){
+mail_chat_common.Conversation.include({
+    init: function(parent, session, options){
         this._super.apply(this, arguments);
         this.shown = true;
         this.feedback = false;
+        this.options.default_username = session.anonymous_name || this.options.default_username;
     },
     show: function(){
         this._super.apply(this, arguments);
@@ -33,7 +34,7 @@ im_chat_common.Conversation.include({
         this._super.apply(this, arguments);
         this.shown = false;
     },
-    session_update_state: function(state){
+    session_fold: function(state){
         // set manually the new state
         if(state === 'closed'){
             this.destroy();
@@ -54,14 +55,14 @@ im_chat_common.Conversation.include({
         this._super(state);
         utils.set_cookie(COOKIE_NAME, JSON.stringify(this.get('session')), 60*60);
     },
-    click_close: function(event) {
+    on_click_close: function(event) {
         if(!this.feedback && (this.get('messages').length > 1)){
             this.feedback = new Feedback(this);
-            this.$(".oe_im_chatview_content").empty();
-            this.$(".oe_im_chatview_input").prop('disabled', true);
-            this.feedback.appendTo( this.$(".oe_im_chatview_content"));
+            this.$(".o_mail_chat_im_window_content").empty();
+            this.$(".o_mail_chat_im_window_input").prop('disabled', true);
+            this.feedback.appendTo(this.$(".o_mail_chat_im_window_content"));
             // bind event to close conversation
-            this.feedback.on("feedback_sent", this, this.click_close);
+            this.feedback.on("feedback_sent", this, this.on_click_close);
         }else{
             this._super.apply(this, arguments);
             utils.set_cookie(COOKIE_NAME, "", -1);
@@ -72,7 +73,7 @@ im_chat_common.Conversation.include({
 
 // To avoid exeption when the anonymous has close his
 // conversation and when operator send him a message.
-im_chat_common.ConversationManager.include({
+var LivechatConversationManager = mail_chat_common.ConversationManager.extend({
     message_receive: function(message) {
         try{
             this._super(message);
@@ -95,7 +96,7 @@ var LiveSupport = Widget.extend({
         this.load_template(db, channel, options, rule);
     },
     _get_template_list: function(){
-        return ['/im_livechat/static/src/xml/im_livechat.xml', '/im_chat/static/src/xml/im_chat.xml'];
+        return ['/im_livechat/static/src/xml/im_livechat.xml', '/mail/static/src/xml/mail_chat_common.xml'];
     },
     load_template: function(db, channel, options, rule){
         var self = this;
@@ -153,7 +154,7 @@ var ChatButton = Widget.extend({
     start: function() {
         this.$().append(QWeb.render("im_livechat.chatButton", {widget: this}));
         // set up the manager
-        this.manager = new im_chat_common.ConversationManager(this, this.options);
+        this.manager = new LivechatConversationManager(this, this.options);
         this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
         if(this.session){
             this.set_conversation(this.session);
@@ -200,20 +201,20 @@ var ChatButton = Widget.extend({
     },
     send_welcome_message: function(){
         var self = this;
-        if(this.session.users.length > 0){
-            if (self.options.defaultMessage) {
-                setTimeout(function(){
-                    var operator = _.last(_.filter(self.session.users, function(user){return user.is_operator}));
-                    self.conv.message_receive({
-                        id : 1,
-                        type: "message",
-                        message: self.options.defaultMessage,
-                        create_date: time.datetime_to_str(new Date()),
-                        from_id: [operator.id, operator.name],
-                        to_id: [0, self.session.uuid]
-                    });
-                }, 1000);
-            }
+        if(this.session.operator_pid && self.options.defaultMessage) {
+            setTimeout(function(){
+                self.conv.message_receive({
+                    id : 1,
+                    message_type: "comment",
+                    model: 'mail.channel',
+                    body: self.options.defaultMessage,
+                    date: time.datetime_to_str(new Date()),
+                    author_id: self.session.operator_pid,
+                    channel_ids: [self.session.id],
+                    tracking_value_ids: [],
+                    attachment_ids: [],
+                });
+            }, 1000);
         }
     }
 });
@@ -231,20 +232,20 @@ var Feedback = Widget.extend({
     start: function(){
         this._super.apply(this.arguments);
         // bind events
-        this.$('.oe_livechat_rating_choices img').on('click', _.bind(this.click_smiley, this));
+        this.$('.o_livechat_rating_choices img').on('click', _.bind(this.click_smiley, this));
         this.$('#rating_submit').on('click', _.bind(this.click_send, this));
     },
     click_smiley: function(ev){
         var self = this;
         this.rating = parseInt($(ev.currentTarget).data('value'));
-        this.$('.oe_livechat_rating_choices img').removeClass('selected');
-        this.$('.oe_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
+        this.$('.o_livechat_rating_choices img').removeClass('selected');
+        this.$('.o_livechat_rating_choices img[data-value="'+this.rating+'"]').addClass('selected');
         // only display textearea if bad smiley selected
         var close_conv = false;
         if(this.rating === 0){
-            this.$('.oe_livechat_rating_reason').show();
+            this.$('.o_livechat_rating_reason').show();
         }else{
-            this.$('.oe_livechat_rating_reason').hide();
+            this.$('.o_livechat_rating_reason').hide();
             close_conv = true;
         }
         this._send_feedback(close_conv).then(function(){
@@ -260,7 +261,7 @@ var Feedback = Widget.extend({
     _send_feedback: function(close){
         var self = this;
         var uuid = this.conversation.get('session').uuid;
-        return user_session.rpc('/rating/livechat/feedback', {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
+        return user_session.rpc('/im_livechat/feedback', {uuid: uuid, rate: this.rating, reason : this.reason}).then(function(res) {
             if(close){
                 self.trigger("feedback_sent"); // will close the conversation
                     self.conversation.message_send(_.str.sprintf(_t("I rated you with :rating_%d"), self.rating), "message");

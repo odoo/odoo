@@ -7,18 +7,18 @@
     </t>
 
     <t t-name="im_livechat.feedback">
-        <div class="oe_livechat_rating">
-            <div class="oe_im_feedback_text">
+        <div class="o_livechat_rating">
+            <div class="o_livechat_rating_feedback_text">
                 Did we correctly answer your question ?
             </div>
-            <div class="oe_livechat_rating_choices">
+            <div class="o_livechat_rating_choices">
                 <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_10.png'" alt="Good" data-value="10"/>
                 <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_5.png'" alt="OK" data-value="5"/>
                 <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_0.png'" alt="Bad" data-value="0" />
             </div>
-            <div class="oe_livechat_rating_reason">
+            <div class="o_livechat_rating_reason">
                 <textarea id="reason" placeholder="Explain your note"></textarea>
-                <div class="oe_livechat_rating_reason_button">
+                <div class="o_livechat_rating_reason_button">
                     <input type="button" id="rating_submit" value="Send" />
                 </div>
             </div>
