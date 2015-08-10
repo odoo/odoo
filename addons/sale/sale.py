@@ -435,11 +435,11 @@ class sale_order(osv.osv):
         return result
 
     def action_view_refund(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
+        mod_data = self.pool.get('ir.model.data')
+        act_data = self.pool.get('ir.actions.act_window')
         account_invoice = self.pool['account.invoice']
-        id = mod_obj.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        ref_id = mod_data.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree1')
+        result = act_data.read(cr, uid, [ref_id], context=context)[0]
         #compute the number of invoices refund to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
@@ -449,7 +449,7 @@ class sale_order(osv.osv):
         if len(inv_ids) > 1:
             result['domain'] = [('id', 'in', inv_ids)]
         else:
-            res = mod_obj.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+            res = mod_data.xmlid_to_res_id(cr, uid, 'account.invoice_form')
             result['views'] = [(res or False, 'form')]
             result['res_id'] = inv_ids and inv_ids[0] or False
         return result

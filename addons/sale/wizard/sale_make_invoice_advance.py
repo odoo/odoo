@@ -29,12 +29,6 @@ class sale_advance_payment_inv(osv.osv_memory):
             paid = invoice.amount_total - invoice.residual
         return invoiced , paid
 
-    def _currency_position(self, amount, order):
-        amount_paid = (amount, order.currency_id.symbol)
-        if order.currency_id.position == 'before':
-            amount_paid = amount_paid[::-1]
-        return _('(Including %s %s paid)') % amount_paid
-
     def _amount_total(self, cr, uid, context=None):
         vals = {}
         refunded, invoiced, paid, refund_amount = 0.0, 0.0, 0.0, 0.0
@@ -53,8 +47,6 @@ class sale_advance_payment_inv(osv.osv_memory):
                 invoiced_amount, paid_amount = self._amount_calculate(invoice)
                 invoiced += invoiced_amount
                 paid += paid_amount
-            paid = self._currency_position(paid, order)
-            refund_amount = self._currency_position(refund_amount, order)
             vals.update({'currency_id': order.currency_id.id, 'amount_total': order.amount_total, 'amount_paid': paid, 'amount_invoiced': invoiced, 'amount_refunded': -refunded, 'amount_tobe_invoice': order.amount_total - invoiced + refunded, 'refund_paid': refund_amount})
         return vals
 
@@ -72,9 +64,9 @@ class sale_advance_payment_inv(osv.osv_memory):
             help="The amount to be invoiced in advance. \nTaxes are not taken into account for advance invoices."),
         'amount_total': fields.function(_get_amounts, string='Invoice Amount', multi='amounts', type="float",
             help="Order total amount."),
-        'amount_paid': fields.function(_get_amounts, string='Amount Paid', multi='amounts', type="char",
+        'amount_paid': fields.function(_get_amounts, string='Amount Paid', multi='amounts', type="float",
             help="Order paid amount."),
-        'refund_paid': fields.function(_get_amounts, string='Refund Paid', multi='amounts', type="char",
+        'refund_paid': fields.function(_get_amounts, string='Refund Paid', multi='amounts', type="float",
             help="Invoice refund paid amount."),
         'amount_invoiced': fields.function(_get_amounts, string='Already Invoiced', multi='amounts', type="float",
             help="The amount already invoiced as an advance."),
