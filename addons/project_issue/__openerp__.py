@@ -14,7 +14,7 @@ This application allows you to manage the issues you might face in a project lik
 
 It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/project-management',
     'depends': [
         'sales_team',

@@ -8,7 +8,7 @@
 Website for browsing Associations, Groups and Memberships
 =========================================================
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_partner', 'website_google_map', 'association', 'website_sale'],
     'data': [
         'views/website_membership.xml',

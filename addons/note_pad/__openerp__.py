@@ -12,7 +12,7 @@ This module update memos inside OpenERP for using an external pad
 Use for update your text memo in real time with the following user that you invite.
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/notes',
     'summary': 'Sticky memos, Collaborative',
     'depends': [

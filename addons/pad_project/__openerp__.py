@@ -9,7 +9,7 @@
 This module adds a PAD in all project form views.
 =================================================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/project-management',
     'depends': ['project', 'pad'],
     'data': ['project_task.xml'],

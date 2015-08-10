@@ -11,7 +11,7 @@
 OpenERP Customer References
 ===========================
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': [
         'crm_partner_assign',
         'website_partner',

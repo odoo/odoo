@@ -13,7 +13,7 @@ Adds a reporting menu in products that computes sales, purchases, margins and ot
 
 The wizard to launch the report has several options to help you get the data you need.
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',

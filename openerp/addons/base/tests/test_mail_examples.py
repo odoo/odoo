@@ -825,7 +825,7 @@ Regards,
 -- 
 Olivier Laurent
 Migration Manager
-OpenERP SA
+Odoo SA
 Chaussée de Namur, 40
 B-1367 Gérompont
 Tel: +32.81.81.37.00

@@ -2,7 +2,7 @@
 {
     'name': 'Prices Visible Discounts',
     'version': '1.0',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Sales Management',
     'website': 'https://www.odoo.com',
     'description': """

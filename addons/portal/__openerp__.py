@@ -8,7 +8,7 @@
         'base',
         'auth_signup',
     ],
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.

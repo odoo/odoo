@@ -6,7 +6,7 @@
     'summary': 'Payment Acquirer: Adyen Implementation',
     'version': '1.0',
     'description': """Adyen Payment Acquirer""",
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['payment'],
     'data': [
         'views/adyen.xml',

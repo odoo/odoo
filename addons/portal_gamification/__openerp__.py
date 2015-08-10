@@ -11,7 +11,7 @@
 This module adds security rules for gamification to allow portal users to participate to challenges
 ===================================================================================================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['gamification','portal'],
     'data': [
         'security/ir.model.access.csv',

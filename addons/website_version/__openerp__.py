@@ -8,7 +8,7 @@ OpenERP Website CMS
 ===================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website','marketing','google_account'],
     'installable': True,
     'data': [

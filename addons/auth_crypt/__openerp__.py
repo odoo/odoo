@@ -3,8 +3,8 @@
 {
     'name': 'Password Encryption',
     'version': '2.0',
-    'author': ['OpenERP SA', 'FS3'],
-    'maintainer': 'OpenERP SA',
+    'author': ['Odoo SA', 'FS3'],
+    'maintainer': 'Odoo SA',
     'website': 'https://www.odoo.com',
     'category': 'Tools',
     'description': """

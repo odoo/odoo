@@ -25,7 +25,7 @@ The validation can be configured in the company:
 * Period size (Day, Week, Month)
 * Maximal difference between timesheet and attendances
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
     'data': [

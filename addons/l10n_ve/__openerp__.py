@@ -9,7 +9,7 @@
 {
     'name' : 'Venezuela - Accounting',
     'version': '1.0',
-    'author': ['OpenERP SA', 'Vauxoo'],
+    'author': ['Odoo SA', 'Vauxoo'],
     'category': 'Localization/Account Charts',
     'description':
 """

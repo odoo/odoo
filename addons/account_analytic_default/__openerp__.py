@@ -17,7 +17,7 @@ Allows to automatically select analytic accounts based on criterions:
     * Company
     * Date
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/accounting',
     'depends': ['sale_stock'],
     'data': [

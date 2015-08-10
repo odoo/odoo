@@ -3,7 +3,7 @@
 {
     'name': 'Product Email Template',
     'depends': ['account'],
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Accounting & Finance',
     'description': """
 Add email templates to products to be sent on invoice confirmation

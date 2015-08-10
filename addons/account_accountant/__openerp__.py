@@ -3,7 +3,7 @@
 {
     'name': 'Accounting and Finance',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Accounting & Finance',
     'sequence': 10,
     'summary': 'Financial and Analytic Accounting',

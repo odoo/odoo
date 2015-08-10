@@ -4,7 +4,7 @@
 {
     'name': 'Employee Directory',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Human Resources',
     'sequence': 21,
     'website': 'https://www.odoo.com',
@@ -22,7 +22,7 @@ You can manage:
 * HR Departments
 * HR Jobs
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',

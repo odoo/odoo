@@ -34,7 +34,7 @@ Wizards provided by this module:
         **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
-    'author': 'Noviat & OpenERP SA',
+    'author': 'Noviat & Odoo SA',
     'depends': [
         'account',
         'base_vat',

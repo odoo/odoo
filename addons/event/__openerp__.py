@@ -17,7 +17,7 @@ Key Features
 * Manage your Events and Registrations
 * Use emails to automatically confirm and send acknowledgements for any event registration
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['base_setup', 'board', 'mail', 'marketing', 'web_tip'],
     'data': [
         'security/event_security.xml',

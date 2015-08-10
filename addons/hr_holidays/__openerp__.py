@@ -5,7 +5,7 @@
 {
     'name': 'Leave Management',
     'version': '1.5',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Human Resources',
     'sequence': 27,
     'summary': 'Holidays, Allocation and Leave Requests',

@@ -9,7 +9,7 @@
     'description': """
         Test
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website'],
     'data': [
         'test.xml',

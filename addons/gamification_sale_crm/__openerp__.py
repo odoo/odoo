@@ -3,7 +3,7 @@
 {
     'name': 'CRM Gamification',
     'version': '1.0',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'hidden',
     'depends': ['gamification','sale_crm'],
     'website' : 'https://www.odoo.com/page/gamification',

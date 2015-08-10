@@ -2,7 +2,7 @@
 {
     'name' : 'Claim on Deliveries',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
+    'author' : 'Odoo SA',
     'category' : 'Warehouse Management',
     'depends' : ['base', 'crm_claim', 'stock'],
     'demo' : [],

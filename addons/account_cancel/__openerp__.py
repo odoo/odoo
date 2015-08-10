@@ -4,7 +4,7 @@
 {
     'name': 'Cancel Journal Entries',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Accounting & Finance',
     'description': """
 Allows canceling accounting entries.

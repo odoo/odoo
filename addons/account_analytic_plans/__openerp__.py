@@ -44,7 +44,7 @@ So when this line of invoice will be confirmed, it will generate 3 analytic line
 
 The analytic plan validates the minimum and maximum percentage at the time of creation of distribution models.
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account', 'account_analytic_default'],
     'data': [

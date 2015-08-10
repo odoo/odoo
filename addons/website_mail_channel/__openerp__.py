@@ -8,7 +8,7 @@ OpenERP Mail Group : Mailing List Archives
 ==========================================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_mail'],
     'data': [
         'views/website_mail_channel.xml',

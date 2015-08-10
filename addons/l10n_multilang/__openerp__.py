@@ -4,7 +4,7 @@
 {
     'name': 'Multi Language Chart of Accounts',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Hidden/Dependency',
     'description': """
     * Multi language support for Chart of Accounts, Taxes, Tax Codes, Journals,
@@ -13,7 +13,7 @@
         - Copy translations for COA, Tax, Tax Code and Fiscal Position from
           templates to target objects.
     """,
-    'website': 'http://www.openerp.com',
+    'website': 'http://www.odoo.com',
     'depends' : ['account'],
     'data': [],
     'demo': [],

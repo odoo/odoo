@@ -3,8 +3,8 @@
 {
     'name': 'Indian Payroll',
     'category': 'Localization',
-    'author': 'OpenERP SA',
-    'website':'http://www.openerp.com',
+    'author': 'Odoo SA',
+    'website':'http://www.odoo.com',
     'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """

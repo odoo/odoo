@@ -3,7 +3,7 @@
 {
     'name': 'Sales Teams',
     'version': '1.0',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Sales Management',
     'summary': 'Sales Team',
     'description': """

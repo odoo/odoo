@@ -30,7 +30,7 @@ It also supports batch invoicing methods that can be configured by partners and 
 
 Some statistics by journals are provided.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/billing',
     'depends': ['sale_stock'],
     'data': [

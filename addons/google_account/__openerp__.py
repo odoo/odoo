@@ -10,7 +10,7 @@
 The module adds google user in res user.
 ========================================
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com',
     'depends': ['base_setup'],
     'data': [

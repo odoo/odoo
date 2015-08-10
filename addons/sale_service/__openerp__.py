@@ -27,7 +27,7 @@ is updated accordingly. For example, if this procurement corresponds to a sale
 order line, the sale order line will be considered delivered when the task is
 completed.
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['project', 'procurement', 'sale', 'procurement_jit'],
     'data': ['views/sale_service_view.xml'],

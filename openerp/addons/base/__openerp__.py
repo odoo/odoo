@@ -10,9 +10,9 @@
 The kernel of OpenERP, needed for all installation.
 ===================================================
 """,
-    'author': 'OpenERP SA',
-    'maintainer': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'author': 'Odoo SA',
+    'maintainer': 'Odoo SA',
+    'website': 'http://www.odoo.com',
     'depends': [],
     'data': [
         'base_data.xml',

@@ -8,7 +8,7 @@
     'depends': ['marketing_campaign',
                  'crm',
     ],
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Marketing',
     'description': """
 Demo data for the module marketing_campaign.

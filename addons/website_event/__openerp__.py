@@ -9,7 +9,7 @@
     'description': """
 Online Events
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
     'data': [
         'data/event_data.xml',

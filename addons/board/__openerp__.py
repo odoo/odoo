@@ -11,7 +11,7 @@ Lets the user create a custom dashboard.
 
 Allows users to create custom dashboard.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',

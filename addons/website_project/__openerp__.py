@@ -9,7 +9,7 @@ OpenERP Projects
 ================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_mail', 'project'],
     'data': [
         'views/website_project.xml',
