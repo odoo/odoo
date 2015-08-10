@@ -647,6 +647,7 @@ class WebClient(http.Controller):
         if lang is None:
             lang = request.context["lang"]
         res_lang = request.registry.get('res.lang')
+        multi_lang = True if res_lang.search_count(request.cr, uid, []) > 1 else False
         ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
         lang_params = None
         if ids:
@@ -667,7 +668,8 @@ class WebClient(http.Controller):
                                                              'string': m['value']} \
                                                                 for m in msg_group)
         return {"modules": translations_per_module,
-                "lang_parameters": lang_params}
+                "lang_parameters": lang_params,
+                "multi_lang": multi_lang}
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):

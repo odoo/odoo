@@ -602,6 +602,8 @@ class ir_translation(osv.osv):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',
+            'target': 'new',
+            'flags': {'search_view': True},
             'domain': domain,
         }
         if field:
