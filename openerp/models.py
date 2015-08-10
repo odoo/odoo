@@ -381,15 +381,15 @@ class BaseModel(object):
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
-                'help': f.help or False,
+                'help': f.help or None,
                 'ttype': f.type,
-                'relation': f.comodel_name or '',
+                'relation': f.comodel_name or None,
                 'select_level': tools.ustr(int(f.index)),
                 'readonly': bool(f.readonly),
                 'required': bool(f.required),
                 'selectable': bool(f.search or f.store),
                 'translate': bool(getattr(f, 'translate', False)),
-                'relation_field': getattr(f, 'inverse_name', ''),
+                'relation_field': f.type == 'one2many' and f.inverse_name or None,
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
