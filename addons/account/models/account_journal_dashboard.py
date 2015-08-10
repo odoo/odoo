@@ -92,9 +92,6 @@ class account_journal(models.Model):
     @api.multi
     def get_bar_graph_datas(self):
         data = []
-        title = _('Invoices owed to you')
-        if self.type == 'purchase':
-            title = _('Bills you need to pay')
         today = datetime.strptime(fields.Date.context_today(self), DF)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
@@ -133,12 +130,13 @@ class account_journal(models.Model):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
 
-        return [{'values': data, 'title': title}]
+        return [{'values': data}]
 
     @api.multi
     def get_journal_dashboard_datas(self):
         number_to_reconcile = last_balance = account_sum = 0
         ac_bnk_stmt = []
+        title = ''
         number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
         if self.type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
@@ -158,6 +156,7 @@ class account_journal(models.Model):
                     account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
+            title = _('Bills you need to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
             query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;"""
             self.env.cr.execute(query, (self.id,))
@@ -189,6 +188,7 @@ class account_journal(models.Model):
             'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
             'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
+            'title': title, 
         }
 
     @api.multi
