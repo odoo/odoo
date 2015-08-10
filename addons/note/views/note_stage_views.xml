@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- note Stage Form View -->
+    <record id="note_stage_view_form" model="ir.ui.view">
+      <field name="name">note.stage.form</field>
+      <field name="model">note.stage</field>
+      <field name="arch" type="xml">
+        <form string="Stage of Notes">
+          <group>
+            <field name="name"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- note Stage Tree View -->
+    <record id="note_stage_view_tree" model="ir.ui.view">
+      <field name="name">note.stage.tree</field>
+      <field name="model">note.stage</field>
+      <field name="field_parent"></field>
+      <field name="arch" type="xml">
+        <tree string="Stages of Notes" editable="bottom">
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="fold"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- note Stage Action -->
+    <record id="note_stage_action" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">note.stage</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Stages" id="note_stage_menu" parent="menu_note_configuration" action="note.note_stage_action" sequence="21" />
+
+</odoo>
