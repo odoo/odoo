@@ -1,42 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+
+from openerp import api, fields, models
 
 
-class fleet_vehicle_odometer(osv.Model):
-    _name='fleet.vehicle.odometer'
-    _description='Odometer log for a vehicle'
-    _order='date desc'
+class FleetVehicleOdometer(models.Model):
 
-    def _vehicle_log_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.vehicle_id.name
-            if not name:
-                name = record.date
-            elif record.date:
-                name += ' / '+ record.date
-            res[record.id] = name
-        return res
+    _name = 'fleet.vehicle.odometer'
+    _description = 'Odometer log for a vehicle'
+    _order = 'date desc'
 
-    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
-        if not vehicle_id:
-            return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
-        return {
-            'value': {
-                'unit': odometer_unit,
-            }
-        }
+    name = fields.Char(compute='_compute_vehicle_log_name', store=True)
+    date = fields.Date(default=fields.Date.context_today)
+    value = fields.Float('Odometer Value', group_operator="max")
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', required=True)
+    unit = fields.Selection(related='vehicle_id.odometer_unit', readonly=True)
 
-    _columns = {
-        'name': fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
-        'date': fields.date('Date'),
-        'value': fields.float('Odometer Value', group_operator="max"),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-        'unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
-    }
-    _defaults = {
-        'date': fields.date.context_today,
-    }
+    @api.one
+    @api.depends('vehicle_id', 'date')
+    def _compute_vehicle_log_name(self):
+        name = self.vehicle_id and self.vehicle_id.name or ''
+        self.name = self.date and name + ' / ' + self.date or name

@@ -1,212 +1,199 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import time
+from collections import defaultdict
 import datetime
-from openerp import tools
-from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError
 
-class fleet_vehicle_log_contract(osv.Model):
 
-    def scheduler_manage_auto_costs(self, cr, uid, context=None):
-        #This method is called by a cron task
-        #It creates costs for contracts having the "recurring cost" field setted, depending on their frequency
-        #For example, if a contract has a reccuring cost of 200 with a weekly frequency, this method creates a cost of 200 on the first day of each week, from the date of the last recurring costs in the database to today
-        #If the contract has not yet any recurring costs in the database, the method generates the recurring costs from the start_date to today
-        #The created costs are associated to a contract thanks to the many2one field contract_id
-        #If the contract has no start_date, no cost will be created, even if the contract has recurring costs
-        vehicle_cost_obj = self.pool.get('fleet.vehicle.cost')
-        d = datetime.datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT).date()
-        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','!=','closed')], offset=0, limit=None, order=None,context=None, count=False)
-        deltas = {'yearly': relativedelta(years=+1), 'monthly': relativedelta(months=+1), 'weekly': relativedelta(weeks=+1), 'daily': relativedelta(days=+1)}
-        for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, contract_ids, context=context):
-            if not contract.start_date or contract.cost_frequency == 'no':
-                continue
-            found = False
+class FleetVehicleLogContract(models.Model):
+
+    _name = 'fleet.vehicle.log.contract'
+    _description = 'Contract information on a vehicle'
+    _order = 'state desc, expiration_date'
+    _inherits = {'fleet.vehicle.cost': 'cost_id'}
+
+    @api.model
+    def default_get(self, fields):
+        res = super(FleetVehicleLogContract, self).default_get(fields)
+        try:
+            service_type_id = self.env.ref('fleet.type_contract_leasing').id
+        except ValueError:
+            service_type_id = False
+        res.update({'cost_type': 'contract', 'cost_subtype_id': service_type_id})
+        return res
+
+    name = fields.Text(compute='_compute_vehicle_contract_name_get', store=True)
+    start_date = fields.Date(string='Contract Start Date', help='Date when the coverage of the contract begins',
+                             default=fields.Date.context_today)
+    expiration_date = fields.Date(string='Contract Expiration Date',
+                                  default=lambda self: self.compute_next_year_date(fields.Date.context_today(self)),
+                                  help='Date when the coverage of the contract expirates '
+                                       '(by default, one year after begin date)')
+    days_left = fields.Integer(compute='compute_days_left', string='Warning Date')
+    insurer_id = fields.Many2one('res.partner', string='Supplier')
+    purchaser_id = fields.Many2one('res.partner', string='Contractor',
+                                   help='Person to which the contract is signed for',
+                                   default=lambda self: self.env['res.users'].browse(self._uid).partner_id.id or False)
+    contract_reference = fields.Char(copy=False)
+    state = fields.Selection(selection=[('open', 'In Progress'), ('toclose', 'To Close'), ('closed', 'Terminated')],
+                             string='Status', readonly=True, help='Choose whether the contract is still valid or not',
+                             copy=False, default='open')
+    notes = fields.Text(string='Terms and Conditions',
+                        help='Write here all supplementary information relative to this contract', copy=False)
+    cost_generated = fields.Float(string='Recurring Cost Amount',
+                                  help="Costs paid at regular intervals, depending on the cost frequency. "
+                                       "If the cost frequency is set to unique, the cost will be logged at "
+                                       "the start date")
+    cost_frequency = fields.Selection(selection=[('no', 'No'), ('daily', 'Daily'), ('weekly', 'Weekly'),
+                                                 ('monthly', 'Monthly'), ('yearly', 'Yearly')],
+                                      string='Recurring Cost Frequency',
+                                      help='Frequency of the recurring cost', required=True, default='no')
+    generated_cost_ids = fields.One2many('fleet.vehicle.cost', 'contract_id', string='Generated Costs')
+    sum_cost = fields.Float(compute='_compute_sum_cost', string='Indicative Costs Total')
+    cost_id = fields.Many2one('fleet.vehicle.cost', string='Cost', required=True, ondelete='cascade')
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    date = fields.Date(default=fields.Date.context_today)
+    # we need to keep this field as a related with store=True because the graph view doesn't support (1) to
+    # address fields from inherited table and (2) fields that aren't stored in database
+
+    @api.one
+    @api.depends('cost_subtype_id')
+    def _compute_vehicle_contract_name_get(self):
+        name = self.vehicle_id.name + ' / ' + self.cost_subtype_id.name
+        self.name = self.date and name + ' / ' + self.date or name
+
+    def compute_next_year_date(self, strdate):
+        oneyear = relativedelta(years=+1)
+        curdate = fields.Datetime.from_string(strdate)
+        return fields.Datetime.to_string(curdate + oneyear)
+
+    @api.multi
+    def compute_days_left(self):
+        """
+        if contract is in an open state and is overdue, return 0
+        if contract is in a closed state, return -1
+        otherwise return the number of days before the contract expires
+        """
+        today = fields.Datetime.from_string(fields.Date.today())
+        for log_contract in self:
+            if log_contract.expiration_date and (log_contract.state in ('open', 'toclose')):
+                renew_date = fields.Datetime.from_string(log_contract.expiration_date)
+                diff_time = (renew_date - today).days
+                log_contract.days_left = diff_time > 0 and diff_time or 0
+            else:
+                log_contract.days_left = -1
+
+    @api.multi
+    def _compute_sum_cost(self):
+        for contract in self:
+            contract.sum_cost = sum([cost.amount for cost in contract.cost_ids])
+
+    @api.onchange('vehicle_id')
+    def on_change_vehicle(self):
+        self.odometer_unit = self.vehicle_id.odometer_unit
+
+    @api.one
+    def contract_close(self):
+        self.state = 'closed'
+
+    @api.one
+    def contract_open(self):
+        self.state = 'open'
+
+    @api.model
+    def scheduler_manage_auto_costs(self):
+        """
+        This method is called by a cron task
+        It creates costs for contracts having the "recurring cost" field setted, depending on their frequency
+        For example, if a contract has a reccuring cost of 200 with a weekly frequency, this method creates a cost of
+        200 on the first day of each week, from the date of the last recurring costs in the database to today
+        If the contract has not yet any recurring costs in the database, the method generates the recurring costs
+        from the start_date to today
+        The created costs are associated to a contract thanks to the many2one field contract_id
+        If the contract has no start_date, no cost will be created, even if the contract has recurring costs
+        """
+        VehicleCost = self.env['fleet.vehicle.cost']
+        today = fields.Datetime.from_string(fields.Date.context_today(self))
+        log_contract = self.env['fleet.vehicle.log.contract'].search([('state', '!=', 'closed'),
+                                                                      '|', ('start_date', '=', None),
+                                                                      ('cost_frequency', '!=', 'no')])
+        deltas = {'yearly': relativedelta(years=+1), 'monthly': relativedelta(months=+1),
+                  'weekly': relativedelta(weeks=+1), 'daily': relativedelta(days=+1)}
+        for contract in log_contract:
             last_cost_date = contract.start_date
             if contract.generated_cost_ids:
-                last_autogenerated_cost_id = vehicle_cost_obj.search(cr, uid, ['&', ('contract_id','=',contract.id), ('auto_generated','=',True)], offset=0, limit=1, order='date desc',context=context, count=False)
-                if last_autogenerated_cost_id:
-                    found = True
-                    last_cost_date = vehicle_cost_obj.browse(cr, uid, last_autogenerated_cost_id[0], context=context).date
-            startdate = datetime.datetime.strptime(last_cost_date, tools.DEFAULT_SERVER_DATE_FORMAT).date()
-            if found:
-                startdate += deltas.get(contract.cost_frequency)
-            while (startdate <= d) & (startdate <= datetime.datetime.strptime(contract.expiration_date, tools.DEFAULT_SERVER_DATE_FORMAT).date()):
+                vehicle_cost = VehicleCost.search(['&', ('contract_id', '=', contract.id),
+                                                 ('auto_generated', '=', True)], limit=1, order='date desc')[0]
+                if vehicle_cost:
+                    last_cost_date = vehicle_cost.date
+            last_cost_date = fields.Datetime.from_string(last_cost_date)
+            last_cost_date += deltas.get(contract.cost_frequency)
+            while (last_cost_date <= today) and (
+                    last_cost_date <= fields.Datetime.from_string(contract.expiration_date)):
                 data = {
                     'amount': contract.cost_generated,
-                    'date': startdate.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
+                    'date': fields.Date.to_string(last_cost_date),
                     'vehicle_id': contract.vehicle_id.id,
                     'cost_subtype_id': contract.cost_subtype_id.id,
                     'contract_id': contract.id,
                     'auto_generated': True
                 }
-                cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context)
-                startdate += deltas.get(contract.cost_frequency)
+                VehicleCost.create(data)
+                last_cost_date += deltas.get(contract.cost_frequency)
         return True
 
-    def scheduler_manage_contract_expiration(self, cr, uid, context=None):
-        #This method is called by a cron task
-        #It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
-        datetime_today = datetime.datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT)
-        limit_date = (datetime_today + relativedelta(days=+15)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        ids = self.search(cr, uid, ['&', ('state', '=', 'open'), ('expiration_date', '<', limit_date)], offset=0, limit=None, order=None, context=context, count=False)
-        res = {}
-        for contract in self.browse(cr, uid, ids, context=context):
-            if contract.vehicle_id.id in res:
-                res[contract.vehicle_id.id] += 1
-            else:
-                res[contract.vehicle_id.id] = 1
+    @api.model
+    def scheduler_manage_contract_expiration(self):
+        # This method is called by a cron task
+        # It manages the state of a contract, possibly by posting a message on the vehicle concerned and
+        # updating its status
+        today = fields.Datetime.from_string(fields.Date.context_today(self))
+        limit_date = fields.Date.to_string(today + relativedelta(days=+15))
+        log_contract = self.search(['&', ('state', '=', 'open'), ('expiration_date', '<', limit_date)])
+        result = defaultdict(int)
+        for contract in log_contract:
+            result[contract.vehicle_id.id] += 1
 
-        for vehicle, value in res.items():
-            self.pool.get('fleet.vehicle').message_post(cr, uid, vehicle, body=_('%s contract(s) need(s) to be renewed and/or closed!') % (str(value)), context=context)
-        return self.write(cr, uid, ids, {'state': 'toclose'}, context=context)
+        for vehicle, value in result.items():
+            self.env['fleet.vehicle'].browse(vehicle).message_post(body=_('%s contract(s) need(s) to be renewed '
+                                                                          'and/or closed!') % (value))
+        log_contract.write({'state': 'toclose'})
 
-    def run_scheduler(self, cr, uid, context=None):
-        self.scheduler_manage_auto_costs(cr, uid, context=context)
-        self.scheduler_manage_contract_expiration(cr, uid, context=context)
-        return True
+    @api.model
+    def run_scheduler(self):
+        self.scheduler_manage_auto_costs()
+        self.scheduler_manage_contract_expiration()
 
-    def _vehicle_contract_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.vehicle_id.name
-            if record.cost_subtype_id.name:
-                name += ' / '+ record.cost_subtype_id.name
-            if record.date:
-                name += ' / '+ record.date
-            res[record.id] = name
-        return res
-
-    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
-        if not vehicle_id:
-            return {}
-        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
-        return {
-            'value': {
-                'odometer_unit': odometer_unit,
-            }
+    @api.multi
+    def act_renew_contract(self):
+        self.ensure_one()
+        if len(self.ids) > 1:
+            raise UserError(_("This operation should only be done for 1 single contract at a time, "
+                            "as it it suppose to open a window as result"))
+        # compute end date
+        startdate = fields.Datetime.from_string(self.start_date)
+        enddate = fields.Datetime.from_string(self.expiration_date)
+        diffdate = (enddate - startdate)
+        default = {
+            'date': fields.Date.context_today(self),
+            'start_date': fields.Datetime.to_string(fields.Datetime.from_string(self.expiration_date) +
+                                                    datetime.timedelta(days=1)),
+            'expiration_date': fields.Datetime.to_string(enddate + diffdate),
         }
-
-    def compute_next_year_date(self, strdate):
-        oneyear = datetime.timedelta(days=365)
-        curdate = str_to_datetime(strdate)
-        return datetime.datetime.strftime(curdate + oneyear, tools.DEFAULT_SERVER_DATE_FORMAT)
-
-    def on_change_start_date(self, cr, uid, ids, strdate, enddate, context=None):
-        if (strdate):
-            return {'value': {'expiration_date': self.compute_next_year_date(strdate),}}
-        return {}
-
-    def get_days_left(self, cr, uid, ids, prop, unknow_none, context=None):
-        """return a dict with as value for each contract an integer
-        if contract is in an open state and is overdue, return 0
-        if contract is in a closed state, return -1
-        otherwise return the number of days before the contract expires
-        """
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            if (record.expiration_date and (record.state == 'open' or record.state == 'toclose')):
-                today = str_to_datetime(time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
-                renew_date = str_to_datetime(record.expiration_date)
-                diff_time = (renew_date-today).days
-                res[record.id] = diff_time > 0 and diff_time or 0
-            else:
-                res[record.id] = -1
-        return res
-
-    def act_renew_contract(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, "This operation should only be done for 1 single contract at a time, as it it suppose to open a window as result"
-        for element in self.browse(cr, uid, ids, context=context):
-            #compute end date
-            startdate = str_to_datetime(element.start_date)
-            enddate = str_to_datetime(element.expiration_date)
-            diffdate = (enddate - startdate)
-            default = {
-                'date': fields.date.context_today(self, cr, uid, context=context),
-                'start_date': datetime.datetime.strftime(str_to_datetime(element.expiration_date) + datetime.timedelta(days=1), tools.DEFAULT_SERVER_DATE_FORMAT),
-                'expiration_date': datetime.datetime.strftime(enddate + diffdate, tools.DEFAULT_SERVER_DATE_FORMAT),
-            }
-            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, element.id, default, context=context)
-        mod, modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
+        newid = self.copy(default).id
         return {
-            'name':_("Renew Contract"),
+            'name': _("Renew Contract"),
             'view_mode': 'form',
-            'view_id': modid,
+            'view_id': self.env.ref('fleet.fleet_vehicle_log_contract_form').id,
             'view_type': 'tree,form',
             'res_model': 'fleet.vehicle.log.contract',
             'type': 'ir.actions.act_window',
+            'nodestroy': True,
             'domain': '[]',
             'res_id': newid,
-            'context': {'active_id':newid}, 
+            'context': {'active_id': newid},
         }
-
-    def _get_default_contract_type(self, cr, uid, context=None):
-        try:
-            model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_contract_leasing')
-        except ValueError:
-            model_id = False
-        return model_id
-
-    def on_change_indic_cost(self, cr, uid, ids, cost_ids, context=None):
-        totalsum = 0.0
-        for element in cost_ids:
-            if element and len(element) == 3 and isinstance(element[2], dict):
-                totalsum += element[2].get('amount', 0.0)
-        return {
-            'value': {
-                'sum_cost': totalsum,
-            }
-        }
-
-    def _get_sum_cost(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for contract in self.browse(cr, uid, ids, context=context):
-            totalsum = 0
-            for cost in contract.cost_ids:
-                totalsum += cost.amount
-            res[contract.id] = totalsum
-        return res
-
-    _inherits = {'fleet.vehicle.cost': 'cost_id'}
-    _name = 'fleet.vehicle.log.contract'
-    _description = 'Contract information on a vehicle'
-    _order='state desc,expiration_date'
-    _columns = {
-        'name': fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
-        'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
-        'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
-        'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
-        'insurer_id' :fields.many2one('res.partner', 'Vendor'),
-        'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
-        'ins_ref': fields.char('Contract Reference', size=64, copy=False),
-        'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')],
-                                  'Status', readonly=True, help='Choose wheter the contract is still valid or not',
-                                  copy=False),
-        'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract', copy=False),
-        'cost_generated': fields.float('Recurring Cost Amount', help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
-        'cost_frequency': fields.selection([('no','No'), ('daily', 'Daily'), ('weekly','Weekly'), ('monthly','Monthly'), ('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost', required=True),
-        'generated_cost_ids': fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs'),
-        'sum_cost': fields.function(_get_sum_cost, type='float', string='Indicative Costs Total'),
-        'cost_id': fields.many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade'),
-        'cost_amount': fields.related('cost_id', 'amount', string='Amount', type='float', store=True), #we need to keep this field as a related with store=True because the graph view doesn't support (1) to address fields from inherited table and (2) fields that aren't stored in database
-    }
-    _defaults = {
-        'purchaser_id': lambda self, cr, uid, ctx: self.pool.get('res.users').browse(cr, uid, uid, context=ctx).partner_id.id or False,
-        'date': fields.date.context_today,
-        'start_date': fields.date.context_today,
-        'state':'open',
-        'expiration_date': lambda self, cr, uid, ctx: self.compute_next_year_date(fields.date.context_today(self, cr, uid, context=ctx)),
-        'cost_frequency': 'no',
-        'cost_subtype_id': _get_default_contract_type,
-        'cost_type': 'contract',
-    }
-
-    def contract_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'closed'}, context=context)
-
-    def contract_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)

@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+
+from openerp import fields, models, _
 
 
-class fleet_vehicle_state(osv.Model):
-    _name = 'fleet.vehicle.state'
-    _order = 'sequence asc'
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the note stages")
-    }
-    _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
+class FleetVehicleStage(models.Model):
+    _name = 'fleet.vehicle.stage'
+    _order = 'sequence asc, id asc'
+
+    name = fields.Char(required=True)
+    sequence = fields.Integer(help="Used to order the vehicle stages")
+
+    _sql_constraints = [('fleet_stage_name_unique', 'unique(name)', _('Stage name already exists'))]
