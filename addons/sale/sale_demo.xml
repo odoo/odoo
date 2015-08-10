@@ -374,7 +374,7 @@ Thanks!</field>
             <field name="tax_sign" eval="1.0" />
         </record>
 
-        <record id="sale.test_crm_sale_invoice_1" model="account.invoice">
+        <record id="test_crm_sale_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -385,7 +385,7 @@ Thanks!</field>
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
         </record>
-        <record id="sale.test_crm_sale_invoice_1_line_1" model="account.invoice.line">
+        <record id="test_crm_sale_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">250</field>
@@ -393,7 +393,7 @@ Thanks!</field>
             <field name="account_id" ref="account.a_sale"/>
             <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
-        <record id="sale.test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Little server with raid 1 and 512ECC ram</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">800</field>
@@ -401,7 +401,7 @@ Thanks!</field>
             <field name="account_id" ref="account.a_sale"/>
             <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
-        <record id="sale.test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Server with raid 10 and 2048ECC ram</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">4800</field>
