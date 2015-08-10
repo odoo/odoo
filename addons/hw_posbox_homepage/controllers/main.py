@@ -43,7 +43,7 @@ index_template = """
         to the <a href='/hw_proxy/status'>hardware status page</a>
         </p>
         <p>
-        The PosBox software installed on this posbox is <b>version 8</b>,
+        The PosBox software installed on this posbox is <b>version 13</b>,
         the posbox version number is independent from Odoo. You can upgrade
         the software on the <a href='/hw_proxy/upgrade/'>upgrade page</a>
         </p>
