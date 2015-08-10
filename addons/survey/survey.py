@@ -895,8 +895,12 @@ class survey_user_input(osv.Model):
     ]
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
+        context = context or {}
+        if 'allow_copy' not in context:
+            raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+                element!'))
+        return super(survey_user_input, self).copy_data(
+            cr, uid, id, default=default, context=context)
 
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
@@ -1027,8 +1031,12 @@ class survey_user_input_line(osv.Model):
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
+        context = context or {}
+        if 'allow_copy' not in context:
+            raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
+                element!'))
+        return super(survey_user_input_line, self).copy_data(
+            cr, uid, id, default=default, context=context)
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):
