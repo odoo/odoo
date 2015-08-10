@@ -65,6 +65,18 @@
             </field>
         </record>
 
+        <record id="view_translation_dialog_tree" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <tree string="Translations" editable="top" create="false">
+                    <field name="lang" readonly="1"/>
+                    <field name="source"/>
+                    <field name="value"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_translation" model="ir.actions.act_window">
             <field name="name">Translated Terms</field>
             <field name="res_model">ir.translation</field>

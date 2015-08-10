@@ -612,8 +612,10 @@ class ir_translation(osv.osv):
             'name': 'Translate',
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree',
+            'view_id': self.env.ref('base.view_translation_dialog_tree').id,
+            'target': 'new',
+            'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }
         if field:
