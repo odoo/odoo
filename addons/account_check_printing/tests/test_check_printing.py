@@ -1,7 +1,7 @@
 from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 import time
 
-class TestCheckWriting(AccountingTestCase):
+class TestCheckPrinting(AccountingTestCase):
 
     def setUp(self):
         super(TestCheckWriting, self).setUp()
@@ -11,13 +11,14 @@ class TestCheckWriting(AccountingTestCase):
 
         self.partner_axelor = self.env.ref("base.res_partner_13")
         self.product = self.env.ref("product.product_product_4")
-        self.payment_method_check = self.env.ref("account_check_writing.account_payment_method_check_writing")
+        self.payment_method_check = self.env.ref("account_check_printing.account_payment_method_check")
 
         self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.account_expenses = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_expenses').id)], limit=1)
 
         self.bank = self.env['res.partner.bank'].create({'acc_number': '0123456789', 'bank_name': 'Test Bank', 'company_id': self.env.user.company_id.id})
         self.bank_journal = self.bank.journal_id
+        self.bank_journal.check_manual_sequencing = True
 
     def create_invoice(self, amount=100, is_refund=False):
         invoice = self.invoice_model.create({
@@ -54,5 +55,5 @@ class TestCheckWriting(AccountingTestCase):
     def test_send_check(self):
         # Create a payment and 'send' the check
         payment = self.create_payment(self.create_invoice())
-        payment.send_checks()
+        payment.print_checks()
         self.assertEqual(payment.state, 'sent')
