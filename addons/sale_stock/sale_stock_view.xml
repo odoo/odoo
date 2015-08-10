@@ -31,7 +31,7 @@
                     </field>
                    <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="replace">
                        <field name="product_id"
-                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
+                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':False}"
                        groups="base.group_user"
                        on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.warehouse_id, context)"/>
                    </xpath>
