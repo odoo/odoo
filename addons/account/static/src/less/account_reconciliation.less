@@ -546,17 +546,26 @@
                 }
             }
 
-            .oe_form > table, .o_form > table {
+            .o_form > table {
                 width: 49%;
-                height: 26px;
                 margin: 0;
+                vertical-align: top;
 
-                &:nth-child(2n+1) { float: left; clear: left; }
-                &:nth-child(2n) { float: right; clear: right; }
+                &.create_group_left { float: left; }
+                &.create_group_right { float: right; }
 
-                th {
-                    font-weight: bold;
+                td {
+                    width: 99%;
+                    padding-left: 8px;
+
+                    .oe_m2o_cm_button {
+                        line-height: 22px;
+                    }
+                }
+
+                td.o_td_label {
                     line-height: 26px;
+                    font-weight: bold;
                     padding-right: 8px;
                     min-width: 100px;
                     border-right: 1px solid #ddd;
@@ -564,29 +573,18 @@
                     width: 1%;
                 }
 
-                td {
-                    width: 99%;
-                    padding-left: 8px;
-                }
-
                 input, select {
                     width: 100%;
                 }
 
-                &.add_line_container {
-                    width: 98%;
-                    float: none;
-                    clear: both;
-                    margin: auto;
+            }
 
-                    td {
-                        text-align: center;
-                    }
-
-                    .add_line {
-                        line-height: 26px;
-                    }
-                }
+            .add_line_container {
+                clear: both;
+                line-height: 26px;
+                text-align: center;
+                margin: 0;
+                padding-top: 7px;
             }
         }
     }

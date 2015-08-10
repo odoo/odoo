@@ -13,7 +13,7 @@ widgets.bankStatementReconciliation.include({
         delete this.create_form_fields.analytic_account_id;
         this.create_form_fields["analytic_plan"] = {
             id: "analytic_plan",
-            index: 4,
+            index: 25,
             corresponding_property: "analytics_id",
             label: _t("Analytic Distribution"),
             required: false,

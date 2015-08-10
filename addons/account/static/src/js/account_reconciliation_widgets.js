@@ -485,7 +485,7 @@ var abstractReconciliationLine = Widget.extend({
         for (var key in create_form_fields)
             if (create_form_fields.hasOwnProperty(key))
                 create_form_fields_arr.push(create_form_fields[key]);
-        create_form_fields_arr.sort(function(a, b){ return b.index - a.index });
+        create_form_fields_arr.sort(function(a, b){ return a.index - b.index });
 
         // field_manager
         var dataset = new data.DataSet(this, "account.account", self.context);
@@ -538,7 +538,7 @@ var abstractReconciliationLine = Widget.extend({
         // Returns a function that serves as a xhr response handler
         var hideGroupResponseClosureFactory = function(field_widget, $container, obj_key){
             return function(has_group){
-                if (has_group) $container.show();
+                if (has_group) $container[0].style.removeProperty('display');
                 else {
                     field_widget.destroy();
                     $container.remove();
@@ -565,8 +565,8 @@ var abstractReconciliationLine = Widget.extend({
 
             // append to DOM
             var $field_container = $(QWeb.render("form_create_field", {id: field_data.id, label: field_data.label}));
-            field.appendTo($field_container.find("td"));
-            self.$(".create_form").prepend($field_container);
+            field.appendTo($field_container.find(".o_td_field"));
+            self.$(".create_group_" + (i%2 === 0 ? "left" : "right")).append($field_container);
 
             // Change field value on keypress instead of blur
             if (field_data.field_properties.type !== "many2one") {
@@ -576,6 +576,7 @@ var abstractReconciliationLine = Widget.extend({
             }
 
             // Hide the field if group not OK
+            // TODO: avoid this RPC that could break fields order if the only field with a group wasn't the last one.
             if (field_data.group !== undefined) {
                 var target = $field_container;
                 target.hide();

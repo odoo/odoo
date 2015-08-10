@@ -83,9 +83,9 @@
                             </div>
                         </div>
                         <div class="oe_form o_form create_form">
-                            <!-- here come some form_create_field -->
-                            <table class="create_field add_line_container"><tr><td><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> New Operation</a></td></tr></table>
-                            <div class='clearer'></div>
+                            <table class="o_group o_inner_group o_group_col_6 create_group_left"><!-- here come some form_create_field --></table>
+                            <table class="o_group o_inner_group o_group_col_6 create_group_right"><!-- here come some form_create_field --></table>
+                            <p class="add_line_container"><a href="javascript:void(0)" class="add_line"><i class="fa fa-plus-circle"></i> New Operation</a></p>
                         </div>
                     </div>
                 </td>
@@ -113,10 +113,10 @@
     </t>
 
     <t t-name="form_create_field">
-        <table t-att-class='"create_field o_group o_inner_group o_group_col_6 create_"+id'><tr>
-            <th><t t-esc="label"/></th>
-            <td class="create_account_container" t-att-class='"create_"+id+"_container"'></td>
-        </tr></table>
+        <tr t-att-class='"create_" + id'>
+            <td class="o_td_label"><t t-esc="label"/></td>
+            <td t-att-class='"o_td_field create_" + id + "_container"'></td>
+        </tr>
     </t>
 
     <t t-name="filter_no_match">
