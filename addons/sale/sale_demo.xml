@@ -358,7 +358,23 @@ Thanks!</field>
         </record>
 
         <!-- coming from sale_crm -->
-        <record id="test_crm_sale_invoice_1" model="account.invoice">
+        <record model="account.tax" id="account_tax_1">
+            <field name="sequence" eval="1" />
+            <field name="base_sign" eval="1.0" />
+            <field name="display_name">TAX sale - purchase</field>
+            <field name="applicable_type">true</field>
+            <field name="company_id" ref="base.main_company" />
+            <field name="name">TAX sale - purchase</field>
+            <field name="ref_tax_sign" eval="1.0" />
+            <field name="type">percent</field>
+            <field name="ref_base_sign" eval="1.0" />
+            <field name="type_tax_use">all</field>
+            <field name="active" eval="True" />
+            <field name="amount" eval="0.2" />
+            <field name="tax_sign" eval="1.0" />
+        </record>
+
+        <record id="sale.test_crm_sale_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="partner_id" ref="base.res_partner_1"/>
@@ -369,26 +385,29 @@ Thanks!</field>
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
         </record>
-        <record id="test_crm_sale_invoice_1_line_1" model="account.invoice.line">
+        <record id="sale.test_crm_sale_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">250</field>
             <field name="quantity">1</field>
             <field name="account_id" ref="account.a_sale"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
-        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+        <record id="sale.test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Little server with raid 1 and 512ECC ram</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">800</field>
             <field name="quantity">2</field>
             <field name="account_id" ref="account.a_sale"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
-        <record id="test_crm_sale_invoice_1_line_2" model="account.invoice.line">
+        <record id="sale.test_crm_sale_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Server with raid 10 and 2048ECC ram</field>
             <field name="invoice_id" ref="test_crm_sale_invoice_1"/>
             <field name="price_unit">4800</field>
             <field name="quantity">4</field>
             <field name="account_id" ref="account.a_sale"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_1"/>
         <function model="account.invoice" name="pay_and_reconcile">
@@ -423,11 +442,12 @@ Thanks!</field>
             <field name="price_unit">500</field>
             <field name="quantity">1</field>
             <field name="account_id" ref="account.a_sale"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[ref('account_tax_1')])]"/>
         </record>
         <workflow action="invoice_open" model="account.invoice" ref="test_crm_sale_invoice_2"/>
         <function model="account.invoice" name="pay_and_reconcile">
             <!-- ids = -->                    <value eval="[ref('test_crm_sale_invoice_2')]"/>
-            <!-- pay_amount = -->            <value eval="500"/>
+            <!-- pay_amount = -->            <value eval="600"/>
             <!-- pay_account_id = -->        <value eval="ref('account.cash')"/>
             <!-- period_id = -->            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <!-- pay_journal_id = -->        <value eval="ref('account.bank_journal')"/>
