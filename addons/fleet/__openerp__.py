@@ -30,16 +30,16 @@ Main Features
         'mail',
         'board'
     ],
-    'data' : [
+    'data': [
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
-        'fleet_view.xml',
-        'fleet_cars.xml',
-        'fleet_data.xml',
-        'fleet_board_view.xml',
+        'views/fleet_views.xml',
+        'data/fleet_cars_data.xml',
+        'data/fleet_data.xml',
+        'views/fleet_board_view.xml',
     ],
 
-    'demo': ['fleet_demo.xml'],
+    'demo': ['data/fleet_demo_data.xml'],
 
     'installable' : True,
     'application' : True,
