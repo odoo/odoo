@@ -38,7 +38,6 @@ class ImLivechatChannel(models.Model):
         help="URL to a static page where you client can discuss with the operator of the channel.")
     are_you_inside = fields.Boolean(string='Are you inside the matrix?',
         compute='_are_you_inside', store=False, readonly=True)
-    script_internal = fields.Text('Script (internal)', compute='_compute_script_internal', store=False, readonly=True)
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_session = fields.Integer('Number of session', compute='_compute_nbr_session', store=False, readonly=True)
     rating_percentage_satisfaction = fields.Integer('% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1)
@@ -74,17 +73,6 @@ class ImLivechatChannel(models.Model):
         else:
             self.image_small = False
             self.image_medium = False
-
-    @api.multi
-    def _compute_script_internal(self):
-        view = self.env['ir.model.data'].get_object('im_livechat', 'internal_loader')
-        values = {
-            "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
-            "dbname": self._cr.dbname,
-        }
-        for record in self:
-            values["channel"] = record.id
-            record.script_internal = view.render(values)
 
     @api.multi
     def _compute_script_external(self):
