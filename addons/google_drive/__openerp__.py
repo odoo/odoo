@@ -12,6 +12,7 @@
         'views/res_config_user_view.xml',
         'data/google_drive_data.xml',
         'views/google_drive.xml',
+        'views/base_config_setting_views.xml',
     ],
     'demo': [
         'data/google_drive_demo.xml'
