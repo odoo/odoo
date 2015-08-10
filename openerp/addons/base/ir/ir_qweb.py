@@ -1166,7 +1166,7 @@ class AssetsBundle(object):
                     raise NotImplementedError
 
     def can_aggregate(self, url):
-        return not urlparse(url).netloc and not url.startswith(('/web/css', '/web/js'))
+        return not urlparse(url).netloc and not url.startswith('/web/content')
 
     def to_html(self, sep=None, css=True, js=True, debug=False, async=False):
         if sep is None:
@@ -1186,16 +1186,10 @@ class AssetsBundle(object):
         else:
             url_for = self.context.get('url_for', lambda url: url)
             if css and self.stylesheets:
-                suffix = ''
-                if request:
-                    ua = request.httprequest.user_agent
-                    if ua.browser == "msie" and int((ua.version or '0').split('.')[0]) < 10:
-                        suffix = '.0'
-                href = '/web/css%s/%s/%s' % (suffix, self.xmlid, self.version)
-                response.append('<link href="%s" rel="stylesheet"/>' % url_for(href))
-            if js:
-                src = '/web/js/%s/%s' % (self.xmlid, self.version)
-                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(src)))
+                for attachment in self.css():
+                    response.append('<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+            if js and self.javascripts:
+                response.append('<script %s type="text/javascript" src="%s"></script>' % (async and 'async="async"' or '', url_for(self.js().url)))
         response.extend(self.remains)
         return sep + sep.join(response)
 
@@ -1220,53 +1214,69 @@ class AssetsBundle(object):
         check = self.html + str(self.last_modified)
         return hashlib.sha1(check).hexdigest()
 
+    def clean_attachments(self, type):
+        ira = self.registry['ir.attachment']
+        domain = ['&', '!', ('url', '=like', '/web/content/%%-%s/%%' % self.version), ('url', '=like', '/web/content/%%-%%/%s%%.%s' % (self.xmlid, type))]
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+        return ira.unlink(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
+
+    def get_attachments(self, type, inc=None):
+        ira = self.registry['ir.attachment']
+        domain = [('url', '=like', '/web/content/%%-%s/%s%s.%s' % (self.version, self.xmlid, ('%%' if inc is None else '.%s' % inc), type))]
+        attachment_ids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+        return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_ids, context=self.context)
+
+    def save_attachment(self, type, content, inc=None):
+        ira = self.registry['ir.attachment']
+        self.clean_attachments(type)
+        attachments = self.get_attachments(type, inc)
+        values = {}
+
+        if not attachments:
+            values["name"] = "/web/content/%s" % type
+            values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
+            values["res_model"] = 'ir.ui.view'
+            values["type"] = 'binary'
+            attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
+            url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
+            values["name"] = url
+            values["url"] = url
+        else:
+            attachment_id = attachments[0].id
+
+        values["datas"] = content.encode('utf8').encode('base64')
+        ira.write(self.cr, openerp.SUPERUSER_ID, attachment_id, values, context=self.context)
+
+        return ira.browse(self.cr, openerp.SUPERUSER_ID, attachment_id, context=self.context)
+
     def js(self):
-        content = self.get_cache('js')
-        if content is None:
+        attachments = self.get_attachments(type)
+        if not attachments or attachments[0].__last_update < max([asset.last_modified for asset in self.javascripts]):
             content = ';\n'.join(asset.minify() for asset in self.javascripts)
-            self.set_cache('js', content)
-        return content
+            return self.save_attachment('js', content)
+        return attachments[0]
 
-    def css(self, page_number=None):
-        """Generate css content from given bundle"""
-        if page_number is not None:
-            return self.css_page(page_number)
-
-        content = self.get_cache('css')
-        if content is None:
-            content = self.preprocess_css()
-
+    def css(self):
+        ira = self.registry['ir.attachment']
+        attachments = self.get_attachments('css')
+        if not attachments:
+            # get css content
+            css = self.preprocess_css()
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-                content += self.css_message(msg)
+                css += self.css_message(msg)
 
             # move up all @import rules to the top
             matches = []
-            def push(matchobj):
-                matches.append(matchobj.group(0))
-                return ''
+            css = re.sub(self.rx_css_import, lambda matchobj: matches.append(matchobj.group(0)) and '', css)
+            matches.append(css)
+            css = u'\n'.join(matches)
 
-            content = re.sub(self.rx_css_import, push, content)
-
-            matches.append(content)
-            content = u'\n'.join(matches)
-            if not self.css_errors:
-                self.set_cache('css', content)
-            content = content.encode('utf-8')
-
-        return content
-
-    def css_page(self, page_number):
-        content = self.get_cache('css.%d' % (page_number,))
-        if page_number:
-            return content
-        if content is None:
-            css = self.css().decode('utf-8')
+            # split for browser max file size and browser max expression
             re_rules = '([^{]+\{(?:[^{}]|\{[^{}]*\})*\})'
             re_selectors = '()(?:\s*@media\s*[^{]*\{)?(?:\s*(?:[^,{]*(?:,|\{(?:[^}]*\}))))'
-            css_url = '@import url(\'/web/css.%%d/%s/%s\');' % (self.xmlid, self.version)
-            pages = [[]]
-            page = pages[0]
+            page = []
+            pages = [page]
             page_selectors = 0
             for rule in re.findall(re_rules, css):
                 selectors = len(re.findall(re_selectors, rule))
@@ -1277,38 +1287,11 @@ class AssetsBundle(object):
                     pages.append([rule])
                     page = pages[-1]
                     page_selectors = selectors
-            if len(pages) == 1:
-                pages = []
             for idx, page in enumerate(pages):
-                self.set_cache("css.%d" % (idx+1), ''.join(page))
-            content = '\n'.join(css_url % i for i in range(1,len(pages)+1))
-            self.set_cache("css.0", content)
-        if not content:
-            return self.css()
-        return content
-
-    def get_cache(self, type):
-        content = None
-        domain = [('url', '=', '/web/%s/%s/%s' % (type, self.xmlid, self.version))]
-        bundle = self.registry['ir.attachment'].search_read(self.cr, openerp.SUPERUSER_ID, domain, ['datas'], context=self.context)
-        if bundle and bundle[0]['datas']:
-            content = bundle[0]['datas'].decode('base64')
-        return content
-
-    def set_cache(self, type, content):
-        ira = self.registry['ir.attachment']
-        url = '/web/%s/%s/%s' % (type, self.xmlid, self.version)
-        try:
-            with self.cr.savepoint():
-                ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
-                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=content.encode('utf8').encode('base64'),
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
-        except psycopg2.Error:
-            pass
+                attachments |= self.save_attachment("css", ' '.join(page), inc=idx)
+        elif len(attachments) > 1:
+            attachments = attachments[1:]
+        return attachments
 
     def css_message(self, message):
         # '\A' == css content carriage return

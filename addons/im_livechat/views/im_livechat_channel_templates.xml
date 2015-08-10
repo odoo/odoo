@@ -87,9 +87,9 @@
         -->
         <template id="external_loader" name="Livechat : external_script field of livechat channel">
             <!-- css style -->
-            <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
+            <link t-att-href="'%s/im_livechat/external_lib.css' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript"/>
+            <script t-att-src="'%s/im_livechat/external_lib.js' % (url)" type="text/javascript" />
             <!-- the loader -->
             <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel_id)" type="text/javascript"/>
         </template>
