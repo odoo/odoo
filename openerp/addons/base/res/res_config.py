@@ -399,6 +399,12 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             By default 'group' is the group Employee.  Groups are given by their xml id.
             The attribute 'group' may contain several xml ids, separated by commas.
 
+        *   For a selection field like 'group_XXX' composed of 2 integers values ('0' and '1'),
+            ``execute`` adds/removes 'implied_group' to/from the implied groups of 'group', 
+            depending on the field's value.
+            By default 'group' is the group Employee.  Groups are given by their xml id.
+            The attribute 'group' may contain several xml ids, separated by commas.
+
         *   For a boolean field like 'module_XXX', ``execute`` triggers the immediate
             installation of the module named 'XXX' if the field has value ``True``.
 
@@ -494,7 +500,8 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         for name, field in self._columns.items():
             if name.startswith('default_') and hasattr(field, 'default_model'):
                 defaults.append((name, field.default_model, name[8:]))
-            elif name.startswith('group_') and isinstance(field, fields.boolean) and hasattr(field, 'implied_group'):
+            elif name.startswith('group_') and (isinstance(field, fields.boolean) or isinstance(field, fields.selection)) \
+                 and hasattr(field, 'implied_group'):
                 field_groups = getattr(field, 'group', 'base.group_user').split(',')
                 groups.append((name, map(ref, field_groups), ref(field.implied_group)))
             elif name.startswith('module_') and (isinstance(field, fields.boolean) or isinstance(field, fields.selection)):

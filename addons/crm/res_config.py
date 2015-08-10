@@ -15,11 +15,6 @@ class crm_configuration(osv.TransientModel):
             help="Odoo will generate an email alias based on the sales team name"),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
         'alias_domain' : fields.char('Alias Domain'),
-        'group_multi_salesteams': fields.selection([
-            (0, 'One sales team only'),
-            (1, 'Activate multiple sales teams')
-            ], "Multiple Sales Teams",
-            implied_group='base.group_multi_salesteams'),
     }
 
     _defaults = {
