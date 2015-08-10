@@ -15,7 +15,8 @@ This module display project customer satisfaction on your website.
         'rating_project_issue'
     ],
     'data': [
-        'views/website_rating_project.xml'
+        'views/website_rating_project.xml',
+        'views/project_project_view.xml',
     ],
     'installable': True,
 }
