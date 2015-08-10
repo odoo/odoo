@@ -36,7 +36,6 @@ Main Features
         'views/fleet_views.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
-        'views/fleet_board_view.xml',
     ],
 
     'demo': ['data/fleet_demo_data.xml'],
