@@ -359,7 +359,7 @@ class hr_evaluation_interview(osv.Model):
         interview = self.browse(cr, uid, ids, context=context)[0]
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
-        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        response = response_obj.browse(cr, SUPERUSER_ID, interview.request_id.id, context=context)
         context.update({'survey_token': response.token})
         return survey_obj.action_print_survey(cr, uid, [interview.survey_id.id], context=context)
 
@@ -369,6 +369,6 @@ class hr_evaluation_interview(osv.Model):
         survey_obj = self.pool.get('survey.survey')
         response_obj = self.pool.get('survey.user_input')
         # grab the token of the response and start surveying
-        response = response_obj.browse(cr, uid, interview.request_id.id, context=context)
+        response = response_obj.browse(cr, SUPERUSER_ID, interview.request_id.id, context=context)
         context.update({'survey_token': response.token})
         return survey_obj.action_start_survey(cr, uid, [interview.survey_id.id], context=context)
