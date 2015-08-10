@@ -172,6 +172,8 @@ class Scanner(Thread):
             else:
                 time.sleep(5)   # wait until a suitable device is plugged
                 device = self.get_device()
+                if not device:
+                    continue
 
             try:
                 device.grab()
