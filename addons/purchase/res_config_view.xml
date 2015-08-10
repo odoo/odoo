@@ -20,54 +20,24 @@
                 <form string="Configure Purchases" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Invoicing Process"/>
-                    <group>
+                    <group string="Invoicing Process">
                         <label for="id" string="Default Invoicing Settings"/>
                         <div>
-                            <field name="default_invoice_method" widget="radio" class="oe_inline"/>
+                            <field name="default_invoice_method" widget="radio"/>
                         </div>
                     </group>
-                    <separator string="Purchase Order"/>
-                    <group>
-                        <label for="group_product_variant"/>
-                        <div>
-                            <field name="group_product_variant" widget="radio"/>
-                        </div>
-
-                        <label for="group_purchase_pricelist"/>
-                        <div>
-                            <field name="group_purchase_pricelist" widget="radio"/>
-                        </div> 
-
-                        <label for="group_uom"/>
-                        <div>
-                            <field name="group_uom" widget="radio"/>
-                        </div>
-
-                        <label for="group_costing_method"/>
-                        <div>
-                            <field name="group_costing_method" widget="radio"/>
-                        </div>
-
-                        <label for="module_purchase_double_validation"/>
-                        <div name="module_purchase_double_validation">
-                            <field name="module_purchase_double_validation" widget="radio"/>
-                        </div>
-
-                        <label for="module_purchase_requisition"/>
-                        <div>
-                            <field name="module_purchase_requisition" widget="radio"/>
-                        </div>
+                    <group string="Purchase Order">
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="group_purchase_pricelist" widget="radio"/>
+                        <field name="group_uom" widget="radio"/>
+                        <field name="group_costing_method" widget="radio"/>
+                        <field name="module_purchase_double_validation" widget="radio"/>
+                        <field name="module_purchase_requisition" widget="radio"/>
                     </group>
-                    <separator string="Location &amp; Warehouse"/>
-                    <group>
-                        <label for="module_stock_dropshipping"/>
-                        <div>
-                            <field name="module_stock_dropshipping" widget="radio"/>
-                        </div>
+                    <group string="Location &amp; Warehouse">
+                        <field name="module_stock_dropshipping" widget="radio"/>
                     </group>
                 </form>
             </field>
@@ -96,7 +66,7 @@
                 <group name="analytic_account_purchase" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <xpath expr="//group[@name='analytic_account_purchase']/div" position="inside">
+                <xpath expr="//group[@name='analytic_account_purchase']" position="inside">
                     <div>
                         <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                         <label for="group_analytic_account_for_purchases"/>
@@ -104,6 +74,5 @@
                 </xpath>
             </field>
         </record>
-
     </data>
 </openerp>

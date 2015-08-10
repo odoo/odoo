@@ -7,10 +7,7 @@
             <field name="inherit_id" ref="project.view_config_settings"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='project_management']" position="inside">
-                    <label for="group_tasks_work_on_tasks"/>
-                    <div>
-                        <field name="group_tasks_work_on_tasks" widget="radio"/>
-                    </div>
+                    <field name="group_tasks_work_on_tasks" widget="radio"/>
                 </xpath>
             </field>
         </record>

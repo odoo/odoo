@@ -1,43 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
         <record id="view_event_configuration" model="ir.ui.view">
             <field name="name">Configure Event</field>
             <field name="model">event.config.settings</field>
             <field name="arch" type="xml">
-                <form string="Configure Event" class="oe_form_configuration">
+                <form class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Events"/>
-                    <group>
-                        <label for="module_event_sale"/>
-                        <div>
-                            <field name="module_event_sale" widget="radio"/>
-                        </div>
-
-                        <label for="module_website_event_track"/>
-                        <div>
-                            <field name="module_website_event_track" widget="radio"/>
-                        </div>
-
-                        <label for="module_website_event_questions"/>
-                        <div>
-                            <field name="module_website_event_questions" widget="radio"/>
-                        </div>
-
-                        <label for="auto_confirmation"/>
-                        <div>
-                            <field name="auto_confirmation" widget="radio"/>
-                        </div>
-
-                        <label for="group_email_scheduling"/>
-                        <div>
-                            <field name="group_email_scheduling" widget="radio"/>
-                        </div>
+                    <group string="Events">
+                        <field name="module_event_sale" widget="radio"/>
+                        <field name="module_website_event_track" widget="radio"/>
+                        <field name="module_website_event_questions" widget="radio"/>
+                        <field name="auto_confirmation" widget="radio"/>
+                        <field name="group_email_scheduling" widget="radio"/>
                     </group>
                 </form>
             </field>
@@ -52,9 +30,5 @@
 
         <menuitem id="menu_event_global_settings" name="Settings" 
             parent="menu_event_configuration" sequence="0" action="action_event_configuration"/>
-
     </data>
 </openerp>
-                    
-                 
-       

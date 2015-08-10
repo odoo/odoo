@@ -5,28 +5,15 @@
             <field name="name">pos.config.settings.form</field>
             <field name="model">pos.config.settings</field>
             <field name="arch" type="xml">
-                <form string="Configure Point of Sale" class="oe_form_configuration">
+                <form class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Point of Sale"/>
-                    <group>
-                        <label for="module_pos_restaurant"/>
-                        <div>
-                            <field name="module_pos_restaurant" widget="radio"/>
-                        </div>
-
-                        <label for="module_pos_loyalty"/>
-                        <div>
-                            <field name="module_pos_loyalty" widget="radio"/>
-                        </div>
-
-                        <label for="module_pos_discount"/>
-                        <div>
-                            <field name="module_pos_discount" widget="radio"/>
-                        </div>
+                    <group string="Point of Sale">
+                        <field name="module_pos_restaurant" widget="radio"/>
+                        <field name="module_pos_loyalty" widget="radio"/>
+                        <field name="module_pos_discount" widget="radio"/>
                     </group>
                 </form>
 			</field>

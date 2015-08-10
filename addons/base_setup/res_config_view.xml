@@ -8,15 +8,12 @@
                 <form string="General Settings" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="General Settings"/>
                     <div>
-                        <p>
-                            <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
-                            <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
-                        </p>
+                        <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
                     </div>
                     <group>
                         <label for="id" string="Email" name="email_label"/>
@@ -47,37 +44,29 @@
                     <group name="authentication">
                         <label for="id" string="Authentication"/>
                         <div>
-                            <div>
-                                <field name="module_auth_oauth" class="oe_inline"/>
-                                <label for="module_auth_oauth"/>
-                            </div>
+                            <field name="module_auth_oauth" class="oe_inline"/>
+                            <label for="module_auth_oauth"/>
                         </div>
                     </group>
                     <group>
                         <label for="id" string="Import / Export"/>
                         <div>
-                            <div>
-                                <field name="module_base_import" class="oe_inline"/>
-                                <label for="module_base_import"/>
-                            </div>
+                            <field name="module_base_import" class="oe_inline"/>
+                            <label for="module_base_import"/>
                         </div>
                     </group>
                     <group groups="base.group_no_one">
                         <label for="font" />
                         <div>
-                            <div>
-                                <field name="font" class="oe_inline" />
-                                <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
-                            </div>
+                            <field name="font" class="oe_inline" />
+                            <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
                         </div>
                     </group>
                     <group>
                         <label for="id" string="Multi Company"/>
-                        <div>
-                            <div name="multi_company">
-                                <field name="module_multi_company" class="oe_inline"/>
-                                <label for="module_multi_company"/>
-                            </div>
+                        <div name="multi_company">
+                            <field name="module_multi_company" class="oe_inline"/>
+                            <label for="module_multi_company"/>
                         </div>
                     </group>
                     <group attrs="{'invisible': [('module_multi_company','=',False)]}">
@@ -90,15 +79,9 @@
                         </div>
                     </group>
                     <group string="Shared ressources" name="company_share_ressources" attrs="{'invisible': [('module_multi_company','=',False)]}">
-                        <label for="company_share_partner" />
-                        <div>
-                            <div>
-                                <field name="company_share_partner" class="oe_inline" />
-                            </div>
-                        </div>
+                        <field name="company_share_partner" class="oe_inline" />
                     </group>
-                    <separator string="Google Integration" name="google"/>
-                    <group>
+                    <group string="Google Integration" name="google">
                         <label for="id" string="Google Drive"/>
                         <div name="google_drive">
                             <div name="module_google_drive">
@@ -113,12 +96,12 @@
                             <div name="module_google_calendar">
                                 <field name="module_google_calendar" class="oe_inline"/>
                                 <label for="module_google_calendar"/>
-                                    <div name="google_calendar_config_description" attrs="{'invisible': [('module_google_calendar','=',False)]}">
-                                        <p>
-                                            Once installed, you can configure your API credentials for "Google calendar"
-                                        </p>
-                                    </div>
+                                <div name="google_calendar_config_description" attrs="{'invisible': [('module_google_calendar','=',False)]}">
+                                    <p>
+                                        Once installed, you can configure your API credentials for "Google calendar"
+                                    </p>
                                 </div>
+                            </div>
                         </div>
                     </group>
                 </form>
@@ -142,12 +125,9 @@
                 <form string="Configure Sales" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <div id="main">
-
-                    </div>
+                    <div id="main"/>
                 </form>
             </field>
         </record>

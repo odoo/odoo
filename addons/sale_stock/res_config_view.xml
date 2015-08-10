@@ -1,43 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-         <record id="view_sales_config_sale_stock" model="ir.ui.view">
-             <field name="name">sale settings</field>
-             <field name="model">sale.config.settings</field>
-             <field name="inherit_id" ref="sale.view_sales_config"/>
-             <field name="arch" type="xml">
-                 <data>
-                     <xpath expr="//div[@id='main']" position="inside">
-                         <group string="Shipping">
-                             <label for="module_delivery"/>
-                             <div>
-                                 <field name="module_delivery" widget="radio"/>
-                             </div>
-
-                             <label for="default_picking_policy"/>
-                             <div name='default_picking_policy'>
-                                 <field name="default_picking_policy" widget="radio"/>
-                             </div>
-                         </group>
-                     </xpath>
-                     <xpath expr="//group[@id='sale']" position="inside">
-                         <label for="default_order_policy"/>
-                         <div>
-                             <field name="default_order_policy" widget="radio"/>
-                         </div>
-
-                         <label for="group_route_so_lines"/>
-                         <div>
-                              <field name="group_route_so_lines" widget="radio"/>
-                         </div>
-
-                         <label for="group_mrp_properties" groups="base.group_no_one"/>
-                         <div groups="base.group_no_one">
-                              <field name="group_mrp_properties" widget="radio"/>
-                         </div>
-                     </xpath>
-                </data>
-             </field>
-         </record>
-    </data>
-</openerp>
+<odoo>
+    <record id="view_sales_config_sale_stock" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sale.view_sales_config"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='main']" position="inside">
+                <group string="Shipping">
+                    <field name="module_delivery" widget="radio"/>
+                    <field name="default_picking_policy" widget="radio"/>
+                </group>
+            </xpath>
+            <xpath expr="//group[@id='sale']" position="inside">
+                <field name="default_order_policy" widget="radio"/>
+                <field name="group_route_so_lines" widget="radio"/>
+                <field name="group_mrp_properties" widget="radio" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

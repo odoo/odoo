@@ -20,42 +20,17 @@
                 <form string="Configure Manufacturing" class= "oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Manufacturing Order"/>
-                    <group>
-                        <label for="group_product_variant"/>
-                        <div>
-                            <field name="group_product_variant" widget="radio"/>
-                        </div>
-
-                        <label for="module_mrp_byproduct"/>
-                        <div>
-                            <field name="module_mrp_byproduct" widget="radio"/>
-                        </div>
-
-                        <label for="module_mrp_repair"/>
-                        <div>
-                            <field name="module_mrp_repair" widget="radio"/>
-                        </div>
-
-                        <label for="group_mrp_routings"/>
-                        <div>
-                            <field name="group_mrp_routings" widget="radio"/>
-                        </div>
-
-                        <label for="module_mrp_operations"/>
-                         <div>
-                            <field name="module_mrp_operations" widget="radio"/>
-                        </div>
+                    <group string="Manufacturing Order">
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="module_mrp_byproduct" widget="radio"/>
+                        <field name="module_mrp_repair" widget="radio"/>
+                        <field name="group_mrp_routings" widget="radio"/>
+                        <field name="module_mrp_operations" widget="radio"/>
                     </group>
-                    <separator string="Master Data"/>
-                    <group >
-                        <label for="group_rounding_efficiency"/>
-                        <div>
-                            <field name="group_rounding_efficiency" widget="radio"/>
-                        </div>
+                    <group string="Master Data">
+                        <field name="group_rounding_efficiency" widget="radio"/>
                     </group>
                 </form>
             </field>
@@ -70,6 +45,5 @@
 
         <menuitem id="base.menu_mrp_config" name="Settings" parent="menu_mrp_configuration"
             sequence="0" action="action_mrp_configuration" groups="base.group_configuration"/>
-
     </data>
 </openerp>

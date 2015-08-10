@@ -16,11 +16,9 @@
                 <form string="Configure Payroll" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <separator string="Payroll"/>
-                    <group>
+                    <group string="Payroll">
                         <label for="id" string="Settings"/>
                         <div>
                             <field name="module_hr_payroll_account" class="oe_inline"/>
@@ -45,6 +43,5 @@
 
         <menuitem id="menu_hr_payroll_global_settings" name="Settings" 
             parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration"/>
-
     </data>
 </openerp>

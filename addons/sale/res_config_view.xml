@@ -8,57 +8,20 @@
             <field name="arch" type="xml">
                 <div id="main" position="inside">
                     <group string="Products">
-                        <label for="group_product_variant"/>
-                        <div>
-                            <field name="group_product_variant" widget="radio"/>
-                        </div>
-
-                        <label for="module_website_sale_digital"/>
-                        <div>
-                            <field name="module_website_sale_digital" widget="radio"/>
-                        </div>
-                        <label for="group_uom" string="Unit of Measures"/>
-                        <div>
-                            <field name="group_uom" widget="radio"/>
-                        </div>
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="module_website_sale_digital" widget="radio"/>
+                        <field name="group_uom" widget="radio"/>
                     </group>
                     <group string="Quotations &amp; Sales" id="sale">
-                        <label for="group_sale_pricelist"/>
-                        <div>
-                            <field name="group_sale_pricelist" widget="radio"/>
-                        </div>
-
-                        <label for="group_sale_delivery_address"/>
-                        <div>
-                            <field name="group_sale_delivery_address" widget="radio"/>
-                        </div>
-
-                        <label for="group_display_incoterm"/>
-                        <div>
-                            <field name="group_display_incoterm" widget="radio"/>
-                        </div>
-
-                        <label for="group_discount_per_so_line"/>
-                        <div>
-                            <field name="group_discount_per_so_line" widget="radio"/>
-                        </div>
-
-                        <label for="module_website_quote"/>
-                        <div>
-                            <field name="module_website_quote" widget="radio"/>
-                        </div>
-
-                        <label for="module_sale_margin"/>
-                        <div>
-                            <field name="module_sale_margin" widget="radio"/>
-                        </div>
-
+                        <field name="group_sale_pricelist" widget="radio"/>
+                        <field name="group_sale_delivery_address" widget="radio"/>
+                        <field name="group_display_incoterm" widget="radio"/>
+                        <field name="group_discount_per_so_line" widget="radio"/>
+                        <field name="module_website_quote" widget="radio"/>
+                        <field name="module_sale_margin" widget="radio"/>
                     </group>
                     <group string="Contracts" id="contract">
-                        <label for="module_sale_contract"/>
-                        <div>
-                            <field name="module_sale_contract" widget="radio"/>
-                        </div>
+                        <field name="module_sale_contract" widget="radio"/>
                     </group>
                 </div>
             </field>
@@ -81,7 +44,7 @@
                 <group name="analytic_account_sale" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <xpath expr="//group[@name='analytic_account_sale']/div" position="inside">
+                <xpath expr="//group[@name='analytic_account_sale']" position="inside">
                     <div>
                         <field name="group_analytic_account_for_sales" class="oe_inline"/>
                         <label for="group_analytic_account_for_sales"/>

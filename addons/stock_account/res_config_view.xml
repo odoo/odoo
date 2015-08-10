@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <record id="view_stock_config_settings_inherit" model="ir.ui.view">
@@ -6,22 +7,10 @@
             <field name="inherit_id" ref="stock.view_stock_config_settings"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='traceability']" position="after">
-                    <separator string="Accounting"/>
-                    <group>
-                        <label for="module_stock_landed_costs"/>
-                        <div>
-                            <field name="module_stock_landed_costs" widget="radio" on_change="onchange_landed_costs(module_stock_landed_costs)"/>
-                        </div>
-
-                        <label for="group_stock_inventory_valuation"/>
-                        <div>
-                            <field name="group_stock_inventory_valuation" widget="radio"/>
-                        </div>
-
-                        <label for="module_stock_invoice_directly"/>
-                        <div>
-                            <field name="module_stock_invoice_directly" widget="radio"/>
-                        </div>
+                    <group string="Accounting">
+                        <field name="module_stock_landed_costs" widget="radio" on_change="onchange_landed_costs(module_stock_landed_costs)"/>
+                        <field name="group_stock_inventory_valuation" widget="radio"/>
+                        <field name="module_stock_invoice_directly" widget="radio"/>
                     </group>
                 </xpath>
             </field>

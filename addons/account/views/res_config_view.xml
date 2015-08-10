@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="open_account_charts_modules" model="ir.actions.act_window">
             <field name="name">Chart Templates</field>
             <field name="res_model">ir.module.module</field>
@@ -17,15 +16,13 @@
                 <form string="Configure Accounting" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
 
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <separator string="Company" groups="base.group_multi_company"/>
-                    <group groups="base.group_multi_company">
+                    <group string="Company" groups="base.group_multi_company">
                         <label for="id" string="Company"/>
                         <div>
                             <div attrs="{'invisible': [('has_default_company', '=', True)]}">
@@ -39,8 +36,7 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}"/>
-                    <group attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
+                    <group string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
                         <label for="id" string="Chart of Account"/>
                         <div>
                             <div>
@@ -84,11 +80,9 @@
                     <group string="Fiscal Year">
                         <label for="id" string="Financial Year End"/>
                         <div>
-                            <div>
-                                <label for="fiscalyear_last_day" string="Last Day"/>
-                                <field name="fiscalyear_last_day" class="oe_inline"/>
-                                <field name="fiscalyear_last_month" class="oe_inline"/>
-                            </div>
+                            <label for="fiscalyear_last_day" string="Last Day"/>
+                            <field name="fiscalyear_last_day" class="oe_inline"/>
+                            <field name="fiscalyear_last_month" class="oe_inline"/>
                         </div>
                         <label for="id" string="Lock Dates"/>
                         <div>
@@ -102,8 +96,7 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Accounting &amp; Finance"/>
-                    <group>
+                    <group string="Accounting &amp; Finance">
                         <label for="id" string="Options"/>
                         <div name="account_config">
                             <div>
@@ -197,14 +190,13 @@
                             </div>
                         </div>
                     </group>
+                    <!-- Invisible section which is inherited in other modules -->
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
                     <group name="analytic_account_sale" invisible="1">
                         <label for="id" string="Sale"/>
-                        <div/>
                     </group>
                     <group name="analytic_account_purchase" invisible="1">
                         <label for="id" string="Purchase"/>
-                        <div/>
                     </group>
                 </form>
             </field>
@@ -220,6 +212,5 @@
 
         <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
             sequence="0" action="action_account_config" groups="base.group_configuration"/>
-
     </data>
 </openerp>
