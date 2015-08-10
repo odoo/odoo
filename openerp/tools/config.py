@@ -367,7 +367,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database',
+                'log_db_level', 'geoip_database', 'session_store',
         ]
 
         for arg in keys:
