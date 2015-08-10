@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
 {
     'name': 'Initial Setup Tools',
     'version': '1.0',
@@ -21,7 +19,6 @@ Shows you a list of applications features to install from.
         'base_setup_views.xml',
         'res_config_view.xml',
         'res_partner_view.xml',
-        'views/base_setup.xml',
     ],
     'demo': [],
     'installable': True,
