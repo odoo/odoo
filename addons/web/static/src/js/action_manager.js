@@ -39,6 +39,11 @@ var Action = core.Class.extend({
         }
     },
     /**
+     * Not implemented for functions
+     */
+    detach: function() {
+    },
+    /**
      * Destroyer: there is nothing to destroy in the case of a client function
      */
     destroy: function() {
@@ -109,10 +114,9 @@ var WidgetAction = Action.extend({
      * @return {Deferred} resolved when the widget is appended
      */
     appendTo: function(el) {
-        this.client_action_container = document.createElement('div');
-        this.client_action_container.className = 'oe_client_action';
-        el.appendChild(this.client_action_container);
-        return this.widget.appendTo(this.client_action_container);
+        this.$client_action_container = $('<div>').addClass('oe_client_action');
+        this.$client_action_container.appendTo(el);
+        return this.widget.appendTo(this.$client_action_container);
     },
     /**
      * Restores WidgetAction by calling do_show on its widget
@@ -124,11 +128,18 @@ var WidgetAction = Action.extend({
         });
     },
     /**
+     * Detaches the client action's container from the DOM
+     * @return {jQuery} the action's container
+     */
+    detach: function() {
+        return this.$client_action_container.detach();
+    },
+    /**
      * Destroys the widget
      */
     destroy: function() {
         this.widget.destroy();
-        this.client_action_container.remove();
+        this.detach();
     },
 });
 /**
@@ -160,6 +171,13 @@ var ViewManagerAction = WidgetAction.extend({
      */
     set_is_in_DOM: function(is_in_DOM) {
         this.widget.is_in_DOM = is_in_DOM;
+    },
+    /**
+     * Detaches the view_manager from the DOM
+     * @return {jQuery} the view_manager's $el
+     */
+    detach: function() {
+        return this.widget.$el.detach();
     },
     /**
      * Destroys the widget
@@ -273,7 +291,7 @@ var ActionManager = Widget.extend({
         return $.when(this.inner_action.appendTo(new_widget_fragment)).done(function() {
             // Detach the fragment of the previous action and store it within the action
             if (old_action) {
-                old_action.set_fragment(old_widget.$el.detach());
+                old_action.set_fragment(old_action.detach());
                 old_action.set_is_in_DOM(false);
             }
             if (!widget.need_control_panel) {
