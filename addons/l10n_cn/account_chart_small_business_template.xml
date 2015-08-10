@@ -16,7 +16,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
       
         <!-- 科目表模板-->
         <record id="cn_small_business_root" model="account.account.template">
-            <field name="name">会计科目</field>
+            <field name="name">2011会计科目</field>
             <field name="code">0</field>
             <field name="type">view</field>
             <field name="user_type" ref="user_type_all"/>
@@ -79,7 +79,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">payable</field>
             <field name="name">预付账款</field>
-            <field name="user_type" ref="user_type_bs6"/>
+            <field name="user_type" ref="user_type_bs8"/>
         </record>
         <record id="small_business_chart1131" model="account.account.template">
             <field name="code">1131</field>
@@ -240,7 +240,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">固定资产清理</field>
-            <field name="user_type" ref="user_type_bs39"/>
+            <field name="user_type" ref="user_type_bs46"/>
         </record>
 
         <record id="small_business_chart1621" model="account.account.template">
@@ -249,7 +249,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">生产性生物资产</field>
-            <field name="user_type" ref="user_type_bs39"/>
+            <field name="user_type" ref="user_type_bs47"/>
         </record>
 
         <record id="small_business_chart1622" model="account.account.template">
@@ -258,7 +258,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">生产性生物资产累计折旧</field>
-            <field name="user_type" ref="user_type_bs40"/>
+            <field name="user_type" ref="user_type_bs47"/>
         </record>
 
         <record id="small_business_chart1701" model="account.account.template">
@@ -295,7 +295,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">待处理财产损溢</field>
-            <field name="user_type" ref="user_type_bs44"/>
+            <field name="user_type" ref="user_type_bs53"/>
         </record>
         
         
@@ -356,7 +356,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">应付利息</field>
-            <field name="user_type" ref="user_type_bs74"/>
+            <field name="user_type" ref="user_type_bs174"/>
         </record>
         <record id="small_business_chart2232" model="account.account.template">
             <field name="code">2232</field>
@@ -364,7 +364,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">应付利润</field>
-            <field name="user_type" ref="user_type_bs74"/>
+            <field name="user_type" ref="user_type_bs175"/>
         </record>
 
         <record id="small_business_chart2241" model="account.account.template">
@@ -382,7 +382,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">递延收益</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_bs104"/>
         </record>
         <record id="small_business_chart2501" model="account.account.template">
             <field name="code">2501</field>
@@ -434,7 +434,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">本年利润</field>
-            <field name="user_type" ref="user_type_bs121"/>
+            <field name="user_type" ref="user_type_bs120"/>
         </record>
         <record id="small_business_chart3104" model="account.account.template">
             <field name="code">3104</field>
@@ -452,7 +452,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">生产成本</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_cost2"/>
         </record>
         <record id="small_business_chart4101" model="account.account.template">
             <field name="code">4101</field>
@@ -460,7 +460,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">制造费用</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_cost2"/>
         </record>
 
         <record id="small_business_chart4301" model="account.account.template">
@@ -469,7 +469,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">研发支出</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_cost3"/>
         </record>
 
         <record id="small_business_chart4401" model="account.account.template">
@@ -478,7 +478,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">工程施工</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_cost2"/>
         </record>
 
         <record id="small_business_chart4403" model="account.account.template">
@@ -487,7 +487,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">机械作业</field>
-            <field name="user_type" ref="user_type_all"/>
+            <field name="user_type" ref="user_type_cost2"/>
         </record>
 
 
@@ -506,7 +506,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
             <field name="name">其他业务收入</field>
-            <field name="user_type" ref="user_type_pl23"/>
+            <field name="user_type" ref="user_type_pl1"/>
         </record>
 
         <record id="small_business_chart5111" model="account.account.template">
@@ -589,7 +589,7 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
             <field eval="False" name="reconcile"/>
             <field ref="cn_small_business_root" name="parent_id"/>
             <field name="type">other</field>
-            <field name="name">所得税</field>
+            <field name="name">所得税费用</field>
             <field name="user_type" ref="user_type_pl29"/>
         </record>
 
