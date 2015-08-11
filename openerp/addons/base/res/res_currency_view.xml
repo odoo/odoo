@@ -29,6 +29,7 @@
            view_mode='tree,form'
            view_id='view_currency_rate_tree'
            domain="[('currency_id','=', active_id)]"
+           context="{'default_currency_id': active_id}"
            res_model="res.currency.rate"/>
 
         <record id="view_currency_search" model="ir.ui.view">
