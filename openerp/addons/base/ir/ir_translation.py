@@ -595,15 +595,16 @@ class ir_translation(osv.osv):
 
             assert fld.translate and rec._name == fld.model_name
             self.insert_missing(fld, rec)
+        view_id = self.env.ref('base.view_translation_dialog_tree').id
 
         action = {
             'name': 'Translate',
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree',
+            'view_id': view_id,
             'target': 'new',
-            'flags': {'search_view': True},
+            'flags': {'search_view': True, 'action_buttons': True},
             'domain': domain,
         }
         if field:
