@@ -1518,16 +1518,22 @@ class account_voucher_line(osv.osv):
         'name': '',
     }
 
-    def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
+    def onchange_reconcile(self, cr, uid, ids, reconcile, amount,
+                           amount_unreconciled, context=None):
         vals = {'amount': 0.0}
         if reconcile:
-            vals = { 'amount': amount_unreconciled}
+            vals = {'amount': amount_unreconciled}
         return {'value': vals}
 
-    def onchange_amount(self, cr, uid, ids, amount, amount_unreconciled, context=None):
+    def onchange_amount(self, cr, uid, ids, amount, amount_unreconciled,
+                        context=None):
         vals = {}
+        prec = self.pool.get('decimal.precision').precision_get(
+            cr, uid, 'Account')
         if amount:
-            vals['reconcile'] = (amount == amount_unreconciled)
+            result = float_compare(amount, amount_unreconciled,
+                                   precision_digits=prec)
+            vals['reconcile'] = (result == 0)
         return {'value': vals}
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context=None):
