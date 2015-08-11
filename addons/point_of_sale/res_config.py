@@ -20,4 +20,13 @@ class pos_configuration(osv.TransientModel):
             (1, "Allow global discounts")
             ], "Discount",
             help='Allows the cashier to quickly give a percentage sale discount for all the sales order to a customer'),
+        'module_pos_mercury': fields.selection([
+            (0, "No credit card"),
+            (1, "Allows customers to pay with credit cards.")
+            ], "Credit Cards",
+            help='The transactions are processed by Mercury'),
+        'module_pos_reprint': fields.selection([
+            (0, "No reprint"),
+            (1, "Allow cashier to reprint receipts")
+            ], "Reprints"),
     }
