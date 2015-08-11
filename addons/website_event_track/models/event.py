@@ -137,8 +137,8 @@ class event_event(models.Model):
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
     blog_id = fields.Many2one('blog.blog', 'Event Blog')
-    show_track_proposal = fields.Boolean('Talks Proposals')
-    show_tracks = fields.Boolean('Multiple Tracks')
+    show_track_proposal = fields.Boolean(string='Talks Proposals', compute='_get_show_track_proposal', inverse='_set_show_track', store=True)
+    show_tracks = fields.Boolean(string='Multiple Tracks', compute='_get_show_tracks', inverse='_set_show_track', store=True)
     show_blog = fields.Boolean('News')
     count_tracks = fields.Integer('Tracks', compute='_count_tracks')
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
@@ -148,14 +148,48 @@ class event_event(models.Model):
     @api.one
     def _get_new_menu_pages(self):
         result = super(event_event, self)._get_new_menu_pages()[0]  # TDE CHECK api.one -> returns a list with one item ?
-        if self.show_tracks:
-            result.append((_('Talks'), '/event/%s/track' % slug(self)))
-            result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
         if self.blog_id:
             result.append((_('News'), '/blogpost'+slug(self.blog_ig)))
-        if self.show_track_proposal:
-            result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
+        if self.show_menu:
+            if self.show_tracks:
+                result.append((_('Talks'), '/event/%s/track' % slug(self)))
+                result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
+            if self.show_track_proposal:
+                result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result
+
+    @api.one
+    def _set_show_menu(self):
+        result = super(event_event, self)._set_show_menu()[0]  # TDE CHECK api.one ->
+        if not self.show_menu:
+            self.show_track_proposal = False
+            self.show_tracks = False
+
+    @api.one
+    def _set_show_track(self):
+        if self.menu_id:
+            self.menu_id.unlink()
+        if self.show_track_proposal or self.show_tracks or self.show_menu:
+            root_menu = self.env['website.menu'].create({'name': self.name})
+            to_create_menus = self._get_new_menu_pages()[0]
+            seq = 0
+            for name, url in to_create_menus:
+                self.env['website.menu'].create({
+                    'name': name,
+                    'url': url,
+                    'parent_id': root_menu.id,
+                    'sequence': seq,
+                })
+                seq += 1
+            self.menu_id = root_menu
+
+    @api.one
+    def _get_show_tracks(self):
+        self.show_tracks = bool(self.menu_id)
+
+    @api.one
+    def _get_show_track_proposal(self):
+        self.show_track_proposal = bool(self.menu_id)
 
 
 class event_sponsors_type(models.Model):
