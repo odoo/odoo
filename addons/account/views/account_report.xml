@@ -32,13 +32,22 @@
             file="account.report_overdue"
         />
 
-                <report 
+        <report 
             id="action_report_general_ledger"
             model="account.report.general.ledger"
             string="General Ledger"
             report_type="qweb-pdf"
             name="account.report_generalledger"
             file="account.report_generalledger"
+        />
+
+        <report 
+            id="action_report_trial_balance"
+            model="account.balance.report"
+            string="Trial Balance"
+            report_type="qweb-pdf"
+            name="account.report_trialbalance"
+            file="account.report_trialbalance"
         />
 
     </data>
