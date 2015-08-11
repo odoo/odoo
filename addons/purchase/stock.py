@@ -4,6 +4,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+from openerp import api
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -95,12 +96,14 @@ class stock_warehouse(osv.osv):
                         buy_pull_id = pull_obj.unlink(cr, uid, warehouse.buy_pull_id.id, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
 
+    @api.cr_uid_records_context
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)
         if warehouse.buy_to_resupply and warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
             all_routes += [warehouse.buy_pull_id.route_id.id]
         return all_routes
 
+    @api.cr_uid_records_context
     def _get_all_products_to_resupply(self, cr, uid, warehouse, context=None):
         res = super(stock_warehouse, self)._get_all_products_to_resupply(cr, uid, warehouse, context=context)
         if warehouse.buy_pull_id and warehouse.buy_pull_id.route_id:
@@ -111,6 +114,7 @@ class stock_warehouse(osv.osv):
                         break
         return res
 
+    @api.cr_uid_records_context
     def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         res = super(stock_warehouse, self)._handle_renaming(cr, uid, warehouse, name, code, context=context)
         pull_obj = self.pool.get('procurement.rule')

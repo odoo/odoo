@@ -22,12 +22,12 @@
     company_id: base.main_company
     product_tmpl_id: product_manu_product_template
     product_id: product_manu
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     product_qty: 1.0
-    type: normal
+    bom_type: normal
     bom_line_ids:
       - product_id: product.product_product_44
-        product_uom: product.product_uom_unit
+        product_uom_id: product.product_uom_unit
         product_qty: 1.0
 -
   And set routes on product to be MTO and manufacture
@@ -54,7 +54,7 @@
   Confirm sales order
 - 
   !python {model: sale.order}: |
-    self.action_confirm(cr, uid, ref("sale_order_product_manu"), context=context)
+    self.action_confirm(cr, uid, [ref("sale_order_product_manu")], context=context)
 -
   I run scheduler.
 -

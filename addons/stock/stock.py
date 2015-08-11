@@ -175,6 +175,7 @@ class stock_location(osv.osv):
             loc = loc.location_id
         return self._default_removal_strategy(cr, uid, context=context)
 
+    @api.cr_uid_records_context
     def get_warehouse(self, cr, uid, location, context=None):
         """
             Returns warehouse id of warehouse that contains location
@@ -2430,6 +2431,7 @@ class stock_move(osv.osv):
         if not no_prepare:
             self.check_recompute_pack_op(cr, uid, ids, context=context)
 
+    @api.cr_uid_ids_context
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.
         @return: True
@@ -2820,7 +2822,7 @@ class stock_move(osv.osv):
         #thus the result of action_confirm should always be a list of 1 element length)
         return self.action_confirm(cr, uid, [new_move], context=context)[0]
 
-
+    @api.cr_uid_records_context
     def get_code_from_locs(self, cr, uid, move, location_id=False, location_dest_id=False, context=None):
         """
         Returns the code the picking type should have.  This can easily be used
@@ -3820,6 +3822,7 @@ class stock_warehouse(osv.osv):
             'pick_pack_ship': (_('Pick + Pack + Ship'), [(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id.id), (warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id.id), (warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id.id)]),
         }
 
+    @api.cr_uid_records_context
     def _handle_renaming(self, cr, uid, warehouse, name, code, context=None):
         location_obj = self.pool.get('stock.location')
         route_obj = self.pool.get('stock.location.route')
@@ -3971,6 +3974,7 @@ class stock_warehouse(osv.osv):
                                                                             'property_stock_supplier': transit_loc}, context=context)
         return super(stock_warehouse, self).write(cr, uid, ids, vals=vals, context=context)
 
+    @api.cr_uid_records_context
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         route_obj = self.pool.get("stock.location.route")
         all_routes = [route.id for route in warehouse.route_ids]

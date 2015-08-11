@@ -25,14 +25,13 @@ class product_template(osv.osv):
         for prod_id in ids:
             bom_obj = self.pool.get('mrp.bom')
             if model == 'product.product':
-                bom_id = bom_obj._bom_find(cr, uid, product_id=prod_id, context=context)
+                bom = bom_obj._bom_find(cr, uid, product=self.pool.get('product.product').browse(prod_id), context=context)
             else:
-                bom_id = bom_obj._bom_find(cr, uid, product_tmpl_id=prod_id, context=context)
-            if bom_id:
+                bom = bom_obj._bom_find(cr, uid, product_tmpl=self.pool.get('product.template').browse(prod_id), context=context)
+            if bom:
                 # In recursive mode, it will first compute the prices of child boms
                 if recursive:
                     #Search the products that are components of this bom of prod_id
-                    bom = bom_obj.browse(cr, uid, bom_id, context=context)
 
                     #Call compute_price on these subproducts
                     prod_set = set([x.product_id.id for x in bom.bom_line_ids])
@@ -40,7 +39,7 @@ class product_template(osv.osv):
                     if test: 
                         testdict.update(res)
                 #Use calc price to calculate and put the price on the product of the BoM if necessary
-                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
+                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom.id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
                 if test:
                     testdict.update({prod_id : price})
         if test:
@@ -62,7 +61,7 @@ class product_template(osv.osv):
                 price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
 
         if bom.routing_id:
-            for wline in bom.routing_id.workcenter_lines:
+            for wline in bom.routing_id.workcenter_line_ids:
                 wc = wline.workcenter_id
                 cycle = wline.cycle_nbr
                 hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)

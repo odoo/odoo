@@ -39,10 +39,10 @@ class SaleOrderLine(models.Model):
         # delivery was created.
         bom_delivered = {}
         for bom in self.product_id.product_tmpl_id.bom_ids:
-            if bom.type != 'phantom':
+            if bom.bom_type != 'phantom':
                 continue
             bom_delivered[bom.id] = False
-            bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id, self.product_uom_qty)[0]
+            bom_exploded = bom.explode(self.product_id.product_tmpl_id, self.product_uom_qty)[0]
             for bom_line in bom_exploded:
                 qty = 0.0
                 for move in self.procurement_ids.mapped('move_ids'):
@@ -76,11 +76,9 @@ class StockMove(models.Model):
             res['property_ids'] = [(6, 0, move.procurement_id.property_ids.ids)]
         return res
 
-    @api.model
-    def _action_explode(self, move):
+    def _action_explode(self):
         """ Explodes pickings.
-        @param move: Stock moves
         @return: True
         """
-        property_ids = move.procurement_id.sale_line_id.property_ids.ids
-        return super(StockMove, self.with_context(property_ids=property_ids))._action_explode(move)
+        properties = self.procurement_id.sale_line_id.property_ids
+        return super(StockMove, self.with_context(properties=properties))._action_explode()

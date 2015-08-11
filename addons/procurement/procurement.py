@@ -215,6 +215,7 @@ class procurement_order(osv.osv):
                         raise
         return True
 
+    @api.cr_uid_ids_context
     def check(self, cr, uid, ids, autocommit=False, context=None):
         done_ids = []
         for procurement in self.browse(cr, uid, ids, context=context):
