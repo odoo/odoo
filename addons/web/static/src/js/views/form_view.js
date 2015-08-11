@@ -911,6 +911,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     } else {
                         // Write save
                         save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
+                            self.display_translation_alert(values);
                             return self.record_saved(r);
                         }, null);
                     }
@@ -1069,6 +1070,26 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
     sidebar_eval_context: function () {
         return $.when(this.build_eval_context());
+    },
+    display_translation_alert: function(values){
+        var self = this;
+        if(_t.database.multi_lang){
+            var alert_fields = _.filter(this.translatable_fields, function(field) {
+                return  _.has(values, field.name)
+            });
+            if (alert_fields.length){
+                var lang = _t.database.parameters.name,
+                    $alert_box = $(QWeb.render('translation-alert', {'fields': alert_fields,'lang': lang})),
+                    $target_el = this.$('.oe_form_sheet').length ? this.$('.oe_form_sheet') : this.$el;
+
+                $alert_box.find('.oe_field_translate').on('click', function(ev){
+                    ev.preventDefault();
+                    var name = ev.target.name;
+                    debugger;
+                });
+                $target_el.prepend($alert_box);
+            }
+        }
     },
     open_defaults_dialog: function () {
         var self = this;

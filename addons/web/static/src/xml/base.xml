@@ -1460,4 +1460,14 @@
     </t>
 </t>
 
+<t t-name="translation-alert">
+    <div class="alert alert-warning">
+        <t t-foreach="fields" t-as="field">
+            You have updated the <b><t t-esc="field.string"/></b> for <b>
+            <t t-esc="field.get_value()"/></b> in <b> <t t-esc="lang"/></b>.
+            <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
+            <a class="close" data-dismiss="alert" href="#" aria-hidden="true" style=" line-height: 0px;">x</a>
+        </t>
+    </div>
+</t>
 </templates>
