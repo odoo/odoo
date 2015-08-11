@@ -5,7 +5,7 @@
 {
     'name': 'MRP',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category': 'Manufacturing',
     'sequence': 18,

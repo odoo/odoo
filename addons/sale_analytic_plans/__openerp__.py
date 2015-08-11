@@ -11,7 +11,7 @@ The base module to manage analytic distribution and sales orders.
 
 Using this module you will be able to link analytic accounts to sales orders.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'account_analytic_plans'],
     'data': ['sale_analytic_plans_view.xml','res_config.xml'],

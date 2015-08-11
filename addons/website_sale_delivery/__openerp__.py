@@ -8,7 +8,7 @@
 Delivery Costs
 ==============
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_sale', 'delivery'],
     'data': [
         'views/website_sale_delivery.xml',

@@ -4,7 +4,7 @@
 {
     'name': 'Project Management',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Project Management',
     'sequence': 8,

@@ -10,7 +10,7 @@
 Partners geolocalization
 ========================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['crm'],
     'demo': [
     ],

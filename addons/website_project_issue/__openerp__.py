@@ -11,7 +11,7 @@
 This module adds issue menu and features to your portal if project_issue and portal are installed.
 ==================================================================================================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['project_issue','portal', 'website'],
     'data': [
         'security/portal_security.xml',

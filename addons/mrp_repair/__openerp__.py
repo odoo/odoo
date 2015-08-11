@@ -19,7 +19,7 @@ The following topics should be covered by this module:
     * Repair quotation report
     * Notes for the technician and for the final customer
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['mrp', 'sale', 'account'],
     'website': 'https://www.odoo.com/page/manufacturing',
     'data': [

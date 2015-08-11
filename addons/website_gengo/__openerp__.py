@@ -11,7 +11,7 @@ Website Gengo Translator
 
 Translate you website in one click
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': [
         'website',
         'base_gengo'

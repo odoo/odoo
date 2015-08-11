@@ -9,7 +9,7 @@
     'description': """
 Ask questions, get answers, no distractions
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/community-builder',
     'depends': [
         'auth_signup',

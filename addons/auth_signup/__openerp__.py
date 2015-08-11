@@ -7,7 +7,7 @@
 Allow users to sign up and reset their password
 ===============================================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'version': '1.0',
     'category': 'Authentication',
     'website': 'https://www.odoo.com',

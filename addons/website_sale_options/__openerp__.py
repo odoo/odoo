@@ -8,7 +8,7 @@ OpenERP E-Commerce
 ==================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_sale'],
     'data': [
         'views/views.xml',

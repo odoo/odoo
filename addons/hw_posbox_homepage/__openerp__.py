@@ -21,7 +21,7 @@ If you activate this module, you won't be able to access the
 regular openerp interface anymore. 
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['hw_proxy'],
     'installable': False,
     'auto_install': False,

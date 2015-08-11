@@ -11,8 +11,8 @@ A module that adds intrastat reports.
 
 This module gives the details of the goods traded between the countries of
 European Union.""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
+    'author': 'Odoo SA',
+    'website': 'http://www.odoo.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
     'data': [
         'security/ir.model.access.csv',

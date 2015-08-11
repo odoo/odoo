@@ -9,7 +9,7 @@
     'description': """
 Documentation based on question and pertinent answers of Forum
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': [
         'website_forum'
     ],

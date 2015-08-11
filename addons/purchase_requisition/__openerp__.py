@@ -2,7 +2,7 @@
 {
     'name': 'Purchase Requisitions',
     'version': '0.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Purchase Management',
     'website': 'https://www.odoo.com/page/purchase',
     'description': """

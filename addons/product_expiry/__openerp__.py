@@ -2,7 +2,7 @@
 {
     'name' : 'Products Expiry Date',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
+    'author' : 'Odoo SA',
     'category' : 'Specific Industry Applications',
     'website': 'https://www.odoo.com',
     'depends' : ['stock'],

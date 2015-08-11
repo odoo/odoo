@@ -5,7 +5,7 @@
 {
     'name': 'Products & Pricelists',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Sales Management',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
     'demo': [

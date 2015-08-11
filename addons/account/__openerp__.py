@@ -3,7 +3,7 @@
 {
     'name' : 'Invoicing',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
+    'author' : 'Odoo SA',
     'summary': 'Send Invoices and Track Payments',
     'sequence': 4,
     'description': """

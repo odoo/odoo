@@ -10,7 +10,7 @@ OpenERP Website CMS
 ===================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['web', 'web_editor', 'web_planner'],
     'installable': True,
     'data': [

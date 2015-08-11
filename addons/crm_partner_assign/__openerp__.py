@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This is the module used by OpenERP SA to redirect customers to its partners, based on geolocation.
+This is the module used by Odoo SA to redirect customers to its partners, based on geolocation.
 ======================================================================================================
 
 This modules lets you geolocate Leads, Opportunities and Partners based on their address.
@@ -15,7 +15,7 @@ This modules lets you geolocate Leads, Opportunities and Partners based on their
 Once the coordinates of the Lead/Opportunity is known, they can be automatically assigned
 to an appropriate local partner, based on the distance and the weight that was assigned to the partner.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['base_geolocalize', 'crm', 'account', 'portal'],
     'data': [
         'security/ir.model.access.csv',

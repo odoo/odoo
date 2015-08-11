@@ -8,7 +8,7 @@ Our Team Page
 =============
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website', 'hr'],
     'demo': [
         'data/website_hr_demo.xml',

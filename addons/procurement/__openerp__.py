@@ -5,7 +5,7 @@
 {
     'name' : 'Procurements',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
+    'author' : 'Odoo SA',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category' : 'Hidden/Dependency',
     'depends' : ['base', 'product'],

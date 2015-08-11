@@ -18,7 +18,7 @@ that product, you will be able to choose an existing event of that category and
 when you confirm your sale order it will automatically create a registration for
 this event.
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['event', 'sale_crm'],
     'data': [
         'views/event.xml',

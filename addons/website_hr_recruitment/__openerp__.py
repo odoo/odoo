@@ -8,7 +8,7 @@ OpenERP Contact Form
 ====================
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_partner', 'hr_recruitment', 'website_mail'],
     'data': [
         'security/ir.model.access.csv',

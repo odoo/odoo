@@ -18,7 +18,7 @@ Adds support for:
 - agenda
 - call for proposals
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_event', 'website_blog'],
     'data': [
         'data/event_data.xml',

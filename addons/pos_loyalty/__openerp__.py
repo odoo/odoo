@@ -17,7 +17,7 @@ the point of sale, where the customers earn loyalty points
 and get rewards.
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['point_of_sale'],
     'data': [
         'views/views.xml',

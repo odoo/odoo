@@ -20,7 +20,7 @@ It supports different kind of members:
 It is integrated with sales and accounting to allow you to automatically
 invoice and send propositions for membership renewal.
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['base', 'product', 'account'],
     'data': [
         'security/ir.model.access.csv',

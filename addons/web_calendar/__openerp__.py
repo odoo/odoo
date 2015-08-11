@@ -6,7 +6,7 @@ OpenERP Web Calendar view.
 ==========================
 
 """,
-    'author': 'OpenERP SA, Valentino Lab (Kalysto)',
+    'author': 'Odoo SA, Valentino Lab (Kalysto)',
     'version': '2.0',
     'depends': ['web'],
     'data' : [

@@ -9,7 +9,7 @@
 This module adds the picking wave option in warehouse management.
 =================================================================
     """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock'],
     'data': ['security/ir.model.access.csv',

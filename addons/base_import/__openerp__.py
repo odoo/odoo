@@ -23,7 +23,7 @@ Re-implement openerp's file import system:
 """,
     'category': 'Uncategorized',
     'website': 'https://www.odoo.com',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['web'],
     'installable': True,
     'data': [

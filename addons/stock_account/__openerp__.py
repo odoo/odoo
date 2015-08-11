@@ -4,7 +4,7 @@
 {
     'name': 'WMS Accounting',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'summary': 'Inventory, Logistic, Valuation, Accounting',
     'description': """
 WMS Accounting module

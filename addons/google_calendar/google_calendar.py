@@ -916,7 +916,7 @@ class google_calendar(osv.AbstractModel):
         readonly = '.readonly' if RO else ''
         return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
 
-    def authorize_google_uri(self, cr, uid, from_url='http://www.openerp.com', context=None):
+    def authorize_google_uri(self, cr, uid, from_url='http://www.odoo.com', context=None):
         url = self.pool['google.service']._get_authorize_uri(cr, uid, from_url, self.STR_SERVICE, scope=self.get_calendar_scope(), context=context)
         return url
 

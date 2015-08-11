@@ -4,7 +4,7 @@
 {
     'name': 'Employee Appraisals',
     'version': '0.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Human Resources',
     'sequence': 31,
     'website': 'https://www.odoo.com/page/appraisal',

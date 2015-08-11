@@ -12,7 +12,7 @@ OpenERP Blog
 ============
 
         """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['website_mail', 'website_partner'],
     'data': [
         'data/website_blog_data.xml',

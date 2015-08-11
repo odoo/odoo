@@ -11,7 +11,7 @@ This module adds the 'Margin' on sales order.
 This gives the profitability by calculating the difference between the Unit
 Price and Cost Price.
     """,
-    'author':'OpenERP SA',
+    'author':'Odoo SA',
     'depends':['sale'],
     'demo':['sale_margin_demo.xml'],
     'test': ['test/sale_margin.yml'],

@@ -18,7 +18,7 @@ to open ESC/POS controlled cashdrawers in the point of sale and other modules
 that would need such functionality.
 
 """,
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'depends': ['hw_proxy'],
     'external_dependencies': {
         'python' : ['usb.core','serial','qrcode'],
