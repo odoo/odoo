@@ -976,6 +976,10 @@ class product_product(osv.osv):
         'color': 0,
     }
 
+    _sql_constraints = [
+        ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
+    ]
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
