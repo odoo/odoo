@@ -68,25 +68,6 @@ Administrator</span>]]></field>
             <field eval="10" name="sequence"/>
         </record>
 
-        <!--
-            A group dedicated to the portal users, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_portal" model="res.groups">
-            <field name="name">Portal</field>
-            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual Odoo groups.</field>
-        </record>
-        <!--
-            A group dedicated to the public user only, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_public" model="res.groups">
-            <field name="name">Public</field>
-            <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual Odoo groups.</field>
-        </record>
-
         <!-- Basic fonts family included in PDF standart, will always be in the font list -->
         <record model="res.font" id="base.font_helvetica">
             <field name="name">Helvetica</field>
@@ -117,7 +98,7 @@ Administrator</span>]]></field>
             <field name="login">public</field>
             <field name="password"></field>
             <!-- Avoid auto-including this demo user in any default group -->
-            <field name="groups_id" eval="[(6,0,[ref('base.group_public')])]"/>
+            <field name="groups_id" eval="[(6,0,[])]"/>
             <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
             <field name="partner_id" ref="public_partner"/>
             <field name="active" eval="False"/>
