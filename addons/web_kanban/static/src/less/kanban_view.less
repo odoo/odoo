@@ -1,4 +1,5 @@
 @o-kanban-record-margin: 4px;
+@o-kanban-group-padding: 4px;
 
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
@@ -117,7 +118,7 @@
     }
 
     .o_kanban_quick_create {
-        margin: 0 @o-kanban-record-margin 8px @o-kanban-record-margin;
+        margin: 0 @o-kanban-record-margin @o-kanban-record-margin @o-kanban-record-margin;
         padding: 3px;
         input {
             width: 100%;
@@ -127,18 +128,15 @@
 
     .o_kanban_group {
         .o-flex(0, 0, auto);
-        margin: 0 4px;
+        padding: 0 @o-kanban-group-padding;
         &:not(.o_column_folded) {
-            width: @o-kanban-default-record-width + 2*@o-kanban-record-margin;
+            width: @o-kanban-default-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
         }
 
         .o_kanban_header + .o_kanban_record {
             margin-top: 0;  // no margin top from the first card after kanban_header
         }
 
-    }
-    .o_kanban_group:first-child {
-        margin-left: 0;
     }
 
     &.o_kanban_ungrouped {
@@ -173,14 +171,13 @@
 
     &.o_kanban_grouped {
         min-height: 100%;
-        padding: 0 @odoo-horizontal-padding - @o-kanban-record-margin;
+        padding: 0 @odoo-horizontal-padding - @o-kanban-group-padding - @o-kanban-record-margin;
         .o_kanban_record {
             width: @o-kanban-default-record-width;
-
         }
         &.o_kanban_small_column .o_kanban_group {
             &:not(.o_column_folded) {
-                width: @o-kanban-small-record-width + 2*@o-kanban-record-margin;
+                width: @o-kanban-small-record-width + 2*@o-kanban-group-padding + 2*@o-kanban-record-margin;
                 .o_kanban_record {
                     width: @o-kanban-small-record-width;
                 }
@@ -359,7 +356,7 @@
 
        .o_kanban_header {
             color: white;
-            padding: 0 4px;
+            margin: 0 @o-kanban-record-margin;
             height: 50px;
             line-height: 2.2;
             cursor: move;
