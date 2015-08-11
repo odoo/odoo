@@ -113,15 +113,19 @@
                         <group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="speaker_ids" widget="many2many_tags"/>
-                                <field name="location_id"/>
+                                <field name="partner_id"/>
+                                <field name="partner_name"/>
+                                <field name="partner_email"/>
+                                <field name="partner_phone"/>
                             </group>
                             <group>
+                                <field name="speaker_ids" widget="many2many_tags"/>
                                 <field name="date"/>
                                 <label for="duration"/>
                                 <div>
                                     <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
+                                <field name="location_id"/>
                                 <field name="tag_ids" widget="many2many_tags"/>
                             </group>
                         </group>

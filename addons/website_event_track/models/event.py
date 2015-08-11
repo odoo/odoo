@@ -32,8 +32,12 @@ class event_track(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
 
     name = fields.Char('Title', required=True, translate=True)
-
     user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
+    partner_id = fields.Many2one('res.partner', 'Proposed by')
+    partner_name = fields.Char('Partner Name')
+    partner_email = fields.Char('Partner Email')
+    partner_phone = fields.Char('Partner Phone')
+    partner_biography = fields.Html('Partner Biography')
     speaker_ids = fields.Many2many('res.partner', string='Speakers')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     state = fields.Selection([
@@ -63,6 +67,23 @@ class event_track(models.Model):
     def create(self, vals):
         res = super(event_track, self).create(vals)
         res.message_subscribe(res.speaker_ids.ids)
+        res.event_id.message_post(body="""<h3>%(header)s</h3>
+<ul>
+    <li>%(proposed_by)s</li>
+    <li>%(mail)s</li>
+    <li>%(phone)s</li>
+    <li>%(title)s</li>
+    <li>%(speakers)s</li>
+    <li>%(introduction)s</li>
+</ul>""" % {
+            'header': _('New Track Proposal'),
+            'proposed_by': '<b>%s</b>: %s' % (_('Proposed By'), (res.partner_id.name or res.partner_name or res.partner_email)),
+            'mail': '<b>%s</b>: %s' % (_('Mail'), '<a href="mailto:%s">%s</a>' % (res.partner_email, res.partner_email)),
+            'phone': '<b>%s</b>: %s' % (_('Phone'), res.partner_phone),
+            'title': '<b>%s</b>: %s' % (_('Title'), res.name),
+            'speakers': '<b>%s</b>: %s' % (_('Speakers Biography'), res.partner_biography),
+            'introduction': '<b>%s</b>: %s' % (_('Talk Introduction'), res.description),
+        }, subtype='event.mt_event_track')
         return res
 
     @api.multi
