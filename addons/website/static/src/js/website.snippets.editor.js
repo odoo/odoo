@@ -1060,7 +1060,7 @@
         },
         background: function(type, value, $li) {
             if (value && value.length) {
-                this.$bg.attr("style", 'background-image: url(' + value + '); ' + (this.$bg.attr("style") || '').replace(/background-image:[^;]+;/, ''));
+                this.$bg.attr("style", 'background-image: url(' + value + '); ' + (this.$bg.attr("style") || '').replace(/background-image:[^;]+;?/, ''));
                 this.$bg.addClass("oe_img_bg");
             } else {
                 this.$bg.css("background-image", "");
