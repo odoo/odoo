@@ -2,7 +2,6 @@
 {
     'name': 'Check Writing',
     'version': '1.0',
-    'author': 'Odoo SA',
     'category': 'Generic Modules/Accounting',
     'summary': 'Keep Track of Checks Payments',
     'description': """

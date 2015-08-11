@@ -18,7 +18,6 @@ This module adds several restaurant features to the Point of Sale:
 - Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['point_of_sale'],
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [

@@ -9,7 +9,6 @@ OpenERP Contact Form
 ====================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_partner', 'crm'],
     'data': [
         'data/website_crm_data.xml',

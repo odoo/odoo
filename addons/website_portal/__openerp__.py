@@ -6,7 +6,6 @@
     'description': """
 Allows your customers to manage their account from a beautiful web interface.
         """,
-    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/',
     'depends': [
         'website',

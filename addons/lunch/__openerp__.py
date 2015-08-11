@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 {
-    'author': 'Odoo SA',
     'name': 'Lunch',
     'version': '1.0',
     'depends': ['base', 'web', 'decimal_precision'],

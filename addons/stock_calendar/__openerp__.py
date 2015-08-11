@@ -4,7 +4,6 @@
 {
     'name': 'Calendars on Orderpoints',
     'version': '1.0',
-    'author': 'OpenERP SA',
     'summary': 'Calendars ',
     'description': """
         The stock_calendar module handles minimum stock rules (=orderpoints / reordering rules) differently by

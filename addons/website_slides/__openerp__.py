@@ -15,8 +15,6 @@ Share and Publish Videos, Presentations and Documents'
  * Channel Subscription
  * Supported document types supported: PDF, images, YouTube videos and Google Drive documents)
 """,
-    'author': 'Odoo SA',
-    'website': 'https://www.odoo.com',
     'depends': ['website', 'website_mail','marketing'],
     'data': [
         'view/res_config.xml',

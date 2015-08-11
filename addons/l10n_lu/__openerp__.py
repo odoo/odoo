@@ -24,7 +24,6 @@ Notes:
     * to update the chart of tax template, update tax.xls and run tax2csv.py
 """,
     'author': 'OpenERP SA, ADN, ACSONE SA/NV',
-    'website': 'https://www.odoo.com',
     'depends': ['account', 'base_vat', 'base_iban'],
     'data': [
         # basic accounting data

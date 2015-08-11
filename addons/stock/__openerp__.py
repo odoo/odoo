@@ -4,7 +4,6 @@
 {
     'name': 'inventory Management',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
     'description': """
 Manage multi-warehouses, multi- and structured stock locations

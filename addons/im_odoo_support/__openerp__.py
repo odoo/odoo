@@ -1,6 +1,5 @@
 {
     'name' : 'Odoo Live Support',
-    'author': 'OpenERP SA',
     'version': '1.0',
     'summary': 'Chat with the Odoo collaborators',
     'category': 'Tools',

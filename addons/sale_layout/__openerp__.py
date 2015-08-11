@@ -12,7 +12,6 @@ Manage your sales reports
 With this module you can personnalize the sale order and invoice report with
 separators, page-breaks or subtotals.
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'report'],
     'category': 'Sale',

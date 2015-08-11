@@ -24,7 +24,6 @@ Main Features
 * Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
-    'author': 'Odoo SA',
     'website': 'https://www.odoo.com/page/enterprise-social-network',
     'depends': ['base', 'base_setup'],
     'data': [

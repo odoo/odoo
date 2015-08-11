@@ -3,7 +3,6 @@
     'name': 'Import OFX Bank Statement',
     'category': 'Accounting & Finance',
     'version': '1.0',
-    'author': 'Odoo SA',
     'depends': ['account_bank_statement_import'],
     'description': """
 Module to import OFX bank statements.

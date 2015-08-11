@@ -4,7 +4,6 @@
     'name': 'Import QIF Bank Statement',
     'category': 'Accounting & Finance',
     'version': '1.0',
-    'author': 'Odoo SA',
     'description': '''
 Module to import QIF bank statements.
 ======================================

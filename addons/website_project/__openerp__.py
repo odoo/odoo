@@ -9,7 +9,6 @@ OpenERP Projects
 ================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_mail', 'project'],
     'data': [
         'views/website_project.xml',

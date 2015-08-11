@@ -15,7 +15,6 @@
 Allow cashier to reprint receipts
 
 """,
-    'author': 'Odoo SA',
     'depends': ['point_of_sale'],
     'data': [
         'views/templates.xml',

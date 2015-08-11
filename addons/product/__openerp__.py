@@ -5,14 +5,12 @@
 {
     'name': 'Products & Pricelists',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'category': 'Sales Management',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
     'demo': [
         'product_demo.xml',
         'product_image_demo.xml',
     ],
-    'website': 'https://www.odoo.com',
     'description': """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================

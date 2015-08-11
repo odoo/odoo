@@ -8,7 +8,6 @@ OpenERP Web tips.
 
 """,
     'version': '0.1',
-    'author': 'OpenERP SA',
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',

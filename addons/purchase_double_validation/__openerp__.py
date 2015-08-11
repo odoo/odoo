@@ -6,7 +6,6 @@
     'version' : '1.1',
     'category': 'Purchase Management',
     'depends' : ['base','purchase'],
-    'author' : 'OpenERP SA',
     'description': """
 Double-validation for purchases exceeding minimum amount.
 =========================================================

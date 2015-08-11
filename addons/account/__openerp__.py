@@ -3,7 +3,6 @@
 {
     'name' : 'Invoicing',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',
     'sequence': 4,
     'description': """

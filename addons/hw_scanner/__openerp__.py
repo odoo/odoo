@@ -18,7 +18,6 @@ scanner, and is used by the posbox to provide barcode scanner support to the
 point of sale module. 
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['hw_proxy'],
     'external_dependencies': {'python': ['evdev']},
     'test': [

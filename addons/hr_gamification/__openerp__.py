@@ -3,7 +3,6 @@
 {
     'name': 'HR Gamification',
     'version': '1.0',
-    'author': 'OpenERP SA',
     'category': 'hidden',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['gamification', 'hr'],
