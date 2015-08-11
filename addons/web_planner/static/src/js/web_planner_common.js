@@ -115,13 +115,16 @@ var PlannerDialog = Widget.extend({
         this.set('progress', this.planner.progress); // set progress to trigger initial UI update
     },
     _render_done_page: function (page) {
-        var mark_as_done_button = this.$('.mark_as_done');
+        var mark_as_done_button = this.$('.mark_as_done')
+        var mark_as_done_li = mark_as_done_button.find('i');
         var next_button = this.$('a.btn-next');
         var active_menu = $(page.menu_item).find('span');
         if (page.done) {
             active_menu.addClass('fa-check');
-            mark_as_done_button.removeClass('fa-square-o btn-primary');
-            mark_as_done_button.addClass('fa-check-square-o btn-default');
+            mark_as_done_button.removeClass('btn-primary');
+            mark_as_done_li.removeClass('fa-square-o');
+            mark_as_done_button.addClass('btn-default');
+            mark_as_done_li.addClass('fa-check-square-o');
             next_button.removeClass('btn-default');
             next_button.addClass('btn-primary');
 
@@ -132,8 +135,10 @@ var PlannerDialog = Widget.extend({
             }, 1000);
         } else {
             active_menu.removeClass('fa-check');
-            mark_as_done_button.removeClass('fa-check-square-o btn-default');
-            mark_as_done_button.addClass('fa-square-o btn-primary');
+            mark_as_done_button.removeClass('btn-default');
+            mark_as_done_li.removeClass('fa-check-square-o');
+            mark_as_done_button.addClass('btn-primary');
+            mark_as_done_li.addClass('fa-square-o');
             next_button.removeClass('btn-primary');
             next_button.addClass('btn-default');
         }
@@ -284,7 +289,6 @@ var PlannerDialog = Widget.extend({
             mark_as_done_button.show();
         }
 
-        this.$('.o_planner_title').text(this.currently_shown_page.title);
         this._render_done_page(this.currently_shown_page);
 
         this.planner.data.last_open_page = page_id;
