@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="view_oauth_provider_form">
+<odoo>
+        <record id="view_oauth_provider_form" model="ir.ui.view">
             <field name="name">auth.oauth.provider.form</field>
             <field name="model">auth.oauth.provider</field>
             <field name="arch" type="xml">
@@ -23,8 +22,8 @@
                 </form>
             </field>
         </record>        
-        <record model="ir.ui.view" id="view_oauth_provider_list">
-            <field name="name">auth.oauth.provider.list</field>
+        <record id="view_oauth_provider_tree" model="ir.ui.view">
+            <field name="name">auth.oauth.provider.tree</field>
             <field name="model">auth.oauth.provider</field>
             <field name="arch" type="xml">
                 <tree string="arch">
@@ -34,7 +33,7 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_oauth_provider">
+        <record id="action_oauth_provider" model="ir.actions.act_window">
             <field name="name">Providers</field>
             <field name="res_model">auth.oauth.provider</field>
             <field name="view_type">form</field>
@@ -43,5 +42,4 @@
         <menuitem id="menu_oauth_providers" name="OAuth Providers"
             parent="base.menu_users" sequence="30"
             action="action_oauth_provider" groups="base.group_no_one"/>
-    </data>
-</openerp>
+</odoo>

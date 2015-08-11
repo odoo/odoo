@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from openerp import SUPERUSER_ID
-from openerp.osv import osv
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class ir_configparameter(osv.Model):
+from odoo import models
+
+
+class IrConfigParameter(models.Model):
     _inherit = 'ir.config_parameter'
 
-    def init(self, cr, force=False):
-        super(ir_configparameter, self).init(cr, force=force)
+    def init(self, force=False):
+        super(IrConfigParameter, self).init(force=force)
         if force:
-            IMD = self.pool['ir.model.data']
-            oauth_oe = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'auth_oauth.provider_openerp')
-            dbuuid = self.get_param(cr, SUPERUSER_ID, 'database.uuid')
+            oauth_oe = self.env.ref('auth_oauth.provider_openerp')
+            dbuuid = self.sudo().get_param('database.uuid')
             oauth_oe.write({'client_id': dbuuid})

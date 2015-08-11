@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="view_general_configuration">
-            <field name="name">base.config.settings.oauth</field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">base.config.settings.form.inherit</field>
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
@@ -107,5 +106,4 @@
             </xpath>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

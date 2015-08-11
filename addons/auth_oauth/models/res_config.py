@@ -1,46 +1,51 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
-
 import logging
+
+from odoo import api, fields, models
+
 _logger = logging.getLogger(__name__)
 
-class base_config_settings(osv.TransientModel):
+
+class BaseConfigSettings(models.TransientModel):
     _inherit = 'base.config.settings'
 
-    def get_uri(self, cr, uid, context=None):
-        return "%s/auth_oauth/signin" % (self.pool['ir.config_parameter'].get_param(cr, uid, 'web.base.url', context=context))
+    @api.model
+    def get_uri(self):
+        return "%s/auth_oauth/signin" % (self.env['ir.config_parameter'].get_param('web.base.url'))
 
-    def _get_server_uri(self, cr, uid, ids, name, arg, context=None):
-        return dict.fromkeys(ids, self.get_uri(cr, uid, context))
+    def _compute_server_uri(self):
+        uri = self.get_uri()
+        for setting in self:
+            setting.server_uri_google = uri
 
-    _columns = {
-        'auth_oauth_google_enabled' : fields.boolean('Allow users to sign in with Google'),
-        'auth_oauth_google_client_id' : fields.char('Client ID'),
-        'server_uri_google': fields.function(_get_server_uri, type='char', string='Server uri'),
-        'auth_oauth_tutorial_enabled': fields.boolean('Show tutorial'),
-    }
+    auth_oauth_google_enabled = fields.Boolean(string='Allow users to sign in with Google')
+    auth_oauth_google_client_id = fields.Char(string='Client ID')
+    server_uri_google = fields.Char(compute='_compute_server_uri', string='Server uri')
+    auth_oauth_tutorial_enabled = fields.Boolean(string='Show tutorial')
 
-    def default_get(self, cr, uid, fields, context=None):
-        res = super(base_config_settings, self).default_get(cr, uid, fields, context=context)
-        res.update(self.get_oauth_providers(cr, uid, fields, context=context))
-        return res
+    @api.model
+    def default_get(self, fields):
+        settings = super(BaseConfigSettings, self).default_get(fields)
+        settings.update(self.get_oauth_providers(fields))
+        return settings
 
-    def get_oauth_providers(self, cr, uid, fields, context=None):
-        google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
-        rg = self.pool.get('auth.oauth.provider').read(cr, uid, [google_id], ['enabled','client_id'], context=context)
+    @api.model
+    def get_oauth_providers(self, fields):
+        google_provider = self.env.ref('auth_oauth.provider_google')
         return {
-            'auth_oauth_google_enabled': rg[0]['enabled'],
-            'auth_oauth_google_client_id': rg[0]['client_id'],
-            'server_uri_google': self.get_uri(cr, uid, context)
+            'auth_oauth_google_enabled': google_provider.enabled,
+            'auth_oauth_google_client_id': google_provider.client_id,
+            'server_uri_google': self.get_uri()
         }
 
-    def set_oauth_providers(self, cr, uid, ids, context=None):
-        google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
-        config = self.browse(cr, uid, ids[0], context=context)
+    @api.multi
+    def set_oauth_providers(self):
+        self.ensure_one()
+        google_provider = self.env.ref('auth_oauth.provider_google')
         rg = {
-            'enabled':config.auth_oauth_google_enabled,
-            'client_id':config.auth_oauth_google_client_id,
+            'enabled': self.auth_oauth_google_enabled,
+            'client_id': self.auth_oauth_google_client_id,
         }
-        self.pool.get('auth.oauth.provider').write(cr, uid, [google_id], rg)
+        google_provider.write(rg)
