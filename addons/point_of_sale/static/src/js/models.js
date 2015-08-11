@@ -201,7 +201,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type'],
+        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -211,7 +211,7 @@ exports.PosModel = Backbone.Model.extend({
             });
             _.each(self.taxes_by_id, function(tax) {
                 tax.child_taxes = {};
-                _.each(tax.child_ids, function(child_tax_id) {
+                _.each(tax.children_tax_ids, function(child_tax_id) {
                     tax.child_taxes[child_tax_id] = self.taxes_by_id[child_tax_id];
                 });
             });
@@ -1296,11 +1296,11 @@ exports.Orderline = Backbone.Model.extend({
         }
         _(taxes).each(function(tax) {
             if (tax.amount_type === 'group'){
-                var ret = self.compute_all(tax.children_tax_ids, price_unit, quantity, currency_rounding);
+                var ret = self.compute_all(tax.child_taxes, price_unit, quantity, currency_rounding);
                 total_excluded = ret.total_excluded;
                 base = ret.total_excluded;
                 total_included = ret.total_included;
-                list_taxes.concat(ret.taxes)
+                list_taxes = list_taxes.concat(ret.taxes);
             }
             else {
                 var tax_amount = self._compute_all(tax, price_unit, quantity);
