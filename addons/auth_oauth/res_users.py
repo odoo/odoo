@@ -99,6 +99,7 @@ class res_users(osv.Model):
         #   continue with the process
         access_token = params.get('access_token')
         validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+
         # required check
         if not validation.get('user_id'):
             # Workaround: facebook does not send 'user_id' in Open Graph Api
