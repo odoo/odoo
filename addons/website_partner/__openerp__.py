@@ -7,7 +7,6 @@
     'summary': 'Partner Module for Website',
     'version': '0.1',
     'description': """Base module holding website-related stuff for partner model""",
-    'author': 'OpenERP SA',
     'depends': ['website'],
     'data': [
         'views/res_partner_view.xml',

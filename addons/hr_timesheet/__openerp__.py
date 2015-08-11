@@ -20,7 +20,6 @@ Lots of reporting on time and employee tracking are provided.
 It is completely integrated with the cost accounting module. It allows you to set
 up a management by affair.
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['account', 'hr', 'base', 'hr_attendance'],
     'data': [

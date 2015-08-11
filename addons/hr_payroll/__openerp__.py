@@ -19,7 +19,6 @@ Generic Payroll system.
     * Monthly Payroll Register
     * Integrated with Holiday Management
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr',

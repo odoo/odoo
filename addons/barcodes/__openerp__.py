@@ -24,7 +24,6 @@ It provides the following features:
 - Definition of barcode aliases that allow to identify the same product with different barcodes
 - Support for encodings EAN-13, EAN-8 and UPC-A
 """,
-    'author': 'Odoo SA',
     'depends': ['web'],
     'data': [
         'data/barcodes_data.xml',

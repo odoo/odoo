@@ -11,7 +11,6 @@
 Add timesheet support on issue in the frontend.
 ==================================================================================================
     """,
-    'author': 'OpenERP SA',
     'depends': ['website_project_issue', 'project_issue_sheet'],
     'data': [
         'views/project_issue_templates.xml',

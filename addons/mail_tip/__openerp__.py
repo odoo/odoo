@@ -8,7 +8,6 @@ OpenERP link module for web tips.
 
 """,
     'version': '0.1',
-    'author': 'OpenERP SA',
     'depends': ['web_tip', 'mail'],
     'data': [
         'views/mail_tip.xml',

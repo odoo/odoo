@@ -3,7 +3,6 @@
     'name' : 'Instant Messaging',
     'version': '1.0',
     'summary': 'Chat between users',
-    'author': 'Odoo SA',
     'sequence': '18',
     'category': 'Tools',
     'complexity': 'easy',

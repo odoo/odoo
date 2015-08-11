@@ -9,7 +9,6 @@
 This module display project customer satisfaction on your website.
 ==================================================================================================
     """,
-    'author': 'Odoo SA',
     'depends': [
         'website_project_issue',
         'rating_project_issue'

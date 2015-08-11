@@ -11,7 +11,6 @@
 This module adds project issues inside your account's page on website if project_issue and website_portal are installed.
 ==================================================================================================
     """,
-    'author': 'OpenERP SA',
     'depends': ['project_issue', 'website_portal'],
     'data': [
         'security/portal_security.xml',

@@ -2,7 +2,6 @@
 {
     'name': 'Check Printing Base',
     'version': '1.0',
-    'author': 'Odoo SA',
     'category': 'Hidden/Dependency',
     'summary': 'Check printing commons',
     'description': """

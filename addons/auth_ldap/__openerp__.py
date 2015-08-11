@@ -4,7 +4,6 @@
     'name' : 'Authentication via LDAP',
     'version' : '1.0',
     'depends' : ['base'],
-    'author' : 'OpenERP SA',
     #'description': < auto-loaded from README file
     'website' : 'https://www.odoo.com',
     'category' : 'Authentication',

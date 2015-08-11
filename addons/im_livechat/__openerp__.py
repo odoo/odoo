@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 {
     'name' : 'Live Chat',
-    'author': 'Odoo SA',
     'version': '1.0',
     'summary': 'Live Chat with Visitors/Customers',
     'category': 'Tools',

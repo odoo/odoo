@@ -5,7 +5,6 @@
     'summary': 'Help to configure application',
     'version': '1.0',
     'description': """Application Planner""",
-    'author': 'Odoo SA',
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',

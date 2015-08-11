@@ -12,7 +12,6 @@ OpenERP Blog
 ============
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_mail', 'website_partner'],
     'data': [
         'data/website_blog_data.xml',

@@ -25,7 +25,6 @@ Dashboard / Reports for Purchase Management will include:
 * Receipt Analysis
 * Purchase Analysis
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['stock_account', 'report', 'web_tip'],
     'data': [

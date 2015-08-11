@@ -28,7 +28,6 @@ Main Features
 * Allows the user to create an invoice automatically
 * Refund previous sales
     """,
-    'author': 'OpenERP SA',
     'depends': ['sale_stock', 'barcodes'],
     'data': [
         'data/report_paperformat.xml',

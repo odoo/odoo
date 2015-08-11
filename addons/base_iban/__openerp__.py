@@ -11,8 +11,6 @@ This module installs the base for IBAN (International Bank Account Number) bank 
 The ability to extract the correctly represented local accounts from IBAN accounts
 with a single statement.
     """,
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com',
     'depends': ['account_accountant'],
     'demo': ['demo/iban_demo.xml'],
     'installable': True,
