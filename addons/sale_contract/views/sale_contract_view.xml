@@ -242,7 +242,7 @@
             <field name="model">account.analytic.account</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree toolbar="1" colors="grey:state=='close';" string="Analytic Accounts">
+                <tree toolbar="1" decoration-muted="state=='close'" string="Analytic Accounts">
                     <field name="complete_name"/>
                     <field name="manager_id"/>
                     <field name="contract_type"/>

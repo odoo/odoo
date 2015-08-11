@@ -667,7 +667,7 @@
             <field name="name">crm.lead.next.activity.tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Next Activity" create="false" colors="red:date_action and (date_action &lt; current_date)" default_order="date_action">
+                <tree string="Next Activity" create="false" decoration-danger="date_action and (date_action &lt; current_date)" default_order="date_action">
                     <field name="name"/>
                     <field name="date_action"/>
                     <field name="next_activity_id"/>

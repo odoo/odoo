@@ -25,7 +25,7 @@
             <field name="name">account.supplier.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state=='draft'; #707070:state=='sent'; #A0A0A0:state=='reconciled'" edit="false">
+                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>

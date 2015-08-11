@@ -974,18 +974,30 @@ Tree views can take supplementary attributes to further customize their
 behavior:
 
 ``colors``
-    mappings of colors to conditions. If the condition evaluates to ``True``,
-    the corresponding color is applied to the row:
+    .. deprecated:: 9.0
+        replaced by ``decoration-{$name}``
+
+``decoration-{$name}``
+    allow changing the style of a row's text based on the corresponding
+    record's attributes.
+
+    Values are Python expressions. For each record, the expression is evaluated
+    with the record's attributes as context values and if ``true``, the
+    corresponding style is applied to the row. Other context values are
+    ``uid`` (the id of the current user) and ``current_date`` (the current date
+    as a string of the form ``yyyy-MM-dd``).
+
+    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 
     .. code-block:: xml
 
-        <tree string="Idea Categories" colors="blue:state=='draft';red:state=='trashed'">
+        <tree string="Idea Categories" decoration-info="state=='draft'"
+            decoration-danger="state=='trashed'">
             <field name="name"/>
             <field name="state"/>
         </tree>
-
-    Clauses are separated by ``;``, the color and condition are separated by
-    ``:``.
 
 ``editable``
     Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
