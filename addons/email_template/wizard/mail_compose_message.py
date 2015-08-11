@@ -68,6 +68,8 @@ class mail_compose_message(osv.TransientModel):
             also have to be duplicated to avoid changing their ownership. """
         email_context = dict(context or {})
         for wizard in self.browse(cr, uid, ids, context=context):
+            if wizard.template_id:
+                email_context['mail_notify_user_signature'] = False  # template user_signature is added when generating body_html
             if not wizard.attachment_ids or wizard.composition_mode == 'mass_mail' or not wizard.template_id:
                 continue
             template = self.pool.get('email.template').browse(cr, uid, wizard.template_id, context=context)

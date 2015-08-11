@@ -151,9 +151,10 @@ class mail_notification(osv.Model):
         body_html = msg.body
         # if quote_context:
             # body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
-        signature = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].signature or ''
-        if signature:
-            body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
+        if context.get('mail_notify_user_signature', True):
+            signature = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].signature or ''
+            if signature:
+                body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
 
         # email_from: partner-user alias or partner email or mail.message email_from
         if 'email_from' in context:
