@@ -1464,4 +1464,13 @@
     </div>
 </t>
 
+<t t-name="translation-alert">
+    <t t-foreach="fields" t-as="field">
+        <div>
+            You have updated <strong><t t-esc="field.string"/></strong> (<t t-esc="lang"/>).
+            <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
+        </div>
+    </t>
+</t>
+
 </templates>

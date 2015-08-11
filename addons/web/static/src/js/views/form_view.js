@@ -905,6 +905,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     if (!self.datarecord.id) {
                         // Creation save
                         save_deferral = self.dataset.create(values, {readonly_fields: readonly_values}).then(function(r) {
+                            self.display_translation_alert(values);
                             return self.record_created(r, prepend_on_create);
                         }, null);
                     } else if (_.isEmpty(values)) {
@@ -913,6 +914,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     } else {
                         // Write save
                         save_deferral = self.dataset.write(self.datarecord.id, values, {readonly_fields: readonly_values}).then(function(r) {
+                            self.display_translation_alert(values);
                             return self.record_saved(r);
                         }, null);
                     }
@@ -1071,6 +1073,32 @@ var FormView = View.extend(common.FieldManagerMixin, {
     },
     sidebar_eval_context: function () {
         return $.when(this.build_eval_context());
+    },
+    /*
+     * Show a warning message if the user modified a translated field.  For each
+     * field, the notification provides a link to edit the field's translations.
+     */
+    display_translation_alert: function(values) {
+        if (_t.database.multi_lang) {
+            var alert_fields = _.filter(this.translatable_fields, function(field) {
+                return _.has(values, field.name)
+            });
+            if (alert_fields.length) {
+                var $content = $(QWeb.render('translation-alert', {
+                        fields: alert_fields,
+                        lang: _t.database.parameters.name
+                    }));
+                // bind click event on "Update translations" links
+                $content.find('.oe_field_translate').click(function(ev) {
+                    ev.preventDefault();
+                    _.find(alert_fields, {'name': ev.target.name}).on_translate();
+                });
+                // show notification
+                this.once('to_view_mode', this, function () {
+                    this.notify_in_form($content);
+                });
+            }
+        }
     },
     /**
      * Add a notification box inside the form. The notification automatically

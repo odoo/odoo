@@ -648,8 +648,8 @@ class WebClient(http.Controller):
         ids = res_lang.search(request.cr, uid, [("code", "=", lang)])
         lang_params = None
         if ids:
-            lang_params = res_lang.read(request.cr, uid, ids[0], ["direction", "date_format", "time_format",
-                                                "grouping", "decimal_point", "thousands_sep"])
+            lang_params = res_lang.read(request.cr, uid, ids[0],
+                ["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
