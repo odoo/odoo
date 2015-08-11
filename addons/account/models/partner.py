@@ -30,6 +30,12 @@ class AccountFiscalPosition(models.Model):
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Integer(string='Zip Range From', default=0)
     zip_to = fields.Integer(string='Zip Range To', default=0)
+    # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
+    states_count = fields.Integer(compute='_compute_states_count')
+
+    @api.one
+    def _compute_states_count(self):
+        self.states_count = len(self.country_id.state_ids)
 
     @api.one
     @api.constrains('zip_from', 'zip_to')
@@ -104,6 +110,7 @@ class AccountFiscalPosition(models.Model):
         if self.country_id:
             self.zip_from = self.zip_to = self.country_group_id = False
             self.state_ids = [(5,)]
+            self.states_count = len(self.country_id.state_ids)
 
     @api.onchange('country_group_id')
     def _onchange_country_group_id(self):
