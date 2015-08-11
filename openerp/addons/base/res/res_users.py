@@ -767,7 +767,7 @@ class groups_view(osv.osv):
             xml1.append(E.separator(string=_('Application'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application(cr, uid, context):
                 # hide groups in category 'Hidden' (except to group_no_one)
-                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
+                attrs = {'groups': 'base.group_no_one'} if app and app.xml_id in ['base.module_category_hidden', 'base.module_category_extra'] else {}
                 if kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(map(int, gs))
@@ -776,7 +776,8 @@ class groups_view(osv.osv):
                 else:
                     # application separator with boolean fields
                     app_name = app and app.name or _('Other')
-                    xml2.append(E.separator(string=app_name, colspan="4", **attrs))
+                    if not app or app.xml_id != 'base.module_category_extra':
+                        xml2.append(E.separator(string=app_name, colspan="4", **attrs))
                     for g in gs:
                         field_name = name_boolean_group(g.id)
                         xml2.append(E.field(name=field_name, **attrs))

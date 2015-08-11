@@ -18,7 +18,6 @@ Contains the installer for marketing-related modules.
         'marketing_view.xml',
         'res_config_view.xml',
     ],
-    'demo': ['marketing_demo.xml'],
     'installable': True,
     'auto_install': False,
 }
