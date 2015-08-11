@@ -60,6 +60,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <form method="post" action="/website_payment/delete/">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <div class="form-group">
                                     <select name="delete_pm_id" class="form-control" >
                                         <t t-foreach="pms" t-as="pm">

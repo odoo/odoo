@@ -4,7 +4,7 @@ import json
 from openerp.http import Controller, route
 
 class ImportController(Controller):
-    @route('/base_import/set_file')
+    @route('/base_import/set_file', methods=['POST'])
     def set_file(self, req, file, import_id, jsonp='callback'):
         import_id = int(import_id)
 

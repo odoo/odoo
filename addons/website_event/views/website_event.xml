@@ -379,6 +379,7 @@
 <!-- Registration Templates -->
 <template id="registration_template">
     <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <table itemprop="offers" class="table table-striped">
             <thead>
                 <tr>
@@ -428,6 +429,7 @@
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>

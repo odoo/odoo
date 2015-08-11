@@ -846,6 +846,7 @@
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
                             <form action="/website/reset_templates" method="post" id="reset_templates_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <ul class="oe_template_fallback">
                                     <li t-foreach="views" t-as="view">
                                         <label>
