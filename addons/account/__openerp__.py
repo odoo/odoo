@@ -48,6 +48,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',
         'views/account_journal_dashboard_view.xml',
+        'views/report_overdue.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

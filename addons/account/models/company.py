@@ -34,6 +34,12 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account')
+    overdue_msg = fields.Text(string='Overdue Payments Message', default='''Dear Sir/Madam,
+Our records indicate that some payments on your account are still due. Please find details below.
+If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.
+If you have any queries regarding your account, Please contact us.
+Thank you in advance for your cooperation.
+Best Regards,''')
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
