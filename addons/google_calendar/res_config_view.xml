@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="base_setup.view_general_configuration"/>
             <field name="arch" type="xml">
                 <div name="google_calendar" position="replace">
-                    <div name="google_calendar">
+                    <div name="google_calendar" id='top'>
                         <label for="google_cal_sync"/>
                         <field name="google_cal_sync"/>
                         <div attrs="{'invisible':[('google_cal_sync','=',False)]}">
@@ -42,7 +42,7 @@
                                 <li>Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!
                                     <br/><br/> <img src='/google_calendar/static/src/img/setup_08.png' class='calendar_img_tuto'/>
                                 </li>
-                                <a href="#" class="oe_link">Return at Top</a>                                       
+                                <a href="#top" class="oe_link">Return at Top</a>                                       
                             </ul>
                         </div>
 
