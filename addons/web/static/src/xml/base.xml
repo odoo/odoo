@@ -412,12 +412,20 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
+        <div class="oe_list_buttons">
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
+            <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
+                Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
+                Discard
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -453,16 +461,6 @@
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
-            Discard
-        </button>
-    </t>
-</t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
