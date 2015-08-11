@@ -316,6 +316,7 @@ class BaseModel(object):
     _description = None
     _needaction = False
     _translate = True # set to False to disable translations export for this model
+    _copy = True  # set to False to disable copy into a model
 
     # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
@@ -4833,6 +4834,8 @@ class BaseModel(object):
         :returns: new record
 
         """
+        if not self._copy:
+            raise Warning(_('You cannot duplicate this element!'))
         if context is None:
             context = {}
         context = context.copy()

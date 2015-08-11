@@ -836,6 +836,7 @@ class survey_user_input(osv.Model):
     _name = "survey.user_input"
     _rec_name = 'date_create'
     _description = 'Survey User Input'
+    _copy = False
 
     def _quizz_get_score(self, cr, uid, ids, name, args, context=None):
         ret = dict()
@@ -894,10 +895,6 @@ class survey_user_input(osv.Model):
         ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
-
     def do_clean_emptys(self, cr, uid, automatic=False, context=None):
         ''' Remove empty user inputs that have been created manually
             (used as a cronjob declared in data/survey_cron.xml) '''
@@ -945,6 +942,7 @@ class survey_user_input_line(osv.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
     _rec_name = 'date_create'
+    _copy = False
 
     def _answered_or_skipped(self, cr, uid, ids, context=None):
         for uil in self.browse(cr, uid, ids, context=context):
@@ -1025,10 +1023,6 @@ class survey_user_input_line(osv.Model):
         if value_suggested:
             vals.update({'quizz_mark': self.__get_mark(cr, uid, value_suggested)})
         return super(survey_user_input_line, self).write(cr, uid, ids, vals, context=context)
-
-    def copy_data(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('You cannot duplicate this \
-            element!'))
 
     def save_lines(self, cr, uid, user_input_id, question, post, answer_tag,
                    context=None):
