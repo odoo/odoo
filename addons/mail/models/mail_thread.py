@@ -346,6 +346,9 @@ class MailThread(models.AbstractModel):
                         ('res_model', 'in', [False, self._name]),
                         ('internal', '=', True)], ['name', 'description', 'sequence'])
                     options['internal_subtypes'] = internal_subtypes
+                # emoji list
+                options['emoji_list'] = self.env['mail.shortcode'].search([('shortcode_type', '=', 'image')]).read(['source', 'description', 'substitution'])
+                # save options on the node
                 node.set('options', json.dumps(options))
             res['arch'] = etree.tostring(doc)
         return res
@@ -1855,9 +1858,9 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def message_set_read(self):
-        # Nothing done here currently. Will be implemented with the final
-        # slack modeling.
-        return True
+        messages = self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('needaction', '=', True)])
+        messages.write({'needaction_partner_ids': [(3, self.env.user.partner_id.id)]})
+        return messages.ids
 
     @api.multi
     def message_change_thread(self, new_thread):

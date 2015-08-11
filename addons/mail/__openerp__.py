@@ -25,7 +25,7 @@ Main Features
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'website': 'https://www.odoo.com/page/enterprise-social-network',
-    'depends': ['base', 'base_setup'],
+    'depends': ['base', 'base_setup', 'bus'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
@@ -40,7 +40,7 @@ Main Features
         'views/res_config_views.xml',
         'data/mail_data.xml',
         'data/mail_channel_data.xml',
-        'data/mail_shortcode.xml',
+        'data/mail_shortcode_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
         'views/mail_alias_views.xml',
@@ -60,7 +60,10 @@ Main Features
     'application': True,
     'qweb': [
         'static/src/xml/mail.xml',
+        'static/src/xml/mail_thread.xml',
+        'static/src/xml/mail_chatter.xml',
         'static/src/xml/mail_chat_common.xml',
+        'static/src/xml/mail_chat_backend.xml',
         'static/src/xml/mail_followers.xml',
         'static/src/xml/announcement.xml',
     ],

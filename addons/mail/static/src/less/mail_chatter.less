@@ -1,0 +1,54 @@
+
+.o_mail_chatter{
+    /* Layout for chatter header (buttons and compose message) */
+    .o_mail_chatter_compose_buttons, .o_mail_chatter_compose_message_wrap{
+        padding-left:15px;
+        margin-bottom:20px;
+        //background-color: lightGrey;
+    }
+
+    /* Specific message style for chatter */
+    .o_mail_chatter_messages{
+
+        .o_mail_thread_message{
+            .o_mail_thread_message_type_comment{ // message comment
+                &:not(.o_mail_thread_message_subtype_note){
+                    background-color: white;
+                    box-shadow: 0px 1px #CACACA;
+                }
+            }
+            .o_mail_thread_message_type_email{ // message email
+                background-color: white;
+                box-shadow: 0px 1px #CACACA;
+            }
+            .o_mail_thread_message_type_notification{ // message notification
+
+            }
+        }
+
+        .o_mail_thread_date_separator{
+            .o_mail_thread_date_wrapper {
+                height: 20px;
+                .o_mail_thread_date_separator_title {
+                    text-align: center;
+                    font-weight: bold;
+                    color: @gray-light;
+                }
+            }
+        }
+    }
+    .o_mail_chatter_show_more_message{
+        text-align: center;
+        cursor: pointer;
+    }
+
+}
+
+
+.o_mail_chatter_compose_message{
+    .o_mail_chatter_compose_message_suggested_partners label{
+        vertical-align: middle;
+        display: block;
+        line-height: 14px;
+    }
+}

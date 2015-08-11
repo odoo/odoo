@@ -248,12 +248,12 @@ class Message(models.Model):
                     tracking_value_ids.append(tracking_tree[tracking_value.id])
 
             message_dict.update({
-                'is_author': pid == author[0],
+                #'is_author': pid == author[0],
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
-                'user_pid': pid
+                #'user_pid': pid
                 })
 
         return True
@@ -281,7 +281,8 @@ class Message(models.Model):
                 'record_name': self.record_name,
                 'subject': self.subject,
                 'date': self.date,
-                'needaction': self.needaction,
+                #'needaction': self.needaction, JEM : not used.
+                'needaction_partner_ids': self.needaction_partner_ids.ids,
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
@@ -291,12 +292,13 @@ class Message(models.Model):
                 'is_favorite': self.starred,
                 'attachment_ids': [],
                 'tracking_value_ids': [],
+                'channel_ids': self.channel_ids.ids,
             }
 
     @api.cr_uid_context
     def message_read_wrapper(self, cr, uid, ids=None, domain=None, context=None,
                              thread_level=0, parent_id=False, limit=None, child_limit=None):
-        return self.message_read(cr, uid, ids, domain=domain, thread_level=thread_level, context=context, 
+        return self.message_read(cr, uid, ids, domain=domain, thread_level=thread_level, context=context,
                                  parent_id=parent_id, limit=limit, child_limit=child_limit)
 
     @api.multi
@@ -308,7 +310,7 @@ class Message(models.Model):
             well formed threads, if uid has access to them.
 
             After reading the messages, expandable messages are added in the
-            message list. It consists in messages holding the 'read more' data: 
+            message list. It consists in messages holding the 'read more' data:
             number of messages to read, domain to apply.
 
             :param list ids: optional IDs to fetch
@@ -320,7 +322,7 @@ class Message(models.Model):
             :param int limit: number of messages to fetch, before adding the
                 ancestors and expandables
             :param int child_limit: number of child messages to fetch
-            :return dict: 
+            :return dict:
                 - int: number of messages read (status 'unread' to 'read')
                 - list: list of threads [[messages_of_thread1], [messages_of_thread2]]
         """
@@ -397,7 +399,7 @@ class Message(models.Model):
                            'nb_messages': more_count,
                            'parent_id': parent}
 
-                    if parent and thread_level: 
+                    if parent and thread_level:
                         #insert expandable before parent message
                         parent_tree[parent].insert(len(parent_tree[parent])-1, exp)
                     else:
@@ -408,7 +410,7 @@ class Message(models.Model):
             parent_list = parent_tree.values()
             parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item]), reverse=True)
 
-            #add 'thread' expandable 
+            #add 'thread' expandable
             if thread_level:
                 exp_domain = domain + [('id', '<', min(self.ids)), ('id', 'not in', parent_ids), ('parent_id', 'not in', parent_ids)]
                 more_count = self.search_count(exp_domain)
@@ -419,14 +421,79 @@ class Message(models.Model):
                                         'parent_id': parent_id}])
 
             nb_read = 0
-            if context and 'mail_read_set_read' in context and context['mail_read_set_read']: 
+            if context and 'mail_read_set_read' in context and context['mail_read_set_read']:
                 nb_read = self.set_message_read(True, create_missing=False)
 
         else:
             nb_read = 0
-            parent_list = [] 
+            parent_list = []
 
         return {'nb_read': nb_read, 'threads': parent_list}
+
+
+    @api.model
+    def message_fetch(self, domain, limit=20):
+        return self.search(domain, limit=limit).message_format()
+
+    @api.multi
+    def message_format(self):
+        """ Get the message values in the format for web client. Since message values can be broadcasted,
+            computed fields MUST NOT BE READ and broadcasted.
+            :returns list(dict).
+             Example :
+                {
+                    'body': HTML content of the message
+                    'model': u'res.partner',
+                    'record_name': u'Agrolait',
+                    'attachment_ids': [
+                        {
+                            'file_type_icon': u'webimage',
+                            'id': 45,
+                            'name': u'sample.png',
+                            'filename': u'sample.png'
+                        }
+                    ],
+                    'needaction_partner_ids': [], # list of partner ids
+                    'res_id': 7,
+                    'tracking_value_ids': [
+                        {
+                            'old_value': "",
+                            'changed_field': "Customer",
+                            'id': 2965,
+                            'new_value': "Axelor"
+                        }
+                    ],
+                    'author_id': (3, u'Administrator'),
+                    'author_avatar': .... # base64 of the author avatar
+                    'email_from': 'sacha@pokemon.com' # email address or False
+                    'subtype_id': (1, u'Discussions'),
+                    'channel_ids': [], # list of channel ids
+                    'date': '2015-06-30 08:22:33',
+                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
+                    'message_type': u'comment',
+                    'id': 59,
+                    'subject': False
+                    'is_note': True # only if the subtype is internal
+                }
+        """
+        message_values = self.read([
+            'id', 'body', 'date', 'author_id', 'author_avatar', 'email_from',  # base message fields
+            'message_type', 'subtype_id', 'subject',  # message specific
+            'model', 'res_id', 'record_name',  # document related
+            'channel_ids', 'partner_ids',  # recipients
+            'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
+            'starred_partner_ids',  # list of partner ids for whom the message is starred
+        ])
+        message_tree = dict((m.id, m) for m in self)
+        self._message_read_dict_postprocess(message_values, message_tree)
+
+        # add is_note flag
+        internal_subtype_ids = self.env['mail.message.subtype'].search([('internal', '=', True)]).ids
+        for message in message_values:
+            if message['subtype_id'] and message['subtype_id'][0]:
+                message['is_note'] = bool(message['subtype_id'][0] in internal_subtype_ids)
+        return message_values
+
 
     #------------------------------------------------------
     # mail_message internals
@@ -750,7 +817,9 @@ class Message(models.Model):
         self_sudo = self.sudo()
 
         # TDE CHECK: add partners / channels as arguments to be able to notify a message with / without computation ??
-        self.ensure_one()  # tde: not sure, just for testing, will see
+        self.ensure_one()  # tde: not sure, just for testinh, will see
+        partners = self.env['res.partner'] | self.partner_ids
+        channels = self.env['mail.channel'] | self.channel_ids
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal

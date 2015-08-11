@@ -31,7 +31,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="mail_channel_partner_action" model="ir.actions.act_window">
             <field name="name">Channels/Partner</field>
             <field name="res_model">mail.channel.partner</field>
@@ -97,53 +97,52 @@
             <field name="model">mail.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form string="Group Form">
-                    <sheet class="openerp_mail_channel_sheet">
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_small"}'/>
+                <form string="Mail Channel Form">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name"/>
                             </div>
-                            <h1><field name="name" readonly="0"/></h1>
-                            <group colspan="2" name="group_alias"
-                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
-                                <div name="alias_def">
-                                    <field name="alias_id" class="oe_read_only oe_inline"
-                                            string="Email Alias" required="0"/>
-                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                    </div>
-                                </div>
-                                <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
-                                <field name="alias_contact" class="oe_inline" nolabel="1"/>
-                            </group>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                            </h1>
                         </div>
                         <field name="description" placeholder="Topics discussed in this group..."/>
-                        <div class="oe_clear"/>
-                        <group class="oe_edit_only">
-                            <field name="public" widget="radio" string="Who can follow the group's activities?"/>
-                            <field name="group_public_id"
-                                attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
-                                />
-                            <field name="group_ids" widget="many2many_tags"/>
-                        </group>
-                        <group attrs="{'invisible': [('public', 'not in', ['public', 'private'])]}">
-                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
-                                This group is visible by everyone,
-                                including your customers if you installed
-                                the portal module.
+                        <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
+                            <div name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline"
+                                        string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
                             </div>
-                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
-                                Only the invited followers can read the
-                                discussions on this group.
-                            </div>
+                            <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
+                            <field name="alias_contact" class="oe_inline" nolabel="1"/>
                         </group>
+                        <notebook>
+                            <page string="Privacy">
+                                <group>
+                                    <field name="public" widget="radio" string="Who can follow the group's activities?"/>
+                                    <field name="group_public_id"
+                                        attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                        />
+                                    <field name="group_ids" widget="many2many_tags"/>
+                                </group>
+                            </page>
+                            <page string="Members">
+                                <field name="channel_partner_ids" mode="tree" readonly="1">
+                                    <tree string="members">
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                        <field name="im_status"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
-                    </div>
                 </form>
             </field>
         </record>
@@ -186,6 +185,41 @@
         <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="90"
             name="Channels" action="mail_channel_action_view"
             groups="base.group_no_one"/>
+
+
+
+
+
+    <!-- TODO JEM : SLACK test client action-->
+
+    <record id="mail_channel_action_client_slack" model="ir.actions.client">
+            <field name="name">Chat</field>
+            <field name="tag">mail.chat.instant_messaging</field>
+            <field name="res_model">mail.channel</field>
+            <field name="params" eval="&quot;{
+                'default_active_id': 'channel_inbox'
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    There is no message in this channel.
+                </p><p>
+                    Your "Inbox" contains your "needaction" also known as the messages where you are mentioned, and the messages you get when you follow a document as a person.<br/>
+                    Your "Starred" contains your favorite messages.
+                    <br/><br/>
+                    In the "Channels" section, you will find the public and restricted channel.<br/>
+                    The "Direct Message" allow you to talk directly to one person.<br/>
+                    "Private Group" contains the private group conversation. You need to be invited to this group to see it.
+                </p>
+            </field>
+        </record>
+
+    <menuitem
+        id="mail.mail_channel_menu_root_slack"
+        name="Slack"
+        action="mail_channel_action_client_slack"
+        icon="fa-envelope"
+        groups="base.group_user"
+        sequence="1"/>
 
     </data>
 </openerp>

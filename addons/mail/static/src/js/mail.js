@@ -1167,7 +1167,7 @@ var ComposeMessage = Attachment.extend ({
         var names_to_find = _.pluck(recipients_to_find, 'full_name');
         var recipients_to_check = _.filter(recipients, function (recipient) { return (recipient.partner_id && ! recipient.email_address); });
         var recipient_ids = _.pluck(_.filter(recipients, function (recipient) { return recipient.partner_id && recipient.email_address; }), 'partner_id');
-        
+
         var names_to_remove = [];
         var recipient_ids_to_remove = [];
 
@@ -1236,7 +1236,7 @@ var ComposeMessage = Attachment.extend ({
                 });
             });
         });
-        
+
         return check_done;
     },
 
@@ -1445,10 +1445,10 @@ var ComposeMessageTopButton = Widget.extend({
 });
 
 // Put the ComposeMessageTopButton widget in the systray menu
-SystrayMenu.Items.push(ComposeMessageTopButton);
+//SystrayMenu.Items.push(ComposeMessageTopButton);
 
 core.view_registry.add('timeline', TimelineView);
-core.form_widget_registry.add('mail_thread', TimelineRecordThread);
+//core.form_widget_registry.add('mail_thread', TimelineRecordThread);
 
 return {
     TimelineView: TimelineView,

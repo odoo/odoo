@@ -1,13 +1,12 @@
-odoo.define('im_chat.im_chat_common', function (require) {
+odoo.define('mail.chat_common', function (require) {
 "use strict";
-
-// to do: make this work in website
 
 var bus = require('bus.bus');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
 var Widget = require('web.Widget');
+var mail_utils = require('mail.utils');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -15,140 +14,130 @@ var QWeb = core.qweb;
 var NBR_LIMIT_HISTORY = 20;
 
 
+/**
+ * Widget handeling the sessions/conversations
+ *
+ * Responsible to listen the bus and do the correct action according to the received notifications (fetch
+ * conversation, add message, ...)
+ **/
 var ConversationManager = Widget.extend({
     init: function(parent, options) {
         var self = this;
         this._super(parent);
         this.options = _.clone(options) || {};
         _.defaults(this.options, {
-            inputPlaceholder: _t("Say something..."),
-            defaultMessage: null,
-            defaultUsername: _t("Visitor"),
-            force_open: false,
+            placeholder: _t("Say something..."),
+            default_username: _t("Visitor"),
             load_history: true,
             focus: false,
         });
+        this.emoji_list = [];
         // business
         this.sessions = {};
         this.bus = bus.bus;
         this.bus.on("notification", this, this.on_notification);
-        this.bus.options.im_presence = true;
-
         // ui
         this.set("right_offset", 0);
         this.set("bottom_offset", 0);
         this.on("change:right_offset", this, this.calc_positions);
         this.on("change:bottom_offset", this, this.calc_positions);
 
-        this.set("window_focus", true);
-        this.on("change:window_focus", self, function(e) {
-            self.bus.options.im_presence = self.get("window_focus");
-        });
         this.set("waiting_messages", 0);
         this.on("change:waiting_messages", this, this.window_title_change);
         $(window).on("focus", _.bind(this.window_focus, this));
-        $(window).on("blur", _.bind(this.window_blur, this));
         this.window_title_change();
+        // session widgets deferred (for their creation)
+        this._session_defs = {};
+    },
+    start: function(){
+        var self = this;
+        return $.when(session.rpc("/mail/chat_init"), this._super.apply(this, arguments)).then(function(result){
+            self._setup(result);
+        });
+    },
+    _setup: function(init_data){
+        this.emoji_list = init_data['emoji'];
+        this.options['emoji'] = mail_utils.shortcode_substitution(init_data['emoji']);
     },
     on_notification: function(notification, options) {
         var self = this;
         var channel = notification[0];
         var message = notification[1];
         var regex_uuid = new RegExp(/(\w{8}(-\w{4}){3}-\w{12}?)/g);
+        var is_channel_uuid = regex_uuid.test(channel);
 
-        // Concern im_chat : if the channel is the im_chat.session or im_chat.status, or a 'private' channel (aka the UUID of a session)
-        if((Array.isArray(channel) && (channel[1] === 'im_chat.session')) || (regex_uuid.test(channel))){
-            // message to display in the chatview
-            if (message.type === "message" || message.type === "meta") {
-                self.message_receive(message);
-            }
+        // (dbname, 'res.partner', partner_id) receive only the new mail.channel header
+        if((Array.isArray(channel) && (channel[1] === 'res.partner')) || is_channel_uuid){
             // activate the received session
             if(message.uuid){
-                 this.session_apply(message, options);
+                this.session_apply(message, options);
+            }
+        }
+        // (dbname, 'mail.channel', channel_id) receive only the mail.message of the channel
+        if((Array.isArray(channel) && (channel[1] === 'mail.channel')) || is_channel_uuid){
+            // message to display in the chatview
+            if (message.message_type) {
+                self.message_receive(message);
             }
         }
     },
-
     // window focus unfocus beep and title
     window_focus: function() {
-        this.set("window_focus", true);
         this.set("waiting_messages", 0);
     },
-    window_blur: function() {
-        this.set("window_focus", false);
-    },
     window_beep: function() {
-        if (typeof(Audio) === "undefined") {
-            return;
-        }
-        var audio = new Audio();
-        var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-        audio.src = session.url("/im_chat/static/src/audio/ting") + ext;
-        audio.play();
+        mail_utils.beep(session);
     },
     window_title_change: function() {
         var title = undefined;
         if (this.get("waiting_messages") !== 0) {
-            title = _.str.sprintf(_t("%d Messages"), this.get("waiting_messages"));
             this.window_beep();
         }
     },
-    // sessions and messages
-    session_apply: function(active_session, options){
-        // options used by this function : force_open and focus (load_history can be usefull)
+    // sessions methods
+    session_apply: function(session, options){
+        // options used by this function : focus (load_history can be usefull)
         var self = this;
-        options = _.extend(_.clone(this.options), options || {});
-        // force open
-        var session = _.clone(active_session);
-        if(options['force_open']){
-            session.state = 'open';
-        }
+        options = _.defaults(options || {}, {
+            'focus': true,
+        }, this.options);
         // create/get the conversation widget
-        var conv = this.sessions[session.uuid];
+        var conv = this.sessions[session.id];
         if (! conv) {
             if(session.state !== 'closed'){
-                conv = new Conversation(this, this, session, options);
-                conv.appendTo($("body"));
+                conv = new Conversation(this, session, options);
+                // store this deferred to apply next action (notifications) when it is resolved.
+                this._session_defs[session.id] = conv.appendTo($("body"));
+                this._session_defs[session.id].then(function() {
+                    self.calc_positions();
+                });
                 conv.on("destroyed", this, _.bind(this.session_delete, this));
-                this.sessions[session.uuid] = conv;
-                this.calc_positions();
+                this.sessions[session.id] = conv;
             }
         }else{
-            conv.set("session", session);
-        }
-        // if force open, broadcast it
-        if(options['force_open'] && active_session.state !== 'open'){
-            conv.session_update_state('open');
-        }
-        // apply the focus
-        if (options['focus']){
-            conv.focus();
+            // update the state only when the 'contruction' deferred is resolved.
+            this._session_defs[session.id].then(function(){
+                conv.set('session', session);
+            });
         }
         return conv;
     },
-    session_delete: function(uuid){
-        delete this.sessions[uuid];
+    session_delete: function(channel_id){
+        delete this.sessions[channel_id];
         this.calc_positions();
     },
-    message_receive: function(message) {
+    /**
+     * Adding a message in all its channels
+     * /!\ Suppose the channel are already loaded in the ConversationManager /!\
+     * @param {Object} message : the received message (formatted server side)
+     */
+    message_receive: function(message){
         var self = this;
-        var session_id = message.to_id[0];
-        var uuid = message.to_id[1];
-        var from_id = message['from_id'] ? message['from_id'][0] : false;
-        if (! this.get("window_focus") && from_id != this.get_current_uid()) {
-            this.set("waiting_messages", this.get("waiting_messages") + 1);
-        }
-        this._message_receive(message);
-    },
-    _message_receive: function(message){
-        var uuid = message.to_id[1];
-        var conv = this.sessions[uuid];
-        conv.message_receive(message);
+        _.each(message.channel_ids, function(channel_id){
+            self.sessions[channel_id].message_receive(message);
+        });
     },
     // others
-    get_current_uid: function(){
-        return session && !_.isUndefined(session.uid) ? session.uid : false;
-    },
     calc_positions: function() {
         var self = this;
         var current = this.get("right_offset");
@@ -159,84 +148,72 @@ var ConversationManager = Widget.extend({
         });
     },
     destroy: function() {
-        $(window).off("unload", this.unload);
         $(window).off("focus", this.window_focus);
         $(window).off("blur", this.window_blur);
         return this._super();
     }
 });
 
-
+/**
+ * Widget Conversation
+ *
+ * Display the conversation in a 'portable' window, manage sending and receiving message,
+ * and the fold state of the conversation.
+ **/
 var Conversation = Widget.extend({
-    className: "openerp_style oe_im_chatview",
+    template: "mail.chat.im.Conversation",
     events: {
         "keydown input": "keydown",
-        "click .oe_im_chatview_close": "click_close",
-        "click .oe_im_chatview_header": "click_header"
+        "click .o_mail_chat_im_window_close": "on_click_close",
+        "click .o_mail_chat_im_window_header": "on_click_header"
     },
-    init: function(parent, c_manager, session, options) {
+    init: function(parent, session, options) {
         this._super(parent);
-        this.c_manager = c_manager;
-        this.options = options || {};
-        this.loading_history = true;
+        this.options = _.defaults(options || {}, {
+            'emoji': {},
+            'placeholder': _t('Write something ...'),
+            'loading_history': true,
+            'focus': true,
+        });
         this.set("messages", []);
         this.set("session", session);
+        this.set("pending", 0);
         this.set("right_position", 0);
         this.set("bottom_position", 0);
-        this.set("pending", 0);
-        this.inputPlaceholder = this.options.defaultInputPlaceholder;
+    },
+    willStart: function(){
+        if(this.options.loading_history){
+            return $.when(this.message_history(), this._super.apply(this, arguments));
+        }
+        return this._super.apply(this, arguments);
     },
     start: function() {
         var self = this;
-        self._super.apply(this, arguments);
-        self.prepare_action_menu();
         // ui
-        self.$().append(QWeb.render("im_chat.Conversation", {widget: self}));
         self.on("change:right_position", self, self.calc_pos);
         self.on("change:bottom_position", self, self.calc_pos);
-        self.on("change:pending", self, _.bind(function() {
-            if (self.get("pending") === 0) {
-                self.$(".nbr_messages").text("");
-            } else {
-                self.$(".nbr_messages").text("(" + self.get("pending") + ")");
-            }
-        }, self));
+        self.on("change:pending", self, self.message_pending_change);
+
         self.full_height = self.$().height();
-        self.calc_pos();
-        // business
-        self.bind_action_menu();
-        self.on("change:session", self, self.session_update);
-        self.on("change:messages", self, self.render_messages);
-        self.$('.oe_im_chatview_content').on('scroll',function(){
+        self.$('.o_mail_chat_im_window_content').on('scroll',function(){
             if($(this).scrollTop() === 0){
                 self.message_history();
             }
         });
-        if(self.options['load_history']){ // load history if asked
-            self.message_history();
-        }
-        // prepare the header and the correct state
-        self.session_update();
-    },
-    // action menu
-    _add_action: function(label, style_class, icon_fa_class, callback){
-        this.actions.push({
-            'label': label,
-            'class': style_class,
-            'icon_class': icon_fa_class,
-            'callback': callback,
-        });
-    },
-    prepare_action_menu: function(){
-        // override this method to add action with _add_action()
-        this.actions = [];
-    },
-    bind_action_menu: function(){
-        var self = this;
-        _.each(this.actions, function(action){
-            if(action.callback){
-                self.$('.button_option_group .' + action.class).on('click', _.bind(action.callback, self));
+        // business
+        self.on("change:session", self, self.session_change);
+        self.on("change:messages", self, self.message_render);
+
+        return self._super.apply(this, arguments).then(function(){
+            // place the conversation window correctly on the screen
+            self.calc_pos();
+            // focus if needed
+            if(self.options.focus){
+                self.focus();
             }
+            // re-apply the session to display the correct state
+            self.set('session', _.clone(self.get('session')));
+            self._go_bottom();
         });
     },
     // ui
@@ -248,7 +225,7 @@ var Conversation = Widget.extend({
     },
     hide: function(){
         this.$().animate({
-            height: this.$(".oe_im_chatview_header").outerHeight()
+            height: this.$(".o_mail_chat_im_window_header").outerHeight()
         });
     },
     calc_pos: function() {
@@ -256,21 +233,25 @@ var Conversation = Widget.extend({
         this.$().css("bottom", this.get("bottom_position"));
     },
     // session
-    session_update_state: function(state){
+    /**
+     * Set the fold state LOCALLY for the session. This will
+     * trigger a ui update
+     * @param {string} state : the fold state ('fold', 'closed' or 'open')
+     */
+    session_fold: function(state){
         var session = this.get('session');
         session.state = state;
         this.set('session', session);
     },
-    session_update: function(){
-        // built the name
-        var names = [];
-        _.each(this.get("session").users, function(user){
-            if( (session.uid !== user.id) && !(_.isUndefined(session.uid) && !user.id) ){
-                names.push(user.name);
-            }
-        });
-        this.$(".header_name").text(names.join(", "));
-        this.$(".header_name").attr('title', names.join(", "));
+    /**
+     * Triggered when the session has changed : it update the header name
+     * and fold the window (ui) according to its state.
+     */
+    session_change: function(){
+        // update conversation name in header
+        var name = this.get("session").name || _t('Unknown Channel');
+        this.$(".o_mail_chat_im_window_header_name").text(name);
+        this.$(".o_mail_chat_im_window_header_name").attr('title', name);
         // update the fold state
         if(this.get("session").state){
             if(this.get("session").state === 'closed'){
@@ -285,39 +266,53 @@ var Conversation = Widget.extend({
         }
     },
     // messages
+    /**
+     * Load the history of the current session, and insert it into already loaded messages
+     * @returns {Deferred} resolved with the new loaded messages (Object[])
+     */
     message_history: function(){
         var self = this;
-        if(this.loading_history){
-            var data = {uuid: self.get("session").uuid, limit: NBR_LIMIT_HISTORY};
-            var lastid = _.first(this.get("messages")) ? _.first(this.get("messages")).id : false;
-            if(lastid){
-                data.last_id = lastid;
-            }
-            session.rpc("/im_chat/history", data).then(function(messages){
+        if(this.options.loading_history){
+            var data = {
+                uuid: self.get("session").uuid,
+                limit: NBR_LIMIT_HISTORY,
+                last_id: _.first(this.get("messages")) ? _.first(this.get("messages")).id : false,
+            };
+            return session.rpc("/mail/chat_history", data).then(function(messages){
                 if(messages){
-                    self.insert_messages(messages);
+                    self.message_insert(messages);
                     if(messages.length != NBR_LIMIT_HISTORY){
-                        self.loading_history = false;
+                        self.options.loading_history = false;
                     }
                 }else{
-                    self.loading_history = false;
+                    self.options.loading_history = false;
                 }
+                return messages;
             });
         }
+        return $.Deferred().resolve([]);
     },
     message_receive: function(message) {
-        if (this.get('session').state === 'open') {
-            this.set("pending", 0);
-        } else {
-            this.set("pending", this.get("pending") + 1);
+        // don't add duplicated message (this can happen when refreshing and receiving already recieved
+        // message that are still in the bus queue/buffer).
+        if(!_.contains(_.pluck(this.get('messages'), 'id'), message.id)){
+            // is pending message ?
+            if (this.get('session').state === 'open') {
+                this.set("pending", 0);
+            } else {
+                if(!this.message_am_i_author(message)){
+                    this.set("pending", this.get("pending") + 1);
+                }
+            }
+            // insert it
+            this.message_insert([message]);
+            this._go_bottom();
         }
-        this.insert_messages([message]);
-        this._go_bottom();
     },
-    message_send: function(message, type) {
+    message_send: function(message) {
         var self = this;
         var send_it = function() {
-            return session.rpc("/im_chat/post", {uuid: self.get("session").uuid, message_type: type, message_content: message});
+            return session.rpc("/mail/chat_post", {uuid: self.get("session").uuid, message_content: message});
         };
         var tries = 0;
         send_it().fail(function(error, e) {
@@ -327,71 +322,65 @@ var Conversation = Widget.extend({
                 return send_it();
         });
     },
-    insert_messages: function(messages){
+    /**
+     * Preporcess the message (add informations in the Object, ...)
+     * @param {Object[]} messages : server side formatted message (from message_format method)
+     */
+    _message_preprocess: function(raw_messages){
         var self = this;
-        // avoid duplicated messages
-        messages = _.filter(messages, function(m){ return !_.contains(_.pluck(self.get("messages"), 'id'), m.id) ; });
-        // escape the message content and set the timezone
-        _.map(messages, function(m){
-            if(!m.from_id){
-                m.from_id = [false,self. get_anonymous_name()];
+        _.each(raw_messages, function(m){
+            m.date = moment(time.str_to_datetime(m.date)).format('YYYY-MM-DD HH:mm:ss'); // set the date in the correct browser user timezone
+            if(m.body){
+                m.body = mail_utils.shortcode_apply(m.body, self.options.emoji);
             }
-            m.create_date = moment(time.str_to_datetime(m.create_date)).format('YYYY-MM-DD HH:mm:ss');
-            return m;
+            _.each(m.attachment_ids, function(a){
+                a.url = mail_utils.get_attachment_url(session, m.id, a.id);
+                a.fa_class = mail_utils.attachment_filetype_to_fa_class(a.file_type_icon);
+            });
         });
+        return raw_messages;
+    },
+    /**
+     * Insert new raw message into the current ones
+     * @param {Object[]} messages : server side formatted message (from message_format method)
+     */
+    message_insert: function(raw_messages){
+        var messages = this._message_preprocess(raw_messages);
         this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
     },
-    render_messages: function(){
+    message_render: function(){
         var self = this;
-        var res = {};
-        var last_date_day, last_user_id = -1;
-        _.each(this.get("messages"), function(current){
-            // add the url of the avatar for all users in the conversation
-            current.from_id[2] = session.url(_.str.sprintf("/im_chat/image/%s/%s", self.get('session').uuid, current.from_id[0]));
-            var date_day = current.create_date.split(" ")[0];
-            if(date_day !== last_date_day){
-                res[date_day] = [];
-                last_user_id = -1;
-            }
-            last_date_day = date_day;
-            if(current.type == "message"){ // traditionnal message
-                if(last_user_id === current.from_id[0]){
-                    _.last(res[date_day]).push(current);
-                }else{
-                    res[date_day].push([current]);
-                }
-                last_user_id = current.from_id[0];
-            }else{ // meta message
-                res[date_day].push([current]);
-                last_user_id = -1;
-            }
-        });
-        // render and set the content of the chatview
-        // TODO jem : when refactoring this, don't forget to pre-process date in this function before render quweb template
-        // since, moment will not be define in qweb on the website pages, because the helper (see csn) is in core.js and cannot be
-        // imported in the frontend.
-        this.$('.oe_im_chatview_content_bubbles').html($(QWeb.render("im_chat.Conversation_content", {"list": res})));
-        this._go_bottom();
+        var message_html = $(QWeb.render("mail.chat.im.Conversation.messages", {"widget": this}));
+        this.$('.o_mail_chat_im_window_content').html(message_html);
+    },
+    message_am_i_author: function(message){
+        return message.author_id && message.author_id[0] === session.partner_id;
+    },
+    message_pending_change: function(event){
+        if (this.get("pending") === 0) {
+            this.$(".o_mail_chat_im_window_header_counter").text("");
+        } else {
+            this.$(".o_mail_chat_im_window_header_counter").text("(" + this.get("pending") + ")");
+        }
     },
     // utils and event
-    get_anonymous_name: function(){
-        var name = this.options["defaultUsername"];
-        _.each(this.get('session').users, function(u){
-            if(!u.id){
-                name = u.name;
-            }
-        });
-        return name;
+    _go_bottom: function() {
+        if(this.$(".o_mail_chat_im_window_content").length){
+            this.$(".o_mail_chat_im_window_content").scrollTop(this.$(".o_mail_chat_im_window_content").get(0).scrollHeight);
+        }
+    },
+    focus: function() {
+        this.$(".o_mail_chat_im_window_input").focus();
     },
     keydown: function(e) {
         if(e && e.which == 27) {
-            if(this.$el.prev().find('.oe_im_chatview_input').length > 0){
-                this.$el.prev().find('.oe_im_chatview_input').focus();
+            if(this.$el.prev().find('.o_mail_chat_im_window_input').length > 0){
+                this.$el.prev().find('.o_mail_chat_im_window_input').focus();
             }else{
-                this.$el.next().find('.oe_im_chatview_input').focus();
+                this.$el.next().find('.o_mail_chat_im_window_input').focus();
             }
             e.stopPropagation();
-            this.session_update_state('closed');
+            this.session_fold('closed');
         }
         if(e && e.which !== 13) {
             return;
@@ -401,25 +390,17 @@ var Conversation = Widget.extend({
             return;
         }
         this.$("input").val("");
-        this.message_send(mes, "message");
+        this.message_send(mes);
     },
-    _go_bottom: function() {
-        this.$(".oe_im_chatview_content").scrollTop(this.$(".oe_im_chatview_content").get(0).scrollHeight);
+    on_click_header: function(event){
+        this.session_fold();
     },
-    focus: function() {
-        this.$(".oe_im_chatview_input").focus();
-    },
-    click_header: function(event){
-        var classes = event.target.className.split(' ');
-        if(_.contains(classes, 'header_name') || _.contains(classes, 'oe_im_chatview_header')){
-            this.session_update_state();
-        }
-    },
-    click_close: function(event) {
-        this.session_update_state('closed');
+    on_click_close: function(event) {
+        event.stopPropagation(); // avoid triggering event for 'on_click_header'
+        this.session_fold('closed');
     },
     destroy: function() {
-        this.trigger("destroyed", this.get('session').uuid);
+        this.trigger("destroyed", this.get('session').id);
         return this._super();
     }
 });

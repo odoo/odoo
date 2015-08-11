@@ -13,17 +13,17 @@ DISCONNECTION_TIMER = TIMEOUT + 5
 AWAY_TIMER = 600 # 10 minutes
 
 
-class ImChatPresence(models.Model):
-    """ User Chat Presence
+class BusPresence(models.Model):
+    """ User Presence
         Its status is 'online', 'away' or 'offline'. This model should be a one2one, but is not
         attached to res_users to avoid database concurrence errors. Since the 'update' method is executed
         at each poll, if the user have multiple opened tabs, concurrence errors can happend, but are 'muted-logged'.
     """
 
-    _name = 'im_chat.presence'
-    _description = 'User Chat Presence'
+    _name = 'bus.presence'
+    _description = 'User Presence'
 
-    _sql_constraints = [('im_chat_user_status_unique', 'unique(user_id)', 'A user can only have one IM status.')]
+    _sql_constraints = [('bus_user_presence_unique', 'unique(user_id)', 'A user can only have one IM status.')]
 
     user_id = fields.Many2one('res.users', 'Users', required=True, index=True, ondelete='cascade')
     last_poll = fields.Datetime('Last Poll', default=lambda self: fields.Datetime.now())
@@ -43,14 +43,14 @@ class ImChatPresence(models.Model):
         send_notification = True
         values = {
             'last_poll': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'status' : presence and presence.status or 'offline'
+            'status': presence and presence.status or 'offline'
         }
         # update the user or a create a new one
-        if not presence: # create a new presence for the user
+        if not presence:  # create a new presence for the user
             values['status'] = 'online'
             values['user_id'] = self._uid
             self.create(values)
-        else: # write the user presence if necessary
+        else:  # write the user presence if necessary
             if user_presence:
                 values['last_presence'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 values['status'] = 'online'
@@ -69,7 +69,7 @@ class ImChatPresence(models.Model):
         self.env.cr.commit() # TODO : check if still necessary
         # notify if the status has changed
         if send_notification: # TODO : add user_id to the channel tuple to allow using user_watch in controller presence
-            self.env['bus.bus'].sendone((self._cr.dbname, 'im_chat.presence'), {'id': self._uid, 'im_status': values['status']})
+            self.env['bus.bus'].sendone((self._cr.dbname, 'bus.presence'), {'id': self._uid, 'im_status': values['status']})
         # gc : disconnect the users having a too old last_poll. 1 on 100 chance to do it.
         if random.random() < 0.01:
             self.check_users_disconnection()
@@ -83,5 +83,5 @@ class ImChatPresence(models.Model):
         presences.write({'status': 'offline'})
         notifications = []
         for presence in presences:
-            notifications.append([(self._cr.dbname, 'im_chat.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
+            notifications.append([(self._cr.dbname, 'bus.presence'), {'id': presence.user_id.id, 'im_status': presence.status}])
         self.env['bus.bus'].sendmany(notifications)

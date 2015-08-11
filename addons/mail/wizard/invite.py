@@ -45,7 +45,7 @@ class Invite(models.TransientModel):
 
             model_ids = self.env['ir.model'].search([('model', '=', wizard.res_model)])
             model_name = model_ids.name_get()[0][1]
-
+            print "@@@@@", wizard.message
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 # TDE FIXME: use a template + _notification methods

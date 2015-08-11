@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="mail.chatter.ComposeMessage">
+        <div class="o_mail_chatter_compose_message">
+            <!-- Log a Note (subtypes)-->
+            <t t-if="widget.options.is_log">
+                <div class="form-group col-md-8">
+                    <span class="text-muted">
+                        Log an internal note which will not be sent to followers.<br/>
+                        Note that users reading the document can read internal notes.
+                    </span>
+                </div>
+                <!-- Internal subtypes -->
+                <div t-att-class="'form-group col-md-8 ' + (widget.options.internal_subtypes.length &lt;= 1 ? ' hide' : '')">
+                    <label class="col-sm-2 control-label">Activity</label>
+                    <div class="col-sm-4">
+                        <select class="form-control o_mail_chatter_compose_message_subtype_select">
+                            <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
+                                <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+            </t>
+            <!-- New Message (list of followers)-->
+            <t t-if="!widget.options.is_log">
+                <!-- Text for followers -->
+                <div class="form-group col-md-8 o_mail_chatter_compose_message_all_followers">
+                    <span class="text-muted">
+                        To:
+                        <t t-if="widget.options.record_name">
+                            Followers of
+                            <t t-raw="'&quot;' + widget.options.record_name + '&quot;'"/>
+                        </t>
+                        <t t-if="!widget.options.record_name">
+                            Followers of this document
+                        </t>
+                    </span>
+                    <!-- List of followers -->
+                    <div class="o_mail_chatter_compose_message_suggested_partners">
+                        <t t-foreach='widget.suggested_partners' t-as='recipient'>
+                            <div class="checkbox">
+                                <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
+                                    <input type="checkbox"
+                                           t-att-checked="recipient.checked ? 'checked' : undefined"
+                                           t-att-data-fullname="recipient.full_name"/>
+                                    <t t-esc="recipient.name"/>
+                                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                                    <t t-if="!recipient.email_address">(no email address)</t>
+                                </label>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <!-- Composer Message -->
+            <t t-call="mail.ComposeMessage"/>
+        </div>
+    </t>
+
+
+    <t t-name="mail.chatter.ChatterMailThread">
+        <div class="container-fluid o_mail_chatter o_mail_thread">
+            <!-- Compose buttons ('new message' and 'log a note') -->
+            <div class="row o_mail_chatter_compose_buttons">
+                <div class="col-md-7">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-primary o_mail_chatter_button_new_message" title="Send a message">
+                            New message
+                        </button>
+                    </div>
+                    <t t-if="widget.options.display_log_button">
+                        <span class="text-muted">or</span>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-link btn-small o_mail_chatter_button_log_note" title="Log a note. Followers will not be notified.">
+                                Log an internal note
+                            </button>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <!-- wrap div for ChatterMailComposeMessage -->
+            <div class="row o_mail_chatter_compose_message_wrap" style="display:none;">
+
+            </div>
+
+            <!-- Message list -->
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1 o_mail_chatter_messages">
+                    <t t-call="mail.chatter.ChatterMailThread.messages"/>
+                </div>
+            </div>
+
+            <div t-if="widget.options.display_show_more_message" class="o_mail_chatter_show_more_message text-muted">
+                ----------- Show more message -----------
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.chatter.ChatterMailThread.messages">
+        <t t-if="widget.get('messages').length">
+            <t t-call="mail.Thread.messages"/>
+        </t>
+        <t t-if="!widget.get('messages').length">
+            No Messages.
+        </t>
+    </t>
+
+    <!--
+    ComposeMessage.ButtonTopBar
+    render of the button on the user bar for open wizard compose message
+    -->
+    <t t-name="mail.ComposeMessageTopButton">
+        <li title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
+            <a href="#">
+                <i class="fa fa-envelope-o fa-fw"></i>
+            </a>
+        </li>
+    </t>
+
+
+</templates>

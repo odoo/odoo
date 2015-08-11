@@ -13,9 +13,9 @@ var web_client = require('web.web_client');
 var _t = core._t;
 var qweb = core.qweb;
 
-/** 
+/**
  * ------------------------------------------------------------
- * timeline_followers Widget
+ * Mail Followers Widget
  * ------------------------------------------------------------
  *
  * This widget handles the display of a list of records as a vertical
@@ -27,7 +27,7 @@ var qweb = core.qweb;
 
 
 var Followers = form_common.AbstractField.extend({
-    template: 'mail_followers',
+    template: 'mail.Followers',
 
     init: function() {
         this._super.apply(this, arguments);
@@ -40,7 +40,7 @@ var Followers = form_common.AbstractField.extend({
         this.value = [];
         this.followers = [];
         this.data_subtype = {};
-        
+
         this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
     },
 
@@ -112,7 +112,7 @@ var Followers = form_common.AbstractField.extend({
                         size: 'small',
                         title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                         buttons: [
-                                { text: _t("Apply"), click: function() { 
+                                { text: _t("Apply"), click: function() {
                                     self.do_update_subscription(event, user_pid);
                                     this.parents('.modal').modal('hide');
                                 }},
@@ -236,11 +236,11 @@ var Followers = form_common.AbstractField.extend({
         var user_follower = _.filter(this.followers, function (rec) { return rec['is_uid'];});
         this.message_is_follower = user_follower.length >= 1;
         this.follower_id = this.message_is_follower ? user_follower[0]['id'] : undefined;
-        $(qweb.render('mail_followers_add_more', {'widget': self})).appendTo(node_user_list);
+        $(qweb.render('mail.Followers.add_more', {'widget': self})).appendTo(node_user_list);
 
         // truncate number of displayed followers
         _(this.followers).each(function (record) {
-            $(qweb.render('mail_followers_partner', {
+            $(qweb.render('mail.Followers.partner', {
                 'record': _.extend(record, {'avatar_url': '/web/image/' + record['res_model'] + '/' + record['res_id'] + '/image_small'}),
                 'widget': self})
             ).appendTo(node_user_list);
@@ -279,7 +279,7 @@ var Followers = form_common.AbstractField.extend({
 
         if (user_pid) {
             dialog = true;
-        } 
+        }
         else {
             var subtype_list_ul = this.$('.o_timeline_subtype_list ul').empty();
             if (! this.message_is_follower) {
@@ -302,7 +302,7 @@ var Followers = form_common.AbstractField.extend({
     display_subtypes:function (data, dialog) {
         var self = this;
         var $list = this.$('.o_timeline_subtype_list ul');
-    
+
         if (_.isEmpty(this.data_subtype)) {
             this.data_subtype = data;
 
@@ -326,7 +326,7 @@ var Followers = form_common.AbstractField.extend({
                 }
                 old_parent_model = record.parent_model;
                 record.followed = record.followed || undefined;
-                $(qweb.render('mail_followers_subtype', {'record': record, 
+                $(qweb.render('mail.Followers.subtype', {'record': record,
                                                          'dialog': dialog}))
                 .appendTo($list);
             });
@@ -336,9 +336,9 @@ var Followers = form_common.AbstractField.extend({
     do_follow: function () {
         var context = new data.CompoundContext(this.build_context(), {});
         this.$('.o_timeline_subtype_list > .dropdown-toggle').attr('disabled', false);
-        this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], 
-                                                       [session.uid], 
-                                                       undefined, 
+        this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id],
+                                                       [session.uid],
+                                                       undefined,
                                                        context])
             .then(this.proxy('read_value'));
 
@@ -403,9 +403,9 @@ var Followers = form_common.AbstractField.extend({
                 $(event.target).attr("checked", "checked");
             }
             else {
-                  self.$('.o_timeline_subtype_list ul').empty(); 
+                  self.$('.o_timeline_subtype_list ul').empty();
             }
-        } 
+        }
         else {
             var context = new data.CompoundContext(this.build_context(), {});
             return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, undefined, checklist, context])
