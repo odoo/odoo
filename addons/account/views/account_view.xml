@@ -316,6 +316,22 @@
                 </form>
             </field>
         </record>
+
+        <record id="action_account_bank_account_form" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type', '=', 'bank')]</field>
+            <field name="context">{'default_type': 'bank', 'display_on_footer': True, 'code': 'BNK'}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a bank account.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_bank_account_form" id="menu_action_account_bank_account_form" parent="account_account_menu"/>
+
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
