@@ -234,11 +234,9 @@ class AccountVoucher(models.Model):
         :return: Tuple build as (remaining amount not allocated on voucher lines, list of account_move_line created in this method)
         :rtype: tuple(float, list of int)
         '''
-        prec = self.company_id.currency_id.rounding
         for line in self.line_ids:
             #create one move line per voucher line where amount is not 0.0
-            # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
-            if not line.price_subtotal and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_digits=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_digits=prec)):
+            if not line.price_subtotal:
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
