@@ -1140,6 +1140,7 @@ class pos_order(osv.osv):
                 invoice_line.invoice_line_tax_ids = [tax.id for tax in invoice_line.invoice_line_tax_ids if tax.company_id.id == company_id]
                 # We convert a new id object back to a dictionary to write to bridge between old and new api
                 inv_line = invoice_line._convert_to_write(invoice_line._cache)
+                inv_line.update(price_unit=line.price_unit, discount=line.discount)
                 inv_line_ref.create(cr, SUPERUSER_ID, inv_line, context=local_context)
             inv_ref.compute_taxes(cr, SUPERUSER_ID, [inv_id], context=local_context)
             self.signal_workflow(cr, uid, [order.id], 'invoice')
