@@ -376,7 +376,7 @@ class Report(osv.Model):
         """
         command_args = []
         if wkhtmltopdf_state == "ok":
-            command_args.extend(['--viewport-size', '1024x768'])
+            command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
         try:
@@ -399,7 +399,7 @@ class Report(osv.Model):
                     del command_args[index]
                     del command_args[index]
                     command_args.extend(['--orientation', 'landscape'])
-        elif landscape and not '--orientation' in command_args:
+        elif landscape and '--orientation' not in command_args:
             command_args.extend(['--orientation', 'landscape'])
 
         # Execute WKhtmltopdf
@@ -449,7 +449,7 @@ class Report(osv.Model):
 
                 if process.returncode not in [0, 1]:
                     raise UserError(_('Wkhtmltopdf failed (error code: %s). '
-                                        'Message: %s') % (str(process.returncode), err))
+                                      'Message: %s') % (str(process.returncode), err))
 
                 # Save the pdf in attachment if marked
                 if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
@@ -464,8 +464,7 @@ class Report(osv.Model):
                         try:
                             self.pool['ir.attachment'].create(cr, uid, attachment)
                         except AccessError:
-                            _logger.info("Cannot save PDF report %r as attachment",
-                                            attachment['name'])
+                            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
                             _logger.info('The PDF document %s is now saved in the database',
                                          attachment['name'])
