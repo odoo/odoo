@@ -138,7 +138,7 @@ class res_users(osv.osv):
         avatar, ... The user model is now dedicated to technical data.
     """
     __admin_ids = {}
-    _uid_cache = {}
+    __uid_cache = {}
     _inherits = {
         'res.partner': 'partner_id',
     }
@@ -305,6 +305,24 @@ class res_users(osv.osv):
 
         return result
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if uid != SUPERUSER_ID:
+            groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+            if groupby_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid groupby')
+        return super(res_users, self).read_group(
+            cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+
+    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        if user != SUPERUSER_ID and args:
+            domain_terms = [term for term in args if isinstance(term, (tuple, list))]
+            domain_fields = set(left for (left, op, right) in domain_terms)
+            if domain_fields.intersection(USER_PRIVATE_FIELDS):
+                raise openerp.exceptions.AccessError('Invalid search criterion')
+        return super(res_users, self)._search(
+            cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count,
+            access_rights_uid=access_rights_uid)
+
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
         user = self.browse(cr, uid, user_id, context=context)
@@ -336,10 +354,10 @@ class res_users(osv.osv):
         clear = partial(self.pool['ir.rule'].clear_cache, cr)
         map(clear, ids)
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self.__uid_cache:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
+                if id in self.__uid_cache[db]:
+                    del self.__uid_cache[db][id]
         self.context_get.clear_cache(self)
         return res
 
@@ -347,10 +365,10 @@ class res_users(osv.osv):
         if 1 in ids:
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
         db = cr.dbname
-        if db in self._uid_cache:
+        if db in self.__uid_cache:
             for id in ids:
-                if id in self._uid_cache[db]:
-                    del self._uid_cache[db][id]
+                if id in self.__uid_cache[db]:
+                    del self.__uid_cache[db][id]
         return super(res_users, self).unlink(cr, uid, ids, context=context)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -491,15 +509,12 @@ class res_users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise openerp.exceptions.AccessDenied()
-        if self._uid_cache.get(db, {}).get(uid) == passwd:
+        if self.__uid_cache.setdefault(db, {}).get(uid) == passwd:
             return
         cr = self.pool.db.cursor()
         try:
             self.check_credentials(cr, uid, passwd)
-            if self._uid_cache.has_key(db):
-                self._uid_cache[db][uid] = passwd
-            else:
-                self._uid_cache[db] = {uid:passwd}
+            self.__uid_cache[db][uid] = passwd
         finally:
             cr.close()
 
