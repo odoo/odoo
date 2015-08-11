@@ -6,3 +6,4 @@ import account_invoice_report
 import account_overdue_report
 import common_report_header
 import account_general_ledger
+import account_balance
