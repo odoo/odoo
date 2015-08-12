@@ -5,15 +5,15 @@
     company_id: base.main_company
     product_tmpl_id: product.product_product_3_product_template
     product_id: product.product_product_3
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     product_qty: 1.0
-    type: normal
+    bom_type: normal
     bom_line_ids:
       - product_id: product.product_product_2
-        product_uom: product.product_uom_unit
+        product_uom_id: product.product_uom_unit
         product_qty: 1.0
       - product_id: product.product_product_44
-        product_uom: product.product_uom_unit
+        product_uom_id: product.product_uom_unit
         product_qty: 1.0
 -
   I make the production order using BoM having one service type product and one consumable product.
