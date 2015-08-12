@@ -2,6 +2,7 @@ import logging
 
 import werkzeug.urls
 import urlparse
+import urllib
 import urllib2
 import simplejson
 
@@ -25,29 +26,82 @@ class res_users(osv.Model):
         ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
     ]
 
-    def _auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
-        params = werkzeug.url_encode({'access_token': access_token})
-        if urlparse.urlparse(endpoint)[4]:
-            url = endpoint + '&' + params
+    def _auth_oauth_rpc(self, cr, uid, endpoint, params, method='get', context=None):
+        # params = werkzeug.url_encode({'access_token': access_token})
+        if method == 'get':
+            if urlparse.urlparse(endpoint)[4]:
+                url = endpoint + '&' + werkzeug.url_encode(params)
+            else:
+                url = endpoint + '?' + werkzeug.url_encode(params)
+            _logger.info("url: %s" % (url,))
+            req = urllib2.Request(url, headers={'Content-Type': 'application/json'})
         else:
-            url = endpoint + '?' + params
-        f = urllib2.urlopen(url)
-        response = f.read()
-        return simplejson.loads(response)
+            ''' default: post method '''
+            url = endpoint
+            _logger.info("url: %s" % (url,))
+            req = urllib2.Request(url, data=urllib.urlencode(params), headers={'Content-Type': 'application/x-www-form-urlencoded'})
 
-    def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
+        '''
+        special process for Douban
+        '''
+        if endpoint == 'https://api.douban.com/v2/user/~me':
+            url = endpoint
+            _logger.info("url: %s" % (url,))
+            req = urllib2.Request(url, headers={'Authorization': 'Bearer ' + params['access_token']})
+
+        f = urllib2.urlopen(req)
+        response = f.read()
+        _logger.info("response: %s" % (response,))
+        if not isinstance(response, str):
+            _logger.info("response is not str")
+            response = str(response)
+        # strip space
+        response = response.strip()
+        if response.startswith('callback(') and response.endswith(');'):
+            '''
+            QQ strip prefix and suffix when fetch openid
+            '''
+            response = response[9:-2].strip()
+
+        try:
+            res = simplejson.loads(response)
+        except simplejson.scanner.JSONDecodeError:
+            res = werkzeug.url_decode(response)
+
+        return res
+
+    def _auth_oauth_validate(self, cr, uid, provider, params, context=None):
         """ return the validation data corresponding to the access token """
         p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
-        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
-        if validation.get("error"):
-            raise Exception(validation['error'])
+
+        state = simplejson.loads(params['state'])
+        vparams = dict(
+            grant_type=p['grant_type'],
+            client_id=p['client_id'],
+            client_secret=p['client_secret'],
+            redirect_uri=state['rr'],
+            code=params['code'],
+        )
+        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, vparams, 'post', context)
+        if validation.get("msg") or validation.get("error"):
+            if validation.get("error"):
+                raise Exception(validation['error'])
+            raise Exception(validation['msg'])
         if p.data_endpoint:
-            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, dict(access_token=validation['access_token']), context)
+            _logger.info("data_endpoint: %s" % (data,))
+            if not data.get('openid'):
+                if data.get('uid'):
+                    data['openid'] = data.get('uid')
+                elif data.get('taobao_user_id'):
+                    data['openid'] = data.get('taobao_user_id')
+                elif data.get('douban_user_id'):
+                    data['openid'] = data.get('douban_user_id')
             validation.update(data)
         return validation
 
     def _generate_signup_values(self, cr, uid, provider, validation, params, context=None):
-        oauth_uid = validation['user_id']
+        oauth_uid = validation['openid']
         email = validation.get('email', 'provider_%s_user_%s' % (provider, oauth_uid))
         name = validation.get('name', email)
         return {
@@ -56,7 +110,7 @@ class res_users(osv.Model):
             'email': email,
             'oauth_provider_id': provider,
             'oauth_uid': oauth_uid,
-            'oauth_access_token': params['access_token'],
+            'oauth_access_token': validation['access_token'],
             'active': True,
         }
 
@@ -71,15 +125,16 @@ class res_users(osv.Model):
             This method can be overridden to add alternative signin methods.
         """
         try:
-            oauth_uid = validation['user_id']
+            oauth_uid = validation['openid']
             user_ids = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
             if not user_ids:
                 raise openerp.exceptions.AccessDenied()
             assert len(user_ids) == 1
             user = self.browse(cr, uid, user_ids[0], context=context)
-            user.write({'oauth_access_token': params['access_token']})
+            user.write({'oauth_access_token': validation['access_token']})
             return user.login
         except openerp.exceptions.AccessDenied, access_denied_exception:
+            _logger.error("AccessDenied")
             if context and context.get('no_user_creation'):
                 return None
             state = simplejson.loads(params['state'])
@@ -89,6 +144,7 @@ class res_users(osv.Model):
                 _, login, _ = self.signup(cr, uid, values, token, context=context)
                 return login
             except SignupError:
+                _logger.error("SignupError")
                 raise access_denied_exception
 
     def auth_oauth(self, cr, uid, provider, params, context=None):
@@ -97,22 +153,20 @@ class res_users(osv.Model):
         #   abort()
         # else:
         #   continue with the process
-        access_token = params.get('access_token')
-        validation = self._auth_oauth_validate(cr, uid, provider, access_token)
+        # access_token = params.get('access_token')
+        validation = self._auth_oauth_validate(cr, uid, provider, params)
+        _logger.error("validation %s" % (validation,))
         # required check
-        if not validation.get('user_id'):
-            # Workaround: facebook does not send 'user_id' in Open Graph Api
-            if validation.get('id'):
-                validation['user_id'] = validation['id']
-            else:
-                raise openerp.exceptions.AccessDenied()
-
+        if not validation.get('openid'):
+            _logger.error("No openid")
+            raise openerp.exceptions.AccessDenied()
         # retrieve and sign in user
         login = self._auth_oauth_signin(cr, uid, provider, validation, params, context=context)
         if not login:
+            _logger.error("Not login")
             raise openerp.exceptions.AccessDenied()
         # return user credentials
-        return (cr.dbname, login, access_token)
+        return (cr.dbname, login, validation['access_token'])
 
     def check_credentials(self, cr, uid, password):
         try:
