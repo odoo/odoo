@@ -44,12 +44,10 @@
                         Indeed, there are many ways to manage a project; to find the best one for you, you need know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company.
                     </p>
                     <div class="row">
-
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
                                 <div class="o_planner_notebook_line_separator"></div>
                                 <li class="o_planner_notebook_header">
-
                                     <h5><strong>What do you expect</strong> from using Odoo Project?:</h5>
 
                                     <a class="pull-right" data-toggle="collapse" href="#o_planner_page2_help">
@@ -70,7 +68,6 @@
                                         </ul>
                                     </div>
                                 </li>
-
                                 <li><span>#1</span><textarea id="input_element_obj1" value="" line="1" type="text"/></li>
                                 <li><span>#2</span><textarea id="input_element_obj2" value="" line="1" type="text"/></li>
                                 <li><span>#3</span><textarea id="input_element_obj3" value="" line="1" type="text"/></li>
@@ -84,7 +81,6 @@
                     <t t-set="page_title" t-value="'Your Activities'"/>
                     <t t-set="page_menutitle" t-value="'Activities'"/>
                     <p class="text-muted">The Odoo Project app can be used to manage many activities, from the development of a new product to the daily operation of a customer support. With a little creativity, it can even be used to manage your marketing communications or personal projects. But just because it can be done doesn't mean it's a good idea: let's start by helping you understand what can be a good project.</p>
-
                     <div class="row">
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
@@ -111,7 +107,6 @@
                         </div>
                     </div>
                 </t>
-
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Your Projects'"/>
@@ -199,48 +194,43 @@
                                         <h5>Your Projects: </h5>
                                     </li>
                                     <li><span>#1</span>
-                                    <div class="small">
                                         <input id="input_element_prj1" value="" line="1" type="text"/>
                                         <input type="radio" id="input_element_rowtask1" name="row1" checked="checked"/>Tasks
                                         <input type="radio" id="input_element_rowissue1" name="row1"/>Issues
                                         <input type="checkbox" id="input_element_rowtime1" name="rowtime1"/>with Timesheet
-                                    </div></li>
+                                    </li>
                                     <li><span>#2</span>
-                                    <div class="small">
                                         <input id="input_element_prj2" value="" line="1" type="text"/>
                                         <input type="radio" id="input_element_rowtask2" name="row2" checked="checked"/>Tasks
                                         <input type="radio" id="input_element_rowissue2" name="row2"/>Issues
                                         <input type="checkbox" id="input_element_rowtime2" name="rowtime2"/>with Timesheet
-                                    </div></li>
+                                    </li>
                                     <li><span>#3</span>
-                                    <div class="small">
                                         <input id="input_element_prj3" value="" line="1" type="text"/>
                                         <input type="radio" id="input_element_rowtask3" name="row3" checked="checked"/>Tasks
                                         <input type="radio" id="input_element_rowissue3" name="row3"/>Issues
                                         <input type="checkbox" id="input_element_rowtime3" name="rowtime3"/>with Timesheet
-                                    </div></li>
+                                    </li>
                                     <li><span>#4</span>
-                                    <div class="small">
                                         <input id="input_element_prj4" value="" line="1" type="text"/>
                                         <input type="radio" id="input_element_rowtask4" name="row4" checked="checked"/>Tasks
                                         <input type="radio" id="input_element_rowissue4" name="row4"/>Issues
                                         <input type="checkbox" id="input_element_rowtime4" name="rowtime4"/>with Timesheet
-                                    </div></li>
+                                    </li>
                                     <li><span>#5</span>
-                                    <div class="small">
                                         <input id="input_element_prj5" value="" line="1" type="text"/>
                                         <input type="radio" id="input_element_rowtask5" name="row5" checked="checked"/>Tasks
                                         <input type="radio" id="input_element_rowissue5" name="row5"/>Issues
                                         <input type="checkbox" id="input_element_rowtime5" name="rowtime5"/>with Timesheet
-                                    </div></li>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
 
                         <table class="table">
                             <thead>
-                                <th><h4><span class="fa fa-thumbs-o-up"/> The <strong>Right Way</strong> to use projects:</h4></th>
-                                <th><h4><span class="fa fa-thumbs-o-down"/> The <strong> Wrong Way</strong> to use projects:</h4></th>
+                                <th><h5><span class="fa fa-thumbs-o-up"/> The <strong>Right Way</strong> to use projects:</h5></th>
+                                <th><h5><span class="fa fa-thumbs-o-down"/> The <strong> Wrong Way</strong> to use projects:</h5></th>
                             </thead>
                             <tbody>
                                 <tr>
@@ -280,8 +270,8 @@
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
                                 <li class="row o_planner_notebook_header">
-                                    <h5 class="col-xs-12 col-md-7"><strong>Stages and Requirements</strong> for next stage:</h5>
-                                    <div class="col-xs-12 col-md-5">
+                                    <h5 class="col-md-12"><strong>Stages and Requirements</strong> for next stage:</h5>
+                                    <div class="col-md-12">
                                         <select id="input_element_kanban_stage_pipeline">
                                             <option value="basic_management">Basic Management</option>
                                             <option value="development_process">Development Process</option>
@@ -292,47 +282,46 @@
                                         </select>
                                     </div>
                                 </li>
-                                <li class="row"><span>#1</span>
-                                <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_0" type="text" value="Ideas"/>
-                                <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_7" type="text" value="Idea is fully explained"/>
+                                <li><span>#1</span>
+                                <input class="user_project mb4" id="input_element_stage_0" type="text" value="Ideas"/>
+                                <input id="input_element_stage_7" type="text" value="Idea is fully explained"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#2</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_1" type="text" value="To Do"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_8" type="text" value="Idea has been transformed into concrete actions"/>
+                                    <input class="user_project mb4" id="input_element_stage_1" type="text" value="To Do"/>
+                                    <input id="input_element_stage_8" type="text" value="Idea has been transformed into concrete actions"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#3</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_2" type="text" value="Done"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_9" type="text" value="Task is completed"/>
+                                    <input class="user_project mb4" id="input_element_stage_2" type="text" value="Done"/>
+                                    <input id="input_element_stage_9" type="text" value="Task is completed"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#4</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_3" type="text" value="Cancelled"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_10" type="text" value="Reason for cancellation has been documented"/>
+                                    <input class="user_project mb4" id="input_element_stage_3" type="text" value="Cancelled"/>
+                                    <input id="input_element_stage_10" type="text" value="Reason for cancellation has been documented"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#5</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_4" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_11" type="text"/>
+                                    <input class="user_project mb4" id="input_element_stage_4" type="text"/>
+                                    <input id="input_element_stage_11" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#6</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_5" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_12" type="text"/>
+                                    <input class="user_project mb4" id="input_element_stage_5" type="text"/>
+                                    <input id="input_element_stage_12" type="text"/>
                                 </li>
                                 <li class="row">
                                     <span>#7</span>
-                                    <input class="col-xs-12 col-sm-4 user_project" id="input_element_stage_6" type="text"/>
-                                    <input class="col-xs-12 col-sm-7 col-sm-offset-1" id="input_element_stage_13" type="text"/>
+                                    <input class="user_project mb4" id="input_element_stage_6" type="text"/>
+                                    <input id="input_element_stage_13" type="text"/>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
                         </div>
                     </div>
-
                     <div class="row">
-                        <div class="col-md-6 col-xs-12 ">
+                        <div class="col-md-12">
                             <div class="well well-lg">
                                 <strong>Recommended actions:</strong>
                                 <li>
@@ -345,7 +334,7 @@
                                 </li>
                             </div>
                         </div>
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-12">
                             <div class="well well-lg">
                                 <strong>Need help to structure your projects ?</strong><br/>
                                 <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
@@ -463,7 +452,7 @@
                     <section>
                         <h3><strong>Enter you activities</strong> (every day)</h3>
                         <div class="row">
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -478,7 +467,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -499,7 +488,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -570,7 +559,7 @@
                     <h4>Here are some of the <strong>available customizations</strong></h4>
                     <section>
                         <div class="row">
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -589,7 +578,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -606,7 +595,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -626,14 +615,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-8 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <span><strong>Contact us to customize your application:</strong><br/>
                                     We have special options for unlimited number of customizations !
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
@@ -651,18 +640,18 @@
                     </h4>
                     <section>
                         <div class="row o_planner_row_apps">
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-eur fa-4x"></span>
-                                <h3><strong>Billing</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-eur fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Billing</strong></h4>
                                 <p>Create bills automatically based on Time &amp; Material.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_voucher')"
                                    class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-file-o fa-4x"></span>
-                                <h3><strong>Notes</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-file-o fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Notes</strong></h4>
                                 <p>Organize your company, from personal tasks to collaborative meeting minutes.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'note')"
                                    class="btn odoo_purple">
@@ -692,73 +681,88 @@
                                     <h5 class="col-xs-12 col-md-6">Kanban Stage</h5>
                                     <h5 class="col-xs-12 col-md-6"><i class="fa fa-user"/> Person Responsible</h5>
                                 </li>
-                                <li class="row"><span>#1</span>
-                                <div class="col-xs-12 col-md-6">
+                                <li>
+                                    <span>#1</span>
                                     <input type="text" id="input_element_stage_0_user" value="Ideas" readonly="readonly"/>
-                                </div>
-                                <div class="col-xs-12 col-md-6">
-                                    <i class="fa fa-user"/>
-                                    <input id="input_element_resp0" type="text"/>
-                                </div>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user pull-left"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp0" type="text"/>
+                                        </div>
+                                    </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#2</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_1_user" value="To Do" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp1" type="text"/>
+                                    <input type="text" id="input_element_stage_1_user" value="To Do" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp1" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#3</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_2_user" value="Done" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp2" type="text"/>
+                                    <input type="text" id="input_element_stage_2_user" value="Done" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp2" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#4</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_3_user" value="Cancelled" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp3" type="text"/>
+                                    <input type="text" id="input_element_stage_3_user" value="Cancelled" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp3" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#5</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_4_user" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp4" type="text"/>
+                                    <input type="text" id="input_element_stage_4_user" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp4" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#6</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_5_user" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp5" type="text"/>
+                                    <input type="text" id="input_element_stage_5_user" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp5" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#7</span>
-                                    <div class="col-xs-12 col-md-6">
-                                        <input type="text" id="input_element_stage_6_user" readonly="readonly"/>
-                                    </div>
-                                    <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp6" type="text"/>
+                                    <input type="text" id="input_element_stage_6_user" readonly="readonly"/>
+                                    <div class="row mt4">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-11">
+                                            <input id="input_element_resp6" type="text"/>
+                                        </div>
                                     </div>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
@@ -779,7 +783,7 @@
                     <div class="o_planner_paragraphs">
                         <div class="row">
                             <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe051;" /></div>
-                            <div class="col-sm-7 col-md-7">
+                            <div class="col-sm-11 col-md-10">
                                 <p>
                                     <strong>Follow only what you need</strong><br/>
                                     The simplest way to use notifications is to follow a whole Project: you will then receive all the selected notifications for all the Project's new and existing and new Tasks or Issues.
@@ -789,7 +793,7 @@
                                 </p>
                                 <p>Another good way to limit the number of notifications you receive is to only follow your Project's 'Task Assigned' events.  Then you'll be notified when a Task or Issue is created, and can  manually decide if you want to be notified for its other events too.</p>
                             </div>
-                            <div class="col-sm-4 col-md-3">
+                            <div class="col-md-12 col-md-push-2">
                                 <img class="signature" src="/project/static/src/img/web_planner_subtype.png" />
                             </div>
                         </div>
@@ -815,7 +819,7 @@
                                 <p>If you want to limit access for certain users or customers, simply use the Privacy / Visibility settings in the Project Settings.</p>
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-12 col-md-push-4">
+                        <div class="col-md-12 col-md-push-2">
                             <img src="/project/static/src/img/web_planner_project.png"/>
                         </div>
                         <div class="row">
@@ -828,7 +832,7 @@
                                     This is particularly useful to manage help and support: all incoming email  from customers will be transformed into an issue that you'll be able to track easily!
                                 </p>
                             </div>
-                            <p class="col-sm-8 col-md-8 col-md-push-2">
+                            <p class="col-md-12 col-md-push-2">
                                 <img src="/project/static/src/img/web_planner_email.png"/>
                             </p>
                         </div>
@@ -850,12 +854,12 @@
                     <h4 class="text-muted text-center">You're almost finished !</h4>
                     <section>
                         <div class="row">
-                            <div class="col-md-4 col-md-offset-2 col-xs-12 text-center o_planner_white_box">
+                            <div class="col-md-6 col-xs-12 text-center o_planner_white_box">
                                 <div class="panel">
                                     <a t-att-href="prepare_backend_url('base.action_res_users')"><i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here</a>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12 text-center o_planner_white_box">
+                            <div class="col-md-6 col-xs-12 text-center o_planner_white_box">
                                 <div class="panel">
                                     <a t-att-href="prepare_backend_url('mail.mail_message_action_inbox')"><i class="fa-2x" data-icon="&#xe090;"></i><br/> Follow the day-to-day activites to be sure that everyone is using it</a>
                                 </div>
@@ -958,7 +962,7 @@
                     <h4><strong>Click on 'Reporting' on the main menu</strong> and generate statistics relevent to each profiles:</h4>
                     <section>
                         <div class="row">
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -977,7 +981,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -1007,13 +1011,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-8 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
