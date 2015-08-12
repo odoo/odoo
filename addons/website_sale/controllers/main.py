@@ -500,7 +500,9 @@ class website_sale(http.Controller):
             query = dict((prefix + field_name, getattr(data, field_name))
                 for field_name in all_fields if getattr(data, field_name))
             if address_type == 'billing' and data.parent_id:
-                query[prefix + 'street'] = data.parent_id.name
+                query[prefix + 'company'] = data.parent_id.name
+            if address_type == 'billing' and data.is_company:
+                query[prefix + 'company'] = data.name
 
         if query.get(prefix + 'state_id'):
             query[prefix + 'state_id'] = int(query[prefix + 'state_id'])
