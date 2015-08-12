@@ -146,3 +146,4 @@ class marketing_campaign_activity(osv.osv):
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
         return action(cr, uid, activity, workitem, context=context)
+
