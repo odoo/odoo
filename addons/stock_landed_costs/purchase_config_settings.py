@@ -16,7 +16,7 @@ class purchase_config_settings(osv.osv_memory):
                     'message': _('Disabling the costing methods will prevent you to use the landed costs feature.'),
                 },
                 'value': {
-                    'group_costing_method': True
+                    'group_costing_method': 1
                 }
             }
         return {}
