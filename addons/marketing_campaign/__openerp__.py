@@ -36,6 +36,8 @@ input segments, workflow.
     """,
     'website': 'https://www.odoo.com/page/lead-automation',
     'data': [
+        'security/marketing_campaign_security.xml',
+        'security/ir.model.access.csv',
         'views/marketing_campaign_view.xml',
         'views/marketing_campaign_data.xml',
         'views/marketing_campaign_workflow.xml',
@@ -45,7 +47,4 @@ input segments, workflow.
         'report/campaign_analysis_view.xml',
     ],
     'demo': ['data/marketing_campaign_demo.xml'],
-    'test': ['test/marketing_campaign.yml'],
-    'installable': True,
-    'auto_install': False,
 }

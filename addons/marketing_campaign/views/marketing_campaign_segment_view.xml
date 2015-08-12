@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <data noupdate="1">
 
     <!-- Marketing Segments -->
-    <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
+    <record model="ir.ui.view" id="view_marketing_campaign_segment_form" >
         <field name="name">marketing.campaign.segment.form</field>
         <field name="model">marketing.campaign.segment</field>
         <field name="arch" type="xml">
@@ -92,4 +92,4 @@
     <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign_campaigns" action="action_marketing_campaign_segment_form" sequence="2"/>
 
     </data>
-</openerp>
+</odoo>

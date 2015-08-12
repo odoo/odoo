@@ -1,23 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-import base64
-import itertools
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
-from traceback import format_exception
-from sys import exc_info
-from openerp.tools.safe_eval import safe_eval as eval
-import re
-from openerp.addons.decimal_precision import decimal_precision as dp
-
-from openerp import api
-from openerp.osv import fields, osv
-from openerp.report import render_report
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -26,21 +12,30 @@ _intervalTypes = {
     'years': lambda interval: relativedelta(years=interval),
 }
 
-DT_FMT = '%Y-%m-%d %H:%M:%S'
 
-
-class marketing_campaign_transition(osv.osv):
+class MarketingCampaignTransition(models.Model):
     _name = "marketing.campaign.transition"
     _description = "Campaign Transition"
 
-    _interval_units = [
-        ('hours', 'Hour(s)'),
-        ('days', 'Day(s)'),
-        ('months', 'Month(s)'),
-        ('years', 'Year(s)'),
-    ]
+    name = fields.Char(compute='_compute_get_name')
+    activity_from_id = fields.Many2one(
+        'marketing.campaign.activity', string='Previous Activity', index=1, required=True, ondelete="cascade")
+    activity_to_id = fields.Many2one(
+        'marketing.campaign.activity', string='Next Activity', required=True, ondelete="cascade")
+    interval_nbr = fields.Integer(
+        string='Interval Value', required=True, default=1)
+    interval_type = fields.Selection([
+                                    ('hours', 'Hour(s)'),
+                                    ('days', 'Day(s)'),
+                                    ('months', 'Month(s)'),
+                                    ('years', 'Year(s)')], string='Interval Unit', required=True, default='days')
+    trigger = fields.Selection([('auto', 'Automatic'),
+                                ('time', 'Time'),
+                                # fake plastic transition
+                                ('cosmetic', 'Cosmetic'),
+                                ], required=True, default='time', help="How is the destination workitem triggered")
 
-    def _get_name(self, cr, uid, ids, fn, args, context=None):
+    def _compute_get_name(self):
         # name formatters that depend on trigger
         formatters = {
             'auto': _('Automatic transition'),
@@ -48,62 +43,27 @@ class marketing_campaign_transition(osv.osv):
             'cosmetic': _('Cosmetic'),
         }
         # get the translations of the values of selection field 'interval_type'
-        fields = self.fields_get(cr, uid, ['interval_type'], context=context)
+        fields = self.fields_get(['interval_type'])
         interval_type_selection = dict(fields['interval_type']['selection'])
-
-        result = dict.fromkeys(ids, False)
-        for trans in self.browse(cr, uid, ids, context=context):
+        for trans in self:
             values = {
                 'interval_nbr': trans.interval_nbr,
                 'interval_type': interval_type_selection.get(trans.interval_type, ''),
             }
-            result[trans.id] = formatters[trans.trigger] % values
-        return result
+            trans.name = formatters[trans.trigger] % values
 
+    def _delta(self):
+        self.ensure_one()
+        if self.trigger != 'time':
+            raise ValidationError('Delta is only relevant for timed transition.')
+        return relativedelta(**{str(self.interval_type): self.interval_nbr})
 
-    def _delta(self, cr, uid, ids, context=None):
-        assert len(ids) == 1
-        transition = self.browse(cr, uid, ids[0], context=context)
-        if transition.trigger != 'time':
-            raise ValueError('Delta is only relevant for timed transition.')
-        return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
-
-
-    _columns = {
-        'name': fields.function(_get_name, string='Name',
-                                type='char', size=128),
-        'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                            'Previous Activity', select=1,
-                                            required=True, ondelete="cascade"),
-        'activity_to_id': fields.many2one('marketing.campaign.activity',
-                                          'Next Activity',
-                                          required=True, ondelete="cascade"),
-        'interval_nbr': fields.integer('Interval Value', required=True),
-        'interval_type': fields.selection(_interval_units, 'Interval Unit',
-                                          required=True),
-
-        'trigger': fields.selection([('auto', 'Automatic'),
-                                     ('time', 'Time'),
-                                     ('cosmetic', 'Cosmetic'),  # fake plastic transition
-                                    ],
-                                    'Trigger', required=True,
-                                    help="How is the destination workitem triggered"),
-    }
-
-    _defaults = {
-        'interval_nbr': 1,
-        'interval_type': 'days',
-        'trigger': 'time',
-    }
-    def _check_campaign(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
-                return False
-        return True
-
-    _constraints = [
-            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
-        ]
+    @api.constrains('activity_from_id', 'activity_to_id')
+    def _check_campaign(self):
+        for transition in self:
+            if transition.activity_from_id.campaign_id != transition.activity_to_id.campaign_id:
+                raise ValidationError(
+                _('The To/From Activity of transition must be of the same Campaign'))
 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
