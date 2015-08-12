@@ -46,18 +46,18 @@ class TestSaleMrpFlow(common.TransactionCase):
             self.MrpBomLine.create({
                 'product_id': product_id,
                 'product_qty': qty,
-                'type': bom_type,
+                'bom_type': bom_type,
                 'bom_id': bom_id,
-                'product_uom': uom_id})
+                'product_uom_id': uom_id})
 
         def create_bom(name, product_tmpl_id, qty, uom_id, bom_type):
             return self.MrpBom.create({
                 'name': name,
                 'product_tmpl_id': product_tmpl_id,
                 'product_qty': qty,
-                'type': bom_type,
+                'bom_type': bom_type,
                 'product_efficiency': 1.0,
-                'product_uom': uom_id})
+                'product_uom_id': uom_id})
 
         self.uom_kg = self.ProductUom.create({
             'name': 'Test-KG',
@@ -179,7 +179,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
         self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------

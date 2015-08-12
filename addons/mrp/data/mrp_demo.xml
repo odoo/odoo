@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
         <record id="base.user_demo" model="res.users">
@@ -244,220 +244,220 @@
         <record id="mrp_bom_1" model="mrp.bom">
             <field name="name">HDD 500GB</field>
             <field name="product_tmpl_id" ref="product.product_product_18_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
             <field name="routing_id" ref="mrp_routing_0"/>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_17"/>
             <field name="product_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_1"/>
         </record>
 
         <record id="mrp_bom_2" model="mrp.bom">
             <field name="name">HDD 2TB on Demand</field>
             <field name="product_tmpl_id" ref="product.product_product_19_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_18"/>
             <field name="product_qty">4</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_2"/>
         </record>
 
         <record id="mrp_bom_3" model="mrp.bom">
             <field name="name">HDD on Demand</field>
             <field name="product_tmpl_id" ref="product.product_product_19_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_3" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_17"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_3"/>
         </record>
 
         <record id="mrp_bom_4" model="mrp.bom">
             <field name="name">Laptop Customized</field>
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
             <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_4" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_40"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_4"/>
         </record>
 
         <record id="mrp_bom_line_5" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_4"/>
         </record>
 
         <record id="mrp_bom_line_6" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_4"/>
         </record>
 
         <record id="mrp_bom_5" model="mrp.bom">
             <field name="name">Laptop Customized + Azerty</field>
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_7" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_40"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_5"/>
         </record>
 
         <record id="mrp_bom_line_8" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_9"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_5"/>
         </record>
 
         <record id="mrp_bom_line_9" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_5"/>
         </record>
 
         <record id="mrp_bom_6" model="mrp.bom">
             <field name="name">Computer Case-1</field>
             <field name="product_tmpl_id" ref="product.product_product_16_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_10" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_23"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_6"/>
         </record>
 
         <record id="mrp_bom_line_11" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_20"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_6"/>
         </record>
 
         <record id="mrp_bom_line_12" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_17"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">8</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_6"/>
         </record>
 
         <record id="mrp_bom_7" model="mrp.bom">
             <field name="name">Computer Case-2</field>
             <field name="product_tmpl_id" ref="product.product_product_16_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_line_13" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_22"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_line_14" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_21"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_line_15" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_18"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_line_16" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_24"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_7"/>
         </record>
 
         <record id="mrp_bom_8" model="mrp.bom">
             <field name="name">PC Assemble + 2GB RAM</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
 
         <record id="mrp_bom_property_0" model="mrp.bom">
             <field name="name">PC Assemble + DDR 512MB</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
         </record>
 
@@ -465,205 +465,205 @@
             <field name="name">RAM SR2 PLUS</field>
             <field name="product_id" ref="product.product_product_14"/>
             <field name="product_tmpl_id" ref="product.product_product_14_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>
-            <field name="type">phantom</field>
+            <field name="bom_type">phantom</field>
             <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
         </record>
 
         <record id="mrp_bom_line_17" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_8"/>
         </record>
 
         <record id="mrp_bom_line_18" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_16"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_8"/>
         </record>
 
         <record id="mrp_bom_line_19" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_8"/>
         </record>
 
         <record id="mrp_bom_line_20" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">8</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_8"/>
         </record>
 
         <record id="mrp_bom_line_21" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_15"/>
             <field name="product_qty">2</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_8"/>
         </record>
 
         <record id="mrp_bom_9" model="mrp.bom">
             <field name="name">PC Assemble + 512MB RAM</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>
             <field name="routing_id" ref="mrp_routing_2"/>
-            <field name="type">phantom</field>
+            <field name="bom_type">phantom</field>
         </record>
 
         <record id="mrp_bom_line_22" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_7"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_9"/>
         </record>
 
         <record id="mrp_bom_line_23" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_16"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_9"/>
         </record>
 
         <record id="mrp_bom_line_24" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_9"/>
         </record>
 
         <record id="mrp_bom_line_25" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">8</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_9"/>
         </record>
 
         <record id="mrp_bom_line_26" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_13"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_9"/>
         </record>
 
         <record id="mrp_bom_10" model="mrp.bom">
             <field name="name">PC Assemble + Custom RAM (PC on Demand)</field>
             <field name="product_tmpl_id" ref="product.product_product_5_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
             <field name="routing_id" ref="mrp_routing_2"/>
-            <field name="type">phantom</field>
+            <field name="bom_type">phantom</field>
         </record>
 
         <record id="mrp_bom_line_27" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_10"/>
         </record>
 
         <record id="mrp_bom_line_28" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_16"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_10"/>
         </record>
 
         <record id="mrp_bom_line_29" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_13"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">6</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_10"/>
         </record>
 
         <record id="mrp_bom_line_30" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">8</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_10"/>
         </record>
 
         <record id="mrp_bom_line_31" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_10"/>
         </record>
 
         <record id="mrp_bom_11" model="mrp.bom">
             <field name="name">iPad Retina Display</field>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
         </record>
         <record id="mrp_bom_line_32" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_14"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_1')])]"/>
             <field name="bom_id" ref="mrp_bom_11"/>
         </record>
         <record id="mrp_bom_line_33" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_15"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product.product_attribute_value_2')])]"/>
             <field name="bom_id" ref="mrp_bom_11"/>
         </record>
         <record id="mrp_bom_line_34" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_23"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">3</field>            
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_11"/>
         </record>
 
         <record id="mrp_bom_line_prop_1" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_13"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="property_ids" eval="[(6,0,[ref('mrp_property_8')])]"/>
             <field name="bom_id" ref="mrp_bom_property_line"/>
         </record>
@@ -671,9 +671,9 @@
         <record id="mrp_bom_line_prop_2" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
             <field name="bom_id" ref="mrp_bom_property_line"/>
         </record>
@@ -681,16 +681,16 @@
         <record id="mrp_bom_line_prop_3" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_11"/>
             <field name="product_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="type">normal</field>
+            <field name="bom_type">normal</field>
             <field name="bom_id" ref="mrp_bom_property_line"/>
         </record>
 
 
     <record id="mrp_production_1" model="mrp.production">
         <field name="product_id" ref="product.product_product_3"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_uom_id" ref="product.product_uom_unit"/>
         <field name="product_qty">3</field>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
@@ -700,7 +700,7 @@
 
     <record id="mrp_production_2" model="mrp.production">
         <field name="product_id" ref="product.product_product_27"/>
-        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="product_uom_id" ref="product.product_uom_unit"/>
         <field name="location_src_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="bom_id" ref="mrp.mrp_bom_4"/>
@@ -711,4 +711,4 @@
     <!-- Run Scheduler -->
     <function model="procurement.order" name="run_scheduler"/>
     </data>
-</openerp>
+</odoo>

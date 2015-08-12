@@ -12,7 +12,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
-    order.action_cancel(context=context)
+    order.action_cancel()
 -
   Now I check that the production order is cancelled.
 -
