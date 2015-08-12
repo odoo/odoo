@@ -164,7 +164,6 @@
                             <field name="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"
                                 context="{'object_name': 'crm.lead'}"
                             />
                         </group>
@@ -436,9 +435,7 @@
                             <group>
                                 <field name="categ_ids"
                                     string="Categories" widget="many2many_tags"
-                                    context = "{'object_name': 'crm.lead'}"
-                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
-
+                                    context="{'object_name': 'crm.lead'}"/>
                             </group>
                         </group>
 
