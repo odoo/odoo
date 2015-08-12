@@ -36,10 +36,9 @@ For more specific needs, you may also assign custom-defined actions
     """,
     'website': 'https://www.odoo.com/page/mailing',
     'data': [
-        'fetchmail_data.xml',
-        'fetchmail_view.xml',
+        'data/fetchmail_data.xml',
         'security/ir.model.access.csv',
-        'fetchmail_installer_view.xml'
+        'views/fetchmail_views.xml',
     ],
     'demo': [],
     'installable': True,
