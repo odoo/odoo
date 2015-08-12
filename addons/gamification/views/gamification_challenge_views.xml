@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <record id="challenge_list_view" model="ir.ui.view">
-            <field name="name">Challenges List</field>
+            <field name="name">gamification.challenge.tree</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <tree string="Goal definitions" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
@@ -29,7 +27,7 @@
         </record>
 
         <record id="challenge_form_view" model="ir.ui.view">
-            <field name="name">Challenge Form</field>
+            <field name="name">gamification.challenge.form</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <form string="Goal definitions">
@@ -82,7 +80,7 @@
                                 <field name="line_ids" nolabel="1" colspan="4">
                                     <tree string="Line List" editable="bottom" >
                                         <field name="sequence" widget="handle"/>
-                                        <field name="definition_id" on_change="on_change_definition_id(definition_id)" />
+                                        <field name="definition_id"/>
                                         <field name="condition"/>
                                         <field name="target_goal"/>
                                         <field name="definition_full_suffix"/>
@@ -137,7 +135,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_challenge_kanban">
-            <field name="name">Challenge Kanban</field>
+            <field name="name">gamification.challenge.kanban</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <kanban string="Challenges" class="oe_background_grey">
@@ -209,9 +207,8 @@
             </field>
         </record>
 
-
         <record id="challenge_search_view" model="ir.ui.view">
-            <field name="name">Challenge Search</field>
+            <field name="name">gamification.challenge.search</field>
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <search string="Search Challenges">
@@ -227,7 +224,6 @@
                 </search>
             </field>
         </record>
-
 
         <record id="view_challenge_wizard" model="ir.ui.view">
             <field name="name">Challenge Wizard</field>
@@ -288,6 +284,4 @@
             <field name="view_id" ref="view_challenge_wizard"/>
             <field name="target">new</field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

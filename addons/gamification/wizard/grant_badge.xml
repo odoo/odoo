@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <record id="view_badge_wizard_grant" model="ir.ui.view">
-            <field name="name">Grant Badge User Form</field>
+            <field name="name">gamification.badge.user.wizard</field>
             <field name="model">gamification.badge.user.wizard</field>
             <field name="arch" type="xml">
                 <form string="Grant Badge To">
@@ -28,6 +26,4 @@
             context="{'default_badge_id': active_id, 'badge_id': active_id}"
             view_type="form" view_mode="form"
             view_id="gamification.view_badge_wizard_grant" />
-
-    </data>
-</openerp>
+</odoo>

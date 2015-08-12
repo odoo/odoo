@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <!-- Goal views -->
         <record id="goal_list_action" model="ir.actions.act_window">
             <field name="name">Goals</field>
@@ -20,7 +18,7 @@
         </record>
 
         <record id="goal_list_view" model="ir.ui.view">
-            <field name="name">Goal List</field>
+            <field name="name">gamification.goal.tree</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <tree string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
@@ -38,7 +36,7 @@
         </record>
 
         <record id="goal_form_view" model="ir.ui.view">
-            <field name="name">Goal Form</field>
+            <field name="name">gamification.goal.form</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <form string="Goal" create="false">
@@ -53,7 +51,7 @@
                     <sheet>
                         <group>
                             <group string="Reference">
-                                <field name="definition_id" on_change="on_change_definition_id(definition_id)" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name="definition_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 <field name="challenge_id" />
                             </group>
@@ -91,7 +89,7 @@
         </record>
 
         <record id="goal_search_view" model="ir.ui.view">
-            <field name="name">Goal Search</field>
+            <field name="name">gamification.goal.search</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <search string="Search Goals">
@@ -129,7 +127,7 @@
         </record>
 
         <record id="goal_kanban_view" model="ir.ui.view" >
-            <field name="name">Goal Kanban View</field>
+            <field name="name">gamification.goal.kanban</field>
             <field name="model">gamification.goal</field>
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey">
@@ -194,9 +192,8 @@
             </field>
         </record>
 
-
         <!-- Goal definitions view -->
-        
+
         <record id="goal_definition_list_action" model="ir.actions.act_window">
             <field name="name">Goal Definitions</field>
             <field name="res_model">gamification.goal.definition</field>
@@ -213,7 +210,7 @@
         </record>
 
         <record id="goal_definition_list_view" model="ir.ui.view">
-            <field name="name">Goal Definitions List</field>
+            <field name="name">gamification.goal.definition.tree</field>
             <field name="model">gamification.goal.definition</field>
             <field name="arch" type="xml">
                 <tree string="Goal Definitions">
@@ -225,7 +222,7 @@
 
 
         <record id="goal_definition_form_view" model="ir.ui.view">
-            <field name="name">Goal Definitions Form</field>
+            <field name="name">gamification.goal.definition.form</field>
             <field name="model">gamification.goal.definition</field>
             <field name="arch" type="xml">
                 <form string="Goal definitions">
@@ -244,7 +241,7 @@
                                 <field widget="radio" name="computation_mode"/>
 
                                 <!-- Hide the fields below if manually -->
-                                <field name="model_id" class="oe_inline" on_change="on_change_model_id(model_id)"
+                                <field name="model_id" class="oe_inline"
                                     attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
                                 <field name="field_id" class="oe_inline"
                                     attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
@@ -277,7 +274,7 @@
         </record>
 
         <record id="goal_definition_search_view" model="ir.ui.view">
-            <field name="name">Goal Definition Search</field>
+            <field name="name">gamification.goal.definition.search</field>
             <field name="model">gamification.goal.definition</field>
             <field name="arch" type="xml">
                 <search string="Search Goal Definitions">
@@ -298,6 +295,4 @@
             <menuitem id="gamification_goal_menu" parent="gamification_menu" action="goal_list_action" sequence="10"/>
             <menuitem id="gamification_definition_menu" parent="gamification_menu" action="goal_definition_list_action" sequence="20"/>
             <menuitem id="gamification_badge_menu" parent="gamification_menu" action="badge_list_action" sequence="30"/>
-
-    </data>
-</openerp>
+</odoo>

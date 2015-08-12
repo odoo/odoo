@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-
+<odoo>
         <!-- Badge views -->
         <record id="badge_list_action" model="ir.actions.act_window">
             <field name="name">Badges</field>
@@ -20,7 +18,7 @@
         </record>
 
         <record id="badge_list_view" model="ir.ui.view">
-            <field name="name">Badge List</field>
+            <field name="name">gamification.badge.tree</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
                 <tree string="Badge List"> 
@@ -34,7 +32,7 @@
         </record>
 
         <record id="badge_form_view" model="ir.ui.view">
-            <field name="name">Badge Form</field>
+            <field name="name">gamification.badge.form</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
                 <form string="Badge">
@@ -92,9 +90,8 @@
             </field>
         </record>
 
-
         <record id="badge_kanban_view" model="ir.ui.view" >
-            <field name="name">Badge Kanban View</field>
+            <field name="name">gamification.badge.kanban</field>
             <field name="model">gamification.badge</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_badge">
@@ -146,7 +143,6 @@
             </field>
         </record>
 
-
         <!-- Badge user viewss -->
 
         <record id="badge_user_kanban_view" model="ir.ui.view" >
@@ -180,5 +176,4 @@
                 </kanban>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

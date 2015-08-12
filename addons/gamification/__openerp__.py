@@ -2,10 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Gamification',
-    'version': '1.0',
     'sequence': 160,
     'category': 'Human Resources',
-    'website' : 'https://www.odoo.com/page/gamification',
+    'website': 'https://www.odoo.com/page/gamification',
     'depends': ['mail', 'web_kanban_gauge'],
     'description': """
 Gamification process
@@ -33,6 +32,4 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'data/gamification_base_data.xml',
         'views/gamification_templates.xml',
     ],
-    'application': False,
-    'auto_install': False,
 }
