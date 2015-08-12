@@ -127,8 +127,7 @@ var CalendarView = View.extend({
         this.attendee_people = attrs.attendee;
 
         // Check whether the date field is editable (i.e. if the events can be dragged and dropped)
-        var main_date_field = this.date_start || this.date_end || this.date_delay;
-        this.editable = !this.options.read_only_mode && !this.fields_view.fields[main_date_field].readonly;
+        this.editable = !this.options.read_only_mode && !this.fields_view.fields[this.date_start].readonly;
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default quick_create_instance

@@ -889,7 +889,7 @@ class calendar_event(osv.Model):
         'display_time': fields.function(_compute, string='Event Time', type="char", multi='attendee'),
         'display_start': fields.function(_compute, string='Date', type="char", multi='attendee', store=True),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
-        'start': fields.function(_compute, string='Start', type="datetime", multi='attendee', store=True, required=True, help="Start date of an event, without time for full days events"),
+        'start': fields.function(_compute, fnct_inv=lambda *args: None, string='Start', type="datetime", multi='attendee', store=True, required=True, help="Start date of an event, without time for full days events"),
         'stop': fields.function(_compute, string='Stop', type="datetime", multi='attendee', store=True, required=True, help="Stop date of an event, without time for full days events"),
         'start_date': fields.date('Start Date', states={'done': [('readonly', True)]}, track_visibility='onchange'),
         'start_datetime': fields.datetime('Start DateTime', states={'done': [('readonly', True)]}, track_visibility='onchange'),
