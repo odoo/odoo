@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
@@ -202,7 +200,7 @@ class Partner(osv.osv):
         res = {}
         for id in ids:
             res[id] = 'none'
-        today = time.strftime('%Y-%m-%d')
+        today = fields.date.today()
         for id in ids:
             partner_data = self.browse(cr, uid, id, context=context)
             if partner_data.membership_cancel and today > partner_data.membership_cancel:
@@ -211,6 +209,7 @@ class Partner(osv.osv):
             if partner_data.membership_stop and today > partner_data.membership_stop:
                 res[id] = 'free' if partner_data.free_member else 'old'
                 continue
+
             s = 4
             if partner_data.member_lines:
                 for mline in partner_data.member_lines:
@@ -313,7 +312,7 @@ class Partner(osv.osv):
                     string = 'Current Membership Status', type = 'selection',
                     selection = STATE,
                     store = {
-                        'account.invoice': (_get_invoice_partner, ['state'], 10),
+                        'account.invoice': (_get_invoice_partner, ['state', 'invoice_line_ids'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help='It indicates the membership state.\n'
@@ -376,7 +375,6 @@ class Partner(osv.osv):
         """
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
-        invoice_tax_obj = self.pool.get('account.invoice.tax')
         product_id = product_id or datas.get('membership_product_id', False)
         amount = datas.get('amount', 0.0)
         invoice_list = []
@@ -390,26 +388,27 @@ class Partner(osv.osv):
                 raise UserError(_("Partner is a free Member."))
             if not addr.get('invoice', False):
                 raise UserError(_("Partner doesn't have an address to make the invoice."))
-            quantity = 1
-            invoice_id = invoice_obj.create(cr, uid, {
+            invoice_values = {
                 'partner_id': partner.id,
                 'account_id': account_id,
                 'fiscal_position_id': fpos_id or False
-                }, context=context)
-            line_value =  {
+            }
+            invoice_id = invoice_obj.create(cr, uid, invoice_values, context=context)
+            line_values = {
                 'product_id': product_id,
                 'price_unit': amount,
                 'invoice_id': invoice_id,
             }
-            invoice_line = invoice_line_obj.new(cr, uid, line_value, context=context)
+            # create a record in cache, apply onchange then revert back to a dictionnary
+            invoice_line = invoice_line_obj.new(cr, uid, line_values, context=context)
             invoice_line._onchange_product_id()
             # We convert a new id object back to a dictionary to write to bridge between old and new api
-            line_value = invoice_line._convert_to_write(invoice_line._cache)
-            invoice_line_obj.create(cr, uid, line_value, context=context)
+            line_values = invoice_line._convert_to_write(invoice_line._cache)
+            line_values['price_unit'] = amount
+            invoice_obj.write(cr, uid, [invoice_id], {'invoice_line_ids': [(0, 0, line_values)]}, context=context)
             invoice_list.append(invoice_id)
             invoice_obj.compute_taxes(cr, uid, [invoice_id])
-        #recompute the membership_state of those partners
-        self.pool.get('res.partner').write(cr, uid, ids, {})
+
         return invoice_list
 
 
@@ -454,7 +453,7 @@ class Invoice(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
         member_line_obj = self.pool.get('membership.membership_line')
-        today = time.strftime('%Y-%m-%d')
+        today = fields.date.today()
         for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
@@ -484,7 +483,7 @@ class account_invoice_line(osv.osv):
                                     'partner': line.invoice_id.partner_id.id,
                                     'membership_id': line.product_id.id,
                                     'member_price': line.price_unit,
-                                    'date': time.strftime('%Y-%m-%d'),
+                                    'date': fields.date.today(),
                                     'date_from': date_from,
                                     'date_to': date_to,
                                     'account_invoice_line': line.id,
@@ -517,13 +516,14 @@ class account_invoice_line(osv.osv):
                 date_to = line.product_id.membership_date_to
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
-                member_line_obj.create(cr, uid, {
+                values = {
                             'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
                             'membership_id': line.product_id.id,
                             'member_price': line.price_unit,
-                            'date': time.strftime('%Y-%m-%d'),
+                            'date': fields.date.today(),
                             'date_from': date_from,
                             'date_to': date_to,
                             'account_invoice_line': line.id,
-                        }, context=context)
+                        }
+                member_line_obj.create(cr, uid, values, context=context)
         return result
