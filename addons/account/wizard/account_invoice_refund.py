@@ -50,6 +50,7 @@ class AccountInvoiceRefund(models.TransientModel):
             date = False
             description = False
             for inv in inv_obj.browse(context.get('active_ids')):
+                print 'refunding', inv, 'at state', inv.state
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise UserError(_('Cannot refund draft/proforma/cancelled invoice.'))
                 if inv.reconciled and mode in ('cancel', 'modify'):
@@ -61,6 +62,7 @@ class AccountInvoiceRefund(models.TransientModel):
                 refund.compute_taxes()
 
                 created_inv.append(refund.id)
+                print 'refund', refund, refund.state, mode
                 if mode in ('cancel', 'modify'):
                     movelines = inv.move_id.line_ids
                     to_reconcile_ids = {}

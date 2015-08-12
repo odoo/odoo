@@ -390,6 +390,9 @@
                     </group>
                     <field name="sent" invisible="1"/>
                     <notebook colspan="4">
+                        <page string="payment">
+                            <field name="payment_ids"/>
+                        </page>
                         <page string="Invoice Lines">
                             <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
                                 <tree string="Invoice Lines" editable="bottom">
