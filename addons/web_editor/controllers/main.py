@@ -147,30 +147,32 @@ class Web_Editor(http.Controller):
                 'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
-            uploads.append({'id': attachment_id})
+            uploads += Attachments.read(request.cr, request.uid, [attachment_id], ['name', 'mimetype', 'checksum', 'url'], request.context)
         else:                                                  # images provided
             try:
                 attachment_ids = []
                 for c_file in request.httprequest.files.getlist('upload'):
-                    image_data = c_file.read()
-                    image = Image.open(cStringIO.StringIO(image_data))
-                    w, h = image.size
-                    if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                        raise ValueError(
-                            u"Image size excessive, uploaded images must be smaller "
-                            u"than 42 million pixel")
-
-                    if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                        image_data = tools.image_save_for_web(image)
+                    data = c_file.read()
+                    try:
+                        image = Image.open(cStringIO.StringIO(data))
+                        w, h = image.size
+                        if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                            raise ValueError(
+                                u"Image size excessive, uploaded images must be smaller "
+                                u"than 42 million pixel")
+                        if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                            data = tools.image_save_for_web(image)
+                    except IOError, e:
+                        pass
 
                     attachment_id = Attachments.create(request.cr, request.uid, {
                         'name': c_file.filename,
-                        'datas': image_data.encode('base64'),
+                        'datas': data.encode('base64'),
                         'datas_fname': c_file.filename,
                         'res_model': 'ir.ui.view',
                     }, request.context)
                     attachment_ids.append(attachment_id)
-                uploads = [{'id': id} for id in attachment_ids]
+                uploads += Attachments.read(request.cr, request.uid, attachment_ids, ['name', 'mimetype', 'checksum', 'url'], request.context)
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)

@@ -41,6 +41,7 @@
                     <div class="modal-body">
                         <ul class="nav nav-tabs">
                             <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
+                            <li><a href="#editor-media-document" data-toggle="tab">Document</a></li>
                             <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
                             <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
                             <li class="search" style="float: right;">
@@ -61,6 +62,8 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div class="tab-pane fade in active" id="editor-media-image">
+                            </div>
+                            <div class="tab-pane fade" id="editor-media-document">
                             </div>
                             <div class="tab-pane fade" id="editor-media-icon">
                             </div>
@@ -87,7 +90,7 @@
                   class="form-inline">
                 <div class="well">
                     <div class="form-group pull-left">
-                        <input type="file" name="upload" accept="image/*" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <input type="file" name="upload" t-att-accept="widget.accept" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
                         <input type="hidden" name="disable_optimization" value=""/>
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
@@ -144,7 +147,7 @@
                 <div class="col-sm-2 existing-attachment-cell"
                      t-foreach="row" t-as="attachment">
                     <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
-                    <img t-att-src="attachment.local_url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" class="img img-responsive"/>
+                    <div class="o_attachment_border"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image"/></div>
                 </div>
             </div>
         </div>

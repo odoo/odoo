@@ -101,15 +101,17 @@ var MediaDialog = Dialog.extend({
 
         this.only_images = this.options.only_images || this.options.select_images || (this.media && $(this.media).parent().data("oe-field") === "image");
         if (this.only_images) {
-            this.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+            this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
         }
 
         if (this.media) {
             if (this.media.nodeName === "IMG") {
                 this.$('[href="#editor-media-image"]').tab('show');
+            } else if ($(this.media).is('a.o_image')) {
+                this.$('[href="#editor-media-document"]').tab('show');
             } else if (this.media.className.match(/(^|\s)media_iframe_video($|\s)/)) {
                 this.$('[href="#editor-media-video"]').tab('show');
-            }  else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+            } else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
                 this.media = this.media.parentNode;
                 this.$('[href="#editor-media-video"]').tab('show');
             } else if (this.media.className.match(/(^|\s)fa($|\s)/)) {
@@ -119,6 +121,8 @@ var MediaDialog = Dialog.extend({
 
         this.imageDialog = new ImageDialog(this, this.media, this.options);
         this.imageDialog.appendTo(this.$("#editor-media-image"));
+        this.documentDialog = new ImageDialog(this, this.media, _.extend({'document': true}, this.options));
+        this.documentDialog.appendTo(this.$("#editor-media-document"));
         this.iconDialog = new fontIconsDialog(this, this.media, this.options);
         this.iconDialog.appendTo(this.$("#editor-media-icon"));
         this.videoDialog = new VideoDialog(this, this.media, this.options);
@@ -129,6 +133,9 @@ var MediaDialog = Dialog.extend({
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
             if ($(event.target).is('[href="#editor-media-image"]')) {
                 self.active = self.imageDialog;
+                self.$('li.search, li.previous, li.next').removeClass("hidden");
+            } if ($(event.target).is('[href="#editor-media-document"]')) {
+                self.active = self.documentDialog;
                 self.$('li.search, li.previous, li.next').removeClass("hidden");
             } else if ($(event.target).is('[href="#editor-media-icon"]')) {
                 self.active = self.iconDialog;
@@ -159,6 +166,9 @@ var MediaDialog = Dialog.extend({
             if (this.active !== this.imageDialog) {
                 this.imageDialog.clear();
             }
+            if (this.active !== this.documentDialog) {
+                this.documentDialog.clear();
+            }
             if (this.active !== this.iconDialog) {
                 this.iconDialog.clear();
             }
@@ -173,23 +183,24 @@ var MediaDialog = Dialog.extend({
         this.active.save();
 
         if (this.active.add_class) {
-            $(this.media).addClass(this.active.add_class);
+            $(this.active.media).addClass(this.active.add_class);
         }
+        var media = this.active.media;
 
-        $(document.body).trigger("media-saved", [self.active.media, self.old_media]);
-        self.trigger("saved", [self.active.media, self.old_media]);
+        $(document.body).trigger("media-saved", [media, self.old_media]);
+        self.trigger("saved", [media, self.old_media]);
         setTimeout(function () {
-            if (!self.active.media.parentNode) {
+            if (!media.parentNode) {
                 return;
             }
-            range.createFromNode(self.active.media).select();
-            click_event(self.active.media, "mousedown");
+            range.createFromNode(media).select();
+            click_event(media, "mousedown");
             if (!this.only_images) {
                 setTimeout(function () {
-                    if($(self.active.media).parent().data("oe-field") !== "image") {
-                        click_event(self.active.media, "click");
+                    if($(media).parent().data("oe-field") !== "image") {
+                        click_event(media, "click");
                     }
-                    click_event(self.active.media, "mouseup");
+                    click_event(media, "mouseup");
                 },0);
             }
         },0);
@@ -238,12 +249,14 @@ var ImageDialog = Widget.extend({
         'change input.url': "change_input",
         'keyup input.url': "change_input",
         //'change select.image-style': 'preview_image',
-        'click .existing-attachments img': 'select_existing',
+        'click .existing-attachments [data-src]': 'select_existing',
         'click .existing-attachment-remove': 'try_remove',
     }),
     init: function (parent, media, options) {
         this._super();
         this.options = options || {};
+        this.accept = this.options.accept || this.options.document ? "*/*" : "image/*";
+        this.domain = this.options.domain || ['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]];
         this.parent = parent;
         this.media = media;
         this.images = [];
@@ -254,13 +267,12 @@ var ImageDialog = Widget.extend({
         var self = this;
         var res = this._super();
         var o = { url: null, alt: null };
-        // avoid typos, prevent addition of new properties to the object
-        Object.preventExtensions(o);
 
         if ($(this.media).is("img")) {
             o.url = this.media.getAttribute('src');
-        } else {
-            this.add_class = "img-responsive pull-left";
+        } else if ($(this.media).is("a.o_image")) {
+            o.url = this.media.getAttribute('href').replace(/[?].*/, '');
+            o.id = +o.url.match(/\/web\/content\/([0-9]*)/, '')[1];
         }
         this.parent.$(".pager > li").click(function (e) {
             e.preventDefault();
@@ -271,13 +283,14 @@ var ImageDialog = Widget.extend({
             self.page += $target.hasClass('previous') ? -1 : 1;
             self.display_attachments();
         });
-        this.set_image(o.url, o.alt);
-        this.fetch_existing();
+        this.fetch_existing().then(function () {
+            self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+        });
         return res;
     },
-    push: function (url, alt, id) {
+    push: function (attachment) {
         if (this.options.select_images) {
-            var img = _.select(this.images, function (v) { return v.url == url;});
+            var img = _.select(this.images, function (v) { return v.id == attachment.id;});
             if (img.length) {
                 this.images.splice(this.images.indexOf(img[0]),1);
                 return;
@@ -285,7 +298,7 @@ var ImageDialog = Widget.extend({
         } else {
             this.images = [];
         }
-        this.images.push({'url': url, 'alt': alt, 'id': id});
+        this.images.push(attachment);
     },
     save: function () {
         if (this.options.select_images) {
@@ -294,21 +307,33 @@ var ImageDialog = Widget.extend({
         }
         this.parent.trigger("save", this.media);
 
-        var img = this.images[0] || {
-                'url': this.$(".existing-attachments img:first").attr('src'),
-                'alt': this.$(".existing-attachments img:first").attr('alt')
-            };
-
-        if (this.media.tagName !== "IMG") {
-            var media = document.createElement('img');
-            $(this.media).replaceWith(media);
-            this.media = media;
+        var img = this.images[0];
+        if (!img) {
+            var id = this.$(".existing-attachments [data-src]:first").data('id');
+            img = _.find(this.images, function (img) { return img.id === id;});
         }
 
-        $(this.media).attr('src', img.url).attr('alt', img.alt);
+        if (!img.is_document) {
+            if(this.media.tagName !== "IMG") {
+                var media = document.createElement('img');
+                $(this.media).replaceWith(media);
+                this.media = media;
+                this.add_class = "img-responsive pull-left";
+            }
+            this.media.setAttribute('src', img.src);
+        } else {
+            if (this.media.tagName !== "A") {
+                $('.note-control-selection').hide();
+                var media = document.createElement('a');
+                $(this.media).replaceWith(media);
+                this.media = media;
+            }
+            this.media.setAttribute('href', '/web/content/' + img.id + '?unique=' + img.checksum + '&download=true');
+            $(this.media).addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+        }
 
+        $(this.media).attr('alt', img.alt);
         var style = this.style;
-        this.media.setAttribute('src', img.url);
         if (style) { this.media.addClass(style); }
 
         return this.media;
@@ -334,11 +359,9 @@ var ImageDialog = Widget.extend({
             self.selected_existing();
         });
     },
-    set_image: function (url, alt, error) {
+    set_image: function (attachment, error) {
         var self = this;
-        if (url) {
-            this.push(url, alt);
-        }
+        this.push(attachment);
         this.$('input.url').val('');
         this.fetch_existing().then(function () {
             self.selected_existing();
@@ -362,11 +385,16 @@ var ImageDialog = Widget.extend({
             delete window[callback];
             $form.find('.well > span').remove();
             $form.find('.well > div').show();
+            _.each(attachments, function (record) {
+                record.src = record.url || '/web/image/' + record.id;
+                record.is_document = !(/gif|jpe|jpg|png/.test(record.mimetype));
+            });
             if (error || !attachments.length) {
                 self.file_selected(null, error || !attachments.length);
             }
+            self.images = attachments;
             for (var i=0; i<attachments.length; i++) {
-                self.file_selected(attachments[i]['local_url'] || '/web/image/'+attachments[i].id, error);
+                self.file_selected(attachments[i], error);
             }
         };
     },
@@ -376,17 +404,16 @@ var ImageDialog = Widget.extend({
         this.$('button.filepicker').removeClass('btn-danger btn-success');
         this.$('form').submit();
     },
-    file_selected: function(url, error) {
+    file_selected: function(attachment, error) {
         var $button = this.$('button.filepicker');
         if (!error) {
             $button.addClass('btn-success');
         } else {
-            url = null;
             this.$('form').addClass('has-error')
                 .find('.help-block').text(error);
             $button.addClass('btn-danger');
+            this.set_image(attachment, error);
         }
-        this.set_image(url, null, error);
 
         if (!this.options.select_images) {
             // auto save and close popup
@@ -394,8 +421,7 @@ var ImageDialog = Widget.extend({
         }
     },
     fetch_existing: function (needle) {
-        var domain = [['res_model', '=', 'ir.ui.view'], '|',
-                    ['mimetype', '=', false], ['mimetype', '=like', 'image/%']];
+        var domain = [['res_model', '=', 'ir.ui.view']].concat(this.domain);
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
@@ -405,7 +431,7 @@ var ImageDialog = Widget.extend({
             args: [],
             kwargs: {
                 domain: domain,
-                fields: ['name', 'local_url'],
+                fields: ['name', 'mimetype', 'checksum', 'url'], // if we want to use /web/image/xxx with redirect for image url, remove 'url'
                 order: 'id desc',
                 context: base.get_context()
             }
@@ -413,12 +439,15 @@ var ImageDialog = Widget.extend({
     },
     fetched_existing: function (records) {
         this.records = records;
+        _.each(records, function (record) {
+            record.src = record.url || '/web/image/' + record.id;
+            record.is_document = !(/gif|jpe|jpg|png/.test(record.mimetype));
+        });
         this.display_attachments();
     },
     display_attachments: function () {
-        this.$('.help-block').empty();
+        var self = this;
         var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
-
         var from = this.page * per_screen;
         var records = this.records;
 
@@ -428,6 +457,9 @@ var ImageDialog = Widget.extend({
             .groupBy(function (_, index) { return Math.floor(index / IMAGES_PER_ROW); })
             .values()
             .value();
+
+        this.$('.help-block').empty();
+
         this.$('.existing-attachments').replaceWith(
             QWeb.render(
                 'web_editor.dialog.image.existing.content', {rows: rows}));
@@ -435,30 +467,31 @@ var ImageDialog = Widget.extend({
             .find('li.previous').toggleClass('disabled', (from === 0)).end()
             .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
 
+        this.$el.find('.o_image').each(function () {
+            var $div = $(this);
+            if (/gif|jpe|jpg|png/.test($div.data('mimetype'))) {
+                var $img = $('<img/>').addClass('img img-responsive').attr('src', $div.data('url') || $div.data('src'));
+                $div.addClass('o_webimage').append($img);
+            }
+        });
         this.selected_existing();
     },
     select_existing: function (e) {
         var $img = $(e.currentTarget);
-        this.push($img.attr('src'), $img.attr('alt'), $img.data('id'));
+        var attachment = _.find(this.records, function (record) { return record.id === $img.data('id'); });
+        this.push(attachment);
         this.selected_existing();
     },
     selected_existing: function () {
         var self = this;
         this.$('.existing-attachment-cell.media_selected').removeClass("media_selected");
-        var $select = this.$('.existing-attachment-cell img').filter(function () {
+        var $select = this.$('.existing-attachment-cell [data-src]').filter(function () {
             var $img = $(this);
-            var url = $img.attr("src");
-            return !!_.select(self.images, function (v) {
-                if (v.url === url) {
-                    if (!v.id) {
-                        v.id = $img.data('id');
-                        v.alt = $img.attr('alt');
-                    }
-                    return true;
-                }
-            }).length;
+            return !!_.find(self.images, function (v) {
+                return (v.url === $img.data("src") || ($img.data("url") && v.url === $img.data("url")) || v.id === $img.data("id"));
+            });
         });
-        $select.parent().addClass("media_selected");
+        $select.closest('.existing-attachment-cell').addClass("media_selected");
         return $select;
     },
     try_remove: function (e) {

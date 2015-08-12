@@ -694,13 +694,31 @@
 .note-image-dialog .existing-attachments .existing-attachment-cell {
   position: relative;
 }
-.note-image-dialog .existing-attachments .existing-attachment-cell .img {
+.note-image-dialog .existing-attachments .existing-attachment-cell .o_attachment_border {
   border: 1px solid #848490;
+  text-align: center;
+}
+.note-image-dialog .existing-attachments .existing-attachment-cell .o_image {
+  max-width: 100%;
+  padding-top: 80%;
+  max-height: 100%;
+  display: inline-block;
+}
+.note-image-dialog .existing-attachments .existing-attachment-cell .o_image img {
+  width: 100%;
+}
+.note-image-dialog .existing-attachments .existing-attachment-cell .o_webimage {
+  background-image: none;
+  padding-top: 0;
+  width: 100%;
+  height: initial;
+  vertical-align: middle;
 }
 .note-image-dialog .existing-attachments .existing-attachment-cell .existing-attachment-remove {
   position: absolute;
   top: 0;
   left: 15px;
+  z-index: 1;
   cursor: pointer;
   background: white;
   padding: 2px;
@@ -711,7 +729,7 @@
   -webkit-border-bottom-right-radius: 8px;
   border-bottom-right-radius: 8px;
 }
-.note-image-dialog .existing-attachments .existing-attachment-cell.media_selected > i, .note-image-dialog .existing-attachments .existing-attachment-cell.media_selected > img {
+.note-image-dialog .existing-attachments .existing-attachment-cell.media_selected > * {
   border-width: 5px;
   border-color: #00f8f8;
 }
@@ -1018,7 +1036,7 @@ html[lang] > body.editor_enable [data-oe-translation-state]:hover {
   cursor: text;
 }
 html[lang] > body.editor_enable [data-oe-translation-state="translated"] {
-  background: rgba(120, 215, 110, 0.5) !important
+  background: rgba(120, 215, 110, 0.5) !important;
 }
 
 html[data-translatable] .oe_field_translate {

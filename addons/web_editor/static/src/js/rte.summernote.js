@@ -398,7 +398,7 @@ dom.isVoid = function (node) {
     return node && /^BR|^IMG|^HR/.test(node.nodeName.toUpperCase()) || dom.isImg(node);
 };
 dom.isImg = function (node) {
-    return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i)) ));
+    return dom.isImgFont(node) || (node && (node.nodeName === "IMG" || (node.className && node.className.match(/(^|\s)(media_iframe_video|o_image)(\s|$)/i)) ));
 };
 dom.isForbiddenNode = function (node) {
     return $(node).is(".media_iframe_video, .fa, img");
@@ -609,7 +609,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on('mousedown', summernote_mousedown);
     $(document).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor.off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
-    oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa', function (event) {
+    oLayoutInfo.editor.on('dblclick', 'img, .media_iframe_video, span.fa, i.fa, span.fa, a.o_image', function (event) {
         if (!$(event.target).closest(".note-toolbar").length) { // prevent icon edition of top bar for default summernote
             new widgets.MediaDialog(oLayoutInfo.editor, event.target).appendTo(document.body);
         }
