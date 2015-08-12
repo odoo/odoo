@@ -1071,21 +1071,26 @@ var FormView = View.extend(common.FieldManagerMixin, {
     sidebar_eval_context: function () {
         return $.when(this.build_eval_context());
     },
-    display_translation_alert: function(values){
-        var self = this;
-        if(_t.database.multi_lang){
+    display_translation_alert: function(values) {
+        if (_t.database.multi_lang) {
             var alert_fields = _.filter(this.translatable_fields, function(field) {
-                return  _.has(values, field.name)
+                return _.has(values, field.name)
             });
-            if (alert_fields.length){
-                var lang = _t.database.parameters.name,
-                    $alert_box = $(QWeb.render('translation-alert', {'fields': alert_fields,'lang': lang})),
+            if (alert_fields.length) {
+                var $alert_box = $(QWeb.render('translation-alert', {
+                        'fields': alert_fields,
+                        'lang': _t.database.parameters.name
+                    })),
                     $target_el = this.$('.oe_form_sheet').length ? this.$('.oe_form_sheet') : this.$el;
-
-                $alert_box.find('.oe_field_translate').on('click', function(ev){
+                // TODO: `to_edit_mode` and `to_view_mode` should be trigger from form view. currently web tip override form view to trigger it.
+                this.on('to_edit_mode', null, function() {
+                    $alert_box.remove();
+                });
+                $alert_box.find('.oe_field_translate').on('click', function(ev) {
                     ev.preventDefault();
-                    var name = ev.target.name;
-                    debugger;
+                    _.find(alert_fields, {
+                        'name': ev.target.name
+                    }).on_translate()
                 });
                 $target_el.prepend($alert_box);
             }
