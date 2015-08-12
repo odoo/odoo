@@ -855,17 +855,6 @@ class mrp_production(osv.osv):
                 res = False
         return res
 
-    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
-        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default,
-            it's always equal to the quantity encoded in the production order or the production wizard, but if the
-            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce
-            and its quantity.
-        :param production_id: ID of the mrp.order
-        :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
-        :return: The factor to apply to the quantity that we should produce for the given production order.
-        """
-        return 1
-
     def _get_produced_qty(self, cr, uid, production, context=None):
         ''' returns the produced quantity of product 'production.product_id' for the given production, in the product UoM
         '''
@@ -968,6 +957,16 @@ class mrp_production(osv.osv):
                 consume_lines.append({'product_id': prod, 'product_qty': qty, 'lot_id': lot})
         return consume_lines
 
+    def _calculate_produce_line_qty(self, cr, uid, move, quantity, context=None):
+        """ Compute the quantity and remainig quantity of products to produce.
+        :param move: Record set of stock move that needs to be produced, identify the product to produce.
+        :param quantity: specify quantity to produce in the uom of the production order.
+        :return: The quantity and remaining quantity of product produce.
+        """
+        qty = min(quantity, move.product_qty)
+        remaining_qty = quantity - qty
+        return qty, remaining_qty
+
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz=False, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -996,15 +995,13 @@ class mrp_production(osv.osv):
                     produced_products[produced_product.product_id.id] = 0
                 produced_products[produced_product.product_id.id] += produced_product.product_qty
             for produce_product in production.move_created_ids:
-                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 lot_id = False
                 if wiz:
                     lot_id = wiz.lot_id.id
-                qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
+                qty, remaining_qty = self._calculate_produce_line_qty(cr, uid, produce_product, production_qty_uom, context=context)
                 new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
                                                          location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
                 stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
-                remaining_qty = subproduct_factor * production_qty_uom - qty
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     # In case you need to make more than planned
                     #consumed more in wizard than previously planned
