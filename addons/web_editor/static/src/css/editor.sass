@@ -601,13 +601,27 @@ $attachment-border-color: #848490
 
         .existing-attachment-cell
             position: relative
-            .img
+            .o_attachment_border
                 border: 1px solid $attachment-border-color
+                text-align: center
+            .o_image
+                max-width: 100%
+                padding-top: 80%
+                max-height: 100%
+                display: inline-block
+                img
+                    width: 100%
+            .o_webimage
+                background-image: none
+                padding-top: 0
+                width: 100%
+                height: initial
+                vertical-align: middle
             .existing-attachment-remove
                 position: absolute
                 top: 0
                 left: 15px // padding-left on col-*
-
+                z-index: 1
                 cursor: pointer
                 background: white
                 padding: 2px
@@ -616,7 +630,7 @@ $attachment-border-color: #848490
                 border-left: none
                 +border-bottom-right-radius(8px)
             &.media_selected
-                > i, > img 
+                > *
                     border-width: 5px
                     border-color: rgb(0, 248, 248)
 
