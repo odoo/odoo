@@ -96,7 +96,7 @@ class AccountInvoiceReport(models.Model):
                 sub.fiscal_position_id, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total as price_total, sub.price_average as price_average,
-                cr.rate as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
+                COALESCE(cr.rate, 1) as currency_rate, sub.residual as residual, sub.commercial_partner_id as commercial_partner_id
         """
         return select_str
 
@@ -171,7 +171,7 @@ class AccountInvoiceReport(models.Model):
             FROM (
                 %s %s %s
             ) AS sub
-            JOIN currency_rate cr ON
+            LEFT JOIN currency_rate cr ON
                 (cr.currency_id = sub.currency_id AND
                  cr.date_start <= COALESCE(sub.date, NOW()) AND
                  (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
