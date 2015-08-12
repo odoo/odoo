@@ -658,7 +658,7 @@ var KanbanView = View.extend({
                 id: id,
                 attributes: {folded: false},
                 dataset: dataset,
-                values: {},
+                values: {id: id},
             };
             var options = self.get_column_options();
             var record_options = _.clone(self.record_options);
