@@ -89,8 +89,7 @@ var PlannerDialog = Widget.extend({
             self.pages.forEach(function(page) {
                 page.menu_item = self._find_menu_item_by_page_id(page.id);
             });
-
-            self.$el.append(self.$res);
+            self.$el.find('.o_planner_content_wrapper').append(self.$res);
 
             // update the planner_data with the new inputs of the view
             var actual_vals = self._get_values();

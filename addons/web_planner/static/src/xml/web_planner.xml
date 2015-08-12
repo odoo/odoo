@@ -9,21 +9,22 @@
 
     <t t-name="PlannerDialog">
         <div id="PlannerDialog" tabindex="-1">
-            <div class="dropdown o_planner_menu">
-                <a class="btn btn-default" data-toggle="dropdown" href="#" aria-expanded="false">Steps <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel"/>
-            </div>
-
-            <div class="o_planner_header">
+            <div class="o_planner_header_left">
                 <button class="btn btn-primary mark_as_done">
                     <i class="fa fa-square-o"></i>
                     <span>Mark As Done</span>
                 </button>
-            </div><div class="o_planner_header text-right">
+            </div><div class="o_planner_header_right text-right">
                 <a class="btn btn-next">
                     Next step
                     <i class="fa fa-angle-right"></i>
                 </a>
+            </div>
+
+            <div class="o_planner_content_wrapper">
+                <div class="o_planner_menu">
+                    <ul role="menu" aria-labelledby="dLabel"/>
+                </div>
             </div>
         </div>
     </t>
