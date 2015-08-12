@@ -22,6 +22,7 @@ professional emails and reuse templates in a few clicks.
         'web_kanban_gauge',
     ],
     'data': [
+        'security/mass_mailing_security.xml',
         'data/mail_data.xml',
         'data/mass_mailing_data.xml',
         'wizard/mail_compose_message_view.xml',

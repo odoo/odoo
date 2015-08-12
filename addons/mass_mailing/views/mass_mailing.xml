@@ -12,7 +12,7 @@
         <!-- Marketing / Mass Mailing -->
         <menuitem name="Mass Mailing" id="mass_mailing_menu_root" sequence="60" web_icon="mass_mailing,static/description/icon.png"/>
         <menuitem name="Mailings" id="mass_mailing_menu"
-            parent="mass_mailing_menu_root" sequence="1" groups="marketing.group_marketing_user"/>
+            parent="mass_mailing_menu_root" sequence="1" groups="mass_mailing.group_mass_mailing_user"/>
         <!-- Marketing / Configuration -->
         <menuitem name="Configuration" id="mass_mailing_configuration"
             parent="mass_mailing_menu_root" sequence="100" groups="base.group_configuration"/>
@@ -670,7 +670,7 @@
         </record>
 
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"
-            sequence="100" groups="marketing.group_marketing_user,base.group_configuration"/>
+            sequence="100" groups="mass_mailing.group_mass_mailing_user,base.group_configuration"/>
 
         <menuitem name="Campaign Stages" id="menu_view_mass_mailing_stages"
             parent="menu_mass_mailing_configuration" sequence="1"
