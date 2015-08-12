@@ -50,13 +50,6 @@ Dashboard / Reports for MRP will include:
         'report/mrp_report_view.xml',
     ],
     'demo': ['data/mrp_demo.xml'],
-    'test': [
-         'test/bom_with_service_type_product.yml',
-         'test/mrp_users.yml',
-         'test/order_demo.yml',
-         'test/order_process.yml',
-         'test/cancel_order.yml',
-    ],
     'installable': True,
     'application': True,
     'auto_install': False,
