@@ -56,8 +56,6 @@ Dashboard / Reports for Inventory Management will include:
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
-        'wizard/stock_pack_details.xml',
-        'wizard/stock_lot_split.xml',
         'stock_incoterms.xml',
         'stock_report.xml',
         'stock_view.xml',

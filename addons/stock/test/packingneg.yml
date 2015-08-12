@@ -48,7 +48,7 @@
     #Create package for each line and assign it as result_package_id
     #create pack operation
     stock_pack.write(cr, uid, record.pack_operation_ids[0].id, {'result_package_id': package1, 'product_qty': 120})
-    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'lot_id': lot_a, 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
+    new_pack1 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'pack_lot_ids': [(0, 0, {'lot_id': lot_a, 'qty': 120})], 'result_package_id': package2, 'product_qty': 120, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
     new_pack2 = stock_pack.create(cr, uid, {'product_id': ref('product_neg'), 'product_uom_id': ref('product.product_uom_unit'), 'picking_id': ref('pick_neg'), 'result_package_id': package3, 'product_qty': 60, 'location_id': ref('stock_location_suppliers'), 'location_dest_id': ref('stock_location_stock')}, context=context)
 - 
   Transfer the receipt
@@ -82,7 +82,7 @@
     for rec in delivery_id.pack_operation_ids:
       if rec.package_id.name == 'Palneg 2':
         lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
-        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'), 'product_qty': 140, 'lot_id': lot_ids[0], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
+        stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'), 'product_qty': 140, 'pack_lot_ids': [(0, 0, {'lot_id': lot_ids[0], 'qty': 140})], 'product_uom_id': ref('product.product_uom_unit')}, context=context)
       if rec.package_id.name == 'Palneg 3':
         stock_pack.write(cr, uid, [rec.id], {'product_id': ref('product_neg'),'product_qty': 10, 'product_uom_id': ref('product.product_uom_unit')}, context=context)
 - 
@@ -133,7 +133,7 @@
     pack_obj = self.pool.get("stock.quant.package")
     lot_ids = self.pool.get("stock.production.lot").search(cr, uid, [('product_id', '=', ref('product_neg')), ('name','=','Lot neg')])
     pack_ids = pack_obj.search(cr, uid, [('name', '=', 'Palneg 2')])
-    ops_obj.write(cr, uid, [pick.pack_operation_ids[0].id], {'lot_id': lot_ids[0], 'result_package_id': pack_ids[0]})
+    ops_obj.write(cr, uid, [pick.pack_operation_ids[0].id], {'pack_lot_ids': {'lot_id': lot_ids[0], 'qty': 20.0}, 'result_package_id': pack_ids[0]})
     self.do_transfer(cr, uid, [ref("delivery_reconcile")])
 - 
   Check the negative quant was reconciled and the 20 pieces of lot neg at customers have the incoming shipments in the history_ids

@@ -680,6 +680,109 @@
             </field>
         </record>
 
+        <record id="view_pack_operation_details_form" model="ir.ui.view">
+            <field name="name">stock.pack.operation.details.form</field>
+            <field name="model">stock.pack.operation</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group string="Products">
+                            <field name="lots_visible" invisible="1"/>
+                            <field name="picking_source_location_id" invisible="1"/>
+                            <field name="picking_destination_location_id" invisible="1"/>
+                            <field name="product_id" attrs="{'required': [('package_id', '=', False)]}"/>
+                        </group>
+                        <group string="From">
+                            <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]" groups="stock.group_locations"/>
+                            <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" groups="stock.group_tracking_lot" context="{'location_id': location_id}"/>
+                        </group>
+                    </group>
+                    <group name="qty_to">
+                        <group string="Quantities">
+                            <label for="qty_done"/>
+                            <span class="oe_inline">
+                                <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}"/>
+                                /
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
+                            </span>
+                            <!--<button name="split_quantities" class="oe_link" string="Split" type="object"/> TODO-->
+                        </group>
+                        <group string="To">
+                            <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" groups="stock.group_locations"/>
+                            <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pack_operation_details_form_save" model="ir.ui.view">
+            <field name="name">stock.pack.operation.details.form.save</field>
+            <field name="model">stock.pack.operation</field>
+            <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
+            <field eval="15" name="priority"/>
+            <field name="arch" type="xml">
+                <group name="qty_to" position="after">
+                    <footer>
+                        <button name="save" type="object" string="Save" class="oe_highlight"/>
+                    </footer>
+                </group>
+            </field>
+        </record>
+
+        <record id="pack_details" model="ir.actions.act_window">
+            <field name="name">Pack Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.pack.operation</field>
+            <field name="view_id" ref="view_pack_operation_details_form_save"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="view_pack_operation_lot_form" model="ir.ui.view">
+            <field name="name">stock.pack.operation.lots.form</field>
+            <field name="model">stock.pack.operation</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="product_id" readonly="1"/>
+                        <label for="qty_done"/>
+                        <span>
+                            <field name="qty_done" class="oe_inline" readonly="1"/> of
+                            <field name="product_qty" class="oe_inline" readonly="1"/>
+                            <field name="product_uom_id" class="oe_inline" groups="product.group_uom" readonly="1"/>
+                            <field name="state" invisible="1"/>
+                        </span>
+                    </group>
+                    <group>
+                        <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
+                            <tree editable="bottom" decoration-success="qty_todo==qty">
+                                <field name="lot_name" invisible="not context.get('only_create', False)"/>
+                                <field name="lot_id" invisible="context.get('only_create', False)"
+                                       domain="[('product_id','=', parent.product_id)]"
+                                       context="{'product_id': parent.product_id}"/>
+                                <field name="qty" invisible="context.get('serial') and context.get('only_create')"/>
+                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved')"/>
+                                <button name="do_plus" type="object" icon="fa-plus-square" invisible="not context.get('show_reserved')"/>
+                                <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial')" readonly="1" string="To Do"/>
+                                <field name="processed" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="save" type="object" string="Save" class="oe_highlight" attrs="{'invisible':[('state','=','done')]}"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
         <record id="view_picking_form" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
@@ -690,7 +793,6 @@
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_new_transfer" states="draft,partially_available,assigned" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="action_assign" states="confirmed,waiting" string="Reserve" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="rereserve_pick" string="Recheck Availability" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'partially_available')), ('pack_operation_exist','=',True)]}"/>
                     <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="base.group_user"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('assigned', 'partially_available'))]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
@@ -736,9 +838,6 @@
                                     <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
                                     <field name="fresh_record" invisible="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('fresh_record', '=', False)]}" groups="product.group_uom"/>
-                                    <field name="lot_id" domain="[('product_id','=', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
-                                    <button name="split_lot" string="Lot Split" type="object" icon="STOCK_INDENT" groups="stock.group_production_lot"
-                                            attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available'])]}"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -748,7 +847,9 @@
                                     <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="qty_done"/>
+                                    <field name="qty_done" attrs="{'readonly': [('lots_visible', '=', True)]}"/>
+                                    <button name="split_lot" string="Lot Split" type="object" icon="fa-list" groups="stock.group_production_lot"
+                                            attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available','done'])]}"/>
                                     <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available"/>
@@ -766,6 +867,7 @@
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="qty_done" invisible="1"/>
+                                    <field name="lots_visible" invisible="1"/>
                                     <field name="processed_boolean"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
