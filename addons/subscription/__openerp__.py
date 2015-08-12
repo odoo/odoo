@@ -20,7 +20,10 @@ e.g. To have an invoice generated automatically periodically:
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],
-    'data': ['security/subcription_security.xml', 'security/ir.model.access.csv', 'subscription_view.xml'],
+    'data': [
+        'security/ir.model.access.csv',
+        'subscription_view.xml'
+    ],
     'demo': ['subscription_demo.xml',],
     'installable': True,
     'auto_install': False,
