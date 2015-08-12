@@ -171,7 +171,7 @@ class stock_config_settings(osv.osv_memory):
         'module_stock_calendar': fields.selection([
             (0, 'Set lead times in calendar days (easy)'),
             (1, "Adapt lead times using the suppliers' open days calendars (advanced)")
-            ], "Minimun Stock Rules",
+            ], "Minimum Stock Rules",
             help='This allows you to handle minimum stock rules differently by the possibility to take into account the purchase and delivery calendars \n-This installs the module stock_calendar.'),
     }
 
