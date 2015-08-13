@@ -240,6 +240,7 @@ class AccountJournal(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
+    bank_statements_source = fields.Selection([('manual', 'Record Manually')], default='manual', string='Bank Feeds', required=True)
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id')
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict')
     display_on_footer = fields.Boolean("Show in Invoice Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")

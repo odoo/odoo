@@ -247,6 +247,7 @@
                                 <field name="display_on_footer" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
                             </group>
                             <group>
+                                <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')], 'invisible': [('type', '!=', 'bank')]}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>

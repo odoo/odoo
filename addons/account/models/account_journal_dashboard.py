@@ -187,7 +187,8 @@ class account_journal(models.Model):
             'sum_waiting': formatLang(self.env, sum_waiting or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
-            'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
+            'no_statement': bool(self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0),
+            'bank_statements_source': self.bank_statements_source,
             'title': title, 
         }
 
@@ -346,4 +347,14 @@ class account_journal(models.Model):
         action = self.pool[model].read(self._cr, self._uid, action_id, context=self.env.context)
         # Note: this drops action['context'], which is a dict stored as a string, which is not easy to update
         action.update({'context': (u"{'journal_id': " + str(self.id) + u"}")})
+        return action
+
+    @api.multi
+    def create_statement(self):
+        """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
+        action = self.env.ref('account.action_bank_statement_tree').read()[0]
+        action.update({
+            'views': [[False, 'form']],
+            'context': "{'default_journal_id': " + str(self.id) + "}",
+        })
         return action
