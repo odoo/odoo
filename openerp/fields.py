@@ -42,14 +42,18 @@ def _check_value(value):
     return value.get() if isinstance(value, SpecialValue) else value
 
 
-def resolve_all_mro(model, name, reverse=False):
-    """ Return the (successively overridden) values of attribute ``name`` in the
-        class of ``model`` in mro order (or inverse order if ``reverse``).
+def resolve_mro(model, name, predicate):
+    """ Return the list of successively overridden values of attribute ``name``
+        in mro order on ``model`` that satisfy ``predicate``.
     """
-    klasses = reversed(type(model).__mro__) if reverse else type(model).__mro__
-    for klass in klasses:
-        if name in klass.__dict__:
-            yield klass.__dict__[name]
+    result = []
+    for cls in type(model).__mro__:
+        if name in cls.__dict__:
+            value = cls.__dict__[name]
+            if not predicate(value):
+                break
+            result.append(value)
+    return result
 
 
 def default_new_to_new(field, value):
@@ -392,15 +396,16 @@ class Field(object):
     # Setup field parameter attributes
     #
 
+    def _can_setup_from(self, field):
+        """ Return whether ``self`` can retrieve parameters from ``field``. """
+        return isinstance(field, type(self))
+
     def _setup_attrs(self, model, name):
         """ Determine field parameter attributes. """
         # determine all inherited field attributes
         attrs = {}
-        for field in resolve_all_mro(model, name, reverse=True):
-            if isinstance(field, type(self)):
-                attrs.update(field.args)
-            else:
-                attrs.clear()
+        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+            attrs.update(field.args)
         attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
@@ -489,7 +494,7 @@ class Field(object):
         if isinstance(self.compute, basestring):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
-            for method in resolve_all_mro(model, self.compute, reverse=True):
+            for method in resolve_mro(model, self.compute, callable):
                 self.depends += make_depends(getattr(method, '_depends', ()))
             self.compute = make_callable(self.compute)
         else:
@@ -1417,18 +1422,15 @@ class Selection(Field):
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
         # determine selection (applying 'selection_add' extensions)
-        for field in resolve_all_mro(model, name, reverse=True):
-            if isinstance(field, type(self)):
-                # We cannot use field.selection or field.selection_add here
-                # because those attributes are overridden by ``_setup_attrs``.
-                if 'selection' in field.args:
-                    self.selection = field.args['selection']
-                if 'selection_add' in field.args:
-                    # use an OrderedDict to update existing values
-                    selection_add = field.args['selection_add']
-                    self.selection = OrderedDict(self.selection + selection_add).items()
-            else:
-                self.selection = None
+        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+            # We cannot use field.selection or field.selection_add here
+            # because those attributes are overridden by ``_setup_attrs``.
+            if 'selection' in field.args:
+                self.selection = field.args['selection']
+            if 'selection_add' in field.args:
+                # use an OrderedDict to update existing values
+                selection_add = field.args['selection_add']
+                self.selection = OrderedDict(self.selection + selection_add).items()
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
