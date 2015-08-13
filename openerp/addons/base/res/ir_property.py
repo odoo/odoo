@@ -75,7 +75,7 @@ class ir_property(osv.osv):
                 prop = self.browse(cr, uid, ids[0])
                 type_ = prop.type
             else:
-                type_ = self._defaults['type']
+                type_ = self._defaults['type'] if 'type' in self._defaults else 'many2one'
 
         field = TYPE2FIELD.get(type_)
         if not field:
