@@ -27,7 +27,6 @@
                         <field name="group_stock_tracking_owner" widget="radio"/>
                     </group>
                     <group string="Location &amp; Warehouse">
-                        <field name="group_product_variant" widget="radio"/>
                         <field name="module_procurement_jit" widget="radio"/>
                         <field name="group_stock_multiple_locations" widget="radio"/>
 
@@ -39,21 +38,23 @@
                                 <field name="propagation_minimum_delta" class="oe_inline"/>
                             </div>
                         </div>
-                    </group>
-                    <group>
+
                         <label for="id" string="Products" groups="base.group_no_one"/>
                         <div groups="base.group_no_one">
                             <label for="decimal_precision"/>
                             <field name="decimal_precision" class="oe_inline"/>
                         </div>
 
-                        <field name="group_stock_packaging" widget="radio"/>
-                        <field name="group_uom" widget="radio"/>
-                        <field name="group_uos" widget="radio"/>
                         <field name="module_claim_from_delivery" widget="radio"/>
                         <field name="module_stock_dropshipping" widget="radio"/>
                         <field name="module_stock_picking_wave" widget="radio"/>
                         <field name="module_stock_calendar" widget="radio"/>
+                    </group>
+                    <group string="Products">
+                        <field name="group_uom" widget="radio"/>
+                        <field name="group_uos" widget="radio"/>
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="group_stock_packaging" widget="radio"/>
                     </group>
                 </form>
             </field>
