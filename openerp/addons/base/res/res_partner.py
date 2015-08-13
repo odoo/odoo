@@ -145,7 +145,6 @@ def _lang_get(self):
     languages = self.env['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
-# fields copy if 'use_parent_address' is checked
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 
 
@@ -235,9 +234,11 @@ class res_partner(osv.Model, format_address):
         'supplier': fields.boolean('Is a Vendor', help="Check this box if this contact is a vendor. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position'),
-        'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
-                                   ('delivery', 'Shipping'), ('contact', 'Contact'),
-                                   ('other', 'Other')], 'Address Type',
+        'type': fields.selection(
+            [('contact', 'Contact'),
+             ('invoice', 'Invoice address'),
+             ('delivery', 'Shipping address'),
+             ('other', 'Other address')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street'),
         'street2': fields.char('Street2'),
@@ -250,7 +251,19 @@ class res_partner(osv.Model, format_address):
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
         'birthdate': fields.char('Birthdate'),
-        'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
+        'is_company': fields.boolean(
+            'Is a Company',
+            help="Check if the contact is a company, otherwise it is a person"),
+        'company_type': fields.selection(
+            selection=[('person', 'Individual'),
+                       ('company', 'Company')],
+            string='Company Type',
+            help='Technical field, used only to display a boolean using a radio'
+                 'button. As for Odoo v9 RadioButton cannot be used on boolean'
+                 'fields, this one serves as interface. Due to the old API'
+                 'limitations with interface function field, we implement it'
+                 'by hand instead of a true function field. When migrating to'
+                 'the new API the code should be simplified.'),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -319,8 +332,8 @@ class res_partner(osv.Model, format_address):
         'company_id': _default_company,
         'color': 0,
         'is_company': False,
-        'type': 'contact', # type 'default' is wildcard and thus inappropriate
-        'use_parent_address': False,
+        'company': 'person',
+        'type': 'contact',
         'image': False,
     }
 
@@ -334,33 +347,30 @@ class res_partner(osv.Model, format_address):
         default['name'] = _('%s (copy)') % self.name
         return super(res_partner, self).copy(default)
 
-    @api.multi
-    def onchange_type(self, is_company):
-        value = {'title': False}
-        if is_company:
-            value['use_parent_address'] = False
-        return {'value': value}
-
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
         def value_or_id(val):
             """ return val or val.id if val is a browse record """
             return val if isinstance(val, (bool, int, long, float, basestring)) else val.id
-        result = {}
+        if not parent_id or not ids:
+            return {'value': {}}
         if parent_id:
-            if ids:
-                partner = self.browse(cr, uid, ids[0], context=context)
-                if partner.parent_id and partner.parent_id.id != parent_id:
-                    result['warning'] = {'title': _('Warning'),
-                                         'message': _('Changing the company of a contact should only be done if it '
-                                                      'was never correctly set. If an existing contact starts working for a new '
-                                                      'company then a new contact should be created under that new '
-                                                      'company. You can use the "Discard" button to abandon this change.')}
-            if use_parent_address:
+            result = {}
+            partner = self.browse(cr, uid, ids[0], context=context)
+            if partner.parent_id and partner.parent_id.id != parent_id:
+                result['warning'] = {
+                    'title': _('Warning'),
+                    'message': _('Changing the company of a contact should only be done if it '
+                                 'was never correctly set. If an existing contact starts working for a new '
+                                 'company then a new contact should be created under that new '
+                                 'company. You can use the "Discard" button to abandon this change.')}
+            # for contacts: copy the parent address, if set (aka, at least
+            # one value is set in the address: otherwise, keep the one from
+            # the contact)
+            if partner.type == 'contact':
                 parent = self.browse(cr, uid, parent_id, context=context)
                 address_fields = self._address_fields(cr, uid, context=context)
-                result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
-        else:
-            result['value'] = {'use_parent_address': False}
+                if any(parent[key] for key in address_fields):
+                    result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
         return result
 
     @api.multi
@@ -369,6 +379,10 @@ class res_partner(osv.Model, format_address):
             state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
         return {}
+
+    @api.multi
+    def on_change_company_type(self, company_type):
+        return {'value': {'is_company': company_type == 'company'}}
 
     def _update_fields_values(self, cr, uid, partner, fields, context=None):
         """ Returns dict of write() values for synchronizing ``fields`` """
@@ -441,19 +455,18 @@ class res_partner(osv.Model, format_address):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if update_values.get('parent_id') or update_values.get('use_parent_address'):
+        if update_values.get('parent_id') or update_values.get('type', 'contact'):  # TDE/ fp change to check, get default value not sure
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
             # 1b. Address fields: sync if parent or use_parent changed *and* both are now set 
-            if partner.parent_id and partner.use_parent_address:
-                onchange_vals = self.onchange_address(cr, uid, [partner.id],
-                                                      use_parent_address=partner.use_parent_address,
-                                                      parent_id=partner.parent_id.id,
-                                                      context=context).get('value', {})
+            if partner.parent_id and partner.type == 'contact':
+                onchange_vals = self.onchange_parent_id(cr, uid, [partner.id],
+                                                        parent_id=partner.parent_id.id,
+                                                        context=context).get('value', {})
                 partner.update_address(onchange_vals)
 
-        # 2. To DOWNSTREAM: sync children 
+        # 2. To DOWNSTREAM: sync children
         if partner.child_ids:
             # 2a. Commercial Fields: sync if commercial entity
             if partner.commercial_partner_id == partner:
@@ -465,7 +478,7 @@ class res_partner(osv.Model, format_address):
             # 2b. Address fields: sync if address changed
             address_fields = self._address_fields(cr, uid, context=context)
             if any(field in update_values for field in address_fields):
-                domain_children = [('parent_id', '=', partner.id), ('use_parent_address', '=', True)]
+                domain_children = [('parent_id', '=', partner.id), ('type', '=', 'contact')]
                 update_ids = self.search(cr, uid, domain_children, context=context)
                 self.update_address(cr, uid, update_ids, update_values, context=context)
 
@@ -480,14 +493,6 @@ class res_partner(osv.Model, format_address):
             parent.update_address(addr_vals)
             if not parent.is_company:
                 parent.write({'is_company': True})
-
-    def unlink(self, cr, uid, ids, context=None):
-        orphan_contact_ids = self.search(cr, uid,
-            [('parent_id', 'in', ids), ('id', 'not in', ids), ('use_parent_address', '=', True)], context=context)
-        if orphan_contact_ids:
-            # no longer have a parent address
-            self.write(cr, uid, orphan_contact_ids, {'use_parent_address': False}, context=context)
-        return super(res_partner, self).unlink(cr, uid, ids, context=context)
 
     def _clean_website(self, website):
         (scheme, netloc, path, params, query, fragment) = urlparse.urlparse(website)
@@ -513,6 +518,13 @@ class res_partner(osv.Model, format_address):
                     companies = set(user.company_id for user in partner.user_ids)
                     if len(companies) > 1 or company not in companies:
                         raise UserError(_("You can not change the company as the partner/user has multiple user linked with different companies."))
+        # function field implemented by hand -> remove my when migrating
+        c_type = vals.get('company_type')
+        is_company = vals.get('is_company')
+        if c_type:
+            vals['is_company'] = c_type == 'company'
+        elif 'is_company' in vals:
+            vals['company_type'] = is_company and 'company' or 'person'
 
         result = super(res_partner, self).write(vals)
         for partner in self:
@@ -523,6 +535,14 @@ class res_partner(osv.Model, format_address):
     def create(self, vals):
         if vals.get('website'):
             vals['website'] = self._clean_website(vals['website'])
+        # function field not correctly triggered at create -> remove me when
+        # migrating to the new API
+        c_type = vals.get('company_type', self._context.get('default_company_type'))
+        is_company = vals.get('is_company', self._context.get('default_is_company'))
+        if c_type:
+            vals['is_company'] = c_type == 'company'
+        else:
+            vals['company_type'] = is_company and 'company' or 'person'
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)
@@ -541,9 +561,11 @@ class res_partner(osv.Model, format_address):
     def open_parent(self, cr, uid, ids, context=None):
         """ Utility method used to add an "Open Parent" button in partner views """
         partner = self.browse(cr, uid, ids[0], context=context)
+        address_form_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.view_partner_address_form')
         return {'type': 'ir.actions.act_window',
                 'res_model': 'res.partner',
                 'view_mode': 'form',
+                'views': [(address_form_id, 'form')],
                 'res_id': partner.parent_id.id,
                 'target': 'new',
                 'flags': {'form': {'action_buttons': True}}}
@@ -697,8 +719,8 @@ class res_partner(osv.Model, format_address):
         Defaults to partners of type ``'default'`` when the exact type is not found, or to the
         provided partner itself if no type ``'default'`` is found either. """
         adr_pref = set(adr_pref or [])
-        if 'default' not in adr_pref:
-            adr_pref.add('default')
+        if 'contact' not in adr_pref:
+            adr_pref.add('contact')
         result = {}
         visited = set()
         if isinstance(ids, (int, long)):
@@ -724,10 +746,10 @@ class res_partner(osv.Model, format_address):
                     break
                 current_partner = current_partner.parent_id
 
-        # default to type 'default' or the partner itself
-        default = result.get('default', ids and ids[0] or False)
+        # default to type 'contact' or the partner itself
+        default = result.get('contact', ids and ids[0] or False)
         for adr_type in adr_pref:
-            result[adr_type] = result.get(adr_type) or default 
+            result[adr_type] = result.get(adr_type) or default
         return result
 
     def view_header_get(self, cr, uid, view_id, view_type, context):

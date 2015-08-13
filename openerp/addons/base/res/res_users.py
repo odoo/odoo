@@ -210,21 +210,13 @@ class res_users(osv.osv):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_state(cr, uid, partner_ids, state_id, context=context)
 
-    def onchange_type(self, cr, uid, ids, is_company, context=None):
-        """ Wrapper on the user.partner onchange_type, because some calls to the
-            partner form view applied to the user may trigger the
-            partner.onchange_type method, but applied to the user object.
-        """
-        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool['res.partner'].onchange_type(cr, uid, partner_ids, is_company, context=context)
-
-    def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
+    def onchange_parent_id(self, cr, uid, ids, parent_id, context=None):
         """ Wrapper on the user.partner onchange_address, because some calls to the
             partner form view applied to the user may trigger the
             partner.onchange_type method, but applied to the user object.
         """
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
-        return self.pool['res.partner'].onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
+        return self.pool['res.partner'].onchange_address(cr, uid, partner_ids, parent_id, context=context)
 
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))

@@ -397,7 +397,6 @@ class purchase_order(osv.osv):
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
-        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,

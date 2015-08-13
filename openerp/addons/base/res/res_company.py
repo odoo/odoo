@@ -23,9 +23,9 @@ class res_company(osv.osv):
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
-                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
-                if address_data['default']:
-                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['default']], field_names, context=context)[0]
+                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['contact'])
+                if address_data['contact']:
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['contact']], field_names, context=context)[0]
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
@@ -35,8 +35,8 @@ class res_company(osv.osv):
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
-            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
-            address = address_data['default']
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['contact'])
+            address = address_data['contact']
             if address:
                 part_obj.write(cr, uid, [address], {name: value or False}, context=context)
             else:

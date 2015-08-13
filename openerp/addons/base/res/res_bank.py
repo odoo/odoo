@@ -89,7 +89,7 @@ class res_partner_bank(osv.osv):
         for address in self.pool.get('res.partner').resolve_2many_commands(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
-            if address.get('type') == 'default':
+            if address.get('type') == 'contact':
                 return address.get(field, value)
             elif not address.get('type'):
                 value = address.get(field, value)

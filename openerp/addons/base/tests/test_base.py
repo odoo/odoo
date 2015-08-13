@@ -68,13 +68,12 @@ class test_base(common.TransactionCase):
                                                                               'phone': '123456789',
                                                                               'email': 'info@ghoststep.com',
                                                                               'vat': 'BE0477472701',
-                                                                              'type': 'default'}))
+                                                                              'type': 'contact'}))
         p1 = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'Denis Bladesmith <denis.bladesmith@ghoststep.com>')[0])
         self.assertEqual(p1.type, 'contact', 'Default type must be "contact"')
         p1phone = '123456789#34'
         p1.write({'phone': p1phone,
-                  'parent_id': ghoststep.id,
-                  'use_parent_address': True})
+                  'parent_id': ghoststep.id})
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -84,13 +83,13 @@ class test_base(common.TransactionCase):
         # turn off sync
         p1street = 'Different street, 42'
         p1.write({'street': p1street,
-                  'use_parent_address': False})
+                  'type': 'invoice'})
         p1.refresh(), ghoststep.refresh() 
         self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
         self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
 
         # turn on sync again       
-        p1.write({'use_parent_address': True})
+        p1.write({'type': 'contact'})
         p1.refresh()
         self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
@@ -110,16 +109,14 @@ class test_base(common.TransactionCase):
         ghoststep.refresh()
         self.assertEqual(ghoststep.street, ghoststreet, 'Touching contact should never alter parent')
 
-
     def test_30_res_partner_first_contact_sync(self):
         """ Test initial creation of company/contact pair where contact address gets copied to
         company """
         cr, uid = self.cr, self.uid
         ironshield = self.res_partner.browse(cr, uid, self.res_partner.name_create(cr, uid, 'IronShield')[0])
         self.assertFalse(ironshield.is_company, 'Partners are not companies by default')
-        self.assertFalse(ironshield.use_parent_address, 'use_parent_address defaults to False')
         self.assertEqual(ironshield.type, 'contact', 'Default type must be "contact"')
-        ironshield.write({'type': 'default'}) # force default type to double-check sync 
+        ironshield.write({'type': 'contact'})
         p1 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid,
                                                                       {'name': 'Isen Hardearth',
                                                                        'street': 'Strongarm Avenue, 12',
@@ -146,9 +143,9 @@ class test_base(common.TransactionCase):
                                                                                       'parent_id': branch1.id,
                                                                                       'type': 'other'}))
         leaf111 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 111',
-                                                                                    'parent_id': branch11.id,
-                                                                                    'type': 'delivery'}))
-        branch11.write({'is_company': False}) # force is_company after creating 1rst child
+                                                                                     'parent_id': branch11.id,
+                                                                                     'type': 'delivery'}))
+        branch11.write({'is_company': False})  # force is_company after creating 1rst child
         branch2 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Branch 2',
                                                                                      'parent_id': elmtree.id,
                                                                                      'is_company': True}))
@@ -159,72 +156,65 @@ class test_base(common.TransactionCase):
                                                                                     'parent_id': branch2.id}))
         leaf23 = self.res_partner.browse(cr, uid, self.res_partner.create(cr, uid, {'name': 'Leaf 23',
                                                                                     'parent_id': branch2.id,
-                                                                                    'type': 'default'}))
+                                                                                    'type': 'contact'}))
+
         # go up, stop at branch1
-        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf111.id,
                           'invoice': leaf10.id,
                           'contact': branch1.id,
-                          'other': branch11.id,
-                          'default': leaf111.id}, 'Invalid address resolution')
-        self.assertEqual(self.res_partner.address_get(cr, uid, [branch11.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+                          'other': branch11.id}, 'Invalid address resolution')
+        self.assertEqual(self.res_partner.address_get(cr, uid, [branch11.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf111.id,
                           'invoice': leaf10.id,
                           'contact': branch1.id,
-                          'other': branch11.id,
-                          'default': branch11.id}, 'Invalid address resolution')
+                          'other': branch11.id}, 'Invalid address resolution')
 
         # go down, stop at at all child companies
-        self.assertEqual(self.res_partner.address_get(cr, uid, [elmtree.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+        self.assertEqual(self.res_partner.address_get(cr, uid, [elmtree.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': elmtree.id,
                           'invoice': elmtree.id,
                           'contact': elmtree.id,
-                          'other': elmtree.id,
-                          'default': elmtree.id}, 'Invalid address resolution')
+                          'other': elmtree.id}, 'Invalid address resolution')
 
         # go down through children
-        self.assertEqual(self.res_partner.address_get(cr, uid, [branch1.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+        self.assertEqual(self.res_partner.address_get(cr, uid, [branch1.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf111.id,
                           'invoice': leaf10.id,
                           'contact': branch1.id,
-                          'other': branch11.id,
-                          'default': branch1.id}, 'Invalid address resolution')
-        self.assertEqual(self.res_partner.address_get(cr, uid, [branch2.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+                          'other': branch11.id}, 'Invalid address resolution')
+
+        self.assertEqual(self.res_partner.address_get(cr, uid, [branch2.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
-                          'invoice': leaf23.id,
+                          'invoice': branch2.id,
                           'contact': branch2.id,
-                          'other': leaf23.id,
-                          'default': leaf23.id}, 'Invalid address resolution')
+                          'other': branch2.id}, 'Invalid address resolution. Company is the first encountered contact, therefore default for unfound addresses.')
 
         # go up then down through siblings
-        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf21.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf21.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
-                          'invoice': leaf23.id,
+                          'invoice': branch2.id,
                           'contact': branch2.id,
-                          'other': leaf23.id,
-                          'default': leaf23.id
-                          }, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
-        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf22.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+                          'other': branch2.id}, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
+        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf22.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
-                          'invoice': leaf23.id,
+                          'invoice': leaf22.id,
                           'contact': leaf22.id,
-                          'other': leaf23.id,
-                          'default': leaf23.id}, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
-        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf23.id], ['delivery', 'invoice', 'contact', 'other', 'default']),
+                          'other': leaf22.id}, 'Invalid address resolution, should scan commercial entity ancestor and its descendants')
+        self.assertEqual(self.res_partner.address_get(cr, uid, [leaf23.id], ['delivery', 'invoice', 'contact', 'other']),
                          {'delivery': leaf21.id,
                           'invoice': leaf23.id,
-                          'contact': branch2.id,
-                          'other': leaf23.id,
-                          'default': leaf23.id}, 'Invalid address resolution, `default` should only override if no partner with specific type exists')
+                          'contact': leaf23.id,
+                          'other': leaf23.id}, 'Invalid address resolution, `default` should only override if no partner with specific type exists')
 
-        # empty adr_pref means only 'default'
+        # empty adr_pref means only 'contact'
         self.assertEqual(self.res_partner.address_get(cr, uid, [elmtree.id], []),
-                        {'default': elmtree.id}, 'Invalid address resolution, no default means commercial entity ancestor')
+                        {'contact': elmtree.id}, 'Invalid address resolution, no contact means commercial entity ancestor')
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], []),
-                        {'default': leaf111.id}, 'Invalid address resolution, no default means contact itself')
-        branch11.write({'type': 'default'})
+                        {'contact': branch1.id}, 'Invalid address resolution, no contact means finding contact in ancestors')
+        branch11.write({'type': 'contact'})
         self.assertEqual(self.res_partner.address_get(cr, uid, [leaf111.id], []),
-                        {'default': branch11.id}, 'Invalid address resolution, branch11 should now be default')
+                        {'contact': branch11.id}, 'Invalid address resolution, branch11 should now be contact')
 
 
     def test_50_res_partner_commercial_sync(self):    
@@ -275,10 +265,10 @@ class test_base(common.TransactionCase):
             self.assertEquals(p.vat, sunhelmvat, 'Sync to children should only work downstream and on commercial entities')
 
         # promote p1 to commercial entity
-        vals = p1.onchange_type(is_company=True)['value']
-        p1.write(dict(vals, parent_id=sunhelm.id,
-                      is_company=True,
-                      name='Sunhelm Subsidiary'))
+        p1.write({
+            'parent_id': sunhelm.id,
+            'is_company': True,
+            'name': 'Sunhelm Subsidiary'})
         p1.refresh()
         self.assertEquals(p1.vat, p1vat, 'Setting is_company should stop auto-sync of commercial fields')
         self.assertEquals(p1.commercial_partner_id, p1, 'Incorrect commercial entity resolution after setting is_company')

@@ -671,7 +671,7 @@ class crm_lead(format_address, osv.osv):
         crm_stage = self.pool.get('crm.stage')
         contact_id = False
         if customer:
-            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['contact']
         if not team_id:
             team_id = lead.team_id and lead.team_id.id or False
         val = {
