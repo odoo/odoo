@@ -368,6 +368,14 @@ class project_issue(osv.Model):
             pass
         return recipients
 
+
+    def email_split(self, cr, uid, ids, msg, context=None):
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        # check left-part is not already an alias
+        issue_ids = self.browse(cr, uid, ids, context=context)
+        aliases = [issue.project_id.alias_name for issue in issue_ids if issue.project_id]
+        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -384,17 +392,20 @@ class project_issue(osv.Model):
             'user_id': False,
         }
         defaults.update(custom_values)
+
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
-        alias = self.browse(cr, uid, res_id, context=context).project_id.alias_name or False
-        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
+        email_list = self.email_split(cr, uid, [res_id], msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, [], email_list, force_create=True, context=context)
         self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the issue according to the email. """
-        alias = self.browse(cr, uid, ids, context=context).project_id.alias_name or False
-        partner_ids = self.pool['res.partner']._find_create_partner_from_mail(cr, uid, msg, alias, context=context)
-        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+
+        email_list = self.email_split(cr, uid, ids, msg, context=context)
+        for issue_id in ids:
+            partner_ids = self._find_partner_from_emails(cr, uid, [issue_id], email_list, force_create=True, context=context)
+            self.message_subscribe(cr, uid, [issue_id],  partner_ids, context=context)
         return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     @api.cr_uid_ids_context
