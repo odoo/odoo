@@ -142,7 +142,6 @@
                 <page string="Accounting" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                     <group>
                         <group string="Sale" name="acc_sale">
-                            <button name="%(action_account_partner_followup_note)d" class="oe_link" type="action" string="Log a followup note" colspan="2"/>
                             <field name="property_payment_term_id" widget="selection"/>
                             <field name="credit"/>
                             <field name="credit_limit"/>
