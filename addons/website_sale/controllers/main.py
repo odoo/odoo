@@ -767,7 +767,7 @@ class website_sale(http.Controller):
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
             elif state == 'error':
-                message = '<p>%s</p>' % _('An error occured during the transaction.')
+                message = '<p>%s</p>' % _('An error occurred during the transaction.')
             validation = tx.acquirer_id.validation
 
         return {
