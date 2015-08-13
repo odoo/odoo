@@ -47,7 +47,7 @@ from .api import Environment
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv import fields
 from .osv.query import Query
-from .tools import frozendict, lazy_property, ormcache
+from .tools import frozendict, lazy_property, ormcache, Collector
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -435,9 +435,10 @@ class BaseModel(object):
                         break
         self.invalidate_cache(cr, SUPERUSER_ID)
 
-    @classmethod
-    def _add_field(cls, name, field):
+    @api.model
+    def _add_field(self, name, field):
         """ Add the given ``field`` under the given ``name`` in the class """
+        cls = type(self)
         # add field as an attribute and in cls._fields (for reflection)
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
@@ -445,23 +446,24 @@ class BaseModel(object):
         cls._fields[name] = field
 
         # basic setup of field
-        field.set_class_name(cls, name)
+        field.setup_base(self, name)
 
-        # cls._columns will be updated once fields are set up
+        # cls._columns will be updated once fields are fully set up
 
-    @classmethod
-    def _pop_field(cls, name):
+    @api.model
+    def _pop_field(self, name):
         """ Remove the field with the given ``name`` from the model.
             This method should only be used for manual fields.
         """
+        cls = type(self)
         field = cls._fields.pop(name)
         cls._columns.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
 
-    @classmethod
-    def _add_magic_fields(cls):
+    @api.model
+    def _add_magic_fields(self):
         """ Introduce magic fields on the current class
 
         * id is a "normal" field (with a specific getter)
@@ -482,19 +484,19 @@ class BaseModel(object):
         """
         def add(name, field):
             """ add ``field`` with the given ``name`` if it does not exist yet """
-            if name not in cls._fields:
-                cls._add_field(name, field)
+            if name not in self._fields:
+                self._add_field(name, field)
 
         # cyclic import
         from . import fields
 
         # this field 'id' must override any other column or field
-        cls._add_field('id', fields.Id(automatic=True))
+        self._add_field('id', fields.Id(automatic=True))
 
         add('display_name', fields.Char(string='Display Name', automatic=True,
             compute='_compute_display_name'))
 
-        if cls._log_access:
+        if self._log_access:
             add('create_uid', fields.Many2one('res.users', string='Created by', automatic=True))
             add('create_date', fields.Datetime(string='Created on', automatic=True))
             add('write_uid', fields.Many2one('res.users', string='Last Updated by', automatic=True))
@@ -504,7 +506,7 @@ class BaseModel(object):
             last_modified_name = 'compute_concurrency_field'
 
         # this field must override any other column or field
-        cls._add_field(cls.CONCURRENCY_CHECK_FIELD, fields.Datetime(
+        self._add_field(self.CONCURRENCY_CHECK_FIELD, fields.Datetime(
             string='Last Modified on', compute=last_modified_name, automatic=True))
 
     @api.one
@@ -602,9 +604,9 @@ class BaseModel(object):
         ModelClass = type(name, tuple(bases), {
             '_name': name,
             '_register': False,
-            '_columns': None,           # recomputed in _setup_fields()
-            '_defaults': None,          # recomputed in _setup_base()
-            '_fields': frozendict(),    # idem
+            '_columns': {},             # recomputed in _setup_fields()
+            '_defaults': {},            # recomputed in _setup_base()
+            '_fields': {},              # idem
             '_inherits': inherits,
             '_depends': depends,
             '_constraints': constraints.values(),
@@ -655,12 +657,12 @@ class BaseModel(object):
                     pool._store_function[model].append(t)
                     pool._store_function[model].sort(key=lambda x: x[4])
 
-    @classmethod
-    def _init_manual_fields(cls, cr, partial):
-        manual_fields = cls.pool.get_manual_fields(cr, cls._name)
+    @api.model
+    def _add_manual_fields(self, partial):
+        manual_fields = self.pool.get_manual_fields(self._cr, self._name)
 
         for name, field in manual_fields.iteritems():
-            if name in cls._fields:
+            if name in self._fields:
                 continue
             attrs = {
                 'manual': True,
@@ -675,23 +677,23 @@ class BaseModel(object):
             elif field['ttype'] in ('selection', 'reference'):
                 attrs['selection'] = eval(field['selection'])
             elif field['ttype'] == 'many2one':
-                if partial and field['relation'] not in cls.pool:
+                if partial and field['relation'] not in self.pool:
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['ondelete'] = field['on_delete']
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'one2many':
                 if partial and not (
-                    field['relation'] in cls.pool and (
-                        field['relation_field'] in cls.pool[field['relation']]._fields or
-                        field['relation_field'] in cls.pool.get_manual_fields(cr, field['relation'])
+                    field['relation'] in self.pool and (
+                        field['relation_field'] in self.pool[field['relation']]._fields or
+                        field['relation_field'] in self.pool.get_manual_fields(self._cr, field['relation'])
                 )):
                     continue
                 attrs['comodel_name'] = field['relation']
                 attrs['inverse_name'] = field['relation_field']
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
             elif field['ttype'] == 'many2many':
-                if partial and field['relation'] not in cls.pool:
+                if partial and field['relation'] not in self.pool:
                     continue
                 attrs['comodel_name'] = field['relation']
                 _rel1 = field['relation'].replace('.', '_')
@@ -700,7 +702,7 @@ class BaseModel(object):
                 attrs['column1'] = 'id1'
                 attrs['column2'] = 'id2'
                 attrs['domain'] = eval(field['domain']) if field['domain'] else None
-            cls._add_field(name, Field.by_type[field['ttype']](**attrs))
+            self._add_field(name, Field.by_type[field['ttype']](**attrs))
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -2842,13 +2844,13 @@ class BaseModel(object):
     # Update objects that uses this one to update their _inherits fields
     #
 
-    @classmethod
-    def _init_inherited_fields(cls):
+    @api.model
+    def _add_inherited_fields(self):
         """ Determine inherited fields. """
         # determine candidate inherited fields
         fields = {}
-        for parent_model, parent_field in cls._inherits.iteritems():
-            parent = cls.pool[parent_model]
+        for parent_model, parent_field in self._inherits.iteritems():
+            parent = self.env[parent_model]
             for name, field in parent._fields.iteritems():
                 # inherited fields are implemented as related fields, with the
                 # following specific properties:
@@ -2863,8 +2865,8 @@ class BaseModel(object):
 
         # add inherited fields that are not redefined locally
         for name, field in fields.iteritems():
-            if name not in cls._fields:
-                cls._add_field(name, field)
+            if name not in self._fields:
+                self._add_field(name, field)
 
     @classmethod
     def _inherits_reload(cls):
@@ -2892,29 +2894,29 @@ class BaseModel(object):
             result[k] = fields.column_info(k, col)
         return result
 
-    @classmethod
-    def _inherits_check(cls):
-        for table, field_name in cls._inherits.items():
-            field = cls._fields.get(field_name)
+    @api.model
+    def _inherits_check(self):
+        for table, field_name in self._inherits.items():
+            field = self._fields.get(field_name)
             if not field:
-                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, cls._name)
+                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
                 from .fields import Many2one
                 field = Many2one(table, string="Automatically created field to link to parent %s" % table, required=True, ondelete="cascade")
-                cls._add_field(field_name, field)
+                self._add_field(field_name, field)
             elif not field.required or field.ondelete.lower() not in ("cascade", "restrict"):
-                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, cls._name)
+                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 field.required = True
                 field.ondelete = "cascade"
 
-        # reflect fields with delegate=True in dictionary cls._inherits
-        for field in cls._fields.itervalues():
+        # reflect fields with delegate=True in dictionary self._inherits
+        for field in self._fields.itervalues():
             if field.type == 'many2one' and not field.related and field.delegate:
                 if not field.required:
                     _logger.warning("Field %s with delegate=True must be required.", field)
                     field.required = True
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
-                cls._inherits[field.comodel_name] = field.name
+                self._inherits[field.comodel_name] = field.name
 
     @api.model
     def _prepare_setup(self):
@@ -2928,27 +2930,57 @@ class BaseModel(object):
         if cls._setup_done:
             return
 
-        # 1. determine the proper fields of the model; duplicate them on cls to
-        # avoid clashes with inheritance between different models
-        for name in getattr(cls, '_fields', {}):
-            delattr(cls, name)
+        # 1. determine the proper fields of the model: the fields defined on the
+        # class and magic fields, not the inherited or custom ones
+        cls0 = cls.pool.model_cache.get(cls.__bases__)
+        if cls0:
+            # cls0 is either a model class from another registry, or cls itself.
+            # The point is that it has the same base classes. We retrieve stuff
+            # from cls0 to optimize the setup of cls. cls0 is guaranteed to be
+            # properly set up: registries are loaded under a global lock,
+            # therefore two registries are never set up at the same time.
 
-        # retrieve fields from parent classes
-        cls._fields = {}
-        cls._defaults = {}
-        for attr, field in getmembers(cls, Field.__instancecheck__):
-            cls._add_field(attr, field.new())
+            # remove fields that are not proper to cls
+            for name in set(cls._fields) - cls0._proper_fields:
+                delattr(cls, name)
+                cls._fields.pop(name, None)
+                cls._defaults.pop(name, None)
+            # collect proper fields on cls0, and add them on cls
+            for name in cls0._proper_fields:
+                field = cls0._fields[name]
+                if field.related:
+                    # only regular fields are shared, related fields are copied
+                    field = field.new(**field.args)
+                assert not (field.setup_full_done and field.related)
+                self._add_field(name, field)
+            cls._proper_fields = set(cls._fields)
 
-        # add magic and custom fields
-        cls._add_magic_fields()
-        cls._init_manual_fields(self._cr, partial)
+        else:
+            # retrieve fields from parent classes, and duplicate them on cls to
+            # avoid clashes with inheritance between different models
+            cls._fields = {}
+            cls._defaults = {}
+            for name, field in getmembers(cls, Field.__instancecheck__):
+                self._add_field(name, field.new())
+            self._add_magic_fields()
+            cls._proper_fields = set(cls._fields)
 
-        # 2. make sure that parent models determine their own fields, then add
+            cls.pool.model_cache[cls.__bases__] = cls
+
+        # 2. add custom fields
+        self._add_manual_fields(partial)
+
+        # 3. make sure that parent models determine their own fields, then add
         # inherited fields to cls
-        cls._inherits_check()
-        for parent in cls._inherits:
+        self._inherits_check()
+        for parent in self._inherits:
             self.env[parent]._setup_base(partial)
-        cls._init_inherited_fields()
+        self._add_inherited_fields()
+
+        # 4. initialize more field metadata
+        cls._field_computed = {}            # fields computed with the same method
+        cls._field_inverses = Collector()   # inverse fields for related fields
+        cls._field_triggers = Collector()   # list of (field, path) to invalidate
 
         cls._setup_done = True
 
@@ -2960,20 +2992,17 @@ class BaseModel(object):
         # set up fields, and determine their corresponding column
         cls._columns = {}
         for name, field in cls._fields.iteritems():
-            field.setup(self.env)
+            field.setup_full(self)
             column = field.to_column()
             if column:
                 cls._columns[name] = column
 
-        # determine field.computed_fields
-        computed_fields = defaultdict(list)
+        # map each field to the fields computed with the same method
+        groups = defaultdict(list)
         for field in cls._fields.itervalues():
             if field.compute:
-                computed_fields[field.compute].append(field)
-
-        for fields in computed_fields.itervalues():
-            for field in fields:
-                field.computed_fields = fields
+                cls._field_computed[field] = group = groups[field.compute]
+                group.append(field)
 
     @api.model
     def _setup_complete(self):
@@ -2986,13 +3015,12 @@ class BaseModel(object):
 
         # add invalidation triggers on model dependencies
         if cls._depends:
-            triggers = [(field, None) for field in cls._fields.itervalues()]
             for model_name, field_names in cls._depends.iteritems():
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    for trigger in triggers:
-                        field.add_trigger(trigger)
+                    for dependent in cls._fields.itervalues():
+                        model._field_triggers.add(field, (dependent, None))
 
         # determine old-api structures about inherited fields
         cls._inherits_reload()
@@ -3037,8 +3065,6 @@ class BaseModel(object):
         res = {}
         for fname, field in self._fields.iteritems():
             if allfields and fname not in allfields:
-                continue
-            if not field.setup_done:
                 continue
             if field.groups and not recs.user_has_groups(field.groups):
                 continue
@@ -5417,7 +5443,7 @@ class BaseModel(object):
             for name in values:
                 field = self._fields.get(name)
                 if field:
-                    for invf in field.inverse_fields:
+                    for invf in self._field_inverses[field]:
                         invf._update(record[name], record)
 
         return record
@@ -5623,7 +5649,7 @@ class BaseModel(object):
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in f.inverse_fields]
+               [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.invalidate(spec)
 
     @api.multi
@@ -5673,11 +5699,8 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            names = [
-                f.name
-                for f in field.computed_fields
-                if f.store and self.env.field_todo(f)
-            ]
+            computed = self.env[field.model_name]._field_computed[field]
+            names = [f.name for f in computed if f.store and self.env.field_todo(f)]
             for rec in recs:
                 try:
                     values = rec._convert_to_write({
@@ -5688,7 +5711,7 @@ class BaseModel(object):
                 except MissingError:
                     pass
             # mark the computed fields as done
-            map(recs._recompute_done, field.computed_fields)
+            map(recs._recompute_done, computed)
 
     #
     # Generic onchange method
@@ -5701,7 +5724,7 @@ class BaseModel(object):
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
         return field.name in self._onchange_methods or \
-            any(dep in other_fields for dep in field.dependents)
+            any(dep in other_fields for dep, _ in self._field_triggers[field])
 
     @api.model
     def _onchange_spec(self, view_info=None):

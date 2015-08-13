@@ -1064,6 +1064,24 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
 
+class Collector(Mapping):
+    """ A mapping from keys to lists. This is essentially a space optimization
+        for ``defaultdict(list)``.
+    """
+    __slots__ = ['_map']
+    def __init__(self):
+        self._map = {}
+    def add(self, key, val):
+        vals = self._map.setdefault(key, [])
+        if val not in vals:
+            vals.append(val)
+    def __getitem__(self, key):
+        return self._map.get(key, ())
+    def __iter__(self):
+        return iter(self._map)
+    def __len__(self):
+        return len(self._map)
+
 class OrderedSet(OrderedDict):
     """ A simple collection that remembers the elements insertion order. """
     def __init__(self, seq=()):

@@ -88,6 +88,10 @@ class Registry(Mapping):
         return self.models[model_name]
 
     @lazy_property
+    def model_cache(self):
+        return RegistryManager.model_cache
+
+    @lazy_property
     def pure_function_fields(self):
         """ Return the list of pure function fields (field objects) """
         fields = []
@@ -269,6 +273,7 @@ class RegistryManager(object):
 
     """
     _registries = None
+    _model_cache = None
     _lock = threading.RLock()
     _saved_lock = None
 
@@ -289,6 +294,14 @@ class RegistryManager(object):
 
             cls._registries = LRU(size)
         return cls._registries
+
+    @classproperty
+    def model_cache(cls):
+        """ A cache for model classes, indexed by their base classes. """
+        if cls._model_cache is None:
+            # we cache 256 classes per registry on average
+            cls._model_cache = LRU(cls.registries.count * 256)
+        return cls._model_cache
 
     @classmethod
     def lock(cls):
