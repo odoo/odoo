@@ -4526,7 +4526,7 @@ class BaseModel(object):
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
                        parent_model=inherited_model)
 
-    def _generate_m2o_order_by(self, alias, order_field, query):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -4560,46 +4560,53 @@ class BaseModel(object):
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"', '').split('.', 1)
         dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
-        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query)
+        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
+                                                   reverse_direction=reverse_direction)
 
-    def _generate_order_by_inner(self, alias, order_spec, query):
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
         order_by_elements = []
         self._check_qorder(order_spec)
         for order_part in order_spec.split(','):
             order_split = order_part.strip().split(' ')
             order_field = order_split[0].strip()
-            order_direction = order_split[1].strip() if len(order_split) == 2 else ''
+            order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+            if reverse_direction:
+                order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
+            do_reverse = order_direction == 'DESC'
             order_column = None
-            inner_clause = None
+            inner_clauses = []
+            add_dir = False
             if order_field == 'id':
                 order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
             elif order_field in self._columns:
                 order_column = self._columns[order_field]
                 if order_column._classic_read:
-                    inner_clause = '"%s"."%s"' % (alias, order_field)
+                    inner_clauses = ['"%s"."%s"' % (alias, order_field)]
+                    add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clause = self._generate_m2o_order_by(alias, order_field, query)
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             elif order_field in self._inherit_fields:
                 parent_obj = self.pool[self._inherit_fields[order_field][3]]
                 order_column = parent_obj._columns[order_field]
                 if order_column._classic_read:
-                    inner_clause = self._inherits_join_calc(alias, order_field, query)
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clause = self._generate_m2o_order_by(alias, order_field, query)
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             else:
                 raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
             if order_column and order_column._type == 'boolean':
-                inner_clause = "COALESCE(%s, false)" % inner_clause
-            if inner_clause:
-                if isinstance(inner_clause, list):
-                    for clause in inner_clause:
-                        order_by_elements.append("%s %s" % (clause, order_direction))
+                inner_clauses = ["COALESCE(%s, false)" % inner_clauses[0]]
+
+            for clause in inner_clauses:
+                if add_dir:
+                    order_by_elements.append("%s %s" % (clause, order_direction))
                 else:
-                    order_by_elements.append("%s %s" % (inner_clause, order_direction))
+                    order_by_elements.append(clause)
         return order_by_elements
 
     def _generate_order_by(self, order_spec, query):
