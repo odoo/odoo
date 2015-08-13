@@ -11,15 +11,10 @@ class ReportTrialBalance(models.AbstractModel, CommonReportHeader):
 
     @api.multi
     def _process(self, form):
-        ctx = self._context.copy()
         self.result_acc = []
-
-        ctx['date_from'] = form['date_from']
-        ctx['date_to'] =  form['date_to']
-        ctx['state'] = form['target_move']
         accounts = self.env['account.account'].search([])
 
-        data = self.with_context(ctx)._compute(accounts)
+        data = self.with_context(form.get('used_context'))._compute(accounts)
         for account in accounts:
             currency = account.currency_id and account.currency_id or account.company_id.currency_id
             res = {
@@ -28,9 +23,9 @@ class ReportTrialBalance(models.AbstractModel, CommonReportHeader):
                 'code': account.code,
                 'name': account.name,
                 'bal_type': '',
-                'debit': data[account.id].get('debit') if account.id in data else 0.0,
-                'credit': data[account.id].get('credit') if account.id in data else 0.0,
-                'balance': data[account.id].get('balance') if account.id in data else 0.0,
+                'debit': data[account.id].get('debit'),
+                'credit': data[account.id].get('credit'),
+                'balance': data[account.id].get('balance'),
             }
             if form['display_account'] == 'movement':
                 if not currency.is_zero(res['credit']) or not currency.is_zero(res['debit']) or not currency.is_zero(res['balance']):
