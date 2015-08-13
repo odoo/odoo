@@ -255,6 +255,41 @@
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="state" invisible="1"/>
                                 </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id"
+                                               on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
+                                                parent.partner_id, parent.date_order, parent.fiscal_position_id, date_planned,
+                                                name, False, parent.state, True, context)"
+                                               context="{'partner_id': parent.partner_id}"/>
+                                            <label for="product_qty"/>
+                                            <div>
+                                                <field name="product_qty" class="oe_inline"
+                                                    on_change="onchange_product_id(parent.pricelist_id, product_id, product_qty,
+                                                    product_uom, parent.partner_id, parent.date_order, parent.fiscal_position_id,
+                                                    date_planned, name, False, parent.state, False, context)"/>
+                                                <field name="product_uom" groups="product.group_uom" class="oe_inline"
+                                                    on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position_id,date_planned,name,False,parent.state,context)"/>
+                                            </div>
+                                            <field name="price_unit"/>
+                                        </group>
+                                        <group>
+                                            <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                            <field name="date_planned" widget="date"/>
+                                            <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
+                                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                    <page string="Notes">
+                                        <field name="name"/>
+                                    </page><page string="Invoices and Incoming Shipments">
+                                        <field name="invoice_lines"/>
+                                        <field name="move_ids"/>
+                                    </page>
+                                    </notebook>
+                                </form>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
