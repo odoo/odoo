@@ -24,7 +24,7 @@
     <t t-name="nothing_to_reconcile">
         <div class="oe_form_sheetbg o_form_view"><div class="oe_form_sheet o_form_sheet oe_form_sheet_width">
             <div class="notification_area"></div>
-            <div class="oe_view_nocontent o_view_nocontent"></div>
+            <div class="oe_view_nocontent"></div>
         </div></div>
     </t>
 
@@ -200,7 +200,7 @@
     </t>
 
     <t t-name="bank_statement_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
             <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
         </t>
@@ -304,7 +304,7 @@
     </t>
 
     <t t-name="manual_reconciliation_nothing_to_reconcile" t-extend="nothing_to_reconcile">
-        <t t-jquery=".oe_view_nocontent, .o_view_nocontent" t-operation="inner">
+        <t t-jquery=".oe_view_nocontent" t-operation="inner">
             <p><b>Good Job!</b> There is nothing to reconcile.</p>
             <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
         </t>
