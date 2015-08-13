@@ -120,11 +120,14 @@ class project_issue(osv.Model):
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
+        vals = {'partner_id': False}
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
-            if project and project.partner_id:
-                return {'value': {'partner_id': project.partner_id.id}}
-        return {'value': {'partner_id': False}}
+            vals.update({
+                'project_type': project.project_type,
+                'partner_id': project.partner_id and project.partner_id.id
+            })
+        return {'value': vals}
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -184,6 +187,7 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'project_type': fields.related('project_id', 'project_type', type='char', string='Project Type'),
     }
 
     _defaults = {

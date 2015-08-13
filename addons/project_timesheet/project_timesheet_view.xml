@@ -55,8 +55,9 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
-                <xpath expr='//filter[@name="Template"]' position='after'>
+                <xpath expr='//filter[@name="Manager"]' position='before'>
                     <filter string="Billable" domain="[('to_invoice','!=', False)]"/>
+                    <separator/>
                 </xpath>
             </field>
         </record>
@@ -146,7 +147,7 @@
                     <attribute name="on_change">onchange_project(project_id)</attribute>
                 </field>
                 <xpath expr='//field[@name="project_id"]' position='after'>
-                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('project_id', '=', False), ('partner_id', '=', False)]}"
+                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', '|', ('project_id', '=', False), ('partner_id', '=', False), ('project_type','!=', 'single_customer')]}"
                     options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
                 </xpath>
                 <field name="tag_ids" position="after">
@@ -161,7 +162,7 @@
                             <field name="date"/>
                             <field name="user_id" required="1"/>
                             <field name="name"/>
-                            <field name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)"/>
+                            <field name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)" invisible="1"/>
                             <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" sum="Total time" widget="float_time"/>
                             <field name="to_invoice"/>
                             <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" invisible="1"/>

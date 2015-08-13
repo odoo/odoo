@@ -52,9 +52,12 @@ class Project(models.Model):
         compute='_compute_percentage_satisfaction_task', string='% Happy', store=True, default=-1)
     percentage_satisfaction_project = fields.Integer(
         compute="_compute_percentage_satisfaction_project", string="% Happy", store=True, default=-1)
-    is_visible_happy_customer = fields.Boolean(string="Customer Satisfaction", default=False,
-        help="Display informations about rating of the project on kanban and form view. This buttons will only be displayed if at least a rating exists.")
+    published = fields.Boolean('Visible in Portal / Website', copy=False,
+        help="Display informations about rating of the project")
 
+    @api.one
+    def action_publish_unpublish_button(self):
+        self.published = not self.published
 
     @api.multi
     def action_view_task_rating(self):

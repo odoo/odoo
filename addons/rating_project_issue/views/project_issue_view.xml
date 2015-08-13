@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button name="action_view_issue_rating"
-                        attrs="{'invisible': ['|', '|', ('use_issues','=', False), ('is_visible_happy_customer','=', False), ('percentage_satisfaction_issue', '=', -1)]}"
+                        attrs="{'invisible': ['|', '|', ('use_issues','=', False), ('published','=', False), ('percentage_satisfaction_issue', '=', -1)]}"
                         class="oe_stat_button oe_percent"
                         type="object"
                         icon="fa-smile-o">
