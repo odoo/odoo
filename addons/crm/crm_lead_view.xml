@@ -494,21 +494,17 @@
                                     <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
                                         attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
                                     <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
-                                        <button name="log_next_activity_done" string="Done" type="object" class="oe_link"/>
-                                        <button name="log_next_activity_1" type="object" class="oe_link" attrs="{'invisible': [('next_activity_1','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
+                                        <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
                                             <field name="next_activity_1" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <button name="log_next_activity_2" type="object" class="oe_link" attrs="{'invisible': [('next_activity_2','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_2" type="object" class="btn-link" attrs="{'invisible': [('next_activity_2','=',False)]}">
                                             <field name="next_activity_2" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <button name="log_next_activity_3" type="object" class="oe_link" attrs="{'invisible': [('next_activity_3','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_3" type="object" class="btn-link" attrs="{'invisible': [('next_activity_3','=',False)]}">
                                             <field name="next_activity_3" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <span>&#160;|&#160;</span>
-                                        <button name="cancel_next_activity" string="Cancel" type="object" class="oe_link"/>
+                                        <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
                                     </div>
                                 </div>
                                 <field name="date_deadline"/>
