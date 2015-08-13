@@ -39,6 +39,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/fetchmail_data.xml',
         'security/ir.model.access.csv',
         'views/fetchmail_views.xml',
+        'views/mail_mail_views.xml',
     ],
     'demo': [],
     'installable': True,
