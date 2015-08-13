@@ -5,6 +5,7 @@
 {
     'name': 'Repairs Management',
     'version': '1.0',
+    'sequence': 14,
     'category': 'Manufacturing',
     'description': """
 The aim is to have a complete module to manage all products repairs.
@@ -19,7 +20,7 @@ The following topics should be covered by this module:
     * Repair quotation report
     * Notes for the technician and for the final customer
 """,
-    'depends': ['mrp', 'sale', 'account'],
+    'depends': ['stock', 'sale', 'account'],
     'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
@@ -43,4 +44,5 @@ The following topics should be covered by this module:
     ],
     'installable': True,
     'auto_install': False,
+    'application': True,
 }
