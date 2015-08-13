@@ -171,7 +171,7 @@ class stock_move(osv.osv):
                 pricelist_obj = self.pool.get("product.pricelist")
                 pricelist = partner.property_product_pricelist_purchase.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist],
-                                    move.product_id.id, move.product_uom_qty, partner, {
+                                    move.product_id.id, move.product_uom_qty, partner.id, {
                                                                                 'uom': move.product_uom.id,
                                                                                 'date': move.date,
                                                                                 })[pricelist]
