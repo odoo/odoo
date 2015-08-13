@@ -20,12 +20,12 @@
                     <t t-set="publish_edit" t-value="True"/>
                 </t>
                 <div class="clearfix"/>
-                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded o_avatar_medium"/>
+                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded"/>
                 <div class="mt8">
                     <strong t-field="employee.name"></strong>
                 </div>
                 <div t-field="employee.job_id"/>
-                <div t-field="employee.public_info" t-att-title="employee.public_info" class="text-muted mt16 center-block o_employee_info"/>
+                <div t-field="employee.public_info" class="text-muted mt16 center-block"/>
             </div>
         </section>
     </xpath>
