@@ -96,7 +96,7 @@
                                         <t t-if="o.picking_type_id.code != 'incoming'"><td><span t-field="move.location_id"/></td></t>
                                         <td>
                                             <span t-if="move.product_id and move.product_id.barcode">
-                                               <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Barcode', move.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
+                                               <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
                                             </span>
                                         </td>
                                         <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="move.location_dest_id"/></td></t>

@@ -98,7 +98,7 @@
                                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.lot_id.name, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                         <span t-if="pack_operation.product_id and not pack_operation.lot_id and pack_operation.product_id.barcode">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Barcode', pack_operation.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', pack_operation.product_id.barcode, 600, 100)" style="width:300px;height:50px"/>
                                         </span>
                                         <span t-if="pack_operation.package_id and not pack_operation.product_id">
                                             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', pack_operation.package_id.name, 600, 100)" style="width:300px;height:50px"/>
