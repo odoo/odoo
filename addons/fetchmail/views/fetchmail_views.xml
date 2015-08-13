@@ -119,21 +119,5 @@
             groups="base.group_no_one"
         />
 
-      <record model="ir.ui.view" id="email_message_tree_view">
-          <field name="name">mail.mail.form.fetchmail</field>
-          <field name="model">mail.mail</field>
-          <field name="inherit_id" ref="mail.view_mail_form"/>
-          <field name="arch" type="xml">
-              <field name="references" position="after">
-                  <field name="fetchmail_server_id"/>
-              </field>
-          </field>
-      </record>
-
-      <act_window
-            context="{'search_default_server_id': active_id, 'default_fetchmail_server_id': active_id}"
-            id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
-            res_model="mail.mail" src_model="fetchmail.server"/>
-
     </data>
 </openerp>
