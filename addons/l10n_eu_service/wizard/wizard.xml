@@ -18,7 +18,7 @@
                         You can use the wizard again later to add more countries.
                     </p>
                     <group>
-                        <field name="chart_id" domain="[('parent_id','=', False)]"
+                        <field name="chart_id" domain="[('deprecated','=', False)]"
                                context="{'company_id': company_id}" options="{'no_create': True}"/>
                         <field name="company_id" invisible="1"/>
                         <field name="fiscal_position_id" domain="[('company_id','=', company_id)]"
