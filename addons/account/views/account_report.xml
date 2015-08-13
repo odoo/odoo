@@ -51,6 +51,16 @@
         />
 
         <report 
+            id="action_report_financial"
+            model="account.financial.report"
+            string="Financial report"
+            report_type="qweb-pdf"
+            name="account.report_financial"
+            file="account.report_financial"
+            menu="False"
+        />
+
+        <report 
             id="action_report_account_balance"
             model="account.account"
             string="Partner Balance"

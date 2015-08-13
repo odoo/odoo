@@ -4,7 +4,7 @@
 class CommonReportHeader(object):
 
     def _compute(self, accounts):
-        """ compute the balance, debit and/or credit for the provided
+        """ compute the balance, debit and credit for the provided
         accounts
         Arguments:
         `accounts`: accounts 
@@ -14,8 +14,10 @@ class CommonReportHeader(object):
             'debit': "COALESCE(SUM(debit), 0) as debit",
             'credit': "COALESCE(SUM(credit), 0) as credit",
         }
-        #compute for each account the balance/debit/credit from the move lines
+
         res = {}
+        for account in accounts:
+            res[account.id] = dict((fn, 0.0) for fn in mapping.keys())
         if accounts:
             tables, where_clause, where_params = self.env['account.move.line']._query_get()
             tables = tables.replace('"','') if tables else "account_move_line"
@@ -31,7 +33,6 @@ class CommonReportHeader(object):
                        " GROUP BY account_id")
             params = (tuple(accounts._ids),) + tuple(where_params)
             self._cr.execute(request, params)
-
             for row in self._cr.dictfetchall():
                 res[row['id']] = row
         return res
