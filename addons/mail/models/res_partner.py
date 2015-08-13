@@ -14,7 +14,7 @@ class Partner(models.Model):
     notify_email = fields.Selection([
         ('none', 'Never'),
         ('always', 'All Messages')],
-        'Receive Inbox Notifications by Email', required=True,
+        'Email Messages and Notifications', required=True,
         oldname='notification_email_send', default='always',
         help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
              "- Never: no emails are sent\n"

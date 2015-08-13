@@ -332,7 +332,7 @@ class res_partner(osv.Model, format_address):
         'company_id': _default_company,
         'color': 0,
         'is_company': False,
-        'company': 'person',
+        'company_type': 'person',
         'type': 'contact',
         'image': False,
     }

@@ -74,6 +74,7 @@
             <field name="view_id" ref="analytic.view_account_analytic_account_tree"/>
             <field name="search_view_id" ref="analytic.view_account_analytic_account_search"/>
         </record>
+
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
@@ -93,6 +94,12 @@
                             <span class="o_stat_value"><field name="total_invoiced"/></span>
                             <span class="o_stat_text">Invoiced</span>
                         </div>
+                    </button>
+                     <button class="oe_stat_button" type="action"
+                        name="%(base.action_res_partner_bank_account_form)d"
+                        icon="fa-university"
+                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                        <field string="Bank Accounts" name="bank_account_count" widget="statinfo"/>
                     </button>
                     <field name="currency_id" invisible="1"/>
                 </div>
@@ -143,32 +150,20 @@
                     <group>
                         <group string="Sale" name="acc_sale">
                             <field name="property_payment_term_id" widget="selection"/>
-                            <field name="credit"/>
-                            <field name="credit_limit"/>
+                            <field name="credit" groups="base.group_no_one"/>
                         </group>
                         <group string="Purchase" name="acc_purchase">
                             <field name="property_supplier_payment_term_id" widget="selection"/>
-                            <field name="debit"/>
+                            <field name="debit" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="Fiscal Information" name="fiscal_information">
                             <field name="property_account_position_id" widget="selection"/>
                         </group>
-                        <group string="Accounting Entries" name="accounting_entries">
-                            <field name="property_account_receivable_id" groups="account.group_account_invoice" />
-                            <field name="property_account_payable_id" groups="account.group_account_invoice"/>
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
+                            <field name="property_account_receivable_id"/>
+                            <field name="property_account_payable_id"/>
                         </group>
-                    </group>
-                    <group string="Bank Accounts" name="bank_accounts">
-                        <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}" nolabel="1">
-                            <tree string="Bank Details">
-                                <field name="state" invisible="1"/>
-                                <field name="sequence" invisible="1"/>
-                                <field name="acc_number"/>
-                                <field name="bank_name"/>
-                                <field name="owner_name"/>
-                            </tree>
-                        </field>
                     </group>
                 </page>
                 <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">

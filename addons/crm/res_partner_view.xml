@@ -82,9 +82,9 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="user_id" position="after">
-                        <field name="team_id" completion="1"/>
-                    </field>
+                    <!-- <field name="user_id" position="after">
+                        <field name="team_id" completion="1" invisible="1"/>
+                    </field> -->
                     <div name="button_box" position="inside">
                         <button class="oe_stat_button o_res_partner_tip_opp" type="action"
                             attrs="{'invisible': [('customer', '=', False)]}"

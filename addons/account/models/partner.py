@@ -6,8 +6,6 @@ from openerp.exceptions import UserError
 
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from datetime import datetime, timedelta
-from openerp.tools.misc import formatLang
 
 
 class AccountFiscalPosition(models.Model):
@@ -306,7 +304,7 @@ class ResPartner(models.Model):
             issued_total = 0
             for aml in self.env['account.move.line'].search(domain):
                 issued_total += aml.amount_residual
-            partner.issued_total = formatLang(self.env, issued_total, currency_obj=self.env.user.company_id.currency_id)
+            partner.issued_total = issued_total
 
     @api.one
     def _compute_has_unreconciled_entries(self):
@@ -367,7 +365,7 @@ class ResPartner(models.Model):
 
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
-    issued_total = fields.Char(compute='_compute_issued_total', string="Journal Items")
+    issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
@@ -398,6 +396,14 @@ class ResPartner(models.Model):
              'or if you click the "Done" button.')
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
+    bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
+
+    @api.multi
+    def _compute_bank_count(self):
+        bank_data = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
+        for partner in self:
+            partner.bank_account_count = mapped_data.get(partner.id, 0)
 
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
