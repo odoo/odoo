@@ -54,10 +54,8 @@ class ReportFinancial(models.AbstractModel, CommonReportHeader):
         AccountFinancial = self.env['account.financial.report']
         account_report = AccountFinancial.search([('id', '=', data['account_report_id'][0])])
         child_reports = AccountFinancial.browse(account_report._get_children_by_order())
-        data.get('used_context').update({'strict_range': True})
         res = self.with_context(data.get('used_context'))._balance(child_reports)
         if data['enable_filter']:
-            data.get('comparison_context').update({'strict_range': True})
             comparison_res = self.with_context(data.get('comparison_context'))._balance(child_reports)
             for report_id, value in comparison_res.items():
                 res[report_id]['comp_bal'] = value['balance']

@@ -31,6 +31,7 @@ class AccountingReport(models.TransientModel):
         if data['form']['filter_cmp'] == 'filter_date':
             result['date_from'] = data['form']['date_from_cmp']
             result['date_to'] = data['form']['date_to_cmp']
+            result['strict_range'] = True
         return result
 
     @api.multi
