@@ -18,17 +18,14 @@
                         You can use the wizard again later to add more countries.
                     </p>
                     <group>
-                        <field name="chart_id" domain="[('deprecated','=', False)]"
-                               context="{'company_id': company_id}" options="{'no_create': True}"/>
-                        <field name="company_id" invisible="1"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="fiscal_position_id" domain="[('company_id','=', company_id)]"
                                options="{'no_create': True}"
                                placeholder="Current EU B2C Fiscal Position, if any"/>
                         <field name="tax_id"
                                domain="[('type_tax_use', '=', 'sale'),
-                                        ('type', '=', 'percent'),
-                                        ('account_collected_id', '!=', False),
-                                        ('tax_code_id', '!=', False),
+                                        ('amount_type', '=', 'percent'),
+                                        ('account_id', '!=', False),
                                         ('company_id','=', company_id)]"
                                options="{'no_create': True}"/>
                         <field name="account_collected_id" 
