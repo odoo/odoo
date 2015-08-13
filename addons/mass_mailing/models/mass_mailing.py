@@ -53,8 +53,8 @@ class MassMailingList(osv.Model):
     }
 
     def _get_default_popup_content(self, cr, uid, context=None):
-        return """<div class="o_popup_modal_header text-center">
-    <h3 class="o_popup_modal_title mt8">Odoo Presents</h3>
+        return """<div class="modal-header text-center">
+    <h3 class="modal-title mt8">Odoo Presents</h3>
 </div>
 <div class="o_popup_message">
     <font>7</font>
