@@ -238,6 +238,21 @@ class HrEquipmentRequest(models.Model):
     close_date = fields.Date('Close Date')
     kanban_state = fields.Selection([('normal', 'In Progress'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
                                     string='Kanban State', required=True, default='normal', track_visibility='onchange')
+    active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
+
+
+    @api.multi
+    def archive_equipment_request(self):
+        """ Archive an hr.equipment.request as it was refused """
+        for equipment_request in self:
+            equipment_request.write({'active': False})
+
+    @api.multi
+    def reset_equipment_request(self):
+        """ Reinsert the equipment request into the maintenance pipe"""
+        for equipment_request in self:
+            first_stage_obj = self.env['hr.equipment.stage'].search([], order="sequence asc", limit=1)
+            equipment_request.write({'active': True, 'stage_id': first_stage_obj.id})
 
     @api.onchange('employee_id', 'department_id')
     def onchange_department_or_employee_id(self):
