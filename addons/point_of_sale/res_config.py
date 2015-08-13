@@ -11,7 +11,7 @@ class pos_configuration(osv.TransientModel):
             ], "Restaurant",
             help='This module adds several restaurant features to the Point of Sale: \n\n- Bill Printing: Allows you to print a receipt before the order is paid \n\n- Bill Splitting: Allows you to split an order into different orders \n\n- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers'),
         'module_pos_loyalty': fields.selection([
-            (0, "No loyalty programns"),
+            (0, "No loyalty programs"),
             (1, "Use loyalty programs")
             ], "Loyalty",
             help='Allows you to define a loyalty program in the point of sale, where the customers earn loyalty points and get rewards'),
@@ -24,7 +24,7 @@ class pos_configuration(osv.TransientModel):
             (0, "No credit card"),
             (1, "Allows customers to pay with credit cards.")
             ], "Credit Cards",
-            help='The transactions are processed by Mercury'),
+            help='The transactions are processed by MercuryPay'),
         'module_pos_reprint': fields.selection([
             (0, "No reprint"),
             (1, "Allow cashier to reprint receipts")
