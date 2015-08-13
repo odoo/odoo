@@ -114,10 +114,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     limit: function () {
         if (this._limit === undefined) {
-            this._limit = (this.options.limit
-                        || this.defaults.limit
-                        || (this.getParent().action || {}).limit
-                        || 80);
+            this._limit = (this.options.limit ||
+                        this.defaults.limit ||
+                        parseInt(this.fields_view.arch.attrs.limit, 10) ||
+                        (this.getParent().action || {}).limit ||
+                        80);
         }
         return this._limit;
     },
