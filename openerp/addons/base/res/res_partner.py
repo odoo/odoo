@@ -137,10 +137,6 @@ class res_partner_title(osv.osv):
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
         'shortcut': fields.char('Abbreviation', translate=True),
-        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True)
-    }
-    _defaults = {
-        'domain': 'contact',
     }
 
 
@@ -343,10 +339,7 @@ class res_partner(osv.Model, format_address):
         value = {'title': False}
         if is_company:
             value['use_parent_address'] = False
-            domain = {'title': [('domain', '=', 'partner')]}
-        else:
-            domain = {'title': [('domain', '=', 'contact')]}
-        return {'value': value, 'domain': domain}
+        return {'value': value}
 
     def onchange_address(self, cr, uid, ids, use_parent_address, parent_id, context=None):
         def value_or_id(val):

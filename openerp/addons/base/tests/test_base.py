@@ -293,8 +293,8 @@ class test_base(common.TransactionCase):
 
     def test_60_read_group(self):
         cr, uid = self.cr, self.uid
-        title_sir = self.res_partner_title.create(cr, uid, {'name': 'Sir', 'domain': 'contact'})
-        title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady', 'domain': 'contact'})
+        title_sir = self.res_partner_title.create(cr, uid, {'name': 'Sir'})
+        title_lady = self.res_partner_title.create(cr, uid, {'name': 'Lady'})
         test_users = [
             {'name': 'Alice', 'login': 'alice', 'color': 1, 'function': 'Friend', 'date': '2015-03-28', 'title': title_lady},
             {'name': 'Alice', 'login': 'alice2', 'color': 0, 'function': 'Friend',  'date': '2015-01-28', 'title': title_lady},
