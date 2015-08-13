@@ -321,16 +321,15 @@ class Applicant(models.Model):
                 composer.send_mail()
         return res
 
-    @api.model
-    def _broadcast_welcome(self):
+    def _broadcast_welcome(self, employee):
         """ Broadcast the welcome message to all users in the employee company. """
         IrModelData = self.env['ir.model.data']
         channel_all_employees = IrModelData.xmlid_to_object('mail.channel_all_employees')
         template_new_employee = IrModelData.xmlid_to_object('hr_recruitment.hr_welcome_new_employee')
         if template_new_employee:
             MailTemplate = self.env['mail.template']
-            body_html = MailTemplate.render_template(template_new_employee.body_html, 'hr.employee', self.id)
-            subject = MailTemplate.render_template(template_new_employee.subject, 'hr.employee', self.id)
+            body_html = MailTemplate.render_template(template_new_employee.body_html, 'hr.employee', employee.id)
+            subject = MailTemplate.render_template(template_new_employee.subject, 'hr.employee', employee.id)
             channel_all_employees.message_post(
                 body=body_html, subject=subject,
                 subtype='mail.mt_comment')
@@ -470,7 +469,7 @@ class Applicant(models.Model):
                 applicant.job_id.message_post(
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
                     subtype="hr_recruitment.mt_job_applicant_hired")
-                employee._broadcast_welcome()
+                self._broadcast_welcome(employee)
             else:
                 raise UserError(_('You must define an Applied Job and a Contact Name for this applicant.'))
 
