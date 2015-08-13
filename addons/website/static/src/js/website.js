@@ -160,6 +160,7 @@ var form = function (url, method, params) {
 
 
 ajax.loadXML('/website/static/src/xml/website.xml', qweb);
+ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
 
 /**
  * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
