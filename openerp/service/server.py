@@ -265,7 +265,7 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
-        test_mode = config['test_enable'] or config['test_file']
+        test_mode = bool(config['test']) or config['test_file']
         if test_mode or (config['xmlrpc'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()

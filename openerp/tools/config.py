@@ -29,6 +29,8 @@ class MyOption (optparse.Option, object):
         self.my_default = attrs.pop('my_default', None)
         super(MyOption, self).__init__(*opts, **attrs)
 
+TEST_CATEGORIES = ['yaml', 'python', 'web', 'website']
+
 DEFAULT_LOG_HANDLER = ':INFO'
 def _get_default_datadir():
     home = os.path.expanduser('~')
@@ -139,12 +141,14 @@ class configmanager(object):
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
+        group.add_option("--test", dest='test', my_default="",
+                         help="Specify which tests to run: a comma-separated list of values among %s" % ", ".join(TEST_CATEGORIES))
         group.add_option("--test-file", dest="test_file", my_default=False,
                          help="Launch a python or YML test file.")
         group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
                          help="If set, will save sample of all reports in this directory.")
-        group.add_option("--test-enable", action="store_true", dest="test_enable",
-                         my_default=False, help="Enable YAML and unit tests.")
+        group.add_option("--test-enable", dest="test", action="store_const", const="yaml,python,web,website",
+                         help="Enable YAML and unit tests.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
                          my_default=False, help="Commit database changes performed by YAML or XML tests.")
         parser.add_option_group(group)
@@ -387,7 +391,7 @@ class configmanager(object):
             'debug_mode', 'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'xmlrpc', 'syslog',
             'list_db', 'proxy_mode',
-            'test_file', 'test_enable', 'test_commit', 'test_report_directory',
+            'test', 'test_file', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
         ]
@@ -438,6 +442,12 @@ class configmanager(object):
         if self.options.get('language', False):
             if len(self.options['language']) > 5:
                 raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
+
+        if self.options['test'] == 'full':
+            self.options['test'] = TEST_CATEGORIES
+        else:
+            self.options['test'] = self.options['test'].split(",")
+        self.options['test_enable'] = bool(self.options['test'])
 
         if opt.save:
             self.save()

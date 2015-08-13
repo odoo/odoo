@@ -1,7 +1,8 @@
 import openerp.tests
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(True)
+@openerp.tests.category('website')
+@openerp.tests.at_install(False)
+@openerp.tests.post_install(True)
 class TestUi(openerp.tests.HttpCase):
     def test_01_admin_widget_x2many(self):
         self.phantom_js("/web#action=test_new_api.action_discussions",

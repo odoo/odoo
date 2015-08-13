@@ -77,6 +77,17 @@ def post_install(flag):
         return obj
     return decorator
 
+def category(name):
+    """ Set the category of a test.
+    Possible values for `name` are: 'python', 'web', 'website'.
+    """
+    assert name in ('python', 'web', 'website')
+    def decorate(cls):
+        cls.category = name
+        return cls
+    return decorate
+
+@category('python')
 class BaseCase(unittest2.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
@@ -215,6 +226,7 @@ class RedirectHandler(urllib2.HTTPRedirectHandler):
 
     https_response = http_response
 
+@category('web')
 class HttpCase(TransactionCase):
     """ Transactional HTTP TestCase with url_open and phantomjs helpers.
     """

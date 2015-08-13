@@ -183,7 +183,7 @@ class ir_actions_report_xml(osv.osv):
         if isinstance(new_report, (str, unicode)):  # Qweb report
             # The only case where a QWeb report is rendered with this method occurs when running
             # yml tests originally written for RML reports.
-            if openerp.tools.config['test_enable'] and not tools.config['test_report_directory']:
+            if openerp.tools.config['test'] and not tools.config['test_report_directory']:
                 # Only generate the pdf when a destination folder has been provided.
                 return self.pool['report'].get_html(cr, uid, res_ids, new_report, data=data, context=context), 'html'
             else:

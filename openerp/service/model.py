@@ -108,7 +108,7 @@ def check(f):
         tries = 0
         while True:
             try:
-                if openerp.registry(dbname)._init and not openerp.tools.config['test_enable']:
+                if openerp.registry(dbname)._init and not openerp.tools.config['test']:
                     raise openerp.exceptions.Warning('Currently, this database is not fully loaded and can not be used.')
                 return f(dbname, *args, **kwargs)
             except OperationalError, e:

@@ -195,7 +195,7 @@ class ir_http(osv.AbstractModel):
             m = request.registry.get('ir.module.module')
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state', '=', 'installed'), ('name', '!=', 'web')], context=request.context)
             installed = set(x['name'] for x in m.read(cr, 1, ids, ['name'], context=request.context))
-            if openerp.tools.config['test_enable']:
+            if openerp.tools.config['test']:
                 installed.add(openerp.modules.module.current_test)
             mods = [''] + openerp.conf.server_wide_modules + sorted(installed)
             self._routing_map = http.routing_map(mods, False, converters=self._get_converters())

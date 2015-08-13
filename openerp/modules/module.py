@@ -440,6 +440,10 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
               if any of them failed.
     :rtype: bool
     """
+    test_categories = tools.config['test']
+    def category(test):
+        return getattr(test, 'category', None) in test_categories
+
     global current_test
     current_test = module_name
     mods = get_test_modules(module_name)
@@ -447,7 +451,9 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     r = True
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
-        suite = unittest2.TestSuite(itertools.ifilter(position, tests))
+        tests = itertools.ifilter(position, tests)
+        tests = itertools.ifilter(category, tests)
+        suite = unittest2.TestSuite(tests)
 
         if suite.countTestCases():
             t0 = time.time()
