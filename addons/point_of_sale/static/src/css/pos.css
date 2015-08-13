@@ -1396,7 +1396,6 @@ td {
 }
 
 .pos .pos-sale-ticket {
-    text-align: left;
     width: 300px;
     background-color: white;
     margin: 20px;
@@ -1408,6 +1407,14 @@ td {
     border: solid 1px rgb(220,220,220);
     border-radius: 3px;
     overflow: hidden;
+}
+.pos .pos-sale-ticket.direction-ltr{
+    text-align: left;
+    direction: ltr;
+}
+.pos .pos-sale-ticket.direction-rtl{
+    text-align: right;
+    direction: rtl;
 }
 .pos .pos-sale-ticket pre{
     font-family: "Inconsolata";

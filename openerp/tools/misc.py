@@ -442,6 +442,8 @@ def get_iso_codes(lang):
             lang = lang.split('_')[0]
     return lang
 
+RTL_LANGUAGES = ['ar_SY', 'fa_IR', 'he_IL']
+
 ALL_LANGUAGES = {
         'am_ET': u'Amharic / አምሃርኛ',
         'ar_SY': u'Arabic / الْعَرَبيّة',

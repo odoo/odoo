@@ -1445,6 +1445,10 @@ var ReceiptScreenWidget = ScreenWidget.extend({
     render_change: function() {
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
     },
+    get_report_direction:function(){
+        var user_lang = this.pos.user.lang;
+        return user_lang ? this.pos.languages[user_lang].direction : 'ltr';
+    },
     render_receipt: function() {
         var order = this.pos.get_order();
         this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
@@ -1453,6 +1457,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                 receipt: order.export_for_printing(),
                 orderlines: order.get_orderlines(),
                 paymentlines: order.get_paymentlines(),
+                direction: this.get_report_direction()
             }));
     },
 });

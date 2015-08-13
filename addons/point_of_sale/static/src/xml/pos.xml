@@ -1249,15 +1249,50 @@
     </t>
 
     <t t-name="PosTicket">
-        <div class="pos-sale-ticket">
-            
-            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
-            <br />
-            <t t-esc="widget.pos.company.name"/><br />
-            Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
-            Shop: <t t-esc="widget.pos.shop.name"/><br />
-            <br />
+        <div t-attf-class="pos-sale-ticket direction-#{direction}" >
+            <table>
+                <tr class="pos-center-align">
+                    <td>
+                        <t t-esc="moment().format('L LT')"/>
+                    </td>
+                    <td>
+                        <t t-esc="order.name"/>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <table>
+                <tr>
+                    <td>
+                        <t t-esc="widget.pos.company.name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <t>Phone:</t>
+                    </td>
+                    <td>
+                        <t t-esc="widget.pos.company.phone || ''"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <t>User:</t>
+                    </td>
+                    <td>
+                        <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <t>Shop:</t>
+                    </td>
+                    <td>
+                        <t t-esc="widget.pos.shop.name"/>
+                    </td>
+                </tr>
+            </table>
+            <br/>
             <t t-if="receipt.header">
                 <div style='text-align:center'>
                     <t t-esc="receipt.header" />

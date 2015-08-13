@@ -248,7 +248,7 @@ exports.PosModel = Backbone.Model.extend({
        },
     },{
         model:  'res.users',
-        fields: ['name','pos_security_pin','groups_id','barcode'],
+        fields: ['name','pos_security_pin','groups_id','barcode', 'lang'],
         domain: function(self){ return [['company_id','=',self.user.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
         loaded: function(self,users){ 
             // we attribute a role to the user, 'cashier' or 'manager', depending
@@ -322,6 +322,15 @@ exports.PosModel = Backbone.Model.extend({
         context: function(self){ return { pricelist: self.pricelist.id, display_default_code: false }; },
         loaded: function(self, products){
             self.db.add_products(products);
+        },
+    },{
+        model:  'res.lang',
+        fields: ['name', 'code','direction'],
+        loaded: function(self, languages){
+            self.languages = {};
+            _.each(languages, function(lang){
+                self.languages[lang.code] = lang;
+            });
         },
     },{
         model:  'account.bank.statement',

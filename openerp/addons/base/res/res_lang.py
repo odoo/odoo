@@ -94,6 +94,7 @@ class lang(osv.osv):
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
             'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+            'direction': 'rtl' if lang in tools.RTL_LANGUAGES else 'ltr',
         }
         lang_id = False
         try:
