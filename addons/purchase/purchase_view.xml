@@ -458,19 +458,11 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="product_id"
-                                       on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
-                                            parent.partner_id, parent.date_order, parent.fiscal_position_id, date_planned,
-                                            name, False, 'draft', True, context)"
-                                       context="{'partner_id': parent.partner_id}"/>
+                                <field name="product_id"/>
                                 <label for="product_qty"/>
                                 <div>
-                                    <field name="product_qty"
-                                           on_change="onchange_product_id(parent.pricelist_id, product_id, product_qty,
-                                                product_uom, parent.partner_id, parent.date_order, parent.fiscal_position_id,
-                                                date_planned, name, False, 'draft', True, context)"
-                                           class="oe_inline"/>
-                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position_id,date_planned,name,False,'draft',context)" class="oe_inline"/>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>
