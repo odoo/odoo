@@ -1300,7 +1300,7 @@ class Root(object):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')
-                    if os.path.isfile(manifest_path) and os.path.isdir(path_static):
+                    if os.path.isfile(manifest_path):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
@@ -1310,7 +1310,8 @@ class Root(object):
                             m = None
                         addons_module[module] = m
                         addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        if os.path.isdir(path_static):
+                            statics['/%s/static' % module] = path_static
 
         if statics:
             _logger.info("HTTP Configuring static files")
