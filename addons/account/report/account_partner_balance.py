@@ -13,7 +13,7 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
         full_account = []
         filters = self.filters.replace('account_move_line__move_id', 'am').replace('account_move_line', 'l')
         params = tuple(self.where_params) + (tuple(self.ACCOUNT_TYPE),) + tuple(self.where_params)
-        self._cr.execute(
+        self.env.cr.execute(
             "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
@@ -37,12 +37,10 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
             "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
             "ORDER BY l.account_id,p.name",
             (params))
-        res = self._cr.dictfetchall()
+        res = self.env.cr.dictfetchall()
 
-
-        if self.display_partner == 'non-zero_balance':
-            full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
-        else:
+        full_account = [r for r in res if r['sdebit'] > 0 or r['scredit'] > 0]
+        if self.display_partner == 'all':
             full_account = [r for r in res]
 
         for rec in full_account:
@@ -50,17 +48,13 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
                 rec.update({'name': 'Unknown Partner'})
 
         ## We will now compute Total
-        subtotal_row = self._add_subtotal(full_account)
-        return subtotal_row
+        return self._add_subtotal(full_account)
 
     def _add_subtotal(self, cleanarray):
         i = 0
         completearray = []
-        tot_debit = 0.0
-        tot_credit = 0.0
-        tot_scredit = 0.0
-        tot_sdebit = 0.0
-        tot_enlitige = 0.0
+        tot_debit = tot_credit = tot_scredit = tot_sdebit = tot_enlitige = 0.0
+
         for r in cleanarray:
             # For the first element we always add the line
             # type = 1 is the line is the first of the account
@@ -171,19 +165,19 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
 
     @api.multi
     def render_html(self, data):
-        self.model = self._context.get('active_model')
+        self.model = self.env.context.get('active_model')
         MoveLine = self.env['account.move.line']
         self.account_ids = []
-        docs = self.env[self.model].browse(self._context.get('active_id'))
-        tables, where_clause, self.where_params = MoveLine.with_context(data['options']['form'].get('used_context', {}))._query_get()
+        docs = self.env[self.model].browse(self.env.context.get('active_id'))
+        tables, where_clause, self.where_params = MoveLine.with_context(data['form'].get('used_context', {}))._query_get()
         self.tables = tables.replace('"','')
         self.wheres = [""]
         if where_clause.strip():
             self.wheres.append(where_clause.strip())
         self.filters = " AND ".join(self.wheres)
 
-        self.display_partner = data['options']['form'].get('display_partner', 'non-zero_balance')
-        self.result_selection = data['options']['form'].get('result_selection')
+        self.display_partner = data['form'].get('display_partner', 'non-zero_balance')
+        self.result_selection = data['form'].get('result_selection')
 
         if (self.result_selection == 'customer' ):
             self.ACCOUNT_TYPE = ["receivable"]
@@ -192,9 +186,9 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
         else:
             self.ACCOUNT_TYPE = ["payable", "receivable"]
 
-        self._cr.execute("SELECT a.id FROM account_account a " \
+        self.env.cr.execute("SELECT a.id FROM account_account a " \
                     "WHERE a.internal_type IN %s ", (tuple(self.ACCOUNT_TYPE),))
-        self.account_ids = [a for (a,) in self._cr.fetchall()]
+        self.account_ids = [a for (a,) in self.env.cr.fetchall()]
         lines = self.lines()
         sum_debit = sum_credit = sum_litige = 0
         for line in filter(lambda x: x['type'] == 3, lines):
@@ -205,7 +199,7 @@ class ReportPartnerBalance(models.AbstractModel, CommonReportHeader):
         docargs = {
             'doc_ids': self.ids,
             'doc_model': self.model,
-            'data': data['options']['form'],
+            'data': data['form'],
             'docs': docs,
             'time': time,
             'get_journal': self._get_journal,

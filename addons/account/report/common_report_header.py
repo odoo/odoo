@@ -32,8 +32,8 @@ class CommonReportHeader(object):
                             + filters +
                        " GROUP BY account_id")
             params = (tuple(accounts._ids),) + tuple(where_params)
-            self._cr.execute(request, params)
-            for row in self._cr.dictfetchall():
+            self.env.cr.execute(request, params)
+            for row in self.env.cr.dictfetchall():
                 res[row['id']] = row
         return res
 
@@ -50,6 +50,6 @@ class CommonReportHeader(object):
     def _get_journal(self, data):
         codes = []
         if data.get('journal_ids', False):
-            self._cr.execute('select code from account_journal where id IN %s',(tuple(data['journal_ids']),))
-            codes = [x for x, in self._cr.fetchall()]
+            self.env.cr.execute('select code from account_journal where id IN %s',(tuple(data['journal_ids']),))
+            codes = [x for x, in self.env.cr.fetchall()]
         return codes

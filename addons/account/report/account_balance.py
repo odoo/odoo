@@ -2,7 +2,7 @@
 
 import time
 
-from openerp import api, models, _
+from openerp import api, models
 from common_report_header import CommonReportHeader
 
 
@@ -30,9 +30,8 @@ class ReportTrialBalance(models.AbstractModel, CommonReportHeader):
             if form['display_account'] == 'movement':
                 if not currency.is_zero(res['credit']) or not currency.is_zero(res['debit']) or not currency.is_zero(res['balance']):
                     self.result_acc.append(res)
-            elif form['display_account'] == 'not_zero':
-                if not currency.is_zero(res['balance']):
-                    self.result_acc.append(res)
+            elif form['display_account'] == 'not_zero' and not currency.is_zero(res['balance']):
+                self.result_acc.append(res)
             else:
                 self.result_acc.append(res)
 
@@ -43,13 +42,13 @@ class ReportTrialBalance(models.AbstractModel, CommonReportHeader):
 
     @api.multi
     def render_html(self, data):
-        self.model = self._context.get('active_model')
-        docs = self.env[self.model].browse(self._context.get('active_id'))
+        self.model = self.env.context.get('active_model')
+        docs = self.env[self.model].browse(self.env.context.get('active_id'))
 
         docargs = {
             'doc_ids': self.ids,
             'doc_model': self.model,
-            'data': data['options']['form'],
+            'data': data['form'],
             'docs': docs,
             'time': time,
             'lines': self.lines,

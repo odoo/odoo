@@ -11,11 +11,11 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
 
     def _get_lines(self, form):
         res = []
-        self.total_account = []
+        cr = self.env.cr
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
-        self._cr.execute('SELECT DISTINCT res_partner.id AS id,\
+        cr.execute('SELECT DISTINCT res_partner.id AS id,\
                     res_partner.name AS name \
                 FROM res_partner,account_move_line AS l, account_account, account_move am\
                 WHERE (l.account_id=account_account.id) \
@@ -27,7 +27,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                     AND (l.date <= %s)\
                 ORDER BY res_partner.name', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from))
 
-        partners = self._cr.dictfetchall()
+        partners = cr.dictfetchall()
         # mise a 0 du total
         for i in range(7):
             self.total_account.append(0)
@@ -39,7 +39,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
 
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
         totals = {}
-        self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+        cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id) \
                     AND (am.state IN %s)\
@@ -47,14 +47,14 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                     AND (l.partner_id IN %s)\
                     AND (l.date <= %s)\
                     GROUP BY l.partner_id ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids), self.date_from,))
-        partner_totals = self._cr.fetchall()
+        partner_totals = cr.fetchall()
         for partner_id, amount in partner_totals:
             totals[partner_id] = amount
 
         # This dictionary will store the future or past of all partners
         future_past = {}
         if self.direction_selection == 'future':
-            self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                         FROM account_move_line AS l, account_account, account_move am \
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id) \
                         AND (am.state IN %s)\
@@ -64,11 +64,11 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND l.reconciled IS FALSE\
                     AND (l.date <= %s)\
                         GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids),self.date_from,))
-            partner_totals = self._cr.fetchall()
+            partner_totals = cr.fetchall()
             for partner_id, amount in partner_totals:
                 future_past[partner_id] = amount
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
-            self._cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
+            cr.execute('SELECT l.partner_id, SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
@@ -78,14 +78,13 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND l.reconciled IS FALSE\
                     AND (l.date <= %s)\
                         GROUP BY l.partner_id', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from, tuple(partner_ids), self.date_from,))
-            partner_totals = self._cr.fetchall()
+            partner_totals = cr.fetchall()
             for partner_id, amount in partner_totals:
                 future_past[partner_id] = amount
 
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []
-
         for i in range(5):
             args_list = (tuple(move_state), tuple(self.ACCOUNT_TYPE), tuple(partner_ids),)
             dates_query = '(COALESCE(l.date_maturity,l.date)'
@@ -101,7 +100,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
 
-            self._cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.id
+            cr.execute('''SELECT l.partner_id, SUM(l.debit-l.credit), l.id
                     FROM account_move_line AS l, account_account, account_move am
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)
                         AND (am.state IN %s)
@@ -111,7 +110,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
                     GROUP BY l.partner_id, l.id''', args_list)
-            partners_partial = self._cr.fetchall()
+            partners_partial = cr.fetchall()
             partners_amount = dict((partner_id, 0) for partner_id, amount, line_id in partners_partial)
 
             for partner_id, amount, line_id in partners_partial:
@@ -124,8 +123,8 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         partial_reconcile_ids.append(partial_line.debit_move_id.id)
                 if partial_reconcile_ids:
                     # in case of partial reconciliation, we want to keep the left amount in the oldest period
-                    self._cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) from account_move_line where id = %s''', (line_id,))
-                    date = self._cr.fetchall()
+                    cr.execute('''SELECT MIN(COALESCE(date_maturity,date)) from account_move_line where id = %s''', (line_id,))
+                    date = cr.fetchall()
                     partial = False
                     if 'BETWEEN' in dates_query:
                         partial = date and args_list[-3] <= date[0][0] <= args_list[-2]
@@ -136,12 +135,12 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                     if partial:
                         # partial reconcilation
                         limit_date = 'COALESCE(l.date_maturity,l.date) %s %%s' % ('<=' if self.direction_selection == 'past' else '>=')
-                        self._cr.execute('''SELECT SUM(l.debit-l.credit)
+                        cr.execute('''SELECT SUM(l.debit-l.credit)
                                            FROM account_move_line AS l, account_move AS am
                                            WHERE l.move_id = am.id AND am.state in %s
                                            AND l.id in %s
                                            AND ''' + limit_date, (tuple(move_state), tuple(partial_reconcile_ids), self.date_from))
-                        unreconciled_amount = self._cr.fetchall()
+                        unreconciled_amount = cr.fetchall()
                         partners_amount[partner_id] += unreconciled_amount[0][0]
                 else:
                     partners_amount[partner_id] += amount
@@ -193,8 +192,8 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
         return res
 
     def _get_lines_with_out_partner(self, form):
-        self.total_account = []
         res = []
+        cr = self.env.cr
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
@@ -203,7 +202,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
         for i in range(7):
             self.total_account.append(0)
         totals = {}
-        self._cr.execute('SELECT SUM(l.debit-l.credit) \
+        cr.execute('SELECT SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
                     AND (am.state IN %s)\
@@ -212,12 +211,12 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                     AND l.reconciled IS FALSE \
                     AND (l.date <= %s)\
                     ',(tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from,))
-        total_amount = self._cr.fetchall()
+        total_amount = cr.fetchall()
         for amount in total_amount:
             totals['Unknown Partner'] = amount[0]
         future_past = {}
         if self.direction_selection == 'future':
-            self._cr.execute('SELECT SUM(l.debit-l.credit) \
+            cr.execute('SELECT SUM(l.debit-l.credit) \
                         FROM account_move_line AS l, account_account, account_move am\
                         WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
@@ -226,11 +225,11 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND (COALESCE(l.date_maturity, l.date) < %s)\
                         AND l.reconciled IS FALSE'
                         , (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from,))
-            total_amount = self._cr.fetchall()
+            total_amount = cr.fetchall()
             for amount in total_amount:
                 future_past['Unknown Partner'] = amount[0]
         elif self.direction_selection == 'past': # Using elif so people could extend without this breaking
-            self._cr.execute('SELECT SUM(l.debit-l.credit) \
+            cr.execute('SELECT SUM(l.debit-l.credit) \
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id=account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
@@ -239,11 +238,11 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND (COALESCE(l.date_maturity,l.date) > %s)\
                         AND l.reconciled IS FALSE\
                         ', (tuple(move_state), tuple(self.ACCOUNT_TYPE), self.date_from,))
-            total_amount = self._cr.fetchall()
+            total_amount = cr.fetchall()
             for amount in total_amount:
                 future_past['Unknown Partner'] = amount[0]
-        history = []
 
+        history = []
         for i in range(5):
             args_list = (tuple(move_state), tuple(self.ACCOUNT_TYPE))
             dates_query = '(COALESCE(l.date_maturity,l.date)'
@@ -257,7 +256,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                 dates_query += ' < %s)'
                 args_list += (form[str(i)]['stop'],)
             args_list += (self.date_from,)
-            self._cr.execute('SELECT SUM(l.debit-l.credit)\
+            cr.execute('SELECT SUM(l.debit-l.credit)\
                     FROM account_move_line AS l, account_account, account_move am \
                     WHERE (l.account_id = account_account.id) AND (l.move_id=am.id)\
                         AND (am.state IN %s)\
@@ -267,7 +266,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
                         AND ' + dates_query + '\
                     AND (l.date <= %s)\
                     GROUP BY l.partner_id', args_list)
-            total_amount = self._cr.fetchall()
+            total_amount = cr.fetchall()
             history_data = {}
             for amount in total_amount:
                 history_data['Unknown Partner'] = amount[0]
@@ -325,17 +324,17 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
     @api.multi
     def render_html(self, data):
         self.total_account = []
-        self.model = self._context.get('active_model')
+        self.model = self.env.context.get('active_model')
         MoveLine = self.env['account.move.line']
-        docs = self.env[self.model].browse(self._context.get('active_id'))
+        docs = self.env[self.model].browse(self.env.context.get('active_id'))
 
-        self.direction_selection = data['options']['form'].get('direction_selection', 'past')
-        self.target_move = data['options']['form'].get('target_move', 'all')
-        self.date_from = data['options']['form'].get('date_from', time.strftime('%Y-%m-%d'))
+        self.direction_selection = data['form'].get('direction_selection', 'past')
+        self.target_move = data['form'].get('target_move', 'all')
+        self.date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
 
-        if (data['options']['form']['result_selection'] == 'customer' ):
+        if (data['form']['result_selection'] == 'customer' ):
             self.ACCOUNT_TYPE = ['receivable']
-        elif (data['options']['form']['result_selection'] == 'supplier'):
+        elif (data['form']['result_selection'] == 'supplier'):
             self.ACCOUNT_TYPE = ['payable']
         else:
             self.ACCOUNT_TYPE = ['payable','receivable']
@@ -343,7 +342,7 @@ class ReportAgedPartnerBalance(models.AbstractModel, CommonReportHeader):
         docargs = {
             'doc_ids': self.ids,
             'doc_model': self.model,
-            'data': data['options']['form'],
+            'data': data['form'],
             'docs': docs,
             'time': time,
             'get_lines_with_out_partner': self._get_lines_with_out_partner,

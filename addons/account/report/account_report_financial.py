@@ -115,12 +115,12 @@ class ReportFinancial(models.AbstractModel, CommonReportHeader):
 
     @api.multi
     def render_html(self, data):
-        self.model = self._context.get('active_model')
-        docs = self.env[self.model].browse(self._context.get('active_id'))
+        self.model = self.env.context.get('active_model')
+        docs = self.env[self.model].browse(self.env.context.get('active_id'))
         docargs = {
             'doc_ids': self.ids,
             'doc_model': self.model,
-            'data': data['options']['form'],
+            'data': data['form'],
             'docs': docs,
             'time': time,
             'get_lines': self.get_lines,
