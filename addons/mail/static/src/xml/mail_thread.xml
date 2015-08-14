@@ -6,6 +6,9 @@
     -->
     <t t-name="mail.ComposeMessage">
         <div class="form-group col-md-12 o_mail_compose_message">
+            <div t-if="widget.options.mention_menu_orientation === 'top'" class="o_mail_mention_dropdown">
+                <t t-call="mail.ComposeMessage.mention_menu"/>
+            </div>
             <!-- input text : depending on the display_mode option -->
             <div t-att-class="widget.options.display_mode === 'chat' ? 'input-group o_mail_compose_message_mode_chat' : 'o_mail_compose_message_mode_mail'">
                 <t t-if="widget.options.display_mode === 'chat'">
@@ -26,6 +29,12 @@
                     </button>
                 </span>
             </div>
+            <div t-if="widget.options.mention_menu_orientation === 'bottom'" class="o_mail_mention_dropdown">
+                <t t-call="mail.ComposeMessage.mention_menu"/>
+            </div>
+            <div class="o_mail_mention_partner_tags">
+                <t t-call="mail.ComposeMessage.mention_tags"/>
+            </div>
 
             <span class="o_mail_attachment_file hide">
                 <t t-call="HiddenInputFile">
@@ -44,7 +53,7 @@
 
     <t t-name="mail.ComposeMessage.emoji">
         <div class="o_mail_compose_message_emoji_content">
-            <t t-foreach="widget.emoji_list" t-as="emoji">
+            <t t-foreach="widget.options.emoji_list" t-as="emoji">
                 <span t-att-data-emoji="emoji.source" class="o_mail_compose_message_emoji_img" t-att-title="emoji.description">
                     <t t-raw="emoji.substitution"/>
                 </span>
@@ -85,6 +94,24 @@
                 </t>
             </t>
         </div>
+    </t>
+
+    <t t-name="mail.ComposeMessage.mention_menu">
+        <ul class="dropdown-menu o_mail_mention_dropdown_menu" aria-labelledby="dropdownMailMentionMenu">
+            <t t-foreach="widget.get('mention_partners')" t-as="partner">
+                <li t-att-data-partner-id="partner.id" t-att-class="'o_mail_mention_proposition ' + (partner_index === 0 ? 'active' : '')">
+                    <a href="#">
+                        <t t-esc="partner.name"/> (<t t-esc="partner.email || _t('No email')"/>)</a>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+    <t t-name="mail.ComposeMessage.mention_tags">
+        <t t-if="widget.get('mention_selected_partners').length">Mention(s) :</t>
+        <t t-foreach="widget.get('mention_selected_partners')" t-as="partner">
+            <span class="badge"><t t-esc="partner.name"/></span>
+        </t>
     </t>
 
 

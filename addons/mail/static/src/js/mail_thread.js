@@ -3,6 +3,7 @@ odoo.define('mail.thread', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var Model = require('web.Model');
 var time = require('web.time');
 var Widget = require('web.Widget');
 var session = require('web.session');
@@ -28,10 +29,13 @@ var MailComposeMessage = Widget.extend({
     template: 'mail.ComposeMessage',
     events: {
         "keydown .o_mail_compose_message_input": "on_keydown",
+        "keyup .o_mail_compose_message_input": "on_keyup",
         "change input.oe_form_binary_file": "on_attachment_change",
         "click .o_mail_compose_message_attachment_list .o_mail_attachment_delete": "on_attachment_delete",
         "click .o_mail_compose_message_button_attachment": 'on_click_attachment',
         "click .o_mail_compose_message_button_send": 'message_send',
+        "click .o_mail_mention_proposition": "on_click_mention_item",
+        "mouseover .o_mail_mention_proposition": "on_hover_mention_proposition",
     },
     /**
      * Contructor
@@ -39,6 +43,11 @@ var MailComposeMessage = Widget.extend({
      * @param {Object[]} [options.emoji_list] : the list of emoji
      * @param {Object} options.context : the context. It should contains the default_res_id' (id of the current document).
      * @param {chat|mail} options.display_mode : the 'chat' mode will display an input, when the 'mail' mode will display a texarea.
+     * @param {Char} [options.mention_delimiter] : the delimiter char to distinguish the beginning of a mention
+     * @param {Integer} [options.mention_min_length] : min length of the mention word required to start a search on partner
+     * @param {Integer} [options.mention_typing_speed] : delay before starting a search with the mention word
+     * @param {Integer} [options.mention_fetch_limit] : limit of partner fetch
+     * @param {top|bottom} [options.mention_menu_orientation] : orientation of the dropdown menu regarding the input text
      */
     init: function(parent, dataset, options){
         this._super.apply(this, arguments);
@@ -47,13 +56,24 @@ var MailComposeMessage = Widget.extend({
             'emoji_list': {},
             'context': {},
             'display_mode': 'mail',
+            'mention_delimiter': '@',
+            'mention_min_length': 2,
+            'mention_typing_speed': 400,
+            'mention_fetch_limit': 8,
+            'mention_menu_orientation': 'top',
         });
         this.emoji_list = this.options.emoji_list;
         this.context = this.options.context;
+        this.input_buffer = ''; // save the value at keydown
         // attachment handeling
         this.AttachmentDataSet = new data.DataSetSearch(this, 'ir.attachment', this.context);
         this.fileupload_id = _.uniqueId('o_mail_chat_fileupload');
         this.set('attachment_ids', []);
+        // mention
+        this.PartnerModel = new Model('res.partner');
+        this.set('mention_word', false); // word typed after the delimiter
+        this.set('mention_partners', []); // proposition of not-mention partner matching the mention_word
+        this.set('mention_selected_partners', []); // contains the mention partners sorted as they appear in the input text
     },
     start: function(){
         var self = this;
@@ -77,6 +97,10 @@ var MailComposeMessage = Widget.extend({
             container: '.o_mail_compose_message_emoji',
             trigger: 'focus',
         });
+        // mention
+        this.on('change:mention_word', this, this.mention_word_change);
+        this.on('change:mention_partners', this, this.mention_render_partner);
+        this.on('change:mention_selected_partners', this, this.mention_render_selected_partners);
         return this._super();
     },
     // events
@@ -89,18 +113,60 @@ var MailComposeMessage = Widget.extend({
         this.$input.focus();
     },
     on_keydown: function(event){
-        if(event.which === 13 && this.options.display_mode === 'chat') {
-            this.message_send();
+
+                // Save the old input
+        this.input_buffer = this.$input.val();
+        // Key Down displatching
+        switch(event.which) {
+            // BACKSPACE : check if need to remove a mention
+            case $.ui.keyCode.BACKSPACE:
+                this.mention_check_remove(event.which);
+                break;
+            // ENTER : submit the message only if the dropdown mention proposition is not displayed
+            case $.ui.keyCode.ENTER:
+                if(!this.get('mention_partners').length && this.options.display_mode === 'chat'){
+                    this.message_send();
+                }
+                break;
         }
     },
     message_send: function(){
         var $input = this.$('.o_mail_compose_message_input');
-        var mes = mail_utils.get_text2html($input.val());
+        var mes = mail_utils.get_text2html(this.$input.val());
         if (! mes.trim() && this.do_check_attachment_upload()) {
             return;
         }
         $input.val("");
         this.message_post(mes, _.pluck(this.get('attachment_ids'), 'id'));
+    },
+    on_keyup: function(event){
+        switch(event.which) {
+            // ESCAPED KEYS : do nothing
+            case $.ui.keyCode.END:
+            case $.ui.keyCode.PAGE_UP:
+            case $.ui.keyCode.PAGE_DOWN:
+            case $.ui.keyCode.ESCAPE:
+                // do nothing
+                break;
+            // ENTER, UP, DOWN : check if navigation in mention propositions
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.ENTER:
+                this.mention_proposition_navigation(event.which);
+                break;
+            // DELETE : check if need to remove a mention
+            case $.ui.keyCode.DELETE:
+                this.mention_check_remove(event.which);
+                break;
+            // Otherwise, check is a mention is typed
+            default:
+                var mention_word = this.mention_detect_delimiter();
+                if(mention_word){
+                    this.set('mention_word', mention_word);
+                }else{
+                    this.set('mention_partners', []); // close the dropdown
+                }
+        }
     },
     /**
      * Sent the message to the server to create a mail.message, using 'message_post' method
@@ -112,15 +178,18 @@ var MailComposeMessage = Widget.extend({
     message_post: function(body, attachment_ids, kwargs){
         var self = this;
         var values = _.defaults(kwargs || {}, {
-            'body': body,
-            'attachment_ids': attachment_ids || [],
             'message_type': 'comment',
             'content_subtype': 'html',
             'partner_ids': [],
             'subtype': 'mail.mt_comment',
         });
+        values = _.extend(values, {
+            'body': this.mention_preprocess_message(body),
+            'attachment_ids': attachment_ids || [],
+            'partner_ids': _.pluck(this.get('mention_selected_partners'), 'id').concat(values['partner_ids']),
+        });
         return this.thread_dataset._model.call('message_post', [this.context.default_res_id], values).then(function(message_id){
-            self.clean_attachments(); // empty attachment list
+            self.reset(); // empty attachment, mention partners, ...
             self.trigger('message_sent', message_id);
             return message_id;
         });
@@ -206,16 +275,252 @@ var MailComposeMessage = Widget.extend({
         }
         return true;
     },
-    clean_attachments: function(){
-        this.set('attachment_ids', []);
-    },
-    // ui
     attachment_render: function(){
         this.$('.o_mail_compose_message_attachment_list').html(QWeb.render('mail.ComposeMessage.attachments', {'widget': this}));
     },
+    // Mention
+    on_click_mention_item: function(event){
+        event.preventDefault();
+
+        var text_input = this.$input.val();
+        var partner_id = this.$(event.currentTarget).data('partner-id');
+        var selected_partner = _.filter(this.get('mention_partners'), function(p){
+            return p.id === partner_id;
+        })[0];
+
+        // add the mention partner to the list
+        var mention_selected_partners = this.get('mention_selected_partners');
+        if(mention_selected_partners.length){ // there are already mention partner
+            // get mention matches (ordered by index in the text)
+            var matches = this.mention_get_match(text_input);
+            var index = this.mention_get_index(matches, this.get_cursor_position());
+            mention_selected_partners.splice(index, 0, selected_partner);
+            mention_selected_partners = _.clone(mention_selected_partners);
+        }else{ // this is the first mentionned partner
+            mention_selected_partners = mention_selected_partners.concat([selected_partner]);
+        }
+        this.set('mention_selected_partners', mention_selected_partners);
+
+        // update input text, and reset dropdown
+        var mention_word = this.get('mention_word');
+        var cursor_position = this.get_cursor_position();
+        var text_left = text_input.substring(0, cursor_position-(mention_word.length+1));
+        var text_right = text_input.substring(cursor_position, text_input.length);
+        var text_input_new = text_left + this.options.mention_delimiter + selected_partner.name + ' ' + text_right;
+
+        this.$input.val(text_input_new);
+        this.set_cursor_position(text_left.length+selected_partner.name.length+2);
+        this.set('mention_partners', []);
+    },
+    on_hover_mention_proposition: function(event){
+        var $elem = this.$(event.currentTarget);
+        this.$('.o_mail_mention_proposition').removeClass('active');
+        $elem.addClass('active');
+    },
+    mention_proposition_navigation: function(keycode){
+        var $active = this.$('.o_mail_mention_proposition.active');
+        if(keycode === $.ui.keyCode.ENTER){ // selecting proposition
+            if($active){
+                $active.click();
+            }
+        }else{ // navigation in propositions
+            var $to = undefined;
+            if(keycode === $.ui.keyCode.DOWN){
+                $to = $active.next('.o_mail_mention_proposition:not(.active)');
+            }else{
+                $to = $active.prev('.o_mail_mention_proposition:not(.active)');
+            }
+            if($to.length){
+                this.$('.o_mail_mention_proposition').removeClass('active');
+                $to.addClass('active');
+            }
+        }
+    },
+    /**
+     * Return the text attached to the mention delimiter
+     * @returns {String|false} : the text right after the delimiter or false
+     */
+    mention_detect_delimiter: function(){
+        var self = this;
+        var delimiter = self.options.mention_delimiter;
+        var validate_keyword = function(search_str){
+            var pattern = "(^"+delimiter+"|(^\\s"+delimiter+"))";
+            var regex_start = new RegExp(pattern, "g");
+            search_str = search_str.replace(/^\s\s*|^[\n\r]/g, '');
+            if (regex_start.test(search_str) && search_str.length > self.options.mention_min_length){
+                search_str = search_str.replace(pattern, '');
+                return search_str.indexOf(' ') < 0 && !/[\r\n]/.test(search_str) ? search_str.replace(delimiter, '') : false;
+            }
+            return false;
+        };
+        var text_val = this.$input.val();
+        var left_string = text_val.substring(0, this.get_cursor_position());
+        var search_str = text_val.substring(left_string.lastIndexOf(delimiter) - 1, this.get_cursor_position());
+        return validate_keyword(search_str);
+    },
+    mention_word_change: function(){
+        var self = this;
+        var word = this.get('mention_word');
+        if(word){
+            // start a timeout to fetch partner with the current 'mention word'. The timer avoid to start
+            // a RPC for each pushed key when the user is typing the partner name. The 'mention_typing_speed'
+            // option should approach the time for a human to type a letter.
+            clearTimeout(this.mention_fetch_timer);
+            this.mention_fetch_timer = setTimeout(function() {
+                self.mention_fetch_partner();
+            }, this.options.mention_typing_speed);
+        }else{
+            // when deleting mention word, avoid RPC call with last long enough word
+            clearTimeout(this.mention_fetch_timer);
+        }
+    },
+    mention_fetch_partner: function(event){
+        var self = this;
+        var search_str = this.get('mention_word');
+        this.PartnerModel.query(['id', 'name', 'email'])
+            .filter([['id', 'not in', _.pluck(this.get('mention_selected_partners'), 'id')],'|', ['name', 'ilike', search_str], ['email', 'ilike', search_str]])
+            .limit(this.options.mention_fetch_limit)
+            .all().then(function(partners){
+                self.set('mention_partners', partners);
+        });
+    },
+    mention_check_remove: function(keycode){
+        var mention_selected_partners = this.get('mention_selected_partners');
+        var cursor = this.get_cursor_position();
+        var input_text = this.$input.val();
+        switch(keycode) {
+            // Remove a mention when a character belonging to a mention word is removed from the input text
+            case $.ui.keyCode.BACKSPACE:
+                var matches = this.mention_get_match(this.$input.val());
+                for(var i=0 ; i< matches.length ; i++){
+                    var m = matches[i];
+                    if(m.index <= cursor && cursor <= m.index+m[0].length){
+                        mention_selected_partners.splice(i, 1);
+                    }
+                }
+                break;
+            // Remove a mention if the deleted string overlapse a mention
+            case $.ui.keyCode.DELETE:
+                var left_text = input_text.substring(0, cursor);
+                var right_text = input_text.substring(cursor, input_text.length);
+                var temp = this.input_buffer.substring(0, this.input_buffer.length - right_text.length);
+                var deleted_text = temp.substring(left_text.length, temp.length);
+
+                var deleted_binf = left_text.length;
+                var deleted_bsup = left_text.length + deleted_text.length;
+
+                var matches = this.mention_get_match(this.input_buffer);
+                for(var i=0 ; i< matches.length ; i++){
+                    var m = matches[i];
+                    var m1 = m.index;
+                    var m2 = m.index+m[0].length;
+                    if(deleted_binf <= m2 && m1 <= deleted_bsup){
+                        mention_selected_partners.splice(i, 1);
+                    }
+                }
+                break;
+        }
+        this.set('mention_selected_partners', _.clone(mention_selected_partners));
+    },
+    mention_preprocess_message: function(body){
+        var partners = this.get('mention_selected_partners');
+        if(partners.length){
+            var matches = this.mention_get_match(body);
+            var substrings = [];
+            var start_index = 0;
+            for(var i=0; i < matches.length ; i++){
+                var match = matches[i];
+                var end_index = match.index+match[0].length;
+                var subtext = body.substring(start_index, end_index);
+                subtext = subtext.replace(match[0], _.str.sprintf("<span data-oe-model='res.partner' data-oe-id='%s'>%s</span>", partners[i].id, match[0]))
+                substrings.push(subtext);
+                start_index = end_index;
+            }
+            substrings.push(body.substring(start_index, body.length));
+            return substrings.join('');
+        }
+        return body;
+    },
+    mention_render_partner: function(){
+        this.$('.o_mail_mention_dropdown').html(QWeb.render('mail.ComposeMessage.mention_menu', {'widget': this}));
+        if(this.get('mention_partners').length){
+            this.$('.o_mail_mention_dropdown').addClass('open');
+        }else{
+            this.$('.o_mail_mention_dropdown').removeClass('open');
+        }
+    },
+    mention_render_selected_partners: function(){
+        this.$('.o_mail_mention_partner_tags').html(QWeb.render('mail.ComposeMessage.mention_tags', {'widget': this}));
+    },
+    /**
+     * Return the matches (as RexExp.exec do) for the partner mention in the input text
+     * @param {String} input_text : the text to search matches
+     * @returns {Object[]} matches in the same format as RexExp.exec()
+     */
+    mention_get_match: function(input_text){
+        var self = this;
+        // create the regex of all mention partner name
+        var partner_names = _.pluck(this.get('mention_selected_partners'), 'name');
+        var escaped_partner_names = _.map(partner_names, function(str){
+            return "("+_.str.escapeRegExp(self.options.mention_delimiter+str)+")";
+        });
+        var regex_str = escaped_partner_names.join('|');
+        // extract matches
+        var result = [];
+        if(regex_str.length){
+            var myRegexp = new RegExp(regex_str, 'g');
+            var match = myRegexp.exec(input_text);
+            while (match != null) {
+                result.push(match);
+                match = myRegexp.exec(input_text);
+            }
+        }
+        return result;
+    },
+    mention_get_index: function(matches, cursor_position){
+        for(var i = 0 ; i < matches.length ; i++){
+            if(cursor_position < matches[i].index){
+                return i;
+            }else{
+                if(i === matches.length-1){
+                    return i+1;
+                }
+            }
+        }
+        return 0;
+    },
+    // others
+    reset: function(){
+        this.set('attachment_ids', []);
+        this.set('mention_partners', []);
+        this.set('mention_selected_partners', []);
+    },
     focus: function(){
         this.$input.focus();
-    }
+    },
+    get_cursor_position: function() {
+        var el = this.$input.get(0);
+        if(!el){
+            return 0;
+        }
+        if('selectionStart' in el) {
+            return el.selectionStart;
+        } else if('selection' in document) {
+            var cr = document.selection.createRange();
+            return cr.moveStart('character', -el.focus().value.length).text.length - cr.text.length;
+        }
+        return 0;
+    },
+    set_cursor_position: function(pos) {
+        this.$input.each(function(index, elem) {
+            if (elem.setSelectionRange){
+                elem.setSelectionRange(pos, pos);
+            }
+            else if (elem.createTextRange){
+                elem.createTextRange().collapse(true).moveEnd('character', pos).moveStart('character', pos).select();
+            }
+        });
+    },
 });
 
 
@@ -383,12 +688,23 @@ var MailThreadMixin = {
             m.date = moment(time.str_to_datetime(m.date)).format('YYYY-MM-DD HH:mm:ss'); // set the date in the correct browser user timezone
             if(m.body){
                 m.body = mail_utils.shortcode_apply(m.body, self.emoji_substitution);
+                m.body = self._message_preprocess_mention(m.body);
             }
             _.each(m.attachment_ids, function(a){
                 a.url = mail_utils.get_attachment_url(session, m.id, a.id);
             });
         });
         return _.sortBy(messages, 'date');
+    },
+    /**
+     * Transform the mention 'span' tag into a link tag to the partner form
+     * @param {String} body : the message body (html) to transform
+     * @returns {String} the transformed body
+     */
+    _message_preprocess_mention: function(body){
+        var re = /<span data-oe-model="([^"]*)"\s+data-oe-id="([^"]*)">(.*?)\<\/span>/g;
+        var subst = "<a href='#model=$1&id=$2' class='o_mail_redirect' data-oe-model='$1' data-oe-id='$2'>$3</a>";
+        return body.replace(re, subst);
     },
     /**
      * Take the current messages, render them, and insert the rendering in the DOM.
