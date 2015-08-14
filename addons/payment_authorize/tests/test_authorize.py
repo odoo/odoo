@@ -161,10 +161,10 @@ class AuthorizeForm(AuthorizeCommon):
         self.payment_transaction.form_feedback(cr, uid, authorize_post_data, 'authorize', context=context)
         # check state
         self.assertEqual(tx.state, 'done', 'Authorize: validation did not put tx into done state')
-        self.assertEqual(tx.authorize_txnid, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
+        self.assertEqual(tx.acquirer_reference, authorize_post_data.get('x_trans_id'), 'Authorize: validation did not update tx payid')
 
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'authorize_txnid': False})
+        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
 
         # simulate an error
         authorize_post_data['x_response_code'] = u'3'

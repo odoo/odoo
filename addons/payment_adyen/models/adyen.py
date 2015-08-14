@@ -104,10 +104,6 @@ class AcquirerAdyen(osv.Model):
 class TxAdyen(osv.Model):
     _inherit = 'payment.transaction'
 
-    _columns = {
-        'adyen_psp_reference': fields.char('Adyen PSP Reference'),
-    }
-
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
@@ -160,7 +156,7 @@ class TxAdyen(osv.Model):
         if status == 'AUTHORISED':
             tx.write({
                 'state': 'done',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
                 # 'date_validate': data.get('payment_date', fields.datetime.now()),
                 # 'paypal_txn_type': data.get('express_checkout')
             })
@@ -168,7 +164,7 @@ class TxAdyen(osv.Model):
         elif status == 'PENDING':
             tx.write({
                 'state': 'pending',
-                'adyen_psp_reference': data.get('pspReference'),
+                'acquirer_reference': data.get('pspReference'),
             })
             return True
         else:
