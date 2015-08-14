@@ -2948,11 +2948,14 @@ class BaseModel(object):
             # collect proper fields on cls0, and add them on cls
             for name in cls0._proper_fields:
                 field = cls0._fields[name]
-                if field.related:
-                    # only regular fields are shared, related fields are copied
-                    field = field.new(**field.args)
-                assert not (field.setup_full_done and field.related)
-                self._add_field(name, field)
+                if not field.related:
+                    # regular fields are shared, and their default value copied
+                    self._add_field(name, field)
+                    if name in cls0._defaults:
+                        cls._defaults[name] = cls0._defaults[name]
+                else:
+                    # related fields are copied, and setup from scratch
+                    self._add_field(name, field.new(**field.args))
             cls._proper_fields = set(cls._fields)
 
         else:
