@@ -3,5 +3,5 @@
 
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
 
-import fr_report_bilan
-import fr_report_compute_resultant
+#import fr_report_bilan
+#import fr_report_compute_resultant
