@@ -991,7 +991,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         email = _.str.trim(email || '').toLowerCase();
         var default_ = _.str.isBlank(email) ? 'mm' : 'identicon';
         var email_md5 = $.md5(email);
-        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
+        return '//www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size + '&d=' + default_;
     },
     kanban_image: function(model, field, id, cache, options) {
         options = options || {};
