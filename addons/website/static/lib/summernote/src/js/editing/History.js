@@ -40,6 +40,14 @@ define(['summernote/core/range'], function (range) {
       }
     };
 
+    this.hasUndo = function () {
+      return 1 < stackOffset;
+    };
+
+    this.hasRedo = function () {
+      return stack.length - 1 > stackOffset;
+    };
+
     this.recordUndo = function () {
       stackOffset++;
 
