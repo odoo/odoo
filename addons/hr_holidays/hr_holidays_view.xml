@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8' ?>
 <openerp>
     <data>
 
@@ -24,6 +25,8 @@
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
+                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="My Department Leaves" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
@@ -31,9 +34,17 @@
                     <separator/>
                     <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
                     <separator/>
-                    <filter name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
+                    <separator/>
+                    <filter name="year" string="Year"
+                        domain="['|','&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')),
+                                             ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
+                                     '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')),
+                                             ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
+                        help="Current Year Leaves"/>
+                    <separator/>
+                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]" help="My Leave Requests"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>

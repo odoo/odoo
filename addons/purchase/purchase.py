@@ -1399,13 +1399,15 @@ class procurement_order(osv.osv):
 
         pricelist_id = partner.property_product_pricelist_purchase.id
         prices_qty = []
+        qty = {}
+
         for procurement in procurements:
             seller_qty = procurement.product_id.seller_qty if procurement.location_id.usage != 'customer' else 0.0
             uom_id = procurement.product_id.uom_po_id.id
-            qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
+            qty[procurement.product_id.id] = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if seller_qty:
-                qty = max(qty, seller_qty)
-            prices_qty += [(procurement.product_id, qty, partner)]
+                qty[procurement.product_id.id] = max(qty[procurement.product_id.id], seller_qty)
+            prices_qty += [(procurement.product_id, qty[procurement.product_id.id], partner)]
         prices = pricelist_obj.price_get_multi(cr, uid, [pricelist_id], prices_qty)
 
         #Passing partner_id to context for purchase order line integrity of Line name
@@ -1430,7 +1432,7 @@ class procurement_order(osv.osv):
 
             values = {
                 'name': name,
-                'product_qty': qty,
+                'product_qty': qty[procurement.product_id.id],
                 'product_id': procurement.product_id.id,
                 'product_uom': procurement.product_id.uom_po_id.id,
                 'price_unit': price or 0.0,

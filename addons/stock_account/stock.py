@@ -214,7 +214,7 @@ class stock_picking(osv.osv):
             @return: object of the partner to invoice
         """
         return picking.partner_id and picking.partner_id.id
-        
+
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal

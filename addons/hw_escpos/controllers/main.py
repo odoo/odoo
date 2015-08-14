@@ -40,6 +40,10 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+# workaround https://bugs.launchpad.net/openobject-server/+bug/947231
+# related to http://bugs.python.org/issue7980
+from datetime import datetime
+datetime.strptime('2012-01-01', '%Y-%m-%d')
 
 class EscposDriver(Thread):
     def __init__(self):
@@ -146,7 +150,7 @@ class EscposDriver(Thread):
             _logger.warning('ESC/POS Device Disconnected: '+message)
 
     def run(self):
-
+        printer = None
         if not escpos:
             _logger.error('ESC/POS cannot initialize, please verify system dependencies.')
             return
@@ -192,7 +196,7 @@ class EscposDriver(Thread):
                 errmsg = str(e) + '\n' + '-'*60+'\n' + traceback.format_exc() + '-'*60 + '\n'
                 _logger.error(errmsg);
             finally:
-                if error: 
+                if error:
                     self.queue.put((timestamp, task, data))
                 if printer:
                     printer.close()

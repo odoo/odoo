@@ -186,7 +186,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             request.registry['website.menu'].create(
                 request.cr, request.uid, {
                     'name': path,
-                    'url': "/page/" + xml_id,
+                    'url': "/page/" + xml_id[8:],
                     'parent_id': request.website.menu_id.id,
                     'website_id': request.website.id,
                 }, context=request.context)

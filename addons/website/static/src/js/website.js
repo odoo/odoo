@@ -113,8 +113,7 @@ var prompt = function (options, _qweb) {
         field.focus();
         dialog.on('click', '.btn-primary', function () {
             def.resolve(field.val(), field, dialog);
-            dialog.remove();
-            $('.modal-backdrop').remove();
+            dialog.modal('hide').remove();
         });
     });
     dialog.on('hidden.bs.modal', function () {
@@ -208,7 +207,7 @@ base.ready().then(function () {
             var redirect = {
                 lang: self.data('lang'),
                 url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
-                hash: location.hash
+                hash: encodeURIComponent(location.hash)
             };
             location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     });

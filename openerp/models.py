@@ -1881,7 +1881,7 @@ class BaseModel(object):
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones
-        qualified_field = self._inherits_join_calc(split[0], query)
+        qualified_field = self._inherits_join_calc(self._table, split[0], query)
         if temporal:
             display_formats = {
                 # Careful with week/year formats:
@@ -2041,7 +2041,7 @@ class BaseModel(object):
 
         field_formatter = lambda f: (
             self._fields[f].group_operator or 'sum',
-            self._inherits_join_calc(cr, uid, f, query, context=context),
+            self._inherits_join_calc(cr, uid, self._table, f, query, context=context),
             f,
         )
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
@@ -2118,17 +2118,18 @@ class BaseModel(object):
         return parent_alias
 
     @api.model
-    def _inherits_join_calc(self, field, query):
+    def _inherits_join_calc(self, alias, field, query):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
 
+        :param alias: name of the initial SQL alias
         :param field: name of inherited field to reach
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
         # INVARIANT: alias is the SQL alias of model._table in query
-        model, alias = self, self._table
+        model = self
         while field in model._inherit_fields and field not in model._columns:
             # retrieve the parent model where field is inherited from
             parent_model_name = model._inherit_fields[field][0]
@@ -3263,7 +3264,7 @@ class BaseModel(object):
         # the query may involve several tables: we need fully-qualified names
         def qualify(field):
             col = field.name
-            res = self._inherits_join_calc(field.name, query)
+            res = self._inherits_join_calc(self._table, field.name, query)
             if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
                 # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
@@ -4522,7 +4523,7 @@ class BaseModel(object):
         for inherited_model in self._inherits:
             rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
-                        parent_model=inherited_model)
+                       parent_model=inherited_model)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4546,7 +4547,7 @@ class BaseModel(object):
             return '"%s"."%s"' % (table_alias, field)
 
     @api.model
-    def _generate_m2o_order_by(self, order_field, query):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -4556,10 +4557,10 @@ class BaseModel(object):
         """
         if order_field not in self._columns and order_field in self._inherit_fields:
             # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(order_field, query)
+            qualified_field = self._inherits_join_calc(alias, order_field, query)
             order_field_column = self._inherit_fields[order_field][2]
         else:
-            qualified_field = '"%s"."%s"' % (self._table, order_field)
+            qualified_field = '"%s"."%s"' % (alias, order_field)
             order_field_column = self._columns[order_field]
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
@@ -4570,24 +4571,68 @@ class BaseModel(object):
             return
 
         # figure out the applicable order_by for the m2o
-        dest_model = self.pool[order_field_column._obj]
+        dest_model = self.env[order_field_column._obj]
         m2o_order = dest_model._order
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
-        else:
-            # extract the field names, to be able to qualify them and add desc/asc
-            m2o_order_list = []
-            for order_part in m2o_order.split(","):
-                m2o_order_list.append(order_part.strip().split(" ", 1)[0].strip())
-            m2o_order = m2o_order_list
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"', '').split('.', 1)
         dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
-        qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
-        return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
+        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
+                                                   reverse_direction=reverse_direction)
+
+    @api.model
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
+        order_by_elements = []
+        self._check_qorder(order_spec)
+        for order_part in order_spec.split(','):
+            order_split = order_part.strip().split(' ')
+            order_field = order_split[0].strip()
+            order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+            if reverse_direction:
+                order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
+            do_reverse = order_direction == 'DESC'
+            order_column = None
+            inner_clauses = []
+            add_dir = False
+            if order_field == 'id':
+                order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
+            elif order_field in self._columns:
+                order_column = self._columns[order_field]
+                if order_column._classic_read:
+                    if order_column.translate and not callable(order_column.translate):
+                        inner_clauses = [self._generate_translated_field(alias, order_field, query)]
+                    else:
+                        inner_clauses = ['"%s"."%s"' % (alias, order_field)]
+                    add_dir = True
+                elif order_column._type == 'many2one':
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                else:
+                    continue  # ignore non-readable or "non-joinable" fields
+            elif order_field in self._inherit_fields:
+                parent_obj = self.pool[self._inherit_fields[order_field][3]]
+                order_column = parent_obj._columns[order_field]
+                if order_column._classic_read:
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    add_dir = True
+                elif order_column._type == 'many2one':
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                else:
+                    continue  # ignore non-readable or "non-joinable" fields
+            else:
+                raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
+            if order_column and order_column._type == 'boolean':
+                inner_clauses = ["COALESCE(%s, false)" % inner_clauses[0]]
+
+            for clause in inner_clauses:
+                if add_dir:
+                    order_by_elements.append("%s %s" % (clause, order_direction))
+                else:
+                    order_by_elements.append(clause)
+        return order_by_elements
 
     @api.model
     def _generate_order_by(self, order_spec, query):
@@ -4600,46 +4645,7 @@ class BaseModel(object):
         order_by_clause = ''
         order_spec = order_spec or self._order
         if order_spec:
-            order_by_elements = []
-            self._check_qorder(order_spec)
-            for order_part in order_spec.split(','):
-                order_split = order_part.strip().split(' ')
-                order_field = order_split[0].strip()
-                order_direction = order_split[1].strip() if len(order_split) == 2 else ''
-                order_column = None
-                inner_clause = None
-                if order_field == 'id':
-                    order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
-                elif order_field in self._columns:
-                    order_column = self._columns[order_field]
-                    if order_column._classic_read:
-                        if order_column.translate and not callable(order_column.translate):
-                            inner_clause = self._generate_translated_field(self._table, order_field, query)
-                        else:
-                            inner_clause = '"%s"."%s"' % (self._table, order_field)
-                    elif order_column._type == 'many2one':
-                        inner_clause = self._generate_m2o_order_by(order_field, query)
-                    else:
-                        continue  # ignore non-readable or "non-joinable" fields
-                elif order_field in self._inherit_fields:
-                    parent_obj = self.pool[self._inherit_fields[order_field][3]]
-                    order_column = parent_obj._columns[order_field]
-                    if order_column._classic_read:
-                        inner_clause = self._inherits_join_calc(order_field, query)
-                    elif order_column._type == 'many2one':
-                        inner_clause = self._generate_m2o_order_by(order_field, query)
-                    else:
-                        continue  # ignore non-readable or "non-joinable" fields
-                else:
-                    raise ValueError(_("Sorting field %s not found on model %s") % ( order_field, self._name))
-                if order_column and order_column._type == 'boolean':
-                    inner_clause = "COALESCE(%s, false)" % inner_clause
-                if inner_clause:
-                    if isinstance(inner_clause, list):
-                        for clause in inner_clause:
-                            order_by_elements.append("%s %s" % (clause, order_direction))
-                    else:
-                        order_by_elements.append("%s %s" % (inner_clause, order_direction))
+            order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
 

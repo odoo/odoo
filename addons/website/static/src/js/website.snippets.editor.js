@@ -81,17 +81,24 @@ options.registry.slider = options.Class.extend({
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
         // clone the best candidate from template to use new features
-        var $snippets = this.buildingBlock.$snippets.find('.oe_snippet_body.carousel');
-        var point = 0;
-        var selection;
-        var className = _.compact(this.$target.attr("class").split(" "));
-        $snippets.each(function () {
-            var len = _.intersection(_.compact(this.className.split(" ")), className).length;
-            if (len > point) {
-                point = len;
-                selection = this;
-            }
-        });
+        var $snippets = this.BuildingBlock.$snippets;
+        //since saas-6, all snippets must start by s_
+        var selection = this.$target.closest('[class*="s_"');
+        if (_.isUndefined(selection)) {
+            var point = 0;
+            var className = _.compact(this.$target.attr("class").split(" "));
+            $snippets.find('.oe_snippet_body').each(function () {
+                var len = _.intersection(_.compact(this.className.split(" ")), className).length;
+                if (len > point) {
+                    point = len;
+                    selection = this;
+                }
+            });
+        }
+        else {
+            var s_class = selection.attr('class').split(' ').filter(function(o) { return _.str.startsWith(o, "s_") })[0]
+            selection = $snippets.find("." + s_class);
+        }
         var $clone = $(selection).find('.item:first').clone();
 
         // insert

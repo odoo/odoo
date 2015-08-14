@@ -379,28 +379,36 @@ class procurement_order(osv.osv):
         'requisition_id': fields.many2one('purchase.requisition', 'Latest Requisition')
     }
 
-    def _run(self, cr, uid, procurement, context=None):
+    def make_po(self, cr, uid, ids, context=None):
         requisition_obj = self.pool.get('purchase.requisition')
         warehouse_obj = self.pool.get('stock.warehouse')
-        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
-            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
-            requisition_id = requisition_obj.create(cr, uid, {
-                'origin': procurement.origin,
-                'date_end': procurement.date_planned,
-                'warehouse_id': warehouse_id and warehouse_id[0] or False,
-                'company_id': procurement.company_id.id,
-                'procurement_id': procurement.id,
-                'picking_type_id': procurement.rule_id.picking_type_id.id,
-                'line_ids': [(0, 0, {
-                    'product_id': procurement.product_id.id,
-                    'product_uom_id': procurement.product_uom.id,
-                    'product_qty': procurement.product_qty
-
-                })],
-            })
-            self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
-            return self.write(cr, uid, [procurement.id], {'requisition_id': requisition_id}, context=context)
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        req_ids = []
+        res = {}
+        for procurement in self.browse(cr, uid, ids, context=context):
+            res[procurement.id] = False
+            if procurement.product_id.purchase_requisition:
+                warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
+                requisition_id = requisition_obj.create(cr, uid, {
+                    'origin': procurement.origin,
+                    'date_end': procurement.date_planned,
+                    'warehouse_id': warehouse_id and warehouse_id[0] or False,
+                    'company_id': procurement.company_id.id,
+                    'procurement_id': procurement.id,
+                    'picking_type_id': procurement.rule_id.picking_type_id.id,
+                    'line_ids': [(0, 0, {
+                        'product_id': procurement.product_id.id,
+                        'product_uom_id': procurement.product_uom.id,
+                        'product_qty': procurement.product_qty
+                    })],
+                })
+                self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
+                self.write(cr, uid, [procurement.id], {'requisition_id': requisition_id}, context=context)
+                req_ids += [procurement.id]
+                res[procurement.id] = True
+        set_others = set(ids) - set(req_ids)
+        if set_others:
+            res.update(super(procurement_order, self).make_po(cr, uid, list(set_others), context=context))
+        return res
 
     def _check(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:

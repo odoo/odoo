@@ -21,7 +21,7 @@
         <record id="chart1001" model="account.account.template">
             <field name="code">1001</field>
             <field eval="False" name="reconcile"/>
-            <field name="name">现金</field>
+            <field name="name">库存现金</field>
             <field name="user_type_id" ref="user_type_bs1"/>
         </record>
         <record id="chart1002" model="account.account.template">
@@ -431,6 +431,12 @@
             <field eval="False" name="reconcile"/>
             <field name="name">应付利息</field>
             <field name="user_type_id" ref="user_type_bs74"/>
+        </record>
+        <record id="chart2241" model="account.account.template">
+            <field name="code">2241</field>
+            <field eval="True" name="reconcile"/>
+            <field name="name">其他应付款</field>
+            <field name="user_typed_id" ref="user_type_bs73"/>
         </record>
         <record id="chart2401" model="account.account.template">
             <field name="code">2401</field>

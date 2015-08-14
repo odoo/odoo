@@ -128,7 +128,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'partner_id': sale.partner_invoice_id.id,
                 'invoice_line_ids': [(0, 0, inv_line_values)],
                 'currency_id': sale.pricelist_id.currency_id.id,
-                'comment': '',
+                'comment': sale.note,
                 'payment_term_id': sale.payment_term_id.id,
                 'fiscal_position_id': sale.fiscal_position_id.id or sale.partner_id.property_account_position_id.id,
                 'team_id': sale.team_id.id,

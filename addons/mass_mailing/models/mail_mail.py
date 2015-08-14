@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import urllib
 import urlparse
 import re
+import werkzeug.urls
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -41,7 +41,7 @@ class MailMail(osv.Model):
         track_url = urlparse.urljoin(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
                 'mail_id': mail.id,
-                'params': urllib.urlencode({'db': cr.dbname})
+                'params': werkzeug.url_encode({'db': cr.dbname})
             }
         )
         return '<img src="%s" alt=""/>' % track_url
@@ -51,7 +51,7 @@ class MailMail(osv.Model):
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': mail.mailing_id.id,
-                'params': urllib.urlencode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
+                'params': werkzeug.url_encode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
             }
         )
         return url
