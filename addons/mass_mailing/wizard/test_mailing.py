@@ -33,6 +33,7 @@ class TestMassMailing(osv.TransientModel):
                     'body_html': '',
                     'notification': True,
                     'mailing_id': mailing.id,
+                    'attachment_ids': [(4, l.id) for l in mailing.attachment_ids],
                 }
                 mail_mail_obj = Mail.browse(cr, uid, Mail.create(cr, uid, mail_values, context=context), context=context)
                 unsubscribe_url = Mail._get_unsubscribe_url(cr, uid, mail_mail_obj, test_mail, context=context)
