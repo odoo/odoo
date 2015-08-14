@@ -330,13 +330,6 @@ class Website(openerp.addons.web.controllers.main.Home):
         return res
 
     #------------------------------------------------------
-    # Helpers
-    #------------------------------------------------------
-    @http.route(['/website/kanban'], type='http', auth="public", methods=['POST'], website=True)
-    def kanban(self, **post):
-        return request.website.kanban_col(**post)
-
-    #------------------------------------------------------
     # Server actions
     #------------------------------------------------------
     @http.route([
