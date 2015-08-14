@@ -1361,7 +1361,7 @@ openerp.web_calendar = function(instance) {
             pop.show_element(this.field.relation, id, this.build_context(), {
                 title: _t("Open: ") + this.string,
                 write_function: function(id, data, _options) {
-                    return self.dataset.write(id, data, {}).done(function() {
+                    return self.dataset.write(id, data, _options).done(function() {
                         // Note that dataset will trigger itself the
                         // ``dataset_changed`` signal
                         self.calendar_view.refresh_event(id);
