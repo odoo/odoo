@@ -852,6 +852,13 @@ class sale_order_line(osv.osv):
                 return True
         return False
 
+    def _map_included_tax(self, cr, uid, prod_taxes, line_taxes):
+        res = []
+        for tax in prod_taxes:
+            if not (tax in line_taxes) and tax.price_include:
+                res.append(tax)
+        return res
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -860,6 +867,10 @@ class sale_order_line(osv.osv):
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            incl_tax = self._map_included_tax(cr, uid, line.product_id.taxes_id, line.tax_id)
+            if incl_tax:
+                r = tax_obj._unit_compute_inv(cr, uid, incl_tax, price)
+                price = r and r[0]['price_unit'] or price
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
