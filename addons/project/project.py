@@ -148,6 +148,8 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
+        # We need a related field in order to be able to sort the project name by name
+        'name_related': fields.related('analytic_account_id', 'name', type='char', string='Name', readonly=True, store=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one(
@@ -197,7 +199,7 @@ class project(osv.osv):
             'sequence': 1,
         })]
 
-    _order = "sequence, name, id"
+    _order = "sequence, name_related, id"
     _defaults = {
         'active': True,
         'type': 'contract',
