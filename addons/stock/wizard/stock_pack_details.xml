@@ -27,7 +27,7 @@
                             <field name="quantity"/>
                             <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
                         </span>
-                        <button name="split_quantities" class="oe_link" string="Split" type="object"/>
+                        <button name="split_quantities" class="oe_link " string="Split" type="object"/>
                     </group>
                     <group string="To">
                         <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]"/>
@@ -36,8 +36,7 @@
                 </group>
                 <footer>
                     <button name="process" string="Save" type="object" class="oe_highlight"/>
-                    or
-                    <button string="_Cancel" class="oe_link" special="cancel" />
+                    <button string="_Cancel" class="oe_link btn-default" special="cancel" />
                 </footer>
             </form>
         </field>

@@ -32,8 +32,8 @@ class base_module_upgrade(osv.osv_memory):
             res['arch'] = '''<form string="Upgrade Completed" version="7.0">
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
-                                    <button name="config" string="Start Configuration" type="object" class="oe_highlight"/> or
-                                    <button special="cancel" string="Close" class="oe_link"/>
+                                    <button name="config" string="Start Configuration" type="object" class="oe_highlight"/>
+                                    <button special="cancel" string="Close" class="oe_link btn-default"/>
                                 </footer>
                              </form>'''
 
