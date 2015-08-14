@@ -1988,7 +1988,7 @@ define(['summernote/summernote'], function () {
             return this.media;
         },
         clear: function () {
-            this.media.className = this.media.className.replace(/(^|\s)(img(\s|$)|img-[^\s]*)/g, ' ');
+            this.media.className = this.media.className.replace(/(^|\s+)(img(\s|$)|img-(?!circle|rounded|thumbnail)[^\s]*)/g, ' ');
         },
         cancel: function () {
             this.trigger('cancel');
@@ -2294,12 +2294,14 @@ define(['summernote/summernote'], function () {
             var icons = this.icons;
             var style = this.media.attributes.style ? this.media.attributes.style.value : '';
             var classes = (this.media.className||"").split(/\s+/);
+            var custom_classes = /^fa(-[1-5]x|spin|rotate-(9|18|27)0|flip-(horizont|vertic)al|fw|border)?$/;
             var non_fa_classes = _.reject(classes, function (cls) {
-                return self.getFont(cls);
+                return self.getFont(cls) || custom_classes.test(cls);
             });
             var final_classes = non_fa_classes.concat(this.get_fa_classes());
             if (this.media.tagName !== "SPAN") {
                 var media = document.createElement('span');
+                $(media).data($(this.media).data());
                 $(this.media).replaceWith(media);
                 this.media = media;
                 style = style.replace(/\s*width:[^;]+/, '');

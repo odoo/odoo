@@ -815,12 +815,12 @@
 
                     var timer;
                     $target.closest('.o_editable').on("content_changed", function (event) {
-                        if ($target.data('overlay') && $target.data('overlay').hasClass("oe_active")) {
-                            clearTimeout(timer);
-                            timer = setTimeout(function () {
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            if ($target.data('overlay') && $target.data('overlay').hasClass("oe_active")) {
                                 self.cover_target($target.data('overlay'), $target);
-                            },50);
-                        }
+                            }
+                        },50);
                      });
 
                     var resize = function () {
