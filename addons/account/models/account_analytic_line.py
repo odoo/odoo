@@ -107,6 +107,7 @@ class AccountAnalyticLine(models.Model):
             return {}
 
         result = 0.0
+        unit = False
         if self.product_id:
             unit = self.product_uom_id.id
             if not self.product_uom_id or self.product_id.uom_id.category_id.id != self.product_uom_id.category_id.id:
@@ -127,21 +128,25 @@ class AccountAnalyticLine(models.Model):
                                 'for this product: "%s" (id:%d).') % \
                                 (self.product_id.name, self.product_id.id,))
 
-        # Compute based on pricetype
-        if journal_id.type == 'sale':
-            pricetype = product_price_type_obj.search([('field', '=', 'list_price')], limit=1)
-        else:
-            pricetype = product_price_type_obj.search([('field', '=', 'standard_price')], limit=1)
-
         ctx = dict(self._context or {})
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
-        amount = amount_unit * self.unit_amount or 0.0
+
+        # Compute based on pricetype
+        amount_unit = 0.0
+        pricetype = False
+        if self.product_id:
+            if journal_id.type == 'sale':
+                pricetype = product_price_type_obj.search([('field', '=', 'list_price')], limit=1)
+            else:
+                pricetype = product_price_type_obj.search([('field', '=', 'standard_price')], limit=1)
+            amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
+
+        amount = amount_unit * self.unit_amount
         result = round(amount, self.currency_id.decimal_places)
-        if pricetype.field != 'list_price':
+        if pricetype and pricetype.field != 'list_price':
             result *= -1
         self.amount = result
         self.general_account_id = account
