@@ -259,10 +259,10 @@ class crm_lead(format_address, osv.osv):
         values = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
+            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.company_type == 'company' and partner.name) or False
             values = {
                 'partner_name': partner_name,
-                'contact_name': (not partner.is_company and partner.name) or False,
+                'contact_name': (partner.company_type == 'person' and partner.name) or False,
                 'title': partner.title and partner.title.id or False,
                 'street': partner.street,
                 'street2': partner.street2,
@@ -671,7 +671,7 @@ class crm_lead(format_address, osv.osv):
         crm_stage = self.pool.get('crm.stage')
         contact_id = False
         if customer:
-            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['contact']
         if not team_id:
             team_id = lead.team_id and lead.team_id.id or False
         val = {
@@ -705,7 +705,7 @@ class crm_lead(format_address, osv.osv):
 
         return True
 
-    def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+    def _lead_create_contact(self, cr, uid, lead, name, company_type, parent_id=False, context=None):
         partner = self.pool.get('res.partner')
         vals = {'name': name,
             'user_id': lead.user_id.id,
@@ -724,7 +724,7 @@ class crm_lead(format_address, osv.osv):
             'city': lead.city,
             'country_id': lead.country_id and lead.country_id.id or False,
             'state_id': lead.state_id and lead.state_id.id or False,
-            'is_company': is_company,
+            'company_type': company_type,
             'type': 'contact'
         }
         partner = partner.create(cr, uid, vals, context=context)
@@ -734,16 +734,16 @@ class crm_lead(format_address, osv.osv):
         contact_id = False
         contact_name = lead.contact_name or lead.email_from and self.pool.get('res.partner')._parse_partner_name(lead.email_from, context=context)[0] or False
         if lead.partner_name:
-            partner_company_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, True, context=context)
+            partner_company_id = self._lead_create_contact(cr, uid, lead, lead.partner_name, 'company', context=context)
         elif lead.partner_id:
             partner_company_id = lead.partner_id.id
         else:
             partner_company_id = False
 
         if contact_name:
-            contact_id = self._lead_create_contact(cr, uid, lead, contact_name, False, partner_company_id, context=context)
+            contact_id = self._lead_create_contact(cr, uid, lead, contact_name, 'person', partner_company_id, context=context)
 
-        partner_id = contact_id or partner_company_id or self._lead_create_contact(cr, uid, lead, lead.name, False, context=context)
+        partner_id = contact_id or partner_company_id or self._lead_create_contact(cr, uid, lead, lead.name, 'person', context=context)
         return partner_id
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):

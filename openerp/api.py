@@ -165,9 +165,9 @@ def depends(*args):
             pname = fields.Char(compute='_compute_pname')
 
             @api.one
-            @api.depends('partner_id.name', 'partner_id.is_company')
+            @api.depends('partner_id.name', 'partner_id.company_type')
             def _compute_pname(self):
-                if self.partner_id.is_company:
+                if self.partner_id.company_type:
                     self.pname = (self.partner_id.name or "").upper()
                 else:
                     self.pname = self.partner_id.name

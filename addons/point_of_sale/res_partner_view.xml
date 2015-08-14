@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='warehouse']" position="before">
                     <group string="Point of Sale" name="point_of_sale">
-                        <field name="barcode" />
+                        <field name="barcode" class="oe_inline"/>
                     </group>
                 </xpath>
             </field>

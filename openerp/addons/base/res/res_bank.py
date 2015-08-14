@@ -89,7 +89,7 @@ class res_partner_bank(osv.osv):
         for address in self.pool.get('res.partner').resolve_2many_commands(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
-            if address.get('type') == 'default':
+            if address.get('type') == 'contact':
                 return address.get(field, value)
             elif not address.get('type'):
                 value = address.get(field, value)
@@ -110,7 +110,7 @@ class res_partner_bank(osv.osv):
             change_default=True, domain="[('country_id','=',country_id)]"),
         'company_id': fields.many2one('res.company', 'Company',
             ondelete='cascade', help="Only if this bank account belong to your company"),
-        'partner_id': fields.many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|',('is_company','=',True),('parent_id','=',False)]),
+        'partner_id': fields.many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|',('company_type','=','company'),('parent_id','=',False)]),
         'state': fields.selection(_bank_type_get, 'Bank Account Type',
             change_default=True),
         'sequence': fields.integer('Sequence'),

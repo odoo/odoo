@@ -285,6 +285,13 @@ class ResPartner(models.Model):
             partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
             partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
 
+    @api.multi
+    def _compute_bank_count(self):
+        bank_data  = self.env['res.partner.bank'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        mapped_data  = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
+        for partner in self:
+            partner.bank_count = mapped_data.get(partner.id, 0)
+
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
         if only_unblocked:
@@ -306,12 +313,12 @@ class ResPartner(models.Model):
             issued_total = 0
             for aml in self.env['account.move.line'].search(domain):
                 issued_total += aml.amount_residual
-            partner.issued_total = formatLang(self.env, issued_total, currency_obj=self.env.user.company_id.currency_id)
+            partner.issued_total = issued_total
 
     @api.one
     def _compute_has_unreconciled_entries(self):
         # Avoid useless work if has_unreconciled_entries is not relevant for this partner
-        if not self.active or not self.is_company and self.parent_id:
+        if not self.active or self.company_type == 'person' and self.parent_id:
             return
         self.env.cr.execute(
             """ SELECT 1 FROM(
@@ -367,7 +374,7 @@ class ResPartner(models.Model):
 
     contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
-    issued_total = fields.Char(compute='_compute_issued_total', string="Journal Items")
+    issued_total = fields.Monetary(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable", oldname="property_account_payable",
         domain="[('internal_type', '=', 'payable'), ('deprecated', '=', False)]",
@@ -398,6 +405,7 @@ class ResPartner(models.Model):
              'or if you click the "Done" button.')
     invoice_ids = fields.One2many('account.invoice', 'partner_id', string='Invoices', readonly=True, copy=False)
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
+    bank_count = fields.Integer(compute='_compute_bank_count', string="Bank")
 
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
@@ -408,3 +416,13 @@ class ResPartner(models.Model):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+
+    @api.multi
+    def action_open_partner_bank(self):
+        self.ensure_one()
+        bank_action_data = self.env.ref('base.action_res_partner_bank_account_form').read()[0]
+        form_view_id = self.env.ref('base.view_partner_bank_form').id
+        if len(self.bank_ids) <= 1:
+            bank_action_data['res_id'] = self.bank_ids.id or False
+            bank_action_data['views'] = [(form_view_id or False, 'form') ,(False, 'tree')]
+        return bank_action_data

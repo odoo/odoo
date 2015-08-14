@@ -39,7 +39,7 @@ class google_map(http.Controller):
                 pass
 
         # search for partners that can be displayed on a map
-        domain = [("id", "in", clean_ids), ('website_published', '=', True), ('is_company', '=', True)]
+        domain = [("id", "in", clean_ids), ('website_published', '=', True), ('company_type', '=', 'company')]
         partners_ids = partner_obj.search(cr, SUPERUSER_ID, domain, context=context)
 
         # browse and format data

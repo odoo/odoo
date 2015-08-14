@@ -359,7 +359,7 @@ class event_registration(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner(self):
         if self.partner_id:
-            contact_id = self.partner_id.address_get().get('default', False)
+            contact_id = self.partner_id.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
                 self.name = self.name or contact.name

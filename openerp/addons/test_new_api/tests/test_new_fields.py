@@ -329,7 +329,7 @@ class TestNewFields(common.TransactionCase):
         # a bunch of fields are inherited from res_partner
         for user in self.env['res.users'].search([]):
             partner = user.partner_id
-            for field in ('is_company', 'name', 'email', 'country_id'):
+            for field in ('company_type', 'name', 'email', 'country_id'):
                 self.assertEqual(getattr(user, field), getattr(partner, field))
                 self.assertEqual(user[field], partner[field])
 

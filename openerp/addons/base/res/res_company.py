@@ -23,9 +23,9 @@ class res_company(osv.osv):
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
-                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
-                if address_data['default']:
-                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['default']], field_names, context=context)[0]
+                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['contact'])
+                if address_data['contact']:
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['contact']], field_names, context=context)[0]
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
@@ -35,8 +35,8 @@ class res_company(osv.osv):
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
-            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
-            address = address_data['default']
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['contact'])
+            address = address_data['contact']
             if address:
                 part_obj.write(cr, uid, [address], {name: value or False}, context=context)
             else:
@@ -205,7 +205,7 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True, 'image': vals.get('logo', False)}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'company_type':'company', 'image': vals.get('logo', False)}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)

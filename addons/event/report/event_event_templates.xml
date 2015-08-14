@@ -14,7 +14,7 @@
                                     <t t-if="o.event_id.event_logo">
                                         <div t-field="o.event_id.event_logo"/>
                                     </t>
-                                    <span t-if="not o.event_id.event_logo and o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
+                                    <span t-if="not o.event_id.event_logo and o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.company_type == 'company'">
                                         <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
                                     </span>
                                     <h5 t-field="o.event_id.name"/>
@@ -63,7 +63,7 @@
                         <div class="col-xs-6 text-center" style="padding-left:7mm; border-right:1px dashed black; height: 149mm; padding-top: 7mm">
                             <div class="row" t-ignore="true">
                                 <div class="col-xs-12">
-                                    <span t-if="event.organizer_id.is_company and event.organizer_id.company_id.logo_web">
+                                    <span t-if="event.organizer_id.company_type == 'company' and event.organizer_id.company_id.logo_web">
                                         <div t-field="event.event_logo">
                                             <img t-att-src="'data:image/png;base64,%s' % event.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
                                         </div>

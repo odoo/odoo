@@ -1013,7 +1013,7 @@ class test_realworld(common.TransactionCase):
         result = self.registry('res.partner').load(
             self.cr, openerp.SUPERUSER_ID,
             ["name", "type", "street", "city", "country_id", "category_id",
-             "supplier", "customer", "is_company", "parent_id"],
+             "supplier", "customer", "company_type", "parent_id"],
             data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
