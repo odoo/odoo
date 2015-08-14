@@ -224,7 +224,7 @@ Tour.register({
         // change message a
 
         {
-            title:      "create new message aaa",
+            title:      "edit message a",
             waitNot:    '.modal',
             waitFor:    '.oe_list_field_cell:containsExact(e)',
             element:    '.oe_list_field_cell:containsExact(a)'
@@ -238,6 +238,44 @@ Tour.register({
             title:      "save changes",
             waitFor:    '.modal textarea.field_text:propValue(aaa)',
             element:    '.o_formdialog_save'
+        },
+
+        // change message e
+
+        {
+            title:      "edit message e",
+            waitNot:    '.modal',
+            waitFor:    '.oe_list_field_text:contains(aaa)',
+            element:    '.oe_list_field_cell:containsExact(e)'
+        },
+
+        {
+            title:      "open the many2one to select an other user",
+            element:    '.modal .oe_m2o_drop_down_button',
+        },
+        {
+            title:      "select an other user",
+            element:    '.ui-autocomplete li:contains(Demo User)',
+        },
+        {
+            title:      "test one2many's line onchange after many2one",
+            waitFor:    '.oe_form_char_content:contains([test_trigger] Demo User)',
+        },
+        {
+            title:      "test one2many field not triggered onchange",
+            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:e)',
+        },
+        {
+            title:      "save changes",
+            element:    '.o_formdialog_save'
+        },
+        {
+            title:      "test one2many triggered the onchange on save for the line",
+            waitFor:    '.oe_list_content td.oe_list_field_cell.oe_readonly:contains([test_trigger] Demo User)',
+        },
+        {
+            title:      "test one2many triggered the onchange on save",
+            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Demo User:e)',
         },
 
         // remove

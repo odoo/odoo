@@ -949,7 +949,7 @@ var X2ManyViewManager = ViewManager.extend({
                 return self.x2m.data_create(data, options);
             },
             write_function: function(id, data, options) {
-                return self.x2m.data_update(id, data, {}).done(function() {
+                return self.x2m.data_update(id, data, options).done(function() {
                     self.x2m.reload_current_view();
                 });
             },
@@ -1113,8 +1113,8 @@ var One2ManyListView = X2ManyListView.extend({
             res_id: id,
             context: self.x2m.build_context(),
             title: _t("Open: ") + self.x2m.string,
-            write_function: function(id, data) {
-                return self.x2m.data_update(id, data, {}).done(function() {
+            write_function: function(id, data, options) {
+                return self.x2m.data_update(id, data, options).done(function() {
                     self.x2m.reload_current_view();
                 });
             },
