@@ -58,13 +58,14 @@ class note_note(osv.osv):
         return self.write(cr, uid, ids, {'open': True}, context=context)
 
     #return the default stage for the uid user
-    def _get_default_stage_id(self,cr,uid,context=None):
+    def _get_default_stage_id(self, cr, uid, context=None):
         ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
         return ids and ids[0] or False
 
+
     def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
         note = self.browse(cr, uid, id, context=context)
-        if not value: return False
+        if not value or note.user_id.id != uid: return False
         stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
         return self.write(cr, uid, [id], {'stage_ids': [(6, 0, set(stage_ids))]}, context=context)
 
@@ -97,61 +98,54 @@ class note_note(osv.osv):
     _defaults = {
         'user_id': lambda self, cr, uid, ctx=None: uid,
         'open' : 1,
-        'stage_id' : _get_default_stage_id,
+        'stage_id': _get_default_stage_id,
     }
     _order = 'sequence'
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        result = []
         if groupby and groupby[0]=="stage_id":
 
-            #search all stages
+            #1.0 Search all stages of current user.
             current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+            stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
+            result = [{
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage.id)],
+                    'stage_id': (stage.id, stage.name),
+                    'stage_id_count': self.search(cr, uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
+                    '__fold': stage.fold,
+                } for stage in stages]
 
-            if current_stage_ids: #if the user have some stages
-                stages = self.pool['note.stage'].browse(cr, uid, current_stage_ids, context=context)
+            #2.0 Put the note to 'Undefined' stage which do not have any stage.
+            nb_notes_ws = self.search(cr, uid, domain+['&', ('stage_ids', 'not in', current_stage_ids), ('user_id', '=', uid)], context=context, count=True)
+            if nb_notes_ws:
+                dom_not_in = ['&', ('stage_ids', 'not in', current_stage_ids), ('user_id', '=', uid)]
+                result.insert(0, {
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + dom_not_in,
+                    'stage_id': False,
+                    'stage_id_count': nb_notes_ws,
+                })
 
-                result = [{ #notes by stage for stages user
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage.id)],
-                        'stage_id': (stage.id, stage.name),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage.id)], context=context, count=True),
-                        '__fold': stage.fold,
-                    } for stage in stages]
-
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
-                if nb_notes_ws:
-                    # add note to the first column if it's the first stage
-                    dom_not_in = ('stage_ids', 'not in', current_stage_ids)
-                    if result and result[0]['stage_id'][0] == current_stage_ids[0]:
-                        dom_in = result[0]['__domain'].pop()
-                        result[0]['__domain'] = domain + ['|', dom_in, dom_not_in]
-                        result[0]['stage_id_count'] += nb_notes_ws
-                    else:
-                        # add the first stage column
-                        result = [{
-                            '__context': {'group_by': groupby[1:]},
-                            '__domain': domain + [dom_not_in],
-                            'stage_id': (stages[0].id, stages[0].name),
-                            'stage_id_count':nb_notes_ws,
-                            '__fold': stages[0].name,
-                        }] + result
-
-            else: # if stage_ids is empty
-
-                #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain, context=context, count=True)
-                if nb_notes_ws:
-                    result = [{ #notes for unknown stage
-                        '__context': {'group_by': groupby[1:]},
-                        '__domain': domain,
-                        'stage_id': False,
-                        'stage_id_count':nb_notes_ws
-                    }]
-                else:
-                    result = []
+            #3.0 Put the note to 'Shared' stage which are shared by other users.
+            partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
+            records = self.pool['mail.followers'].read_group(cr, uid, [
+                ('res_model', '=', 'note.note'),
+                ('partner_id', '=', partner.id),
+            ], fields=['res_id'], groupby=['res_id'], context=context)
+            note_ids = [notes.get('res_id') for notes in records]
+            nb_self_notes = self.search(cr, uid, domain+[('user_id', '=', uid)], context=context)
+            shared_notes = list(set(note_ids) - set(nb_self_notes))
+            domain = domain + [('id', 'in', shared_notes)]
+            if shared_notes:
+                result.insert(0, {
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain,
+                    'stage_id': False,
+                    'stage_id_count': len(shared_notes),
+                })
             return result
-
         else:
             return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
