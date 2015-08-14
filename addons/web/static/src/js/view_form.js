@@ -4364,7 +4364,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
                 });
             },
             write_function: function(id, data, options) {
-                return self.o2m.dataset.write(id, data, {}).done(function() {
+                return self.o2m.dataset.write(id, data, options).done(function() {
                     self.o2m.reload_current_view();
                 });
             },
@@ -4488,8 +4488,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
-            write_function: function(id, data) {
-                return self.o2m.dataset.write(id, data, {}).done(function() {
+            write_function: function(id, data, options) {
+                return self.o2m.dataset.write(id, data, options).done(function() {
                     self.o2m.reload_current_view();
                 });
             },
@@ -5104,7 +5104,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             pop.show_element(self.field.relation, id, self.build_context(), {
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
-                    return self.dataset.write(id, data, {}).done(function() {
+                    return self.dataset.write(id, data, options).done(function() {
                         self.render_value();
                     });
                 },
