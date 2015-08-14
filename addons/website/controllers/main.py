@@ -176,7 +176,7 @@ class Website(openerp.addons.web.controllers.main.Home):
             model, id  = request.registry["ir.model.data"].get_object_reference(request.cr, request.uid, 'website', 'main_menu')
             request.registry['website.menu'].create(request.cr, request.uid, {
                     'name': path,
-                    'url': "/page/" + xml_id,
+                    'url': "/page/" + xml_id[8:],
                     'parent_id': id,
                 }, context=request.context)
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
