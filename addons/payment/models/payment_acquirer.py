@@ -106,7 +106,7 @@ class PaymentAcquirer(osv.Model):
         'pending_msg': '<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
         'done_msg': '<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
         'cancel_msg': '<i>Cancel,</i> Your payment has been cancelled.',
-        'error_msg': '<i>Error,</i> An error occurred. We cannot process your payment for the moment, please try again later.'
+        'error_msg': "Please be aware that an error occurred during the transaction. The order has been confirmed but won't be paid. Don't hesitate to contact us if you have questions on the status of your order."
     }
 
     def _check_required_if_provider(self, cr, uid, ids, context=None):
