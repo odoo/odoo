@@ -62,8 +62,8 @@
                             <tr style="font-weight: bold;">
                                 <td colspan="6">
                                     <span style="color: white;" t-esc="'..'"/>
-                                    <span t-esc="childrenaccount['code']"/>
-                                    <span t-esc="childrenaccount['name']"/>
+                                    <span t-esc="account['code']"/>
+                                    <span t-esc="account['name']"/>
                                 </td>
                                 <td class="text-right">
                                     <span t-esc="account['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
