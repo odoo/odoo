@@ -29,7 +29,7 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
-                <div class="row">
+                <div class="row" t-if="record.use_invoices.raw_value">
                     <div class="col-xs-9">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
                             Sales to Invoice

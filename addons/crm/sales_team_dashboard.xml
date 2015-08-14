@@ -38,7 +38,7 @@
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
-                    <button class="btn btn-primary" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Pipeline</button>
+                    <button t-if="record.use_opportunities.raw_value" class="btn btn-primary" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Pipeline</button>
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
@@ -55,7 +55,7 @@
                 </xpath>
 
                 <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
-                    <div>
+                    <div t-if="record.use_opportunities.raw_value">
                         <a  name="%(action_opportunity_form)d" type="action">
                             Opportunity
                         </a>
@@ -68,7 +68,7 @@
                             Leads
                         </a>
                     </div>
-                    <div>
+                    <div t-if="record.use_opportunities.raw_value">
                         <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
                             Opportunities
                         </a>
