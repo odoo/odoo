@@ -47,10 +47,10 @@
     </record>
 
     <record model="ir.rule" id="project_public_members_rule">
-        <field name="name">Project: employees: public, employees or followers</field>
+        <field name="name">Project: employees: portal, employees or followers</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
-                                        ('privacy_visibility', 'in', ['public', 'employees']),
+                                        ('privacy_visibility', 'in', ['portal', 'employees']),
                                         ('message_follower_ids', 'in', [user.partner_id.id])
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
@@ -67,11 +67,11 @@
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">
-        <field name="name">Project/Task: employees: public or employee or (followers and following)</field>
+        <field name="name">Project/Task: employees: portal or employee or (followers and following)</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', 'in', ['public', 'employees']),
+            ('project_id.privacy_visibility', 'in', ['portal', 'employees']),
             '|',
                 '&amp;',
                     ('project_id.privacy_visibility', '=', 'followers'),
@@ -89,6 +89,42 @@
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+
+    <!-- Portal -->
+    <record model="ir.rule" id="portal_project_rule">
+        <field name="name">Project: portal users: portal or following</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('privacy_visibility', '=', 'portal'),
+                    ('message_follower_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                '&amp;',
+                    ('privacy_visibility', '=', 'followers'),
+                    ('message_follower_ids', 'in', [user.partner_id.id])
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="portal_task_rule">
+        <field name="name">Project/Task: portal users: (portal and colleagues following) or (followers and following)</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[
+        '|',
+            '|',
+                '&amp;',
+                    ('project_id.privacy_visibility', '=', 'portal'),
+                    ('project_id.message_follower_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                '&amp;',
+                    ('project_id.privacy_visibility', '=', 'followers'),
+                    ('project_id.message_follower_ids', 'in', [user.partner_id.id]),
+            '&amp;',
+                # on employee project can receive messages but not access the object
+                ('project_id.privacy_visibility', '!=', 'employees'),
+                ('message_follower_ids', 'in', [user.partner_id.id])
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
 </data>

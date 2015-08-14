@@ -3,22 +3,21 @@
 
 
 {
-    'name': 'Portal Project',
+    'name': 'Timesheet on Website Project Issue',
     'version': '0.1',
     'category': 'Tools',
     'complexity': 'easy',
     'description': """
-This module adds project menu and features (tasks) to your portal if project and portal are installed.
-======================================================================================================
+Add timesheet support on issue in the frontend.
+==================================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['project', 'portal'],
+    'depends': ['website_project_issue', 'project_issue_sheet'],
     'data': [
-        'security/portal_security.xml',
+        'views/project_issue_templates.xml',
         'security/ir.model.access.csv',
-        'portal_project_view.xml',
+        'security/portal_security.xml',
     ],
-    'demo': [],
     'installable': True,
     'auto_install': True,
     'category': 'Hidden',
