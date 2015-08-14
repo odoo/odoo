@@ -189,7 +189,7 @@ class AccountJournal(models.Model):
         return self.env.ref('account.account_payment_method_manual_out')
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Shortcode', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
+    code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
