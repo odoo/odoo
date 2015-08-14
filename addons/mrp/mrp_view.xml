@@ -383,11 +383,12 @@
                                     <field name="product_efficiency"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
-                                    <field name="attribute_value_ids" widget="many2many_tags"/>
+                                    <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]"/>
+                                    <field name="property_ids" widget="many2many_tags"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Properties" groups="product.group_mrp_properties">
+                        <page string="Properties">
                             <group>
                                 <group>
                                     <field name="position"/>
@@ -401,8 +402,8 @@
                                     <field name="product_efficiency"/>
                                 </group>
                             </group>
-                            <separator string="Properties"/>
-                            <field name="property_ids" widget="many2many_tags"/>
+                            <separator string="Properties" groups="product.group_mrp_properties"/>
+                            <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                         </page>
                     </notebook>
                     <div class="oe_chatter">
@@ -700,7 +701,13 @@
                             <field name="date_planned"/>
                         </group>
                         <group>
-                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
+                            <field name="bom_id"
+                                domain="['|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False)]"
+                                context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>
@@ -760,7 +767,7 @@
                                 </group>
                                 <group string="Produced Products">
                                     <field name="move_created_ids2" nolabel="1" options="{'reload_on_button': true}">
-                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('confirmed','ready','in_production');gray:state == 'cancel' " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_uom_qty" readonly="1"/>
                                             <field name="restrict_lot_id" groups="stock.group_production_lot"/>
@@ -780,7 +787,7 @@
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
-                            <field name="workcenter_lines">
+                            <field name="workcenter_lines" options="{'reload_on_button': true}">
                                 <form string="Production Work Centers">
                                     <group col="4">
                                         <field colspan="4" name="name"/>

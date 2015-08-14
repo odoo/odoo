@@ -100,7 +100,7 @@ class crm_helpdesk(osv.osv):
         if values.get('state'):
             if values.get('state') in ['draft', 'open'] and not values.get('date_open'):
                 values['date_open'] = fields.datetime.now()
-            elif values.get('state') == 'close' and not values.get('date_closed'):
+            elif values.get('state') == 'done' and not values.get('date_closed'):
                 values['date_closed'] = fields.datetime.now()
         return super(crm_helpdesk, self).write(cr, uid, ids, values, context=context)
 

@@ -52,8 +52,9 @@ class TestRelatedField(common.TransactionCase):
         company_ids = self.company.search(self.cr, self.uid, [('partner_id', '!=', False)], limit=1)
         company = self.company.browse(self.cr, self.uid, company_ids[0])
 
-        # find partners that satisfy [('partner_id.company_id', '=', company.id)]
-        partner_ids = self.partner.search(self.cr, self.uid, [('related_company_partner_id', '=', company.id)])
+        # find partners that satisfy [('company_id.partner_id', '=', company.partner_id.id)]
+        partner_ids = self.partner.search(self.cr, self.uid, [('related_company_partner_id', '=', company.partner_id.id)])
+        self.assertGreater(len(partner_ids), 0)
         partner = self.partner.browse(self.cr, self.uid, partner_ids[0])
 
         # create a new partner, and assign it to company
@@ -110,9 +111,6 @@ class TestPropertyField(common.TransactionCase):
         self.partner._columns.update({
             'property_country': fields.property(type='many2one', relation="res.country", string="Country by company"),
         })
-        self.partner._all_columns.update({
-            'property_country': fields.column_info('property_country', self.partner._columns['property_country'], None, None, None),
-        })
         self.partner._field_create(cr)
 
         partner_id = self.partner.create(cr, alice, {
@@ -145,7 +143,7 @@ class TestHtmlField(common.TransactionCase):
 % if object.some_field and not object.oriented:
 <table>
     % if object.other_field:
-    <tr>
+    <tr style="border: 10px solid black;">
         ${object.mako_thing}
         <td>
     </tr>
@@ -172,5 +170,11 @@ class TestHtmlField(common.TransactionCase):
         # sanitize should have closed tags left open in the original html
         self.assertIn('</table>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
         self.assertIn('</td>', partner.comment, 'Error in HTML field: content does not seem to have been sanitized despise sanitize=True')
+        self.assertIn('<tr style="', partner.comment, 'Style attr should not have been stripped')
+
+        self.partner._columns['comment'] = fields.html('Stripped Html', sanitize=True, strip_style=True)
+        self.partner.write(cr, uid, [pid], {'comment': some_ugly_html}, context=context)
+        partner = self.partner.browse(cr, uid, pid, context=context)
+        self.assertNotIn('<tr style="', partner.comment, 'Style attr should have been stripped')
 
         self.partner._columns = old_columns

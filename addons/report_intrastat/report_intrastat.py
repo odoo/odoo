@@ -39,6 +39,7 @@ class res_country(osv.osv):
 class report_intrastat_code(osv.osv):
     _name = "report.intrastat.code"
     _description = "Intrastat code"
+    _translate = False
     _columns = {
         'name': fields.char('Intrastat Code'),
         'description': fields.char('Description'),

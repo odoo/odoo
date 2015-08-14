@@ -129,15 +129,32 @@ class account_config_settings(osv.osv_memory):
             'company_id', 'income_currency_exchange_account_id',
             type='many2one',
             relation='account.account',
-            string="Gain Exchange Rate Account", 
-            domain="[('type', '=', 'other')]"),
+            string="Gain Exchange Rate Account",
+            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
             string="Loss Exchange Rate Account",
-            domain="[('type', '=', 'other')]"),
+            domain="[('type', '=', 'other'), ('company_id', '=', company_id)]]"),
     }
+
+    def _check_account_gain(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.income_currency_exchange_account_id.company_id and obj.company_id != obj.income_currency_exchange_account_id.company_id:
+                return False
+        return True
+
+    def _check_account_loss(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.expense_currency_exchange_account_id.company_id and obj.company_id != obj.expense_currency_exchange_account_id.company_id:
+                return False
+        return True
+
+    _constraints = [
+        (_check_account_gain, 'The company of the gain exchange rate account must be the same than the company selected.', ['income_currency_exchange_account_id']),
+        (_check_account_loss, 'The company of the loss exchange rate account must be the same than the company selected.', ['expense_currency_exchange_account_id']),
+    ]
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -235,8 +252,8 @@ class account_config_settings(osv.osv_memory):
                     })
             # update taxes
             ir_values = self.pool.get('ir.values')
-            taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
-            supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
+            taxes_id = ir_values.get_default(cr, uid, 'product.template', 'taxes_id', company_id=company_id)
+            supplier_taxes_id = ir_values.get_default(cr, uid, 'product.template', 'supplier_taxes_id', company_id=company_id)
             values.update({
                 'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
                 'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
@@ -305,9 +322,9 @@ class account_config_settings(osv.osv_memory):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
         config = self.browse(cr, uid, ids[0], context)
-        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.template', 'taxes_id',
             config.default_sale_tax and [config.default_sale_tax.id] or False, company_id=config.company_id.id)
-        ir_values.set_default(cr, SUPERUSER_ID, 'product.product', 'supplier_taxes_id',
+        ir_values.set_default(cr, SUPERUSER_ID, 'product.template', 'supplier_taxes_id',
             config.default_purchase_tax and [config.default_purchase_tax.id] or False, company_id=config.company_id.id)
 
     def set_chart_of_accounts(self, cr, uid, ids, context=None):

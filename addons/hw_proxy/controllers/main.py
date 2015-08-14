@@ -17,6 +17,14 @@ _logger = logging.getLogger(__name__)
 from openerp import http
 from openerp.http import request
 
+# Those are the builtin raspberry pi USB modules, they should
+# not appear in the list of connected devices.
+BANNED_DEVICES = set([
+	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
+	"1d6b:0002",	# Linux Foundation 2.0 root hub
+	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
+])
+
 
 # drivers modules must add to drivers an object with a get_status() method 
 # so that 'status' can return the status of all active drivers
@@ -88,17 +96,25 @@ class Proxy(http.Controller):
             <p>The list of connected USB devices as seen by the posbox</p>
         """
         devices = commands.getoutput("lsusb").split('\n')
+        count   = 0
         resp += "<div class='devices'>\n"
         for device in devices:
             device_name = device[device.find('ID')+2:]
-            resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+            device_id   = device_name.split()[0]
+            if not (device_id in BANNED_DEVICES):
+            	resp+= "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                count += 1
+        
+        if count == 0:
+            resp += "<div class='device'>No USB Device Found</div>"
+
         resp += "</div>\n"
         resp += """
             <h2>Add New Printer</h2>
             <p>
             Copy and paste your printer's device description in the form below. You can find
             your printer's description in the device list above. If you find that your printer works
-            well, please send your printer's description to <a href='mailto:support@openerp.com'>
+            well, please send your printer's description to <a href='mailto:support@odoo.com'>
             support@openerp.com</a> so that we can add it to the default list of supported devices.
             </p>
             <form action='/hw_proxy/escpos/add_supported_device' method='GET'>
@@ -192,12 +208,12 @@ class Proxy(http.Controller):
         print 'print_receipt' + str(receipt)
 
     @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
-    def print_receipt(self, receipt):
+    def is_scanner_connected(self, receipt):
         print 'is_scanner_connected?' 
         return False
 
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def print_receipt(self, receipt):
+    def scanner(self, receipt):
         print 'scanner' 
         time.sleep(10)
         return ''

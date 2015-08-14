@@ -33,15 +33,15 @@
 
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
-        ((submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
+        ((submenu.url and submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
          request.httprequest.path == submenu.url) and 'active'
         ">
-        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'blank' if submenu.new_window else None">
+        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
     <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        ((submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
+        ((submenu.url and submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
          request.httprequest.path == submenu.url) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -65,26 +65,28 @@
           t-att-data-oe-company-name="res_company.name">
         <head>
             <meta charset="utf-8" />
-            <t t-if="main_object and 'website_meta_title' in main_object">
+            <t t-if="main_object and 'website_meta_title' in main_object and not title">
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
-            <t t-if="not title and main_object and 'name' in main_object">
+            <t t-if="main_object and 'name' in main_object and not title and not additional_title">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
             <t t-if="not title">
-                <t t-set="title"><t t-raw="res_company.name"/><t t-if="additional_title"> - <t t-raw="additional_title"/></t></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
             </t>
+
             <meta name="viewport" content="initial-scale=1"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
+            <meta name="generator" content="Odoo"/>
             <title><t t-esc="title"/></title>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
-                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+                    <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
             </t>
 
@@ -92,17 +94,6 @@
             <t t-call-assets="website.assets_frontend" t-js="false"/>
 
             <t t-raw="head or ''" name='layout_head'/>
-            <t t-if="website and website.google_analytics_key">
-                <script>
-                    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-                    ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
-                    ga('send','pageview');
-                </script>
-            </t>
         </head>
         <body>
             <div id="wrapwrap">
@@ -153,6 +144,15 @@
 
             <t t-call-assets="web.assets_common" t-css="false"/>
             <t t-call-assets="website.assets_frontend" t-css="false"/>
+            <script t-if="website and website.google_analytics_key">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
+                ga('send','pageview');
+            </script>
         </body>
     </html>
 </template>
@@ -164,8 +164,8 @@
                 Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
                 <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
             </div>
-            <div class="pull-left text-muted">
-                Copyright &amp;copy; <span t-field="res_company.name">Company name</span>
+            <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
             </div>
         </div>
     </xpath>
@@ -174,7 +174,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
-            <img src="/logo.png"/>
+            <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
         </a>
     </xpath>
 </template>
@@ -235,10 +235,10 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider"/>
-        <li>
+        <li class="divider" groups="base.group_public"/>
+        <li groups="base.group_public">
             <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>
@@ -249,7 +249,7 @@
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer_container']" position="replace">
         <div class="oe_structure" id="footer">
-            <section data-snippet-id='three-columns' class="mt16 mb16">
+            <section data-snippet-id='three-columns'>
                 <div class="container">
                     <div class="row">
                         <div class="col-md-4">
@@ -301,7 +301,7 @@
                         <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
                         <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
                         <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
+                        <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" rel="publisher"><i class="fa fa-google-plus-square"/></a>
                         <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
                     </h2>
                 </div>
@@ -323,9 +323,14 @@
                     </div>
                     <ul class="list-inline js_language_selector mt16" t-if="(request.website_multilang and len(languages) &gt; 1) or editable">
                         <li t-foreach="languages" t-as="lg">
-                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
-                             t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None">
-                             <t t-esc="lg[1].split('/').pop()"/></a>
+                            <a
+                                t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                                t-att-data-default-lang="editable and 'true' if lg[0] == website.default_lang_code else None"
+                                t-att-data-lang="lg[0]"
+                                class="js_change_lang"
+                            >
+                              <t t-esc="lg[1].split('/').pop()"/>
+                            </a>
                         </li>
                         <li groups="base.group_website_publisher">
                             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
@@ -368,11 +373,9 @@
 
 <template id="publish_short">
     <t groups="base.group_website_publisher" t-ignore="true">
-        <div t-attf-class="btn-group pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
-            <button t-attf-class="btn btn-sm btn-#{object.website_published and 'success' or 'danger'} js_publish_btn">
-                <span class="css_publish">Not Published</span>
-                <span class="css_unpublish">Published</span>
-            </button>
+        <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+            <button class="btn btn-sm btn-danger js_publish_btn">Not Published</button>
+            <button class="btn btn-sm btn-success js_publish_btn">Published</button>
         </div>
     </t>
 </template>
@@ -447,6 +450,13 @@
 <template id="info" name="Odoo Information">
     <t t-call="website.layout">
       <div id="wrap">
+      </div>
+    </t>
+</template>
+
+<template id="show_website_info" inherit_id="website.info" customize_show="True" name="Show Odoo Information">
+    <xpath expr="//div[@id='wrap']" position="inside">
+
         <div class="oe_structure">
 
             <section class="container">
@@ -473,35 +483,37 @@
                     </dt>
                     <dd>
                         <span t-raw="app.summary"/>
-                    </dd><dd class="text-muted">
+                    </dd><dd class="text-muted" groups='base.group_no_one'>
                         Technical name: <span t-field="app.name"/>, updated: <span t-field="app.write_date"/>, author: <span t-field="app.author"/>
                     </dd>
                 </dl>
 
-                <h2>Installed Modules</h2>
-                <dl class="dl-horizontal">
-                    <t t-foreach="modules" t-as="app">
-                        <dt>
-                            <span t-raw="app.shortdesc"/>
-                        </dt>
-                        <dd t-if="app.summary">
-                            <span t-raw="app.summary"/>
-                        </dd><dd>
-                            Technical name: <span t-field="app.name"/>,
-                            updated: <span t-field="app.write_date"/>
-                            <t t-if="app.author">
-                                , author: <span t-field="app.author"/>
-                            </t>
-                        </dd>
-                    </t>
-                </dl>
+                <div groups='base.group_no_one'>
+                    <h2>Installed Modules</h2>
+                    <dl class="dl-horizontal">
+                        <t t-foreach="modules" t-as="app">
+                            <dt>
+                                <span t-raw="app.shortdesc"/>
+                            </dt>
+                            <dd t-if="app.summary">
+                                <span t-raw="app.summary"/>
+                            </dd><dd>
+                                Technical name: <span t-field="app.name"/>,
+                                updated: <span t-field="app.write_date"/>
+                                <t t-if="app.author">
+                                    , author: <span t-field="app.author"/>
+                                </t>
+                            </dd>
+                        </t>
+                    </dl>
+                </div>
 
 
             </section>
 
         </div>
-      </div>
-    </t>
+
+    </xpath>
 </template>
 
 <template id="default_page">

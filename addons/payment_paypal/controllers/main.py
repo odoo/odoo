@@ -47,7 +47,7 @@ class PaypalController(http.Controller):
             tx_ids = request.registry['payment.transaction'].search(cr, uid, [('reference', '=', reference)], context=context)
             if tx_ids:
                 tx = request.registry['payment.transaction'].browse(cr, uid, tx_ids[0], context=context)
-        paypal_urls = request.registry['payment.acquirer']._get_paypal_urls(cr, uid, tx and tx.acquirer_id and tx.acquirer_id.env or 'prod', context=context)
+        paypal_urls = request.registry['payment.acquirer']._get_paypal_urls(cr, uid, tx and tx.acquirer_id and tx.acquirer_id.environment or 'prod', context=context)
         validate_url = paypal_urls['paypal_form_url']
         urequest = urllib2.Request(validate_url, werkzeug.url_encode(new_post))
         uopen = urllib2.urlopen(urequest)

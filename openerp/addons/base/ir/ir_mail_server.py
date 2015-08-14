@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2011-2012 OpenERP S.A (<http://www.openerp.com>)
+#    Copyright (C) 2011-2014 OpenERP S.A. (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,7 +24,7 @@ from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.charset import Charset
 from email.header import Header
-from email.utils import formatdate, make_msgid, COMMASPACE, parseaddr
+from email.utils import formatdate, make_msgid, COMMASPACE, getaddresses, formataddr
 from email import Encoders
 import logging
 import re
@@ -140,33 +140,22 @@ def encode_rfc2822_address_header(header_text):
        ``"Name"`` portion by the RFC2047-encoded
        version, preserving the address part untouched.
     """
-    header_text_utf8 = tools.ustr(header_text).encode('utf-8')
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    if header_text_ascii:
-        return header_text_ascii
+    def encode_addr(addr):
+        name, email = addr
+        if not try_coerce_ascii(name):
+            name = str(Header(name, 'utf-8'))
+        return formataddr((name, email))
 
-    name, email = parseaddr(header_text_utf8)
-    if not name:
-      return email
+    addresses = getaddresses([tools.ustr(header_text).encode('utf-8')])
+    return COMMASPACE.join(map(encode_addr, addresses))
 
-    # non-ASCII characters are present, attempt to
-    # replace all "Name" patterns with the RFC2047-
-    # encoded version
-    name_encoded = str(Header(name, 'utf-8'))
-    header_text_utf8 = "%s <%s>" % (name_encoded, email)
-    # try again after encoding
-    header_text_ascii = try_coerce_ascii(header_text_utf8)
-    if header_text_ascii:
-        return header_text_ascii
-    # fallback to extracting pure addresses only, which could
-    # still cause a failure downstream if the actual addresses
-    # contain non-ASCII characters
-    return COMMASPACE.join(extract_rfc2822_addresses(header_text_utf8))
 
- 
 class ir_mail_server(osv.osv):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
+
+    NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
+                          "specified for outgoing emails (To/Cc/Bcc)")
 
     _columns = {
         'name': fields.char('Description', required=True, select=True),
@@ -374,6 +363,27 @@ class ir_mail_server(osv.osv):
                 msg.attach(part)
         return msg
 
+    def _get_default_bounce_address(self, cr, uid, context=None):
+        '''Compute the default bounce address.
+
+        The default bounce address is used to set the envelop address if no
+        envelop address is provided in the message.  It is formed by properly
+        joining the parameters "mail.catchall.alias" and
+        "mail.catchall.domain".
+
+        If "mail.catchall.alias" is not set it defaults to "postmaster-odoo".
+
+        If "mail.catchall.domain" is not set, return None.
+
+        '''
+        get_param = self.pool['ir.config_parameter'].get_param
+        postmaster = get_param(cr, SUPERUSER_ID, 'mail.bounce.alias',
+                               default='postmaster-odoo',
+                               context=context,)
+        domain = get_param(cr, SUPERUSER_ID, 'mail.catchall.domain', context=context)
+        if postmaster and domain:
+            return '%s@%s' % (postmaster, domain)
+
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
                    context=None):
@@ -389,8 +399,9 @@ class ir_mail_server(osv.osv):
         and fails if not found.
 
         :param message: the email.message.Message to send. The envelope sender will be extracted from the
-                        ``Return-Path`` or ``From`` headers. The envelope recipients will be
-                        extracted from the combined list of ``To``, ``CC`` and ``BCC`` headers.
+                        ``Return-Path`` (if present), or will be set to the default bounce address.
+                        The envelope recipients will be extracted from the combined list of ``To``,
+                        ``CC`` and ``BCC`` headers.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
         :param smtp_encryption: optional TLS mode, one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
@@ -401,7 +412,14 @@ class ir_mail_server(osv.osv):
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
-        smtp_from = message['Return-Path'] or message['From']
+        # Use the default bounce address **only if** no Return-Path was
+        # provided by caller.  Caller may be using Variable Envelope Return
+        # Path (VERP) to detect no-longer valid email addresses.
+        smtp_from = message['Return-Path']
+        if not smtp_from:
+            smtp_from = self._get_default_bounce_address(cr, uid, context=context)
+        if not smtp_from:
+            smtp_from = message['From']
         assert smtp_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
@@ -415,7 +433,7 @@ class ir_mail_server(osv.osv):
         email_bcc = message['Bcc']
         
         smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
-        assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
+        assert smtp_to_list, self.NO_VALID_RECIPIENT
 
         x_forge_to = message['X-Forge-To']
         if x_forge_to:

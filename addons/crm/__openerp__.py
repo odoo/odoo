@@ -117,16 +117,5 @@ Dashboard for CRM will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': [
-        'images/customers.png',
-        'images/leads.png',
-        'images/opportunities_kanban.png',
-        'images/opportunities_form.png',
-        'images/opportunities_calendar.png',
-        'images/opportunities_graph.png',
-        'images/logged_calls.png',
-        'images/scheduled_calls.png',
-        'images/stages.png',
-    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

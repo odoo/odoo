@@ -37,7 +37,6 @@ You can assign several contracts per employee.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': ['images/hr_contract.jpeg'],
     'depends': ['base_action_rule', 'hr'],
     'data': [
         'security/ir.model.access.csv',

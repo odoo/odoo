@@ -19,12 +19,12 @@
                 <div class="oe_suggested_item">
                     <div class="oe_suggested_item_image">
                         <a t-attf-href="#model=hr.employee&amp;id=#{result.id}">
-                            <img t-attf-src="{result.image}" t-attf-alt="{result.name}"/>
+                            <img t-att-src="result.image" t-att-alt="result.name"/>
                         </a>
                     </div>
                     <div class="oe_suggested_item_content">
                         <a class="oe_suggestion_item_name" t-attf-href="#model=hr.employee&amp;id=#{result.id}"><t t-esc="result.name"/></a>
-                        <a class="oe_suggestion_remove_item oe_suggestion_employee oe_e" t-attf-id="{result.id}">X</a>
+                        <a class="oe_suggestion_remove_item oe_suggestion_employee oe_e" t-att-id="result.id">X</a>
                         <br/>
                         <button class="oe_suggestion_follow" t-att-id="result.id">Follow</button>
                     </div>

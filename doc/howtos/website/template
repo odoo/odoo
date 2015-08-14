@@ -1,39 +1,42 @@
 # HG changeset patch
 # Parent d5ad2ad84a5db0668e4e08fefb6e3f628c2e14d1
-diff -r d5ad2ad84a5d -r 3e800beb7db0 academy/__openerp__.py
---- a/academy/__openerp__.py	Mon Aug 11 16:12:38 2014 +0200
-+++ b/academy/__openerp__.py	Mon Aug 11 16:36:15 2014 +0200
-@@ -6,4 +6,8 @@
-     """,
-     # Which modules must be installed for this one to work
-     'depends': ['base'],
-+    # data files which are always installed
-+    'data': [
-+        'templates.xml',
-+    ],
- }
-diff -r d5ad2ad84a5d -r 3e800beb7db0 academy/controllers.py
---- a/academy/controllers.py	Mon Aug 11 16:12:38 2014 +0200
-+++ b/academy/controllers.py	Mon Aug 11 16:36:15 2014 +0200
-@@ -4,5 +4,7 @@ from openerp import http
+# Parent  e65c9826721cb2421131399bc9223e03b482d38f
+
+diff --git a/academy/controllers.py b/academy/controllers.py
+--- a/academy/controllers.py
++++ b/academy/controllers.py
+@@ -4,7 +4,9 @@ from openerp import http
  class Academy(http.Controller):
-     @http.route('/academy/', auth='public')
-     def index(self):
--        return "Hello, world!"
+     @http.route('/academy/academy/', auth='public')
+     def index(self, **kw):
+-        return "Hello, world"
 +        return http.request.render('academy.index', {
 +            'teachers': ["Diana Padilla", "Jody Caroll", "Lester Vaughn"],
 +        })
  
-diff -r d5ad2ad84a5d -r 3e800beb7db0 academy/templates.xml
---- /dev/null	Thu Jan 01 00:00:00 1970 +0000
-+++ b/academy/templates.xml	Mon Aug 11 16:36:15 2014 +0200
-@@ -0,0 +1,8 @@
-+<openerp><data>
-+  <template id="index">
-+    <title>Academy</title>
-+    <t t-foreach="teachers" t-as="teacher">
-+        <p><t t-esc="teacher"/></p>
-+    </t>
-+  </template>
-+</data></openerp>
-\ No newline at end of file
+ #     @http.route('/academy/academy/objects/', auth='public')
+ #     def list(self, **kw):
+diff --git a/academy/templates.xml b/academy/templates.xml
+--- a/academy/templates.xml
++++ b/academy/templates.xml
+@@ -1,14 +1,11 @@
+ <openerp>
+     <data>
+-        <!-- <template id="listing"> -->
+-        <!--   <ul> -->
+-        <!--     <li t-foreach="objects" t-as="object"> -->
+-        <!--       <a t-attf-href="#{ root }/objects/#{ object.id }"> -->
+-        <!--         <t t-esc="object.display_name"/> -->
+-        <!--       </a> -->
+-        <!--     </li> -->
+-        <!--   </ul> -->
+-        <!-- </template> -->
++        <template id="index">
++            <title>Academy</title>
++            <t t-foreach="teachers" t-as="teacher">
++              <p><t t-esc="teacher"/></p>
++            </t>
++        </template>
+         <!-- <template id="object"> -->
+         <!--   <h1><t t-esc="object.display_name"/></h1> -->
+         <!--   <dl> -->

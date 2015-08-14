@@ -1,0 +1,2155 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale
+# 
+# Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
+# FIRST AUTHOR Belkacem Mohammed <belkacem77@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-18 18:18+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Hello ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"    <p>\n"
+"        You can view your quotation online:\n"
+"    </p>\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n"
+"            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n<p>Azul ${object.partner_id.name},</p>\n\n<p>Ad ttafeḍ dagi ${object.state in ('draft', 'sent') and 'asutar n ssuma' or 'Taladna'} sɣuṛ ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>Tmsisɣal</strong><br />\n&nbsp;&nbsp;Uṭṭun n tladna: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Asemday n tladna: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n&nbsp;&nbsp;Azeme n tladna: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Tamsiɣelt n tladna: ${object.origin}<br />\n% endif\n% if object.client_order_ref:\n&nbsp;&nbsp;Tamsisɣelt yinek: ${object.client_order_ref}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Anermis-ik: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n% endif\n</p>\n<p>\nTzemreḍ attwaliḍ asuter-ik n ssuma s srid:\n</p>\n<a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\nhref=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Asuter' or 'Taladna'}</a>\n\n% if object.paypal_url:\n<br/>\n<p>Tzemreḍ ad tefruḍ s webrid n Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Tzemreḍ aɣ-d-nermeseḍ ma ɣurk istiqsiyen.</p>\n<p>Tanemirt-ik imi tferneḍ ${object.company_id.name or 'takebbwanit enneɣ'}!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nTiliɣri:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nAsmel Web:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n%endif\n<p></p>\n</div>\n</div>"
+
+#. module: sale
+#: field:product.product,sales_count:0 field:product.template,sales_count:0
+msgid "# Sales"
+msgstr "# n tludna n uznuzu"
+
+#. module: sale
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "# n  izirigen"
+
+#. module: sale
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr "# n Tnectiwin."
+
+#. module: sale
+#: field:res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr "# n tludna n uznuzu"
+
+#. module: sale
+#: model:email.template,report_name:sale.email_template_edi_sale
+msgid ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'Arewway' or ''}"
+
+#. module: sale
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Asuter n ssuma' or 'Taladna'} (Tamsisɣelt ${object.name or 'n/a' })"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "(update)"
+msgstr "(Aleqqem)"
+
+#. module: sale
+#: help:sale.order.line,state:0
+msgid ""
+"* The 'Draft' status is set when the related sales order in draft status.                     \n"
+"* The 'Confirmed' status is set when the related sales order is confirmed.                     \n"
+"* The 'Exception' status is set when the related sales order is set as exception.                     \n"
+"* The 'Done' status is set when the sales order line has been picked.                     \n"
+"* The 'Cancelled' status is set when a user cancel the sales order related."
+msgstr "* Addad 'Arewway' ad ittunefk ticki taladna tella deg addad 'Arewway'.\n* Addad 'Intem' ad ittunefk ticki taladna tella deg addad 'Intem'.                                     \n* Addad 'Asuref' ad ittunefk ticki taladna tella deg addad 'Asuref'.                                 \n* Addad 'Immed' ad ittunefk ticki taladna tella deg addad 'Immed'.                                                    \n* Addad 'Isfex' ad ittunefk ticki taladna tella deg addad 'Ifsex'."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to create a quotation that can be converted into a sales\n"
+"                    order.\n"
+"                </p><p>\n"
+"                    Odoo will help you efficiently handle the complete sales flow:\n"
+"                    quotation, sales order, delivery, invoicing and payment.\n"
+"                </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSit iwakken ad ttarnuḍ asuter n ssuma neɣ taladna i wemsaɣ agi.\n</p><p>\nOdoo ad yefk tallalt i wesefrek n tneflit tanuzt n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d Wefru.\n</p>"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation or sales order for this customer.\n"
+"              </p><p>\n"
+"                Odoo will help you efficiently handle the complete sale flow:\n"
+"                quotation, sales order, delivery, invoicing and\n"
+"                payment.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customer to keep track of the evolution\n"
+"                of the sales order.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSit iwakken ad ttarnuḍ asuter n ssuma neɣ taladna i wemsaɣ agi.\n</p><p>\nOdoo ad yefk tallalt i wesefrek n tneflit tanuzt n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d Wefru.\n</p><p>\nAẓeṭṭa ametti ad yefk tallalt i tuddsa n uskasi ɣef yal taladna, et permet à votre client de garder trace de l'évolution de la commande.\n</p>\n            "
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_orders_salesteams
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Odoo will help you efficiently handle the complete sales flow:\n"
+"                quotation, sales order, delivery, invoicing and payment.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSit dagi i wesirew n usuter n ssuma ayuɣlen d taladna.\n</p><p>\nOdoo ad yefka tallalt n usefrek ummid n useddem n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d wefru.\n</p>"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation, the first step of a new sale.\n"
+"              </p><p>\n"
+"                Odoo will help you handle efficiently the complete sale flow:\n"
+"                from the quotation to the sales order, the\n"
+"                delivery, the invoicing and the payment collection.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each sales\n"
+"                order, and allow your customers to keep track of the evolution\n"
+"                of the sales order.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nSit dagi i wesirew n usuter n ssuma, asurif amezwaru ɣer tladna.\n</p><p>\nOdoo ad yefk tallalt n usefrek ummid n useddem n uznuzu:\nAsutar n ssuma, Taladna, Asiweḍ, Afeter d wefru.\n</p><p>\nTawuri n uẓeṭṭa ametti ad tefk tallalt i tuddsa n usdiwen ɣef yal taladna, ad yeǧ amsaɣ-inek aḍfar n unerni n tladna.\n</p>"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"<p>\n"
+"                Here is a list of each sales order line to be invoiced. You can\n"
+"                invoice sales orders partially, by lines of sales order. You do\n"
+"                not need this list if you invoice from the delivery orders or\n"
+"                if you invoice sales totally.\n"
+"              </p>\n"
+"            "
+msgstr "<p>\nTagi ttabdart n izirien ara tfetereḍ. Tzemreḍ\ndaɣen at-fetereḍ tiludna s imuren,S izirigen.\nUr yesri ara tabdart agi ma t-fetereḍ ɣef isawaḍen\nneɣ ma t-fetereḍ taladna imaṛṛa.\n</p>\n            "
+
+#. module: sale
+#: help:sale.order.line,address_allotment_id:0
+msgid "A partner to whom the particular product needs to be allotted."
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_delivery_invoice_address
+msgid "Addresses in Sales Orders"
+msgstr "Tansa n tladniwin n uznuzu"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance"
+msgstr "Aɛerbun"
+
+#. module: sale
+#: field:sale.advance.payment.inv,amount:0
+msgid "Advance Amount"
+msgstr "Azal n Uɛerbun"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:207
+#, python-format
+msgid "Advance Invoice"
+msgstr "Tafaturt tuzwirt"
+
+#. module: sale
+#: field:sale.advance.payment.inv,product_id:0
+msgid "Advance Product"
+msgstr "Afaris uzwir"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
+#, python-format
+msgid "Advance of %s %%"
+msgstr "Aɛerbun n %s %%"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:62
+#, python-format
+msgid "Advance of %s %s"
+msgstr "Avance de %s %s"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid ""
+"After clicking 'Show Lines to Invoice', select lines to invoice and create "
+"the invoice from the 'More' dropdown menu."
+msgstr "Ticki t sendeḍ ɣef \"Sken izirigen i wefeter\", Fren izirigen ara t-fetreḍ u sirew tafaturt seg umuɣ ifettin \"Ugar\"."
+
+#. module: sale
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid ""
+"All items in these order lines will be invoiced. You can also invoice a percentage of the sales order\n"
+"                    or a fixed price (for advances) directly from the sales order form if you prefer."
+msgstr "Ifarisen n yezirigen agi n tladna ad ttufetren imaṛṛa. Tzemreḍ diɣen ma tebɣiḍ attfetereḍ amfiḍi n tladna neɣ ssuma tusbiṭ (tazwart n yedrimen) s srid s telwit n tladna."
+
+#. module: sale
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr "Sireg tansa imgaraden i usiweḍ d uftar "
+
+#. module: sale
+#: field:sale.config.settings,module_sale_journal:0
+msgid "Allow batch invoicing of delivery orders through journals"
+msgstr "Sireg aftar s uqeţţun n isawaḍen s tamella n iɣmisen n tmiḍant"
+
+#. module: sale
+#: field:sale.config.settings,module_warning:0
+msgid "Allow configuring alerts by customer or products"
+msgstr "Ad isireg tawila icriren s umsaɣ neɣ s ufaris"
+
+#. module: sale
+#: field:sale.config.settings,module_website_quote:0
+msgid "Allow online quotations and templates"
+msgstr "Ad isireg asuter n ssuma  ed tneɣrufin s srid"
+
+#. module: sale
+#: field:sale.config.settings,group_discount_per_so_line:0
+msgid "Allow setting a discount on the sales order lines"
+msgstr "Ad yeǧǧ ad ternuḍ tuǧǧit ɣef izirigen n tladna"
+
+#. module: sale
+#: help:sale.config.settings,module_warning:0
+msgid ""
+"Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.\n"
+"Example: Product: this product is deprecated, do not purchase more than 5.\n"
+"Supplier: don't forget to ask for an express delivery."
+msgstr "Ad isireg tawila n yelɣuten ɣef ifarisen wa tsenkreḍ ticki a seqdac yebɣa ad yezenz afaris i\nyettunefken i wemsaɣ yettunefken.\nAmedya: Afaris; Afaris ay teddu ad yemmet, ur d ttaɣ ara uar n 5\nAmsaɣ: Ur tettu yara att-esteqsiḍ ɣef usiweḍ uzrib. "
+
+#. module: sale
+#: field:sale.config.settings,group_uom:0
+msgid "Allow using different units of measure"
+msgstr "Sireg aseqdec n iferdisen n usɣel imgaraden"
+
+#. module: sale
+#: help:sale.config.settings,module_account_analytic_analysis:0
+msgid ""
+"Allows to define your customer contracts conditions: invoicing method (fixed price, on timesheet, advance invoice), the exact pricing (650€/day for a developer), the duration (one year support contract).\n"
+"You will be able to follow the progress of the contract and invoice automatically.\n"
+"-It installs the account_analytic_analysis module."
+msgstr "Ak yeǧǧ ad tesbaduḍ  tiwtilin n iguta n umsaɣ yinek: Tarrayt n ufeter (ssuma tusbiṭ, ɣef tferkiwin n wakud, tafaturt tuzwirt), ssuma tufrint (650 DZD / Ass i wemsiḍen), tangazt (agatu n yiwen aseggwass n tallalt).\nAd tizmired aḍfaṛ n usfari n ugatu d ufeter s webrid awurman.\nayagi ad isebdeb azegrir  account_analytic_analysis."
+
+#. module: sale
+#: help:sale.config.settings,group_sale_pricelist:0
+msgid ""
+"Allows to manage different prices based on rules per category of customers.\n"
+"Example: 10% for retailers, promotion of 5 EUR on this product, etc."
+msgstr "Ad yeǧ asefrek n ssumat yemgaraden s useqdec n ilugan ɣef  tiggayin n yemsaɣen.\nAmedya : 10% i yemelaɣizdawen, asmil n 5 DZD ɣef ufaris agi, atg."
+
+#. module: sale
+#: help:sale.config.settings,module_sale_stock:0
+msgid ""
+"Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
+"-This installs the module sale_stock."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_discount_per_so_line:0
+msgid "Allows you to apply some discount per sales order line."
+msgstr "Ad yeǧǧ timerna n tuǧǧit ɣef izirigen n tladna n uznuzu."
+
+#. module: sale
+#: help:sale.config.settings,module_sale_journal:0
+msgid ""
+"Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
+"-This installs the module sale_journal."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,module_analytic_user_function:0
+msgid ""
+"Allows you to define what is the default function of a specific user on a given account.\n"
+"This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.\n"
+"-This installs the module analytic_user_function."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr "Ad isireg afran d usefrek n iferdisen n usɣel imgaraden i  yifarisen."
+
+#. module: sale
+#: help:account.config.settings,group_analytic_account_for_sales:0
+msgid "Allows you to specify an analytic account on sales orders."
+msgstr "Ak isireg tiririt n umsiḍ n tusliṭ ɣef tludna uznuzu."
+
+#. module: sale
+#: help:sale.config.settings,group_sale_delivery_address:0
+msgid ""
+"Allows you to specify different delivery and invoice addresses on a sales "
+"order."
+msgstr "Ad isireg tabadut d usefrek n tansiwin n isawaḍen d tfaturin imgaraden di tludna uznuzu"
+
+#. module: sale
+#: field:sale.report,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Amiḍan usliḍ"
+
+#. module: sale
+#: model:res.groups,name:sale.group_analytic_accounting
+msgid "Analytic Accounting for Sales"
+msgstr "Imsiḍen usliḍen n uznuzu"
+
+#. module: sale
+#: field:account.config.settings,group_analytic_account_for_sales:0
+msgid "Analytic accounting for sales"
+msgstr "Tasiḍent tusliṭ n uznuzu"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Before Delivery"
+msgstr "Send asiweḍ"
+
+#. module: sale
+#: code:addons/sale/sale.py:1048
+#, python-format
+msgid ""
+"Before choosing a product,\n"
+" select a customer in the sales form."
+msgstr "Send afran n ufaris,\n Fren amsaɣ di tfarkit n tladna uznuzu."
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_isale_report_product
+msgid "By Product"
+msgstr "S ufaris"
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_salespersons
+msgid "By Salespersons"
+msgstr "S umzenzi"
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_salesteam
+msgid "By Salesteam"
+msgstr "S tarbaɛt uzenzi"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Cancel"
+msgstr "Sefsex"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_form2
+msgid "Cancel Line"
+msgstr "Sefsex izirig"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Cancel Order"
+msgstr "Sefsex taladana"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Cancel Quotation"
+msgstr "Sefsex asuter n ssuma"
+
+#. module: sale
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "Ifsax"
+
+#. module: sale
+#: code:addons/sale/sale.py:588
+#, python-format
+msgid "Cannot cancel this sales order!"
+msgstr "D wezɣi asefsex n tladna !"
+
+#. module: sale
+#: code:addons/sale/sale.py:1171
+#, python-format
+msgid "Cannot delete a sales order line which is in state '%s'."
+msgstr "D wezɣi tuksa n uzirig n tladna i g-ellan deg addad \"%s\"."
+
+#. module: sale
+#: code:addons/sale/sale.py:1140
+#, python-format
+msgid ""
+"Cannot find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr "D awezɣi tifin n tebdart n ssuma icudden ɣar ufaris agi  di tnecta agi.\nIsefk aţ-snifleḍ afaris, neɣ tanecta, neɣ tabdart n ssuma."
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,categ_id:0
+msgid "Category of Product"
+msgstr "Taggayt n ufaris"
+
+#. module: sale
+#: help:sale.make.invoice,grouped:0
+msgid "Check the box to group the invoices for the same customers"
+msgstr "Ṛcem taxxamt agi i wesdukel n tfaturin n wemsaq"
+
+#. module: sale
+#: help:crm.case.section,use_quotations:0
+msgid "Check this box to manage quotations in this sales team."
+msgstr "Ṛcem taxxamt agi i wesefrek n isutar n ssuma n tarbaɛt agi n imzenziyen."
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to acces the Sales Analysis."
+msgstr "Sit iwakken a tkecmeḍ ɣer tesleṭ n uznuzu."
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of invoices."
+msgstr "Sit dagi iwakken a twaliḍ tasleṭ leqqayen n tfaturin."
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis."
+msgstr "Sit dagi iwakken a twaliḍ tasleṭ leqqayen."
+
+#. module: sale
+#: field:sale.report,delay:0
+msgid "Commitment Delay"
+msgstr "Tawala n umtawa"
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_company
+msgid "Companies"
+msgstr "Tikebbwaniyin"
+
+#. module: sale
+#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,company_id:0
+msgid "Company"
+msgstr "Takebbwanit"
+
+#. module: sale
+#: code:addons/sale/sale.py:1148
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:95
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:99
+#, python-format
+msgid "Configuration Error!"
+msgstr "Tuccḍa di twila !"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Confirm Sale"
+msgstr "Sentem aznuzu"
+
+#. module: sale
+#: field:sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Azemz n usentem"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Intem"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Confirmed sales order lines, not yet delivered"
+msgstr "Izirigen n tladna intemen, ur ttuceggaɛen ara"
+
+#. module: sale
+#: field:sale.order,project_id:0
+msgid "Contract / Analytic"
+msgstr "Agatu/Amsiḍ usliḍ"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Contract Features"
+msgstr "Aglam n ugatu"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Contracts Management"
+msgstr "Asefrek n iguta"
+
+#. module: sale
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create & View Invoice"
+msgstr "Rnu u sken tafaturt"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
+#: view:sale.order.line:sale.view_order_line_form2
+msgid "Create Invoice"
+msgstr "Rnu tafaturt"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create Invoices"
+msgstr "Rnu tifaturin"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Create and View Invoice"
+msgstr "Rnu u sken tafaturt"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "Create invoices"
+msgstr "Rnu tifaturin"
+
+#. module: sale
+#: field:sale.advance.payment.inv,create_uid:0
+#: field:sale.make.invoice,create_uid:0 field:sale.order,create_uid:0
+#: field:sale.order.line,create_uid:0
+#: field:sale.order.line.make.invoice,create_uid:0
+msgid "Created by"
+msgstr "Yerna-t"
+
+#. module: sale
+#: field:sale.advance.payment.inv,create_date:0
+#: field:sale.make.invoice,create_date:0 field:sale.order.line,create_date:0
+#: field:sale.order.line.make.invoice,create_date:0
+msgid "Created on"
+msgstr "Yerna di"
+
+#. module: sale
+#: field:sale.order,create_date:0
+msgid "Creation Date"
+msgstr "Azemz  n tmerna"
+
+#. module: sale
+#: field:sale.order,currency_id:0
+msgid "Currency"
+msgstr "Tanfalit"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+#: view:sale.report:sale.view_order_product_search
+msgid "Customer"
+msgstr "Amsaɣ"
+
+#. module: sale
+#: code:addons/sale/sale.py:464
+#, python-format
+msgid "Customer Invoices"
+msgstr "Tifaturin n umsaɣ"
+
+#. module: sale
+#: field:sale.order,date_order:0
+msgid "Date"
+msgstr "Azemz"
+
+#. module: sale
+#: field:sale.report,date_confirm:0
+msgid "Date Confirm"
+msgstr "Azemz n usentem"
+
+#. module: sale
+#: field:sale.report,date:0
+msgid "Date Order"
+msgstr "Azemz n tladna"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Date Ordered:"
+msgstr "Azemz n tladna :"
+
+#. module: sale
+#: help:sale.order,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
+
+#. module: sale
+#: help:sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr "Azemez anda t-ţusentem tladna n uznuzu."
+
+#. module: sale
+#: help:sale.order,create_date:0
+msgid "Date on which sales order is created."
+msgstr "Azemez anda tlul tladna n uznuzu."
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Default Options"
+msgstr "Imsektayen imezwura"
+
+#. module: sale
+#: field:res.company,sale_note:0
+msgid "Default Terms and Conditions"
+msgstr "Tiwtilin timatutin n uznuzu"
+
+#. module: sale
+#: view:res.company:sale.view_company_inherit_form2
+msgid "Default terms & conditions..."
+msgstr "Tiwtilin timatutin n uznuzu"
+
+#. module: sale
+#: help:res.company,sale_note:0
+msgid "Default terms and conditions for quotations."
+msgstr "Tiwtilin timatutin i yisutar n suma."
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid ""
+"Define an invoicing target in the sales team settings to see the period's "
+"achievement and forecast at a glance."
+msgstr "Sbadu iswiyen n ufeter di twila n tarbaɛt agi n imzinziyen iwakken  ad twaliḍ les prévisions d les réalisations n tawala deg yiwet n muɣli."
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Delivery Address"
+msgstr "Tansa n usiweḍ"
+
+#. module: sale
+#: field:sale.order.line,delay:0
+msgid "Delivery Lead Time"
+msgstr "Amenḍaṛ n usiweḍ"
+
+#. module: sale
+#: help:sale.order,partner_shipping_id:0
+msgid "Delivery address for current sales order."
+msgstr "Tansa n usiweḍ i tladna n uznuzu tamirant."
+
+#. module: sale
+#: field:sale.order.line,name:0 view:website:sale.report_saleorder_document
+msgid "Description"
+msgstr "Aglam"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Disc.(%)"
+msgstr "Tuǧǧit.(%)"
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "Tuǧǧit(%)"
+
+#. module: sale
+#: model:res.groups,name:sale.group_discount_per_so_line
+msgid "Discount on lines"
+msgstr "Tuǧǧit ɣef izirigen"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_margin:0
+msgid "Display margins on sales orders"
+msgstr "Sken Afficher les marges sur les bons de commandes"
+
+#. module: sale
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "S tideţ tebɣiḍ ad ternuḍ n faturt(t-in)?"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
+#: view:sale.order.line:sale.view_order_line_form2
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: selection:sale.order.line,state:0 selection:sale.report,state:0
+msgid "Done"
+msgstr "Immed"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Arewway"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Draft Quotation"
+msgstr "Asutar n ssuma arewway"
+
+#. module: sale
+#: code:addons/sale/edi/sale_order.py:140
+#, python-format
+msgid "EDI Pricelist (%s)"
+msgstr "Tabdart n ssuma EDI (%s)"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_email_templates
+msgid "Email Templates"
+msgstr "Tineɣrufin n Imayl"
+
+#. module: sale
+#: model:ir.model,name:sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Amarag n usuddes n Imayl"
+
+#. module: sale
+#: model:res.groups,name:sale.group_invoice_so_lines
+msgid "Enable Invoicing Sales order lines"
+msgstr "Rmed afeter s uzirig n tladna"
+
+#. module: sale
+#: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:522 code:addons/sale/sale.py:605
+#: code:addons/sale/sale.py:934 code:addons/sale/sale.py:951
+#, python-format
+msgid "Error!"
+msgstr "Tuccḍa !"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "Asuref"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "Extended Filters"
+msgstr "Imzizdigen leqqayen"
+
+#. module: sale
+#: view:res.partner:sale.res_partner_address_type
+msgid "False"
+msgstr "Aruzɣan"
+
+#. module: sale
+#: code:addons/sale/sale.py:589
+#, python-format
+msgid "First cancel all invoices attached to this sales order."
+msgstr "Di tazwara, Sefsex akkw tifaturin iqnen ɣar tladna agi n umsaɣ."
+
+#. module: sale
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Imiḍanen n unhil amtewsan"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Fixed price (deposit)"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,message_follower_ids:0
+msgid "Followers"
+msgstr "Imeltaɣen"
+
+#. module: sale
+#: help:sale.config.settings,timesheet:0
+msgid ""
+"For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
+"-This installs the module account_analytic_analysis."
+msgstr "I wesnifel n tmeẓri n umiḍan usliḍ i weskan n isefka importants i wemasay n usenfaṛ i tkebbwaniyin n umeẓlu. Tzemreḍ diɣen atwaliḍ assaɣ n account analytic summary user-wise as well as month wise.\n- Ayagi ad isebded azegrir module account_analytic_analysis."
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Forecast"
+msgstr "Iriden"
+
+#. module: sale
+#: help:crm.case.section,invoiced_forecast:0
+msgid ""
+"Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+"team should invoice this month. It is used to compute the progression ratio \n"
+" of the current and forecast revenue on the kanban view."
+msgstr "Iriden n ufeter i waggur agi amiran:\nD asemday i tezmer ad tsiweḍ tarbaɣt n uzenzi aggur agi.\nAd isireg asiḍen n umfidi  réalise/arid ad iţusken di tmeẓri Kanban."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The tool search can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr "Seg ussaɣ agi, ɣuṛ-ek timeẓri ɣef wazal asemday iţufetren i wemsaɣ-ik. afecki n unadi yezmer ad iţuseqdec i waggan n tesleṭ n ufeter et ainsi mieux correspondre à vos besoins."
+
+#. module: sale
+#: field:sale.config.settings,group_invoice_so_lines:0
+msgid "Generate invoices based on the sales order lines"
+msgstr "Rnu tifaturin seg izirigen n tladna"
+
+#. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the status of the quotation or sales order.              \n"
+"The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
+"The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
+msgstr "Ad imudd addad n usuter n ssuma neɣ taladna n uznuzu.\nAddad 'Asuref' Iţunefk s wudem awurmanticki  quand une opération d'annulation est effectuée dans la validation de la facture (Exception de facturation) ou dans le processus de colisage (Exception de colisage).\nLe statut 'En attente' est défini quand une facture est confirmée mais on attend le lancement du planificateur à la date de la commande."
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Group By"
+msgstr "Sdukel s"
+
+#. module: sale
+#: field:sale.make.invoice,grouped:0
+msgid "Group the invoices"
+msgstr "Sdukel tifaturin"
+
+#. module: sale
+#: help:sale.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Igber agzul n lehduṛ (amḍan n iznan,…). Agzul agi illa deg umasal HTML iwakken ad isireg aseqdec-ines di tmeẓri n Kanban."
+
+#. module: sale
+#: code:addons/sale/res_config.py:100
+#, python-format
+msgid "Hour"
+msgstr "Asrag"
+
+#. module: sale
+#: field:sale.advance.payment.inv,id:0 field:sale.make.invoice,id:0
+#: field:sale.order,id:0 field:sale.order.line,id:0
+#: field:sale.order.line.make.invoice,id:0 field:sale.report,id:0
+msgid "ID"
+msgstr "Asulay."
+
+#. module: sale
+#: help:sale.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:305
+#, python-format
+msgid ""
+"If you change the pricelist of this order (and eventually the currency), "
+"prices of existing order lines will not be updated."
+msgstr "Ma t-snifeleḍ  tabdart n ssuma n tladna agi (ahat ula d tanfalit), ssumat n izirigen n tladna ur tt-usnifelen-ara."
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Ignore Exception"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "In Progress"
+msgstr "Anazzal"
+
+#. module: sale
+#: code:addons/sale/sale.py:274
+#, python-format
+msgid "In order to delete a confirmed sales order, you must cancel it before!"
+msgstr "Iwakken attekseḍ taladna tumiṭ, issefk send at-tesfesxeḍ. !"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:105
+#, python-format
+msgid "Incorrect Data"
+msgstr "Isefka urimeɣta"
+
+#. module: sale
+#: code:addons/sale/sale.py:274 code:addons/sale/sale.py:990
+#: code:addons/sale/sale.py:1171
+#, python-format
+msgid "Invalid Action!"
+msgstr "Tigawt urtameɣtut!"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:127
+#: model:ir.model,name:sale.model_account_invoice
+#: view:sale.order:sale.view_order_form
+#, python-format
+msgid "Invoice"
+msgstr "Tafaturt"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Tansa n ufeter"
+
+#. module: sale
+#: field:sale.make.invoice,invoice_date:0
+msgid "Invoice Date"
+msgstr "Azemz n ufeter"
+
+#. module: sale
+#: selection:sale.order,state:0 selection:sale.report,state:0
+msgid "Invoice Exception"
+msgstr ""
+
+#. module: sale
+#: field:crm.case.section,invoiced_forecast:0
+msgid "Invoice Forecast"
+msgstr "Arid n wezwil  n  iwezla"
+
+#. module: sale
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Izirigen n tfaturt"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+msgid "Invoice Order"
+msgstr "Feter Taladna"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Invoice Sales Order"
+msgstr "Feter izirigen n tladna"
+
+#. module: sale
+#: field:crm.case.section,invoiced_target:0
+msgid "Invoice Target"
+msgstr "Iswi n wezwil  n  iwezla"
+
+#. module: sale
+#: help:sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr "Tansa n ufeter i tladna tamirant"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Invoice address:"
+msgstr "Tansa n ufeter :"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Invoice and shipping address:"
+msgstr "Tansa n ufeter d usiweḍ"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:113
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
+"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sales Order Line is Invoiced!"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:102
+#, python-format
+msgid "Invoice created"
+msgstr "Tafaturt tlul"
+
+#. module: sale
+#: code:addons/sale/sale.py:1224
+#, python-format
+msgid "Invoice paid"
+msgstr "Tafaturt tefra"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoice the whole sales order"
+msgstr "Feter akk taladna"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: field:sale.order,invoice_exists:0 field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "ifter"
+
+#. module: sale
+#: field:sale.order,invoiced_rate:0
+msgid "Invoiced Ratio"
+msgstr "Amfiḍi n ufeter"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
+#: field:sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr "Tifaturin"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "Tasleṭ n faturin"
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Tiddadanin n ufeter"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Invoicing Process"
+msgstr "Akala n ufeter"
+
+#. module: sale
+#: field:sale.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr "D amagaz"
+
+#. module: sale
+#: help:sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid."
+msgstr "Ad isken ma yella tafaturt tettwaxleṣ."
+
+#. module: sale
+#: help:sale.order,invoice_exists:0
+msgid "It indicates that sales order has at least one invoice."
+msgstr "Ad ibgen ma yella taladna ɣures ɣarsum yiwet n tafurt."
+
+#. module: sale
+#: field:sale.order,message_last_post:0
+msgid "Last Message Date"
+msgstr "Azemz n yizen aneggaru"
+
+#. module: sale
+#: field:sale.advance.payment.inv,write_uid:0
+#: field:sale.make.invoice,write_uid:0 field:sale.order,write_uid:0
+#: field:sale.order.line,write_uid:0
+#: field:sale.order.line.make.invoice,write_uid:0
+msgid "Last Updated by"
+msgstr "Aleqqem aneggaru sɣur"
+
+#. module: sale
+#: field:sale.advance.payment.inv,write_date:0
+#: field:sale.make.invoice,write_date:0 field:sale.order,write_date:0
+#: field:sale.order.line,write_date:0
+#: field:sale.order.line.make.invoice,write_date:0
+msgid "Last Updated on"
+msgstr "Aleqqem aneggaru di"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
+msgid "Make Invoices"
+msgstr "Rnu tifaturin"
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "Manual In Progress"
+msgstr "S ufus amiran"
+
+#. module: sale
+#: field:sale.order,message_ids:0
+msgid "Messages"
+msgstr "Iznan"
+
+#. module: sale
+#: help:sale.order,message_ids:0
+msgid "Messages and communication history"
+msgstr "Amazray n iznan t tiywalin"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "My Sales"
+msgstr "Tiludna-iw uznuzu"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "My Sales Order Lines"
+msgstr "Izirigen-iw n tludna uznuzu"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "New Copy of Quotation"
+msgstr "Anɣel amaynut n usuter"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "New Mail"
+msgstr "Izen amaynut"
+
+#. module: sale
+#: code:addons/sale/sale.py:1048
+#, python-format
+msgid "No Customer Defined!"
+msgstr "Ulac amsaɣ !"
+
+#. module: sale
+#: code:addons/sale/sale.py:1132
+#, python-format
+msgid "No Pricelist ! : "
+msgstr "Ulac tabdart n ssuma! "
+
+#. module: sale
+#: code:addons/sale/sale.py:1143
+#, python-format
+msgid "No valid pricelist line found ! :"
+msgstr "Ulac izirig n tabdart n ssuma ameɣtu ! :"
+
+#. module: sale
+#: help:sale.order.line,delay:0
+msgid ""
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr "Amḍan n wussan gar usentem n tladna d uceggaɛ n ifarisen i umsaɣ."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+msgid "Old Quotations"
+msgstr "Isutar n suma iqbuṛen"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Delivery Order"
+msgstr "ɣef usiweḍ"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Demand"
+msgstr "S usutar"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"On demand: A draft invoice can be created from the sales order when needed. \n"
+"On delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \n"
+"Before delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_analytic_user_function:0
+msgid "One employee can have different roles per contract"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.client,name:sale.action_client_sale_menu
+msgid "Open Sale Menu"
+msgstr "Llid Umuɣ \"Aznuzu\""
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Order"
+msgstr "Taladna"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "Izirigen n tladna"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+msgid "Order Lines to Invoice"
+msgstr "Izirigen n tladna i uftar"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Order Month"
+msgstr "Aggur n tladna"
+
+#. module: sale
+#: view:sale.order:sale.view_order_tree
+msgid "Order Number"
+msgstr "Uṭṭun n tladna"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Order N°"
+msgstr "Uṭṭun n tladna"
+
+#. module: sale
+#: field:sale.order,name:0 field:sale.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Tamsisɣelt n tladna"
+
+#. module: sale
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "Isefk tamsisɣelt n tladna aţili a d tasuft   di tkebbwanit !"
+
+#. module: sale
+#: field:sale.report,state:0
+msgid "Order Status"
+msgstr "Addad n tladna"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Order reference"
+msgstr "Tamsisɣelt n tladna"
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "Ordered date of the sales order"
+msgstr "Azemz n tladna n uznuzu"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Other Information"
+msgstr "Talɣut nniḍen"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Ifra"
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_partner field:sale.report,partner_id:0
+msgid "Partner"
+msgstr "Amendid"
+
+#. module: sale
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "Tawtilt n Ufru"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Payment Term:"
+msgstr "Tawtilt n Ufru:"
+
+#. module: sale
+#: field:sale.order,paypal_url:0
+msgid "Paypal Url"
+msgstr "URL n Paypal"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Percentage"
+msgstr "Amfiḍi"
+
+#. module: sale
+#: code:addons/sale/sale.py:935
+#, python-format
+msgid "Please define income account for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:391
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr "Swel aɣemis n uznuzu i tkebbwanit agi: \"%s\" (id. : %d)."
+
+#. module: sale
+#: field:sale.config.settings,timesheet:0
+msgid "Prepare invoices based on timesheets"
+msgstr "Heggi tifaturin ibnan  ɣef tferkiwin n wakud"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Price"
+msgstr "Ssuma"
+
+#. module: sale
+#: field:sale.order.line,price_reduce:0
+msgid "Price Reduce"
+msgstr "Tuǧǧit di ssuma"
+
+#. module: sale
+#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
+msgid "Pricelist"
+msgstr "Tabdart n ssuma"
+
+#. module: sale
+#: code:addons/sale/sale.py:304
+#, python-format
+msgid "Pricelist Warning!"
+msgstr "Ɣur-ek tabdart n ssuma!"
+
+#. module: sale
+#: help:sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr "Tabdart n ssuma n tladna n tura"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Print"
+msgstr "Siggez"
+
+#. module: sale
+#: model:ir.model,name:sale.model_procurement_order
+msgid "Procurement"
+msgstr "taǧǧawt"
+
+#. module: sale
+#: field:sale.order,procurement_group_id:0
+msgid "Procurement group"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,procurement_ids:0
+msgid "Procurements"
+msgstr "taǧǧawt"
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_product
+#: field:sale.order,product_id:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: field:sale.order.line,product_id:0 field:sale.report,product_id:0
+msgid "Product"
+msgstr "Afaris"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Product Features"
+msgstr "Aglam n ifarisen"
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_template
+msgid "Product Template"
+msgstr "Taneɣruft n ufaris"
+
+#. module: sale
+#: field:sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr "Aferdis n uznuzu n ufaris"
+
+#. module: sale
+#: field:sale.config.settings,module_project:0
+msgid "Project"
+msgstr "Asenfaṛ"
+
+#. module: sale
+#: model:res.groups,name:sale.group_mrp_properties
+msgid "Properties on lines"
+msgstr "Aglam ɣef izirigen"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_tree
+msgid "Qty"
+msgstr "Tanecta"
+
+#. module: sale
+#: field:sale.advance.payment.inv,qtty:0
+#: field:sale.order.line,product_uom_qty:0
+#: view:website:sale.report_saleorder_document
+msgid "Quantity"
+msgstr "Tanecta"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "Tanecta (Aferdis n uznuzu)"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+#: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
+msgid "Quotation"
+msgstr "Asuter n ssuma"
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Asuter / Taladna"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Quotation Date:"
+msgstr "Azemz n usuter:"
+
+#. module: sale
+#: view:sale.order:sale.view_quotation_tree
+msgid "Quotation Number"
+msgstr "Uṭṭun n usuter"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Quotation N°"
+msgstr "Uṭṭun n usuter"
+
+#. module: sale
+#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr "Asuter iţwaceggaɛ"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Quotation Sent"
+msgstr "Asuter iţwaceggaɛ"
+
+#. module: sale
+#: model:mail.message.subtype,description:sale.mt_order_confirmed
+msgid "Quotation confirmed"
+msgstr "Asuter intem"
+
+#. module: sale
+#: code:addons/sale/sale.py:362
+#, python-format
+msgid "Quotation created"
+msgstr "Asuter Yerna"
+
+#. module: sale
+#: model:mail.message.subtype,description:sale.mt_order_sent
+#: model:mail.message.subtype,name:sale.mt_order_sent
+msgid "Quotation sent"
+msgstr "Asuter iţwaceggaɛ"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,use_quotations:0
+#: model:ir.actions.act_window,name:sale.action_quotations
+#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Quotations"
+msgstr "Isutar n ssuma"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
+msgid "Quotations Analysis"
+msgstr "Tasleṭ n isutar n ssuma"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+msgid "Quotations and Sales"
+msgstr "Isutar n ssuma d tiludna uznuzu"
+
+#. module: sale
+#: field:crm.case.section,monthly_quoted:0
+msgid "Rate of created quotation per duration"
+msgstr "Asemday n isutan deg aggur"
+
+#. module: sale
+#: field:crm.case.section,monthly_invoiced:0
+msgid "Rate of sent invoices per duration"
+msgstr "Asemday n tfaturin deg aggur"
+
+#. module: sale
+#: field:crm.case.section,monthly_confirmed:0
+msgid "Rate of validate sales orders per duration"
+msgstr "Asemday n faturin intemen deg aggur"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Recreate Invoice"
+msgstr "Rnu i tikelt nniḍen tafaturt"
+
+#. module: sale
+#: help:sale.order,origin:0
+msgid "Reference of the document that generated this sales order request."
+msgstr "Tamsiɣelt n usemli d isirewen asuter agi  n tladna n uznuzu."
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Reference/Description"
+msgstr "Tamsisɣelt/Aglam"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of confirmed sales orders per month."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of created quotations per month."
+msgstr ""
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+msgid "Revenue of sent invoices per month."
+msgstr ""
+
+#. module: sale
+#: field:procurement.order,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Izirigen n tludna"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line_make_invoice
+msgid "Sale OrderLine Make_invoice"
+msgstr "Izirigen uznuzu : Feter"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale to Invoice"
+msgstr "Taladna i wufeter"
+
+#. module: sale
+#: view:product.product:sale.product_form_view_sale_order_button
+#: view:product.template:sale.product_template_form_view_sale_order_button
+#: view:res.company:sale.view_company_inherit_form2
+#: view:res.partner:sale.crm_lead_partner_kanban_view
+#: view:res.partner:sale.res_partner_view_buttons
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.report:sale.view_order_product_search
+msgid "Sales"
+msgstr "Aznuzu"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Tafaturt tazwart n ufru "
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_all
+#: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
+#: model:ir.ui.menu,name:sale.menu_report_product_all
+#: view:sale.report:sale.view_order_product_graph
+#: view:sale.report:sale.view_order_product_search
+msgid "Sales Analysis"
+msgstr "Tasleṭ n uznuzu"
+
+#. module: sale
+#: model:ir.filters,name:sale.filter_sale_report_sales_funnel
+msgid "Sales Funnel"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr "Aznuzu: Feter"
+
+#. module: sale
+#: code:addons/sale/sale.py:284 model:ir.model,name:sale.model_sale_order
+#: field:res.partner,sale_order_ids:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:sale.view_order_form
+#: view:sale.order:sale.view_sales_order_filter selection:sale.order,state:0
+#, python-format
+msgid "Sales Order"
+msgstr "Taladna uznuzu"
+
+#. module: sale
+#: model:mail.message.subtype,name:sale.mt_order_confirmed
+#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "Taladna tummiṭ"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Izirig n tladna n uznuzu"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+#: view:sale.order:sale.view_order_form
+#: view:sale.order.line:sale.view_order_line_form2
+#: view:sale.order.line:sale.view_order_line_tree
+msgid "Sales Order Lines"
+msgstr "Izirigen n tladna uznuzu"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Sales Order Lines ready to be invoiced"
+msgstr "Izirigen n tladna i  w-ufeter"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Sales Order Lines related to a Sales Order of mine"
+msgstr "Izirigen n tladna n uznuzu iqnen ɣar yiwet si tludna-iw"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid ""
+"Sales Order Lines that are confirmed, done or in exception state and haven't"
+" yet been invoiced"
+msgstr "Izirigen n tludna n uznuzu yellan deg addad 'Intem', 'Immed' neɣ  'Asuref' u tt-wafeteren-ara yakan"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Sales Order Lines that are in 'done' state"
+msgstr "Izirigen n tladna ummiden"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order done"
+msgstr "Tiludna tummidin"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_orders_in_progress
+msgid "Sales Order in Progress"
+msgstr "Tiludna timiranin"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order ready to be invoiced"
+msgstr "Tiludan iheggan i wufeter"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+msgid "Sales Order that haven't yet been confirmed"
+msgstr "Tiludna i ţusentemen-ara yakan"
+
+#. module: sale
+#: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
+#: model:ir.actions.act_window,name:sale.action_orders
+#: model:ir.actions.act_window,name:sale.action_orders_salesteams
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: view:sale.order:sale.view_order_tree
+#: view:sale.order:sale.view_sale_order_calendar
+#: view:sale.order:sale.view_sale_order_graph
+msgid "Sales Orders"
+msgstr "Tiludna n uznuzu"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Tiddadanin ɣef tludna uznuzu"
+
+#. module: sale
+#: view:account.invoice:sale.account_invoice_groupby_inherit
+#: view:account.invoice:sale.account_invoice_tree
+#: field:account.invoice,section_id:0
+#: view:account.invoice.report:sale.view_account_invoice_report_search_inherit
+#: field:account.invoice.report,section_id:0
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,section_id:0
+#: view:sale.report:sale.view_order_product_search
+#: field:sale.report,section_id:0
+msgid "Sales Team"
+msgstr "Tarbaɛt uzenzi"
+
+#. module: sale
+#: model:ir.model,name:sale.model_crm_case_section
+msgid "Sales Teams"
+msgstr "Tirebbaɛ uzenzi"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_orders_exception
+msgid "Sales in Exception"
+msgstr "Tiludna s isuraf"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Sales order lines done"
+msgstr "Izirigen n tladna ummiden"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter field:sale.order,user_id:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:sale.view_order_product_search field:sale.report,user_id:0
+msgid "Salesperson"
+msgstr "Amzenzi"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Salesperson:"
+msgstr "Amzenzi:"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "Search Sales Order"
+msgstr "Nadi tiludna n uznuzu"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Search Uninvoiced Lines"
+msgstr "Nadi izirigen ur iţwafeteren-ara"
+
+#. module: sale
+#: help:sale.advance.payment.inv,product_id:0
+msgid ""
+"Select a product of type service which is called 'Advance Product'.\n"
+"                You may have to create it and set it as a default value on this field."
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid ""
+"Select how you want to invoice this order. This\n"
+"                        will create a draft invoice that can be modified\n"
+"                        before validation."
+msgstr "Fren amek tebɣiḍ afeter n tladna yagi. \nTafaturt tarewwayt ad-lal i tzemreḍ  \natt-snifleḍ send aseɣbel."
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Send by Email"
+msgstr "Azen s Imayl"
+
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "Agzum"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Shipped"
+msgstr "Ittuceggaɛ"
+
+#. module: sale
+#: selection:sale.order,state:0 selection:sale.report,state:0
+msgid "Shipping Exception"
+msgstr "Ugur deg n usiweḍ"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Shipping address:"
+msgstr "Tansa n usiweḍ"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+msgid "Show Lines to Invoice"
+msgstr "Sken izirigen ay ţufeteren"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Some order lines"
+msgstr "Kra n izirigen n taldna"
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Source Document"
+msgstr "Arrat aɣbalu"
+
+#. module: sale
+#: field:sale.order,state:0
+#: view:sale.order.line:sale.view_sales_order_line_filter
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+#: field:sale.order.line,state:0
+#: view:sale.report:sale.view_order_product_search
+msgid "Status"
+msgstr "Addad"
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Ad-asemday"
+
+#. module: sale
+#: field:sale.order,message_summary:0
+msgid "Summary"
+msgstr "Agzul"
+
+#. module: sale
+#: help:crm.case.section,invoiced_target:0
+msgid ""
+"Target of invoice revenue for the current month. This is the amount the sales \n"
+"team estimates to be able to invoice this month."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
+#: view:website:sale.report_saleorder_document
+msgid "Taxes"
+msgstr "Tiẓeṭṭaḍin "
+
+#. module: sale
+#: field:sale.order,note:0
+msgid "Terms and conditions"
+msgstr "Tiwtilin Timatutin"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "Terms and conditions..."
+msgstr "Tiwtilin Timatutin..."
+
+#. module: sale
+#: help:sale.advance.payment.inv,amount:0
+msgid "The amount to be invoiced in advance."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,amount_untaxed:0
+msgid "The amount without tax."
+msgstr "Asemday war Taẓeṭṭaṭ"
+
+#. module: sale
+#: help:sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr "Amiḍan usliḍ iqnen ɣer tladna"
+
+#. module: sale
+#: field:sale.config.settings,time_unit:0
+msgid "The default working time unit for services is"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr "Asemday n tẓeṭṭaḍin."
+
+#. module: sale
+#: help:sale.order,amount_total:0
+msgid "The total amount."
+msgstr "Asemday"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:106
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr "Issek azal n teqwart ad yili d azal yufraren."
+
+#. module: sale
+#: code:addons/sale/sale.py:952
+#, python-format
+msgid ""
+"There is no Fiscal Position defined or Income category account defined for "
+"default properties of Product categories."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:154
+#, python-format
+msgid "There is no default company for the current user!"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:96
+#, python-format
+msgid "There is no income account defined as global property."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:100
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:sale.view_order_product_search
+msgid "This Year"
+msgstr "Asseggwas-agi"
+
+#. module: sale
+#: help:sale.config.settings,module_sale_margin:0
+msgid ""
+"This adds the 'Margin' on sales order.\n"
+"This gives the profitability by calculating the difference between the Unit Price and Cost Price.\n"
+"-This installs the module sale_margin."
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,module_website_quote:0
+msgid "This adds the online quotation"
+msgstr "Ad yernu asuter n ssuma s srid."
+
+#. module: sale
+#: help:account.config.settings,module_sale_analytic_plans:0
+msgid "This allows install module sale_analytic_plans."
+msgstr "Ayagi ad isbed azegrar sale_analytic_plans."
+
+#. module: sale
+#: help:sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sales order. "
+"The same sales order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
+msgid ""
+"This report performs analysis on your quotations. Analysis check your sales "
+"revenues and sort it by different group criteria (salesman, partner, "
+"product, etc.) Use this report to perform analysis on sales not having "
+"invoiced yet. If you want to analyse your turnover, you should use the "
+"Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
+msgid ""
+"This report performs analysis on your sales orders. Analysis check your "
+"sales revenues and sort it by different group criteria (salesman, partner, "
+"product, etc.) Use this report to perform analysis on sales not having "
+"invoiced yet. If you want to analyse your turnover, you should use the "
+"Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "To Do"
+msgstr "Ad imag"
+
+#. module: sale
+#: view:sale.order:sale.view_sales_order_filter
+#: view:sale.order.line:sale.view_sales_order_line_filter
+msgid "To Invoice"
+msgstr "Ad iţwafeter"
+
+#. module: sale
+#: help:sale.config.settings,group_invoice_so_lines:0
+msgid ""
+"To allow your salesman to make invoices for sales order lines using the menu"
+" 'Lines to Invoice'."
+msgstr "Ad yeǧǧ imzenziyen-ik ad feteren izirigen n tludna s ubrid n wumuɣ 'Izirigen i weftar'."
+
+#. module: sale
+#: field:sale.order,amount_total:0
+#: view:sale.order.line:sale.view_order_line_tree
+#: view:website:sale.report_saleorder_document
+msgid "Total"
+msgstr "Asemday"
+
+#. module: sale
+#: field:sale.report,price_total:0
+msgid "Total Price"
+msgstr "Asemday"
+
+#. module: sale
+#: view:sale.order:sale.view_order_tree
+#: view:sale.order:sale.view_quotation_tree
+msgid "Total Tax Included"
+msgstr "Asemday t tẓeṭṭaḍin"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Total Without Taxes"
+msgstr "Asemday war Tiẓeṭṭaḍin "
+
+#. module: sale
+#: field:sale.config.settings,module_sale_stock:0
+msgid "Trigger delivery orders automatically from sales orders"
+msgstr "Senker s wudem awurman isawaḍen si tludna uznuzu"
+
+#. module: sale
+#: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
+msgid "Uninvoiced"
+msgstr "Ur iţwafeter-ara"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "Izirigen iţwazenzen ur ţufetern-ara"
+
+#. module: sale
+#: field:sale.order.line,price_unit:0
+#: view:website:sale.report_saleorder_document
+msgid "Unit Price"
+msgstr "Ssuma n yiwen"
+
+#. module: sale
+#: view:sale.order.line:sale.view_order_line_tree
+#: field:sale.report,product_uom:0
+msgid "Unit of Measure"
+msgstr "Aferdis"
+
+#. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr "Aferdis "
+
+#. module: sale
+#: field:sale.order,message_unread:0
+msgid "Unread Messages"
+msgstr "Iznan ur neţwaɣer-ara"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Azal war Taẓeṭṭaṭ"
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "UoS"
+msgstr "Aferdis n usɣel uznuzu"
+
+#. module: sale
+#: help:sale.advance.payment.inv,advance_payment_method:0
+msgid ""
+"Use Invoice the whole sale order to create the final invoice.\n"
+"                Use Percentage to invoice a percentage of the total amount.\n"
+"                Use Fixed Price to invoice a specific amound in advance.\n"
+"                Use Some Order Lines to invoice a selection of the sales order lines."
+msgstr "Seqdec Feter taladna n uznuzu imaṛṛa i tmerna n tafaturt n tagara.\nSeqdec Amfidi i wufeter n umfidi seg ssuma  tasemdayt.\nSeqdec ssuma tusbiṭ \nSeqdec"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid ""
+"Use contract to be able to manage your services with\n"
+"                        multiple invoicing as part of the same contract with\n"
+"                        your customer."
+msgstr "Seqdec agatu iwakken aţizmireḍ asefrek n imeẓla\n                        d ufeter usgit  deg ugatu iman-is\n                        akkw d umsaɣ-ik."
+
+#. module: sale
+#: field:sale.config.settings,module_account_analytic_analysis:0
+msgid "Use contracts management"
+msgstr "Seqdec asefrek n iguta"
+
+#. module: sale
+#: field:account.config.settings,module_sale_analytic_plans:0
+msgid "Use multiple analytic accounts on sales"
+msgstr "Seqdec aṭas n imsiḍen n tusliṭ i uznuzu"
+
+#. module: sale
+#: field:sale.config.settings,group_sale_pricelist:0
+msgid "Use pricelists to adapt your price per customers"
+msgstr "Seqdec Tibdarin n ssuma i tserwest n ssuma -ik i yemsaɣen"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "VAT:"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:sale.view_order_form
+msgid "View Invoice"
+msgstr "Sken tafaturt"
+
+#. module: sale
+#: selection:sale.order,state:0 selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr "Araǧu n usɣiwes"
+
+#. module: sale
+#: view:sale.config.settings:sale.view_sales_config
+msgid "Warehouse Features"
+msgstr "Aglam n ugadir"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:113
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: code:addons/sale/wizard/sale_make_invoice.py:55
+#, python-format
+msgid "Warning!"
+msgstr "Ɣuṛ-ek !"
+
+#. module: sale
+#: field:sale.order,website_message_ids:0
+msgid "Website Messages"
+msgstr "Iznan n n usmel  Web"
+
+#. module: sale
+#: help:sale.order,website_message_ids:0
+msgid "Website communication history"
+msgstr "Amazray n Taywalt n usmel  Web"
+
+#. module: sale
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Taẓayt"
+
+#. module: sale
+#: field:sale.advance.payment.inv,advance_payment_method:0
+msgid "What do you want to invoice?"
+msgstr "Dacu tenwiḍ aţfetreḍ?"
+
+#. module: sale
+#: code:addons/sale/sale.py:990
+#, python-format
+msgid "You cannot cancel a sales order line that has already been invoiced."
+msgstr "Ur tezmireḍ-ara aţfesxeḍ izirig n tafaturt umsaɣ i ţwafteren yakan."
+
+#. module: sale
+#: code:addons/sale/sale.py:605
+#, python-format
+msgid "You cannot confirm a sales order which has no line."
+msgstr "Ur tezmirt-ara aţsentemeḍ taladna war izirig."
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#, python-format
+msgid "You cannot create invoice when sales order is not confirmed."
+msgstr "Ur tezmiṛ-ḍ ara ad slaleḍ tafaturt skud ur tesentem-ḍ ara taladna uznuzu"
+
+#. module: sale
+#: code:addons/sale/sale.py:523
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr "Ur tezmireḍ ara a ţesdukleḍ tiludna n uznuzu s tenfalit yemgaraden ɣas akken d yiwen n umsaɣ."
+
+#. module: sale
+#: code:addons/sale/sale.py:1130
+#, python-format
+msgid ""
+"You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr "Issefk aţferneḍ tabdart n ssuma neɣ amsaɣ deg tfelwit n tladna n uznuzu!\nFren yiwen send afran n ufaris."
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice.py:55
+#, python-format
+msgid "You shouldn't manually invoice the following sale order %s"
+msgstr "Ur iwalem ara aţfetreḍ s ufus taladna-agi uznuzu %s"
+
+#. module: sale
+#: view:website:sale.report_saleorder_document
+msgid "Your Reference:"
+msgstr "Tamsisɣelt-ik:"
+
+#. module: sale
+#: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
+#: view:sale.make.invoice:sale.view_sale_order_make_invoice
+#: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
+msgid "or"
+msgstr "neɣ"
+
+#. module: sale
+#: view:res.partner:sale.res_partner_address_type
+msgid "sale.group_delivery_invoice_address"
+msgstr "sale.group_delivery_invoice_address"

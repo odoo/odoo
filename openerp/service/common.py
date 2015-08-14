@@ -18,14 +18,8 @@ RPC_VERSION_1 = {
 }
 
 def dispatch(method, params):
-    if method in ['login', 'about', 'timezone_get',
-                  'version', 'authenticate']:
-        pass
-    elif method in ['set_loglevel']:
-        passwd = params[0]
-        params = params[1:]
-        security.check_super(passwd)
-    else:
+    if method not in ['login', 'about', 'timezone_get',
+                      'version', 'authenticate', 'set_loglevel']:
         raise Exception("Method not found: %s" % method)
 
     fn = globals()['exp_' + method]

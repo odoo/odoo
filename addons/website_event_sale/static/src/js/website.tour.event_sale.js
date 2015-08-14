@@ -1,6 +1,7 @@
 (function () {
     'use strict';
-
+    var website = openerp.website;
+    website.ready().done(function() {
     openerp.Tour.register({
         id:   'event_buy_tickets',
         name: "Try to buy tickets for event",
@@ -30,7 +31,7 @@
             },
             {
                 title:     "Check the cart",
-                element:   '#top_menu .my_cart_quantity:contains(5)'
+                element:   'a:has(.my_cart_quantity):contains(5)'
             },
             {
                 title:     "Check if the cart have 2 order lines and add one VIP ticket",
@@ -39,7 +40,7 @@
             },
             {
                 title:     "Process Checkout",
-                waitFor:   '#top_menu .my_cart_quantity:contains(6)',
+                waitFor:   'a:has(.my_cart_quantity):contains(6)',
                 element:   '.btn-primary:contains("Process Checkout")'
             },
             {
@@ -71,6 +72,7 @@
                 waitFor:   '.oe_website_sale:contains("Thank you for your order")',
             }
         ]
+    });
     });
 
 }());

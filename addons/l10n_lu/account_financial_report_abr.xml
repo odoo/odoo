@@ -1,0 +1,635 @@
+<openerp>
+  <data>
+    <!-- balance sheet abbreviated model (CA_BILANABR) -->
+    <record model="account.financial.report" id="account_financial_report_abr_13">
+      <field name="name">Luxembourg Balance Sheet (abbreviated)</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_15">
+      <field name="name">ACTIF</field>
+      <field name="sequence">201</field>
+      <field name="style_overwrite" eval="1"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_13"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_16">
+      <field name="name">A. Capital souscrit non vers&#233;</field>
+      <field name="sequence">101</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_15"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_17">
+      <field name="name">I. Capital souscrit non appel&#233;</field>
+      <field name="sequence">103</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_16"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_18">
+      <field name="name">II. Capital souscrit appel&#233; et non vers&#233;</field>
+      <field name="sequence">105</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_16"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_19">
+      <field name="name">B. Frais d&#8217;&#233;tablissement</field>
+      <field name="sequence">107</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_15"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_20">
+      <field name="name">C. Actif immobilis&#233;</field>
+      <field name="sequence">109</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_15"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_21">
+      <field name="name">I. Immobilisations incorporelles</field>
+      <field name="sequence">111</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_20"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_28">
+      <field name="name">II. Immobilisations corporelles</field>
+      <field name="sequence">125</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_20"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_33">
+      <field name="name">III. Immobilisations financi&#232;res</field>
+      <field name="sequence">135</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_20"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_41">
+      <field name="name">D. Actif circulant</field>
+      <field name="sequence">151</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_15"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_42">
+      <field name="name">I. Stocks</field>
+      <field name="sequence">153</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_41"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_47">
+      <field name="name">II. Cr&#233;ances</field>
+      <field name="sequence">163</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_41"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_49">
+      <field name="name">a) dont la dur&#233;e r&#233;siduelle est inf&#233;rieure ou &#233;gale &#224; un an</field>
+      <field name="sequence">167</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_47"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_50">
+      <field name="name">b) dont la dur&#233;e r&#233;siduelle est sup&#233;rieure &#224; un an</field>
+      <field name="sequence">169</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_47"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_60">
+      <field name="name">III. Valeurs mobili&#232;res</field>
+      <field name="sequence">189</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_41"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_64">
+      <field name="name">IV. Avoirs en banques, avoirs en compte de ch&#232;ques postaux, ch&#232;ques et en caisse</field>
+      <field name="sequence">197</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_41"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_65">
+      <field name="name">E. Comptes de r&#233;gularisation</field>
+      <field name="sequence">199</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_15"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_66">
+      <field name="name">PASSIF</field>
+      <field name="sequence">405</field>
+      <field name="style_overwrite" eval="1"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_13"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_67">
+      <field name="name">A. Capitaux propres</field>
+      <field name="sequence">301</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_66"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_68">
+      <field name="name">I. Capital souscrit</field>
+      <field name="sequence">303</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_69">
+      <field name="name">II. Primes d'&#233;missions et primes assimil&#233;es</field>
+      <field name="sequence">305</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_70">
+      <field name="name">III. R&#233;serves de r&#233;&#233;valuation</field>
+      <field name="sequence">307</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_71">
+      <field name="name">IV. R&#233;serves</field>
+      <field name="sequence">309</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_76">
+      <field name="name">V. R&#233;sultats report&#233;s</field>
+      <field name="sequence">319</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_77">
+      <field name="name">VI. R&#233;sultat de l'exercice</field>
+      <field name="sequence">321</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_78">
+      <field name="name">VII. Acomptes sur dividendes</field>
+      <field name="sequence">323</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_79">
+      <field name="name">VIII. Subventions d&#8217;investissement en capital</field>
+      <field name="sequence">325</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_80">
+      <field name="name">IX. Plus-values immunis&#233;es</field>
+      <field name="sequence">327</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_67"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_81">
+      <field name="name">B. Dettes subordonn&#233;es</field>
+      <field name="sequence">329</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_66"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_82">
+      <field name="name">C. Provisions</field>
+      <field name="sequence">331</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_66"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_86">
+      <field name="name">D. Dettes non subordonn&#233;es</field>
+      <field name="sequence">339</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_66"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_89">
+      <field name="name">a) dont la dur&#233;e r&#233;siduelle est inf&#233;rieure ou &#233;gale &#224; un an</field>
+      <field name="sequence">345</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_86"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_90">
+      <field name="name">b) dont la dur&#233;e r&#233;siduelle est sup&#233;rieure &#224; un an</field>
+      <field name="sequence">347</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_86"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_118">
+      <field name="name">E. Comptes de r&#233;gularisation</field>
+      <field name="sequence">403</field>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_66"/>
+    </record>
+
+    <!-- profit and loss abbreviated model (CA_COMPPABR) -->
+    <record model="account.financial.report" id="account_financial_report_abr_14">
+      <field name="name">Luxembourg Profit &amp; Loss (abbreviated)</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+
+    <!-- p&l full model (CA_COMPP) -->
+    <record model="account.financial.report" id="account_financial_report_abr_119">
+      <field name="name">A. CHARGES</field>
+      <field name="sequence">641</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_14"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_120">
+      <field name="name">1. &#224; 2. Charges brutes (moins B.1 &#224; B.4)</field>
+      <field name="sequence">601</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_122">
+      <field name="name">3. Frais de personnel</field>
+      <field name="sequence">605</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_123">
+      <field name="name">a) Salaires et traitements</field>
+      <field name="sequence">607</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_122"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_124">
+      <field name="name">b) Charges sociales couvrant les salaires et traitements</field>
+      <field name="sequence">609</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_122"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_125">
+      <field name="name">c) Pensions compl&#233;mentaires</field>
+      <field name="sequence">611</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_122"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_126">
+      <field name="name">d) Autres charges sociales</field>
+      <field name="sequence">613</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_122"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_127">
+      <field name="name">4. Corrections de valeur</field>
+      <field name="sequence">615</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_128">
+      <field name="name">a) sur frais d'&#233;tablissement et sur immobilisations corporelles et incorporelles</field>
+      <field name="sequence">617</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_127"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_129">
+      <field name="name">b) sur &#233;l&#233;ments de l'actif circulant</field>
+      <field name="sequence">619</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_127"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_130">
+      <field name="name">5. Autres charges d&#8217;exploitation</field>
+      <field name="sequence">621</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_131">
+      <field name="name">6. Corrections de valeur sur immobilisations financi&#232;res et ajustement de juste valeur sur immobilisations financières</field>
+      <field name="sequence">623</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_132">
+      <field name="name">7. Corrections de valeur et ajustement de juste valeur sur &#233;l&#233;ments financiers de l'actif circulant. Moins-values de cessions des valeurs mobilières</field>
+      <field name="sequence">625</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_133">
+      <field name="name">8. Int&#233;r&#234;ts et autres charges financi&#232;res</field>
+      <field name="sequence">627</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_134">
+      <field name="name">a) concernant des entreprises li&#233;es</field>
+      <field name="sequence">629</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_133"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_135">
+      <field name="name">b) autres int&#233;r&#234;ts et charges</field>
+      <field name="sequence">631</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_133"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_136">
+      <field name="name">9. Charges exceptionnelles</field>
+      <field name="sequence">633</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_137">
+      <field name="name">10. Imp&#244;ts sur le r&#233;sultat</field>
+      <field name="sequence">635</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_138">
+      <field name="name">11. Autres imp&#244;ts ne figurant pas sous le poste ci-dessus</field>
+      <field name="sequence">637</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_140">
+      <field name="name">B. PRODUITS</field>
+      <field name="sequence">737</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_14"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_141">
+      <field name="name">1. &#224; 4. Produits bruts (moins A.1 et A.2)</field>
+      <field name="sequence">701</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_147">
+      <field name="name">5. Autres produits d&#8217;exploitation</field>
+      <field name="sequence">713</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_148">
+      <field name="name">6. Produits des immobilisations financi&#232;res</field>
+      <field name="sequence">715</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_149">
+      <field name="name">a) provenant d&#8217;entreprises li&#233;es</field>
+      <field name="sequence">717</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_148"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_150">
+      <field name="name">b) autres produits de participations</field>
+      <field name="sequence">719</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_148"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_151">
+      <field name="name">7. Produits des &#233;l&#233;ments financiers de l'actif circulant</field>
+      <field name="sequence">721</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_152">
+      <field name="name">a) provenant d&#8217;entreprises li&#233;es</field>
+      <field name="sequence">723</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_151"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_153">
+      <field name="name">b) autres produits</field>
+      <field name="sequence">725</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_151"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_154">
+      <field name="name">8. Autres int&#233;r&#234;ts et autres produits financiers</field>
+      <field name="sequence">727</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_155">
+      <field name="name">a) provenant d&#8217;entreprises li&#233;es</field>
+      <field name="sequence">729</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_154"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_156">
+      <field name="name">b) autres int&#233;r&#234;ts et produits financiers</field>
+      <field name="sequence">731</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_154"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_157">
+      <field name="name">9. Produits exceptionnels</field>
+      <field name="sequence">733</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_161">
+      <field name="name">RESULTAT DE L'EXERCICE</field>
+      <field name="sequence">800</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_14"/>
+    </record>
+  </data>
+</openerp>

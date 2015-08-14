@@ -1,48 +1,44 @@
-# Bosnian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * share
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bosnian <bs@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-05-27 09:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/projects/p/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: share
 #: model:res.groups,comment:share.group_share_user
 msgid ""
 "\n"
-"Members of this groups have access to the sharing wizard, which allows them "
-"to invite external users to view or edit some of their documents."
-msgstr ""
-"\n"
-"Članovi ove grupe imaju pristup čarobnjaku za djeljenje, koji im omogućava "
-"da pozovu vanjske korisnike da pregledaju ili urede neke od njihovih "
-"dokumenata."
+"Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents."
+msgstr "\nČlanovi ove grupe imaju pristup čarobnjaku za djeljenje, koji im omogućava da pozovu vanjske korisnike da pregledaju ili urede neke od njihovih dokumenata."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:525
+#: code:addons/share/wizard/share_wizard.py:524
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Kopiraj za dijeljenje)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:550
+#: code:addons/share/wizard/share_wizard.py:549
 #, python-format
 msgid "(Duplicated for modified sharing permissions)"
 msgstr "(Duplicirana za izmjenjene dozvole djeljenja)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:600
+#: code:addons/share/wizard/share_wizard.py:599
 #, python-format
 msgid "(Modified)"
 msgstr "(promjenjeno)"
@@ -73,11 +69,10 @@ msgid "Access rights to be granted on the shared documents."
 msgstr "Prava pristupa za odobravanje na djeljenim dokumentima."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:641
+#: code:addons/share/wizard/share_wizard.py:640
 #, python-format
 msgid "Action and Access Mode are required to create a shared access."
-msgstr ""
-"Akcijski i pristupni mod je zahtjevan za kreiranje djeljenog pristupa."
+msgstr "Akcijski i pristupni mod je zahtjevan za kreiranje djeljenog pristupa."
 
 #. module: share
 #: field:share.wizard,action_id:0
@@ -95,8 +90,7 @@ msgstr "E-mail obavještenje sa instrukcijama je poslano slijedećim ljudima:"
 #: help:share.wizard,message:0
 msgid ""
 "An optional personal message, to be included in the email notification."
-msgstr ""
-"Opcionalna personalna poruka, da bude uključena u email obavještenje."
+msgstr "Opcionalna personalna poruka, da bude uključena u email obavještenje."
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -117,7 +111,7 @@ msgstr "Otkaži"
 #. module: share
 #: view:share.wizard:share.share_step2_form
 msgid "Close"
-msgstr ""
+msgstr "Zatvori"
 
 #. module: share
 #: field:share.wizard,embed_code:0
@@ -130,22 +124,21 @@ msgid "Configuration"
 msgstr "Konfiguracija"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:492
+#: code:addons/share/wizard/share_wizard.py:491
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Kopiran pristup za dijeljenje"
 
 #. module: share
-#: field:share.wizard,create_uid:0
-#: field:share.wizard.result.line,create_uid:0
+#: field:share.wizard,create_uid:0 field:share.wizard.result.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Kreirao"
 
 #. module: share
 #: field:share.wizard,create_date:0
 #: field:share.wizard.result.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Kreirano"
 
 #. module: share
 #: field:share.wizard,view_type:0
@@ -153,8 +146,8 @@ msgid "Current View Type"
 msgstr "Trentutni tip pogleda"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:831
-#: code:addons/share/wizard/share_wizard.py:863
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:862
 #, python-format
 msgid "Database"
 msgstr "Baza podataka"
@@ -181,15 +174,14 @@ msgid "Domain"
 msgstr "Domen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:814
-#: code:addons/share/wizard/share_wizard.py:845
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
 #, python-format
 msgid "Email Required"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:77
-#: field:share.wizard,new_users:0
+#: code:addons/share/wizard/share_wizard.py:77 field:share.wizard,new_users:0
 #, python-format
 msgid "Emails"
 msgstr "E-mail"
@@ -205,9 +197,7 @@ msgstr "Ugradi"
 #: help:share.wizard,embed_code:0
 msgid ""
 "Embed this code in your documents to provide a link to the shared document."
-msgstr ""
-"Ugradite ovaj kod na vaše dokumente da obezbjedite vezu sa djeljenim "
-"dokumentom."
+msgstr "Ugradite ovaj kod na vaše dokumente da obezbjedite vezu sa djeljenim dokumentom."
 
 #. module: share
 #: view:share.wizard:share.share_step2_form
@@ -219,53 +209,42 @@ msgstr "Opcije ugrađenog koda"
 msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
-msgstr ""
-"Vanjski korisnika sa limitiranim pravima pristupa, kreiran samo za svrhu "
-"djeljenja podataka."
+msgstr "Vanjski korisnika sa limitiranim pravima pristupa, kreiran samo za svrhu djeljenja podataka."
 
 #. module: share
 #: help:res.groups,share:0
 msgid "Group created to set access rights for sharing data with some users."
-msgstr ""
-"Grupa kreirana da postavi prava pristupa za djeljene podatke sa nekim "
-"korisnicima."
+msgstr "Grupa kreirana da postavi prava pristupa za djeljene podatke sa nekim korisnicima."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:822
-#: code:addons/share/wizard/share_wizard.py:854
+#: code:addons/share/wizard/share_wizard.py:821
+#: code:addons/share/wizard/share_wizard.py:853
 #, python-format
 msgid ""
 "Hello,\n"
 "\n"
-msgstr ""
-"Pozdrav,\n"
-"\n"
+msgstr "Pozdrav,\n\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:823
+#: code:addons/share/wizard/share_wizard.py:822
 #, python-format
 msgid ""
 "I have shared %s (%s) with you!\n"
 "\n"
-msgstr ""
-"Podjelio sam %s (%s) sa vama !\n"
-"\n"
+msgstr "Podjelio sam %s (%s) sa vama !\n\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:855
+#: code:addons/share/wizard/share_wizard.py:854
 #, python-format
 msgid ""
 "I've shared %s with you!\n"
 "\n"
-msgstr ""
-"Podijelio sam %s sa vama !\n"
-"\n"
+msgstr "Podijelio sam %s sa vama !\n\n"
 
 #. module: share
-#: field:share.wizard,id:0
-#: field:share.wizard.result.line,id:0
+#: field:share.wizard,id:0 field:share.wizard.result.line,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: share
 #: view:share.wizard:share.share_step1_form
@@ -273,21 +252,19 @@ msgid "Include an Optional Personal Message"
 msgstr "Uključi opcionalnu personalnu poruku"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:615
+#: code:addons/share/wizard/share_wizard.py:614
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
-msgstr ""
-"Indirektni filtar dijeljenja je kreiran od strane korisnika %s (%s) za grupu "
-"%s"
+msgstr "Indirektni filtar dijeljenja je kreiran od strane korisnika %s (%s) za grupu %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:796
+#: code:addons/share/wizard/share_wizard.py:795
 #, python-format
 msgid "Invitation"
 msgstr "Pozivnica"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:821
+#: code:addons/share/wizard/share_wizard.py:820
 #, python-format
 msgid "Invitation to collaborate about %s"
 msgstr "Poziv za razgovor o %s"
@@ -305,14 +282,12 @@ msgid "Invite users to OpenSocial record"
 msgstr "Pozovite korisnike na OpenSocial zapis"
 
 #. module: share
-#: field:share.wizard,write_uid:0
-#: field:share.wizard.result.line,write_uid:0
+#: field:share.wizard,write_uid:0 field:share.wizard.result.line,write_uid:0
 msgid "Last Updated by"
 msgstr ""
 
 #. module: share
-#: field:share.wizard,write_date:0
-#: field:share.wizard.result.line,write_date:0
+#: field:share.wizard,write_date:0 field:share.wizard.result.line,write_date:0
 msgid "Last Updated on"
 msgstr ""
 
@@ -324,8 +299,7 @@ msgstr "Prijava"
 #. module: share
 #: help:share.wizard,share_root_url:0
 msgid "Main access page for users that are granted shared access"
-msgstr ""
-"Glavna stranica pristupa za korisnike kojima je dozvoljen djeljeni pristup"
+msgstr "Glavna stranica pristupa za korisnike kojima je dozvoljen djeljeni pristup"
 
 #. module: share
 #: help:share.wizard,record_name:0
@@ -333,8 +307,7 @@ msgid "Name of the shared record, if sharing a precise record"
 msgstr "Naziv djeljenog zapisa, ako se djeli određeni zapis"
 
 #. module: share
-#: field:share.wizard,email_1:0
-#: field:share.wizard,email_2:0
+#: field:share.wizard,email_1:0 field:share.wizard,email_2:0
 #: field:share.wizard,email_3:0
 msgid "New user email"
 msgstr "Novi korisnički email"
@@ -361,13 +334,12 @@ msgid "Non-Share Groups"
 msgstr "Grupe sa kojima se ne djeli"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:835
-#: code:addons/share/wizard/share_wizard.py:869
+#: code:addons/share/wizard/share_wizard.py:834
+#: code:addons/share/wizard/share_wizard.py:868
 #, python-format
 msgid ""
-"Odoo is a powerful and user-friendly suite of Business Applications (CRM, "
-"Sales, HR, etc.)\n"
-"It is open source and can be found on http://www.openerp.com."
+"Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+"It is open source and can be found on https://www.odoo.com."
 msgstr ""
 
 #. module: share
@@ -380,9 +352,7 @@ msgstr "Opcionalni domen za daljnja filtriranja podataka"
 msgid ""
 "Optionally, you may specify an additional domain restriction that will be "
 "applied to the shared data."
-msgstr ""
-"Opcionalno, možete specifirati dodatno ograničenje domena koje će biti "
-"primjenjeno na djeljene podatke."
+msgstr "Opcionalno, možete specifirati dodatno ograničenje domena koje će biti primjenjeno na djeljene podatke."
 
 #. module: share
 #: view:share.wizard:share.share_step2_form
@@ -390,8 +360,8 @@ msgid "Or insert the following code where you want to embed your documents"
 msgstr "Ili ubacite sljedeći kod gdje želite da ugradite vaše dokumente"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:830
-#: code:addons/share/wizard/share_wizard.py:862
+#: code:addons/share/wizard/share_wizard.py:829
+#: code:addons/share/wizard/share_wizard.py:861
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
@@ -403,10 +373,9 @@ msgid "Personal Message"
 msgstr "Privatna poruka"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:648
+#: code:addons/share/wizard/share_wizard.py:647
 #, python-format
-msgid ""
-"Please indicate the emails of the persons to share with, one per line."
+msgid "Please indicate the emails of the persons to share with, one per line."
 msgstr "Unesite e-mail adrese osoba za dijeljenje, jednu u svaki red."
 
 #. module: share
@@ -414,12 +383,10 @@ msgstr "Unesite e-mail adrese osoba za dijeljenje, jednu u svaki red."
 msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
-msgstr ""
-"Molimo odaberite akciju koja otvara ekran koji sadrži podatke koje želite da "
-"djelite."
+msgstr "Molimo odaberite akciju koja otvara ekran koji sadrži podatke koje želite da djelite."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:759
+#: code:addons/share/wizard/share_wizard.py:758
 #, python-format
 msgid "Record id not found"
 msgstr "ID zapisa nije pronađen"
@@ -468,8 +435,7 @@ msgid "Share Title"
 msgstr "Djeli naslov"
 
 #. module: share
-#: field:share.wizard,embed_url:0
-#: field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "URL djeljenja"
 
@@ -496,7 +462,7 @@ msgid "Share your documents"
 msgstr "Podijelite vaše dokumente"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:772
+#: code:addons/share/wizard/share_wizard.py:771
 #, python-format
 msgid "Shared access created!"
 msgstr "Djeljeni pristup kreiran!"
@@ -513,13 +479,13 @@ msgstr "Opcije dijeljenja"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:61
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:635
 #, python-format
 msgid "Sharing access cannot be created."
 msgstr "Pristup djeljenja nije mogao biti kreiran."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:578
+#: code:addons/share/wizard/share_wizard.py:577
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Djeljeni filter kreiran od strane korisnika %s (%s) za grupu %s"
@@ -535,16 +501,12 @@ msgid "Sharing: preparation"
 msgstr "Djeljenje: priprema"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:637
+#: code:addons/share/wizard/share_wizard.py:636
 #, python-format
 msgid ""
-"Sorry, the current screen and filter you are trying to share are not "
-"supported at the moment.\n"
+"Sorry, the current screen and filter you are trying to share are not supported at the moment.\n"
 "You may want to try a simpler filter."
-msgstr ""
-"Nažalost, trenutni ekran i filtar koji pokušavate dijeliti nije trenutno "
-"podržan.\n"
-"Pokušajte s jednostavnijim filterom."
+msgstr "Nažalost, trenutni ekran i filtar koji pokušavate dijeliti nije trenutno podržan.\nPokušajte s jednostavnijim filterom."
 
 #. module: share
 #: view:share.wizard:share.share_step2_form
@@ -556,60 +518,53 @@ msgstr "Rezime"
 #: help:share.wizard,action_id:0
 msgid ""
 "The action that opens the screen containing the data you wish to share."
-msgstr ""
-"Akcija koja otvara ekran koji sadrži podatke koje želite da podjelite."
+msgstr "Akcija koja otvara ekran koji sadrži podatke koje želite da podjelite."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:814
-#: code:addons/share/wizard/share_wizard.py:845
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
 "to be able to send outgoing emails."
-msgstr ""
-"Trenutni korisnik mora imati e-amil adresu konfiguriranu u Korisničkim "
-"postavama kako bi mogao slati e-mailove"
+msgstr "Trenutni korisnik mora imati e-amil adresu konfiguriranu u Korisničkim postavama kako bi mogao slati e-mailove"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:827
-#: code:addons/share/wizard/share_wizard.py:856
+#: code:addons/share/wizard/share_wizard.py:826
+#: code:addons/share/wizard/share_wizard.py:855
 #, python-format
 msgid ""
-"The documents are not attached, you can view them online directly on my Odoo "
-"server at:\n"
+"The documents are not attached, you can view them online directly on my Odoo server at:\n"
 "    %s\n"
 "\n"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:865
+#: code:addons/share/wizard/share_wizard.py:864
 #, python-format
 msgid ""
-"The documents have been automatically added to your current Odoo documents.\n"
+"The documents have been automatically added to your current Odoo "
+"documents.\n"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:832
+#: code:addons/share/wizard/share_wizard.py:831
 #, python-format
 msgid ""
 "The documents have been automatically added to your subscriptions.\n"
 "\n"
-msgstr ""
-"Dokumenti su bili automatski dodati na vašu pretplatu.\n"
-"\n"
+msgstr "Dokumenti su bili automatski dodati na vašu pretplatu.\n\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:759
+#: code:addons/share/wizard/share_wizard.py:758
 #, python-format
 msgid ""
 "The share engine has not been able to fetch a record_id for your invitation."
-msgstr ""
-"Sistem za dijeljenje nije bio u mogućnosti da uhvati record_id za vašu "
-"pozivnicu."
+msgstr "Sistem za dijeljenje nije bio u mogućnosti da uhvati record_id za vašu pozivnicu."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:828
-#: code:addons/share/wizard/share_wizard.py:860
+#: code:addons/share/wizard/share_wizard.py:827
+#: code:addons/share/wizard/share_wizard.py:859
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
 msgstr "Ovo su vaši podaci za pristup ovom zaštićenom području:\n"
@@ -630,8 +585,8 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:829
-#: code:addons/share/wizard/share_wizard.py:861
+#: code:addons/share/wizard/share_wizard.py:828
+#: code:addons/share/wizard/share_wizard.py:860
 #, python-format
 msgid "Username"
 msgstr "Korisničko ime"
@@ -642,19 +597,16 @@ msgid "Users"
 msgstr "Korisnici"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:866
+#: code:addons/share/wizard/share_wizard.py:865
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
-msgstr ""
-"Možete koristiti vašu trenutnu prijavu (%s) i šifru da ih pregledate..\n"
+msgstr "Možete koristiti vašu trenutnu prijavu (%s) i šifru da ih pregledate..\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:644
+#: code:addons/share/wizard/share_wizard.py:643
 #, python-format
 msgid "You must be a member of the Share/User group to use the share wizard."
-msgstr ""
-"Morate biti član Dijeli/Korisnik grupe da bi ste koristili čarobnjak "
-"dijeljenja."
+msgstr "Morate biti član Dijeli/Korisnik grupe da bi ste koristili čarobnjak dijeljenja."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:205
@@ -662,9 +614,13 @@ msgstr ""
 msgid ""
 "You must configure your email address in the user preferences before using "
 "the Share button."
-msgstr ""
-"Najprije morate konfigurirati vašu e-mail adresu u korisničkim postavkama "
-"prije korišćenja dugmeta Dijeli."
+msgstr "Najprije morate konfigurirati vašu e-mail adresu u korisničkim postavkama prije korišćenja dugmeta Dijeli."
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+#: view:share.wizard:share.share_step1_form
+msgid "or"
+msgstr "ili"
 
 #. module: share
 #: field:share.wizard.result.line,user_id:0

@@ -7,12 +7,7 @@ import logging
 import os
 import os.path
 import platform
-import psutil
 import random
-if os.name == 'posix':
-    import resource
-else:
-    resource = None
 import select
 import signal
 import socket
@@ -24,10 +19,16 @@ import unittest2
 
 import werkzeug.serving
 
-try:
+if os.name == 'posix':
+    # Unix only for workers
     import fcntl
-except ImportError:
-    pass
+    import resource
+    import psutil
+else:
+    # Windows shim
+    signal.SIGHUP = -1
+
+# Optional process names for workers
 try:
     from setproctitle import setproctitle
 except ImportError:
@@ -37,11 +38,16 @@ import openerp
 from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
-from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
+
+def memory_info(process):
+    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
+    get_memory_info """
+    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -211,6 +217,10 @@ class CommonServer(object):
         try:
             sock.shutdown(socket.SHUT_RDWR)
         except socket.error, e:
+            if e.errno == errno.EBADF:
+                # Werkzeug > 0.9.6 closes the socket itself (see commit
+                # https://github.com/mitsuhiko/werkzeug/commit/4d8ca089)
+                return
             # On OSX, socket shutdowns both sides if any side closes it
             # causing an error 57 'Socket is not connected' on shutdown
             # of the other side (or something), see
@@ -249,8 +259,8 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = openerp.modules.registry.RegistryManager.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                while True and registry.ready:
+            for db_name, registry in registries.iteritems():
+                while registry.ready:
                     acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
                     if not acquired:
                         break
@@ -295,12 +305,13 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
         test_mode = config['test_enable'] or config['test_file']
-        if not stop or test_mode:
+        if test_mode or (config['xmlrpc'] and not stop):
             # some tests need the http deamon to be available...
             self.http_spawn()
 
@@ -388,11 +399,16 @@ class GeventServer(CommonServer):
 
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except:
+            _logger.exception("Evented Service (longpolling): uncaught error during main loop")
+            raise
 
     def stop(self):
         import gevent
@@ -474,6 +490,8 @@ class PreforkServer(CommonServer):
         self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
+        if pid == self.long_polling_pid:
+            self.long_polling_pid = None
         if pid in self.workers:
             _logger.debug("Worker (%s) unregistered", pid)
             try:
@@ -503,6 +521,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 self.dumpstacks()
+            elif sig == signal.SIGUSR1:
+                # log ormcache stats on kill -SIGUSR1
+                log_ormcache_stats()
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -536,12 +557,13 @@ class PreforkServer(CommonServer):
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
-        while len(self.workers_http) < self.population:
-            self.worker_spawn(WorkerHTTP, self.workers_http)
+        if config['xmlrpc']:
+            while len(self.workers_http) < self.population:
+                self.worker_spawn(WorkerHTTP, self.workers_http)
+            if not self.long_polling_pid:
+                self.long_polling_spawn()
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
-        if not self.long_polling_pid:
-            self.long_polling_spawn()
 
     def sleep(self):
         try:
@@ -578,6 +600,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
+        signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -595,8 +618,13 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
             for pid in self.workers.keys():
-                self.worker_kill(pid, signal.SIGTERM)
+                self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
+                try:
+                    self.process_signals()
+                except KeyboardInterrupt:
+                    _logger.info("Forced shutdown.")
+                    break
                 self.process_zombie()
                 time.sleep(0.1)
         else:
@@ -668,8 +696,6 @@ class Worker(object):
                 raise
 
     def process_limit(self):
-        if resource is None:
-            return
         # If our parent changed sucide
         if self.ppid != os.getppid():
             _logger.info("Worker (%s) Parent changed", self.pid)
@@ -679,7 +705,7 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = psutil.Process(os.getpid()).get_memory_info()
+        rss, vms = memory_info(psutil.Process(os.getpid()))
         if vms > config['limit_memory_soft']:
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False      # Commit suicide after the request.
@@ -728,7 +754,9 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
+            _logger.info("Worker (%s) exiting. request_count: %s, registry count: %s.",
+                         self.pid, self.request_count,
+                         len(openerp.modules.registry.RegistryManager.registries))
             self.stop()
         except Exception:
             _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
@@ -800,7 +828,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
             import openerp.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
@@ -811,7 +839,7 @@ class WorkerCron(Worker):
                 openerp.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
                 vms_diff = (end_vms - start_vms) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
                     (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
@@ -902,10 +930,11 @@ def preload_registries(dbnames):
             # run test_file if provided
             if test_file:
                 _logger.info('loading test file %s', test_file)
-                if test_file.endswith('yml'):
-                    load_test_file_yml(registry, test_file)
-                elif test_file.endswith('py'):
-                    load_test_file_py(registry, test_file)
+                with openerp.api.Environment.manage():
+                    if test_file.endswith('yml'):
+                        load_test_file_yml(registry, test_file)
+                    elif test_file.endswith('py'):
+                        load_test_file_py(registry, test_file)
 
             if registry._assertion_report.failures:
                 rc += 1

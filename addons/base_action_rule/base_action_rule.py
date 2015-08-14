@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
 import logging
 
@@ -27,15 +28,16 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
 DATE_RANGE_FUNCTION = {
-    'minutes': lambda interval: timedelta(minutes=interval),
-    'hour': lambda interval: timedelta(hours=interval),
-    'day': lambda interval: timedelta(days=interval),
-    'month': lambda interval: timedelta(months=interval),
-    False: lambda interval: timedelta(0),
+    'minutes': lambda interval: relativedelta(minutes=interval),
+    'hour': lambda interval: relativedelta(hours=interval),
+    'day': lambda interval: relativedelta(days=interval),
+    'month': lambda interval: relativedelta(months=interval),
+    False: lambda interval: relativedelta(0),
 }
 
 def get_datetime(date_str):
@@ -114,12 +116,21 @@ class base_action_rule(osv.osv):
             clear_fields = ['filter_pre_id']
         return {'value': dict.fromkeys(clear_fields, False)}
 
+    def _get_eval_context(self, cr, uid, context=None):
+        """ Prepare the context used when evaluating python code
+        :returns: dict -- evaluation context given to (safe_)eval """
+        return {
+            'time': time,
+            'user': self.pool['res.users'].browse(cr, uid, uid, context=context),
+        }
+
     def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
         """ filter the list record_ids that satisfy the action filter """
+        eval_context = self._get_eval_context(cr, uid, context=context)
         if record_ids and action_filter:
             assert action.model == action_filter.model_id, "Filter model different from action rule model"
             model = self.pool[action_filter.model_id]
-            domain = [('id', 'in', record_ids)] + eval(action_filter.domain)
+            domain = [('id', 'in', record_ids)] + eval(action_filter.domain, eval_context)
             ctx = dict(context or {})
             ctx.update(eval(action_filter.context))
             record_ids = model.search(cr, uid, domain, context=ctx)
@@ -131,9 +142,9 @@ class base_action_rule(osv.osv):
 
         # modify records
         values = {}
-        if 'date_action_last' in model._all_columns:
+        if 'date_action_last' in model._fields:
             values['date_action_last'] = time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if action.act_user_id and 'user_id' in model._all_columns:
+        if action.act_user_id and 'user_id' in model._fields:
             values['user_id'] = action.act_user_id.id
         if values:
             model.write(cr, uid, record_ids, values, context=context)
@@ -180,7 +191,7 @@ class base_action_rule(osv.osv):
                 action_model = self.pool.get('base.action.rule')
                 action_dom = [('model', '=', self._name),
                               ('kind', 'in', ['on_create', 'on_create_or_write'])]
-                action_ids = action_model.search(cr, uid, action_dom, context=context)
+                action_ids = action_model.search(cr, uid, action_dom, context=dict(context, active_test=True))
 
                 # check postconditions, and execute actions on the records that satisfy them
                 for action in action_model.browse(cr, uid, action_ids, context=context):
@@ -230,8 +241,8 @@ class base_action_rule(osv.osv):
             ids = self.search(cr, SUPERUSER_ID, [])
         for action_rule in self.browse(cr, SUPERUSER_ID, ids):
             model = action_rule.model_id.model
-            model_obj = self.pool[model]
-            if not hasattr(model_obj, 'base_action_ruled'):
+            model_obj = self.pool.get(model)
+            if model_obj and not hasattr(model_obj, 'base_action_ruled'):
                 # monkey-patch methods create and write
                 model_obj._patch_method('create', make_create())
                 model_obj._patch_method('write', make_write())
@@ -294,7 +305,8 @@ class base_action_rule(osv.osv):
         context = context or {}
         # retrieve all the action rules to run based on a timed condition
         action_dom = [('kind', '=', 'on_time')]
-        action_ids = self.search(cr, uid, action_dom, context=context)
+        action_ids = self.search(cr, uid, action_dom, context=dict(context, active_test=True))
+        eval_context = self._get_eval_context(cr, uid, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()
             if action.last_run:
@@ -307,7 +319,7 @@ class base_action_rule(osv.osv):
             domain = []
             ctx = dict(context)
             if action.filter_id:
-                domain = eval(action.filter_id.domain)
+                domain = eval(action.filter_id.domain, eval_context)
                 ctx.update(eval(action.filter_id.context))
                 if 'lang' not in ctx:
                     # Filters might be language-sensitive, attempt to reuse creator lang
@@ -320,7 +332,7 @@ class base_action_rule(osv.osv):
 
             # determine when action should occur for the records
             date_field = action.trg_date_id.name
-            if date_field == 'date_action_last' and 'create_date' in model._all_columns:
+            if date_field == 'date_action_last' and 'create_date' in model._fields:
                 get_record_dt = lambda record: record[date_field] or record.create_date
             else:
                 get_record_dt = lambda record: record[date_field]

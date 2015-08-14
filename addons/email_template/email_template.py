@@ -60,7 +60,7 @@ def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
 
         fdate = ts.strftime(format_date)
         ftime = ts.strftime(format_time)
-        return "%s %s (%s)" % (fdate, ftime, tz)
+        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -190,7 +190,7 @@ class email_template(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
         variables = {
-            'format_tz': lambda dt, tz=False, format=False: format_tz(self.pool, cr, uid, dt, tz, format, context),
+            'format_tz': lambda dt, tz=False, format=False, context=context: format_tz(self.pool, cr, uid, dt, tz, format, context),
             'user': user,
             'ctx': context,  # context kw would clash with mako internals
         }
@@ -471,11 +471,14 @@ class email_template(osv.osv):
         results = dict()
         for template, template_res_ids in templates_to_res_ids.iteritems():
             # generate fields value for all res_ids linked to the current template
+            ctx = context.copy()
+            if template.lang:
+                ctx['lang'] = template._context.get('lang')
             for field in fields:
                 generated_field_values = self.render_template_batch(
                     cr, uid, getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'),
-                    context=context)
+                    context=ctx)
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
@@ -486,7 +489,8 @@ class email_template(osv.osv):
                 # body: add user signature, sanitize
                 if 'body_html' in fields and template.user_signature:
                     signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-                    values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
+                    if signature:
+                        values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
                 if values.get('body_html'):
                     values['body'] = tools.html_sanitize(values['body_html'])
                 # technical settings
@@ -502,13 +506,9 @@ class email_template(osv.osv):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
+                    report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=ctx)
                     report = report_xml_pool.browse(cr, uid, template.report_template.id, context)
                     report_service = report.report_name
-                    # Ensure report is rendered using template's language
-                    ctx = context.copy()
-                    if template.lang:
-                        ctx['lang'] = self.render_template_batch(cr, uid, template.lang, template.model, [res_id], context)[res_id]  # take 0 ?
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
                         result, format = self.pool['report'].get_pdf(cr, uid, [res_id], report_service, context=ctx), 'pdf'

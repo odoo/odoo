@@ -1,6 +1,5 @@
 (function () {
     'use strict';
-
     openerp.Tour.register({
         id:   'shop_buy_product',
         name: "Try to buy products",

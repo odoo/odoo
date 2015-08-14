@@ -21,7 +21,7 @@ class TableExporter(http.Controller):
         jdata = simplejson.loads(data)
         nbr_measures = jdata['nbr_measures']
         workbook = xlwt.Workbook()
-        worksheet = workbook.add_sheet(jdata['title'])
+        worksheet = workbook.add_sheet(jdata['title'][:30])
         header_bold = xlwt.easyxf("font: bold on; pattern: pattern solid, fore_colour gray25;")
         header_plain = xlwt.easyxf("pattern: pattern solid, fore_colour gray25;")
         bold = xlwt.easyxf("font: bold on;")

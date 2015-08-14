@@ -30,8 +30,8 @@ class res_partner(osv.osv):
         Invoice = self.pool['account.invoice']
         return {
             partner_id: {
-                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context),
-                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', '=', partner_id), ('type','=','in_invoice')], context=context)
+                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', 'child_of', partner_id)], context=context),
+                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', 'child_of', partner_id), ('type','=','in_invoice')], context=context)
             }
             for partner_id in ids
         }

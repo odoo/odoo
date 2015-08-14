@@ -35,7 +35,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
-    'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
         'sales_team',
         'project',

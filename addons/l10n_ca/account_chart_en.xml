@@ -339,133 +339,157 @@
 		<field name="name">LABOUR TAXES TO PAY</field>
 	</record>
 
-	<record id="chart2141_en" model="account.account.template">
-		<field name="code">2141</field>
-		<field name="parent_id" ref="chart214_en"/>
-		<field name="type">view</field>
-		<field name="user_type" ref="account.data_account_type_view"/>
-		<field name="name">CANADIAN REVENU AGENCY</field>
-	</record>
+    <record id="chart2141_en" model="account.account.template">
+        <field name="code">2141</field>
+        <field name="parent_id" ref="chart214_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">CANADA REVENUE AGENCY</field>
+    </record>
 
-        <record id="chart21411_en" model="account.account.template">
-                <field name="code">21411</field>
-                <field name="parent_id" ref="chart2141_en"/>
-                <field name="type">view</field>
-                <field name="user_type" ref="account.data_account_type_view"/>
-                <field name="name">EMPLOYMENT INSURANCE TO PAY</field>
-        </record>
+    <record id="chart21411_en" model="account.account.template">
+        <field name="code">21411</field>
+        <field name="parent_id" ref="chart2141_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">EMPLOYMENT INSURANCE TO PAY</field>
+    </record>
 
-        <record id="chart214111_en" model="account.account.template">
-                <field name="code">214111</field>
-                <field name="parent_id" ref="chart21411_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">EI - Employees Contribution</field>
-        </record>
+    <record id="chart214111_en" model="account.account.template">
+        <field name="code">214111</field>
+        <field name="parent_id" ref="chart21411_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">EI - Employees Contribution</field>
+    </record>
 
-        <record id="chart214112_en" model="account.account.template">
-                <field name="code">214112</field>
-                <field name="parent_id" ref="chart21411_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">EI - Employer Contribution</field>
-        </record>
+    <record id="chart214112_en" model="account.account.template">
+        <field name="code">214112</field>
+        <field name="parent_id" ref="chart21411_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">EI - Employer Contribution</field>
+    </record>
 
-        <record id="chart21412_en" model="account.account.template">
-                <field name="code">21412</field>
-                <field name="parent_id" ref="chart2141_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Federal Income Tax</field>
-        </record>
+    <record id="chart21412_en" model="account.account.template">
+        <field name="code">21412</field>
+        <field name="parent_id" ref="chart2141_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Federal Income Tax</field>
+    </record>
 
-        <record id="chart2142_en" model="account.account.template">
-                <field name="code">2142</field>
-                <field name="parent_id" ref="chart214_en"/>
-                <field name="type">view</field>
-                <field name="user_type" ref="account.data_account_type_view"/>
-                <field name="name">PROVINCIAL REVENU AGENCY</field>
-        </record>
+    <record id="chart21413_en" model="account.account.template">
+        <field name="code">21413</field>
+        <field name="parent_id" ref="chart2141_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">CANADA PENSION PLAN TO PAY</field>
+    </record>
 
-        <record id="chart21421_en" model="account.account.template">
-                <field name="code">21421</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Health Services Fund to pay</field>
-        </record>
+    <record id="chart214131_en" model="account.account.template">
+        <field name="code">214131</field>
+        <field name="parent_id" ref="chart21413_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">CPP - Employees Contribution</field>
+    </record>
 
-        <record id="chart21422_en" model="account.account.template">
-                <field name="code">21422</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">view</field>
-                <field name="user_type" ref="account.data_account_type_view"/>
-                <field name="name">ANNUITIES TO PAY</field>
-        </record>
+    <record id="chart214132_en" model="account.account.template">
+        <field name="code">214132</field>
+        <field name="parent_id" ref="chart21413_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">CPP - Employer Contribution</field>
+    </record>
 
-        <record id="chart214221_en" model="account.account.template">
-                <field name="code">214221</field>
-                <field name="parent_id" ref="chart21422_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Annuities - Employees Contribution</field>
-        </record>
+    <record id="chart2142_en" model="account.account.template">
+        <field name="code">2142</field>
+        <field name="parent_id" ref="chart214_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">PROVINCIAL REVENU AGENCY</field>
+    </record>
 
-        <record id="chart214222_en" model="account.account.template">
-                <field name="code">214222</field>
-                <field name="parent_id" ref="chart21422_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Annuities - Employer Contribution</field>
-        </record>
+    <record id="chart21421_en" model="account.account.template">
+        <field name="code">21421</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Health Services Fund to pay</field>
+    </record>
 
-        <record id="chart21423_en" model="account.account.template">
-                <field name="code">21423</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">view</field>
-                <field name="user_type" ref="account.data_account_type_view"/>
-                <field name="name">PARENTAL INSURANCE PLAN TO PAY</field>
-        </record>
+    <record id="chart21422_en" model="account.account.template">
+        <field name="code">21422</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">PROVINCIAL PENSION PLAN TO PAY</field>
+    </record>
 
-        <record id="chart214231_en" model="account.account.template">
-                <field name="code">214231</field>
-                <field name="parent_id" ref="chart21423_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">PAP - Employee Contribution</field>
-        </record>
+    <record id="chart214221_en" model="account.account.template">
+        <field name="code">214221</field>
+        <field name="parent_id" ref="chart21422_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Provincial Pension Plan - Employees Contribution</field>
+    </record>
 
-        <record id="chart214232_en" model="account.account.template">
-                <field name="code">214232</field>
-                <field name="parent_id" ref="chart21423_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">PAP - Employer Contribution</field>
-        </record>
+    <record id="chart214222_en" model="account.account.template">
+        <field name="code">214222</field>
+        <field name="parent_id" ref="chart21422_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Provincial Pension Plan - Employer Contribution</field>
+    </record>
 
-        <record id="chart21424_en" model="account.account.template">
-                <field name="code">21424</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Labour Health and Safety to pay</field>
-        </record>
+    <record id="chart21423_en" model="account.account.template">
+        <field name="code">21423</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">PROVINCIAL PARENTAL INSURANCE PLAN TO PAY</field>
+    </record>
 
-        <record id="chart21425_en" model="account.account.template">
-                <field name="code">21425</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Labour Standards to pay</field>
-        </record>
+    <record id="chart214231_en" model="account.account.template">
+        <field name="code">214231</field>
+        <field name="parent_id" ref="chart21423_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Parental Insurance Plan - Employee Contribution</field>
+    </record>
 
-        <record id="chart21426_en" model="account.account.template">
-                <field name="code">21426</field>
-                <field name="parent_id" ref="chart2142_en"/>
-                <field name="type">other</field>
-                <field name="user_type" ref="account.data_account_type_liability"/>
-                <field name="name">Provincial Income Tax</field>
-        </record>
+    <record id="chart214232_en" model="account.account.template">
+        <field name="code">214232</field>
+        <field name="parent_id" ref="chart21423_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Parental Insurance Plan - Employer Contribution</field>
+    </record>
+
+    <record id="chart21424_en" model="account.account.template">
+        <field name="code">21424</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Labour Health and Safety to pay</field>
+    </record>
+
+    <record id="chart21425_en" model="account.account.template">
+        <field name="code">21425</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Labour Standards to pay</field>
+    </record>
+
+    <record id="chart21426_en" model="account.account.template">
+        <field name="code">21426</field>
+        <field name="parent_id" ref="chart2142_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Provincial Income Tax</field>
+    </record>
 
 	<record id="chart215_en" model="account.account.template">
 		<field name="code">215</field>
@@ -499,6 +523,86 @@
 		<field name="name">Stock Received But Not Billed</field>
 	</record>
 
+    <record id="chart218_en" model="account.account.template">
+        <field name="code">218</field>
+        <field name="parent_id" ref="chart21_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">CURRENT LIABILITIES RELATED TO SALARIES</field>
+    </record>
+
+    <record id="chart2181_en" model="account.account.template">
+        <field name="code">2181</field>
+        <field name="parent_id" ref="chart218_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Salaries to pay</field>
+    </record>
+
+    <record id="chart2183_en" model="account.account.template">
+        <field name="code">2183</field>
+        <field name="parent_id" ref="chart218_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Bonus to pay</field>
+    </record>
+
+    <record id="chart2184_en" model="account.account.template">
+        <field name="code">2184</field>
+        <field name="parent_id" ref="chart218_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Retroactive Payment to pay</field>
+    </record>
+
+    <record id="chart2185_en" model="account.account.template">
+        <field name="code">2185</field>
+        <field name="parent_id" ref="chart218_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">GROUP PENSION PLAN TO PAY</field>
+    </record>
+
+    <record id="chart218501_en" model="account.account.template">
+        <field name="code">218501</field>
+        <field name="parent_id" ref="chart2185_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Group Pension Plan to pay - Employees Contribution</field>
+    </record>
+
+    <record id="chart218502_en" model="account.account.template">
+        <field name="code">218502</field>
+        <field name="parent_id" ref="chart2185_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Group Pension Plan to pay - Employer Contribution</field>
+    </record>
+
+    <record id="chart2186_en" model="account.account.template">
+        <field name="code">2186</field>
+        <field name="parent_id" ref="chart218_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">EMPLOYEE BENEFITS</field>
+    </record>
+
+    <record id="chart218601_en" model="account.account.template">
+        <field name="code">218601</field>
+        <field name="parent_id" ref="chart2186_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Employee Benefits Provision - Employees Contribution</field>
+    </record>
+
+    <record id="chart218602_en" model="account.account.template">
+        <field name="code">218602</field>
+        <field name="parent_id" ref="chart2186_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Employee Benefits Provision - Employer Contribution</field>
+    </record>
+
 	<record id="chart25_en" model="account.account.template">
 		<field name="code">25</field>
 		<field name="parent_id" ref="chart2_en"/>
@@ -523,13 +627,69 @@
 		<field name="name">PROVISIONS FOR PENSIONS AND OTHER POST-EMPLOYMENT ADVANTAGES</field>
 	</record>
 
-	<record id="chart254_en" model="account.account.template">
-		<field name="code">254</field>
+    <record id="chart2521_en" model="account.account.template">
+        <field name="code">2521</field>
+        <field name="parent_id" ref="chart252_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Provision for pension plans</field>
+    </record>
+
+	<record id="chart253_en" model="account.account.template">
+		<field name="code">253</field>
 		<field name="parent_id" ref="chart25_en"/>
 		<field name="type">view</field>
 		<field name="user_type" ref="account.data_account_type_view"/>
 		<field name="name">DEFERRED TAXES</field>
 	</record>
+
+    <record id="chart254_en" model="account.account.template">
+        <field name="code">254</field>
+        <field name="parent_id" ref="chart25_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">NON-CURRENT LIABILITIES RELATED TO SALARIES</field>
+    </record>
+
+    <record id="chart2541_en" model="account.account.template">
+        <field name="code">2541</field>
+        <field name="parent_id" ref="chart254_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">Leaves Accruded</field>
+    </record>
+
+    <record id="chart254101_en" model="account.account.template">
+        <field name="code">254101</field>
+        <field name="parent_id" ref="chart2541_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Vacations Accruded</field>
+    </record>
+
+    <record id="chart254102_en" model="account.account.template">
+        <field name="code">254102</field>
+        <field name="parent_id" ref="chart2541_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Compensatory Days Accruded</field>
+    </record>
+
+    <record id="chart254103_en" model="account.account.template">
+        <field name="code">254103</field>
+        <field name="parent_id" ref="chart2541_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Sick Leaves Accruded</field>
+    </record>
+
+    <record id="chart2542_en" model="account.account.template">
+        <field name="code">2542</field>
+        <field name="parent_id" ref="chart254_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Bonus Accruded</field>
+    </record>
 
 	<record id="chart259_en" model="account.account.template">
 		<field name="code">259</field>
@@ -737,93 +897,158 @@
 		<field name="name">International Purchases</field>
 	</record>
 
-	<record id="chart512_en" model="account.account.template">
-		<field name="code">512</field>
-		<field name="parent_id" ref="chart51_en"/>
-		<field name="type">view</field>
-		<field name="user_type" ref="account.data_account_type_view"/>
-		<field name="name">LABOUR EXPENSES</field>
-	</record>
+    <record id="chart512_en" model="account.account.template">
+        <field name="code">512</field>
+        <field name="parent_id" ref="chart51_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">LABOUR EXPENSES</field>
+    </record>
 
-	<record id="chart51201_en" model="account.account.template">
-		<field name="code">51201</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Salaries, wages and commissions</field>
-	</record>
+    <record id="chart5121_en" model="account.account.template">
+        <field name="code">5121</field>
+        <field name="parent_id" ref="chart512_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">Salaries</field>
+    </record>
 
-	<record id="chart51202_en" model="account.account.template">
-		<field name="code">51202</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Holidays</field>
-	</record>
+    <record id="chart512101_en" model="account.account.template">
+        <field name="code">512101</field>
+        <field name="parent_id" ref="chart5121_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Regular Salaries</field>
+    </record>
 
-	<record id="chart51203_en" model="account.account.template">
-		<field name="code">51203</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Employment Insurance</field>
-	</record>
+    <record id="chart512102_en" model="account.account.template">
+        <field name="code">512102</field>
+        <field name="parent_id" ref="chart5121_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Bonus</field>
+    </record>
 
-	<record id="chart51204_en" model="account.account.template">
-		<field name="code">51204</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Health Services Fund</field>
-	</record>
+    <record id="chart512103_en" model="account.account.template">
+        <field name="code">512103</field>
+        <field name="parent_id" ref="chart5121_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Retroactive Pay</field>
+    </record>
 
-	<record id="chart51205_en" model="account.account.template">
-		<field name="code">51205</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Annuities</field>
-	</record>
+    <record id="chart5122_en" model="account.account.template">
+        <field name="code">5122</field>
+        <field name="parent_id" ref="chart512_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">Leaves Accruded</field>
+    </record>
 
-	<record id="chart51206_en" model="account.account.template">
-		<field name="code">51206</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Parental Insurance</field>
-	</record>
+    <record id="chart512201_en" model="account.account.template">
+        <field name="code">512201</field>
+        <field name="parent_id" ref="chart5122_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Vacations Accruded</field>
+    </record>
 
-	<record id="chart51207_en" model="account.account.template">
-		<field name="code">51207</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Labour Health and Safety</field>
-	</record>
+    <record id="chart512202_en" model="account.account.template">
+        <field name="code">512202</field>
+        <field name="parent_id" ref="chart5122_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Compensatory Days Accruded</field>
+    </record>
 
-	<record id="chart51208_en" model="account.account.template">
-		<field name="code">51208</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Labour Standards</field>
-	</record>
+    <record id="chart512203_en" model="account.account.template">
+        <field name="code">512203</field>
+        <field name="parent_id" ref="chart5122_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Sick Leaves Accruded</field>
+    </record>
 
-	<record id="chart51209_en" model="account.account.template">
-		<field name="code">51209</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Federal Income Tax</field>
-	</record>
+    <record id="chart5123_en" model="account.account.template">
+        <field name="code">5123</field>
+        <field name="parent_id" ref="chart512_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">Employer Contributions</field>
+    </record>
 
-	<record id="chart51210_en" model="account.account.template">
-		<field name="code">51210</field>
-		<field name="parent_id" ref="chart512_en"/>
-		<field name="type">other</field>
-		<field name="user_type" ref="account.data_account_type_expense"/>
-		<field name="name">Provincial Income Tax</field>
-	</record>
+    <record id="chart512301_en" model="account.account.template">
+        <field name="code">512301</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Canada Pension Plan</field>
+    </record>
+
+    <record id="chart512302_en" model="account.account.template">
+        <field name="code">512302</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Employment Insurance</field>
+    </record>
+
+    <record id="chart512303_en" model="account.account.template">
+        <field name="code">512303</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Group Pension Plan</field>
+    </record>
+
+    <record id="chart512304_en" model="account.account.template">
+        <field name="code">512304</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Employee benefits expense</field>
+    </record>
+
+    <record id="chart512310_en" model="account.account.template">
+        <field name="code">512310</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Provincial Pension Plan</field>
+    </record>
+
+    <record id="chart512311_en" model="account.account.template">
+        <field name="code">512311</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Provincial Parental Insurance Plan</field>
+    </record>
+
+    <record id="chart512312_en" model="account.account.template">
+        <field name="code">512312</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Labour Health and Safety</field>
+    </record>
+
+    <record id="chart512313_en" model="account.account.template">
+        <field name="code">512313</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Labour Standards</field>
+    </record>
+
+    <record id="chart512314_en" model="account.account.template">
+        <field name="code">512314</field>
+        <field name="parent_id" ref="chart5123_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_expense"/>
+        <field name="name">Health Service Fund</field>
+    </record>
+
 	<record id="chart513_en" model="account.account.template">
 		<field name="code">513</field>
 		<field name="parent_id" ref="chart51_en"/>

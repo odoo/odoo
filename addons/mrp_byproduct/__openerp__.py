@@ -40,7 +40,6 @@ With this module:
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'images': ['images/bom_byproduct.jpeg'],
     'depends': ['base', 'mrp'],
     'data': [
        'security/ir.model.access.csv',

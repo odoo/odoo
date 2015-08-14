@@ -46,15 +46,14 @@ class product_public_category(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
+        for cat in self.browse(cr, uid, ids, context=context):
+            names = [cat.name]
+            pcat = cat.parent_id
+            while pcat:
+                names.append(pcat.name)
+                pcat = pcat.parent_id
+            res.append((cat.id, ' / '.join(reversed(names))))
         return res
 
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
@@ -82,7 +81,7 @@ class product_public_category(osv.osv):
         # In this case, the default image is set by the js code.
         # NOTE2: image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
+            help="This field holds the image used as image for the category, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
@@ -123,7 +122,7 @@ class product_template(osv.Model):
             string='Website Comments',
         ),
         'website_published': fields.boolean('Available in the website', copy=False),
-        'website_description': fields.html('Description for the website'),
+        'website_description': fields.html('Description for the website', translate=True),
         'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
@@ -194,7 +193,7 @@ class product_product(osv.Model):
 class product_attribute(osv.Model):
     _inherit = "product.attribute"
     _columns = {
-        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type", type="char"),
+        'type': fields.selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], string="Type"),
     }
     _defaults = {
         'type': lambda *a: 'radio',

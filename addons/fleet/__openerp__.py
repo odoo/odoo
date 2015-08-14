@@ -29,7 +29,7 @@
     'description' : """
 Vehicle, leasing, insurances, cost
 ==================================
-With this module, OpenERP helps you managing all your vehicles, the
+With this module, Odoo helps you managing all your vehicles, the
 contracts associated to those vehicle as well as services, fuel log
 entries, costs and many other features necessary to the management 
 of your fleet of vehicle(s)
@@ -56,7 +56,6 @@ Main Features
         'fleet_data.xml',
         'fleet_board_view.xml',
     ],
-    'images': ['images/costs_analysis.jpeg','images/indicative_costs_analysis.jpeg','images/vehicles.jpeg','images/vehicles_contracts.jpeg','images/vehicles_fuel.jpeg','images/vehicles_odometer.jpeg','images/vehicles_services.jpeg'],
 
     'demo': ['fleet_demo.xml'],
 

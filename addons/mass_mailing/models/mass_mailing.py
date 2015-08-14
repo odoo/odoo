@@ -24,6 +24,28 @@ class MassMailingCategory(osv.Model):
     }
 
 
+class MassMailingList(osv.Model):
+    """Model of a contact list. """
+    _name = 'mail.mass_mailing.list'
+    _order = 'name'
+    _description = 'Mailing List'
+
+    def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
+        result = dict.fromkeys(ids, 0)
+        Contacts = self.pool.get('mail.mass_mailing.contact')
+        for group in Contacts.read_group(cr, uid, [('list_id', 'in', ids), ('opt_out', '!=', True)], ['list_id'], ['list_id'], context=context):
+            result[group['list_id'][0]] = group['list_id_count']
+        return result
+
+    _columns = {
+        'name': fields.char('Mailing List', required=True),
+        'contact_nbr': fields.function(
+            _get_contact_nbr, type='integer',
+            string='Number of Contacts',
+        ),
+    }
+
+
 class MassMailingContact(osv.Model):
     """Model of a contact. This model is different from the partner model
     because it holds only some basic information: name, email. The purpose is to
@@ -77,28 +99,6 @@ class MassMailingContact(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {'partner_ids': [], 'email_to': record.email, 'email_cc': False}
         return res
-
-
-class MassMailingList(osv.Model):
-    """Model of a contact list. """
-    _name = 'mail.mass_mailing.list'
-    _order = 'name'
-    _description = 'Mailing List'
-
-    def _get_contact_nbr(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, 0)
-        Contacts = self.pool.get('mail.mass_mailing.contact')
-        for group in Contacts.read_group(cr, uid, [('list_id', 'in', ids), ('opt_out', '!=', True)], ['list_id'], ['list_id'], context=context):
-            result[group['list_id'][0]] = group['list_id_count']
-        return result
-
-    _columns = {
-        'name': fields.char('Mailing List', required=True),
-        'contact_nbr': fields.function(
-            _get_contact_nbr, type='integer',
-            string='Number of Contacts',
-        ),
-    }
 
 
 class MassMailingStage(osv.Model):
@@ -276,8 +276,8 @@ class MassMailing(osv.Model):
                            'tooltip': ustr((date_begin + relativedelta.relativedelta(days=i)).strftime('%d %B %Y')),
                            } for i in range(0, self._period_number)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
-        field_col_info = obj._all_columns.get(groupby_field.split(':')[0])
-        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field_col_info.column._type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
+        field = obj._fields.get(groupby_field.split(':')[0])
+        pattern = tools.DEFAULT_SERVER_DATE_FORMAT if field.type == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
         for group in group_obj:
             group_begin_date = datetime.strptime(group['__domain'][0][2], pattern).date()
             timedelta = relativedelta.relativedelta(group_begin_date, date_begin)
@@ -513,7 +513,7 @@ class MassMailing(osv.Model):
                 elif len(item) == 3:
                     mailing_list_ids |= set(item[2])
             if mailing_list_ids:
-                value['mailing_domain'] = "[('list_id', 'in', %s)]" % list(mailing_list_ids)
+                value['mailing_domain'] = "[('list_id', 'in', %s), ('opt_out', '=', False)]" % list(mailing_list_ids)
             else:
                 value['mailing_domain'] = "[('list_id', '=', False)]"
         else:
@@ -550,7 +550,7 @@ class MassMailing(osv.Model):
         if not len(ids) == 1:
             raise ValueError('One and only one ID allowed for this action')
         mail = self.browse(cr, uid, ids[0], context=context)
-        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&template_model=%s&enable_editor=1' % (ids[0], mail.mailing_model)
+        url = '/website_mail/email_designer?model=mail.mass_mailing&res_id=%d&template_model=%s&return_action=%d&enable_editor=1' % (ids[0], mail.mailing_model, context['params']['action'])
         return {
             'name': _('Open with Visual Editor'),
             'type': 'ir.actions.act_url',
@@ -594,6 +594,7 @@ class MassMailing(osv.Model):
             comp_ctx = dict(context, active_ids=res_ids)
             composer_values = {
                 'author_id': author_id,
+                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing.body_html,
                 'subject': mailing.name,
                 'model': mailing.mailing_model,

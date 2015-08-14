@@ -370,13 +370,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         scale_read: function(){
             var self = this;
             var ret = new $.Deferred();
-            console.log('scale_read');
+            if (self.use_debug_weight) {
+                return (new $.Deferred()).resolve({weight:this.debug_weight, unit:'Kg', info:'ok'});
+            }
             this.message('scale_read',{})
                 .then(function(weight){
-                    console.log(weight)
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : weight);
+                    ret.resolve(weight);
                 }, function(){ //failed to read weight
-                    ret.resolve(self.use_debug_weight ? self.debug_weight : {weight:0.0, unit:'Kg', info:'ok'});
+                    ret.resolve({weight:0.0, unit:'Kg', info:'ok'});
                 });
             return ret;
         },
@@ -415,9 +416,9 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                             send_printing_job();
                         },function(error){
                             if (error) {
-                                self.pos.pos_widget.screen_selector.show_popup('error',{
-                                    'message': _t('PosBox Printing Error'),
-                                    'comment': _t("The receipt could not be printed. The software installed on the posbox is probably out of date. Please refer to the software instructions in the posbox manual or contact the customer support"),
+                                self.pos.pos_widget.screen_selector.show_popup('error-traceback',{
+                                    'message': _t('Printing Error: ') + error.data.message,
+                                    'comment': error.data.debug,
                                 });
                                 return;
                             }
@@ -695,7 +696,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 };
             }
 
-            if(parse_result.type in {'product':'', 'weight':'', 'price':'', 'discount':''}){    //ean is associated to a product
+            if(parse_result.type in {'product':'', 'weight':'', 'price':''}){    //ean is associated to a product
                 if(this.action_callback['product']){
                     this.action_callback['product'](parse_result);
                 }

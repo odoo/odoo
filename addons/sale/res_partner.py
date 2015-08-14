@@ -29,7 +29,7 @@ class res_partner(osv.osv):
         # The current user may not have access rights for sale orders
         try:
             for partner in self.browse(cr, uid, ids, context):
-                res[partner.id] = len(partner.sale_order_ids)
+                res[partner.id] = len(partner.sale_order_ids) + len(partner.mapped('child_ids.sale_order_ids'))
         except:
             pass
         return res

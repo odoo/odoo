@@ -55,5 +55,4 @@ sent mails with personal token for the invitation of the survey.
     'auto_install': False,
     'application': True,
     'sequence': 10,
-    'images': [],
 }

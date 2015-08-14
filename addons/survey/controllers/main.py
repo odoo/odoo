@@ -29,8 +29,7 @@ from math import ceil
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF
-from openerp.tools.safe_eval import safe_eval
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
 
 
 _logger = logging.getLogger(__name__)
@@ -106,11 +105,11 @@ class WebsiteSurvey(http.Controller):
             user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
         else:
             try:
-                user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)], context=context)[0]
+                user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)], context=context)[0]
             except IndexError:  # Invalid token
                 return request.website.render("website.403")
             else:
-                user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+                user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
         # Do not open expired survey
         errpage = self._check_deadline(cr, uid, user_input, context=context)
@@ -141,11 +140,11 @@ class WebsiteSurvey(http.Controller):
 
         # Load the user_input
         try:
-            user_input_id = user_input_obj.search(cr, uid, [('token', '=', token)])[0]
+            user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', token)])[0]
         except IndexError:  # Invalid token
             return request.website.render("website.403")
         else:
-            user_input = user_input_obj.browse(cr, uid, [user_input_id], context=context)[0]
+            user_input = user_input_obj.browse(cr, SUPERUSER_ID, [user_input_id], context=context)[0]
 
         # Do not display expired survey (even if some pages have already been
         # displayed -- There's a time for everything!)
@@ -167,6 +166,11 @@ class WebsiteSurvey(http.Controller):
         elif user_input.state == 'skip':
             flag = (True if prev and prev == 'prev' else False)
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
+
+            #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
+            if not page:
+                page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=True, context=context)
+
             data = {'survey': survey, 'page': page, 'page_nr': page_nr, 'token': user_input.token}
             if last:
                 data.update({'last': True})
@@ -185,9 +189,9 @@ class WebsiteSurvey(http.Controller):
 
         # Fetch previous answers
         if page:
-            ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token), ('page_id', '=', page.id)], context=context)
+            ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token), ('page_id', '=', page.id)], context=context)
         else:
-            ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token)], context=context)
+            ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token)], context=context)
         previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
 
         # Return non empty answers in a JSON compatible format
@@ -227,7 +231,7 @@ class WebsiteSurvey(http.Controller):
         ret = {}
 
         # Fetch answers
-        ids = user_input_line_obj.search(cr, uid, [('user_input_id.token', '=', token)], context=context)
+        ids = user_input_line_obj.search(cr, SUPERUSER_ID, [('user_input_id.token', '=', token)], context=context)
         previous_answers = user_input_line_obj.browse(cr, uid, ids, context=context)
 
         # Compute score for each question
@@ -264,14 +268,15 @@ class WebsiteSurvey(http.Controller):
 
             user_input_line_obj = request.registry['survey.user_input_line']
             try:
-                user_input_id = user_input_obj.search(cr, uid, [('token', '=', post['token'])], context=context)[0]
+                user_input_id = user_input_obj.search(cr, SUPERUSER_ID, [('token', '=', post['token'])], context=context)[0]
             except KeyError:  # Invalid token
                 return request.website.render("website.403")
+            user_input = user_input_obj.browse(cr, SUPERUSER_ID, user_input_id, context=context)
+            user_id = uid if user_input.type != 'link' else SUPERUSER_ID
             for question in questions:
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
-                user_input_line_obj.save_lines(cr, uid, user_input_id, question, post, answer_tag, context=context)
+                user_input_line_obj.save_lines(cr, user_id, user_input_id, question, post, answer_tag, context=context)
 
-            user_input = user_input_obj.browse(cr, uid, user_input_id, context=context)
             go_back = post['button_submit'] == 'previous'
             next_page, _, last = survey_obj.next_page(cr, uid, user_input, page_id, go_back=go_back, context=context)
             vals = {'last_displayed_page_id': page_id}
@@ -279,7 +284,7 @@ class WebsiteSurvey(http.Controller):
                 vals.update({'state': 'done'})
             else:
                 vals.update({'state': 'skip'})
-            user_input_obj.write(cr, uid, user_input_id, vals, context=context)
+            user_input_obj.write(cr, user_id, user_input_id, vals, context=context)
             ret['redirect'] = '/survey/fill/%s/%s' % (survey.id, post['token'])
             if go_back:
                 ret['redirect'] += '/prev'
@@ -400,7 +405,7 @@ class WebsiteSurvey(http.Controller):
         survey_obj = request.registry['survey.survey']
         result = []
         if question.type == 'multiple_choice':
-            result.append({'key': str(question.question),
+            result.append({'key': ustr(question.question),
                            'values': survey_obj.prepare_result(request.cr, request.uid, question, current_filters, context=request.context)['answers']
                            })
         if question.type == 'simple_choice':

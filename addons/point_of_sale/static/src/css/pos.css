@@ -371,6 +371,11 @@ td {
 
 .pos .order-selector {
     display: inline-block;
+    max-width: 640px;
+    max-height: 48px;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-x: auto;
 }
 .pos .orders {
     display: inline-block;
@@ -1113,7 +1118,14 @@ td {
     word-wrap: break-word;
 }
 
+@page {
+    margin: 0;
+}
+
 @media print {
+    * {
+        color: black !important;
+    }
     .oe_leftbar,
     .pos .pos-topheader, 
     .pos .pos-leftpane, 
@@ -1743,8 +1755,9 @@ td {
 .pos .popup .comment.traceback {
     height: 264px;
     overflow: auto;
-    font-size: 14px;
+    font-size: 12px;
     text-align: left;
+    white-space: pre-wrap;
     font-family: 'Inconsolata';
     -webkit-user-select: text;
        -moz-user-select: text;

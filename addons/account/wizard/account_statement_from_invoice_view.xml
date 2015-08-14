@@ -7,7 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Import Entries">
                     <separator string="Payable and Receivables"/>
-                    <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
+                    <field height="300" width="700"
+                        name="line_ids"
+                        domain="[('account_id.type','in',['receivable','payable']), ('reconcile_id','=',False), ('state', '=', 'valid')]"
+                        context="{'currency':True}" />
                     <footer>
                         <button string="Ok" name="populate_statement" type="object" class="oe_highlight"/>
                         or

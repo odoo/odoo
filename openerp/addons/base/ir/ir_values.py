@@ -335,7 +335,7 @@ class ir_values(osv.osv):
                 (row['id'], row['name'], pickle.loads(row['value'].encode('utf-8'))))
         return defaults.values()
 
-    # use ormcache: this is called a lot by BaseModel.add_default_value()!
+    # use ormcache: this is called a lot by BaseModel.default_get()!
     @tools.ormcache(skiparg=2)
     def get_defaults_dict(self, cr, uid, model, condition=False):
         """ Returns a dictionary mapping field names with their corresponding
@@ -423,7 +423,7 @@ class ir_values(osv.osv):
             if action_model_name not in self.pool:
                 continue    # unknow model? skip it
             action_model = self.pool[action_model_name]
-            fields = [field for field in action_model._all_columns if field not in EXCLUDED_FIELDS]
+            fields = [field for field in action_model._fields if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
                 action_def = action_model.read(cr, uid, int(action_id), fields, context)

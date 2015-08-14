@@ -157,12 +157,11 @@ class TestConvertBack(common.TransactionCase):
         element = html.fromstring(
             rendered, parser=html.HTMLParser(encoding='utf-8'))
 
-        column = Model._all_columns[field].column
         converter = self.registry('website.qweb').get_converter_for(
             element.get('data-oe-type'))
 
         value_back = converter.from_html(
-            self.cr, self.uid, model, column, element)
+            self.cr, self.uid, model, Model._fields[field], element)
 
         if isinstance(expected, str):
             expected = expected.decode('utf-8')
@@ -240,12 +239,11 @@ class TestConvertBack(common.TransactionCase):
         # emulate edition
         element.text = "New content"
 
-        column = Model._all_columns[field].column
         converter = self.registry('website.qweb').get_converter_for(
             element.get('data-oe-type'))
 
         value_back = converter.from_html(
-            self.cr, self.uid, model, column, element)
+            self.cr, self.uid, model, Model._fields[field], element)
 
         self.assertIsNone(
             value_back, "the m2o converter should return None to avoid spurious"

@@ -12,8 +12,8 @@
   I check Timesheet line for employee in current Timesheet
 -
   !python {model: hr.analytic.timesheet}: |
-    import datetime
-    start = (datetime.date.today().strftime('%Y-%m-%d'))
+    from openerp.osv import fields
+    start = fields.date.context_today(self, cr, uid, context=context)
     task_work = self.search(cr, uid, [("name","=","Social network integration: Test Timesheet records")],context)[0]
     task_ids = self.browse(cr, uid, task_work, context)
     assert task_ids.user_id.id == ref("base.user_demo"), 'Error, The User in Timesheet is not Correct'

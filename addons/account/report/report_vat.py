@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from functools import partial
 from openerp.osv import osv
 from openerp.report import report_sxw
 from common_report_header import common_report_header
@@ -30,11 +31,22 @@ class tax_report(report_sxw.rml_parse, common_report_header):
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         res = {}
+        if not data:
+            company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
+            data = {
+                'form': {
+                    'based_on': 'invoices',
+                    'company_id': company_id,
+                    'display_detail': False,
+                }
+            }
         self.period_ids = []
+        self.fiscalyear_id = False
         period_obj = self.pool.get('account.period')
         self.display_detail = data['form']['display_detail']
         res['periods'] = ''
         res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
+        self.fiscalyear_id = res['fiscalyear']
 
         if data['form'].get('period_from', False) and data['form'].get('period_to', False):
             self.period_ids = period_obj.build_ctx_periods(self.cr, self.uid, data['form']['period_from'], data['form']['period_to'])
@@ -53,7 +65,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             'get_codes': self._get_codes,
             'get_general': self._get_general,
             'get_currency': self._get_currency,
-            'get_lines': self._get_lines,
+            'get_lines': partial(self._get_lines, context=context),
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
@@ -66,13 +78,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
 
     def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
         period_list = self.period_ids
+        fiscalyear_id = self.fiscalyear_id
         res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
         if period_list:
             res = self._add_codes(based_on, res, period_list, context=context)
         else:
-            self.cr.execute ("select id from account_fiscalyear")
-            fy = self.cr.fetchall()
-            self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
+            if not fiscalyear_id:
+                self.cr.execute("select id from account_fiscalyear where company_id = %s", (company_id,))
+                result = self.cr.fetchall()
+                fy = [x[0] for x in result]
+            else:
+                fy = [fiscalyear_id]
+            self.cr.execute("select id from account_period where fiscalyear_id = ANY(%s)", (fy,))
             periods = self.cr.fetchall()
             for p in periods:
                 period_list.append(p[0])
@@ -81,19 +98,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         i = 0
         top_result = []
         while i < len(res):
-
-            res_dict = { 'code': res[i][1].code,
-                'name': res[i][1].name,
+            res_dict = { 'code': res[i][1]['code'],
+                'name': res[i][1]['name'],
                 'debit': 0,
                 'credit': 0,
-                'tax_amount': res[i][1].sum_period,
+                'tax_amount': res[i][1]['sum_period'],
                 'type': 1,
                 'level': res[i][0],
                 'pos': 0
             }
 
             top_result.append(res_dict)
-            res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
+            res_general = self._get_general(res[i][1]['id'], period_list, company_id, based_on, context=context)
             ind_general = 0
             while ind_general < len(res_general):
                 res_general[ind_general]['type'] = 2
@@ -143,15 +159,18 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                         account.name AS name,  \
                         account.code AS code \
                     FROM account_move_line AS line, \
-                        account_account AS account \
+                        account_account AS account, \
+                        account_move as move \
                     WHERE line.state <> %s \
+                        AND line.move_id = move.id \
                         AND line.tax_code_id = %s  \
                         AND line.account_id = account.id \
                         AND account.company_id = %s \
                         AND line.period_id IN %s\
                         AND account.active \
+                        AND move.state <> %s \
                     GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
-                        company_id, periods_ids,))
+                        company_id, periods_ids, 'draft',))
         res = self.cr.dictfetchall()
 
         i = 0
@@ -162,7 +181,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
 
     def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
+        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], context=context)
 
         res = []
         for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
@@ -172,6 +191,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         return res
 
     def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
+        if context is None:
+            context = {}
+
         if account_list is None:
             account_list = []
         if period_list is None:
@@ -180,12 +202,19 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
             ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
-            sum_tax_add = 0
+            code = {}
             for period_ind in period_list:
-                for code in obj_tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
-                    sum_tax_add = sum_tax_add + code.sum_period
-
-            code.sum_period = sum_tax_add
+                context2 = dict(context, period_id=period_ind, based_on=based_on)
+                record = obj_tc.browse(self.cr, self.uid, ids, context=context2)[0]
+                if not code:
+                    code = {
+                        'id': record.id,
+                        'name': record.name,
+                        'code': record.code,
+                        'sequence': record.sequence,
+                        'sum_period': 0,
+                    }
+                code['sum_period'] += record.sum_period
 
             res.append((account[0], code))
         return res

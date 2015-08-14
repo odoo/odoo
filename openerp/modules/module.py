@@ -22,6 +22,8 @@
 
 import functools
 import imp
+import importlib
+import inspect
 import itertools
 import logging
 import os
@@ -29,6 +31,7 @@ import re
 import sys
 import time
 import unittest
+import threading
 from os.path import join as opj
 
 import unittest2
@@ -366,23 +369,26 @@ def adapt_version(version):
     return version
 
 def get_test_modules(module):
-    """ Return a list of module for the addons potentialy containing tests to
+    """ Return a list of module for the addons potentially containing tests to
     feed unittest2.TestLoader.loadTestsFromModule() """
     # Try to import the module
-    module = 'openerp.addons.' + module + '.tests'
+    modpath = 'openerp.addons.' + module
     try:
-        __import__(module)
+        mod = importlib.import_module('.tests', modpath)
     except Exception, e:
         # If module has no `tests` sub-module, no problem.
         if str(e) != 'No module named tests':
             _logger.exception('Can not `import %s`.', module)
         return []
 
-    # include submodules too
-    result = [mod_obj for name, mod_obj in sys.modules.iteritems()
-              if mod_obj # mod_obj can be None
-              if name.startswith(module)
-              if re.search(r'test_\w+$', name)]
+    if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
+        _logger.warn(
+            "Found deprecated fast_suite or checks attribute in test module "
+            "%s. These have no effect in or after version 8.0.",
+            mod.__name__)
+
+    result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
+              if name.startswith('test_')]
     return result
 
 # Use a custom stream object to log the test executions.
@@ -430,6 +436,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
     global current_test
     current_test = module_name
     mods = get_test_modules(module_name)
+    threading.currentThread().testing = True
     r = True
     for m in mods:
         tests = unwrap_suite(unittest2.TestLoader().loadTestsFromModule(m))
@@ -447,6 +454,7 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
 
     current_test = None
+    threading.currentThread().testing = False
     return r
 
 def unwrap_suite(test):

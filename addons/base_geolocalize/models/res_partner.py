@@ -64,8 +64,8 @@ class res_partner(osv.osv):
     _inherit = "res.partner"
 
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude'),
-        'partner_longitude': fields.float('Geo Longitude'),
+        'partner_latitude': fields.float('Geo Latitude', digits=(16, 5)),
+        'partner_longitude': fields.float('Geo Longitude', digits=(16, 5)),
         'date_localization': fields.date('Geo Localization Date'),
     }
 

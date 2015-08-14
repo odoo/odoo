@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-09-23 16:28+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-21 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -224,6 +224,12 @@ msgid "<section class=\"row readable\">\n"
 msgstr ""
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:211
+#, python-format
+msgid "A new post %s has been published on the %s blog."
+msgstr ""
+
+#. module: website_blog
 #: view:website:website_blog.blog_post_short
 msgid "About us"
 msgstr ""
@@ -252,6 +258,11 @@ msgstr ""
 #: field:blog.post,author_id:0
 #: field:blog.post,create_uid:0
 msgid "Author"
+msgstr ""
+
+#. module: website_blog
+#: field:blog.post,author_avatar:0
+msgid "Avatar"
 msgstr ""
 
 #. module: website_blog
@@ -293,8 +304,8 @@ msgid "Blog Post History"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:308
-#: code:addons/website_blog/models/website_blog.py:100
+#: code:addons/website_blog/controllers/main.py:305
+#: code:addons/website_blog/models/website_blog.py:133
 #, python-format
 msgid "Blog Post Title"
 msgstr ""
@@ -316,6 +327,12 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.actions.act_window,name:website_blog.action_tags
+#: model:ir.ui.menu,name:website_blog.menu_blog_tag
+msgid "Blog Tags"
 msgstr ""
 
 #. module: website_blog
@@ -346,6 +363,12 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:33
 #, python-format
 msgid "Click <em>Continue</em> to create the blog post."
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:212
+#, python-format
+msgid "Click here to access the post."
 msgstr ""
 
 #. module: website_blog
@@ -668,13 +691,6 @@ msgid "New Blog Post"
 msgstr ""
 
 #. module: website_blog
-#: model:mail.message.subtype,description:website_blog.mt_blog_post_new
-#: model:mail.message.subtype,name:website_blog.mt_blog_blog_post_new
-#: model:mail.message.subtype,name:website_blog.mt_blog_post_new
-msgid "New Post"
-msgstr ""
-
-#. module: website_blog
 #: view:website:website.layout
 #: model:website.menu,name:website_blog.menu_news
 msgid "News"
@@ -746,9 +762,8 @@ msgid "Post"
 msgstr ""
 
 #. module: website_blog
-#: model:mail.message.subtype,description:website_blog.mt_blog_post_published
-#: model:mail.message.subtype,name:website_blog.mt_blog_post_published
-msgid "Post Published"
+#: field:blog.tag,post_ids:0
+msgid "Posts"
 msgstr ""
 
 #. module: website_blog
@@ -773,6 +788,12 @@ msgstr ""
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:10
 #, python-format
 msgid "Published"
+msgstr ""
+
+#. module: website_blog
+#: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
+#: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
+msgid "Published Post"
 msgstr ""
 
 #. module: website_blog
@@ -837,8 +858,8 @@ msgid "Sub Title"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:309
-#: code:addons/website_blog/models/website_blog.py:101
+#: code:addons/website_blog/controllers/main.py:306
+#: code:addons/website_blog/models/website_blog.py:134
 #, python-format
 msgid "Subtitle"
 msgstr ""
@@ -848,6 +869,16 @@ msgstr ""
 #: field:blog.post,message_summary:0
 #: field:blog.post.history,summary:0
 msgid "Summary"
+msgstr ""
+
+#. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_form
+msgid "Tag Form"
+msgstr ""
+
+#. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_tree
+msgid "Tag List"
 msgstr ""
 
 #. module: website_blog
@@ -868,7 +899,7 @@ msgid "The Future of Emails"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:211
+#: code:addons/website_blog/models/website_blog.py:265
 #, python-format
 msgid "There are no changes in revisions."
 msgstr ""
@@ -928,12 +959,17 @@ msgid "Use well designed building blocks to structure the content of your blog. 
 msgstr ""
 
 #. module: website_blog
+#: view:blog.tag:website_blog.blog_tag_form
+msgid "Used in:"
+msgstr ""
+
+#. module: website_blog
 #: help:mail.message,path:0
 msgid "Used to display messages in a paragraph-based chatter using a unique path;"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:211
+#: code:addons/website_blog/models/website_blog.py:265
 #: code:addons/website_blog/wizard/document_page_show_diff.py:50
 #, python-format
 msgid "Warning!"
@@ -1085,6 +1121,11 @@ msgstr ""
 #. module: website_blog
 #: view:website:website_blog.blog_post_short
 msgid "not published"
+msgstr ""
+
+#. module: website_blog
+#: view:website:website_blog.blog_post_complete
+msgid "on"
 msgstr ""
 
 #. module: website_blog

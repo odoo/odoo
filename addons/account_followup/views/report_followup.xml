@@ -4,11 +4,12 @@
 <template id="report_followup">
     <t t-call="report.html_container">
         <t t-foreach="ids_to_objects(data['form']['partner_ids'])" t-as="o">
+            <t t-esc="setLang(o.partner_id.lang)"/>
             <t t-call="report.external_layout">
                 <div class="page">
                     <div class="row">
                         <div class="col-xs-5 col-xs-offset-7">
-                            <div t-field="o.partner_id" 
+                            <div t-field="o.invoice_partner_id"
                                 t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
                              <span t-field="o.partner_id.vat"/>
                         </div>

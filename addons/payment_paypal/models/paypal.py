@@ -113,7 +113,7 @@ class AcquirerPaypal(osv.Model):
         paypal_tx_values.update({
             'cmd': '_xclick',
             'business': acquirer.paypal_email_account,
-            'item_name': tx_values['reference'],
+            'item_name': '%s: %s' % (acquirer.company_id.name, tx_values['reference']),
             'item_number': tx_values['reference'],
             'amount': tx_values['amount'],
             'currency_code': tx_values['currency'] and tx_values['currency'].name or '',

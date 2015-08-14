@@ -1,21 +1,22 @@
-# Macedonian translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-09-23 16:28+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 08:02+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2014-09-24 09:35+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -39,7 +40,7 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
+msgstr "Ви дозволува да изберете рута за испорака на ставките од налогот за продажба"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -69,7 +70,7 @@ msgstr "Компании"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:277
-#: code:addons/sale_stock/sale_stock.py:351
+#: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
 msgstr "Грешка во конфигурацијата!"
@@ -118,7 +119,7 @@ msgstr "Овозможи фактурирање на испратници"
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Овозможи рута на ставки од налог за продажба"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
@@ -140,9 +141,7 @@ msgstr "Incoterm"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
-"Интернационалните Економски Термини претставуваат низа от предефинирани "
-"комерцијални термини што се користат при интернационални трансакции."
+msgstr "Интернационалните Економски Термини претставуваат низа от предефинирани комерцијални термини што се користат при интернационални трансакции."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
@@ -162,23 +161,20 @@ msgstr "Фактура врз база на налози за продажба"
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
-msgstr ""
+msgstr "Дозволува да ги префрлате внесовите под задачите дефинирани за Менаџмент на проект со ставките од распоредот за одреден датум и одреден корисник  со ефект на креирање, уредување и бришење на двете места и автоматско креирање на проектни задачи од ставките за набавка.\n-Ова ги инсталира модулите project_timesheet и sale_service."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
-msgstr ""
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
+msgstr "Маргина на грешки за датумите ветени на клиентите. Производите ќе бидат закажани за набавка и испорака толку денови порано од ветениот датум, за да се земат во предвид неочекувани одложувања во синџирот на испорака."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:346
+#: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Нема доволно залиха ! : "
@@ -192,7 +188,7 @@ msgstr "Број на пакети"
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Само администратори можат да ги променат подесувањата"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -203,9 +199,7 @@ msgstr "Пакување"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr ""
-"Избери 'Испорака на производ кога ќе биде достапен' доколку дозволите "
-"делумна испорака."
+msgstr "Избери 'Испорака на производ кога ќе биде достапен' доколку дозволите делумна испорака."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
@@ -231,12 +225,12 @@ msgstr "Подготви фактура врз основа на активно�
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Производ"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Урнек на производ"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -256,7 +250,7 @@ msgstr "Повторно креирај испратница"
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "Рута"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -266,12 +260,12 @@ msgstr "Налог за продажба"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "Ставки од налог за продажба"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "Продажна услуга"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -294,10 +288,7 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
-"Налогот за продажба стандардно ќе биде конфигуриран да ги испорачува сите "
-"производи наеднаш наместо секој производ кога ќе биде достапен. Ова може да "
-"влијае на цената на испорака."
+msgstr "Налогот за продажба стандардно ќе биде конфигуриран да ги испорачува сите производи наеднаш наместо секој производ кога ќе биде достапен. Ова може да влијае на цената на испорака."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -307,11 +298,10 @@ msgstr "Сигурносни денови"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Се избира на ставки од налог за продажба"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "Испорачано"
 
@@ -333,16 +323,14 @@ msgstr "Стандардниот начин за фактурирање е"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "Да се фактурира"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
-"Да се дозволи продавачот да прави фактури за испратниците користејќи го "
-"менито 'Испораки за фактурирање'"
+msgstr "Да се дозволи продавачот да прави фактури за испратниците користејќи го менито 'Испораки за фактурирање'"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -350,35 +338,29 @@ msgid "View Delivery Order"
 msgstr "Види ја испратницата"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "Магацин"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Може да креирате фактури врз база на налози за продажба или испораки."
+msgid "You can generate invoices based on sales orders or based on shippings."
+msgstr "Може да креирате фактури врз база на налози за продажба или испораки."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr ""
-"Морате прво да ги откажете испратниците прикачани на овој налог за продажба."
+msgstr "Морате прво да ги откажете испратниците прикачани на овој налог за продажба."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:342
+#: code:addons/sale_stock/sale_stock.py:343
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Сакаш да продадеш %.2f %s но на залиха имаш само %.2f %s !\n"
-"Вистинската залиха е %.2f %s. (без резервации)"
+msgstr "Сакаш да продадеш %.2f %s но на залиха имаш само %.2f %s !\nВистинската залиха е %.2f %s. (без резервации)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -388,23 +370,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"Вие ја избравте следната количина на парчиња: %d ,\n"
-"но таа не е компатибилна со избраното пакување.\n"
-"Еве препорачана количина на парчиња според пакувањето:\n"
-"EAN: %s Количина: %s Тип: %s"
+msgstr "Вие ја избравте следната количина на парчиња: %d ,\nно таа не е компатибилна со избраното пакување.\nЕве препорачана количина на парчиња според пакувањето:\nEAN: %s Количина: %s Тип: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "денови"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
-msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "Превземено"

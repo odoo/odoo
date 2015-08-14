@@ -4,6 +4,7 @@ from openerp.tools.translate import _
 
 class stock_picking_wave(osv.osv):
     _name = "stock.picking.wave"
+    _description = "Picking Wave"
     _order = "name desc"
     _columns = {
         'name': fields.char('Picking Wave Name', required=True, help='Name of the picking wave', copy=False),

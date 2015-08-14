@@ -265,7 +265,7 @@ class Cursor(object):
     def split_for_in_conditions(self, ids):
         """Split a list of identifiers into one or more smaller tuples
            safe for IN conditions, after uniquifying them."""
-        return tools.misc.split_every(self.IN_MAX, set(ids))
+        return tools.misc.split_every(self.IN_MAX, ids)
 
     def print_log(self):
         global sql_counter
@@ -402,6 +402,10 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+    @property
+    def closed(self):
+        return self._closed
+
 class TestCursor(Cursor):
     """ A cursor to be used for tests. It keeps the transaction open across
         several requests, and simulates committing, rolling back, and closing.
@@ -477,8 +481,6 @@ class ConnectionPool(object):
 
     @locked
     def borrow(self, dsn):
-        self._debug('Borrow connection to %r', dsn)
-
         # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
             if cnx.closed:
@@ -503,7 +505,7 @@ class ConnectionPool(object):
                     continue
                 self._connections.pop(i)
                 self._connections.append((cnx, True))
-                self._debug('Existing connection found at index %d', i)
+                self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
 
                 return cnx
 
@@ -512,6 +514,8 @@ class ConnectionPool(object):
             for i, (cnx, used) in enumerate(self._connections):
                 if not used:
                     self._connections.pop(i)
+                    if not cnx.closed:
+                        cnx.close()
                     self._debug('Removing old connection at index %d: %r', i, cnx.dsn)
                     break
             else:
@@ -546,11 +550,15 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn=None):
-        _logger.info('%r: Close all connections to %r', self, dsn)
+        count = 0
+        last = None
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn is None or cnx._original_dsn == dsn:
                 cnx.close()
-                self._connections.pop(i)
+                last = self._connections.pop(i)[0]
+                count += 1
+        _logger.info('%r: Closed %d connections %s', self, count,
+                    (dsn and last and 'to %r' % last.dsn) or '')
 
 
 class Connection(object):

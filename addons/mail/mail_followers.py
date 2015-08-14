@@ -18,6 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
+
+import threading
+
 from openerp.osv import osv, fields
 from openerp import tools, SUPERUSER_ID
 from openerp.tools.translate import _
@@ -210,14 +213,22 @@ class mail_notification(osv.Model):
         for chunk in chunks:
             mail_values = {
                 'mail_message_id': message.id,
-                'auto_delete': True,
+                'auto_delete': (context or {}).get('mail_auto_delete', True),
+                'mail_server_id': (context or {}).get('mail_server_id', False),
                 'body_html': body_html,
                 'recipient_ids': [(4, id) for id in chunk],
                 'references': references,
             }
             mail_values.update(custom_values)
             email_ids.append(self.pool.get('mail.mail').create(cr, uid, mail_values, context=context))
-        if force_send and len(chunks) < 2:  # for more than 50 followers, use the queue system
+        # NOTE:
+        #   1. for more than 50 followers, use the queue system
+        #   2. do not send emails immediately if the registry is not loaded,
+        #      to prevent sending email during a simple update of the database
+        #      using the command-line.
+        if force_send and len(chunks) < 2 and \
+               (not self.pool._init or
+                getattr(threading.currentThread(), 'testing', False)):
             self.pool.get('mail.mail').send(cr, uid, email_ids, context=context)
         return True
 

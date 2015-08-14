@@ -392,7 +392,7 @@ class account_invoice(osv.osv):
                 if inv.type in ('in_invoice', 'in_refund'):
                     ref = inv.reference
                 else:
-                    ref = self._convert_ref(inv.number)
+                    ref = inv.number
                 obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'], context=context)
                 ctx = context.copy()
                 ctx.update({'date': inv.date_invoice})
@@ -442,7 +442,9 @@ class sale_order_line(osv.osv):
         if ids:
             sale_line = self.browse(cr, uid, ids[0], context=context)
             for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-                rec = acct_anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+                rec = acct_anal_def_obj.account_get(cr, uid, line.product_id.id,
+                        sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'),
+                        sale_line.order_id.company_id.id, context=context)
 
                 if rec:
                     inv_line_obj.write(cr, uid, [line.id], {'analytics_id': rec.analytics_id.id}, context=context)

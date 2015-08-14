@@ -238,6 +238,10 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     File "start.bat"
     File "stop.bat"
 
+    SetOutPath "$INSTDIR\thirdparty"
+    File /r "${STATIC_PATH}\wkhtmltopdf\*"
+    File /r "${STATIC_PATH}\less\*"
+
 # If there is a previous install of the OpenERP Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_host" $TextPostgreSQLHostname
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
@@ -245,6 +249,7 @@ Section $(TITLE_OpenERP_Server) SectionOpenERP_Server
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
     # Fix the addons path
     WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "addons_path" "$INSTDIR\server\openerp\addons"
+    WriteIniStr "$INSTDIR\server\openerp-server.conf" "options" "bin_path" "$INSTDIR\thirdparty"
 
     # if we're going to install postgresql force it's path,
     # otherwise we consider it's always done and/or correctly tune by users
@@ -324,7 +329,7 @@ Section "Uninstall"
 
     Rmdir /r "$INSTDIR\server"
     Rmdir /r "$INSTDIR\service"
-
+    Rmdir /r "$INSTDIR\thirdparty"
     DeleteRegKey HKLM "${UNINSTALL_REGISTRY_KEY}"
 SectionEnd
 

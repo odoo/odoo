@@ -15,7 +15,7 @@
     background-image: -webkit-radial-gradient(circle, $gradient)
     background-image: -moz-radial-gradient($gradient)
     background-image: -ms-radial-gradient($gradient)
-    background-image: radial-gradient($gradient)
+    background-image: radial-gradient(circle, $gradient)
 
 @mixin radius($radius: 5px)
     -moz-border-radius: $radius
@@ -50,6 +50,9 @@
     // KanbanView {{{
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
     background: white
+    &.oe_background_grey
+        > table.oe_kanban_groups
+            background-color: #eee
     height: inherit
     .oe_kanban_column_higlight
         background: #eeddf6 !important
@@ -200,7 +203,6 @@
     .oe_kanban_group_title_undefined
         color: #666666
     .oe_kanban_group_title_vertical
-        writing-mode: tb-rl
         -webkit-transform: rotate(90deg)
         -moz-transform: rotate(90deg)
         -o-transform: rotate(90deg)
@@ -539,7 +541,6 @@
     .oe_kanban_column, .oe_kanban_group_header
         padding: 0px
         background: #ffffff
-
 .openerp
     .oe_popup_form
         .oe_kanban_buttons
@@ -565,7 +566,6 @@
     .oe_kanban_group_header.oe_kanban_group_folded .oe_kanban_group_title_vertical
         display: inline-block !important
     .oe_kanban_group_title_vertical
-        -ms-writing-mode: lr-tb !important
         background: rgb(240, 238, 238)
     &.oe_kanban_grouped
         .oe_kanban_group_header
