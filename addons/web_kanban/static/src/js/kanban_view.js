@@ -261,7 +261,6 @@ var KanbanView = View.extend({
                     grouped: true,
                 };
             });
-            return def;
         });
     },
 
