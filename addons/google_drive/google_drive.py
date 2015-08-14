@@ -97,7 +97,10 @@ class config(osv.Model):
         data_json = json.dumps(data)
         # resp, content = Http().request(request_url, "POST", data_json, headers)
         req = urllib2.Request(request_url, data_json, headers)
-        content = urllib2.urlopen(req, timeout=TIMEOUT).read()
+        try:
+            content = urllib2.urlopen(req, timeout=TIMEOUT).read()
+        except urllib2.HTTPError, e:
+            raise UserError(_('Error From the Google\n%s' % (e)))
         content = json.loads(content)
         res = {}
         if content.get('alternateLink'):
