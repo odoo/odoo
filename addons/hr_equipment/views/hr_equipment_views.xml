@@ -279,26 +279,20 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div><b><field name="name"/><span t-if="record.category_id.raw_value">(<field name="category_id"/>)</span></b></div>
-                                <div>
-                                    <span t-if="record.employee_id.raw_value"><field name="employee_id"/><br/></span>
-                                    <span t-if="record.department_id.raw_value"><field name="department_id"/><br/></span>
-                                    <a t-if="record.maintenance_ids.raw_value"  type="action" name="%(hr_equipment_request_action_from_equipment)d" style="margin-right: 5px">
-                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
-                                    </a>
-                                    <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                        <span t-if="record.serial_no.raw_value"><field name="serial_no"/><br/></span>
-                                        <span t-if="!record.employee_id.raw_value and !record.department_id.raw_value">Unassigned<br/></span>
-                                    </div>
+                                <div><b><field name="name"/><span t-if="record.model.raw_value"> (<field name="model"/>)</span></b></div>
+                                <div class="mt4">
+                                    <div t-if="record.serial_no.raw_value"><field name="serial_no"/></div>
+                                    <div t-if="!record.employee_id.raw_value and !record.department_id.raw_value">Unassigned</div>
+                                    <div t-if="record.employee_id.raw_value"><field name="employee_id"/></div>
+                                    <div t-if="record.department_id.raw_value"><field name="department_id"/></div>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
-                                    </t>
-                                    <span t-if="record.model.raw_value"><field name="model"/></span>
+                                <div class="oe_kanban_footer_left mt4">
+                                    <a t-if="record.maintenance_ids.raw_value" type="action" name="%(hr_equipment_request_action_from_equipment)d">
+                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
+                                    </a>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
