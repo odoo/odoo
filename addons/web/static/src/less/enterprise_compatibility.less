@@ -57,8 +57,30 @@
     background-color: white !important;
 }
 
+// Buttons and links
+@link-hover-decoration: none;
+.btn, .btn-group > .btn {
+    &:hover, &:active, &:focus, &:active:focus {
+        outline: none;
+    }
+}
 .btn-icon {
     .btn-default;
+}
+.oe_button {
+    .btn-default;
+    &.oe_highlight, &.btn-primary {
+        .btn-primary;
+    }
+    &.oe_link, &.btn-link {
+        .btn-link;
+    }
+}
+.oe_highlight {
+    .btn-primary;
+}
+.oe_link {
+    .btn-link;
 }
 
 .openerp .oe_avatar {
