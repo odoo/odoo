@@ -132,17 +132,17 @@ Tour.register({
             element:    '.tab-pane:eq(1).active .oe_form_field_x2many_list_row_add a'
         },
         {
-            title:      "select participant 1",
-            element:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(0)'
+            title:      "select Admin",
+            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]'
         },
         {
-            title:      "select participant 2",
-            waitFor:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(0):propChecked',
-            element:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(1)'
+            title:      "select Demo User",
+            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]:propChecked',
+            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Demo User)) .oe_list_record_selector input[type="checkbox"]'
         },
         {
             title:      "save selected participants",
-            waitFor:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(1):propChecked',
+            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Demo User)) .oe_list_record_selector input[type="checkbox"]:propChecked',
             element:    '.o_selectcreatepopup_search_select'
         },
 
