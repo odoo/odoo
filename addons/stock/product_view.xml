@@ -109,7 +109,7 @@
                     </div>
                 </group>
                 <group name="status" position="before">
-                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '!=', 'product')]}" groups="base.group_user">
                         <label for="qty_available"/>
                             <div>
                                 <field name="qty_available" class="oe_inline"/>
@@ -139,7 +139,7 @@
                     </group>
                 </group>
                 <group name="weight" position="before">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','=','service')]}">
+                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','!=','product')]}">
                         <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" domain="[('usage','=','production')]"/>
                         <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
