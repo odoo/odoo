@@ -314,7 +314,7 @@ class HttpCase(TransactionCase):
                         _logger.error("phantomjs: %s", line_[0])
                         # The second part of the log is for debugging
                         if len(line_) > 1:
-                            _logger.info("phantomjs: \n%s", line.split('\n\n')[1])
+                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
                         pass
                     break
                 elif line.startswith("warning"):
