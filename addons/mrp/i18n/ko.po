@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-08-14 05:58+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -22,12 +22,12 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr " 생산"
+msgstr "  제조"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr "# 부품명세서"
+msgstr "# 재료 명세서"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
@@ -232,12 +232,12 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr "사이클 내 금액"
+msgstr "회전 금액"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr "수량 (시간)"
+msgstr "시간당 수량"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -247,7 +247,7 @@ msgstr "수량 측정 단위"
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr "분석 저널"
+msgstr "분석 분개"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -290,7 +290,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Structure"
-msgstr "BOM 구조"
+msgstr "재료 명세서 구조"
 
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
@@ -311,13 +311,13 @@ msgstr ""
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:website:mrp.report_mrporder
 msgid "Bill Of Material"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr "BOM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -335,12 +335,12 @@ msgstr ""
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr "BoM 구조"
+msgstr "재료 명세서 구조"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
@@ -352,7 +352,7 @@ msgstr ""
 #. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289
@@ -376,12 +376,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr "BoM 라인"
+msgstr "재료 명세"
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "BoM 유형"
+msgstr "재료 명세서 유형"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:259
@@ -463,7 +463,7 @@ msgstr "상품의 수량을 변경"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr "가용성 체크"
+msgstr "가용성 확인"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -473,7 +473,7 @@ msgstr "코드"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr "업체"
+msgstr "회사"
 
 #. module: mrp
 #: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
@@ -481,7 +481,7 @@ msgstr "업체"
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 #: field:report.mrp.inout,company_id:0
 msgid "Company"
-msgstr "업체"
+msgstr "회사"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
@@ -490,7 +490,7 @@ msgstr "업체"
 #: view:product.template:mrp.product_template_search_view_procurment
 #, python-format
 msgid "Components"
-msgstr "구성 요소"
+msgstr "부품"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
@@ -512,7 +512,7 @@ msgstr "데이터 계산"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "구성"
+msgstr "환경 설정"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -523,12 +523,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Confirm"
-msgstr "확정"
+msgstr "확인"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Confirm Production"
-msgstr "생산 확정"
+msgstr "생산 확인"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -562,7 +562,7 @@ msgstr ""
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr "소비된 상품"
+msgstr "소모된 제품"
 
 #. module: mrp
 #: field:stock.move,consumed_for:0
@@ -585,7 +585,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr "사이클당 원가"
+msgstr "회전당 원가"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -610,7 +610,7 @@ msgstr ""
 #: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
@@ -625,29 +625,29 @@ msgstr "생성자:"
 #: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr "사이클 계정"
+msgstr "회전 계정"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
-msgstr "사이클 원가"
+msgstr "회전 원가"
 
 #. module: mrp
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "기록에 게시된 최근 메시지의 날짜."
+msgstr "레코드에 게시된 최근 메시지의 날짜."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr "일일"
+msgstr "매일"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -692,7 +692,7 @@ msgstr "완료"
 #. module: mrp
 #: field:mrp.production,date_finished:0
 msgid "End Date"
-msgstr "마감 날짜"
+msgstr "마감일"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
@@ -743,7 +743,7 @@ msgstr "팔로워"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Force Reservation"
-msgstr "예약하기"
+msgstr "강제 예약"
 
 #. module: mrp
 #: help:product.template,track_production:0
@@ -786,7 +786,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "분류 기준"
+msgstr "그룹화"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -795,7 +795,7 @@ msgstr "분류 기준"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr "분류 기준..."
+msgstr "그룹화..."
 
 #. module: mrp
 #: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
@@ -803,7 +803,7 @@ msgstr "분류 기준..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 포함함. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
+msgstr "대화 요약 (메시지 개수, ...)을 포함합니다. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -840,7 +840,7 @@ msgstr ""
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
+msgstr "선택하면 새로운 메시지에 주목할 필요가 있습니다."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -877,14 +877,14 @@ msgstr "내부 참조"
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr "유효하지 않은 액션!"
+msgstr "잘못된 동작!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr "은(는) 팔로워임"
+msgstr "팔로워입니까?"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -892,7 +892,7 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr "완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우, 위치를 설정하십시오. 생산 오퍼레이션을 하청 계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
+msgstr "완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우에는 위치를 설정하십시오. 제조 작업을 하청 계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
 
 #. module: mrp
 #: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
@@ -913,7 +913,7 @@ msgstr "최근 메시지 날짜"
 #: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
@@ -928,7 +928,7 @@ msgstr "최근 업데이트한 사람:"
 #: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -948,13 +948,13 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "완제품을 보관할 시스템의 위치"
+msgstr "완제품을 보관할 위치"
 
 #. module: mrp
 #: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr "로트"
+msgstr "롯트"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1009,7 +1009,7 @@ msgstr ""
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr "생산 리드 타임"
+msgstr "생산 소요 시간"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1018,7 +1018,7 @@ msgstr "생산 리드 타임"
 #: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
-msgstr "생산주문"
+msgstr "제조 주문"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:131
@@ -1093,7 +1093,7 @@ msgstr "메시지"
 #: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr "메시지 및 대화이력"
+msgstr "메시지 및 대화 이력"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1116,7 +1116,7 @@ msgstr "이름"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr "새로 만들기"
+msgstr "신규"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:127
@@ -1127,7 +1127,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Cycles"
-msgstr "싸이클 횟수"
+msgstr "회전 횟수"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1190,7 +1190,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr "오퍼레이션"
+msgstr "작업"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1210,12 +1210,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,bom_id:0
 msgid "Parent BoM"
-msgstr "부모 BoM"
+msgstr "상위 재료명세서"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "부모 라우팅"
+msgstr "상위 연결 경로"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1235,7 +1235,7 @@ msgstr "월별"
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr "주당"
+msgstr "주별"
 
 #. module: mrp
 #: selection:mrp.bom.line,type:0
@@ -1266,7 +1266,7 @@ msgstr "적절한 수량을 제공하십시오."
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 msgid "Print"
-msgstr "출력"
+msgstr "인쇄"
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
@@ -1369,13 +1369,13 @@ msgstr "상품 반올림"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "상품 서식"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr "상품 UOS"
+msgstr "상품 판매 단위"
 
 #. module: mrp
 #: help:mrp.bom.line,product_uos:0
@@ -1387,7 +1387,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr "상품 UOS 수량"
+msgstr "상품 판매 단위 수량"
 
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
@@ -1400,12 +1400,12 @@ msgstr ""
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
 msgid "Product Unit of Measure"
-msgstr "상품 UoM"
+msgstr "상품 측정 단위"
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr "상품 UoS"
+msgstr "상품 판매 단위"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
@@ -1442,7 +1442,7 @@ msgstr "생산 주문"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Production Order N° :"
-msgstr "생산 주문 번호:"
+msgstr "생산 주문 번호 :"
 
 #. module: mrp
 #: field:stock.move,production_id:0
@@ -1477,7 +1477,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr "생산 시작 직연"
+msgstr "생산 시작 지연"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_production_gantt
@@ -1528,7 +1528,7 @@ msgstr "속성"
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr "속성 카테고리"
+msgstr "속성 분류"
 
 #. module: mrp
 #: field:mrp.property,composition:0
@@ -1576,7 +1576,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 msgid "Raw Materials Location"
-msgstr "원재료 위치"
+msgstr "원자재 위치"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1608,12 +1608,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr "외부 플랜 내 위치에 대한 참조"
+msgstr "외부 계획에 위치를 참조합니다."
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr "리소스"
+msgstr "자원"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
@@ -1628,7 +1628,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr "담당자:"
+msgstr "담당자"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
@@ -1646,7 +1646,7 @@ msgstr ""
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.routing:mrp.mrp_routing_tree_view
 msgid "Routing"
-msgstr "라우팅"
+msgstr "연결 경로"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
@@ -1666,7 +1666,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "라우팅"
+msgstr "연결 경로"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
@@ -1707,7 +1707,7 @@ msgstr "예정달"
 #: view:mrp.production.product.line:mrp.mrp_production_product_form_view
 #: view:mrp.production.product.line:mrp.mrp_production_product_tree_view
 msgid "Scheduled Products"
-msgstr "계획된 상품"
+msgstr "예약된 상품"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -1747,7 +1747,7 @@ msgstr ""
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "각 생산 오퍼레이션을 위한 여유 기간 (일)"
+msgstr "각 생산 작업을 위한 여유 기간(일)"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -1764,7 +1764,7 @@ msgstr "시간 단위 선택"
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
-msgstr "시퀀스"
+msgstr "순서"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -1791,7 +1791,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Location"
-msgstr "출발지"
+msgstr "재료 위치"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -1813,7 +1813,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1920,12 +1920,12 @@ msgstr "생산 준비 시간"
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr "1 사이클 시간"
+msgstr "1 주기(시간) 시간"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr "한 사이클을 수행하는 시간"
+msgstr "한 주기를 수행하는 시간"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -1935,7 +1935,7 @@ msgstr "청소 시간"
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr "셋업 시간"
+msgstr "설정 시간"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
@@ -1959,7 +1959,7 @@ msgstr ""
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr "총 사이클"
+msgstr "총 주기"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -2015,7 +2015,7 @@ msgstr "읽지않은 메시지"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr "업데이트"
+msgstr "갱신"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2030,7 +2030,7 @@ msgstr "사용자"
 #. module: mrp
 #: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
-msgstr "유효 시작 날짜"
+msgstr "유효 시작일"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2047,7 +2047,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr "유효 마감 날짜"
+msgstr "유효 마감일"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
@@ -2067,7 +2067,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr "변량"
+msgstr "변형"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2097,14 +2097,14 @@ msgstr "경고!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr "웹 사이트 메시지"
+msgstr "웹사이트 메시지"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr "웹 사이트 대화이력"
+msgstr "웹사이트 대화 이력"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2158,7 +2158,7 @@ msgstr ""
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr "워크센터"
+msgstr "작업장"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
@@ -2204,7 +2204,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "작업센터"
+msgstr "작업장"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
@@ -2227,7 +2227,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "작업 주문"
+msgstr "작업 지시"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -2238,7 +2238,7 @@ msgstr "작업 지시"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "WorkCenter"
-msgstr "워크센터"
+msgstr "작업장"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
