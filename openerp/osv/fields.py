@@ -944,16 +944,16 @@ class many2many(_column):
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Extracted from ``get`` to facilitate fine-tuning of the generated
             query. """
-        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                   FROM %(rel)s, %(from_c)s \
-                  WHERE %(rel)s.%(id1)s IN %%s \
-                    AND %(rel)s.%(id2)s = %(tbl)s.id \
-                 %(where_c)s  \
-                 %(order_by)s \
-                 %(limit)s \
-                 OFFSET %(offset)d' \
-                 % values
-        return query, where_params
+        query = """SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s
+                     FROM %(rel)s, %(from_c)s
+                    WHERE %(where_c)s
+                      AND %(rel)s.%(id1)s IN %%s
+                      AND %(rel)s.%(id2)s = %(tbl)s.id
+                      %(order_by)s
+                      %(limit)s
+                   OFFSET %(offset)d
+                """ % values
+        return query, where_params + [tuple(ids)]
 
     def get(self, cr, model, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
@@ -981,25 +981,29 @@ class many2many(_column):
         obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
         order_by = obj._generate_order_by(cr, user, None, wquery, context=context)
         from_c, where_c, where_params = wquery.get_sql()
-        if where_c:
-            where_c = ' AND ' + where_c
+        if not where_c:
+            where_c = '1=1'
 
         limit_str = ''
         if self._limit is not None:
             limit_str = ' LIMIT %d' % self._limit
 
-        query, where_params = self._get_query_and_where_params(cr, model, ids, {'rel': rel,
-               'from_c': from_c,
-               'tbl': obj._table,
-               'id1': id1,
-               'id2': id2,
-               'where_c': where_c,
-               'limit': limit_str,
-               'order_by': order_by,
-               'offset': offset,
-                }, where_params)
+        query_parts = {
+            'rel': rel,
+            'from_c': from_c,
+            'tbl': obj._table,
+            'id1': id1,
+            'id2': id2,
+            'where_c': where_c,
+            'limit': limit_str,
+            'order_by': order_by,
+            'offset': offset,
+        }
+        query, where_params = self._get_query_and_where_params(cr, model, ids,
+                                                               query_parts,
+                                                               where_params)
 
-        cr.execute(query, [tuple(ids),] + where_params)
+        cr.execute(query, where_params)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
