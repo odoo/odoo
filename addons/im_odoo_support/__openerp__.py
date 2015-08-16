@@ -11,7 +11,7 @@
 Odoo Live Support
 =================
 
-Ask your functionnal question directly to the Odoo Operators with the livechat support.
+Ask your functional question directly to the Odoo Operators with the livechat support.
 
         """,
     'data': [
