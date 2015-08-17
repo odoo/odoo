@@ -14,8 +14,8 @@ Contains the installer for marketing-related modules.
     'website': 'https://www.odoo.com/page/mailing',
     'data': [
         'security/marketing_security.xml',
-        'marketing_view.xml',
-        'res_config_view.xml',
+        'views/marketing_view.xml',
+        'views/res_config_view.xml',
     ],
     'demo': [],
     'installable': True,
