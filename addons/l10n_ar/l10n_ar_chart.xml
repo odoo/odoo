@@ -720,6 +720,14 @@
         <field name="chart_template_id" ref="ar_chart_template"/>
     </record>
 
+    <record id="426" model="account.account.template">
+        <field name="name">Diferencial cambiario</field>
+        <field name="code">426</field>
+        <field name="reconcile" eval="False"/>
+        <field ref="account.data_account_type_revenue" name="user_type_id"/>
+        <field name="chart_template_id" ref="ar_chart_template"/>
+    </record>
+
     <record id="511_01" model="account.account.template">
         <field name="name">Costo de Mercaderías Vendidas - Categoria de productos 01</field>
         <field name="code">511.01</field>
@@ -814,6 +822,14 @@
         <field name="chart_template_id" ref="ar_chart_template"/>
     </record>
 
+    <record id="524" model="account.account.template">
+        <field name="name">Diferencial cambiario</field>
+        <field name="code">524</field>
+        <field name="reconcile" eval="False"/>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
+        <field name="chart_template_id" ref="ar_chart_template"/>
+    </record>
+
     <record id="61_01" model="account.account.template">
         <field name="name">Compras - Categoria de productos 01</field>
         <field name="code">61.01</field>
@@ -851,8 +867,8 @@
         <field name="property_account_payable_id" ref="211"/>
         <field name="property_account_expense_categ_id" ref="61_01"/>
         <field name="property_account_income_categ_id" ref="411_01"/>
-        <field name="expense_currency_exchange_account_id" ref="61_01"/>
-        <field name="income_currency_exchange_account_id" ref="411_01"/>
+        <field name="expense_currency_exchange_account_id" ref="524"/>
+        <field name="income_currency_exchange_account_id" ref="426"/>
     </record>   
 
 
