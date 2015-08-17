@@ -5,168 +5,12 @@ from openerp.osv import fields, osv
 import time
 import datetime
 from openerp import tools
-from openerp.exceptions import UserError
 from openerp.tools.translate import _
 from dateutil.relativedelta import relativedelta
 
+
 def str_to_datetime(strdate):
     return datetime.datetime.strptime(strdate, tools.DEFAULT_SERVER_DATE_FORMAT)
-
-class fleet_vehicle_cost(osv.Model):
-    _name = 'fleet.vehicle.cost'
-    _description = 'Cost related to a vehicle'
-    _order = 'date desc, vehicle_id asc'
-
-    def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
-        res = dict.fromkeys(ids, False)
-        for record in self.browse(cr,uid,ids,context=context):
-            if record.odometer_id:
-                res[record.id] = record.odometer_id.value
-        return res
-
-    def _set_odometer(self, cr, uid, id, name, value, args=None, context=None):
-        if not value:
-            raise UserError(_('Emptying the odometer value of a vehicle is not allowed.'))
-        date = self.browse(cr, uid, id, context=context).date
-        if not(date):
-            date = fields.date.context_today(self, cr, uid, context=context)
-        vehicle_id = self.browse(cr, uid, id, context=context).vehicle_id
-        data = {'value': value, 'date': date, 'vehicle_id': vehicle_id.id}
-        odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
-        return self.write(cr, uid, id, {'odometer_id': odometer_id}, context=context)
-
-    _columns = {
-        'name': fields.related('vehicle_id', 'name', type="char", string='Name', store=True),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log'),
-        'cost_subtype_id': fields.many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost'),
-        'amount': fields.float('Total Price'),
-        'cost_type': fields.selection([('contract', 'Contract'), ('services','Services'), ('fuel','Fuel'), ('other','Other')], 'Category of the cost', help='For internal purpose only', required=True),
-        'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', help='Parent cost to this current cost'),
-        'cost_ids': fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
-        'odometer_id': fields.many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Odometer Value', help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer_unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
-        'date' :fields.date('Date',help='Date when the cost has been executed'),
-        'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
-        'auto_generated': fields.boolean('Automatically Generated', readonly=True),
-    }
-
-    _defaults ={
-        'cost_type': 'other',
-    }
-
-    def create(self, cr, uid, data, context=None):
-        #make sure that the data are consistent with values of parent and contract records given
-        if 'parent_id' in data and data['parent_id']:
-            parent = self.browse(cr, uid, data['parent_id'], context=context)
-            data['vehicle_id'] = parent.vehicle_id.id
-            data['date'] = parent.date
-            data['cost_type'] = parent.cost_type
-        if 'contract_id' in data and data['contract_id']:
-            contract = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context)
-            data['vehicle_id'] = contract.vehicle_id.id
-            data['cost_subtype_id'] = contract.cost_subtype_id.id
-            data['cost_type'] = contract.cost_type
-        if 'odometer' in data and not data['odometer']:
-            #if received value for odometer is 0, then remove it from the data as it would result to the creation of a
-            #odometer log with 0, which is to be avoided
-            del(data['odometer'])
-        return super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
-
-
-class fleet_vehicle_tag(osv.Model):
-    _name = 'fleet.vehicle.tag'
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'color': fields.integer('Color Index'),
-    }
-    _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
-
-
-class fleet_vehicle_state(osv.Model):
-    _name = 'fleet.vehicle.state'
-    _order = 'sequence asc'
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the note stages")
-    }
-    _sql_constraints = [('fleet_state_name_unique','unique(name)', 'State name already exists')]
-
-
-
-class fleet_vehicle_model(osv.Model):
-
-    def name_get(self, cr, uid, ids, context=None):
-        res = []
-        for record in self.browse(cr, uid, ids, context=context):
-            name = record.name
-            if record.brand_id.name:
-                name = record.brand_id.name + '/' + name
-            res.append((record.id, name))
-        return res
-
-    def on_change_brand(self, cr, uid, ids, model_id, context=None):
-        if not model_id:
-            return {'value': {'image_medium': False}}
-        brand = self.pool.get('fleet.vehicle.model.brand').browse(cr, uid, model_id, context=context)
-        return {
-            'value': {
-                'image_medium': brand.image,
-            }
-        }
-
-    _name = 'fleet.vehicle.model'
-    _description = 'Model of a vehicle'
-    _order = 'name asc'
-
-    _columns = {
-        'name': fields.char('Model name', required=True),
-        'brand_id': fields.many2one('fleet.vehicle.model.brand', 'Make', required=True, help='Make of the vehicle'),
-        'vendors': fields.many2many('res.partner', 'fleet_vehicle_model_vendors', 'model_id', 'partner_id', string='Vendors'),
-        'image': fields.related('brand_id', 'image', type="binary", string="Logo"),
-        'image_medium': fields.related('brand_id', 'image_medium', type="binary", string="Logo (medium)"),
-        'image_small': fields.related('brand_id', 'image_small', type="binary", string="Logo (small)"),
-    }
-
-
-class fleet_vehicle_model_brand(osv.Model):
-    _name = 'fleet.vehicle.model.brand'
-    _description = 'Brand model of the vehicle'
-
-    _order = 'name asc'
-
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
-
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
-    _columns = {
-        'name': fields.char('Make', required=True),
-        'image': fields.binary("Logo",
-            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized logo of the brand. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the brand. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
 
 
 class fleet_vehicle(osv.Model):
@@ -582,15 +426,6 @@ class fleet_vehicle_log_services(osv.Model):
         'date': fields.date.context_today,
         'cost_subtype_id': _get_default_service_type,
         'cost_type': 'services'
-    }
-
-
-class fleet_service_type(osv.Model):
-    _name = 'fleet.service.type'
-    _description = 'Type of services available on a vehicle'
-    _columns = {
-        'name': fields.char('Name', required=True, translate=True),
-        'category': fields.selection([('contract', 'Contract'), ('service', 'Service'), ('both', 'Both')], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both'),
     }
 
 
