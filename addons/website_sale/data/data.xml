@@ -33,11 +33,6 @@
             <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
             <field name="use_quotations" eval="False"/>
         </record>
-
-        <record model="website" id="website.default_website">
-            <field name="salesteam_id" ref="website.salesteam_website_sales"/>
-        </record>
-
         <record id="wlist0" model="website_pricelist">
             <field name="selectable" eval="True" />
             <field name="website_id" ref="website.default_website" />
