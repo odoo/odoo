@@ -37,7 +37,7 @@ class WebsiteMembership(http.Controller):
         current_country = None
 
         # base domain for groupby / searches
-        base_line_domain = [("partner.website_published", "=", True), ('state', 'in', ['free', 'paid'])]
+        base_line_domain = [("partner_id.website_published", "=", True), ('state', 'in', ['free', 'paid'])]
         if membership_id and membership_id != 'free':
             membership_id = int(membership_id)
             base_line_domain.append(('membership_id', '=', membership_id))
@@ -51,7 +51,7 @@ class WebsiteMembership(http.Controller):
         # group by country, based on all customers (base domain)
         if membership_id != 'free':
             membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, base_line_domain, context=context)
-            country_domain = [('member_lines', 'in', membership_line_ids)]
+            country_domain = [('member_lines_ids', 'in', membership_line_ids)]
         else:
             membership_line_ids = []
             country_domain = [('membership_state', '=', 'free')]

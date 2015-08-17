@@ -1,90 +1,84 @@
 # -*- coding: utf-8 -*-
-import time
-
-from openerp import tools
-from openerp.osv import fields, osv
+from datetime import date
+from openerp import api, models, fields, _
 import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from openerp.exceptions import ValidationError
 
 
-class Invoice(osv.osv):
+class Invoice(models.Model):
     _inherit = 'account.invoice'
-
-    def action_cancel(self, cr, uid, ids, context=None):
+   
+    @api.multi
+    def action_cancel(self):
         '''Create a 'date_cancel' on the membership_line object'''
-        member_line_obj = self.pool.get('membership.membership_line')
-        today = time.strftime('%Y-%m-%d')
-        for invoice in self.browse(cr, uid, ids, context=context):
-            mlines = member_line_obj.search(cr, uid,
-                    [('account_invoice_line', 'in',
-                        [l.id for l in invoice.invoice_line_ids])])
-            member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
-        return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
+        MembershipLine = self.env['membership.membership_line']
+        today_date = date.today()
+        invoice_line_ids = self.mapped('invoice_line_ids').ids
+        MembershipLine.search([('account_invoice_line_id', 'in', invoice_line_ids)])
+        MembershipLine.write({'date_cancel': today_date})
+        return super(Invoice, self).action_cancel()
 
 
-class account_invoice_line(osv.osv):
+class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
-
-    def write(self, cr, uid, ids, vals, context=None):
+   
+    @api.multi
+    def write(self, vals):
         """Overrides orm write method
         """
-        member_line_obj = self.pool.get('membership.membership_line')
-        res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
-        for line in self.browse(cr, uid, ids, context=context):
-            if line.invoice_id.type == 'out_invoice':
-                ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
-                if line.product_id and line.product_id.membership and not ml_ids:
-                    # Product line has changed to a membership product
-                    date_from = line.product_id.membership_date_from
-                    date_to = line.product_id.membership_date_to
-                    if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
-                        date_from = line.invoice_id.date_invoice
-                    member_line_obj.create(cr, uid, {
-                                    'partner': line.invoice_id.partner_id.id,
-                                    'membership_id': line.product_id.id,
-                                    'member_price': line.price_unit,
-                                    'date': time.strftime('%Y-%m-%d'),
-                                    'date_from': date_from,
-                                    'date_to': date_to,
-                                    'account_invoice_line': line.id,
-                                    }, context=context)
-                if line.product_id and not line.product_id.membership and ml_ids:
-                    # Product line has changed to a non membership product
-                    member_line_obj.unlink(cr, uid, ml_ids, context=context)
-        return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        """Remove Membership Line Record for Account Invoice Line
-        """
-        member_line_obj = self.pool.get('membership.membership_line')
-        for id in ids:
-            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', id)], context=context)
-            member_line_obj.unlink(cr, uid, ml_ids, context=context)
-        return super(account_invoice_line, self).unlink(cr, uid, ids, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        """Overrides orm create method
-        """
-        member_line_obj = self.pool.get('membership.membership_line')
-        result = super(account_invoice_line, self).create(cr, uid, vals, context=context)
-        line = self.browse(cr, uid, result, context=context)
-        if line.invoice_id.type == 'out_invoice':
-            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line', '=', line.id)], context=context)
-            if line.product_id and line.product_id.membership and not ml_ids:
-                # Product line is a membership product
+        res = super(AccountInvoiceLine, self).write(vals)
+        MembershipLine = self.env['membership.membership_line']
+        for line in self.filtered(lambda l: l.invoice_id.type == 'out_invoice'):
+            membership_lines = MembershipLine.search([('account_invoice_line_id', '=', line.id)])
+            if line.product_id and line.product_id.membership and not membership_lines:
+                # Product line has changed to a membership product
                 date_from = line.product_id.membership_date_from
                 date_to = line.product_id.membership_date_to
                 if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
                     date_from = line.invoice_id.date_invoice
-                values = {
-                            'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
-                            'membership_id': line.product_id.id,
-                            'member_price': line.price_unit,
-                            'date': time.strftime('%Y-%m-%d'),
-                            'date_from': date_from,
-                            'date_to': date_to,
-                            'account_invoice_line': line.id,
-                        }
-                member_line_obj.create(cr, uid, values, context=context)
+                MembershipLine.create({
+                                'partner_id': line.invoice_id.partner_id.id,
+                                'membership_id': line.product_id.id,
+                                'member_price': line.price_unit,
+                                'date': date.today(),
+                                'date_from': date_from,
+                                'date_to': date_to,
+                                'account_invoice_line_id': line.id,
+                                })
+            if line.product_id and not line.product_id.membership and membership_lines:
+                # Product line has changed to a non membership product
+                membership_lines.unlink()
+        return res
+
+    @api.multi
+    def unlink(self):
+        """Remove Membership Line Record for Account Invoice Line
+        """
+        MembershipLine = self.env['membership.membership_line']
+        membership_lines = MembershipLine.search([('account_invoice_line_id', 'in', self.ids)])
+        membership_lines.unlink()
+        return super(AccountInvoiceLine, self).unlink()
+
+    @api.model
+    def create(self, vals):
+        """Overrides orm create method
+        """
+        MembershipLine = self.env['membership.membership_line']
+        result = super(AccountInvoiceLine, self).create(vals)
+        membership_lines = MembershipLine.search([('account_invoice_line_id', '=', result.id)])
+        if result.invoice_id.type == 'out_invoice' and result.product_id and result.product_id.membership and not membership_lines:
+            # Product line is a membership product
+            date_from = result.product_id.membership_date_from
+            date_to = result.product_id.membership_date_to
+            if result.invoice_id.date_invoice > date_from and result.invoice_id.date_invoice < date_to:
+                date_from = result.invoice_id.date_invoice
+            MembershipLine.create({
+                        'partner_id': result.invoice_id.partner_id and result.invoice_id.partner_id.id or False,
+                        'membership_id': result.product_id.id,
+                        'member_price': result.price_unit,
+                        'date': date.today(),
+                        'date_from': date_from,
+                        'date_to': date_to,
+                        'account_invoice_line_id': result.id,
+                        })
         return result

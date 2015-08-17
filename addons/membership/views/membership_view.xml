@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
 
@@ -116,7 +116,7 @@
                 <tree string="Members">
                     <field name="name"/>
                     <field name="membership_state"/>
-                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
+                    <field name="associate_member_id" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
                     <field name="user_id" invisible="1"/>
@@ -143,7 +143,7 @@
                     <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
                         <filter string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
-                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member'}"/>
+                        <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member_id'}"/>
                         <filter string=" Membership State" domain="[]" context="{'group_by':'membership_state'}"/>
                         <filter string="Start Month" help="Starting Month Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
                         <filter string="End Month" help="Ending Month Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
@@ -220,13 +220,13 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="associate_member" attrs="{'invisible':[('free_member','=',True)]}"/>
+                                <field name="associate_member_id" attrs="{'invisible':[('free_member','=',True)]}"/>
                                 <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
                                 <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
                                 <field name="membership_cancel" attrs="{'invisible':[('membership_cancel','=',False)]}"/>
                             </group>
                         </group>
-                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
+                        <field name="member_lines_ids" nolabel="1" colspan="4" readonly="1">
                             <tree string="Memberships">
                                 <field name="date"/>
                                 <field name="membership_id"/>
