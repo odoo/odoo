@@ -5401,9 +5401,9 @@ class BaseModel(object):
             return self.browse(map(itemgetter('id'), sorted(self, key=key, reverse=reverse)))
 
     def update(self, values):
-        """ Update record `self[0]` with ``values``. """
-        for name, value in values.iteritems():
-            self[name] = value
+        """ Update record `self[0]` with `values`. """
+        self.ensure_one()
+        self.write(values)
 
     #
     # New records - represent records that do not exist in the database yet;
