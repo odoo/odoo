@@ -34,20 +34,21 @@
                         <page string="Products">
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                    <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
-                                    <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                    <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id, product_id, qty, parent.partner_id, parent.session_id)"/>
+                                    <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, parent.session_id, context)"/>
+                                    <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, parent.session_id, context)" widget="monetary"/>
+                                    <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, parent.session_id, context)" widget="monetary"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="price_subtotal_incl" widget="monetary"/>
                                 </tree>
                                 <form string="Order lines">
                                     <group col="4">
-                                        <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                        <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
-                                        <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                        <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="product_id" on_change="onchange_product_id(parent.pricelist_id, product_id, qty, parent.partner_id, parent.session_id)"/>
+                                        <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, parent.session_id, context)"/>
+                                        <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, parent.session_id, context)" widget="monetary"/>
+                                        <field name="discount" on_change="onchange_qty(parent.pricelist_id, product_id, discount, qty, price_unit, parent.session_id, context)" widget="monetary"/>
+                                        <field name="tax_ids" widget="many2many_tags"/>
                                         <field name="price_subtotal" invisible="1" widget="monetary"/>
                                         <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
                                         <field name="notice"/>
@@ -661,6 +662,7 @@
                             <field name="group_by" groups="account.group_account_user"/>
                             <field name="barcode_nomenclature_id" />
                             <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                            <field name="fiscal_position_id" options="{'no_create': True}"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <separator string="Available Payment Methods" colspan="4"/>
