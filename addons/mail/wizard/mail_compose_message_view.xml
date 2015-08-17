@@ -58,22 +58,17 @@
                                     'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="body" options="{'style-inline': true}"/>
-                    <field name="attachment_ids" widget="many2many_binary" string="Attach a file"/>
+                    <group col="4">
+                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                        <field name="template_id" options="{'no_create': True}"
+                               context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                    </group>
                     <footer>
                         <button string="Send" name="send_mail_action" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
 
-                        <group class="oe_right oe_form" col="1">
-                            <div>Use template
-                                <!--FIX: To avoid css issue of many2one field in footer temporary used oe_form (BUG:1152464)-->
-                                <field name="template_id" nolabel="1" class='oe_inline'
-                                    options="{'no_create': True}"
-                                    context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
-                            </div>
-                            <button icon="/mail/static/src/img/email_template_save.png"
-                                type="object" name="save_as_template" string="Save as new template" class="oe_link"
-                                help="Save as a new template"/>
-                        </group>
+                        <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
+                                class="pull-right btn-default" help="Save as a new template"/>
                     </footer>
                 </form>
             </field>
