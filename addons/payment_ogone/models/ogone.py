@@ -249,6 +249,9 @@ class PaymentTxOgone(osv.Model):
             _logger.info(error_msg)
             raise ValidationError(error_msg)
 
+        if not tx.acquirer_reference:
+            tx.acquirer_reference = pay_id
+
         # alias was created on ogone server, store it
         if alias:
             method_obj = self.pool['payment.method']
@@ -380,7 +383,7 @@ class PaymentTxOgone(osv.Model):
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', tx.reference)
             return True
 
-        status = int(tree.get('STATUS', '0'))
+        status = int(tree.get('STATUS') or 0)
         if status in self._ogone_valid_tx_status:
             tx.write({
                 'state': 'done',
@@ -401,11 +404,11 @@ class PaymentTxOgone(osv.Model):
                 'acquirer_reference': tree.get('PAYID'),
                 'html_3ds': str(tree.HTML_ANSWER).decode('base64')
             })
-        elif status in self._ogone_wait_tx_status and tries > 0:
-            time.sleep(1500)
+        elif (not status or status in self._ogone_wait_tx_status) and tries > 0:
+            time.sleep(500)
             tx.write({'acquirer_reference': tree.get('PAYID')})
             tree = self._ogone_s2s_get_tx_status(tx)
-            return self.ogone_s2s_validate(tx, tree, tries - 1)
+            return self._ogone_s2s_validate_tree(tx, tree, tries - 1)
         else:
             error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
                 'error_str': tree.get('NCERRORPLUS'),
