@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
     last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
         help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
-    reconcile = fields.Boolean(string='Reconciliation of Entries', default=False,
+    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')

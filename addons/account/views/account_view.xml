@@ -15,14 +15,12 @@
                            <group>
                              <div class="oe_title oe_inline" colspan="2">
                                 <h1>
-                                  <field name="code" placeholder="code"/> -
                                   <field name="name" placeholder="name"/>
                                 </h1>
                              </div>  
-                             <separator string="Reporting" colspan="2"/>
+                             <field name="code" placeholder="code"/>
                              <field name="user_type_id" widget="selection"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
-                             <separator string="Miscellaneous Options" colspan="2"/>
                              <field name="deprecated"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
@@ -266,7 +264,7 @@
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>
-                                    <group string="Security">
+                                    <group string="Control-Access" groups="base.group_no_one">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
@@ -1204,14 +1202,14 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="journal_id"/>
+                            <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
                             <field name="partner_id"
                                 domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                         </group>
                         <group>
-                            <field name="ref"/>
                             <field name="date"/>
+                            <field name="ref"/>
                             <field name="amount" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
@@ -1221,8 +1219,8 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="top" string="Journal Items">
-                                    <field name="name"/>
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id)]"/>
+                                    <field name="name"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>

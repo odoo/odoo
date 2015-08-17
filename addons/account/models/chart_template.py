@@ -713,6 +713,9 @@ class WizardMultiChartsAccounts(models.TransientModel):
                                'cash_account_code_prefix': self.cash_account_code_prefix,
                                'chart_template_id': self.chart_template_id.id})
 
+        #set the coa currency to active
+        self.currency_id.write({'active': True})
+
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id == 1:
             for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
@@ -738,7 +741,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create the current year earning account (outside of the CoA)
         self.env['account.account'].create({
-            'code': '0',
+            'code': '9999',
             'name': _('Undistributed Profits/Losses'),
             'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})

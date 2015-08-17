@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="group_invoice_lines" position="after">
-                    <field name="update_posted"/>
+                    <field name="update_posted" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>

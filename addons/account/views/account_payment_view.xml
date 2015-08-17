@@ -107,7 +107,7 @@
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -191,7 +191,7 @@
                                 <label for="amount"/>
                                 <div name="amount_div">
                                     <field name="amount" class="oe_inline"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/>
                                 </div>
                             </group>
                             <group>

@@ -39,6 +39,7 @@
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
                     <field name="active"/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
             </field>
         </record>
@@ -49,13 +50,10 @@
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
+                    <field name="symbol"/>
                      <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
-                    <field name="rounding"/>
-                    <field name="decimal_places"/>
-                    <field name="position"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>

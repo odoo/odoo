@@ -133,8 +133,8 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed" sum="Total Amount"/>
-                    <field name="residual_signed" sum="Residual Amount"/>
+                    <field name="amount_total"/>
+                    <field name="residual"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -194,8 +194,8 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total_signed" sum="Total Amount"/>
-                    <field name="residual_signed" sum="Residual Amount" string="To Pay"/>
+                    <field name="amount_total"/>
+                    <field name="residual" string="To Pay"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -245,7 +245,7 @@
                             <field name="date_invoice" string="Bill Date"/>
                             <field name="date_due"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
                         </group>
                     </group>
@@ -383,7 +383,7 @@
                             <field name="user_id" groups="base.group_user" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
-                                <field name="currency_id" options="{'no_create': True}" class="oe_inline"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
                                 <field name="company_currency_id" invisible="1"/>
                             </div>
                         </group>
