@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
+"PO-Revision-Date: 2015-08-13 02:17+0000\n"
 "Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -131,7 +131,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '�
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -291,7 +291,7 @@ msgstr "允许不一样的发运和开票地址。 "
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr "允许通过日记账的发货单批量开票。"
+msgstr "允许通过分类账的发货单批量开票。"
 
 #. module: sale
 #: field:sale.config.settings,module_warning:0
@@ -1306,7 +1306,7 @@ msgstr "轻微公司 \"%s\" (id:%d) 定义销售分类账"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr "准备基于计工单的发票"
+msgstr "基于计工单准备发票"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document

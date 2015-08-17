@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-20 06:47+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
+"PO-Revision-Date: 2015-08-12 15:17+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +42,7 @@ msgstr "允许您在销售订单和交货订单中添加送货方式。\n您可�
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr "允许在销售订单行上选择一个发货路线"
+msgstr "允许在销售订单行上选择一个送货路线"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -90,17 +90,17 @@ msgstr "默认选项"
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr "当所有商品可用后一次性发运"
+msgstr "当所有商品可用后一次性送货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "一次性交货"
+msgstr "一次性送货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "分批交货"
+msgstr "分批送货"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -111,12 +111,12 @@ msgstr "已送货"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "待开票的交货"
+msgstr "待开票的送货"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "开启交货单开票"
+msgstr "开启按送货单开票"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -126,7 +126,7 @@ msgstr "开启销售订单行上的路线"
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于交货开票"
+msgstr "基于送货单开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -247,7 +247,7 @@ msgstr "项目工时单"
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr "重建发运单"
+msgstr "重建送货单"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
@@ -332,12 +332,12 @@ msgstr "待开票"
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr "允许销售员 使用菜单“按已交付数量开票”  根据发运单开发票"
+msgstr "允许销售员 使用菜单“待开票的送货”  根据送货单开发票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "查看交货单"
+msgstr "查看送货单"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
@@ -354,7 +354,7 @@ msgstr "你可以根据销售订单或送货单生成发票。"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr "你必须先取消这个销售订单附加的所有发运单。"
+msgstr "你必须先取消附加到这个销售订单的所有送货单。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343

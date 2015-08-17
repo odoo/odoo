@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
+"PO-Revision-Date: 2015-08-14 06:57+0000\n"
 "Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -541,31 +541,31 @@ msgstr "可用产品"
 #. module: stock
 #: field:stock.move,backorder_id:0 field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "欠交订单于"
+msgstr "欠单于"
 
 #. module: stock
 #: code:addons/stock/stock.py:952
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "欠交订单 <em>%s</em> <b>已创建</b>。"
+msgstr "欠单 <em>%s</em> <b>已创建</b>。"
 
 #. module: stock
 #: code:addons/stock/stock.py:4193
 #, python-format
 msgid "Backorder exists"
-msgstr "欠交订单已存在"
+msgstr "欠单已存在"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr "欠交订单"
+msgstr "欠单"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders (%)"
-msgstr "欠交订单（%）"
+msgstr "欠单(%)"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -604,7 +604,7 @@ msgstr "包含内容"
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
-msgstr "通过改变这里的数量，您确认新的完成数量: Odoo不会自动生成欠交订单。"
+msgstr "通过改变这里的数量，您确认新的完成数量: Odoo不会自动生成欠单。"
 
 #. module: stock
 #: help:stock.move,procure_method:0
@@ -904,7 +904,7 @@ msgstr "创建补货"
 #: code:addons/stock/static/src/xml/picking.xml:80
 #, python-format
 msgid "Create backorder"
-msgstr "创建欠交订单"
+msgstr "创建欠单"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -4074,7 +4074,7 @@ msgstr "计划时间的第一部分发货即将进行。在此手动设定一个
 #. module: stock
 #: help:stock.picking,max_date:0
 msgid "Scheduled time for the last part of the shipment to be processed"
-msgstr ""
+msgstr "待处理的最后一部分发货的计划时间"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_sched
@@ -4136,19 +4136,19 @@ msgstr "搜索结果"
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "选择这条路线可以选择的位置"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:225
 #, python-format
 msgid "Select your operation"
-msgstr ""
+msgstr "选择您的操作"
 
 #. module: stock
 #: field:stock.inventory,filter:0
 msgid "Selection Filter"
-msgstr ""
+msgstr "选择过滤器"
 
 #. module: stock
 #: field:stock.location.path,sequence:0
@@ -4193,7 +4193,7 @@ msgstr "设为可用"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "设置一个特殊的移除策略，它将被使用，而不考虑此产品分类的源库位。"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4212,7 +4212,7 @@ msgstr "如果您的产品在一个固定的库位配置一个库位,如果您�
 msgid ""
 "Setting a product and a source package means that the product will be taken\n"
 "                            out of the package."
-msgstr ""
+msgstr "设定产品和源包装意味着产品将\n被取出包装。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -4233,12 +4233,12 @@ msgstr "货架(Y)"
 #: code:addons/stock/stock.py:3393
 #, python-format
 msgid "Ship Only"
-msgstr ""
+msgstr "仅发货"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr ""
+msgstr "直接从仓库发货 (仅发货)"
 
 #. module: stock
 #: field:stock.warehouse,code:0
@@ -4248,12 +4248,12 @@ msgstr "简名"
 #. module: stock
 #: help:stock.warehouse,code:0
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "利用简称来标识仓库"
 
 #. module: stock
 #: help:stock.move,string_availability_info:0
 msgid "Show various information on stock availability for this move"
-msgstr ""
+msgstr "为这次可用库存的移动显示多方面的信息"
 
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator_small
@@ -4299,22 +4299,22 @@ msgstr "源包裹"
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
+msgstr "指定批次/序列号使您的存货有一个特别的批次/序列号。"
 
 #. module: stock
 #: help:stock.inventory,partner_id:0
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "指定所有者来作为一个特别的所有者专注于您的存货。"
 
 #. module: stock
 #: help:stock.inventory,package_id:0
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "指定包装以作为特定包装来专注于您的存货。"
 
 #. module: stock
 #: help:stock.inventory,product_id:0
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "指定产品以作为特殊产品来专注于您的存货。"
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4329,7 +4329,7 @@ msgstr "开始盘点"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "State"
-msgstr "州"
+msgstr "状态"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_filter
@@ -4489,7 +4489,7 @@ msgstr "供应商"
 #. module: stock
 #: view:product.template:stock.view_template_property_form
 msgid "Supply Chain Information"
-msgstr ""
+msgstr "供应链信息"
 
 #. module: stock
 #: field:stock.move,procure_method:0
@@ -4499,7 +4499,7 @@ msgstr "供应方式"
 #. module: stock
 #: selection:procurement.rule,procure_method:0
 msgid "Take From Stock"
-msgstr ""
+msgstr "从库存获取"
 
 #. module: stock
 #: view:stock.warehouse:stock.view_warehouse
@@ -4803,7 +4803,7 @@ msgid ""
 "be moved. Lowering this quantity does not generate a backorder. Changing "
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
-msgstr "这是一个库存点的产品数量。对于状态为“完成”的调拨单，这就是真正完成了调拨的产品数量。对于其它调拨单，就是计划进行调拨的数量。降低这个数量不会生成延期交货单。改变这个指定的调拨数量将影响产品预订，应该慎之又慎。"
+msgstr "这是一个库存点的产品数量。对于状态为“完成”的调拨单，这就是真正完成了调拨的产品数量。对于其它调拨单，就是计划进行调拨的数量。降低这个数量不会生成欠单。改变这个指定的调拨数量将影响产品预订，应该慎之又慎。"
 
 #. module: stock
 #: help:stock.location.path,auto:0
@@ -5495,7 +5495,7 @@ msgid ""
 "red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', "
 "'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
 "'end', 'obsolete')"
-msgstr ""
+msgstr "red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', 'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', 'end', 'obsolete')"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form

@@ -5,17 +5,19 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012
 # jeffery chen fan <jeffery9@gmail.com>, 2015
+# leangjia <liangjia@qq.com>, 2015
 # Luyang Xing <leon.luyangxing@gmail.com>, 2015
 # matt.cai <cysnake4713@gmail.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 # Xor3 <xor3@outlook.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
-"Last-Translator: Luyang Xing <leon.luyangxing@gmail.com>\n"
+"PO-Revision-Date: 2015-08-13 07:49+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +94,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hello ${object.partner_id.name},</p>\n\n    <p>A new invoice is available for you: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>It is also possible to directly pay with Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>If you have any question, do not hesitate to contact us.</p>\n    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Phone:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p> ${object.partner_id.name},您好</p>\n\n    <p>您有一张新发票： </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n       &nbsp;&nbsp;发票号码: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;发票总额: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;发票日期: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;您的联系方式: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>您也可直接网上用paypal贝宝支付</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/zh_CN/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>如果你有任何问题，请不要犹豫，联系我们。</p>\n    <p>感谢您选择我们 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话：&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址：&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -277,7 +279,7 @@ msgid ""
 "                and one for miscellaneous information.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来添加日记账.\n              </p><p>\n                分类帐由用于记录相关日常\n                业务的所有会计数据.\n              </p><p>\n                一般的公司采用支付方式（现金、银行帐户、\n                支票）分录、采购日记账、\n                销售日记账、杂项日记账.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击来添加分类账.\n              </p><p>\n                分类帐由用于记录相关日常\n                业务的所有会计数据.\n              </p><p>\n                一般的公司采用支付方式（现金、银行帐户、\n                支票）分录、采购分类账、\n                销售分类账、杂项分类账.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -357,7 +359,7 @@ msgid ""
 "                for miscellaneous operations.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个日记账分录。\n              </p><p>\n                日记账分录由几个日记账项组成，每个项目为借方或贷方。\n              </p><p>\n                OpenERP自动创建会计文档的每种会计凭证，如发票、退款、供应商付款、银行帐单等。这样，您只需手工记录杂项的日记账分录。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个分类账分录。\n              </p><p>\n                分类账分录由几个分类账项组成，每个项目为借方或贷方。\n              </p><p>\n                OpenERP自动创建会计文档的每种会计凭证，如发票、退款、供应商付款、银行帐单等。这样，您只需手工记录杂项的分类账分录。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -372,7 +374,7 @@ msgid ""
 "                goes out of the cash box.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的现金记录.\n              </p><p>\n                现金出纳机允许您在您的现金日记账中管理您的现金分录。\n                这个特性提供了按天的方式来跟踪现金付款的方式。\n                您可以查看在您钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建新的现金记录.\n              </p><p>\n                现金出纳机允许您在您的现金分类账中管理您的现金分录。\n                这个特性提供了按天的方式来跟踪现金付款的方式。\n                您可以查看在您钱箱中的每一分钱，并且在资金进出时创建记录。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_statement_operation_template
@@ -399,7 +401,7 @@ msgid ""
 "                (profit/loss or balance sheet).\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的科目类型.\n              </p><p>\n                科目类型用来说明在各个日记账中如何使用这个科目。\n                科目类型的递延方法决定了该账户在年终结账时的处理流程。\n                财务报告，如资产负债表、损益表，将会使用这个分类。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建一个新的科目类型.\n              </p><p>\n                科目类型用来说明在各个分类账中如何使用这个科目。\n                科目类型的递延方法决定了该账户在年终结账时的处理流程。\n                财务报告，如资产负债表、损益表，将会使用这个分类。\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -524,7 +526,7 @@ msgid ""
 "                    No journal items found.\n"
 "                </p>\n"
 "            "
-msgstr "<p>\n                    日记账项目未找到.\n                </p>\n            "
+msgstr "<p>\n                    分类账项目未找到.\n                </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_analytic_account_tree2
@@ -643,7 +645,7 @@ msgstr "会计分析成本分类账"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr "会计分析成本分类账的日记账报告"
+msgstr "会计分析成本分类账的分类账报告"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_inverted_balance
@@ -653,7 +655,7 @@ msgstr "会计分析反向余额"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "会计分析日记账"
+msgstr "会计分析分类账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -669,7 +671,7 @@ msgstr "科目基础代码"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr "会计集中日记账"
+msgstr "会计集中分类账"
 
 #. module: account
 #: view:account.account:account.view_account_form
@@ -684,7 +686,7 @@ msgstr "会计共通科目报告"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "会计共通日记账报告"
+msgstr "会计共通分类账报告"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
@@ -717,19 +719,19 @@ msgstr "会计分录"
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr "会计通用日记账"
+msgstr "会计通用分类账"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
 #: view:account.journal:account.view_account_journal_tree
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "会计日记账"
+msgstr "会计分类账"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "会计日记账选择"
+msgstr "会计分类账选择"
 
 #. module: account
 #: field:account.invoice.report,account_line_id:0
@@ -785,7 +787,7 @@ msgstr "会计期间"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "会计打印日记账"
+msgstr "会计打印分类账"
 
 #. module: account
 #: view:product.category:account.view_category_property_form
@@ -979,7 +981,7 @@ msgstr "会计分录行调节"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "会计分录行调节（注销）"
+msgstr "会计分录行调节(核销)"
 
 #. module: account
 #: view:account.account:account.view_account_form
@@ -1014,7 +1016,7 @@ msgstr "会计税金图表"
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "用在此日记账的科目"
+msgstr "用在此分类账的科目"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -1291,7 +1293,7 @@ msgstr "所有手工创建的会计分录通常为“未登帐”状态，但您
 msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
-msgstr "所有选择的日记账分录将被确认并过账，这意味着您将不能修改它们。"
+msgstr "所有选择的分类账分录将被确认并过账，这意味着您将不能修改它们。"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:348
@@ -1325,7 +1327,7 @@ msgstr "允许形式发票"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr "允许注销"
+msgstr "允许核销"
 
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
@@ -1441,7 +1443,7 @@ msgstr "分析账户"
 #. module: account
 #: view:account.analytic.chart:account.account_analytic_chart_view
 msgid "Analytic Account Charts"
-msgstr "分析账户一览表"
+msgstr "分析账户表"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -1515,23 +1517,23 @@ msgstr "分析项目"
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 #: view:website:account.report_analyticjournal
 msgid "Analytic Journal"
-msgstr "分析日记账"
+msgstr "分析分类账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "分析日记账项目"
+msgstr "分析分类账项目"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "与采购日记账相关的分析日记账项目"
+msgstr "与采购分类账相关的分析分类账项目"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
 msgid "Analytic Journal Items related to a sale journal."
-msgstr "与销售日记账相关的分析日记账项目"
+msgstr "与销售分类账相关的分析分类账项目"
 
 #. module: account
 #: view:account.analytic.journal:account.view_analytic_journal_search
@@ -1539,7 +1541,7 @@ msgstr "与销售日记账相关的分析日记账项目"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "分析日记账"
+msgstr "分析分类账"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -1642,7 +1644,7 @@ msgstr "您确定创建分录?"
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "您确定要打开日记账分录么？"
+msgstr "您确定要打开分类账分录么？"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -2206,7 +2208,7 @@ msgstr "找不到本公司的会计科目表. \n请到会计配置进行配置"
 msgid ""
 "Cannot find any account journal of \"%s\" type for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "找不到该公司 %s 类型的会计日记账。\n请到日记账配置创建一个 "
+msgstr "找不到该公司 %s 类型的会计分类账。\n请到分类账配置创建一个 "
 
 #. module: account
 #: code:addons/account/account_invoice.py:591
@@ -2214,13 +2216,13 @@ msgstr "找不到该公司 %s 类型的会计日记账。\n请到日记账配置
 msgid ""
 "Cannot find any account journal of type \"%s\" for this company, You should create one.\n"
 " Please go to Journal Configuration"
-msgstr "找不到该公司 %s 类型的会计日记账。\n请到日记账配置创建一个 "
+msgstr "找不到该公司 %s 类型的会计分类账。\n请到分类账配置创建一个 "
 
 #. module: account
 #: code:addons/account/account.py:3455
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr "不能生成一个未使用的日记账代码。"
+msgstr "不能生成一个未使用的分类账代码。"
 
 #. module: account
 #: field:account.tax.code,code:0 field:account.tax.code.template,code:0
@@ -2295,7 +2297,7 @@ msgstr "产品类别"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_central_journal
 msgid "Central Journal"
-msgstr "集中日记账"
+msgstr "集中分类账"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -2310,12 +2312,12 @@ msgstr "集中的对方"
 #. module: account
 #: view:website:account.report_centraljournal
 msgid "Centralized Journal"
-msgstr "集中的日记账"
+msgstr "集中的分类账"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "集中日记账"
+msgstr "集中分类账"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -2340,12 +2342,12 @@ msgstr "更改为"
 #: field:account.tax.template,chart_template_id:0
 #: field:wizard.multi.charts.accounts,chart_template_id:0
 msgid "Chart Template"
-msgstr "科目模板一览表"
+msgstr "表模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr "模板一览表"
+msgstr "表模板"
 
 #. module: account
 #: field:account.aged.trial.balance,chart_account_id:0
@@ -2406,35 +2408,35 @@ msgstr "科目表"
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr "分析账户一览表"
+msgstr "分析账户表"
 
 #. module: account
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr "税金一览表"
+msgstr "税金表"
 
 #. module: account
 #: view:website:account.report_vat
 msgid "Chart of Tax:"
-msgstr "税金一览表："
+msgstr "税金表："
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "税金一览表"
+msgstr "税金表"
 
 #. module: account
 #: view:account.account:account.view_account_list
 #: view:account.account:account.view_account_tree
 msgid "Chart of accounts"
-msgstr "科目一览表"
+msgstr "科目表"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "图表"
+msgstr "表"
 
 #. module: account
 #: model:account.account.type,name:account.conf_account_type_chk
@@ -2477,7 +2479,7 @@ msgstr "如果业务伙伴是隶属于增值税，勾选此项。它将被用于
 #. module: account
 #: help:account.account,reconcile:0
 msgid "Check this box if this account allows reconciliation of journal items."
-msgstr "如果此会计科目允许日记账项目调节，勾选此项"
+msgstr "如果此会计科目允许分类账项目调节，勾选此项"
 
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
@@ -2510,7 +2512,7 @@ msgstr "如果您不想该税款编码相关的税务信息显示在发票中, �
 msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
-msgstr "则此凭证簿下的会计凭证或发票可以被作废，勾选此项。"
+msgstr "则此分类账下的会计凭证或发票可以被作废，勾选此项。"
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -2770,7 +2772,7 @@ msgstr "公司本位币"
 #. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
-msgstr "公司有一个会计科目表"
+msgstr "公司具有科目表"
 
 #. module: account
 #: field:account.config.settings,has_fiscal_year:0
@@ -2780,7 +2782,7 @@ msgstr "公司有一个财务年度"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "日记账相关的公司"
+msgstr "分类账相关的公司"
 
 #. module: account
 #: view:accounting.report:account.accounting_report_view
@@ -2861,21 +2863,21 @@ msgstr "配置错误!"
 msgid ""
 "Configuration Error!\n"
 "You cannot define children to an account with internal type different of \"View\"."
-msgstr "配置错误!\n当科目不是内部视图类型时，您不能为其定义子科目。"
+msgstr "配置错误!\n您不能为不是视图类型的科目定义子科目。"
 
 #. module: account
 #: constraint:account.account:0
 msgid ""
 "Configuration Error!\n"
 "You cannot select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"."
-msgstr "配置错误!\n您不能选择科目类型的递延方法是“未调节”以及内部类型是“应收/应付 ”。"
+msgstr "配置错误！\n对于内部类型是‘应收/应付’的会计科目，你不能选择结转方式是‘未调节’的科目类型。 "
 
 #. module: account
 #: constraint:account.journal:0
 msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
-msgstr "配置错误!\n选择的币种也被默认帐户共享。"
+msgstr "配置错误!\n所选币种也应当与默认科目共享。"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3331,7 +3333,7 @@ msgstr "币种根据公司所属国家配置。"
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr "相关会计日记账的币种。"
+msgstr "相关会计分类账的币种。"
 
 #. module: account
 #: view:website:account.report_analyticjournal
@@ -3508,7 +3510,7 @@ msgid ""
 "the last unreconciled debit/credit entry of this partner was reconciled, "
 "either the user pressed the button \"Nothing more to reconcile\" during the "
 "manual reconciliation process."
-msgstr "上次合伙人日记账分录数据完全并入，此数据与前一次并入的数据有差异，这里我们说明的是没有更多的数据并入此数据，这有两种实现的方法：或是并入上次的借贷分录，或是单击“完全并入”来手动并入。"
+msgstr "上次合伙人分类账分录数据完全并入，此数据与前一次并入的数据有差异，这里我们说明的是没有更多的数据并入此数据，这有两种实现的方法：或是并入上次的借贷分录，或是单击“完全并入”来手动并入。"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -3594,7 +3596,7 @@ msgstr "12月"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr "日记账分录小数精度"
+msgstr "分类账分录小数精度"
 
 #. module: account
 #: field:account.journal,default_credit_account_id:0
@@ -3729,7 +3731,7 @@ msgstr "显示科目："
 #: field:account.common.account.report,display_account:0
 #: field:account.report.general.ledger,display_account:0
 msgid "Display Accounts"
-msgstr "显示科目列表"
+msgstr "显示科目"
 
 #. module: account
 #: field:accounting.report,debit_credit:0
@@ -3994,7 +3996,7 @@ msgstr "期间结束"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "年度结束分录日记账"
+msgstr "年度结束分录分类账"
 
 #. module: account
 #: field:account.analytic.balance,date2:0
@@ -4230,14 +4232,14 @@ msgstr "错误！\n不能创建递归的税金代码。"
 msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
-msgstr "错误！\n您不能创建递归的帐户模板。"
+msgstr "错误！\n不能创建递归的科目模板。"
 
 #. module: account
 #: constraint:account.account:0 constraint:account.tax.code:0
 msgid ""
 "Error!\n"
 "You cannot create recursive accounts."
-msgstr "错误！\n不可创建递归的帐户。"
+msgstr "错误！\n不能创建递归的科目。"
 
 #. module: account
 #: field:account.account,exchange_rate:0
@@ -4247,7 +4249,7 @@ msgstr "汇率"
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
 msgid "Expects a Chart of Accounts"
-msgstr "期望一个科目表"
+msgstr "期望科目表"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -4682,7 +4684,7 @@ msgstr "在这里分析贵公司的资金。这里汇总了每个期间在流动
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, "
 "etc."
-msgstr "全部会计特性：日记账，法定报告，会计科目表 等等"
+msgstr "完整会计功能：分类账，法定报告，会计科目表 等等"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -4722,12 +4724,12 @@ msgstr "通用信息"
 #: model:ir.actions.report.xml,name:account.action_report_general_journal
 #: view:website:account.report_generaljournal
 msgid "General Journal"
-msgstr "通用日记账"
+msgstr "通用分类账"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "通用日记账"
+msgstr "通用分类账"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
@@ -4801,7 +4803,7 @@ msgid ""
 "Gives the type of the analytic journal. When it needs for a document (eg: an"
 " invoice) to create analytic entries, Odoo will look for a matching journal "
 "of the same type."
-msgstr "定义分析日记账的类型。当为同一类单据(如：发票) 创建分析，Odoo将看成一个相同类型。"
+msgstr "定义分析分类账的类型。当为同一类单据(如：发票) 创建分析，Odoo将看成一个相同类型。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:726
@@ -5034,7 +5036,7 @@ msgstr "如果活动字段配置为False，您将可以隐藏它而不在科目�
 msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
-msgstr "如果有效字段设为否，您将可以不必删除就隐藏分析日记账。"
+msgstr "如果有效字段设为否，您将可以不必删除就隐藏分析分类账。"
 
 #. module: account
 #: help:account.journal.period,active:0
@@ -5069,7 +5071,7 @@ msgstr "如果勾选此项, 系统将试图对生成的发票分组"
 msgid ""
 "If you do not check this box, you will be able to do invoicing & payments, "
 "but not accounting (Journal Items, Chart of  Accounts, ...)"
-msgstr "若不勾选，可开发票或支付，但不能做账（日记账项，科目表，……）"
+msgstr "若不勾选，可开发票或支付，但不能做账（分类账项，科目表，……）"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -5151,7 +5153,7 @@ msgstr "如果您使用付款条款，到期日会在会计分录产生时自动
 msgid ""
 "If you want the journal should be control at opening/closing, check this "
 "option"
-msgstr "如果您要这个日记账在开帐/关账时被控制，选中此项。"
+msgstr "如果您要这个分类账在开帐/关账时被控制，选中此项。"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -5180,14 +5182,14 @@ msgstr "有异议"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr "要关闭财政年度，必须登录相关的日记账分录。"
+msgstr "要关闭财政年度，必须登录相关的分类账分录。"
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
 #, python-format
 msgid ""
 "In order to close a period, you must first post related journal entries."
-msgstr "要关闭会计期间，必须登录相关的日记账分录。"
+msgstr "要关闭会计期间，必须登录相关的分类账分录。"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:436
@@ -5195,7 +5197,7 @@ msgstr "要关闭会计期间，必须登录相关的日记账分录。"
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr "要删除银行对账单明细，必须先取消它以便删除相关日记账项目"
+msgstr "要删除银行对账单明细，必须先取消它以便删除相关分类账项目"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:392
@@ -5203,7 +5205,7 @@ msgstr "要删除银行对账单明细，必须先取消它以便删除相关日
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr "要删除银行对账单，必须先取消它以便删除相关日记账项目"
+msgstr "要删除银行对账单，必须先取消它以便删除相关分类账项目"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -5277,7 +5279,7 @@ msgstr "期初余额"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "Install more chart templates"
-msgstr "安装其它科目表模板"
+msgstr "安装更多表模板"
 
 #. module: account
 #: help:account.installer,charts:0
@@ -5669,24 +5671,24 @@ msgstr "1"
 #: view:website:account.report_journal
 #, python-format
 msgid "Journal"
-msgstr "日记账"
+msgstr "分类账"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "日记账 & 业务伙伴"
+msgstr "分类账 & 业务伙伴"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr "日记账 :"
+msgstr "分类账 :"
 
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "日记账代码"
+msgstr "分类账代码"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -5696,66 +5698,66 @@ msgstr "日记账代码"
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "日记账分录"
+msgstr "分类账分录"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "日记账分录按月（排序）"
+msgstr "分类账分录按月（排序）"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries to Review"
-msgstr "需要审查的日记账分录"
+msgstr "需要审查的分类账分录"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current period"
-msgstr "当前期间的日记账分录"
+msgstr "当前期间的分类账分录"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current year"
-msgstr "当前年度期间的日记账分录"
+msgstr "当前年度期间的分类账分录"
 
 #. module: account
 #: field:account.bank.statement.line,journal_entry_id:0
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "分类账分录"
 
 #. module: account
 #: view:account.model:account.view_model_form
 #: view:account.model:account.view_model_search
 #: view:account.model:account.view_model_tree
 msgid "Journal Entry Model"
-msgstr "日记账分录模型"
+msgstr "分类账分录模型"
 
 #. module: account
 #: view:account.model.line:account.view_model_line_form
 #: view:account.model.line:account.view_model_line_tree
 msgid "Journal Entry Model Line"
-msgstr "日记账分录模型行"
+msgstr "分类账分录模型行"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal Entry Number"
-msgstr "日记账分录号码"
+msgstr "分类账分录号码"
 
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 msgid "Journal Entry Reconcile"
-msgstr "日记账分录调节"
+msgstr "分类账分录调节"
 
 #. module: account
 #: view:account.move:account.view_move_form
 #: view:account.move.line:account.view_move_line_form
 #: view:account.move.line:account.view_move_line_form2
 msgid "Journal Item"
-msgstr "日记账项目"
+msgstr "分类账项目"
 
 #. module: account
 #: code:addons/account/account_move_line.py:892
@@ -5763,13 +5765,13 @@ msgstr "日记账项目"
 msgid ""
 "Journal Item '%s' (id: %s) cannot be used in a reconciliation as it is not "
 "balanced!"
-msgstr "日记账项目“%s”(号：%s）不能用于调节，因为它不平衡！"
+msgstr "分类账项目“%s”(号：%s）不能用于调节，因为它不平衡！"
 
 #. module: account
 #: code:addons/account/account_move_line.py:888
 #, python-format
 msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
-msgstr "日记账记录 '%s' (id: %s), 分录 '%s' 已调节。"
+msgstr "分类账记录 '%s' (id: %s), 分录 '%s' 已调节。"
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
@@ -5790,55 +5792,55 @@ msgstr "日记账记录 '%s' (id: %s), 分录 '%s' 已调节。"
 #: field:res.partner,journal_item_count:0
 #, python-format
 msgid "Journal Items"
-msgstr "日记账项目"
+msgstr "分类账项目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "日记账项目分析"
+msgstr "分类账项目分析"
 
 #. module: account
 #: view:account.move.line:account.view_move_line_tree_reconcile
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr "待调节的日记账项目"
+msgstr "待调节的分类账项目"
 
 #. module: account
 #: field:account.analytic.journal,name:0 field:account.journal,name:0
 #: view:website:account.report_generaljournal
 msgid "Journal Name"
-msgstr "日记账名称"
+msgstr "分类账名称"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "日记账会计期间"
+msgstr "分类账会计期间"
 
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
 msgid "Journal Select"
-msgstr "日记账选择"
+msgstr "分类账选择"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "分析分录的日记账"
+msgstr "分析分录的分类账"
 
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr "当年期间日记账发票"
+msgstr "当年期间分类账发票"
 
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr "日记账 - 期间名称"
+msgstr "分类账 - 期间名称"
 
 #. module: account
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Journal:"
-msgstr "日记账："
+msgstr "分类账："
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -5866,7 +5868,7 @@ msgstr "日记账："
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "日记账"
+msgstr "分类账"
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -5876,7 +5878,7 @@ msgstr "日记账"
 #: view:website:account.report_partnerledger
 #: view:website:account.report_partnerledgerother
 msgid "Journals:"
-msgstr "日记账："
+msgstr "分类账："
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6187,7 +6189,7 @@ msgstr "行"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr "链接到自动生成的日记账项"
+msgstr "链接到自动生成的分类账项"
 
 #. module: account
 #: selection:account.account,type:0 selection:account.account.template,type:0
@@ -6321,7 +6323,7 @@ msgstr "最大数量："
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "最大注销总额"
+msgstr "最大销账总额"
 
 #. module: account
 #: selection:report.account.sales,month:0
@@ -6356,7 +6358,7 @@ msgstr "杂项"
 #: code:addons/account/account.py:3190
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr "其它日记账"
+msgstr "杂项分类账"
 
 #. module: account
 #: field:account.model.line,model_id:0
@@ -6553,7 +6555,7 @@ msgstr "下个供应商发票编号"
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "No Analytic Journal!"
-msgstr "没有分析日记账"
+msgstr "没有分析分类账"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -6798,7 +6800,7 @@ msgstr "每页一个业务伙伴"
 #. module: account
 #: field:wizard.multi.charts.accounts,only_one_chart_template:0
 msgid "Only One Chart Template Available"
-msgstr "仅有一个图表模版可用。"
+msgstr "仅有一个表模版可用。"
 
 #. module: account
 #: code:addons/account/account.py:3392 code:addons/account/res_config.py:305
@@ -6850,7 +6852,7 @@ msgstr "开放的发票"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 msgid "Open Journal"
-msgstr "打开日记账"
+msgstr "打开分类账"
 
 #. module: account
 #. openerp-web
@@ -6908,7 +6910,7 @@ msgstr "开帐分录收入科目"
 #: code:addons/account/account.py:3191
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "开帐分录日记账"
+msgstr "开帐分录分类账"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -7046,7 +7048,7 @@ msgstr "上级科目模板"
 #. module: account
 #: field:account.chart.template,parent_id:0
 msgid "Parent Chart Template"
-msgstr "父科目表模板"
+msgstr "父表模板"
 
 #. module: account
 #: field:account.tax.code,parent_id:0
@@ -7487,7 +7489,7 @@ msgstr "请调节“内部转帐帐户”区域设为付款方式'%s'."
 #: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr "请检查银行对账单的字段“日记账”已配置"
+msgstr "请检查银行对账单的字段“分类账”已配置"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
@@ -7499,13 +7501,13 @@ msgstr "请创建发票明细。"
 #: code:addons/account/account.py:1321
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr "请定义日记账序列"
+msgstr "请定义分类账序列"
 
 #. module: account
 #: code:addons/account/account_invoice.py:797
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr "请为此发票相关的日记账定义序列"
+msgstr "请为此发票相关的分类账定义序列"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:330
@@ -7533,7 +7535,7 @@ msgstr "登帐"
 #: view:validate.account.move:account.validate_account_move_view
 #: view:validate.account.move.lines:account.validate_account_move_line_view
 msgid "Post Journal Entries"
-msgstr "登录日记账分录"
+msgstr "登录分类账分录"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7547,12 +7549,12 @@ msgstr "已登帐"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "已登帐的日记账分录"
+msgstr "已登帐的分类账分录"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "已登帐的日记账项目"
+msgstr "已登帐的分类账项目"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -7610,7 +7612,7 @@ msgstr "如果币种跟公司本位币不同，带币种打印报告。"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr "打印 销售/采购 日记账"
+msgstr "打印 销售/采购 分类账"
 
 #. module: account
 #: view:account.vat.declaration:account.view_account_vat_declaration
@@ -7781,7 +7783,7 @@ msgstr "采购"
 #: code:addons/account/account.py:3187
 #, python-format
 msgid "Purchase Journal"
-msgstr "采购日记账"
+msgstr "采购分类账"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -7792,7 +7794,7 @@ msgstr "采购退款"
 #: code:addons/account/account.py:3189
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr "采购退款日记账"
+msgstr "采购退款分类账"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:account.view_wizard_multi_chart
@@ -7813,12 +7815,12 @@ msgstr "购置税(%)"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr "采购日记账"
+msgstr "采购分类账"
 
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr "采购退款日记账"
+msgstr "采购退款分类账"
 
 #. module: account
 #: field:account.config.settings,purchase_tax_rate:0
@@ -7971,13 +7973,13 @@ msgstr "调节参考"
 #. module: account
 #: view:account.move.line.reconcile:account.view_account_move_line_reconcile_full
 msgid "Reconcile With Write-Off"
-msgstr "以注销方式调节"
+msgstr "以销账方式调节"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:125
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "调节注销"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -8140,7 +8142,7 @@ msgstr "退款发票"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "退款日记账"
+msgstr "退款分类账"
 
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
@@ -8174,7 +8176,7 @@ msgstr "退款税金代码符号"
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr "这种方式运行，如果发票已关联，您不可以修改和删除。"
+msgstr ""
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -8386,22 +8388,22 @@ msgstr "销售税"
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr "销售日记账"
+msgstr "销售分类账"
 
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr "销售退货日记账"
+msgstr "销售退货分类账"
 
 #. module: account
 #: view:website:account.report_salepurchasejournal
 msgid "Sale/Purchase Journal"
-msgstr "销售/采购日记账"
+msgstr "销售/采购分类账"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr "销售/采购日记账"
+msgstr "销售/采购分类账"
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -8413,7 +8415,7 @@ msgstr "销售"
 #: code:addons/account/account.py:3186
 #, python-format
 msgid "Sales Journal"
-msgstr "销售日记账"
+msgstr "销售分类账"
 
 #. module: account
 #: code:addons/account/account.py:3188
@@ -8459,7 +8461,7 @@ msgstr "销售员"
 #. module: account
 #: view:account.journal:account.view_account_journal_search
 msgid "Search Account Journal"
-msgstr "搜索会计日记账"
+msgstr "搜索会计分类账"
 
 #. module: account
 #: view:account.account.template:account.view_account_template_search
@@ -8480,7 +8482,7 @@ msgstr "搜索银行对账单"
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 msgid "Search Chart of Account Templates"
-msgstr "搜索科目一览表模板"
+msgstr "搜索科目表模板"
 
 #. module: account
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
@@ -8495,7 +8497,7 @@ msgstr "搜索发票"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "搜索日记账项"
+msgstr "搜索分类账项"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -8537,7 +8539,7 @@ msgid ""
 "customer or supplier payments. Select 'General' for miscellaneous operations"
 " journals. Select 'Opening/Closing Situation' for entries generated for new "
 "fiscal years."
-msgstr "‘销售’用于客户发票的凭证簿；‘采购’用于供应商发票的凭证簿；‘现金’或‘银行’用于客户或供应商付款的凭证簿。‘普通’用于其他各种业务。‘初始化’用于生成新会计年度的年初余额。"
+msgstr "‘销售’用于客户发票的分类账；‘采购’用于供应商发票的分类账；‘现金’或‘银行’用于客户或供应商付款的分类账。‘普通’用于其他各种业务。‘初始化’用于生成新会计年度的年初余额。"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -8555,12 +8557,12 @@ msgstr "‘销售’用于客户发票的凭证簿；‘采购’用于供应商
 #: help:account.vat.declaration,chart_account_id:0
 #: help:accounting.report,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr "选择科目一览表"
+msgstr "选择科目表"
 
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr "选择税一览表"
+msgstr "选择税表"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -8717,7 +8719,7 @@ msgid ""
 " 'Balance' will generally be used for cash accounts.\n"
 " 'Detail' will copy each existing journal item of the previous year, even the reconciled ones.\n"
 " 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."
-msgstr "在这设定所有本类型的科目用于生成年度结束日记账分录的方法\n    'None'  不做结转\n    'Balance'  年末余额转到下年\n    'Detail'  把该科目上年的所有日记账项带入下年，即使已对账\n    'Unreconciled'  把该科目未对账日记账项带入下年"
+msgstr "在这设定所有本类型的科目用于生成年度结束分类账分录的方法\n    'None'  不做结转\n    'Balance'  年末余额转到下年\n    'Detail'  把该科目上年的所有分类账项带入下年，即使已对账\n    'Unreconciled'  把该科目未对账分类账项带入下年"
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -8862,7 +8864,7 @@ msgstr "特殊算法"
 msgid ""
 "Specified journals do not have any account move entries in draft state for "
 "the specified periods."
-msgstr "这个期间内，指定的日记账没有任何会计分录在草稿状态。"
+msgstr "这个期间内，指定的分类账没有任何会计分录在草稿状态。"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -8981,7 +8983,7 @@ msgstr "结算单"
 #: code:addons/account/account_bank_statement.py:352
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr "结算单 %s 已确认，日记账项目已创建."
+msgstr "结算单 %s 已确认，分类账项目已创建."
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_form
@@ -9486,7 +9488,7 @@ msgstr "模板"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr "科目一览表模板"
+msgstr "科目表的模板"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -9518,7 +9520,7 @@ msgid ""
 "can have children accounts for multi-company consolidations, "
 "payable/receivable are for partners accounts (for debit/credit "
 "computations), closed for depreciated accounts."
-msgstr "内部类型用于对不同类型的科目进行控制：视图类型科目不能包含日记账项，合并科目用于在多公司合并中指定子科目，应收应付科目用于业务伙伴，关闭科目用于不再使用的科目。"
+msgstr "内部类型用于对不同类型的科目进行控制：视图类型科目不能包含分类账项，合并科目用于在多公司合并中指定子科目，应收应付科目用于业务伙伴，关闭科目用于不再使用的科目。"
 
 #. module: account
 #: help:account.move.line,tax_code_id:0
@@ -9610,7 +9612,7 @@ msgstr "该科目的代码，每家公司必须是唯一的！"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "每个公司的日记账代码必须唯一！"
+msgstr "每个公司的分类账代码必须唯一！"
 
 #. module: account
 #: help:account.journal,code:0
@@ -9638,7 +9640,7 @@ msgstr "用来输入结算单的货币"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr "日记账分录日期不在所选期间内！可以修改日记账分录日期或在日记账上去掉这个检查项。"
+msgstr "分类账分录日期不在所选期间内！可以修改分类账分录日期或在分类账上去掉这个检查项。"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
@@ -9676,7 +9678,7 @@ msgstr "选择的产品相关的利润或费用科目"
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr "所选的日记账和期间必须属于相同公司。"
+msgstr "所选的分类账和期间必须属于相同公司。"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:104
@@ -9684,7 +9686,7 @@ msgstr "所选的日记账和期间必须属于相同公司。"
 msgid ""
 "The journal must have centralized counterpart without the Skipping draft "
 "state option checked."
-msgstr "这个日记账的“合并对方科目”必须被选中，“跳过草稿状态”不能选中。"
+msgstr "这个分类账的“合并对方科目”必须被选中，“跳过草稿状态”不能选中。"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:101
@@ -9708,7 +9710,7 @@ msgstr "此录入行的分录"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "每个公司的日记账名称必须唯一！"
+msgstr "每个公司的分类账名称必须唯一！"
 
 #. module: account
 #: sql_constraint:account.period:0
@@ -9785,7 +9787,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
-msgstr "日记账分录上的科目要求输入一个外币。您可以在科目配置中去掉这个外币或在日记账配置上选择一个支持多币种的输入界面。"
+msgstr "分类账分录上的科目要求输入一个外币。您可以在科目配置中去掉这个外币或在分类账配置上选择一个支持多币种的输入界面。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1391
@@ -9834,7 +9836,7 @@ msgstr "税说明中的税基"
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "负责此日记账的用户"
+msgstr "负责此分类账的用户"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -9842,7 +9844,7 @@ msgid ""
 "The validation of journal entries process is also called 'ledger posting' "
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
-msgstr "使分录生效的过程也被称为“日记账登帐”，也就是把日记账的总额抄写到分录上的过程。"
+msgstr "使分录生效的过程也被称为“分类账登帐”，也就是把分类账的总额抄写到分录上的过程。"
 
 #. module: account
 #: code:addons/account/installer.py:114
@@ -9856,13 +9858,13 @@ msgstr "当前不存在没科目表的公司。因此，向导不执行。"
 #: code:addons/account/account_cash_statement.py:315
 #, python-format
 msgid "There is no Loss Account on the journal %s."
-msgstr "日记账%s中没有配置损失科目。"
+msgstr "分类账%s中没有配置损失科目。"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:320
 #, python-format
 msgid "There is no Profit Account on the journal %s."
-msgstr "日记账%s中没有配置收益科目。"
+msgstr "分类账%s中没有配置收益科目。"
 
 #. module: account
 #: code:addons/account/account.py:1456
@@ -9870,7 +9872,7 @@ msgstr "日记账%s中没有配置收益科目。"
 msgid ""
 "There is no default credit account defined \n"
 "on journal \"%s\"."
-msgstr "日记账\"%s\"未定义默认贷方科目。"
+msgstr "分类账\"%s\"未定义默认贷方科目。"
 
 #. module: account
 #: code:addons/account/account.py:1449
@@ -9878,7 +9880,7 @@ msgstr "日记账\"%s\"未定义默认贷方科目。"
 msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
-msgstr "日记账\"%s\"未定义默认借方科目。"
+msgstr "分类账\"%s\"未定义默认借方科目。"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:96
@@ -10025,7 +10027,7 @@ msgid ""
 "This allows you to manage the assets owned by a company or a person.\n"
 "It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "这允许您管理属于公司或者个人的资产.\n                跟踪资产折旧的发生，创建折旧明细账户。.\n                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n                但不能处理账记(日记账项, 科目表, ...)"
+msgstr "这允许您管理属于公司或者个人的资产.\n                跟踪资产折旧的发生，创建折旧明细账户。.\n                要安装account_asset模块. 如果不检查box, 可以处理发票和付款,\n                但不能处理账记(分类账项, 科目表, ...)"
 
 #. module: account
 #: help:account.chart.template,complete_tax_set:0
@@ -10161,7 +10163,7 @@ msgstr "分录已经包含了这个会计区间的项目，因此您不嫩修改
 msgid ""
 "This journal already contains items, therefore you cannot modify its company"
 " field."
-msgstr "这个日记账已经包含了项目，因此不能修改他的公司字段"
+msgstr "这个分类账已经包含了项目，因此不能修改他的公司字段"
 
 #. module: account
 #: help:res.partner.bank,journal_id:0
@@ -10283,21 +10285,21 @@ msgid ""
 "This wizard will generate the end of year journal entries of selected fiscal"
 " year. Note that you can run this wizard many times for the same fiscal "
 "year: it will simply replace the old opening entries with the new ones."
-msgstr "此向导将生成选定会计年度的年度结束日记账分录。注意您可以针对相同年度多次运行这个向导：新生成的分录会覆盖原有开帐分录。"
+msgstr "此向导将生成选定会计年度的年度结束分类账分录。注意您可以针对相同年度多次运行这个向导：新生成的分录会覆盖原有开帐分录。"
 
 #. module: account
 #: view:account.open.closed.fiscalyear:account.view_account_open_closed_fiscalyear
 msgid ""
 "This wizard will remove the end of year journal entries of selected fiscal "
 "year. Note that you can run this wizard many times for the same fiscal year."
-msgstr "此向导会删除所选财务年度的年度结束日记账分录，您可对相同的财务年度多次执行此向导。"
+msgstr "此向导会删除所选财务年度的年度结束分类账分录，您可对相同的财务年度多次执行此向导。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
 msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
-msgstr "这向导将使指定的会计期间和分录的所有日记账分录生效。一旦生效您不能再修改它们。"
+msgstr "这向导将使指定的会计期间和分录的所有分类账分录生效。一旦生效您不能再修改它们。"
 
 #. module: account
 #. openerp-web
@@ -10572,7 +10574,7 @@ msgstr "未平衡"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unbalanced Journal Items"
-msgstr "未平衡的日记账项目"
+msgstr "未平衡的分类账项目"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -10638,12 +10640,12 @@ msgstr "未登帐"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "未登帐的日记账分录"
+msgstr "未登帐的分类账分录"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "未登帐日记账项目"
+msgstr "未登帐分类账项目"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -10700,7 +10702,7 @@ msgstr "未调节的分录"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Unreconciled Journal Items"
-msgstr "未调节的日记账项目"
+msgstr "未调节的分类账项目"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -10819,12 +10821,12 @@ msgstr "确认生效"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr "确认会计分录"
+msgstr "验证会计分录"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr "确认会计分录行"
+msgstr "验证会计分录行"
 
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_validated
@@ -10984,34 +10986,34 @@ msgstr "使用这个模块，将产品和一个模板相关联来向您的客户
 #: code:addons/account/account_move_line.py:991
 #, python-format
 msgid "Write-Off"
-msgstr "注销"
+msgstr "销账"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr "注销日记账"
+msgstr "销账分类账"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view
 #: view:account.move.line.reconcile.writeoff:account.account_move_line_reconcile_writeoff
 msgid "Write-Off Move"
-msgstr "注销分录"
+msgstr "销账分录"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr "注销科目"
+msgstr "销账科目"
 
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
 msgid "Write-Off amount"
-msgstr "注销总额"
+msgstr "销账总额"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr "注销总额"
+msgstr "销账总额"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11068,7 +11070,7 @@ msgstr "您可以勾选此，标记分录的明细正与相关业务伙伴在争
 #: code:addons/account/account_move_line.py:1220
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
-msgstr "你不能在关闭的记帐期间添加或修改分录%s of journal %s."
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1047
@@ -11090,7 +11092,7 @@ msgstr "您只能修改草稿发票的币种。"
 #. module: account
 #: constraint:account.move.reconcile:0
 msgid "You can only reconcile journal items with the same partner."
-msgstr "只能和同一业务伙伴调节日记账项。"
+msgstr "只能和同一业务伙伴调节分类账项。"
 
 #. module: account
 #: help:account.invoice.refund,journal_id:0
@@ -11098,7 +11100,7 @@ msgid ""
 "You can select here the journal to use for the credit note that will be "
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
-msgstr "可选择这里的分类帐用于将要创建的信用证，如果该栏留空，它将会用于相同分类帐的当前发票。"
+msgstr ""
 
 #. module: account
 #: help:account.financial.report,style_overwrite:0
@@ -11141,7 +11143,7 @@ msgstr "已部分付款的发票，不能取消。请先撤销相关的付款调
 #: code:addons/account/account.py:691
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr "不能更改包含日记账项的科目编号"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:709
@@ -11149,7 +11151,7 @@ msgstr "不能更改包含日记账项的科目编号"
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr "您不能修改已经存在日记账项的公司帐户。"
+msgstr "您不能修改已经存在分类账项的公司帐户。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1171
@@ -11163,7 +11165,7 @@ msgstr "您不能修改税，您需要删去并且重建这一行"
 msgid ""
 "You cannot change the type of account from 'Closed' to any other type as it "
 "contains journal items!"
-msgstr "已包含日记账项的已关闭科目，不能更改科目类别"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:679
@@ -11171,7 +11173,7 @@ msgstr "已包含日记账项的已关闭科目，不能更改科目类别"
 msgid ""
 "You cannot change the type of account to '%s' type as it contains journal "
 "items!"
-msgstr "不能改变科目类型为'%s' ，因为他已经有了日记账项!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_invoice.py:894
@@ -11186,31 +11188,31 @@ msgstr "您不能在汇总分录上面创建发票。在配置菜单中 相关�
 #: code:addons/account/account_move_line.py:599
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
-msgstr "您不能在关闭的科目%s %s 上面创建日记账项。"
+msgstr "您不能在关闭的科目%s %s 上面创建分类账项。"
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items on an account of type view or consolidation."
-msgstr "合并或视图类型的科目无法创建日记账项。"
+msgstr ""
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr "已关闭科目无法创建日记账项。"
+msgstr ""
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "You cannot create journal items with a secondary currency without recording "
 "both 'currency' and 'amount currency' field."
-msgstr "对于没有币种和外币总额的第二货币，您不能用它来创建日记账项。"
+msgstr "对于没有币种和外币总额的第二货币，您不能用它来创建分类账项。"
 
 #. module: account
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr "在每个会计期间，您不可以创建1个以上的总日记账"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:657
@@ -11222,7 +11224,7 @@ msgstr "您不可以废除一个含有分类帐项的科目。"
 #: code:addons/account/account.py:1415
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr "您不能删除已经登帐的日记账分录\"%s\"."
+msgstr "您不能删除已经登帐的分类账分录\"%s\"."
 
 #. module: account
 #: code:addons/account/account_invoice.py:423
@@ -11231,7 +11233,7 @@ msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
 "number).  You can set it back to \"Draft\" state and modify its content, "
 "then re-confirm it."
-msgstr "发票审批（并获得号码）之后不能删除，您可以让它返回到“草稿”状态来修必它的内容，然后重新确认。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_invoice.py:421
@@ -11239,7 +11241,7 @@ msgstr "发票审批（并获得号码）之后不能删除，您可以让它返
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
-msgstr "您不可以删除非草稿和非取消状态的发票，而是应该退款。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:1234
@@ -11263,13 +11265,13 @@ msgstr "已调节的记录不能修改。仅能编辑非正式字段 或 先撤�
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr "不能修改已经登账的凭证项，首先设置日记账以便允许取消分录"
+msgstr "不能修改已经登账的凭证项，首先设置分类账以便允许取消分录"
 
 #. module: account
 #: code:addons/account/account.py:1124
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
-msgstr "不能编辑或删除该时期有记录的日记账。"
+msgstr "不能编辑或删除该时期有记录的分类账。"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -11282,7 +11284,7 @@ msgstr "如果币种与公司的币种相同，不能配置为第二币种。"
 #: code:addons/account/account.py:659
 #, python-format
 msgid "You cannot remove an account that contains journal items."
-msgstr "不能删除含有日记账项目的科目。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:664
@@ -11290,7 +11292,7 @@ msgstr "不能删除含有日记账项目的科目。"
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
 "supplier."
-msgstr "不能删除/或禁用设置在客户或供应商上的科目。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1641
@@ -11299,14 +11301,14 @@ msgid ""
 "You cannot unreconcile journal items if they has been generated by the"
 "                                                         opening/closing "
 "fiscal year process."
-msgstr "你不能反调节由开启/关闭财政年度过程生成的日记账项目。"
+msgstr "你不能反调节由开启/关闭财政年度过程生成的分类账项目。"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1173
 #: code:addons/account/account_move_line.py:1257
 #, python-format
 msgid "You cannot use an inactive account."
-msgstr "不能使用未生效账户"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:1324
@@ -11314,7 +11316,7 @@ msgstr "不能使用未生效账户"
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr "本日记账里不能使用此总账科目，检查相关日记账上的“分录控制”页卡。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1307
@@ -11331,13 +11333,13 @@ msgstr "不能验证一个不平衡的分录。\n确保你已正确的配置了�
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"."
-msgstr "不能验证此日记账分录，因为科目 \"%s\" 不属于科目表 \"%s\"."
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:271
 #, python-format
 msgid "You do not have rights to open this %s journal!"
-msgstr "您没有权限打开这个 %s 日记账。"
+msgstr "您没有权限打开这个 %s 分类账。"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11359,7 +11361,7 @@ msgstr "缺少相应的参数计算初期平衡，请选择相应的会计期间
 #: code:addons/account/account_move_line.py:194
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "您必须定义日记账'%s' 的分析日记账！"
+msgstr "您必须定义分类账'%s' 的分析分类账！"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:49
@@ -11367,14 +11369,14 @@ msgstr "您必须定义日记账'%s' 的分析日记账！"
 msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
-msgstr "为了对账，您必须在分录中定义一个银行账户。"
+msgstr "你必须在分类账定义中为对账定义银行账户"
 
 #. module: account
 #: code:addons/account/account_move_line.py:976
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
-msgstr "必须提供一个科目用来记录注销/汇率差异的分录。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:3531
@@ -11382,7 +11384,7 @@ msgstr "必须提供一个科目用来记录注销/汇率差异的分录。"
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of"
 " accounts."
-msgstr "您须为所选择的会计科目设定一个银行帐的代码。"
+msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -11391,7 +11393,7 @@ msgid ""
 "You have to set the 'End  of Year Entries Journal' for this Fiscal Year "
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
-msgstr "你必须为本财政年度设置“年度结束分录日记账”，它是在从“生成开帐分录”生成开帐分录之后设置的。"
+msgstr "你必须为本财政年度设置“年度结束分录分类账”，它是在从“生成开帐分录”生成开帐分录之后设置的。"
 
 #. module: account
 #. openerp-web
@@ -11411,7 +11413,7 @@ msgstr "至少选择1个记录。"
 #: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr "您必须定义一个类型为 '%s'的成本日记账！"
+msgstr "您必须定义一个类型为 '%s'的成本分类账！"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1311
@@ -11423,7 +11425,7 @@ msgstr "您必须先选择一个业务伙伴!"
 #: code:addons/account/wizard/account_automatic_reconcile.py:154
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr "您必须选择要调节的分录 。"
+msgstr "您必须选择要调节的科目。"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
@@ -11443,7 +11445,7 @@ msgstr "您须配置开始日期。"
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
-msgstr "需要一个开帐日记账并勾选集中，用以设置初始余额。"
+msgstr "需要一个开帐分类账并勾选集中，用以设置初始余额。"
 
 #. module: account
 #: code:addons/account/account.py:1080

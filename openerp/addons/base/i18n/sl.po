@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-01 17:34+0000\n"
+"PO-Revision-Date: 2015-08-12 09:51+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -3188,7 +3188,7 @@ msgid ""
 "\n"
 "    **Note:** this module is not compatible with the module segmentation, since it's the same which has been renamed.\n"
 "    "
-msgstr ""
+msgstr "\nTa modul omogoča izvedbo segmentacije partnerjev.\n=================================================================\n\nUporablja kriterije profilov iz prejšnjih segmentacij in jih izboljša. \nPo zaslugi novega koncepta vprašalnika lahko združujemo vprašanja v\nvprašalnik in jih neposredno uporabimo na partnerju.\n\nZdružen je bil z nekdanjim CRM & SRM segmentacijskim orodjem, da\nse ne prekriva z njim.\n\n    **Opomba:** ta modul ni združljiv z modulom segmentation, saj gre za isti modul, a preimenovan.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -3205,7 +3205,7 @@ msgid ""
 "team. Once you get back your migrated database, you restore it and reverse the\n"
 "anonymization process to recover your previous data.\n"
 "    "
-msgstr ""
+msgstr "\nModul za anonimnost podatkovne baze.\n===============================================\n\nTa modul omogoči zaupnost podatkov v dani podatkovni bazi.\nProces je koristen, če želite uporabiti migracijski proces in zaščititi\nsvoje ali kupčeve zaupne podatke. Zagon anonimizacijskega orodja\nskrije zaupne podatke (zamenjajo jih znaki 'XXX').\nAnonimno podatkovno bazo nato lahko pošljete migracijski ekipi.\nKo dobite nazaj svojo migrirano podatkovno bazo, lahko povrnete in razveljavite\nproces anonimnosti, da pridobite svoje prejšnje podatke.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic_user_function
@@ -3223,7 +3223,7 @@ msgid ""
 "compatible with older configurations.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nTa modul omogoči določanje privzetih funkcij za določenega uporabnika na danem računu.\n====================================================================================================\n\nV glavnem se uporablja, ko uporabnik vknjiži svojo časovnico: vrednosti so pridobljene\nin polja samodejno izpolnjena, a še vedno obstaja možnost spreminjanja\nteh polj.\n\nČe za trenutni račun ni bilo vnosov, se privzeta vrednost določi, kot\nponavadi, iz podatkov kadra, tako, da je ta modul popolnoma\nzdružljiv s starejšimi konfiguracijami.\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -3242,7 +3242,7 @@ msgid ""
 "It is integrated with sales and accounting to allow you to automatically\n"
 "invoice and send propositions for membership renewal.\n"
 "    "
-msgstr ""
+msgstr "\nModul za upravljanje operacij upravljanja članstev.\n=========================================================================\n\nPodpira različne vrste članov:\n--------------------------------------\n    * Brezplačni član\n    * Pridruženi član (npr.: skupina včlani vse svoje hčerinske skupine)\n    * Član plačnik\n    * Cene posebnih članov\n\nIntegrirano je s prodajo in knjigovodstvom, kar omogoči samodejni\nobračun in pošiljanje predlogov o podaljšanju članstva.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -3254,7 +3254,7 @@ msgid ""
 "When a purchase order is created, you now have the opportunity to save the\n"
 "related requisition. This new object will regroup and will allow you to easily\n"
 "keep track and order all your purchase orders.\n"
-msgstr ""
+msgstr "\nModul za upravljanje nabavnih zahtevkov.\n===========================================================\n\nKo se ustvari nabavni nalog, lahko shranite povezano povpraševanje.\nTa novi objekt bo preuredil in omogočil sledenje in urejanje\nvseh vaših prodajnih nalogov.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -3273,7 +3273,7 @@ msgid ""
 "-----------------\n"
 "    A + B + C -> D + E\n"
 "    "
-msgstr ""
+msgstr "\nModul omogoča izdelavo več proizvodov iz enega proizvodnega naloga.\n=============================================================================\n\nNastavite lahko kosovnico stranskih proizvodov.\n\nBrez tega modula:\n--------------------\n    A + B + C -> D\n\nS tem modulom:\n-----------------\n    A + B + C -> D + E\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -3281,7 +3281,7 @@ msgid ""
 "\n"
 "This module gives you a quick view of your address book, accessible from your home page.\n"
 "You can track your suppliers, customers and other contacts.\n"
-msgstr ""
+msgstr "\nModul poda hiter prikaz imenika stikov dosegljiv iz domače strani.\nSledite lahko dobaviteljem, kupcem in drugim stikom.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -3293,7 +3293,7 @@ msgid ""
 "Shows you a list of applications features to install from.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nModul pomaga pri nastavitvi sistema ob namestitvi nove podatkovne baze.\n================================================================================\n\nPrikaz vseh funkcij aplikacij za namestitev.\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -3311,7 +3311,7 @@ msgid ""
 "It is completely integrated with the cost accounting module. It allows you to set\n"
 "up a management by affair.\n"
 "    "
-msgstr ""
+msgstr "\nModul vgradi sistem časovnic.\n==========================================\n\nVsak kader lahko vpisuje in sledi času porabljenemu na različnih projektih.\nProjekt je analitični konto, porabljeni čas pa ustvari stroške na tem\nkontu.\n\nZagotovljenih je veliko poročil glede časa in kadrov.\n\nJe popolnoma integriran s knjigovodskim modulom in omogoča \nupravljanje po poslih.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -3330,7 +3330,7 @@ msgid ""
 "    \n"
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
-msgstr ""
+msgstr "\nModul vgradi kontni plan območja OHADA.\n===========================================================\n    \nVsaki družbi ali združenju omogoča upravljanje finančnega knjigovodstva.\n\nDržave, ki uporabljajo OHADA so:\n-------------------------------------------\n    Benin, Burkina Faso, Kamerun, Centralnoafriška republika, Komori, Kongo,\n    \n    Slonokoščena obala, Gabon, Gvineja, Gvineja Bissau, Ekvatorialna Gvineja, Mali, Niger,\n    \n    DR Kongo, Senegal, Čad, Togo.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -8711,7 +8711,7 @@ msgid ""
 "If you uncheck the active field, it will disable the ACL without deleting it"
 " (if you delete a native ACL, it will be re-created when you reload the "
 "module."
-msgstr ""
+msgstr "Če odstranite označbo aktivnega polja, lahko onemogočite ACL ne da bi ga brisali (če zbrišete originalni ACL, bo ta ponovno ustvarjen ob posodobitvi modula."
 
 #. module: base
 #: help:ir.rule,active:0
@@ -8719,7 +8719,7 @@ msgid ""
 "If you uncheck the active field, it will disable the record rule without "
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module."
-msgstr ""
+msgstr "Če odstranite označbo aktivnega polja, lahko onemogočite pravilo vnosa ne da bi ga brisali (če zbrišete originalno pravilo vnosa, bo to ponovno ustvarjeno ob posodobitvi modula."
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade
@@ -13695,7 +13695,7 @@ msgstr "Naziv objekta mora pričeti z x_ in ne sme vsebovati posebnih znakov!"
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
-msgstr ""
+msgstr "Izrazi opcij izbora morajo biti v formatu [('key','Label'), ...] !"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:300
@@ -13703,7 +13703,7 @@ msgstr ""
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr ""
+msgstr "Izraz opcij izbora ni veljaven Python izraz. Zagotovite izraz v formatu [('key','Label'), ...] ."
 
 #. module: base
 #: constraint:res.lang:0 help:res.lang,grouping:0
@@ -13712,7 +13712,7 @@ msgid ""
 "digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided ',' as the thousand separator in each case."
-msgstr ""
+msgstr "Format ločilnika bi moral biti kot [,n] where 0 < n :začenši od znaka enote -1 se ločevanje konča, npr. [3,2,-1] predstavlja 106500 kot 1,06,500;[1,2,-1] predstavlja 106,50,0;[3] kot 106,500. Za ločevanje tisočic se v vsakem primeru uporablja ',' ."
 
 #. module: base
 #: code:addons/base/module/module.py:686
@@ -15442,7 +15442,7 @@ msgstr ""
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
-msgstr ""
+msgstr "Vaš strežnik ne podpira SSL, poskusite s STARTTLS."
 
 #. module: base
 #: model:res.country,name:base.yu
