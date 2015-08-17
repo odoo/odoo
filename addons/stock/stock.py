@@ -4331,6 +4331,7 @@ class stock_pack_operation(osv.osv):
         'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc', readonly=True),
         'fresh_record': fields.boolean('Newly created pack operation'),
         'lots_visible': fields.function(_compute_lots_visible, type='boolean'),
+        'location_processed': fields.boolean('Location Processed'),
         'state': fields.related('picking_id', 'state', type='selection', selection=[
                 ('draft', 'Draft'),
                 ('cancel', 'Cancelled'),
