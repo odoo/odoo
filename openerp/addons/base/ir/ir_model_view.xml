@@ -65,6 +65,7 @@
                                     </group>
                                     <group string="Properties">
                                         <group>
+                                            <field name="related"/>
                                             <field name="ttype"/>
                                             <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
@@ -80,6 +81,7 @@
                                             <field name="required"/>
                                             <field name="readonly"/>
                                             <field name="select_level"/>
+                                            <field name="copy"/>
                                             <field name="translate"/>
                                             <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                                             <field name="modules"/>
@@ -170,6 +172,7 @@
                     </group>
                     <group>
                         <group>
+                            <field name="related"/>
                             <field name="ttype"/>
                             <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
@@ -187,6 +190,7 @@
                             <field name="required"/>
                             <field name="readonly"/>
                             <field name="select_level"/>
+                            <field name="copy"/>
                             <field name="translate"/>
                         </group>
                     </group>

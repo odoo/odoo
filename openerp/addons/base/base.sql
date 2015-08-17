@@ -35,6 +35,8 @@ CREATE TABLE ir_model_fields (
   relation varchar,
   relation_field varchar,
   select_level varchar,
+  copy boolean,
+  related varchar,
   readonly boolean default False,
   required boolean default False,
   selectable boolean default False,

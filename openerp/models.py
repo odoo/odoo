@@ -385,6 +385,8 @@ class BaseModel(object):
                 'ttype': f.type,
                 'relation': f.comodel_name or None,
                 'select_level': tools.ustr(int(f.index)),
+                'copy': bool(f.copy),
+                'related': f.related and ".".join(f.related),
                 'readonly': bool(f.readonly),
                 'required': bool(f.required),
                 'selectable': bool(f.search or f.store),
@@ -670,6 +672,8 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
+                'copy': bool(field['copy']),
+                'related': field['related'],
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
             }

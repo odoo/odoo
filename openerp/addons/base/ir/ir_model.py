@@ -226,6 +226,8 @@ class ir_model_fields(osv.osv):
         'selection': fields.char('Selection Options', help="List of options for a selection field, "
             "specified as a Python expression defining a list of (key, label) pairs. "
             "For example: [('blue','Blue'),('yellow','Yellow')]"),
+        'copy': fields.boolean('Copied', help="Whether the value is copied when duplicating a record."),
+        'related': fields.char('Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names."),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
@@ -290,6 +292,40 @@ class ir_model_fields(osv.osv):
         ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
+    def _related_field(self):
+        """ Return the ``Field`` instance corresponding to ``self.related``. """
+        names = self.related.split(".")
+        last = len(names) - 1
+        model = self.env[self.model or self.model_id.model]
+        for index, name in enumerate(names):
+            field = model._fields.get(name)
+            if field is None:
+                raise UserError(_("Unknown field name '%s' in related field '%s'") % (name, self.related))
+            if index < last and not field.relational:
+                raise UserError(_("Non-relational field name '%s' in related field '%s'") % (name, self.related))
+            model = model[name]
+        return field
+
+    @api.one
+    @api.constrains('related')
+    def _check_related(self):
+        if self.state == 'manual' and self.related:
+            field = self._related_field()
+            if field.type != self.ttype:
+                raise UserError(_("Related field '%s' does not have type '%s'") % (self.related, self.ttype))
+            if field.relational and field.comodel_name != self.relation:
+                raise UserError(_("Related field '%s' does not have comodel '%s'") % (self.related, self.relation))
+
+    @api.onchange('related')
+    def _onchange_related(self):
+        if self.related:
+            try:
+                field = self._related_field()
+            except UserError as e:
+                return {'warning': {'title': _("Warning"), 'message': e.message}}
+            self.ttype = field.type
+            self.relation = field.comodel_name
+
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
         """ Return default names for the table and columns of a custom many2many field. """
@@ -303,6 +339,7 @@ class ir_model_fields(osv.osv):
 
     @api.onchange('ttype', 'model_id', 'relation')
     def _onchange_ttype(self):
+        self.copy = (self.ttype != 'one2many')
         if self.ttype == 'many2many' and self.model_id and self.relation:
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
