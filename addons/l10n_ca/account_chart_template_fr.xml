@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
+    <data noupdate="1">
+
+        <!-- Those properties are in a noupdate section in the stock module -->
+        <!-- No need to create them if they have been deleted               -->
+        <record id="stock.property_stock_account_input_categ" model="ir.property">
+                <field eval="'account.account,'+str(ref('chart2171_fr'))" model="account.account" name="value"/>
+                <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+	</record>
+
+        <record id="stock.property_stock_account_output_categ" model="ir.property">
+                <field eval="'account.account,'+str(ref('chart1145_fr'))" model="account.account" name="value"/>
+                <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+        </record>
+
+    </data>
+    <data>
 
 	<!-- Chart template -->
 	<record id="ca_fr_chart_template_fr" model="account.chart.template">
@@ -14,22 +29,12 @@
 		<field name="property_account_expense_categ" ref="chart5111_fr"/>
 	</record>
 	
-    <record id="ca_fr_chart_template_fr_value" model="ir.values">
-        <field name="name">Canada - Plan comptable pour les provinces francophones</field>
-        <field name="model">account.chart.template</field>
-        <field name="key">default</field>
-        <field name="res_id" ref="ca_fr_chart_template_fr"/>
-        <field name="value" ref="base.CAD"/>
-    </record>
-
-        <record id="stock.property_stock_account_input_categ" model="ir.property">
-                <field eval="'account.account,'+str(ref('chart2171_fr'))" model="account.account" name="value"/>
-                <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
-	</record>
-
-        <record id="stock.property_stock_account_output_categ" model="ir.property">
-                <field eval="'account.account,'+str(ref('chart1145_fr'))" model="account.account" name="value"/>
-                <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+        <record id="ca_fr_chart_template_fr_value" model="ir.values">
+                <field name="name">Canada - Plan comptable pour les provinces francophones</field>
+                <field name="model">account.chart.template</field>
+                <field name="key">default</field>
+                <field name="res_id" ref="ca_fr_chart_template_fr"/>
+                <field name="value" ref="base.CAD"/>
         </record>
 
         <record id="property_stock_valuation_account_id" model="ir.property">
@@ -40,5 +45,5 @@
                 <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
         </record>
 
-	</data>
+    </data>
 </openerp>
