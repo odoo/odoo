@@ -9,7 +9,7 @@
 {
     'name' : 'Venezuela - Accounting',
     'version': '1.0',
-    'author': ['OpenERP SA', 'Vauxoo'],
+    'author': ['Odoo SA', 'Vauxoo'],
     'category': 'Localization/Account Charts',
     'description':
 """
@@ -46,11 +46,9 @@ but you will need set manually account defaults for taxes.
     ],
     'demo': [],
     'data': [
-             'data/account_user_types.xml',
              'data/account_chart.xml',
              'data/account_tax.xml',
-             'data/l10n_chart_ve_wizard.xml'
+             'data/account_chart_template.yml'
     ],
-    'auto_install': False,
-    'installable': False,
+    'installable': True,
 }
