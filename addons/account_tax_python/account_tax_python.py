@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api
+from openerp.tools.safe_eval import safe_eval
 
 class AccountTaxPython(models.Model):
     _inherit = "account.tax"
@@ -29,7 +30,7 @@ class AccountTaxPython(models.Model):
         if self.amount_type == 'code':
             company = self.env.user.company_id
             localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            exec self.python_compute in localdict
+            safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner)
 
@@ -39,7 +40,7 @@ class AccountTaxPython(models.Model):
         company = self.env.user.company_id
         for tax in self:
             localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            exec tax.python_applicable in localdict
+            safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
                 taxes += tax
         return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner)
