@@ -5328,8 +5328,8 @@ class BaseModel(object):
 
     def update(self, values):
         """ Update record `self[0]` with `values`. """
-        for name, value in values.iteritems():
-            self[name] = value
+        self.ensure_one()
+        self.write(values)
 
     #
     # New records - represent records that do not exist in the database yet;
