@@ -1,26 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-  <data>
+<odoo>
+
+     <!-- Account Tags -->
+
+    <record id="tag_IVA_19%_Venta" model="account.account.tag">
+        <field name="name">IVA 19% Venta</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_IVA_19%_Compra" model="account.account.tag">
+        <field name="name">IVA 19% Compra</field>
+        <field name="applicability">taxes</field>
+    </record>
 
     <record id="ITAX_19" model="account.tax.template">
       <field name="chart_template_id" ref="cl_chart_template"/>
       <field name="name">IVA 19% Venta</field>
-      <field name="amount">0.190000</field>
-      <field name="type">percent</field>
+      <field name="description">IVA 19% Venta</field>
+      <field name="amount">19</field>
+      <field name="amount_type">percent</field>
       <field name="type_tax_use">sale</field>
-      <field name="account_collected_id" ref="231"/>
-      <field name="account_paid_id" ref="231"/>
+      <field name="refund_account_id" ref="231"/>
+      <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_IVA_19%_Venta')])]"/>
     </record>
 
     <record id="OTAX_19" model="account.tax.template">
       <field name="chart_template_id" ref="cl_chart_template"/>
       <field name="name">IVA 19% Compra</field>
-      <field name="amount">0.190000</field>
-      <field name="type">percent</field>
+      <field name="description">IVA 19% Compra</field>
+      <field name="amount">19</field>
+      <field name="amount_type">percent</field>
       <field name="type_tax_use">purchase</field>
-      <field name="account_collected_id" ref="231"/>
-      <field name="account_paid_id" ref="231"/>
+      <field name="refund_account_id" ref="231"/>
+      <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_IVA_19%_Compra')])]"/>
     </record>
 
-  </data>
-</openerp>
+</odoo>
