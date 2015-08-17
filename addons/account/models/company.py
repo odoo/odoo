@@ -42,7 +42,7 @@ class ResCompany(models.Model):
     # Kept for backwards compatibility
     bank_ids = fields.One2many('res.partner.bank', string='Bank Accounts', compute='_compute_bank_ids')
 
-    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
+    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry', 'bank_journal_ids')
     def onchange_footer(self):
         super(ResCompany, self).onchange_footer()
         if not self.custom_footer:
