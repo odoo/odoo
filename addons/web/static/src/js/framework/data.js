@@ -745,7 +745,7 @@ var BufferedDataSet = DataSetStatic.extend({
         // this.from_readonly.
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
         if (!cached) {
-            this.cache.push(cached = {id: id});
+            this.cache.push(cached = {id: id, values: {}});
         }
         var record = _.detect(this.from_read, function(x) {return x.id === id;});
         if (record) {
@@ -831,6 +831,9 @@ var BufferedDataSet = DataSetStatic.extend({
                     }
 
                     var record_from_read = _.detect(self.from_read, function(x) {return x.id === id;});
+                    if (!record_from_read) {
+                        record_from_read = {values: {}};
+                    }
                     _.each(data, function (v, k) {
                         if (!_.isEqual(v, cached.values[k])) {
                             dirty = true;
