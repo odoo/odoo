@@ -1,43 +1,37 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp import tools
+
+from openerp import api, fields, models, tools
 
 
-class fleet_vehicle_model_brand(osv.Model):
-    _name = 'fleet.vehicle.model.brand'
-    _description = 'Brand model of the vehicle'
+class FleetMake(models.Model):
+    _name = 'fleet.make'
+    _description = 'Make of the vehicle'
+    _order = 'name, id'
 
-    _order = 'name asc'
+    name = fields.Char(string='Make', required=True)
+    image = fields.Binary(string="Logo", help="This field holds the image used as logo for the brand,limited to 1024x1024px.")
+    image_medium = fields.Binary(compute='_compute_image', inverse='_inverse_image_medium', string="Medium-sized photo", store=True,
+                                 help="Medium-sized logo of the brand. It is automatically "
+                                      "resize as a 128x128px image, with aspect ratio preserved. "
+                                      "Use this field in form views or some kanban views.")
+    image_small = fields.Binary(compute='_compute_image', inverse='_inverse_image_small', string="Small-sized photo", store=True,
+                                help="Small-sized photo of the brand. It is automatically "
+                                     "resize as a 64x64px image, with aspect ratio preserved. "
+                                     "Use this field anywhere a small image is required.")
 
-    def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
-        return result
+    @api.one
+    @api.depends('image')
+    def _compute_image(self):
+        make_images = tools.image_get_resized_images(self.image)
+        self.image_medium = make_images.get('image_medium')
+        self.image_small = make_images.get('image_small')
 
-    def _set_image(self, cr, uid, id, name, value, args, context=None):
-        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    @api.one
+    def _inverse_image_medium(self):
+        self.image = tools.image_resize_image_big(self.image_medium)
 
-    _columns = {
-        'name': fields.char('Make', required=True),
-        'image': fields.binary("Logo",
-            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
-        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
-            string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Medium-sized logo of the brand. It is automatically "\
-                 "resized as a 128x128px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
-        'image_small': fields.function(_get_image, fnct_inv=_set_image,
-            string="Smal-sized photo", type="binary", multi="_get_image",
-            store = {
-                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
-            },
-            help="Small-sized photo of the brand. It is automatically "\
-                 "resized as a 64x64px image, with aspect ratio preserved. "\
-                 "Use this field anywhere a small image is required."),
-    }
+    @api.one
+    def _inverse_image_small(self):
+        self.image = tools.image_resize_image_big(self.image_small)

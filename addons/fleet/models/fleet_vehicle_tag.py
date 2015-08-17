@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import fields, models
 
 
-class fleet_vehicle_tag(osv.Model):
+class FleetVehicleTag(models.Model):
     _name = 'fleet.vehicle.tag'
-    _columns = {
-        'name': fields.char('Name', required=True),
-    }
-    _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
-    ]
+
+    name = fields.Char(required=True, translate=True)
+    color = fields.Integer('Color Index')
