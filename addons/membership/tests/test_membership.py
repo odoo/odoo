@@ -50,8 +50,7 @@ class TestMembership(TestMembershipCommon):
             'membership: after opening the invoice, customer should be in invoiced status')
 
         # the invoice is paid -> customer goes to paid status
-        bank_account_euro = self.env['res.partner.bank'].create({'acc_number': '123', 'bank_name': 'bank', 'partner_id': self.env.ref('base.main_partner').id})
-        bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67', 'bank_account_id': bank_account_euro.id})
+        bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
         invoice.pay_and_reconcile(bank_journal, invoice.amount_total)
         self.assertEqual(
             self.partner_1.membership_state, 'paid',

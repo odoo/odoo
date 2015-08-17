@@ -18,8 +18,7 @@ class TestCreateInvoice(TransactionCase):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
 
         # Create Sale Journal
-        bank_account = self.env['res.partner.bank'].create({'acc_number': '123', 'bank_name': 'bank', 'state': 'bank', 'partner_id': self.env.ref('base.main_partner').id})
-        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'DSTPJ', 'type': 'purchase', 'bank_account_id': bank_account.id})
+        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'DSTPJ', 'type': 'purchase'})
 
         user_type_id = self.env.ref('account.data_account_type_payable')
         account_pay_id = self.env['account.account'].create({'code': 'X1012', 'name': 'Purchase - Test Payable Account', 'user_type_id': user_type_id.id, 'reconcile': True})

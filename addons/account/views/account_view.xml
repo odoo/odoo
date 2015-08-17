@@ -241,8 +241,8 @@
                             <group>
                                 <field name="type"/>
                                 <field name="company_partner_id" invisible="1"/>
-                                <field name="bank_account_id" attrs="{'required': [('type', '=', 'bank')], 'invisible': [('type', '!=', 'bank')]}"
-                                    domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', [])]"
+                                <field name="bank_account_id" attrs="{'invisible': [('type', '!=', 'bank')]}"
+                                    domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', False)]"
                                     context="{'form_view_ref':'account.view_bank_account_form', 'default_company_id': company_id, 'default_partner_id': company_partner_id}" />
                                 <field name="display_on_footer" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
                             </group>

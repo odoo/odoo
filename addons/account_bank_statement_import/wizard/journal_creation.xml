@@ -16,7 +16,7 @@
                         </group>
                         <group>
                             <field name="company_partner_id" invisible="1"/>
-                            <field name="bank_account_id" domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', [])]"
+                            <field name="bank_account_id" required="1" domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', False)]"
                                 context="{'form_view_ref':'account.view_bank_account_form', 'default_acc_number': context['bank_acc_number'], 'default_company_id': company_id, 'default_partner_id': company_partner_id}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>

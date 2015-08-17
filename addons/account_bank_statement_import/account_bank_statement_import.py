@@ -74,6 +74,7 @@ class AccountBankStatementImport(models.TransientModel):
                 'default_currency_id': currency and currency.id or False,
                 'default_name': _('Bank') + ' ' + account_number,
                 'default_type': 'bank',
+                'default_bank_statements_source': 'file_import',
             }
         }
 

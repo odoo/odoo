@@ -261,17 +261,20 @@ class AccountJournal(models.Model):
     @api.one
     @api.constrains('type', 'bank_account_id')
     def _check_bank_account(self):
-        if self.type == 'bank':
-            # A journal of type bank is necessarily composed of a bank account
-            if not self.bank_account_id:
-                raise ValidationError(_('A bank journal cannot be created without a bank account.'))
+        if self.type == 'bank' and self.bank_account_id:
             if self.bank_account_id.company_id != self.company_id:
                 raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % self.company_id.name)
             # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
-            # Or they are part of a bank journal and their partner_id would be left empty.
-            # However, for backwards compatibility, we ensure that partner_id == company_id.partner_id
+            # Or they are part of a bank journal and their partner_id must be the company's partner_id.
             if self.bank_account_id.partner_id != self.company_id.partner_id:
                 raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
+
+    @api.one
+    @api.constrains('type', 'bank_statements_source', 'bank_account_id')
+    def _check_bank_statements_source(self):
+        if self.type == 'bank' and not self.bank_account_id and self.bank_statements_source != 'manual':
+            bank_st_src_label = next(val[1] for val in self._fields['bank_statements_source']._description_selection(self.env) if val[0] == self.bank_statements_source)
+            raise ValidationError(_('You cannot use "%s" as bank feed without configuring a bank account.') % bank_st_src_label)
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
