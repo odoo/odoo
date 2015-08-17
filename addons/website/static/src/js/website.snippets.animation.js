@@ -152,7 +152,7 @@
     website.snippet.animationRegistry.media_video = website.snippet.Animation.extend({
         selector: ".media_iframe_video",
         start: function () {
-            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+this.$target.data("src")+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+            this.$target.html('<div class="css_editable_mode_display">&nbsp;</div><iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
         },
     });
 })();

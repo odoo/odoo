@@ -44,15 +44,23 @@ class stock_move(osv.osv):
         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
         from openerp import workflow
         if vals.get('state') in ['done', 'cancel']:
+            po_to_check = []
             for move in self.browse(cr, uid, ids, context=context):
                 if move.purchase_line_id and move.purchase_line_id.order_id:
-                    order_id = move.purchase_line_id.order_id.id
+                    order = move.purchase_line_id.order_id
+                    order_id = order.id
                     # update linked purchase order as superuser as the warehouse
                     # user may not have rights to access purchase.order
                     if self.pool.get('purchase.order').test_moves_done(cr, uid, [order_id], context=context):
                         workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_done', cr)
                     if self.pool.get('purchase.order').test_moves_except(cr, uid, [order_id], context=context):
                         workflow.trg_validate(SUPERUSER_ID, 'purchase.order', order_id, 'picking_cancel', cr)
+                    if order_id not in po_to_check and vals['state'] == 'cancel' and order.invoice_method == 'picking':
+                        po_to_check.append(order_id)
+            # Some moves which are cancelled might be part of a PO line which is partially
+            # invoiced, so we check if some PO line can be set on "invoiced = True".
+            if po_to_check:
+                self.pool.get('purchase.order')._set_po_lines_invoiced(cr, uid, po_to_check, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -93,8 +101,11 @@ class stock_move(osv.osv):
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if context.get('inv_type') in ('in_invoice', 'in_refund') and move.purchase_line_id:
+        if context.get('inv_type') == 'in_invoice' and move.purchase_line_id:
             purchase_order = move.purchase_line_id.order_id
+            return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
+        if context.get('inv_type') == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
+            purchase_order = move.origin_returned_move_id.purchase_line_id.order_id
             return purchase_order.partner_id, purchase_order.create_uid.id, purchase_order.currency_id.id
         elif context.get('inv_type') in ('in_invoice', 'in_refund') and move.picking_id:
             # In case of an extra move, it is better to use the data from the original moves
@@ -113,8 +124,12 @@ class stock_move(osv.osv):
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if inv_type in ('in_invoice', 'in_refund') and move.purchase_line_id:
+        if inv_type == 'in_invoice' and move.purchase_line_id:
             purchase_line = move.purchase_line_id
+            res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
+            res['price_unit'] = purchase_line.price_unit
+        elif inv_type == 'in_refund' and move.origin_returned_move_id.purchase_line_id:
+            purchase_line = move.origin_returned_move_id.purchase_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in purchase_line.taxes_id])]
             res['price_unit'] = purchase_line.price_unit
         return res
@@ -156,7 +171,7 @@ class stock_move(osv.osv):
                 pricelist_obj = self.pool.get("product.pricelist")
                 pricelist = partner.property_product_pricelist_purchase.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist],
-                                    move.product_id.id, move.product_uom_qty, partner, {
+                                    move.product_id.id, move.product_uom_qty, partner.id, {
                                                                                 'uom': move.product_uom.id,
                                                                                 'date': move.date,
                                                                                 })[pricelist]
@@ -220,7 +235,7 @@ class stock_warehouse(osv.osv):
     _columns = {
         'buy_to_resupply': fields.boolean('Purchase to resupply this warehouse', 
                                           help="When products are bought, they can be delivered to this warehouse"),
-        'buy_pull_id': fields.many2one('procurement.rule', 'BUY rule'),
+        'buy_pull_id': fields.many2one('procurement.rule', 'Buy rule'),
     }
     _defaults = {
         'buy_to_resupply': True,

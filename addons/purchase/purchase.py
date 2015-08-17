@@ -870,6 +870,7 @@ class purchase_order(osv.osv):
             }
             picking_id = self.pool.get('stock.picking').create(cr, uid, picking_vals, context=context)
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
+        return picking_id
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
@@ -989,6 +990,30 @@ class purchase_order(osv.osv):
 
         return orders_info
 
+    def _set_po_lines_invoiced(self, cr, uid, ids, context=None):
+        for po in self.browse(cr, uid, ids, context=context):
+            is_invoiced = []
+            if po.invoice_method == 'picking':
+                # We determine the invoiced state of the PO line based on the invoiced state
+                # of the associated moves. This should cover all possible cases:
+                # - all moves are done and invoiced
+                # - a PO line is split into multiple moves (e.g. if multiple pickings): some
+                #   pickings are done, some are in progress, some are cancelled
+                for po_line in po.order_line:
+                    if (po_line.move_ids and
+                            all(move.state in ('done', 'cancel') for move in po_line.move_ids) and
+                            not all(move.state == 'cancel' for move in po_line.move_ids) and
+                            all(move.invoice_state == 'invoiced' for move in po_line.move_ids if move.state == 'done')):
+                        is_invoiced.append(po_line.id)
+            else:
+                for po_line in po.order_line:
+                    if (po_line.invoice_lines and 
+                            all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines)):
+                        is_invoiced.append(po_line.id)
+            if is_invoiced:
+                self.pool['purchase.order.line'].write(cr, uid, is_invoiced, {'invoiced': True})
+            workflow.trg_write(uid, 'purchase.order', po.id, cr)
+
 
 class purchase_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
@@ -1053,7 +1078,9 @@ class purchase_order_line(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         procurement_ids_to_except = procurement_obj.search(cr, uid, [('purchase_line_id', 'in', ids)], context=context)
         if procurement_ids_to_except:
-            self.pool['procurement.order'].write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
+            for po_id in procurement_ids_to_except:
+                procurement_obj.message_post(cr, uid, po_id, body=_('Purchase order line deleted.'), context=context)
+            procurement_obj.write(cr, uid, procurement_ids_to_except, {'state': 'exception'}, context=context)
         return super(purchase_order_line, self).unlink(cr, uid, ids, context=context)
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
@@ -1110,6 +1137,9 @@ class purchase_order_line(osv.osv):
 
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
+            if not uom_id:
+                uom_id = self.default_get(cr, uid, ['product_uom'], context=context).get('product_uom', False)
+                res['value']['product_uom'] = uom_id
             return res
 
         product_product = self.pool.get('product.product')
@@ -1238,8 +1268,12 @@ class procurement_order(osv.osv):
         return super(procurement_order, self)._run(cr, uid, procurement, context=context)
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.purchase_line_id and procurement.purchase_line_id.order_id.shipped:  # TOCHECK: does it work for several deliveries?
-            return True
+        if procurement.purchase_line_id:
+            if procurement.purchase_line_id.order_id.shipped:
+                return True
+            elif procurement.move_ids:
+                moves = self.pool.get('stock.move').browse(cr, uid, [x.id for x in procurement.move_ids], context=context)
+                return all(move.state == 'done' for move in moves)
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
 
     def _check_supplier_info(self, cr, uid, ids, context=None):
@@ -1329,6 +1363,7 @@ class procurement_order(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
+        po_obj = self.pool.get('purchase.order')
 
         seller_qty = procurement.product_id.seller_qty if procurement.location_id.usage != 'customer' else 0.0
         pricelist_id = partner.property_product_pricelist_purchase.id
@@ -1343,7 +1378,12 @@ class procurement_order(osv.osv):
         new_context.update({'lang': partner.lang, 'partner_id': partner.id})
         product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
         taxes_ids = procurement.product_id.supplier_taxes_id
-        taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
+        # It is necessary to have the appropriate fiscal position to get the right tax mapping
+        fiscal_position = False
+        fiscal_position_id = po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position']
+        if fiscal_position_id:
+            fiscal_position = acc_pos_obj.browse(cr, uid, fiscal_position_id, context=context)
+        taxes = acc_pos_obj.map_tax(cr, uid, fiscal_position, taxes_ids)
         name = product.display_name
         if product.description_purchase:
             name += '\n' + product.description_purchase
@@ -1455,7 +1495,7 @@ class procurement_order(osv.osv):
                         'currency_id': partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.currency_id.id or procurement.company_id.currency_id.id,
                         'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                         'company_id': procurement.company_id.id,
-                        'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
+                        'fiscal_position': po_obj.onchange_partner_id(cr, uid, None, partner.id, context=context)['value']['fiscal_position'],
                         'payment_term_id': partner.property_supplier_payment_term.id or False,
                         'dest_address_id': procurement.partner_dest_id.id,
                     }
@@ -1567,21 +1607,9 @@ class account_invoice(osv.Model):
         else:
             user_id = uid
         po_ids = purchase_order_obj.search(cr, user_id, [('invoice_ids', 'in', ids)], context=context)
-        for order in purchase_order_obj.browse(cr, user_id, po_ids, context=context):
-            purchase_order_obj.message_post(cr, user_id, order.id, body=_("Invoice received"), context=context)
-            invoiced = []
-            shipped = True
-            # for invoice method manual or order, don't care about shipping state
-            # for invoices based on incoming shippment, beware of partial deliveries
-            if (order.invoice_method == 'picking' and
-                    not all(picking.invoice_state in ['invoiced'] for picking in order.picking_ids)):
-                shipped = False
-            for po_line in order.order_line:
-                if all(line.invoice_id.state not in ['draft', 'cancel'] for line in po_line.invoice_lines):
-                    invoiced.append(po_line.id)
-            if invoiced and shipped:
-                self.pool['purchase.order.line'].write(cr, user_id, invoiced, {'invoiced': True})
-            workflow.trg_write(user_id, 'purchase.order', order.id, cr)
+        for po_id in po_ids:
+            purchase_order_obj.message_post(cr, user_id, po_id, body=_("Invoice received"), context=context)
+            purchase_order_obj._set_po_lines_invoiced(cr, user_id, [po_id], context=context)
         return res
 
     def confirm_paid(self, cr, uid, ids, context=None):

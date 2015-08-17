@@ -13,6 +13,7 @@ import select
 import subprocess
 import threading
 import time
+import itertools
 import unittest2
 import urllib2
 import xmlrpclib
@@ -44,6 +45,10 @@ def get_db_name():
     if not db and hasattr(threading.current_thread(), 'dbname'):
         return threading.current_thread().dbname
     return db
+
+
+# For backwards-compatibility - get_db_name() should be used instead
+DB = get_db_name()
 
 
 def at_install(flag):
@@ -165,6 +170,27 @@ class SingleTransactionCase(BaseCase):
         cls.env.reset()
         cls.cr.rollback()
         cls.cr.close()
+
+
+savepoint_seq = itertools.count()
+class SavepointCase(SingleTransactionCase):
+    """ Similar to :class:`SingleTransactionCase` in that all test methods
+    are run in a single transaction *but* each test case is run inside a
+    rollbacked savepoint (sub-transaction).
+
+    Useful for test cases containing fast tests but with significant database
+    setup common to all cases (complex in-db test data): :meth:`~.setUpClass`
+    can be used to generate db test data once, then all test cases use the
+    same data without influencing one another but without having to recreate
+    the test data either.
+    """
+    def setUp(self):
+        self._savepoint_id = next(savepoint_seq)
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
+    def tearDown(self):
+        self.cr.execute('ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
+        self.env.clear()
+        self.registry.clear_caches()
 
 
 class RedirectHandler(urllib2.HTTPRedirectHandler):
@@ -306,6 +332,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
                 phantom.wait()
             self._wait_remaining_requests()
+            # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):
@@ -322,23 +349,6 @@ class HttpCase(TransactionCase):
                         _logger.info('remaining requests')
                         openerp.tools.misc.dumpstacks()
                         t0 = t1
-
-    def phantom_jsfile(self, jsfile, timeout=60, **kw):
-        options = {
-            'timeout' : timeout,
-            'port': PORT,
-            'db': get_db_name(),
-            'session_id': self.session_id,
-        }
-        options.update(kw)
-        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        # phantom.args[0] == phantomtest path
-        # phantom.args[1] == options
-        cmd = [
-            'phantomjs',
-            jsfile, phantomtest, json.dumps(options)
-        ]
-        self.phantom_run(cmd, timeout)
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
         """ Test js code running in the browser

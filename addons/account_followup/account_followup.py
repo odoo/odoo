@@ -203,14 +203,20 @@ class res_partner(osv.osv):
         mtp = self.pool.get('email.template')
         unknown_mails = 0
         for partner in self.browse(cr, uid, partner_ids, context=ctx):
-            if partner.email and partner.email.strip():
+            partners_to_email = [child for child in partner.child_ids if child.type == 'invoice' and child.email]
+            if not partners_to_email and partner.email:
+                partners_to_email = [partner]
+            if partners_to_email:
                 level = partner.latest_followup_level_id_without_lit
-                if level and level.send_email and level.email_template_id and level.email_template_id.id:
-                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=ctx)
-                else:
-                    mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
-                                                    'account_followup', 'email_template_account_followup_default')
-                    mtp.send_mail(cr, uid, mail_template_id[1], partner.id, context=ctx)
+                for partner_to_email in partners_to_email:
+                    if level and level.send_email and level.email_template_id and level.email_template_id.id:
+                        mtp.send_mail(cr, uid, level.email_template_id.id, partner_to_email.id, context=ctx)
+                    else:
+                        mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid,
+                                                        'account_followup', 'email_template_account_followup_default')
+                        mtp.send_mail(cr, uid, mail_template_id[1], partner_to_email.id, context=ctx)
+                if partner not in partners_to_email:
+                    self.message_post(cr, uid, [partner.id], body=_('Overdue email sent to %s' % ', '.join(['%s <%s>' % (partner.name, partner.email) for partner in partners_to_email])), context=context)
             else:
                 unknown_mails = unknown_mails + 1
                 action_text = _("Email not sent because of email address of partner not filled in")
@@ -237,7 +243,7 @@ class res_partner(osv.osv):
         assert len(ids) == 1
         if context is None:
             context = {}
-        partner = self.browse(cr, uid, ids[0], context=context)
+        partner = self.browse(cr, uid, ids[0], context=context).commercial_partner_id
         #copy the context to not change global context. Overwrite it because _() looks for the lang in local variable 'context'.
         #Set the language to use = the partner language
         context = dict(context, lang=partner.lang)

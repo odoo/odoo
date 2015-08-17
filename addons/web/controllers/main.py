@@ -311,12 +311,12 @@ def set_cookie_and_redirect(redirect_url):
 
 def login_redirect():
     url = '/web/login?'
-    if request.debug:
-        url += 'debug&'
+    # built the redirect url, keeping all the query parameters of the url
+    redirect_url = '%s?%s' % (request.httprequest.base_url, werkzeug.urls.url_encode(request.params))
     return """<html><head><script>
-        window.location = '%sredirect=' + encodeURIComponent(window.location);
+        window.location = '%sredirect=' + encodeURIComponent("%s");
     </script></head></html>
-    """ % (url,)
+    """ % (url, redirect_url)
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')

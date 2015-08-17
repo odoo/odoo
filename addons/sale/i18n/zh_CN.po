@@ -4,14 +4,16 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# 开阖—gilbert <gilbert@osbzr.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-04 04:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-08-13 02:17+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -95,7 +97,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>你好 ${object.partner_id.name},</p>\n    \n    <p>这是你的 ${object.state in ('draft', 'sent') and '报价单' or '订单'} 来自 ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>摘要</strong><br />\n       &nbsp;&nbsp;订单号: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;订单总额: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;订单日期: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;订单偏向: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;你的偏好: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;你的联系人: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>也可能直接通过贝宝支付:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>如果你有任何问题的话，请直接联系我们！</p>\n    <p>感谢您选择${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                网址 :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
@@ -129,7 +131,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '�
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -289,7 +291,7 @@ msgstr "允许不一样的发运和开票地址。 "
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr "允许通过日记账的发货单批量开票。"
+msgstr "允许通过分类账的发货单批量开票。"
 
 #. module: sale
 #: field:sale.config.settings,module_warning:0
@@ -489,7 +491,7 @@ msgstr ""
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "点击进入销售分析。"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -752,7 +754,7 @@ msgstr "草稿"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr "报价单草稿"
+msgstr "草稿报价"
 
 #. module: sale
 #: code:addons/sale/edi/sale_order.py:140
@@ -837,7 +839,7 @@ msgid ""
 "Forecast of the invoice revenue for the current month. This is the amount the sales \n"
 "team should invoice this month. It is used to compute the progression ratio \n"
 " of the current and forecast revenue on the kanban view."
-msgstr ""
+msgstr "当月发票的收入预测。这是本月销售团队应该开出的发票金额。 \n它是用来在看板视图中计算实际和预测的收入之间的比例关系。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -996,12 +998,12 @@ msgstr "当前销售订单的发票地址。"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice address:"
-msgstr ""
+msgstr "发票寄送地址:"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "发票和收货地址:"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:113
@@ -1132,7 +1134,7 @@ msgstr "我的销售订单明细"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "New Copy of Quotation"
-msgstr "复制此报价单"
+msgstr "报价的新副本"
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1167,7 +1169,7 @@ msgstr "订单被确认和产品交付给客户之间的天数"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
 msgid "Old Quotations"
-msgstr "旧的报价单"
+msgstr "旧报价"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -1304,7 +1306,7 @@ msgstr "轻微公司 \"%s\" (id:%d) 定义销售分类账"
 #. module: sale
 #: field:sale.config.settings,timesheet:0
 msgid "Prepare invoices based on timesheets"
-msgstr "准备基于计工单的发票"
+msgstr "基于计工单准备发票"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1407,12 +1409,12 @@ msgstr "数量(销售单位)"
 #: view:sale.order:sale.view_order_form
 #: view:sale.order:sale.view_quotation_tree selection:sale.report,state:0
 msgid "Quotation"
-msgstr "报价单"
+msgstr "报价"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "报价单/订单"
+msgstr "报价/订单"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
@@ -1422,27 +1424,27 @@ msgstr ""
 #. module: sale
 #: view:sale.order:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "报价单编号"
+msgstr "报价号码"
 
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Quotation N°"
-msgstr "报价单号"
+msgstr "报价号"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr "报价单已经发送"
+msgstr "报价发送"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "报价单发送"
+msgstr "报价送出"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "报价已经确认"
+msgstr "报价已确认"
 
 #. module: sale
 #: code:addons/sale/sale.py:362
@@ -1454,7 +1456,7 @@ msgstr ""
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr "报价单发送"
+msgstr "报价已送出"
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -1464,7 +1466,7 @@ msgstr "报价单发送"
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: view:sale.order:sale.view_sales_order_filter
 msgid "Quotations"
-msgstr "报价单"
+msgstr "报价"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1474,7 +1476,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "报价单或销售订单"
+msgstr "报价或销售"
 
 #. module: sale
 #: field:crm.case.section,monthly_quoted:0
@@ -1747,7 +1749,7 @@ msgstr "送货异常"
 #. module: sale
 #: view:website:sale.report_saleorder_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "收货地址:"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -1884,7 +1886,7 @@ msgstr ""
 #. module: sale
 #: help:sale.config.settings,module_website_quote:0
 msgid "This adds the online quotation"
-msgstr ""
+msgstr "增加在线报价"
 
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0

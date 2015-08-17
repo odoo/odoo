@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-08-14 05:58+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,17 +21,17 @@ msgstr ""
 #. module: crm_claim
 #: field:res.partner,claim_count:0
 msgid "# Claims"
-msgstr "불만사항 #"
+msgstr "# 불만사항"
 
 #. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
-msgstr "이메일 #"
+msgstr "# 이메일"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Claims"
-msgstr "요청의 수"
+msgstr "불만사항 갯수"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:167
@@ -46,7 +46,7 @@ msgid ""
 "                    Record and track your customers' claims. Claims may be linked to a sales order or a lot.You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on).Claims may automatically be linked to an email address using the mail gateway module.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    고객의 불만사항을 기록하고 추적하세요. 불만사항은 판매주문 또는 로트와 연결되었을 수도 있습니다. 첨부파일을 포함한 이메일을 보내고 불만사항에 대한 전체 이력을 보관할 수 있습니다 (보낸 이메일, 개입유형 등). 불만사항은 메일 게이트웨이 모듈을 사용하여 이메일주소와 자동으로 연결될 수 있습니다.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                    고객의 불만사항을 기록하고 추적하십시오. 불만사항은 판매주문 또는 롯트와 연결되었을 수도 있습니다. 첨부파일을 포함한 이메일을 보내고 불만사항에 대한 전체 이력을 보관할 수 있습니다 (보낸 이메일, 개입유형 등). 불만사항은 메일 게이트웨이 모듈을 사용하여 이메일 주소와 자동으로 연결될 수 있습니다.\n                </p>\n            "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_categ_action
@@ -59,7 +59,7 @@ msgid ""
 "                corrective action.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                불만사항 목록을 생성하려면 클릭하세요.\n              </p><p>\n               불만사항 목록을 생성하여 불만사항을 더욱 잘 관리하고 분류하세요.\n                불만사항의 몇몇 예시는 다음과 같습니다: 예방조치,\n                시정조치.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                불만사항 목록을 생성합니다.\n              </p><p>\n                불만사항 목록을 생성하여 불만사항을 더욱 잘 관리하고 분류하십시오.\n                불만사항의 몇몇 예시는 다음과 같습니다 : 예방조치,\n                시정조치.\n              </p>\n            "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
@@ -72,7 +72,7 @@ msgid ""
 "                required for the resolution of a claim.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                불만사항을 처리하는 도중 새로운 단계를 설정하려면 클릭하세요. \n              </p><p>\n                시스템에 입력된 불만사항의 단계마다 분류할 수 있도록\n                불만사항 단계를 생성할 수 있습니다. 단계는 불만사항을 해결하기 위해\n                필요한 모든 단계를 정의합니다..\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                불만사항을 처리하는 도중 새로운 단계를 설정합니다. \n              </p><p>\n                시스템에 입력된 불만사항의 단계마다 분류할 수 있도록\n                불만사항 단계를 생성할 수 있습니다. 단계는 불만사항을 해결하기 위해\n                필요한 모든 단계를 정의합니다..\n              </p>\n            "
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -97,19 +97,19 @@ msgstr "사용"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_report
 msgid "CRM Claim Report"
-msgstr "CRM 불만사항 보고서"
+msgstr "고객관계관리 불만사항 보고서"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claim-act
 msgid "Categories"
-msgstr "카테고리"
+msgstr "분류"
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 #: field:crm.claim.report,categ_id:0
 msgid "Category"
-msgstr "카테고리"
+msgstr "분류"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -121,7 +121,7 @@ msgstr "불만사항"
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
-msgstr "불만사항 카테고리"
+msgstr "불만사항 분류"
 
 #. module: crm_claim
 #: field:crm.claim,date:0 field:crm.claim.report,claim_date:0
@@ -206,7 +206,7 @@ msgstr "마감함"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Closure"
-msgstr "마감"
+msgstr "폐쇄"
 
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
@@ -233,32 +233,32 @@ msgstr "시정조치"
 #. module: crm_claim
 #: field:crm.claim.report,create_date:0
 msgid "Create Date"
-msgstr "생성일"
+msgstr "작성일"
 
 #. module: crm_claim
 #: field:crm.claim,create_uid:0 field:crm.claim.stage,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: crm_claim
 #: field:crm.claim.stage,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
-msgstr "생성일"
+msgstr "작성일"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 msgid "Date Closed"
-msgstr "마감한 날짜"
+msgstr "마감일"
 
 #. module: crm_claim
 #: help:crm.claim,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "기록에 게시한 최근 메시지 날짜."
+msgstr "레코드에 게시된 최근 메시지의 날짜."
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
@@ -269,7 +269,7 @@ msgstr "날짜"
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: field:crm.claim,date_deadline:0 field:crm.claim.report,date_deadline:0
 msgid "Deadline"
-msgstr "기한"
+msgstr "마감 시한"
 
 #. module: crm_claim
 #: field:crm.claim.report,delay_close:0
@@ -315,14 +315,14 @@ msgstr "팔로워"
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "Group By"
-msgstr "그룹화 기준"
+msgstr "그룹화"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
 msgid ""
 "Have a general overview of all claims processed in the system by sorting "
 "them with specific criteria."
-msgstr "불만사항을 특정 기준으로 분류하여 시스템에서 처리된 모든 불만사항의 일반 개요를 소유하세요."
+msgstr "특정 기준으로 정렬된 시스템에서 처리된 모든 불만사항의 일반 개요."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
@@ -334,7 +334,7 @@ msgstr "높음"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
+msgstr "대화 요약 (메시지 개수, ...)을 포함합니다. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
 
 #. module: crm_claim
 #: field:crm.claim,id:0 field:crm.claim.report,id:0 field:crm.claim.stage,id:0
@@ -344,14 +344,14 @@ msgstr "ID"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
+msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
-msgstr "이 필드를 체크하면, 이 단계는 각 영업팀에 기본으로 제안됩니다. 기존 팀에게는 이 단계를 할당하지 않습니다."
+msgstr "이 필드를 선택하면 이 단계는 각 영업팀에 기본으로 제안됩니다. 기존 팀에게는 이 단계를 할당하지 않습니다."
 
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim5
@@ -361,7 +361,7 @@ msgstr "진행 중"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr "은(는) 팔로워임"
+msgstr "팔로워입니까?"
 
 #. module: crm_claim
 #: field:crm.claim,message_last_post:0
@@ -371,19 +371,19 @@ msgstr "최근 메시지 날짜"
 #. module: crm_claim
 #: field:crm.claim,write_uid:0 field:crm.claim.stage,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: crm_claim
 #: field:crm.claim.stage,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: crm_claim
 #: help:crm.claim.stage,section_ids:0
 msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
-msgstr "단계와 영업팀 간의 연결. 설정 시 현재 단계를 선택된 영업팀으로 한계를 정합니다."
+msgstr "단계와 영업팀 간의 연결. 설정 시 선택된 영업팀을 현재 단계로 제한합니다."
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0 selection:crm.claim.report,priority:0
@@ -398,7 +398,7 @@ msgstr "메시지"
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr "메시지 및 의사소통 기록"
+msgstr "메시지 및 대화 기록"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
@@ -413,7 +413,7 @@ msgstr "내 사례"
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
 msgid "My Company"
-msgstr "내 업체"
+msgstr "내 회사"
 
 #. module: crm_claim
 #: view:crm.claim.report:crm_claim.view_report_crm_claim_filter
@@ -423,17 +423,17 @@ msgstr "내 영업팀"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim1
 msgid "New"
-msgstr "새로 만들기"
+msgstr "신규"
 
 #. module: crm_claim
 #: field:crm.claim,action_next:0
 msgid "Next Action"
-msgstr "다음 액션"
+msgstr "다음 동작"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
-msgstr "다음 액션일"
+msgstr "다음 동작일"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:183
@@ -464,7 +464,7 @@ msgstr "과거 만기일"
 #: field:crm.claim.report,partner_id:0
 #: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
-msgstr "협력업체"
+msgstr "파트너"
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -474,7 +474,7 @@ msgstr "전화"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim3
 msgid "Policy Claims"
-msgstr "정책 불만사항"
+msgstr "불만사항 정책"
 
 #. module: crm_claim
 #: model:crm.tracking.campaign,name:crm_claim.claim_source2
@@ -509,12 +509,12 @@ msgstr "해결"
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Resolution Actions"
-msgstr "결의 조치"
+msgstr "해결 조치"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.crm_case_claims_form_view
 msgid "Responsibilities"
-msgstr "책무"
+msgstr "책임"
 
 #. module: crm_claim
 #: view:crm.claim:crm_claim.view_crm_case_claims_filter
@@ -665,12 +665,12 @@ msgstr "전문가 이메일"
 #. module: crm_claim
 #: field:crm.claim,website_message_ids:0
 msgid "Website Messages"
-msgstr "웹 사이트 메시지"
+msgstr "웹사이트 메시지"
 
 #. module: crm_claim
 #: help:crm.claim,website_message_ids:0
 msgid "Website communication history"
-msgstr "웹 사이트 대화이력"
+msgstr "웹사이트 대화 이력"
 
 #. module: crm_claim
 #: model:ir.filters,name:crm_claim.filter_report_crm_claim_workload

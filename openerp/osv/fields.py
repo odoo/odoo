@@ -988,11 +988,10 @@ class many2many(_column):
 
         wquery = obj._where_calc(cr, user, domain, context=context)
         obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
+        order_by = obj._generate_order_by(None, wquery)
         from_c, where_c, where_params = wquery.get_sql()
         if where_c:
             where_c = ' AND ' + where_c
-
-        order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
 
         limit_str = ''
         if self._limit is not None:
@@ -1069,6 +1068,8 @@ def get_nice_size(value):
         size = value
     elif value: # this is supposed to be a string
         size = len(value)
+        if size < 12:  # suppose human size
+            return value
     return tools.human_size(size)
 
 # See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
@@ -1591,6 +1592,8 @@ class sparse(function):
         """
 
         if self._type == 'many2many':
+            if not value:
+                return []
             assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
             return value[0][2]
 

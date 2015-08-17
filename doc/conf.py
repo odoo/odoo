@@ -8,14 +8,14 @@ import sphinx
 DIR = os.path.dirname(__file__)
 sys.path.append(
     os.path.abspath(
-        os.path.join(DIR, '_themes')))
+        os.path.join(DIR, '_extensions')))
 # autodoc
 sys.path.append(os.path.abspath(os.path.join(DIR, '..')))
 
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '1.1'
+needs_sphinx = '1.2'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
@@ -24,13 +24,13 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
-    'odoodoc',
+    'sphinx.ext.linkcode',
+    'github_link',
+    'odoo',
+    'html_domain',
+    'exercise_admonition',
     'patchqueue'
 ]
-if sphinx.__version__.split('.') >= ['1', '2']:
-    # linkcode is only available from Sphinx 1.2
-    extensions.insert(0, 'sphinx.ext.linkcode')
-
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -91,7 +91,14 @@ pygments_style = 'odoo'
 # -- Options for HTML output ---------------------------------------------------
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'odoodoc'
+html_theme = 'odoo'
+
+odoo_cover_default = 'banners/installing_odoo.jpg'
+odoo_cover_external = {
+    'https://odoo.com/documentation/functional/accounting.html'   : 'banners/m_accounting.jpg',
+    'https://odoo.com/documentation/functional/double-entry.html' : 'banners/m_1.jpg',
+    'https://odoo.com/documentation/functional/valuation.html'    : 'banners/m_2.jpg',
+}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -99,7 +106,7 @@ html_theme = 'odoodoc'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = ['_themes']
+html_theme_path = ['_extensions']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -122,9 +129,7 @@ html_theme_path = ['_themes']
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_style = "odoo.css"
-
-html_add_permalinks = False
+html_add_permalinks = u''
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -184,6 +189,11 @@ intersphinx_mapping = {
 
 github_user = 'odoo'
 github_project = 'odoo'
+
+# monkeypatch PHP lexer to not require <?php
+from sphinx.highlighting import lexers
+from pygments.lexers.web import PhpLexer
+lexers['php'] = PhpLexer(startinline=True)
 
 def setup(app):
     app.connect('html-page-context', canonicalize)

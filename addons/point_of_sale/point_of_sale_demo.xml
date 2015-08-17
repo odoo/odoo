@@ -105,6 +105,10 @@
           <field name="name">Food</field>
           <field name="image" type="base64" file="point_of_sale/static/img/food-image.jpg"/>
         </record>
+        <record id="partner_services" model="pos.category">
+          <field name="name">Partner Services</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
+        </record>
         <record id="pizza" model="pos.category">
           <field name="parent_id" ref="food"/>
           <field name="name">Pizza</field>
@@ -1195,6 +1199,114 @@
           <field name="pos_categ_id" ref="ice_cream"/>
           <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_dame_blanche_2,5l-image.jpg"/>
         </record>
+
+        <record id="partner_product_1" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">850.00</field>
+          <field name="name">Odoo Start Workshop</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/openbig.jpg"/>
+        </record>
+
+        <record id="partner_product_2" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Odoo Consulting</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/bhc.jpg"/>
+        </record>
+
+        <record id="partner_product_3" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Eezee-It</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eezee-it.png"/>
+        </record>
+
+        <record id="partner_product_4" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Ekomurz.nl</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/ekomurz.gif"/>
+        </record>
+
+        <record id="partner_product_5" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Acsone.eu</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/acsone.png"/>
+        </record>
+
+        <record id="partner_product_6" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Vauxoo.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/vauxoo.png"/>
+        </record>
+
+        <record id="partner_product_7" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Datalp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/datalp.jpg"/>
+        </record>
+
+        <record id="partner_product_8" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">camptocamp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/camptocamp.png"/>
+        </record>
+
+        <record id="partner_product_9" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">EGGS-solutions.fr</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eggs-solutions.jpg"/>
+        </record>
+
+        <record id="partner_product_10" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3500.00</field>
+          <field name="name">Odoo primary scoping &amp; analysis package (£900, £450, £30)</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
+        <record id="partner_product_11" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">900.00</field>
+          <field name="name">3rd party system analysis</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
+        <record id="partner_product_12" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">30.00</field>
+          <field name="name">Odoo enterprise agreement</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
         
         <!-- The electronic products shouldn't be present in the point of sale for the demo -->
 

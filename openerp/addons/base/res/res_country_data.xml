@@ -428,6 +428,7 @@
             <field name="name">Finland</field>
             <field name="code">fi</field>
             <field name="image" type="base64" file="base/static/img/country_flags/fi.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="EUR"/>
         </record>
         <record id="fj" model="res.country">
@@ -1080,6 +1081,7 @@
             <field name="name">Poland</field>
             <field name="code">pl</field>
             <field name="image" type="base64" file="base/static/img/country_flags/pl.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
             <field name="currency_id" ref="PLN"/>
         </record>
         <record id="pm" model="res.country">
@@ -1407,7 +1409,7 @@
             <field name="name">United States</field>
             <field name="code">us</field>
             <field name="image" type="base64" file="base/static/img/country_flags/us.png"></field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s, %(state_code)s %(zip)s\n%(country_name)s'" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
             <field name="currency_id" ref="USD"/>
         </record>
         <record id="uy" model="res.country">

@@ -44,7 +44,6 @@ $('.oe_website_sale').each(function () {
     $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
         var $input = $(this);
         if ($input.data('update_change')) {
-            console.log($input.val()+ "+++");
             return;
         }
         var value = parseInt($input.val(), 10);
@@ -81,12 +80,11 @@ $('.oe_website_sale').each(function () {
             .then(function (data) {
                 $input.data('update_change', false);
                 if (value !== parseInt($input.val(), 10)) {
-                    console.log($input.val()+ "***");
                     $input.trigger('change');
                     return;
                 }
                 if (!data.quantity) {
-                    location.reload();
+                    location.reload(true);
                     return;
                 }
                 var $q = $(".my_cart_quantity");
@@ -220,6 +218,11 @@ $('.oe_website_sale').each(function () {
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
     });
+
+    $('div.js_product', oe_website_sale).each(function () {
+        $('input.js_product_change', this).first().trigger('change');
+    });
+
     $('ul.js_add_cart_variants', oe_website_sale).each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });

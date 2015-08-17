@@ -25,8 +25,7 @@ import time
 from _common import ceiling
 
 
-from openerp import SUPERUSER_ID
-from openerp import tools
+from openerp import api, tools, SUPERUSER_ID
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -235,19 +234,17 @@ class product_ul(osv.osv):
 #----------------------------------------------------------
 class product_category(osv.osv):
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (list, tuple)) and not len(ids):
-            return []
-        if isinstance(ids, (long, int)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
-        res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
-        return res
+    @api.multi
+    def name_get(self):
+        def get_names(cat):
+            """ Return the list [cat.name, cat.parent_id.name, ...] """
+            res = []
+            while cat:
+                res.append(cat.name)
+                cat = cat.parent_id
+            return res
+
+        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -721,7 +718,7 @@ class product_template(osv.osv):
             # unlink or inactive product
             for variant_id in map(int,variants_inactive):
                 try:
-                    with cr.savepoint():
+                    with cr.savepoint(), tools.mute_logger('openerp.sql_db'):
                         product_obj.unlink(cr, uid, [variant_id], context=ctx)
                 except (psycopg2.Error, osv.except_osv):
                     product_obj.write(cr, uid, [variant_id], {'active': False}, context=ctx)
@@ -949,12 +946,12 @@ class product_product(osv.osv):
 
     def _set_image_variant(self, cr, uid, id, name, value, args, context=None):
         image = tools.image_resize_image_big(value)
-        res = self.write(cr, uid, [id], {'image_variant': image}, context=context)
+
         product = self.browse(cr, uid, id, context=context)
-        if not product.product_tmpl_id.image:
-            product.write({'image_variant': None})
-            product.product_tmpl_id.write({'image': image})
-        return res
+        if product.product_tmpl_id.image:
+            product.image_variant = image
+        else:
+            product.product_tmpl_id.image = image
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)

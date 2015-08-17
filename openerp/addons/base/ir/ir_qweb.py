@@ -20,6 +20,7 @@ import babel.dates
 import werkzeug
 from lxml import etree, html
 from PIL import Image
+import psycopg2
 
 import openerp.http
 import openerp.tools
@@ -615,7 +616,7 @@ class FieldConverter(osv.AbstractModel):
                 _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context)
+                    source_element, g_att, t_att, qweb_context, context=context)
             )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
@@ -1257,16 +1258,21 @@ class AssetsBundle(object):
         ira = self.registry['ir.attachment']
         url_prefix = '/web/%s/%s/' % (type, self.xmlid)
         # Invalidate previous caches
-        oids = ira.search(self.cr, openerp.SUPERUSER_ID, [('url', '=like', url_prefix + '%')], context=self.context)
-        if oids:
-            ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
-        url = url_prefix + self.version
-        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+        try:
+            with self.cr.savepoint():
+                domain = [('url', '=like', url_prefix + '%')]
+                oids = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+                if oids:
+                    ira.unlink(self.cr, openerp.SUPERUSER_ID, oids, context=self.context)
+                url = url_prefix + self.version
+                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                     datas=content.encode('utf8').encode('base64'),
                     type='binary',
                     name=url,
                     url=url,
                 ), context=self.context)
+        except psycopg2.Error:
+            pass
 
     def css_message(self, message):
         return """
@@ -1504,21 +1510,26 @@ class SassAsset(StylesheetAsset):
 
     def to_html(self):
         if self.url:
-            ira = self.registry['ir.attachment']
-            url = self.html_url % self.url
-            domain = [('type', '=', 'binary'), ('url', '=', self.url)]
-            ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-            if ira_id:
-                # TODO: update only if needed
-                ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content}, context=self.context)
-            else:
-                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=self.content.encode('utf8').encode('base64'),
-                    mimetype='text/css',
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
+            try:
+                ira = self.registry['ir.attachment']
+                url = self.html_url % self.url
+                domain = [('type', '=', 'binary'), ('url', '=', self.url)]
+                with self.cr.savepoint():
+                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+                    if ira_id:
+                        # TODO: update only if needed
+                        ira.write(self.cr, openerp.SUPERUSER_ID, [ira_id], {'datas': self.content},
+                                  context=self.context)
+                    else:
+                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                            datas=self.content.encode('utf8').encode('base64'),
+                            mimetype='text/css',
+                            type='binary',
+                            name=url,
+                            url=url,
+                        ), context=self.context)
+            except psycopg2.Error:
+                pass
         return super(SassAsset, self).to_html()
 
     def get_source(self):

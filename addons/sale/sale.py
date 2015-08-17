@@ -21,6 +21,7 @@
 
 from datetime import datetime, timedelta
 import time
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
@@ -39,7 +40,7 @@ class sale_order(osv.osv):
     _description = "Sales Order"
     _track = {
         'state': {
-            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual'],
+            'sale.mt_order_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state in ['manual', 'progress'],
             'sale.mt_order_sent': lambda self, cr, uid, obj, ctx=None: obj.state in ['sent']
         },
     }
@@ -315,12 +316,11 @@ class sale_order(osv.osv):
 
     def onchange_delivery_id(self, cr, uid, ids, company_id, partner_id, delivery_id, fiscal_position, context=None):
         r = {'value': {}}
-        if not fiscal_position:
-            if not company_id:
-                company_id = self._get_default_company(cr, uid, context=context)
-            fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
-            if fiscal_position:
-                r['value']['fiscal_position'] = fiscal_position
+        if not company_id:
+            company_id = self._get_default_company(cr, uid, context=context)
+        fiscal_position = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, delivery_id, context=context)
+        if fiscal_position:
+            r['value']['fiscal_position'] = fiscal_position
         return r
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
@@ -353,7 +353,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order') or '/'
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'sale.order', context=context) or '/'
         if vals.get('partner_id') and any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id', 'fiscal_position']):
             defaults = self.onchange_partner_id(cr, uid, [], vals['partner_id'], context=context)['value']
             if not vals.get('fiscal_position') and vals.get('partner_shipping_id'):
@@ -599,8 +599,12 @@ class sale_order(osv.osv):
         return True
 
     def action_button_confirm(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         self.signal_workflow(cr, uid, ids, 'order_confirm')
+        if context.get('send_email'):
+            self.force_quotation_send(cr, uid, ids, context=context)
         return True
         
     def action_wait(self, cr, uid, ids, context=None):
@@ -649,6 +653,29 @@ class sale_order(osv.osv):
             'target': 'new',
             'context': ctx,
         }
+
+    def force_quotation_send(self, cr, uid, ids, context=None):
+        for order_id in ids:
+            email_act = self.action_quotation_send(cr, uid, [order_id], context=context)
+            if email_act and email_act.get('context'):
+                composer_obj = self.pool['mail.compose.message']
+                composer_values = {}
+                email_ctx = email_act['context']
+                template_values = [
+                    email_ctx.get('default_template_id'),
+                    email_ctx.get('default_composition_mode'),
+                    email_ctx.get('default_model'),
+                    email_ctx.get('default_res_id'),
+                ]
+                composer_values.update(composer_obj.onchange_template_id(cr, uid, None, *template_values, context=context).get('value', {}))
+                if not composer_values.get('email_from'):
+                    composer_values['email_from'] = self.browse(cr, uid, order_id, context=context).company_id.email
+                for key in ['attachment_ids', 'partner_ids']:
+                    if composer_values.get(key):
+                        composer_values[key] = [(6, 0, composer_values[key])]
+                composer_id = composer_obj.create(cr, uid, composer_values, context=email_ctx)
+                composer_obj.send_mail(cr, uid, [composer_id], context=email_ctx)
+        return True
 
     def action_done(self, cr, uid, ids, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -1069,10 +1096,10 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-        context = {'lang': lang, 'partner_id': partner_id}
         partner = partner_obj.browse(cr, uid, partner_id)
         lang = partner.lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+        context_partner = context.copy()
+        context_partner.update({'lang': lang, 'partner_id': partner_id})
 
         if not product:
             return {'value': {'th_weight': 0,
@@ -1104,7 +1131,14 @@ class sale_order_line(osv.osv):
         else:
             fpos = self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position)
         if update_tax: #The quantity only have changed
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
+            # The superuser is used by website_sale in order to create a sale order. We need to make
+            # sure we only select the taxes related to the company of the partner. This should only
+            # apply if the partner is linked to a company.
+            if uid == SUPERUSER_ID and partner.company_id:
+                taxes = product_obj.taxes_id.filtered(lambda r: r.company_id == partner.company_id)
+            else:
+                taxes = product_obj.taxes_id
+            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
@@ -1150,11 +1184,13 @@ class sale_order_line(osv.osv):
                     'Please set one before choosing a product.')
             warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
         else:
+            ctx = dict(
+                context,
+                uom=uom or result.get('product_uom'),
+                date=date_order,
+            )
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        })[pricelist]
+                    product, qty or 1.0, partner_id, ctx)[pricelist]
             if price is False:
                 warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
@@ -1162,6 +1198,8 @@ class sale_order_line(osv.osv):
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
                 result.update({'price_unit': price})
+                if context.get('uom_qty_change', False):
+                    return {'value': {'price_unit': price}, 'domain': {}, 'warning': False}
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),
@@ -1282,10 +1320,10 @@ class product_product(osv.Model):
     def _sales_count(self, cr, uid, ids, field_name, arg, context=None):
         r = dict.fromkeys(ids, 0)
         domain = [
-            ('state', 'in', ['waiting_date','progress','manual', 'shipping_except', 'invoice_except', 'done']),
+            ('state', 'in', ['confirmed', 'done']),
             ('product_id', 'in', ids),
         ]
-        for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id','product_uom_qty'], ['product_id'], context=context):
+        for group in self.pool['sale.report'].read_group(cr, uid, domain, ['product_id', 'product_uom_qty'], ['product_id'], context=context):
             r[group['product_id'][0]] = group['product_uom_qty']
         return r
 
