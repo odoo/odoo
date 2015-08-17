@@ -1411,8 +1411,12 @@
                 } else {
                     var xy = event['page'+XY];
                     var current = resize[2] || 0;
+                    var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
+                    var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
                     _.each(resize[0], function (val, key) {
                         if (self.$target.hasClass(val)) {
+                            current = key;
+                        } else if (resize[1][key] === real_margin) {
                             current = key;
                         }
                     });
@@ -1509,12 +1513,12 @@
             if (offset === 0) overlay_class+= " block-w-left";
 
             var mb = _class.match(/mb([0-9-]+)/i);
-            mb = mb ? +mb[1] : 0;
+            mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
             if (mb >= 128) overlay_class+= " block-s-bottom";
             else if (!mb) overlay_class+= " block-s-top";
 
             var mt = _class.match(/mt([0-9-]+)/i);
-            mt = mt ? +mt[1] : 0;
+            mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
             if (mt >= 128) overlay_class+= " block-n-top";
             else if (!mt) overlay_class+= " block-n-bottom";
 
