@@ -1737,14 +1737,19 @@ class _RelationalMulti(_Relational):
         return result
 
     def convert_to_onchange(self, value, fnames=None):
-        # return the recordset value as a list of dicts
+        # return the recordset value as a list of commands; the commands may
+        # give all fields values, the client is responsible for figuring out
+        # which fields are actually dirty
         fields = [(name, value._fields[name]) for name in (fnames or [])]
-        result = []
+        result = [(5,)]
         for record in value:
             vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
-            if record.id:
-                vals['id'] = record.id
-            result.append(vals)
+            if not record.id:
+                result.append((0, 0, vals))
+            elif vals:
+                result.append((1, record.id, vals))
+            else:
+                result.append((4, record.id))
         return result
 
     def convert_to_export(self, value, env):

@@ -474,19 +474,6 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.reset_ids([], {keep_read_data: true});
-            ids = _.map(ids, function(command) {
-                if (command instanceof Array) {
-                    return command;
-                } else {
-                    // command is a dictionary, convert it to a command
-                    if (command.id) {
-                        return COMMANDS.update(command.id, command);
-                    } else {
-                        return COMMANDS.create(command);
-                    }
-                }
-            });
             return this.send_commands(ids, {'_inhibit_on_change_flag': this._inhibit_on_change_flag});
         }
         this.dataset.reset_ids(ids);
@@ -616,7 +603,7 @@ var AbstractManyField = common.AbstractField.extend({
                         }
                         return;
                     case COMMANDS.DELETE_ALL:
-                        return dataset.reset_ids([]);
+                        return dataset.reset_ids([], {keep_read_data: true});
                     case COMMANDS.REPLACE_WITH:
                         dataset.ids = [];
                         return dataset.alter_ids(command[2], options);

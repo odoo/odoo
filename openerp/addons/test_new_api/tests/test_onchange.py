@@ -107,19 +107,19 @@ class TestOnChange(common.TransactionCase):
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertEqual(result['value']['messages'], [
-            {
-                'id': message.id,
+            (5,),
+            (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': message.body,
                 'author': message.author.name_get()[0],
                 'size': message.size,
-            },
-            {
+            }),
+            (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
                 'author': USER.name_get()[0],
                 'size': len(BODY),
-            },
+            }),
         ])
 
     def test_onchange_specific(self):
@@ -149,7 +149,7 @@ class TestOnChange(common.TransactionCase):
         self.assertIn('participants', result['value'])
         self.assertEqual(
             result['value']['participants'],
-            [{'id': usr.id} for usr in discussion.participants + demo],
+            [(5,)] + [(4, usr.id) for usr in discussion.participants + demo],
         )
 
     def test_onchange_one2many_value(self):
