@@ -216,10 +216,10 @@ class Website(openerp.addons.web.controllers.main.Home):
                 modules_to_update.append(view.model_data_id.module)
 
         if modules_to_update:
-            module_obj = request.registry['ir.module.module']
-            module_ids = module_obj.search(request.cr, request.uid, [('name', 'in', modules_to_update)], context=request.context)
-            if module_ids:
-                module_obj.button_immediate_upgrade(request.cr, request.uid, module_ids, context=request.context)
+            module_obj = request.env['ir.module.module'].sudo()
+            modules = module_obj.search([('name', 'in', modules_to_update)])
+            if modules:
+                modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
@@ -235,9 +235,11 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang, mods=None):
-        module_obj = request.registry['ir.module.module']
-        module_ids = module_obj.search(request.cr, request.uid, [('name', 'ilike', 'website'), ('state', '=', 'installed')], context=request.context)
-        modules = [x['name'] for x in module_obj.read(request.cr, request.uid, module_ids, ['name'], context=request.context)]
+        Modules = request.env['ir.module.module'].sudo()
+        modules = Modules.search([
+            ('name', 'ilike', 'website'),
+            ('state', '=', 'installed')
+        ]).mapped('name')
         if mods:
             modules += mods
         return WebClient().translations(mods=modules, lang=lang)

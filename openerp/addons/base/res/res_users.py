@@ -35,7 +35,7 @@ class res_groups(osv.osv):
 
     def _get_full_name(self, cr, uid, ids, field, arg, context=None):
         res = {}
-        for g in self.browse(cr, uid, ids, context):
+        for g in self.browse(cr, SUPERUSER_ID, ids, context=context):
             if g.category_id:
                 res[g.id] = '%s / %s' % (g.category_id.name, g.name)
             else:

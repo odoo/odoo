@@ -62,12 +62,12 @@ class Planner(models.Model):
             params['model'] = 'ir.module.module'
         # setting the module
         if module_name:
-            module = self.env['ir.module.module'].search([('name', '=', module_name)], limit=1)
+            module = self.env['ir.module.module'].sudo().search([('name', '=', module_name)], limit=1)
             if module:
                 params['id'] = module.id
         return "/web#%s" % (urlencode(params),)
 
     @api.model
     def is_module_installed(self, module_name=None):
-        count = self.env['ir.module.module'].search_count([('state', '=', 'installed'), ('name', '=', module_name)])
+        count = self.env['ir.module.module'].sudo().search_count([('state', '=', 'installed'), ('name', '=', module_name)])
         return bool(count)

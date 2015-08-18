@@ -24,6 +24,8 @@ from cStringIO import StringIO
 import babel.messages.pofile
 import werkzeug.utils
 import werkzeug.wrappers
+from openerp.api import Environment
+
 try:
     import xlwt
 except ImportError:
@@ -144,47 +146,31 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed():
+def module_installed(environment):
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
-    modules = {}
 
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = request.session.model('ir.module.module')
+    Modules = environment['ir.module.module']
     domain = [('state','=','installed'), ('name','in', loadable)]
-    for module in Modules.search_read(domain, ['name', 'dependencies_id']):
-        modules[module['name']] = []
-        deps = module.get('dependencies_id')
-        if deps:
-            deps_read = request.session.model('ir.module.module.dependency').read(deps, ['name'])
-            dependencies = [i['name'] for i in deps_read]
-            modules[module['name']] = dependencies
+    modules = {
+        module.name: module.dependencies_id.mapped('name')
+        for module in Modules.search(domain)
+    }
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_installed_bypass_session(dbname):
-    loadable = http.addons_manifest.keys()
-    modules = {}
     try:
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
-            m = registry.get('ir.module.module')
-            # TODO The following code should move to ir.module.module.list_installed_modules()
-            domain = [('state','=','installed'), ('name','in', loadable)]
-            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
-            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
-                modules[module['name']] = []
-                deps = module.get('dependencies_id')
-                if deps:
-                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
-                    dependencies = [i['name'] for i in deps_read]
-                    modules[module['name']] = dependencies
-    except Exception,e:
+            return module_installed(
+                environment=Environment(cr, openerp.SUPERUSER_ID, {}))
+    except Exception:
         pass
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
+    return {}
 
 def module_boot(db=None):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
@@ -816,7 +802,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed()
+        return module_installed(environment=request.env(user=openerp.SUPERUSER_ID))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
