@@ -8,7 +8,7 @@
     'description': """
         This Module will make it possible to add and display 2 more images for the website product
     """,
-
+    'images': ['static/description/upload.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://optima.co.ke",
     'price': 5,
