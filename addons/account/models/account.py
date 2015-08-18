@@ -240,10 +240,15 @@ class AccountJournal(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
-    bank_statements_source = fields.Selection([('manual', 'Record Manually')], default='manual', string='Bank Feeds', required=True)
+    # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id')
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict')
-    display_on_footer = fields.Boolean("Show in Invoice Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
+    display_on_footer = fields.Boolean("Show in invoices footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
+    bank_statements_source = fields.Selection([('manual', 'Record Manually')], default='manual', string='Bank Feeds', required=True)
+    bank_acc_number = fields.Char(related='bank_account_id.acc_number')
+    bank_acc_type = fields.Selection(related='bank_account_id.state')
+    bank_bic = fields.Char(related='bank_account_id.bank_bic')
+    bank_name = fields.Char(related='bank_account_id.bank_name')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -275,6 +280,11 @@ class AccountJournal(models.Model):
         if self.type == 'bank' and not self.bank_account_id and self.bank_statements_source != 'manual':
             bank_st_src_label = next(val[1] for val in self._fields['bank_statements_source']._description_selection(self.env) if val[0] == self.bank_statements_source)
             raise ValidationError(_('You cannot use "%s" as bank feed without configuring a bank account.') % bank_st_src_label)
+
+    @api.onchange('bank_acc_number')
+    def onchange_bank_acc_number(self):
+        if self.bank_acc_number:
+            self.name = _('Bank') + ' ' + self.bank_acc_number
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
@@ -375,6 +385,18 @@ class AccountJournal(models.Model):
     @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
+
+        if vals.get('type') == 'bank' and vals.get('bank_acc_number'):
+            # Create the bank account from values passed through the related fields
+            vals['bank_account_id'] = self.env['res.partner.bank'].create({
+                'acc_number': vals.get('bank_acc_number'),
+                'bank_name': vals.get('bank_name'),
+                'bank_bic': vals.get('bank_bic'),
+                'state': vals.get('bank_acc_type'),
+                'company_id': company_id,
+                'partner_id': self.env['res.company'].browse(company_id).partner_id.id,
+            }).id
+
         if vals.get('type') in ('bank', 'cash'):
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):

@@ -230,6 +230,7 @@
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <sheet>
@@ -290,48 +291,70 @@
                 </form>
             </field>
         </record>
-        <record id="view_bank_account_form" model="ir.ui.view">
-            <field name="name">account.journal.res.partner.bank.form</field>
-            <field name="model">res.partner.bank</field>
+
+        <record id="view_account_bank_journal_tree" model="ir.ui.view">
+            <field name="name">account.bank.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="arch" type="xml">
+                <tree string="Account Journal">
+                    <field name='sequence' widget='handle'/>
+                    <field name="name"/>
+                    <field name="display_on_footer"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_bank_journal_form" model="ir.ui.view">
+            <field name="name">account.bank.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <form string="Bank Account">
-                    <field name="company_id" invisible="1"/>
-                    <group col="4">
-                        <field name="acc_number"/>
-                        <field name="state"/>
-                    </group>
-                    <group>
-                        <group name="owner" string="Account Owner">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" readonly="1"/>
-                            <field name="street" placeholder="Street"/>
-                            <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                            <field name="city" class="oe_inline" placeholder="City"/>
-                            <field name="state_id" placeholder="State" options='{"no_open": True}'/>
-                            <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
+                    <sheet>
+                        <field name="type" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="bank_acc_number" required="1" class="oe_edit_only"/>
+                            <h1><field name="bank_acc_number" required="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="bank_acc_type"/>
+                                <field name="display_on_footer"/>
+                            </group>
+                            <group>
+                                <field name="bank_name"/>
+                                <field name="bank_bic" attrs="{'required': [('bank_acc_type', '=', 'iban')]}"/>
+                            </group>
+                            <group>
+                                <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            </group>
                         </group>
-                        <group name="bank" string="Bank Information">
-                            <field name="bank_name" required="1"/>
-                            <field name="bank_bic" placeholder="e.g. GEBABEBB" attrs="{'required': [('state', '=', 'iban')]}"/>
-                        </group>
-                    </group>
+                    </sheet>
                 </form>
             </field>
         </record>
-
-        <record id="action_account_bank_account_form" model="ir.actions.act_window">
+        <record id="action_account_bank_journal_form" model="ir.actions.act_window">
             <field name="name">Bank Accounts</field>
             <field name="res_model">account.journal</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
             <field name="domain">[('type', '=', 'bank')]</field>
-            <field name="context">{'default_type': 'bank', 'display_on_footer': True, 'code': 'BNK'}</field>
+            <field name="context">{'default_type': 'bank', 'default_display_on_footer': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a bank account.
               </p>
             </field>
         </record>
-        <menuitem action="action_account_bank_account_form" id="menu_action_account_bank_account_form" parent="account_account_menu"/>
+        <menuitem action="action_account_bank_journal_form" id="menu_action_account_bank_journal_form" parent="account_account_menu"/>
 
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
