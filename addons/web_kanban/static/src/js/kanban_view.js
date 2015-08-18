@@ -215,6 +215,7 @@ var KanbanView = View.extend({
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
+                    group.id = value;
                     var field = self.fields_view.fields[self.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
@@ -430,7 +431,7 @@ var KanbanView = View.extend({
                 self.resequence(ids);
             },
         });
-        if (this.is_action_enabled('group_create')) {
+        if (this.is_action_enabled('group_create') && this.grouped_by_m2o) {
             this.column_quick_create = new ColumnQuickCreate(this);
             this.column_quick_create.appendTo(fragment);
         }
