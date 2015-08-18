@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <!-- Top menu item -->
         <menuitem id="base.menu_mrp_root"
@@ -199,7 +198,7 @@
                                     <field name="time_stop" widget="float_time"/>
                                 </group>
                                 <group string="Costing Information">
-                                    <field name="product_id" on_change="on_change_product_cost(product_id)"/>
+                                    <field name="product_id"/>
                                     <field name="costs_hour"/>
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
@@ -307,7 +306,7 @@
                     </group>
                     <notebook>
                         <page string="Work Center Operations">
-                            <field name="workcenter_lines" string="Operation"/>
+                            <field name="workcenter_line_ids" string="Operation"/>
                         </page>
                         <page string="Notes">
                             <field name="note"/>
@@ -375,12 +374,12 @@
                 <form string="Bill of Material">
                     <group>
                         <group>
-                            <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
+                            <field name="product_tmpl_id"/>
                             <field name="product_id" groups="product.group_product_variant"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
-                                <field name="product_qty" class="oe_inline" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
-                                <field name="product_uom" options="{'no_open':True,'no_create':True}" class="oe_inline" on_change="onchange_uom(product_tmpl_id, product_uom)" groups="product.group_uom"/>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" class="oe_inline" groups="product.group_uom"/>
                             </div>
                             <label for="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <div groups="mrp.group_mrp_routings">
@@ -390,8 +389,8 @@
                         <group>
                             <field name="name"/>
                             <field name="code" string="Reference"/>
-                            <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                            <field name="bom_type" widget="radio"/>
+                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('bom_type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
                             </p>
@@ -404,10 +403,10 @@
                             <field name="bom_line_ids" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type"/>
+                                    <field name="product_id"/>
+                                    <field name="bom_type"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                     <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
                                     <field name="product_efficiency" groups="mrp.group_rounding_efficiency"/>
                                     <field name="date_start"/>
@@ -470,9 +469,9 @@
                     <field name="categ_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom_id'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
+                        <filter string='Type' domain="[]" context="{'group_by' : 'bom_type'}"/>
                         <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                         <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
                    </group>
@@ -512,14 +511,14 @@
                 <tree string="Components" editable="top">
                     <field name="sequence" widget="handle"/>
                     <field name="bom_id"/>
-                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    <field name="type"/>
+                    <field name="product_id"/>
+                    <field name="bom_type"/>
                     <field name="product_qty"/>
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="product_uos_id" groups="product.group_uos"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="routing_id"/>
@@ -536,8 +535,8 @@
                 <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="product_id"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="type"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="bom_type"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -554,7 +553,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Bill Of Material" domain="[]" context="{'group_by':'bom_id'}"/>
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
+                        <filter string='Default Unit of Measure' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom_id'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
@@ -601,12 +600,12 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id, product_qty)" domain="[('bom_ids','!=',False),('bom_ids.type','!=','phantom')]" context='{"default_type": "product"}'/>
+                            <field name="product_id" domain="[('bom_ids','!=',False),('bom_ids.bom_type','!=','phantom')]" context='{"default_type": "product"}'/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
-                                <field name="product_qty" on_change="product_id_change(product_id, product_qty)"/>
-                                <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed" class="oe_edit_only oe_link"/>
@@ -614,7 +613,7 @@
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" class="o_row">
                                 <field name="product_uos_qty"/>
-                                <field name="product_uos"/>
+                                <field name="product_uos_id"/>
                             </div>
                             <field name="date_planned"/>
                         </group>
@@ -625,14 +624,14 @@
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False)]"
-                                context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" on_change="bom_id_change(bom_id)" required="1"/>
+                                context="{'default_product_id': product_id, 'default_product_tmpl_id': product_tmpl_id}" required="1"/>
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                             <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>
                             <field name="categ_id"/>
                         </group>
                         <group groups="stock.group_locations">
-                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                         </group>
                     </group>
@@ -640,7 +639,7 @@
                         <page string="Consumed Products">
                             <group>
                                 <group string="Products to Consume">
-                                    <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
+                                    <field name="move_line_ids" nolabel="1" options="{'reload_on_button': true}">
                                         <tree decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('confirmed','waiting')" string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_uom_qty"  string="Quantity"/>
@@ -659,7 +658,7 @@
                                     </field>
                                 </group>
                                 <group string="Consumed Products">
-                                    <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
+                                    <field name="move_line_ids2" nolabel="1" options="{'reload_on_button': true}">
                                        <tree decoration-danger="scrapped==True" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
@@ -706,7 +705,7 @@
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
-                            <field name="workcenter_lines" options="{'reload_on_button': true}">
+                            <field name="workcenter_line_ids" options="{'reload_on_button': true}">
                                 <form string="Production Work Centers">
                                     <group col="4">
                                         <field colspan="4" name="name"/>
@@ -729,7 +728,7 @@
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
-                            <field name="product_lines"/>
+                            <field name="product_line_ids"/>
                         </page>
                         <page string="Extra Information">
                             <group>
@@ -763,7 +762,7 @@
                     <field name="date_planned"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="hour_total" sum="Total Hours"/>
                     <field name="cycle_total" sum="Total Cycles"/>
@@ -780,7 +779,7 @@
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                     <field name="product_uom" options="{'no_open':True,'no_create':True}"/>
+                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
                     <field name="date_planned"/>
                     <field name="state"/>
                     <templates>
@@ -791,7 +790,7 @@
                                         <strong><span><t t-esc="record.product_id.value"/></span></strong>
                                     </div>
                                     <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom.value"/></span></strong>
+                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -940,9 +939,9 @@
                         <field name="name"/>
                         <field name="product_id"/>
                         <field name="product_qty"/>
-                        <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                        <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_id" groups="product.group_uos"/>
                     </group>
                 </form>
             </field>
@@ -954,9 +953,9 @@
                 <tree string="Scheduled Products">
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="product_uos_id" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>
@@ -1088,5 +1087,4 @@
             </field>
         </record>
 
-    </data>
-</openerp>
+</odoo>

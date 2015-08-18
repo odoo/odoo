@@ -7,7 +7,7 @@
   !record {model: mrp.bom, id: mrp.mrp_bom_9}:
     product_id: product.product_product_28
     name: External Hard Disk + Subproduct
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     sub_products:
       - product_id: product.product_product_33
         product_uom: product.product_uom_unit
@@ -19,7 +19,7 @@
   !record {model: mrp.production, id: mrp_production_mo0}:
     product_id: product.product_product_28
     product_qty: 2.0
-    product_uom: product.product_uom_unit
+    product_uom_id: product.product_uom_unit
     bom_id: mrp.mrp_bom_9
     location_src_id: stock.stock_location_stock
 -

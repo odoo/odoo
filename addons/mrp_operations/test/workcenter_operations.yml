@@ -30,7 +30,7 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    for line in order.workcenter_lines:
+    for line in order.workcenter_line_ids:
         #TODO: to check start date of next line should be end of date of previous line.
         assert line.date_planned, "Planned Start date is not computed: %s" %(line)
         assert line.date_planned_end, "Planned End date is not computed: %s" %(line)
@@ -57,45 +57,45 @@
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_start_working')
+    order.workcenter_line_ids[0].signal_workflow('button_start_working')
 -
   Now I pause first work operation due to technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_pause')
+    order.workcenter_line_ids[0].signal_workflow('button_pause')
 -
   I resume first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_resume')
+    order.workcenter_line_ids[0].signal_workflow('button_resume')
     
 -
   I cancel first work operation.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_cancel')
+    order.workcenter_line_ids[0].signal_workflow('button_cancel')
 -
   I reset first work operation and start after resolving technical fault of work center.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_draft')
-    order.workcenter_lines[0].signal_workflow('button_start_working')
+    order.workcenter_line_ids[0].signal_workflow('button_draft')
+    order.workcenter_line_ids[0].signal_workflow('button_start_working')
 -
   I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    order.workcenter_lines[0].signal_workflow('button_done')
+    order.workcenter_line_ids[0].signal_workflow('button_done')
 -
   Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
-    for work_line in order.workcenter_lines[1:]:
+    for work_line in order.workcenter_line_ids[1:]:
       work_line.signal_workflow('button_start_working')
       work_line.signal_workflow('button_done')
 

@@ -74,7 +74,7 @@ class mrp_production(osv.osv):
             if not production.bom_id:
                 continue
             for sub_product in production.bom_id.sub_products:
-                product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, production.bom_id.product_uom.id)
+                product_uom_factor = product_uom_obj._compute_qty(cr, uid, production.product_uom_id.id, production.product_qty, production.bom_id.product_uom_id.id)
                 qty1 = sub_product.product_qty
                 if sub_product.subproduct_type == 'variable':
                     if production.product_qty:

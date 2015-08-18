@@ -50,7 +50,7 @@ class mrp_production_workcenter_line(osv.osv):
         result = {
             'product': production.product_id.id,
             'qty': production.product_qty,
-            'uom': production.product_uom.id,
+            'uom': production.product_uom_id.id,
         }
         return {'value': result}
 
@@ -76,7 +76,7 @@ class mrp_production_workcenter_line(osv.osv):
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
-       'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='Unit of Measure',readonly=True),
+       'uom':fields.related('production_id','product_uom_id',type='many2one',relation='product.uom',string='Unit of Measure',readonly=True),
     }
 
     _defaults = {
@@ -108,7 +108,7 @@ class mrp_production_workcenter_line(osv.osv):
             flag = not bool(open_count)
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
-                    if production.move_lines or production.move_created_ids:
+                    if production.move_line_ids or production.move_created_ids:
                         prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
                 prod_obj_pool.signal_workflow(cr, uid, [oper_obj.production_id.id], 'button_produce_done')
         return
@@ -118,8 +118,8 @@ class mrp_production_workcenter_line(osv.osv):
         prod_obj = self.pool.get('mrp.production')
         if vals.get('date_planned', False) and update:
             for prod in self.browse(cr, uid, ids, context=context):
-                if prod.production_id.workcenter_lines:
-                    dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
+                if prod.production_id.workcenter_line_ids:
+                    dstart = min(vals['date_planned'], prod.production_id.workcenter_line_ids[0]['date_planned'])
                     prod_obj.write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
         return result
 
@@ -186,7 +186,7 @@ class mrp_production(osv.osv):
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned
-            for line in prod.workcenter_lines:
+            for line in prod.workcenter_line_ids:
                 result[prod.id] = max(line.date_planned_end, result[prod.id])
         return result
 
@@ -196,7 +196,7 @@ class mrp_production(osv.osv):
         """
         obj = self.browse(cr, uid, ids, context=context)[0]
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
-        for workcenter_line in obj.workcenter_lines:
+        for workcenter_line in obj.workcenter_line_ids:
             if workcenter_line.state == 'draft':
                 workcenter_line.signal_workflow('button_start_working')
             workcenter_line.signal_workflow('button_done')
@@ -208,8 +208,8 @@ class mrp_production(osv.osv):
         """
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         for prod in self.browse(cr, uid, ids):
-            if prod.workcenter_lines:
-                workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_lines[0].id], 'button_start_working')
+            if prod.workcenter_line_ids:
+                workcenter_pool.signal_workflow(cr, uid, [prod.workcenter_line_ids[0].id], 'button_start_working')
         return super(mrp_production,self).action_in_production(cr, uid, ids, context=context)
     
     def action_cancel(self, cr, uid, ids, context=None):
@@ -218,7 +218,7 @@ class mrp_production(osv.osv):
         """
         workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         obj = self.browse(cr, uid, ids,context=context)[0]
-        workcenter_pool.signal_workflow(cr, uid, [record.id for record in obj.workcenter_lines], 'button_cancel')
+        workcenter_pool.signal_workflow(cr, uid, [record.id for record in obj.workcenter_line_ids], 'button_cancel')
         return super(mrp_production,self).action_cancel(cr,uid,ids,context=context)
 
     def _compute_planned_workcenter(self, cr, uid, ids, context=None, mini=False):
@@ -235,8 +235,8 @@ class mrp_production(osv.osv):
                     'date_start': po.date_planned
                 }, context=context, update=False)
             old = None
-            for wci in range(len(po.workcenter_lines)):
-                wc  = po.workcenter_lines[wci]
+            for wci in range(len(po.workcenter_line_ids)):
+                wc  = po.workcenter_line_ids[wci]
                 if (old is None) or (wc.sequence>old):
                     dt = dt_end
                 if context.get('__last_update'):
@@ -271,7 +271,7 @@ class mrp_production(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
                 continue
-            todo = list(po.move_lines)
+            todo = list(po.move_line_ids)
             dt = datetime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
                 l = todo.pop(0)
@@ -281,7 +281,7 @@ class mrp_production(osv.osv):
                 date_end = l.production_id.date_finished
                 if date_end and datetime.strptime(date_end, '%Y-%m-%d %H:%M:%S') > dt:
                     if l.production_id.state not in ('done','cancel'):
-                        for wc in l.production_id.workcenter_lines:
+                        for wc in l.production_id.workcenter_line_ids:
                             i = self.pool.get('resource.calendar').interval_min_get(
                                 cr,
                                 uid,
@@ -320,7 +320,7 @@ class mrp_production(osv.osv):
             for po in self.browse(cr, uid, ids, context=context):
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
         result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
-        if (vals.get('workcenter_lines', False) or vals.get('date_start', False) or vals.get('date_planned', False)) and update:
+        if (vals.get('workcenter_line_ids', False) or vals.get('date_start', False) or vals.get('date_planned', False)) and update:
             self._compute_planned_workcenter(cr, uid, ids, context=context, mini=mini)
         for d in direction:
             if direction[d] == 1:
