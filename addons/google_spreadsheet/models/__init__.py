@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import google_spreadsheet
+import google_drive_config
