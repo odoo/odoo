@@ -1131,6 +1131,8 @@ define(['summernote/summernote'], function () {
                     d.resolve();
                 }).on('hidden.bs.modal', function () {
                     d.reject();
+                }).on('keydown.dismiss.bs.modal', function (event) {
+                    event.stopImmediatePropagation();
                 });
                 d.always(function () {
                     $dialog.remove();
@@ -1393,6 +1395,7 @@ define(['summernote/summernote'], function () {
     website.editor.Dialog = openerp.Widget.extend({
         events: {
             'hidden.bs.modal': 'destroy',
+            'keydown.dismiss.bs.modal': 'stop_escape',
             'click button.save': 'save',
             'click button[data-dismiss="modal"]': 'cancel',
         },
@@ -1421,6 +1424,11 @@ define(['summernote/summernote'], function () {
                 $('body').addClass('modal-open');
             }
         },
+        stop_escape: function(event) {
+            if($(".modal.in").length>0 && event.which == 27){
+                event.stopPropagation();
+            }
+        }
     });
 
     website.editor.LinkDialog = website.editor.Dialog.extend({
@@ -1914,6 +1922,7 @@ define(['summernote/summernote'], function () {
             //'change select.image-style': 'preview_image',
             'click .existing-attachments img': 'select_existing',
             'click .existing-attachment-remove': 'try_remove',
+            'keydown.dismiss.bs.modal': function(){},
         }),
         init: function (parent, media, options) {
             this._super();
@@ -2244,6 +2253,7 @@ define(['summernote/summernote'], function () {
                 $(".font-icons-icon").removeClass("font-icons-selected");
                 $(event.target).addClass("font-icons-selected");
             },
+            'keydown.dismiss.bs.modal': function(){},
         }),
 
         // extract list of font (like awsome) from the cheatsheet.
@@ -2462,7 +2472,8 @@ define(['summernote/summernote'], function () {
             'change input#urlvideo': 'change_input',
             'keyup input#urlvideo': 'change_input',
             'change input#embedvideo': 'change_input',
-            'keyup input#embedvideo': 'change_input'
+            'keyup input#embedvideo': 'change_input',
+            'keydown.dismiss.bs.modal': function(){},
         }),
         init: function (parent, media) {
             this._super();
