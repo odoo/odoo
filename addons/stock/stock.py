@@ -4535,18 +4535,6 @@ class stock_warehouse_orderpoint(osv.osv):
                 return False
         return True
 
-    def action_view_proc_to_process(self, cr, uid, ids, context=None):
-        act_obj = self.pool.get('ir.actions.act_window')
-        mod_obj = self.pool.get('ir.model.data')
-        proc_ids = self.pool.get('procurement.order').search(cr, uid, [('orderpoint_id', 'in', ids), ('state', 'not in', ('done', 'cancel'))], context=context)
-        result = mod_obj.get_object_reference(cr, uid, 'procurement', 'do_view_procurements')
-        if not result:
-            return False
-
-        result = act_obj.read(cr, uid, [result[1]], context=context)[0]
-        result['domain'] = "[('id', 'in', [" + ','.join(map(str, proc_ids)) + "])]"
-        return result
-
     _columns = {
         'name': fields.char('Name', required=True, copy=False),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),

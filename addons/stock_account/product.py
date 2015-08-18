@@ -11,17 +11,43 @@ class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
 
+    def _get_cost_method(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.property_cost_method:
+                res[product.id] = product.property_cost_method
+            else:
+                res[product.id] = product.categ_id.property_cost_method
+        return res
+
+    def _get_valuation_type(self, cr, uid, ids, field, args, context=None):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            if product.property_valuation:
+                res[product.id] = product.property_valuation
+            else:
+                res[product.id] = product.categ_id.property_valuation
+        return res
+
+    def _set_cost_method(self, cr, uid, ids, name, value, arg, context=None):
+        return self.write(cr, uid, ids, {'property_cost_method': value}, context=context)
+
+    def _set_valuation_type(self, cr, uid, ids, name, value, arg, context=None):
+        return self.write(cr, uid, ids, {'property_valuation': value}, context=context)
+
     _columns = {
-        'valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodic (manual)'),
+        'property_valuation': fields.property(type='selection', selection=[('manual_periodic', 'Periodic (manual)'),
                                         ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
                                         help="If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'" \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
-                                        , required=True, copy=True),
-        'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
+                                        , copy=True),
+        'valuation': fields.function(_get_valuation_type, fnct_inv=_set_valuation_type, type='char'),  # TDE FIXME: store it ?
+        'property_cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
             help="""Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).
                     Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.
                     Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).""",
-            string="Costing Method", required=True, copy=True),
+            string="Costing Method", copy=True),
+        'cost_method': fields.function(_get_cost_method, fnct_inv=_set_cost_method, type='char'),  # TDE FIXME: store it ?
         'property_stock_account_input': fields.property(
             type='many2one',
             relation='account.account',
@@ -39,13 +65,21 @@ class product_template(osv.osv):
     }
 
     _defaults = {
-        'valuation': 'manual_periodic',
+        'property_valuation': 'manual_periodic',
     }
 
-    def onchange_type(self, cr, uid, ids, type):
-        res = super(product_template, self).onchange_type(cr, uid, ids, type)
-        if type in ('consu', 'service'):
-            res = {'value': {'valuation': 'manual_periodic'}}
+    def create(self, cr, uid, vals, context=None):
+        if vals.get('cost_method'):
+            vals['property_cost_method'] = vals.pop('cost_method')
+        if vals.get('valuation'):
+            vals['property_valuation'] = vals.pop('valuation')
+        return super(product_template, self).create(cr, uid, vals, context=context)
+
+    def onchange_type(self, cr, uid, ids, type, context=None):
+        res = super(product_template, self).onchange_type(cr, uid, ids, type, context=context)
+        if type != 'product':
+            value = res.setdefault('value', dict())
+            value['property_valuation'] = 'manual_periodic'
         return res
 
     @api.multi
@@ -130,14 +164,43 @@ class product_template(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
 
-    def onchange_type(self, cr, uid, ids, type):
-        res = super(product_product, self).onchange_type(cr, uid, ids, type)
-        if type not in ['product']:
-            res = {'value': {'valuation': 'manual_periodic'}}
+    def onchange_type(self, cr, uid, ids, type, context=None):
+        res = super(product_product, self).onchange_type(cr, uid, ids, type, context=context)
+        if type != 'product':
+            value = res.setdefault('value', dict())
+            value['property_valuation'] = 'manual_periodic'
         return res
+
+
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
+        'property_valuation': fields.property(
+            type='selection',
+            selection=[('manual_periodic', 'Periodic (manual)'),
+                       ('real_time', 'Perpetual (automated)')],
+            string='Inventory Valuation',
+            required=True, copy=True,
+            help="If perpetual valuation is enabled for a product, the system "
+                 "will automatically create journal entries corresponding to "
+                 "stock moves, with product price as specified by the 'Costing "
+                 "Method'. The inventory variation account set on the product "
+                 "category will represent the current inventory value, and the "
+                 "stock input and stock output account will hold the counterpart "
+                 "moves for incoming and outgoing products."),
+        'property_cost_method': fields.property(
+            type='selection',
+            selection=[('standard', 'Standard Price'),
+                       ('average', 'Average Price'),
+                       ('real', 'Real Price')],
+            string="Costing Method",
+            required=True, copy=True,
+            help="Standard Price: The cost price is manually updated at the end "
+                 "of a specific period (usually once a year).\nAverage Price: "
+                 "The cost price is recomputed at each incoming shipment and "
+                 "used for the product valuation.\nReal Price: The cost price "
+                 "displayed is the price of the last outgoing product (will be "
+                 "used in case of inventory loss for example)."""),
         'property_stock_journal': fields.property(
             relation='account.journal',
             type='many2one',

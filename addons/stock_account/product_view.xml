@@ -8,12 +8,16 @@
             <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <group name="account_property" position="after">
-                        <group name="account_stock_property" string="Account Stock Properties" colspan="2">
+                    <group name="parent" position="inside">
+                        <group name="account_stock_property" string="Account Stock Properties">
                             <field name="property_stock_account_input_categ_id" domain="[('deprecated', '=', False)]"/>
                             <field name="property_stock_account_output_categ_id" domain="[('deprecated', '=', False)]"/>
                             <field name="property_stock_valuation_account_id" domain="[('deprecated', '=', False)]"/>
                             <field name="property_stock_journal"/>
+                        </group>
+                        <group string="Inventory Valuation">
+                            <field name="property_cost_method" groups="stock_account.group_inventory_valuation" />
+                            <field name="property_valuation"/>
                         </group>
                     </group>
                 </data>
@@ -25,34 +29,38 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='standard_price']" position="replace">
-                    <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}"/>
-                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user" attrs="{'invisible':[('product_variant_count','>',1)]}"/>
-                    <div groups="base.group_user" attrs="{'invisible':[('product_variant_count','>',1)]}">
-                        <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline" nolabel="1"/>
+                <data>
+                    <field name="list_price" position="after">
+                        <field name="valuation" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                        <field name="property_cost_method" groups="stock_account.group_inventory_valuation" invisible="1"/>
+                    </field>
+                    <field name="standard_price" position="replace">
+                        <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline"/>
+                    </field>
+                    <field name="currency_id" position="after">
                         <label string="/" class="oe_inline" groups="product.group_uom"/>
                         <field name="uom_rel_id" class="oe_inline" groups="product.group_uom"/>
-                        <button name="%(action_view_change_standard_price)d" string="- update"
-                            type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
-                            class="oe_link" groups="stock_account.group_inventory_valuation"/>
+                     </field>
+                    <div name="standard_price_uom" position="after">
+                        <button string="Compute from average price" type="action"
+                            name="%(action_view_change_standard_price)d"
+                            attrs="{'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                            class="oe_link oe_read_only" colspan="2"
+                            groups="stock_account.group_inventory_valuation"/>
                     </div>
-                </xpath>
-                <xpath expr="//group[@name='properties']" position="before">
-                    <group groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
-                        <separator string="Inventory Valuation" attrs="{'invisible':[('type', 'in', ('service', 'consu'))]}" colspan="4"/>
-                        <group colspan="2" col="2">
-                            <field name="valuation" attrs="{'invisible':[('type', 'in', ('service', 'consu'))]}"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                    <group name="accounting" position="inside">
+                        <group name="property_inventory_valuation" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
+                            <field name="property_valuation" invisible="1"/>
+                            <field name="property_stock_account_input"
+                                attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"
                                 domain="[('deprecated', '=', False)]"/>
-                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_output"
+                                attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"
                                 domain="[('deprecated', '=', False)]"/>
                         </group>
                     </group>
-                    <newline/>
-                </xpath>
-
+                </data>
             </field>
         </record>
     </data>

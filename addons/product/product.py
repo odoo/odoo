@@ -342,8 +342,21 @@ class product_attribute_line(osv.osv):
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
-        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value(s)'),
+        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values'),
     }
+
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
+        # TDE FIXME: currently overriding the domain; however as it includes a
+        # search on a m2o and one on a m2m, probably this will quickly become
+        # difficult to compute - check if performance optimization is required
+        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+        else:
+            new_args = args
+        return super(product_attribute_line, self).name_search(
+            cr, uid, name=name,
+            args=new_args,
+            operator=operator, context=context, limit=limit)
 
 
 #----------------------------------------------------------
@@ -473,6 +486,11 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'currency_id': fields.related(
+            'company_id', 'currency_id',
+            type='many2one',
+            relation='res.currency',
+            string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost Price', digits_compute=dp.get_precision('Product Price'), 
@@ -596,8 +614,8 @@ class product_template(osv.osv):
             res = False
         return res
 
-    def onchange_type(self, cr, uid, ids, type):
-        return {}
+    def onchange_type(self, cr, uid, ids, type, context=None):
+        return {'value': {}}
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id:
@@ -977,8 +995,8 @@ class product_product(osv.osv):
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return res
 
-    def onchange_type(self, cr, uid, ids, type):
-        return {}
+    def onchange_type(self, cr, uid, ids, type, context=None):
+        return {'value': {}}
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:

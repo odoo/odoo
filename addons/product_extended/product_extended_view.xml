@@ -7,13 +7,14 @@
             <field name="priority">3</field>
             <field name="inherit_id" ref="product.product_template_only_form_view" />
             <field name="arch" type="xml">
-                <field name="standard_price" position="after">
-                    <button name="%(action_view_compute_price_wizard)d" string="⇒ Update"
-                       type="action" attrs="{'invisible': ['|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0)]}"
-                       help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
-                       class="oe_link"
-                       groups="stock_account.group_inventory_valuation"/>
-                </field>
+                <div name="standard_price_uom" position="after">
+                    <button name="%(action_view_compute_price_wizard)d"
+                        string="Compute from BOM" type="action" 
+                        attrs="{'invisible': ['|', ('cost_method', '!=', 'standard'), ('bom_count', '=', 0)]}"
+                        help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                        class="oe_link oe_read_only"
+                        colspan="2"/>
+                </div>
             </field>
         </record>
     </data>

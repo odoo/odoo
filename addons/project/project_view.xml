@@ -584,21 +584,7 @@
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
 
-         <record id="product_search_form_view_procurment_consume" model="ir.ui.view">
-            <field name="name">product.product.service.search</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='services']" position="replace">
-                    <filter string="Services" name="services" domain="[('type','=','service')]" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-                 <xpath expr="//filter[@name='consumable']" position="replace">
-                     <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-            </field>
-        </record>
-
-         <record id="task_company" model="ir.ui.view">
+        <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
