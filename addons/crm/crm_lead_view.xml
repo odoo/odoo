@@ -128,14 +128,9 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
-                        <label for="tag_ids" class="oe_edit_only"/>
-                        <field name="tag_ids" widget="many2many_tags"/>
-                        <div class="mt4">
-                            <span class="label label-danger"
-                                attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                            <span class="label label-success"
-                                attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
-                        </div>
+
+                        <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                        <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                     </div>
                     <group>
                         <group>
@@ -174,6 +169,7 @@
                         </group>
                         <group>
                             <field name="priority" widget="priority"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -442,34 +438,30 @@
                                 </div>
                             </button>
                         </div>
-                        <div>
+                        <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <label for="tag_ids" class="oe_edit_only"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
-                            <div class="mt4">
-                                <span class="label label-danger"
-                                    attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                                <span class="label label-success"
-                                    attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
-                            </div>
-                            <div class="o_row">
-                                <div class="oe_left">
+
+                            <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                            <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
+
+                            <h2 class="o_row">
+                                <div>
                                     <label for="planned_revenue" class="oe_edit_only"/>
-                                    <h2 class="o_row">
+                                    <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
                                         <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey"> at </span>
-                                    </h2>
+                                    </div>
                                 </div>
                                 <div>
                                     <label for="probability" class="oe_edit_only"/>
-                                    <h2 class="o_row">
+                                    <div class="o_row">
                                         <field name="probability" widget="integer"/>
                                         <span>%%</span>
-                                    </h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </h2>
                         </div>
                         <group>
                             <group>
@@ -516,6 +508,7 @@
                             </group>
                             <group>
                                 <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                             </group>
