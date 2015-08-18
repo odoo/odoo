@@ -13,7 +13,8 @@ OpenERP Web tips.
     'data': [
         'security/ir.model.access.csv',
         'views/tip.xml',
-        'web_tip_view.xml'
+        'web_tip_view.xml',
+        'web_tip_data.xml',
     ],
     'auto_install': True
 }

@@ -86,5 +86,16 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="crm_team_salesteams_view_kanban">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="inherit_id" ref="sale.crm_team_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//button[@name='%(sale.action_quotations_salesteams)d']" position="replace"/>
+                </data>
+            </field>
+        </record>
+
     </data>
 </openerp>
