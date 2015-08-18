@@ -6,12 +6,6 @@ class TestOfxFile(TransactionCase):
     """ Tests for import bank statement ofx file format (account.bank.statement.import) """
 
     def test_ofx_file_import(self):
-        try:
-            from ofxparse import OfxParser as ofxparser
-        except ImportError:
-            #the Python library isn't installed on the server, the OFX import is unavailable and the test cannot be run
-            return True
-        
         # Get OFX file content
         ofx_file_path = get_module_resource('account_bank_statement_import_ofx', 'test_ofx_file', 'test_ofx.ofx')
         ofx_file = open(ofx_file_path, 'rb').read().encode('base64')
