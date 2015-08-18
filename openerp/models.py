@@ -4552,16 +4552,29 @@ class BaseModel(object):
         # figure out the applicable order_by for the m2o
         dest_model = self.pool[order_field_column._obj]
         m2o_order = dest_model._order
+        same_model = False
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
-
+        elif dest_model._name == self._name:
+            #order in same models is recursive when order is parent on same class
+            same_model = True
+            # extract the field names, to be able to qualify them and add desc/asc
+            m2o_order_list = []
+            for order_part in m2o_order.split(","):
+                m2o_order_list.append(order_part.strip().split(" ", 1)[0].strip())
+            m2o_order = m2o_order_list
+        
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"', '').split('.', 1)
         dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
-        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
-                                                   reverse_direction=reverse_direction)
+        if same_model:
+            qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
+            return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
+        else:
+            return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
+                                                       reverse_direction=reverse_direction)
 
     def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
         order_by_elements = []
