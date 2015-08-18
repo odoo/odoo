@@ -7,10 +7,10 @@
     "author" : "Rolv Råen",
     "category" : "Localization/Account Charts",
     "description": "This is the module to manage the accounting chart for Norway in Open ERP.",
-    "depends" : ["account", "base_iban", "base_vat", "account_chart"],
+    "depends" : ["account", "base_iban", "base_vat"],
     "demo_xml" : [],
     "data" : ["account_chart.xml",
-                    'account_tax.xml','l10n_chart_no_wizard.xml'],
+                    'account_tax.xml','account_chart_template.yml'],
     "active": False,
-    "installable": False
+    "installable": True
 }
