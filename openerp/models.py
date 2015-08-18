@@ -5940,6 +5940,14 @@ class RecordCache(MutableMapping):
         value = self._recs.env.cache[field].get(self._recs.id, dummy)
         return not isinstance(value, SpecialValue)
 
+    def get(self, field, default=None):
+        """ Return the cached, regular value of ``field`` for `records[0]`, or ``default``. """
+        if isinstance(field, basestring):
+            field = self._recs._fields[field]
+        dummy = SpecialValue(None)
+        value = self._recs.env.cache[field].get(self._recs.id, dummy)
+        return default if isinstance(value, SpecialValue) else value
+
     def __getitem__(self, field):
         """ Return the cached value of ``field`` for `records[0]`. """
         if isinstance(field, basestring):
