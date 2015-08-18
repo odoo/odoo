@@ -111,7 +111,7 @@ class procurement_order(osv.osv):
         for procurement in procurements:
             if procurement.rule_id:
                 res[procurement.id] = True
-            elif procurement.product_id.type != 'service':
+            elif procurement.product_id.type in ['product', 'consu']:
                 todo_procs += [procurement]
 
         res_dict = self._find_suitable_rule_multi(cr, uid, todo_procs, context=context)

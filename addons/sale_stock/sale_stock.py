@@ -191,7 +191,7 @@ class product_product(osv.osv):
         #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
         for product in self.browse(cr, uid, ids, context=context):
-            if product.id and product.type != 'service':
+            if product.id and product.type in ['product', 'consu']:
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
 

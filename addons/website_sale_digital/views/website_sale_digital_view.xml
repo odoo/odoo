@@ -6,9 +6,24 @@
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
             <field name="type" position="after">
-                    <field name="digital_content" />
+                    <!-- <field name="digital_content" /> -->
             </field>
+            <xpath expr="//group[@name='packaging']" position="attributes">
+                <attribute name="invisible">[('type', 'in', ['service', 'digital'])]</attribute>
+            </xpath>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="product_product_view_inherit_digital">
+        <field name="name">product.product.view.inherit.digital</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='weight']" position="attributes">
+                <attribute name="invisible">[('type', 'in', ['service', 'digital'])]</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
 

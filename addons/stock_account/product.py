@@ -129,9 +129,10 @@ class product_template(osv.osv):
 
 class product_product(osv.osv):
     _inherit = 'product.product'
+
     def onchange_type(self, cr, uid, ids, type):
         res = super(product_product, self).onchange_type(cr, uid, ids, type)
-        if type in ('consu', 'service'):
+        if type not in ['product']:
             res = {'value': {'valuation': 'manual_periodic'}}
         return res
 class product_category(osv.osv):

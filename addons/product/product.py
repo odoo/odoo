@@ -453,6 +453,10 @@ class product_template(osv.osv):
             return variant.write({name: value})
         return {}        
 
+    def _get_product_template_type(self, cr, uid, context=None):
+        return [('consu', 'Consumable'), ('service', 'Service')]
+    _get_product_template_type_wrapper = lambda self, *args, **kwargs: self._get_product_template_type(*args, **kwargs)
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
         'sequence': fields.integer('Sequence', help='Gives the sequence order when displaying a product list'),
@@ -465,7 +469,7 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description',translate=True,
             help="A description of the Product that you want to communicate to your customers. "
                  "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
-        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
+        'type': fields.selection(_get_product_template_type_wrapper, 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),        
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),

@@ -47,7 +47,7 @@ class StockMove(osv.osv):
 
             for line in res[0]:
                 product = prod_obj.browse(cr, uid, line['product_id'], context=context)
-                if product.type != 'service':
+                if product.type in ['product', 'consu']:
                     valdef = {
                         'picking_id': move.picking_id.id if move.picking_id else False,
                         'product_id': line['product_id'],

@@ -566,7 +566,7 @@ class purchase_order(osv.osv):
         fpos = po_line.order_id.fiscal_position_id or False
         #For anglo-saxon accounting
         account_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
-        if po_line.company_id.anglo_saxon_accounting and po_line.product_id and not po_line.product_id.type == 'service':
+        if po_line.company_id.anglo_saxon_accounting and po_line.product_id and po_line.product_id.type == 'product':
             acc_id = po_line.product_id.property_stock_account_input and po_line.product_id.property_stock_account_input.id
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_stock_account_input_categ_id and po_line.product_id.categ_id.property_stock_account_input_categ_id.id
@@ -1806,6 +1806,7 @@ class account_invoice_line(osv.Model):
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         if self.company_id.anglo_saxon_accounting:
+            # TDE FIXME: undefined variable
             if inv.type in ('in_invoice','in_refund'):
                 for i_line in inv.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
@@ -1820,7 +1821,7 @@ class account_invoice_line(osv.Model):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
-            if i_line.product_id.type != 'service':
+            if i_line.product_id.type == 'product':
                 # get the price difference account at the product
                 acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
                 if not acc:

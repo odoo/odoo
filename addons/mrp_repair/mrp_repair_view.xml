@@ -44,7 +44,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type', 'in', ['product', 'consu'])]"/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/> 

@@ -161,8 +161,8 @@
                     <field name="type"/>
                 </field>
                 <ul position="inside">
-                    <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                    <li t-if="record.type.raw_value != 'service'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value == 'product'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
                 </ul>
             </field>
         </record>

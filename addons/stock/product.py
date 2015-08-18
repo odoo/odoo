@@ -392,8 +392,13 @@ class product_template(osv.osv):
             res[product_tmpl_id]['reordering_max_qty'] = data['product_max_qty']
         return res
 
+    def _get_product_template_type(self, cr, uid, context=None):
+        res = super(product_template, self)._get_product_template_type(cr, uid, context=context)
+        if 'product' not in [item[0] for item in res]:
+            res.append(('product', 'Stockable Product'))
+        return res
+
     _columns = {
-        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
