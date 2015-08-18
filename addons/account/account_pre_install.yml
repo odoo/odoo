@@ -7,7 +7,7 @@
     wiz = wizards.browse(cr, uid, ref('account.account_configuration_installer_todo'))
     part = self.pool.get('res.partner').browse(cr, uid, ref('base.main_partner'))
     # if we know the country and the wizard has not yet been executed, we do it
-    if (part.country_id.id) and (wiz.state=='open'):
+    if (part.country_id.id) and (part.country_id.code) and (wiz.state=='open'):
         mod = 'l10n_'+part.country_id.code.lower()
         ids = modules.search(cr, uid, [ ('name','=',mod) ], context=context)
         if ids:

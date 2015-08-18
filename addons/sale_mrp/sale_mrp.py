@@ -100,3 +100,13 @@ class stock_move(osv.osv):
         if res and move.procurement_id and move.procurement_id.property_ids:
             res['property_ids'] = [(6, 0, [x.id for x in move.procurement_id.property_ids])]
         return res
+
+    def _action_explode(self, cr, uid, move, context=None):
+        """ Explodes pickings.
+        @param move: Stock moves
+        @return: True
+        """
+        if context is None:
+            context = {}
+        property_ids = map(int, move.procurement_id.sale_line_id.property_ids or [])
+        return super(stock_move, self)._action_explode(cr, uid, move, context=dict(context, property_ids=property_ids))

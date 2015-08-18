@@ -3,10 +3,11 @@ import copy
 
 from lxml import etree, html
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, api
 from openerp.addons.website.models import website
 from openerp.http import request
 from openerp.osv import osv, fields
+from openerp.tools import html_escape
 
 class view(osv.osv):
     _inherit = "ir.ui.view"
@@ -119,6 +120,14 @@ class view(osv.osv):
             # ensure there's only one match
             [root] = arch.xpath(section_xpath)
 
+        # html text need to be escaped for xml storage
+        def escape_node(node):
+            node.text = node.text and html_escape(node.text)
+            node.tail = node.tail and html_escape(node.tail)
+        escape_node(replacement)
+        for descendant in replacement.iterdescendants():
+            escape_node(descendant)
+
         root.text = replacement.text
         root.tail = replacement.tail
         # replace all children
@@ -128,6 +137,7 @@ class view(osv.osv):
 
         return arch
 
+    @api.cr_uid_ids_context
     def render(self, cr, uid, id_or_xml_id, values=None, engine='ir.qweb', context=None):
         if request and getattr(request, 'website_enabled', False):
             engine='website.qweb'
@@ -213,4 +223,48 @@ class view(osv.osv):
         view = self.browse(cr, SUPERUSER_ID, res_id, context=context)
         if view.model_data_id:
             view.model_data_id.write({'noupdate': True})
+
+    def customize_template_get(self, cr, uid, xml_id, full=False, bundles=False , context=None):
+        """ Get inherit view's informations of the template ``key``. By default, only
+        returns ``customize_show`` templates (which can be active or not), if
+        ``full=True`` returns inherit view's informations of the template ``key``.
+        ``bundles=True`` returns also the asset bundles
+        """
+        imd = request.registry['ir.model.data']
+        view_model, view_theme_id = imd.get_object_reference(cr, uid, 'website', 'theme')
+        user = request.registry['res.users'].browse(cr, uid, uid, context)
+        user_groups = set(user.groups_id)
+        views = self._views_get(cr, uid, xml_id, context=dict(context or {}, active_test=False))
+        done = set()
+        result = []
+        for v in views:
+            if not user_groups.issuperset(v.groups_id):
+                continue
+            if full or (v.customize_show and v.inherit_id.id != view_theme_id):
+                if v.inherit_id not in done:
+                    result.append({
+                        'name': v.inherit_id.name,
+                        'id': v.id,
+                        'xml_id': v.xml_id,
+                        'inherit_id': v.inherit_id.id,
+                        'header': True,
+                        'active': False
+                    })
+                    done.add(v.inherit_id)
+                result.append({
+                    'name': v.name,
+                    'id': v.id,
+                    'xml_id': v.xml_id,
+                    'inherit_id': v.inherit_id.id,
+                    'header': False,
+                    'active': v.active,
+                })
+        return result
+
+    def get_view_translations(self, cr, uid, xml_id, lang, field=['id', 'res_id', 'value', 'state', 'gengo_translation'], context=None):
+        views = self.customize_template_get(cr, uid, xml_id, full=True, context=context)
+        views_ids = [view.get('id') for view in views if view.get('active')]
+        domain = [('type', '=', 'view'), ('res_id', 'in', views_ids), ('lang', '=', lang)]
+        irt = request.registry.get('ir.translation')
+        return irt.search_read(cr, uid, domain, field, context=context)
 

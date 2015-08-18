@@ -316,10 +316,10 @@ class YamlInterpreter(object):
                     if not self._coerce_bool(record.forcecreate):
                         return None
 
-
             #context = self.get_context(record, self.eval_context)
-            #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
-            context = record.context
+            # FIXME: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
+            # TODO: cleaner way to avoid resetting password in auth_signup (makes user creation costly)
+            context = dict(record.context or {}, no_reset_password=True)
             view_info = False
             if view_id:
                 varg = view_id
@@ -397,7 +397,7 @@ class YamlInterpreter(object):
             onchange_spec = model._onchange_spec(self.cr, SUPERUSER_ID, view_info, context=self.context)
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            defaults = default and model._add_missing_default_values(self.cr, self.uid, {}, context=self.context) or {}
 
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
@@ -438,7 +438,7 @@ class YamlInterpreter(object):
                         result = recs.onchange(record_dict, field_name, onchange_spec)
 
                     else:
-                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                        match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'], re.DOTALL)
                         assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
 
                         # creating the context
@@ -458,7 +458,7 @@ class YamlInterpreter(object):
 
                         # Evaluation args
                         args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                        result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                        result = getattr(model, match.group(1))(self.cr, self.uid, [], *args)
 
                     for key, val in (result or {}).get('value', {}).items():
                         if key in fg:

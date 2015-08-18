@@ -199,7 +199,7 @@
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
                     <separator/>
-                    <filter string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
+                    <filter string="Member" name="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]"/>
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
@@ -273,7 +273,7 @@
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px">
-                                            <t t-raw="record.task_ids.raw_value.length"/> Tasks
+                                            <t t-raw="record.task_count.raw_value"/> Tasks
                                         </a>
                                     </div>
                                     <div class="oe_kanban_project_list">
@@ -306,7 +306,7 @@
             <field name="name">project.project.gantt</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <gantt date_delay="planned_hours" date_start="date_start" progress="progress_rate" string="Projects">
+                <gantt date_start="date_start" date_stop="date" progress="progress_rate" string="Projects">
                 </gantt>
             </field>
         </record>
@@ -750,7 +750,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='account_grp']" position="after">
                     <group name="project_grp" string="Projects">
-                        <field name="project_time_mode_id" domain="[('category_id','=','Working Time')]"/>
+                        <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]"/>
                     </group>
                 </xpath>
             </field>

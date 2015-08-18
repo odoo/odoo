@@ -32,6 +32,7 @@ condition/math builtins.
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 
 from opcode import HAVE_ARGUMENT, opmap, opname
+from psycopg2 import OperationalError
 from types import CodeType
 import logging
 
@@ -320,6 +321,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     except openerp.exceptions.AccessDenied:
         raise
     except openerp.exceptions.AccessError:
+        raise
+    except OperationalError:
+        # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
+        # of serialized transactions work its magic
         raise
     except Exception, e:
         import sys

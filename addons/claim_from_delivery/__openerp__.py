@@ -35,7 +35,6 @@ Adds a Claim link to the delivery order.
               'claim_delivery_data.xml',],
     'auto_install': False,
     'installable': True,
-    'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

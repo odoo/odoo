@@ -39,7 +39,6 @@ compatible with older configurations.
     """,
     'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
-    'images': ['images/analytic_user_function.jpeg'],
     'depends': ['hr_timesheet_sheet'],
     'data': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],
     'demo': [],

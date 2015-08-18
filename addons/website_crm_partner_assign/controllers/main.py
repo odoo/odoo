@@ -95,6 +95,9 @@ class WebsiteCrmPartnerAssign(http.Controller):
         url_args = {}
         if search:
             url_args['search'] = search
+        if country_all:
+            url_args['country_all'] = True
+
         partner_count = partner_obj.search_count(
             request.cr, SUPERUSER_ID, base_partner_domain,
             context=request.context)

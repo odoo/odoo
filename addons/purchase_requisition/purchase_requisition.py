@@ -163,13 +163,14 @@ class purchase_requisition(osv.osv):
         vals = po_line_obj.onchange_product_id(
             cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
             supplier.id, date_order=date_order,
-            fiscal_position_id=supplier.property_account_position,
+            fiscal_position_id=supplier.property_account_position.id,
             date_planned=requisition_line.schedule_date,
             name=False, price_unit=False, state='draft', context=context)['value']
         vals.update({
             'order_id': purchase_id,
             'product_id': product.id,
             'account_analytic_id': requisition_line.account_analytic_id.id,
+            'taxes_id': [(6, 0, vals.get('taxes_id', []))],
         })
         return vals
 
@@ -300,7 +301,7 @@ class purchase_requisition_line(osv.osv):
     _rec_name = 'product_id'
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok', '=', True)]),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Bids', ondelete='cascade'),

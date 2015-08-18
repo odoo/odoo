@@ -27,42 +27,21 @@ class asset_modify(osv.osv_memory):
     _name = 'asset.modify'
     _description = 'Modify Asset'
 
+    def _get_asset_method_time(self, cr, uid, ids, field_name, arg, context=None):
+        if ids and len(ids) == 1 and context.get('active_id'):
+            asset = self.pool['account.asset.asset'].browse(cr, uid, context.get('active_id'), context=context)
+            return {ids[0]: asset.method_time}
+        else:
+            return dict.fromkeys(ids, False)
+
     _columns = {
         'name': fields.char('Reason', required=True),
         'method_number': fields.integer('Number of Depreciations', required=True),
         'method_period': fields.integer('Period Length'),
         'method_end': fields.date('Ending date'),
         'note': fields.text('Notes'),
+        'asset_method_time': fields.function(_get_asset_method_time, type='char', string='Asset Method Time', readonly=True),
     }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ Returns views and fields for current model.
-        @param cr: A database cursor
-        @param user: ID of the user currently logged in
-        @param view_id: list of fields, which required to read signatures
-        @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
-        @param context: context arguments, like lang, time zone
-        @param toolbar: contains a list of reports, wizards, and links related to current model
-
-        @return: Returns a dictionary that contains definition for fields, views, and toolbars
-        """
-        if not context:
-            context = {}
-        asset_obj = self.pool.get('account.asset.asset')
-        result = super(asset_modify, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        asset_id = context.get('active_id', False)
-        active_model = context.get('active_model', '')
-        if active_model == 'account.asset.asset' and asset_id:
-            asset = asset_obj.browse(cr, uid, asset_id, context=context)
-            doc = etree.XML(result['arch'])
-            if asset.method_time == 'number':
-                node = doc.xpath("//field[@name='method_end']")[0]
-                node.set('invisible', '1')
-            elif asset.method_time == 'end':
-                node = doc.xpath("//field[@name='method_number']")[0]
-                node.set('invisible', '1')
-            result['arch'] = etree.tostring(doc)
-        return result
 
     def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
@@ -87,6 +66,8 @@ class asset_modify(osv.osv_memory):
             res.update({'method_period': asset.method_period})
         if 'method_end' in fields and asset.method_time == 'end':
             res.update({'method_end': asset.method_end})
+        if context.get('active_id'):
+            res['asset_method_time'] = self._get_asset_method_time(cr, uid, [0], 'asset_method_time', [], context=context)[0]
         return res
     
     def modify(self, cr, uid, ids, context=None):

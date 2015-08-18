@@ -53,7 +53,7 @@ class crm_case_section(osv.osv):
         month_begin = date.today().replace(day=1)
         section_result = [{
                           'value': 0,
-                          'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y'),
+                          'tooltip': tools.ustr((month_begin + relativedelta.relativedelta(months=-i)).strftime('%B %Y')),
                           } for i in range(self._period_number - 1, -1, -1)]
         group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
         pattern = tools.DEFAULT_SERVER_DATE_FORMAT if obj.fields_get(cr, uid, groupby_field)[groupby_field]['type'] == 'date' else tools.DEFAULT_SERVER_DATETIME_FORMAT
@@ -68,7 +68,7 @@ class crm_case_section(osv.osv):
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
-                        "true, it will allow you to hide the sales team without removing it."),
+                        "false, it will allow you to hide the sales team without removing it."),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids': fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),

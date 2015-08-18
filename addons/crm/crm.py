@@ -73,7 +73,7 @@ class crm_tracking_mixin(osv.AbstractModel):
         'campaign_id': fields.many2one('crm.tracking.campaign', 'Campaign',  # old domain ="['|',('section_id','=',section_id),('section_id','=',False)]"
                                        help="This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"),
         'source_id': fields.many2one('crm.tracking.source', 'Source', help="This is the source of the link Ex: Search Engine, another domain, or name of email list"),
-        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad"),
+        'medium_id': fields.many2one('crm.tracking.medium', 'Channel', help="This is the method of delivery. Ex: Postcard, Email, or Banner Ad", oldname='channel_id'),
     }
 
     def tracking_fields(self):

@@ -104,7 +104,7 @@ header a.navbar-brand img {
 }
 
 #wrapwrap p:empty:after {
-  content: "\2060";
+  content: "\202f";
 }
 
 /* ----- Snippets Styles ----- */
@@ -189,11 +189,12 @@ footer {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.col-md-12 {
-  float: left;
-  width: 100%;
-}
 
+@-moz-document url-prefix() {
+  .table .img-responsive {
+    width: 100%;
+  }
+}
 /* ---- HACK FOR COVERING UP CK EDITOR BOGUS P INSERTION --- */
 .oe_structure.oe_editable.oe_empty:empty, .oe_editable[data-oe-type=html]:empty, .oe_structure.oe_editable.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child {
   background-image: url("/website/static/src/img/drag_here.png") !important;
@@ -595,6 +596,10 @@ div.media_iframe_video .css_editable_mode_display {
   height: 100%;
   display: none;
   z-index: 2;
+}
+
+html[data-browser^="msie"] div.media_iframe_video iframe {
+  margin-left: 0;
 }
 
 /* Mobile view */

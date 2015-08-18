@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0rc1\n"
+"Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-14 13:09+0000\n"
-"PO-Revision-Date: 2014-08-14 13:09+0000\n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-01-21 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:43
-#: code:addons/product_extended/wizard/wizard_price.py:52
+#: code:addons/product_extended/wizard/wizard_price.py:44
+#: code:addons/product_extended/wizard/wizard_price.py:56
 #, python-format
 msgid "Active ID is not set in Context."
 msgstr ""
@@ -93,12 +93,12 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_product_product
-msgid "Product"
+#: model:ir.model,name:product_extended.model_product_template
+msgid "Product Template"
 msgstr ""
 
 #. module: product_extended
-#: view:product.product:product_extended.product_product_ext_form_view2
+#: view:product.template:product_extended.product_product_ext_form_view2
 msgid "Recompute price from BoM"
 msgstr ""
 
@@ -110,5 +110,27 @@ msgstr ""
 #. module: product_extended
 #: field:mrp.bom,standard_price:0
 msgid "Standard Price"
+msgstr ""
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "The price is computed from the bill of material lines which are not variant specific"
+msgstr ""
+
+#. module: product_extended
+#: code:addons/product_extended/wizard/wizard_price.py:54
+#, python-format
+msgid "This wizard is build for product templates, while you are currently running it from a product variant."
+msgstr ""
+
+#. module: product_extended
+#: code:addons/product_extended/wizard/wizard_price.py:54
+#, python-format
+msgid "Wrong model!"
+msgstr ""
+
+#. module: product_extended
+#: view:wizard.price:product_extended.view_compute_price_wizard
+msgid "or"
 msgstr ""
 

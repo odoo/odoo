@@ -37,10 +37,10 @@ class account_fiscal_position(osv.osv):
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping', copy=True),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping', copy=True),
         'note': fields.text('Notes'),
-        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position."),
+        'auto_apply': fields.boolean('Automatic', help="Apply automatically this fiscal position if the conditions match."),
         'vat_required': fields.boolean('VAT required', help="Apply only if partner has a VAT number."),
-        'country_id': fields.many2one('res.country', 'Countries', help="Apply only if delivery or invoicing country match."),
-        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply only if delivery or invocing country match the group."),
+        'country_id': fields.many2one('res.country', 'Country', help="Apply when the shipping or invoicing country matches. Takes precedence over positions matching on a country group."),
+        'country_group_id': fields.many2one('res.country.group', 'Country Group', help="Apply when the shipping or invoicing country is in this country group, and no position matches the country directly."),
     }
 
     _defaults = {
@@ -113,32 +113,34 @@ class account_fiscal_position(osv.osv):
         part_obj = self.pool['res.partner']
         partner = part_obj.browse(cr, uid, partner_id, context=context)
 
-        # partner manually set fiscal position always win
-        if partner.property_account_position:
-            return partner.property_account_position.id
-
         # if no delivery use invocing
         if delivery_id:
             delivery = part_obj.browse(cr, uid, delivery_id, context=context)
         else:
             delivery = partner
 
-        domain = [
-            ('auto_apply', '=', True),
-            '|', ('vat_required', '=', False), ('vat_required', '=', partner.vat_subjected),
-        ]
+        # partner manually set fiscal position always win
+        if delivery.property_account_position or partner.property_account_position:
+            return delivery.property_account_position.id or partner.property_account_position.id
 
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
+        domains = [[('auto_apply', '=', True), ('vat_required', '=', partner.vat_subjected)]]
+        if partner.vat_subjected:
+            # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
+            domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
 
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
+        for domain in domains:
+            if delivery.country_id.id:
+                fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', delivery.country_id.id)], context=context, limit=1)
+                if fiscal_position_ids:
+                    return fiscal_position_ids[0]
 
-        fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
-        if fiscal_position_ids:
-            return fiscal_position_ids[0]
+                fiscal_position_ids = self.search(cr, uid, domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], context=context, limit=1)
+                if fiscal_position_ids:
+                    return fiscal_position_ids[0]
+
+            fiscal_position_ids = self.search(cr, uid, domain + [('country_id', '=', None), ('country_group_id', '=', None)], context=context, limit=1)
+            if fiscal_position_ids:
+                return fiscal_position_ids[0]
         return False
 
 class account_fiscal_position_tax(osv.osv):
@@ -239,23 +241,59 @@ class res_partner(osv.osv):
     def _invoice_total(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         account_invoice_report = self.pool.get('account.invoice.report')
-        for partner in self.browse(cr, uid, ids, context=context):
-            domain = [('partner_id', 'child_of', partner.id)]
-            invoice_ids = account_invoice_report.search(cr, uid, domain, context=context)
-            invoices = account_invoice_report.browse(cr, uid, invoice_ids, context=context)
-            result[partner.id] = sum(inv.user_currency_price_total for inv in invoices)
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        user_currency_id = user.company_id.currency_id.id
+        for partner_id in ids:
+            all_partner_ids = self.pool['res.partner'].search(
+                cr, uid, [('id', 'child_of', partner_id)], context=context)
+
+            # searching account.invoice.report via the orm is comparatively expensive
+            # (generates queries "id in []" forcing to build the full table).
+            # In simple cases where all invoices are in the same currency than the user's company
+            # access directly these elements
+
+            # generate where clause to include multicompany rules
+            where_query = account_invoice_report._where_calc(cr, uid, [
+                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel'])
+            ], context=context)
+            account_invoice_report._apply_ir_rules(cr, uid, where_query, 'read', context=context)
+            from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+            query = """ WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                                SELECT r.currency_id, r.rate, r.name AS date_start,
+                                    (SELECT name FROM res_currency_rate r2
+                                     WHERE r2.name > r.name AND
+                                           r2.currency_id = r.currency_id
+                                     ORDER BY r2.name ASC
+                                     LIMIT 1) AS date_end
+                                FROM res_currency_rate r
+                                )
+                      SELECT SUM(price_total * cr.rate) as total
+                        FROM account_invoice_report account_invoice_report, currency_rate cr
+                       WHERE %s
+                         AND cr.currency_id = %%s
+                         AND (COALESCE(account_invoice_report.date, NOW()) >= cr.date_start)
+                         AND (COALESCE(account_invoice_report.date, NOW()) < cr.date_end OR cr.date_end IS NULL)
+                    """ % where_clause
+
+            # price_total is in the currency with rate = 1
+            # total_invoice should be displayed in the current user's currency
+            cr.execute(query, where_clause_params + [user_currency_id])
+            result[partner_id] = cr.fetchone()[0]
+
         return result
 
     def _journal_item_count(self, cr, uid, ids, field_name, arg, context=None):
         MoveLine = self.pool('account.move.line')
         AnalyticAccount = self.pool('account.analytic.account')
-        return {
-            partner_id: {
-                'journal_item_count': MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context),
-                'contracts_count': AnalyticAccount.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)
-            }
-            for partner_id in ids
-        }
+        results = {}
+        for partner_id in ids:
+            results[partner_id] = {}
+            if 'contracts_count' in field_name:
+                results[partner_id]['contracts_count'] = AnalyticAccount.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
+            if 'journal_item_count' in field_name:
+                results[partner_id]['journal_item_count'] = MoveLine.search_count(cr, uid, [('partner_id', '=', partner_id)], context=context)
+        return results
 
     def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
         '''

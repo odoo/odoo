@@ -14,7 +14,7 @@ def _partner_format_address(address1=False, address2=False):
 
 
 def _partner_split_name(partner_name):
-    return [' '.join(partner_name.split()[-1:]), ' '.join(partner_name.split()[:-1])]
+    return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
 
 
 class ValidationError(ValueError):
@@ -62,7 +62,8 @@ class PaymentAcquirer(osv.Model):
         'name': fields.char('Name', required=True),
         'provider': fields.selection(_provider_selection, string='Provider', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'pre_msg': fields.html('Message', help='Message displayed to explain and help the payment process.'),
+        'pre_msg': fields.html('Message', translate=True,
+            help='Message displayed to explain and help the payment process.'),
         'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
         'validation': fields.selection(
             [('manual', 'Manual'), ('automatic', 'Automatic')],
@@ -115,7 +116,7 @@ class PaymentAcquirer(osv.Model):
 
              - partner_values: will contain name, lang, email, zip, address, city,
                country_id (int or False), country (browse or False), phone, reference
-             - tx_values: will contain refernece, amount, currency_id (int or False),
+             - tx_values: will contain reference, amount, currency_id (int or False),
                currency (browse or False), partner (browse or False)
         """
         acquirer = self.browse(cr, uid, id, context=context)
@@ -340,7 +341,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange', copy=False),
+            track_visibility='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment
@@ -370,8 +371,15 @@ class PaymentTransaction(osv.Model):
                                          help='Reference of the customer in the acquirer database'),
     }
 
-    _sql_constraints = [
-        ('reference_uniq', 'UNIQUE(reference)', 'The payment transaction reference must be unique!'),
+    def _check_reference(self, cr, uid, ids, context=None):
+        transaction = self.browse(cr, uid, ids[0], context=context)
+        if transaction.state not in ['cancel', 'error']:
+            if self.search(cr, uid, [('reference', '=', transaction.reference), ('id', '!=', transaction.id)], context=context, count=True):
+                return False
+        return True
+
+    _constraints = [
+        (_check_reference, 'The payment transaction reference must be unique!', ['reference', 'state']),
     ]
 
     _defaults = {

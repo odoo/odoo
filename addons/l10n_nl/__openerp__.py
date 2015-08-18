@@ -130,7 +130,6 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
     ],
     'demo' : [],
     'installable': True,
-    'images': ['images/config_chart_l10n_nl.jpeg','images/l10n_nl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

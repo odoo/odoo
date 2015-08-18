@@ -52,11 +52,9 @@ If you want to save your employees' time and avoid them to always have coins in 
         'views/report_lunchorder.xml',
         'views/lunch.xml',
     ],
-    'images': ['images/new_order.jpeg','images/lunch_account.jpeg','images/order_by_supplier_analysis.jpeg','images/alert.jpeg'],
     'demo': ['lunch_demo.xml',],
     'installable': True,
     'website': 'https://www.odoo.com/page/employees',
     'application' : True,
     'certificate' : '001292377792581874189',
-    'images': [],
 }

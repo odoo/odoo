@@ -33,6 +33,7 @@ from email.utils import getaddresses
 
 import openerp
 from openerp.loglevels import ustr
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -53,7 +54,7 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      ])
 
 
-def html_sanitize(src, silent=True, strict=False):
+def html_sanitize(src, silent=True, strict=False, strip_style=False):
     if not src:
         return src
     src = ustr(src, errors='replace')
@@ -69,7 +70,7 @@ def html_sanitize(src, silent=True, strict=False):
 
     kwargs = {
         'page_structure': True,
-        'style': False,             # do not remove style attributes
+        'style': strip_style,       # True = remove style tags/attrs
         'forms': True,              # remove form tags
         'remove_unknown_tags': False,
         'allow_tags': allowed_tags,
@@ -281,7 +282,7 @@ def html_email_clean(html, remove=False, shorten=False, max_length=300, expand_o
             read_more_node.append(read_more_separator_node)
         read_more_link_node = _create_node(
             'a',
-            expand_options.get('oe_expand_a_content', 'read more'),
+            expand_options.get('oe_expand_a_content', _('read more')),
             None,
             {
                 'href': expand_options.get('oe_expand_a_href', '#'),

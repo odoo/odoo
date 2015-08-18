@@ -927,6 +927,12 @@
         close: function () {
             this.$el.modal('hide');
         },
+        destroy: function () {
+            this.$el.modal('hide').remove();
+            if($(".modal.in").length>0){
+                $('body').addClass('modal-open');
+            }
+        },
     });
 
     website.editor.LinkDialog = website.editor.Dialog.extend({
@@ -1721,7 +1727,7 @@
             var final_classes = non_fa_classes.concat(this.get_fa_classes());
             this.media.$.className = final_classes.join(' ');
             this.media.renameNode("span");
-            this.media.$.attributes.style.textContent = style;
+            $(this.media.$).attr("style", style || null);
             this._super();
         },
         /**
@@ -1785,7 +1791,8 @@
                         .attr('data-size', size)
                         .addClass(size)
                         .addClass(no_sizes);
-                if ((size && _.contains(classes, size)) || (classes[2] === "" && !selected)) {
+
+                if ((size && _.contains(classes, size)) || (size === "" && !selected)) {
                     this.$preview.append($p.clone());
                     this.$('#fa-size').val(size);
                     $p.addClass('font-icons-selected');
@@ -1899,7 +1906,12 @@
             this._super();
         },
         clear: function () {
-            delete this.media.$.dataset.src;
+            if(this.media.$.dataset.ckeSavedSrc){
+                delete this.media.$.dataset.ckeSavedSrc;
+            }
+            if(this.media.$.dataset.src){
+                delete this.media.$.dataset.src;
+            }
             this.media.$.className = this.media.$.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
         },
     });
@@ -1912,6 +1924,11 @@
         subtree: true,
         attributeOldValue: true,
     };
+    var pasting = false;
+    $(document).on('paste', '[contenteditable]', function() {
+        pasting = true;
+        setTimeout(function(){ pasting = false; }, 0);
+    });
     var observer = new website.Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
@@ -1948,6 +1965,7 @@
                     setTimeout(function () {
                         fixup_browser_crap(m.addedNodes);
                     }, 0);
+                    if (pasting) { remove_oe_attributes(m.addedNodes); }
                     // Remove ignorable nodes from addedNodes or removedNodes,
                     // if either set remains non-empty it's considered to be an
                     // impactful change. Otherwise it's ignored.
@@ -1968,6 +1986,16 @@
             .uniq()
             .each(function (node) { $(node).trigger('content_changed'); })
     });
+    function remove_oe_attributes(nodes) {
+        _.chain(nodes).filter(function(node){ return node.nodeType === 1 }).each(function(node){
+            _.each(_.toArray(node.attributes), function(attr){
+                if(attr.nodeName.indexOf('data-oe-') === 0) {
+                    node.removeAttribute(attr.nodeName)
+                }
+            });
+            remove_oe_attributes(node.childNodes);
+        });
+    };
     function remove_mundane_nodes(nodes) {
         if (!nodes || !nodes.length) { return []; }
 

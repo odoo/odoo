@@ -259,7 +259,9 @@ openerp.hr_timesheet_sheet = function(instance) {
                     return;
                 }
                 var ops = self.generate_o2m_value();
-                new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], id]).then(function(res) {
+                new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], [id],
+                    new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(res) {
+                    res = res[id];
                     var def = _.extend({}, self.default_get, res.value, {
                         name: self.description_line,
                         unit_amount: 0,

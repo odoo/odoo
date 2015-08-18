@@ -130,10 +130,10 @@ class TestCurrencyExport(TestExport):
                   'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
-                      ' {symbol}</span>'.format(
+                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ),)
+            ).encode('utf-8'),)
 
     def test_currency_pre(self):
         currency = self.create(
@@ -147,12 +147,12 @@ class TestCurrencyExport(TestExport):
             '<span data-oe-model="{obj._model._name}" data-oe-id="{obj.id}" '
                   'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
-                      '{symbol} '
+                      u'{symbol}\N{NO-BREAK SPACE}'
                       '<span class="oe_currency_value">0.12</span>'
                       '</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ),)
+            ).encode('utf-8'),)
 
     def test_currency_precision(self):
         """ Precision should be the currency's, not the float field's
@@ -168,10 +168,10 @@ class TestCurrencyExport(TestExport):
                   'data-oe-field="value" data-oe-type="monetary" '
                   'data-oe-expression="obj.value">'
                       '<span class="oe_currency_value">0.12</span>'
-                      ' {symbol}</span>'.format(
+                      u'\N{NO-BREAK SPACE}{symbol}</span>'.format(
                 obj=obj,
                 symbol=currency.symbol.encode('utf-8')
-            ),)
+            ).encode('utf-8'),)
 
 class TestTextExport(TestBasicExport):
     def test_text(self):

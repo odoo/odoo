@@ -1,6 +1,8 @@
-==========
-Web Client
-==========
+:banner: banners/build_interface_ext.jpg
+
+=============================
+Building Interface Extensions
+=============================
 
 .. highlight:: javascript
 
@@ -19,7 +21,7 @@ or extend existing business systems of Odoo, see :doc:`backend`.
     * jQuery_
     * `Underscore.js`_
 
-    It also requires an installed Odoo, and Git_.
+    It also requires :ref:`an installed Odoo <setup/install>`, and Git_.
 
 
 A Simple Module
@@ -45,7 +47,14 @@ If you browse the ``petstore`` folder, you should see the following content:
 .. code-block:: text
 
     oepetstore
+    |-- images
+    |   |-- alligator.jpg
+    |   |-- ball.jpg
+    |   |-- crazy_circle.jpg
+    |   |-- fish.jpg
+    |   `-- mice.jpg
     |-- __init__.py
+    |-- oepetstore.message_of_the_day.csv
     |-- __openerp__.py
     |-- petstore_data.xml
     |-- petstore.py
@@ -78,9 +87,9 @@ sub-folders are conventional and not strictly necessary.
     currently look like::
 
         openerp.oepetstore = function(instance, local) {
-            var _t = openerp.web._t,
-                _lt = openerp.web._lt;
-            var QWeb = openerp.web.qweb;
+            var _t = instance.web._t,
+                _lt = instance.web._lt;
+            var QWeb = instance.web.qweb;
 
             local.HomePage = instance.Widget.extend({
                 start: function() {
@@ -88,8 +97,8 @@ sub-folders are conventional and not strictly necessary.
                 },
             });
 
-            openerp.web.client_actions.add(
-                'petstore.homepage', 'local.HomePage');
+            instance.web.client_actions.add(
+                'petstore.homepage', 'instance.oepetstore.HomePage');
         }
 
 Which only prints a small message in the browser's console.
@@ -139,7 +148,7 @@ In Odoo web, modules are declared as functions set on the global ``openerp``
 variable. The function's name must be the same as the addon (in this case
 ``oepetstore``) so the framework can find it, and automatically initialize it.
 
-When the web client decides to load your module, it'll call the root function
+When the web client loads your module it will call the root function
 and provide two parameters:
 
 * the first parameter is the current instance of the Odoo web client, it gives
@@ -159,7 +168,7 @@ Much as modules, and contrary to most object-oriented languages, javascript
 does not build in *classes*\ [#classes]_ although it provides roughly
 equivalent (if lower-level and more verbose) mechanisms.
 
-For simplicity and developer-friendliness purposes, Odoo web provides a class
+For simplicity and developer-friendliness Odoo web provides a class
 system based on John Resig's `Simple JavaScript Inheritance`_.
 
 New classes are defined by calling the :func:`~openerp.web.Class.extend`
@@ -298,7 +307,7 @@ This line at the end of the file::
         'petstore.homepage', 'instance.oepetstore.HomePage');
 
 registers our basic widget as a client action. Client actions will be
-explained later in the guide, for now this is just what allows our widget to
+explained later, for now this is just what allows our widget to
 be called and displayed when we select the
 :menuselection:`Pet Store --> Pet Store --> Home Page` menu.
 
@@ -326,9 +335,9 @@ section of page they're in charge of (as a jQuery_ object). Widget content
 should be inserted there. By default, :attr:`~openerp.Widget.$el` is an
 empty ``<div>`` element.
 
-A ``<div>`` element is usually invisible for the user if it does not
-have any content (or specific styles giving it a size) which is why nothing
-is displayed on the page when ``HomePage`` is launched.
+A ``<div>`` element is usually invisible to the user if it has no content (or
+without specific styles giving it a size) which is why nothing is displayed
+on the page when ``HomePage`` is launched.
 
 Let's add some content to the widget's root element, using jQuery::
 
@@ -344,10 +353,10 @@ That message will now appear when you open :menuselection:`Pet Store
 .. note::
 
     to refresh the javascript code loaded in Odoo Web, you will need to reload
-    the page. There is no need to restart the Odoo server
+    the page. There is no need to restart the Odoo server.
 
-The ``HomePage`` widget is used by Odoo Web and managed automatically, to
-learn how to use a widget "from scratch" let's create a new one::
+The ``HomePage`` widget is used by Odoo Web and managed automatically.
+To learn how to use a widget "from scratch" let's create a new one::
 
     local.GreetingsWidget = instance.Widget.extend({
         start: function() {
@@ -429,7 +438,7 @@ of another widget, and exist on behalf of it. We call the container the
 *parent*, and the contained widget the *child*.
 
 Due to multiple technical and conceptual reasons, it is necessary for a widget
-to know who is his parent and who are its children.
+to know who is its parent and who are its children.
 
 :func:`~openerp.Widget.getParent`
     can be used to get the parent of a widget::
@@ -499,9 +508,9 @@ manipulating (and adding to) their DOM::
 
     this.$el.append("<div>Hello dear Odoo user!</div>");
 
-This allows generating and displaying any type of content, but tends to
-rapidly get unwieldy when generating significant amounts of DOM (lots of
-duplication, quoting issues, ...)
+This allows generating and displaying any type of content, but gets unwieldy
+when generating significant amounts of DOM (lots of duplication, quoting
+issues, ...)
 
 As many other environments, Odoo's solution is to use a `template engine`_.
 Odoo's template engine is called :ref:`reference/qweb`.
@@ -528,7 +537,7 @@ characteristics:
     structural extensibility where an XML-based templating engine can be
     generically altered using e.g. XPath or CSS and a tree-alteration DSL (or
     even just XSLT). This flexibility and extensibility is a core
-    characteristic of Odoo, and losting it was considered unacceptable.
+    characteristic of Odoo, and losing it was considered unacceptable.
 
 Using QWeb
 ----------
@@ -569,7 +578,7 @@ the template can be set directly on the widget via its
         },
     });
 
-Although the result look similar, there are two differences between these
+Although the result looks similar, there are two differences between these
 usages:
 
 * with the second version, the template is rendered right before
@@ -907,9 +916,8 @@ Selecting DOM elements within a widget can be performed by calling the
 
     this.$el.find("input.my_input")...
 
-But because it's an extremely common operation, :class:`~openerp.Widget`
-provides an equivalent shortcut through the :func:`~openerp.Widget.$`
-method::
+But because it's a common operation, :class:`~openerp.Widget` provides an
+equivalent shortcut through the :func:`~openerp.Widget.$` method::
 
     local.MyWidget = instance.Widget.extend({
         start: function() {
@@ -1100,7 +1108,7 @@ Exercise
     Then, modify the ``HomePage`` widget to instantiate ``ColorInputWidget``
     and display it. The ``HomePage`` widget should also display an empty
     rectangle. That rectangle must always, at any moment, have the same
-    background color than the color in the ``color`` property of the
+    background color as the color in the ``color`` property of the
     ``ColorInputWidget`` instance.
 
     Use QWeb to generate all HTML.
@@ -1121,6 +1129,7 @@ Exercise
                     },
                     start: function() {
                         this.input_changed();
+                        return this._super();
                     },
                     input_changed: function() {
                         var color = [
@@ -1136,9 +1145,9 @@ Exercise
                 local.HomePage = instance.Widget.extend({
                     template: "HomePage",
                     start: function() {
-                        this.colorInput = new local.ColorInputWidget(this)
-                            .on("change:color", this, this.color_changed);
-                            .appendTo(this.$el);
+                        this.colorInput = new local.ColorInputWidget(this);
+                        this.colorInput.on("change:color", this, this.color_changed);
+                        return this.colorInput.appendTo(this.$el);
                     },
                     color_changed: function() {
                         this.$(".oe_color_div").css("background-color", this.colorInput.get("color"));
@@ -1356,11 +1365,10 @@ by the server to translate all the messages of the application. Another one is
 the time zone of the user, used to compute correctly dates and times if Odoo
 is used by people in different countries.
 
-The ``argument`` is necessary in all methods, because if we forget it bad
-things could happen (like the application not being translated
-correctly). That's why, when you call a model's method, you should always give
-it to that argument. The solution to achieve that is to use
-:class:`openerp.web.CompoundContext`.
+The ``argument`` is necessary in all methods, otherwise bad things could
+happen (such as the application not being translated correctly). That's why,
+when you call a model's method, you should always provide that argument. The
+solution to achieve that is to use :class:`openerp.web.CompoundContext`.
 
 :class:`~openerp.web.CompoundContext` is a class used to pass the user's
 context (with language, time zone, etc...) to the server as well as adding new
@@ -1423,7 +1431,7 @@ versus::
   :class:`~openerp.web.Query` for its customization options.
 
 When the query is set up as desired, simply call
-:func:`~openerp.web.Query.all` to perform the actual query and return a
+:func:`~openerp.web.Query.all` to execute it and return a
 deferred to its result. The result is the same as
 :py:meth:`~openerp.models.Model.read`'s, an array of dictionaries where each
 dictionary is a requested record, with each requested field a dictionary key.
@@ -1506,7 +1514,7 @@ Exercises
     ``product.product`` using a special category *Pet Toys*. You can see the
     pre-generated toys and add new ones by going to
     :menuselection:`Pet Store --> Pet Store --> Pet Toys`. You will probably
-    need to explore ``product.product`` in order to create the right domain to
+    need to explore ``product.product`` to create the right domain to
     select just pet toys.
 
     In Odoo, images are generally stored in regular fields encoded as
@@ -1560,8 +1568,10 @@ Exercises
                             .filter([['categ_id.name', '=', "Pet Toys"]])
                             .limit(5)
                             .all()
-                            .then(function (result) {
-                                self.$el.append(QWeb.render('PetToys', {item: item}));
+                            .then(function (results) {
+                                _(results).each(function (item) {
+                                    self.$el.append(QWeb.render('PetToy', {item: item}));
+                                });
                             });
                     }
                 });
@@ -1578,7 +1588,7 @@ Exercises
                         <div class="oe_petstore_homepage_right"></div>
                     </div>
                 </t>
-                <t t-name="MessageofTheDay">
+                <t t-name="MessageOfTheDay">
                     <div class="oe_petstore_motd">
                         <p class="oe_mywidget_message_of_the_day"></p>
                     </div>
@@ -1732,7 +1742,7 @@ attributes are:
             <t t-name="PetToy">
                 <div class="oe_petstore_pettoy" t-att-data-id="item.id">
                     <p><t t-esc="item.name"/></p>
-                    <p><img t-attf-src="data:image/jpg;base64,#{item.image}"/></p>
+                    <p><img t-attf-src="data:image/jpg;base64,{{item.image}}"/></p>
                 </div>
             </t>
 
@@ -1828,10 +1838,10 @@ Views may also want to handle search queries by overriding
 The Form View Fields
 --------------------
 
-A common Odoo web need is the extension of the form view to add new ways of
-displaying form fields.
+A common need is the extension of the web form view to add new ways of
+displaying fields.
 
-All built-in fields have a default display implementation, creating a new
+All built-in fields have a default display implementation, a new
 form widget may be necessary to correctly interact with a new field type
 (e.g. a :term:`GIS` field) or to provide new representations and ways to
 interact with existing field types (e.g. validate
@@ -1859,7 +1869,7 @@ simply use the ``widget`` attribute in the view's XML description:
 Fields are instantiated by the form view after it has read its XML description
 and constructed the corresponding HTML representing that description. After
 that, the form view will communicate with the field objects using some
-methods. Theses methods are defined by the ``FieldInterface``
+methods. These methods are defined by the ``FieldInterface``
 interface. Almost all fields inherit the ``AbstractField`` abstract
 class. That class defines some default mechanisms that need to be implemented
 by most fields.
@@ -1914,13 +1924,13 @@ Creating a New Type of Field
 ''''''''''''''''''''''''''''
 
 In this part we will explain how to create a new type of field. The example
-here will be to re-implement the ``FieldChar`` class and explain progressively
+here will be to re-implement the ``FieldChar`` class and progressively explain
 each part.
 
 Simple Read-Only Field
 """"""""""""""""""""""
 
-Here is a first implementation that will only be able to display a text. The
+Here is a first implementation that will only display text. The
 user will not be able to modify the content of the field.
 
 .. code-block:: javascript
@@ -1960,16 +1970,16 @@ none is specified by the form view (here we assume the default value of a
 Read-Write Field
 """"""""""""""""
 
-Fields that only display their content and don't give the possibility to the
-user to modify it can be useful, but most fields in Odoo allow edition
-too. This makes the field classes more complicated, mostly because fields are
+Read-only fields, which only display content and don't allow the
+user to modify it can be useful, but most fields in Odoo also allow editing.
+This makes the field classes more complicated, mostly because fields are
 supposed to handle both and editable and non-editable mode, those modes are
 often completely different (for design and usability purpose) and the fields
-must be able to switch from one mode to another at any moment.
+must be able to switch between modes at any moment.
 
 To know in which mode the current field should be, the ``AbstractField`` class
 sets a widget property named ``effective_readonly``. The field should watch
-the changes in that widget property and display the correct mode
+for changes in that widget property and display the correct mode
 accordingly. Example::
 
     local.FieldChar2 = instance.web.form.AbstractField.extend({
@@ -2015,17 +2025,16 @@ accordingly. Example::
         </div>
     </t>
 
-In the ``start()`` method (which is called right after a widget has been
+In the ``start()`` method (which is called immediately after a widget has been
 appended to the DOM), we bind on the event ``change:effective_readonly``. That
-will allow use to redisplay the field each time the widget property
+allows us to redisplay the field each time the widget property
 ``effective_readonly`` changes. This event handler will call
 ``display_field()``, which is also called directly in ``start()``. This
 ``display_field()`` was created specifically for this field, it's not a method
-defined in ``AbstractField`` or any other class. This is the method we will
-use to display the content of the field depending we are in read-only mode or
-not.
+defined in ``AbstractField`` or any other class. We can use this method
+to display the content of the field depending on the current mode.
 
-From now on the conception of this field is quite typical, except there is a
+From now on the conception of this field is typical, except there is a
 lot of verifications to know the state of the ``effective_readonly`` property:
 
 * In the QWeb template used to display the content of the widget, it displays
@@ -2231,7 +2240,7 @@ the most useful being:
 
     .. _See the online documentation to know how to use it: http://www.w3schools.com/html/html5_geolocation.asp
 
-    Please also note that it wouldn't be very logical to allow the user to
+    Please also note that the user should not be able to
     click on that button when the form view is in read-only mode. So, this
     custom widget should handle correctly the ``effective_readonly`` property
     just like any field. One way to do this would be to make the button

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_intrastat_declaration_xml" model="ir.ui.view">
+            <field name="name">Intrastat XML Declaration</field>
+            <field name="model">l10n_be_intrastat_xml.xml_decl</field>
+            <field name="arch" type="xml">
+                <form string="XML Intratstat Declaration">
+                  <!-- Need the field in the view in order to be able to hide or show part of the view according the state -->
+                  <field name="state" invisible="1" />
+                  <field name="name" invisible="1"/>
+                  <group states="draft">
+                    <group>
+                      <field name="month"/>
+                      <field name="year"/>
+                      <field name="tax_code_id"/>
+                    </group>
+                    <group>
+                      <field name="arrivals"/>
+                      <field name="dispatches"/>
+                    </group>
+                  </group>
+                  <div states="download">
+                    <h2>Intrastat Declaration</h2>
+                    <p>Here is the XML file with your intrastat declaration: <field name="file_save" filename="name"/></p>
+                  </div>
+                  <footer>
+                    <group states="draft">
+                      <button name="create_xml" string="Create XML" type="object" default_focus="1" class="oe_highlight"  />
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel" />
+                    </group>
+                    <group states="download">
+                        <button string="Close" special="cancel" />
+                    </group>
+                  </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_intrastat_xml_declaration" model="ir.actions.act_window">
+            <field name="name">Intrastat Declaration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_be_intrastat_xml.xml_decl</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_intrastat_declaration_xml"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Intrastat Declaration"
+            parent="l10n_be.menu_finance_belgian_statement"
+            action="action_intrastat_xml_declaration"
+            id="l10n_be_intrastat_xml_declaration"
+            groups="account.group_account_manager"/>
+    </data>
+
+</openerp>

@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from itertools import chain
 import time
 
 from openerp import tools
@@ -41,7 +42,8 @@ class price_type(osv.osv):
         ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
         res = []
         for field in mf.browse(cr, uid, ids, context=context):
-            res.append((field.name, field.field_description))
+            if not (field.name, field.field_description) in res:
+                res.append((field.name, field.field_description))
         return res
 
     def _get_field_currency(self, cr, uid, fname, ctx):
@@ -196,6 +198,7 @@ class product_pricelist(osv.osv):
     def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
         date = context.get('date') or time.strftime('%Y-%m-%d')
+        date = date[0:10]
 
         products = map(lambda x: x[0], products_by_qty_by_partner)
         currency_obj = self.pool.get('res.currency')
@@ -224,7 +227,9 @@ class product_pricelist(osv.osv):
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
             prod_tmpl_ids = [tmpl.id for tmpl in products]
-            prod_ids = [product.id for product in tmpl.product_variant_ids for tmpl in products]
+            # all variants of all products
+            prod_ids = [p.id for p in
+                        list(chain.from_iterable([t.product_variant_ids for t in products]))]
         else:
             prod_ids = [product.id for product in products]
             prod_tmpl_ids = [product.product_tmpl_id.id for product in products]
@@ -247,24 +252,34 @@ class product_pricelist(osv.osv):
 
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
-            uom_price_already_computed = False
             results[product.id] = 0.0
-            price = False
             rule_id = False
+            price = False
+
+            # Final unit price is computed according to `qty` in the `qty_uom_id` UoM.
+            # An intermediary unit price may be computed according to a different UoM, in
+            # which case the price_uom_id contains that UoM.
+            # The final price will be converted to match `qty_uom_id`.
+            qty_uom_id = context.get('uom') or product.uom_id.id
+            price_uom_id = product.uom_id.id
+            qty_in_product_uom = qty
+            if qty_uom_id != product.uom_id.id:
+                try:
+                    qty_in_product_uom = product_uom_obj._compute_qty(
+                        cr, uid, context['uom'], qty, product.uom_id.id or product.uos_id.id)
+                except except_orm:
+                    # Ignored - incompatible UoM in context, use default product UoM
+                    pass
+
             for rule in items:
-                if 'uom' in context and product.uom_id and context['uom'] != product.uom_id.id:
-                    try:
-                        qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, context['uom'], qty, product.uom_id.id, dict(context.items() + [('raise-exception', False)]))
-                    except except_orm:
-                        qty_in_product_uom = qty
-                else:
-                    qty_in_product_uom = qty
-                if rule.min_quantity and qty_in_product_uom<rule.min_quantity:
+                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue
                 if is_product_template:
                     if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
                         continue
-                    if rule.product_id:
+                    if rule.product_id and \
+                            (product.product_variant_count > 1 or product.product_variant_ids[0].id != rule.product_id.id):
+                        # product rule acceptable on template if has only one variant
                         continue
                 else:
                     if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
@@ -285,9 +300,9 @@ class product_pricelist(osv.osv):
                     if rule.base_pricelist_id:
                         price_tmp = self._price_get_multi(cr, uid,
                                 rule.base_pricelist_id, [(product,
-                                qty, False)], context=context)[product.id]
+                                qty, partner)], context=context)[product.id]
                         ptype_src = rule.base_pricelist_id.currency_id.id
-                        uom_price_already_computed = True
+                        price_uom_id = qty_uom_id
                         price = currency_obj.compute(cr, uid,
                                 ptype_src, pricelist.currency_id.id,
                                 price_tmp, round=False,
@@ -302,12 +317,10 @@ class product_pricelist(osv.osv):
                         seller = product.seller_ids[0]
                     if seller:
                         qty_in_seller_uom = qty
-                        from_uom = context.get('uom') or product.uom_id.id
-                        seller_uom = seller.product_uom and seller.product_uom.id or False
-                        if seller_uom and from_uom and from_uom != seller_uom:
-                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, from_uom, qty, to_uom_id=seller_uom)
-                        else:
-                            uom_price_already_computed = True
+                        seller_uom = seller.product_uom.id
+                        if qty_uom_id != seller_uom:
+                            qty_in_seller_uom = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
+                        price_uom_id = seller_uom
                         for line in seller.pricelist_ids:
                             if line.min_quantity <= qty_in_seller_uom:
                                 price = line.price
@@ -317,34 +330,40 @@ class product_pricelist(osv.osv):
                         price_types[rule.base] = price_type_obj.browse(cr, uid, int(rule.base))
                     price_type = price_types[rule.base]
 
-                    uom_price_already_computed = True
-                    price = currency_obj.compute(cr, uid,
+                    # price_get returns the price in the context UoM, i.e. qty_uom_id
+                    price_uom_id = qty_uom_id
+                    price = currency_obj.compute(
+                            cr, uid,
                             price_type.currency_id.id, pricelist.currency_id.id,
-                            product_obj._price_get(cr, uid, [product],
-                            price_type.field, context=context)[product.id], round=False, context=context)
+                            product_obj._price_get(cr, uid, [product], price_type.field, context=context)[product.id],
+                            round=False, context=context)
 
                 if price is not False:
                     price_limit = price
                     price = price * (1.0+(rule.price_discount or 0.0))
                     if rule.price_round:
                         price = tools.float_round(price, precision_rounding=rule.price_round)
-                    if context.get('uom'):
-                        # compute price_surcharge based on reference uom
-                        factor = product_uom_obj.browse(cr, uid, context.get('uom'), context=context).factor
-                    else:
-                        factor = 1.0
-                    price += (rule.price_surcharge or 0.0) / factor
+
+                    convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
+                                                cr, uid, product.uom_id.id,
+                                                price, price_uom_id))
+                    if rule.price_surcharge:
+                        price_surcharge = convert_to_price_uom(rule.price_surcharge)
+                        price += price_surcharge
+
                     if rule.price_min_margin:
-                        price = max(price, price_limit+rule.price_min_margin)
+                        price_min_margin = convert_to_price_uom(rule.price_min_margin)
+                        price = max(price, price_limit + price_min_margin)
+
                     if rule.price_max_margin:
-                        price = min(price, price_limit+rule.price_max_margin)
+                        price_max_margin = convert_to_price_uom(rule.price_max_margin)
+                        price = min(price, price_limit + price_max_margin)
+
                     rule_id = rule.id
                 break
 
-            if price:
-                if 'uom' in context and not uom_price_already_computed:
-                    uom = product.uos_id or product.uom_id
-                    price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
+            # Final price conversion to target UoM
+            price = product_uom_obj._compute_price(cr, uid, price_uom_id, price, qty_uom_id)
 
             results[product.id] = (price, rule_id)
         return results
@@ -369,7 +388,7 @@ class product_pricelist_version(osv.osv):
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
             "dates do not overlaps with original version. You should change the dates " \
-            "and reactivate the pricelist", copy=False),
+            "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True, copy=True),
         'date_start': fields.date('Start Date', help="First valid date for the version."),
@@ -408,6 +427,13 @@ class product_pricelist_version(osv.osv):
             ['date_start', 'date_end'])
     ]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        # set active False to prevent overlapping active pricelist
+        # versions
+        if not default:
+            default = {}
+        default['active'] = False
+        return super(product_pricelist_version, self).copy(cr, uid, id, default, context=context)
 
 class product_pricelist_item(osv.osv):
     def _price_field_get(self, cr, uid, context=None):
@@ -467,8 +493,11 @@ class product_pricelist_item(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
-
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="For the rule to apply, bought/sold quantity must be greater than or equal to minimum quantity specified in this field."),
+        'min_quantity': fields.integer('Min. Quantity', required=True,
+            help="For the rule to apply, bought/sold quantity must be greater "
+              "than or equal to the minimum quantity specified in this field.\n"
+              "Expressed in the default UoM of the product."
+            ),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),

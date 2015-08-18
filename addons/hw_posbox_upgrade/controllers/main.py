@@ -29,17 +29,8 @@ upgrade_template = """
                     $.ajax({
                         url:'/hw_proxy/perform_upgrade/'
                     }).then(function(status){
-                        $('#upgrade').html('Upgrade Successful<br \\>Click to Restart the PosBox');
+                        $('#upgrade').html('Upgrade successful, restarting the posbox...');
                         $('#upgrade').off('click');
-                        $('#upgrade').click(function(){
-                            $.ajax({ url:'/hw_proxy/perform_restart' })
-                            $('#upgrade').text('Restarting');
-                            $('#upgrade').off('click');
-                            setTimeout(function(){
-                                window.location = '/'
-                            },30*1000);
-                        });
-
                     },function(){
                         $('#upgrade').text('Upgrade Failed');
                     });
@@ -73,9 +64,11 @@ upgrade_template = """
     <body>
         <h1>PosBox Software Upgrade</h1>
         <p>
-        This tool will help you perform an upgrade of the PosBox's software.
+        This tool will help you perform an upgrade of the PosBox's software over the
+	internet. 
+	<p></p>
         However the preferred method to upgrade the posbox is to flash the sd-card with
-        the <a href='http://nightly.openerp.com/trunk/posbox/'>latest image</a>. The upgrade
+        the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
         procedure is explained into to the <a href='/hw_proxy/static/doc/manual.pdf'>PosBox manual</a>
         </p>
         <p>
@@ -93,7 +86,6 @@ class PosboxUpgrader(hw_proxy.Proxy):
     def __init__(self):
         super(PosboxUpgrader,self).__init__()
         self.upgrading = threading.Lock()
-        self.last_upgrade = 0
 
     @http.route('/hw_proxy/upgrade', type='http', auth='none', )
     def upgrade(self):
@@ -102,25 +94,8 @@ class PosboxUpgrader(hw_proxy.Proxy):
     @http.route('/hw_proxy/perform_upgrade', type='http', auth='none')
     def perform_upgrade(self):
         self.upgrading.acquire()
-        if time.time() - self.last_upgrade < 30:
-            self.upgrading.release()
-            return 'UPTODATE'
-        else:
-            os.system('/bin/bash /home/pi/openerp/update.sh')
-            self.last_upgrade = time.time()
-            self.upgrading.release()
-            return 'SUCCESS'
 
-    @http.route('/hw_proxy/perform_restart', type='http', auth='none')
-    def perform_restart(self):
-        self.upgrading.acquire()
-        if time.time() - self.last_upgrade < 30:
-            self.upgrading.release()
-            return 'RESTARTED'
-        else:
-            os.system('/bin/bash /home/pi/openerp/restart.sh')
-            self.last_upgrade = time.time()
-            self.upgrading.release()
-            return 'SUCCESS'
-
+        os.system('/home/pi/posbox_update.sh')
         
+        self.upgrading.release()
+        return 'SUCCESS'

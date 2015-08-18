@@ -75,7 +75,6 @@ position.
     ],
     'demo': [],
     'installable': True,
-    'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

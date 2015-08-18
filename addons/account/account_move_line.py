@@ -42,68 +42,77 @@ class account_move_line(osv.osv):
         context = dict(context or {})
         initial_bal = context.get('initial_bal', False)
         company_clause = " "
-        if context.get('company_id', False):
-            company_clause = " AND " +obj+".company_id = %s" % context.get('company_id', False)
-        if not context.get('fiscalyear', False):
-            if context.get('all_fiscalyear', False):
+        query = ''
+        query_params = {}
+        if context.get('company_id'):
+            company_clause = " AND " +obj+".company_id = %(company_id)s"
+            query_params['company_id'] = context['company_id']
+        if not context.get('fiscalyear'):
+            if context.get('all_fiscalyear'):
                 #this option is needed by the aged balance report because otherwise, if we search only the draft ones, an open invoice of a closed fiscalyear won't be displayed
                 fiscalyear_ids = fiscalyear_obj.search(cr, uid, [])
             else:
                 fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         else:
             #for initial balance as well as for normal query, we check only the selected FY because the best practice is to generate the FY opening entries
-            fiscalyear_ids = [context['fiscalyear']]
+            fiscalyear_ids = context['fiscalyear']
+            if isinstance(context['fiscalyear'], (int, long)):
+                fiscalyear_ids = [fiscalyear_ids]
 
-        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
+        query_params['fiscalyear_ids'] = tuple(fiscalyear_ids) or (0,)
         state = context.get('state', False)
         where_move_state = ''
         where_move_lines_by_date = ''
 
-        if context.get('date_from', False) and context.get('date_to', False):
+        if context.get('date_from') and context.get('date_to'):
+            query_params['date_from'] = context['date_from']
+            query_params['date_to'] = context['date_to']
             if initial_bal:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < %(date_from)s)"
             else:
-                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= %(date_from)s AND date <= %(date_to)s)"
 
         if state:
             if state.lower() not in ['all']:
-                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-        if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
+                query_params['state'] = state
+                where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = %(state)s)"
+        if context.get('period_from') and context.get('period_to') and not context.get('periods'):
             if initial_bal:
                 period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
                 first_period = fiscalperiod_obj.search(cr, uid, [('company_id', '=', period_company_id)], order='date_start', limit=1)[0]
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, first_period, context['period_from'])
             else:
                 context['periods'] = fiscalperiod_obj.build_ctx_periods(cr, uid, context['period_from'], context['period_to'])
-        if context.get('periods', False):
+        if context.get('periods'):
+            query_params['period_ids'] = tuple(context['periods'])
             if initial_bal:
-                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s)" + where_move_state + where_move_lines_by_date
                 period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
                 if period_ids and period_ids[0]:
                     first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
-                    ids = ','.join([str(x) for x in context['periods']])
-                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN (%s)) %s %s" % (fiscalyear_clause, first_period.date_start, ids, where_move_state, where_move_lines_by_date)
+                    query_params['date_start'] = first_period.date_start
+                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND date_start <= %(date_start)s AND id NOT IN %(period_ids)s)" + where_move_state + where_move_lines_by_date
             else:
-                ids = ','.join([str(x) for x in context['periods']])
-                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
+                query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s AND id IN %(period_ids)s)" + where_move_state + where_move_lines_by_date
         else:
-            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN %(fiscalyear_ids)s)" + where_move_state + where_move_lines_by_date
 
-        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
+        if initial_bal and not context.get('periods') and not where_move_lines_by_date:
             #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
             #so we have to invalidate this query
             raise osv.except_osv(_('Warning!'),_("You have not supplied enough arguments to compute the initial balance, please select a period and a journal in the context."))
 
+        if context.get('journal_ids'):
+            query_params['journal_ids'] = tuple(context['journal_ids'])
+            query += ' AND '+obj+'.journal_id IN %(journal_ids)s'
 
-        if context.get('journal_ids', False):
-            query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
-
-        if context.get('chart_account_id', False):
+        if context.get('chart_account_id'):
             child_ids = account_obj._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
-            query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
+            query_params['child_ids'] = tuple(child_ids)
+            query += ' AND '+obj+'.account_id IN %(child_ids)s'
 
         query += company_clause
-        return query
+        return cr.mogrify(query, query_params)
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
@@ -181,7 +190,7 @@ class account_move_line(osv.osv):
                 'journal_id': obj_line.journal_id.analytic_journal_id.id,
                 'ref': obj_line.ref,
                 'move_id': obj_line.id,
-                'user_id': uid,
+                'user_id': obj_line.invoice.user_id.id or uid,
                }
 
     def create_analytic_lines(self, cr, uid, ids, context=None):
@@ -305,7 +314,8 @@ class account_move_line(osv.osv):
         if not id:
             return []
         ml = self.browse(cr, uid, id, context=context)
-        return map(lambda x: x.id, ml.move_id.line_id)
+        domain = (context or {}).get('on_write_domain', [])
+        return self.pool.get('account.move.line').search(cr, uid, domain + [['id', 'in', [l.id for l in ml.move_id.line_id]]], context=context)
 
     def _balance(self, cr, uid, ids, name, arg, context=None):
         if context is None:
@@ -451,7 +461,7 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Journal Entry', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
+        'move_id': fields.many2one('account.move', 'Journal Entry', ondelete="cascade", help="The move of this entry line.", select=2, required=True, auto_join=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Internal Note'),
         'ref': fields.related('move_id', 'ref', string='Reference', type='char', store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1, copy=False),
@@ -579,7 +589,8 @@ class account_move_line(osv.osv):
         res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+            cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index '
+                       'ON account_move_line (journal_id, period_id, state, create_uid, id DESC)')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('account_move_line_date_id_index',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
@@ -782,7 +793,7 @@ class account_move_line(osv.osv):
             ret_line = {
                 'id': line.id,
                 'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
-                'ref': line.move_id.ref,
+                'ref': line.move_id.ref or '',
                 'account_code': line.account_id.code,
                 'account_name': line.account_id.name,
                 'account_type': line.account_id.type,
@@ -799,56 +810,59 @@ class account_move_line(osv.osv):
             # Amount residual can be negative
             debit = line.debit
             credit = line.credit
-            total_amount = abs(debit - credit)
-            total_amount_currency = line.amount_currency
-            amount_residual = line.amount_residual
-            amount_residual_currency = line.amount_residual_currency
+            amount = line.amount_residual
+            amount_currency = line.amount_residual_currency
             if line.amount_residual < 0:
                 debit, credit = credit, debit
-                amount_residual = -amount_residual
-                amount_residual_currency = -amount_residual_currency
+                amount = -amount
+                amount_currency = -amount_currency
 
             # Get right debit / credit:
+            target_currency = target_currency or company_currency
             line_currency = line.currency_id or company_currency
             amount_currency_str = ""
             total_amount_currency_str = ""
-            if line.currency_id and line.amount_currency:
-                amount_currency_str = rml_parser.formatLang(amount_residual_currency, currency_obj=line.currency_id)
-                total_amount_currency_str = rml_parser.formatLang(total_amount_currency, currency_obj=line.currency_id)
-            if target_currency and line_currency == target_currency and target_currency != company_currency:
-                debit = debit > 0 and amount_residual_currency or 0.0
-                credit = credit > 0 and amount_residual_currency or 0.0
-                amount_currency_str = rml_parser.formatLang(amount_residual, currency_obj=company_currency)
-                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                total_amount_str = rml_parser.formatLang(total_amount_currency, currency_obj=target_currency)
+            if line_currency != company_currency:
+                total_amount = line.amount_currency
+                actual_debit = debit > 0 and amount_currency or 0.0
+                actual_credit = credit > 0 and amount_currency or 0.0
             else:
-                debit = debit > 0 and amount_residual or 0.0
-                credit = credit > 0 and amount_residual or 0.0
-                amount_str = rml_parser.formatLang(debit or credit, currency_obj=company_currency)
-                total_amount_str = rml_parser.formatLang(total_amount, currency_obj=company_currency)
-                if target_currency and target_currency != company_currency:
-                    amount_currency_str = rml_parser.formatLang(debit or credit, currency_obj=line_currency)
-                    total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                total_amount = abs(debit - credit)
+                actual_debit = debit > 0 and amount or 0.0
+                actual_credit = credit > 0 and amount or 0.0
+            if line_currency != target_currency:
+                amount_currency_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=line_currency)
+                total_amount_currency_str = rml_parser.formatLang(total_amount, currency_obj=line_currency)
+                ret_line['credit_currency'] = actual_credit
+                ret_line['debit_currency'] = actual_debit
+                if target_currency == company_currency:
+                    actual_debit = debit
+                    actual_credit = credit
+                    total_amount = debit or credit
+                else:
                     ctx = context.copy()
-                    if target_date:
-                        ctx.update({'date': target_date})
-                    debit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, debit, context=ctx)
-                    credit = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, credit, context=ctx)
-                    amount_str = rml_parser.formatLang(debit or credit, currency_obj=target_currency)
-                    total_amount = currency_obj.compute(cr, uid, company_currency.id, target_currency.id, total_amount, context=ctx)
-                    total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
+                    ctx.update({'date': line.date})
+                    total_amount = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, total_amount, context=ctx)
+                    actual_debit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_debit, context=ctx)
+                    actual_credit = currency_obj.compute(cr, uid, line_currency.id, target_currency.id, actual_credit, context=ctx)
+            amount_str = rml_parser.formatLang(actual_debit or actual_credit, currency_obj=target_currency)
+            total_amount_str = rml_parser.formatLang(total_amount, currency_obj=target_currency)
 
-            ret_line['credit'] = credit
-            ret_line['debit'] = debit
+            ret_line['debit'] = actual_debit
+            ret_line['credit'] = actual_credit
             ret_line['amount_str'] = amount_str
+            ret_line['total_amount_str'] = total_amount_str
             ret_line['amount_currency_str'] = amount_currency_str
-            ret_line['total_amount_str'] = total_amount_str # For partial reconciliations
             ret_line['total_amount_currency_str'] = total_amount_currency_str
             ret.append(ret_line)
         return ret
 
-    def list_partners_to_reconcile(self, cr, uid, context=None):
+
+    def list_partners_to_reconcile(self, cr, uid, context=None, filter_domain=False):
+        line_ids = []
+        if filter_domain:
+            line_ids = self.search(cr, uid, filter_domain, context=context)
+        where_clause = filter_domain and "AND l.id = ANY(%s)" or ""
         cr.execute(
              """SELECT partner_id FROM (
                 SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
@@ -858,10 +872,12 @@ class account_move_line(osv.osv):
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
                     AND l.state <> 'draft'
+                    %s
                     GROUP BY l.partner_id, p.last_reconciliation_date
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
-                ORDER BY last_reconciliation_date""")
+                ORDER BY last_reconciliation_date"""
+            % where_clause, (line_ids,))
         ids = [x[0] for x in cr.fetchall()]
         if not ids:
             return []
@@ -938,7 +954,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         company_list = []
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in lines:
             if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning!'), _('To reconcile the entries company should be the same for all entries.'))
             company_list.append(line.company_id.id)
@@ -1157,9 +1173,10 @@ class account_move_line(osv.osv):
         move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
             move_ids.add(line.move_id.id)
-            context['journal_id'] = line.journal_id.id
-            context['period_id'] = line.period_id.id
-            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
+            localcontext = dict(context)
+            localcontext['journal_id'] = line.journal_id.id
+            localcontext['period_id'] = line.period_id.id
+            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=localcontext)
         move_ids = list(move_ids)
         if check and move_ids:
             move_obj.validate(cr, uid, move_ids, context=context)
@@ -1177,9 +1194,11 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Unable to change tax!'), _('You cannot change the tax, you should remove and recreate lines.'))
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
-        if update_check:
-            if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
-                self._update_check(cr, uid, ids, context)
+
+        affects_move = any(f in vals for f in ('account_id', 'journal_id', 'period_id', 'move_id', 'debit', 'credit', 'date'))
+
+        if update_check and affects_move:
+            self._update_check(cr, uid, ids, context)
 
         todo_date = None
         if vals.get('date', False):
@@ -1203,7 +1222,8 @@ class account_move_line(osv.osv):
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
-        if check:
+
+        if affects_move and check and not context.get('novalidate'):
             done = []
             for line in self.browse(cr, uid, ids):
                 if line.move_id.id not in done:
@@ -1223,7 +1243,7 @@ class account_move_line(osv.osv):
         period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))
+                raise osv.except_osv(_('Error!'), _('You can not add/modify entries in a closed period %s of journal %s.') % (period.name, journal.name))
         if not result:
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
@@ -1345,24 +1365,23 @@ class account_move_line(osv.osv):
                 account_id = 'account_paid_id'
                 base_sign = 'ref_base_sign'
                 tax_sign = 'ref_tax_sign'
-            tmp_cnt = 0
+            base_adjusted = False
             for tax in tax_obj.compute_all(cr, uid, [tax_id], total, 1.00, force_excluded=False).get('taxes'):
                 #create the base movement
-                if tmp_cnt == 0:
-                    if tax[base_code]:
-                        tmp_cnt += 1
-                        if tax_id.price_include:
-                            total = tax['price_unit']
-                        newvals = {
-                            'tax_code_id': tax[base_code],
-                            'tax_amount': tax[base_sign] * abs(total),
-                        }
-                        if tax_id.price_include:
-                            if tax['price_unit'] < 0:
-                                newvals['credit'] = abs(tax['price_unit'])
-                            else:
-                                newvals['debit'] = tax['price_unit']
-                        self.write(cr, uid, [result], newvals, context=context)
+                if base_adjusted == False:
+                    base_adjusted = True
+                    if tax_id.price_include:
+                        total = tax['price_unit']
+                    newvals = {
+                        'tax_code_id': tax[base_code],
+                        'tax_amount': tax[base_sign] * abs(total),
+                    }
+                    if tax_id.price_include:
+                        if tax['price_unit'] < 0:
+                            newvals['credit'] = abs(tax['price_unit'])
+                        else:
+                            newvals['debit'] = tax['price_unit']
+                    self.write(cr, uid, [result], newvals, context=context)
                 else:
                     data = {
                         'move_id': vals['move_id'],
@@ -1378,9 +1397,10 @@ class account_move_line(osv.osv):
                         'credit': 0.0,
                         'debit': 0.0,
                     }
-                    if data['tax_code_id']:
-                        self.create(cr, uid, data, context)
+                    self.create(cr, uid, data, context)
                 #create the Tax movement
+                if not tax['amount'] and not tax[tax_code]:
+                    continue
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
@@ -1395,11 +1415,11 @@ class account_move_line(osv.osv):
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
                 }
-                if data['tax_code_id']:
-                    self.create(cr, uid, data, context)
+                self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if check and not context.get('novalidate') and (context.get('recompute', True) or journal.entry_posted):
+        recompute = journal.env.recompute and context.get('recompute', True)
+        if check and not context.get('novalidate') and (recompute or journal.entry_posted):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)

@@ -3,7 +3,13 @@ from openerp.tests import common
 
 class test_inherits(common.TransactionCase):
 
-    def test_access_from_child_to_parent_model(self):
+    def test_00_inherits(self):
+        """ Check that a many2one field with delegate=True adds an entry in _inherits """
+        daughter = self.env['test.inherit.daughter']
+
+        self.assertEqual(daughter._inherits, {'test.inherit.mother': 'template_id'})
+
+    def test_10_access_from_child_to_parent_model(self):
         """ check whether added field in model is accessible from children models (_inherits) """
         # This test checks if the new added column of a parent model
         # is accessible from the child model. This test has been written
@@ -15,7 +21,7 @@ class test_inherits(common.TransactionCase):
         self.assertIn('field_in_mother', mother._fields)
         self.assertIn('field_in_mother', daughter._fields)
 
-    def test_field_extension(self):
+    def test_20_field_extension(self):
         """ check the extension of a field in an inherited model """
         mother = self.env['test.inherit.mother']
         daughter = self.env['test.inherit.daughter']
@@ -41,7 +47,7 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(field.string, "Template")
         self.assertTrue(field.required)
 
-    def test_depends_extension(self):
+    def test_30_depends_extension(self):
         """ check that @depends on overridden compute methods extends dependencies """
         mother = self.env['test.inherit.mother']
         field = mother._fields['surname']
@@ -49,7 +55,7 @@ class test_inherits(common.TransactionCase):
         # the field dependencies are added
         self.assertItemsEqual(field.depends, ['name', 'field_in_mother'])
 
-    def test_selection_extension(self):
+    def test_40_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
         mother = self.env['test.inherit.mother']
 

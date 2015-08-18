@@ -41,6 +41,10 @@
   margin-right: 0px !important;
 }
 
+.apps-client {
+  border: 0;
+}
+
 .oe_notification {
   z-index: 1600;
 }
@@ -82,11 +86,13 @@
    */
 }
 .openerp.openerp_webclient_container {
+  height: 95%;
   height: calc(100% - 34px);
   overflow: auto;
 }
 @media (max-width: 768px) {
   .openerp.openerp_webclient_container {
+    height: 90%;
     height: calc(100% - 52px);
   }
 }
@@ -486,17 +492,17 @@
 .openerp .oe_button.oe_link span:hover {
   text-decoration: underline;
 }
-.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+.openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off, .openerp .modal-body .oe_star_on, .openerp .modal-body .oe_star_off {
   color: #cccccc;
   text-shadow: 0 0 2px black;
   vertical-align: top;
   position: relative;
   top: -8px;
 }
-.openerp .oe_webclient .oe_star_on:hover, .openerp .oe_webclient .oe_star_off:hover {
+.openerp .oe_webclient .oe_star_on:hover, .openerp .oe_webclient .oe_star_off:hover, .openerp .modal-body .oe_star_on:hover, .openerp .modal-body .oe_star_off:hover {
   text-decoration: none;
 }
-.openerp .oe_webclient .oe_star_on {
+.openerp .oe_webclient .oe_star_on, .openerp .modal-body .oe_star_on {
   color: gold;
 }
 .openerp p.oe_grey {
@@ -561,6 +567,8 @@
   border-radius: 3px;
   background: #f0f0fa;
   color: #4C4C4C;
+  display: inline-block;
+  word-break: break-word;
 }
 .openerp .oe_tag_dark {
   background: #7C7BAD;
@@ -597,12 +605,14 @@
 }
 .openerp .oe_tags .text-wrap {
   width: 100% !important;
+  position: static;
 }
 .openerp .oe_tags .text-wrap textarea {
   width: 100% !important;
 }
 .openerp .oe_tags .text-core {
-  min-height: 22px;
+  height: initial !important;
+  word-break: break-word;
 }
 .openerp .oe_tags .text-core .text-wrap .text-dropdown .text-list .text-suggestion em {
   font-style: italic;
@@ -897,7 +907,6 @@
 }
 .openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container {
   position: absolute;
-  position: static\9;
   top: 0;
   bottom: 0;
   left: 0;
@@ -1058,7 +1067,6 @@
 }
 .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
   position: absolute;
-  position: static\9;
   top: 0;
   bottom: 0;
   left: 0;
@@ -1957,7 +1965,7 @@
   border-right: none;
 }
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
-  width: 108px;
+  min-width: 108px;
   border-top: 1px solid #cacaca;
   margin-top: 4px;
   padding-top: 4px;
@@ -2368,6 +2376,10 @@
 }
 .openerp .oe_form_field_many2one input {
   padding-right: 13px;
+}
+.openerp.ui-autocomplete {
+  top: 0;
+  left: 0;
 }
 .openerp.ui-autocomplete li.oe_m2o_dropdown_option a {
   font-style: italic;
@@ -2783,6 +2795,10 @@
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
+.openerp .oe_list_content > tbody > tr > td.oe_list_field_boolean input:-moz-read-only {
+  filter: alpha(opacity=100);
+  opacity: 1;
+}
 .openerp .oe_list_content > tbody > tr:nth-child(odd) {
   background-color: #f0f0fa;
   background-color: #efeff8;
@@ -3064,6 +3080,7 @@ div.ui-widget-overlay {
 }
 .ui-menu .ui-menu-item a {
   padding: 1px 16px;
+  color: #404040;
 }
 .ui-menu .ui-menu-item a.ui-corner-all {
   -moz-border-radius: 0;
@@ -3251,11 +3268,23 @@ body.oe_single_form .oe_single_form_container {
 }
 
 @media print {
+  body {
+    height: auto !important;
+  }
+
+  .openerp#announcement_bar_table {
+    display: none;
+  }
+
   .openerp {
     text-shadow: none;
   }
+  .openerp .oe_application, .openerp .oe_view_manager_wrapper {
+    height: auto !important;
+  }
   .openerp .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body {
     overflow: visible;
+    position: relative !important;
   }
   .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
     display: none !important;

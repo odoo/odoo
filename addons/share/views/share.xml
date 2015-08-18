@@ -9,5 +9,13 @@
                 <script type="text/javascript" src="/share/static/src/js/share.js"></script>
             </xpath>
         </template>
+        <template id="webclient_bootstrap" name="Webclient Bootstrap - Share" inherit_id="web.webclient_bootstrap">
+            <xpath expr="//nav[@id='oe_main_menu_navbar']" position="attributes">
+                <attribute name="groups">base.group_user,base.group_portal,share.group_shared</attribute>
+            </xpath>
+            <xpath expr="//div[@class='openerp openerp_webclient_container']//div" position="attributes">
+                <attribute name="groups">base.group_user,base.group_portal,share.group_shared</attribute>
+            </xpath>
+        </template>
     </data>
 </openerp>

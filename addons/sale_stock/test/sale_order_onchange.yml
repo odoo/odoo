@@ -9,6 +9,7 @@
   !record {model: product.product, id: product_onchange1}:
     name: 'Devil Worship Book'
     list_price: 66.6
+    default_code: 'DWB00001'
 -
   In sale order to test process of onchange of Sale Order with access rights of saleman.
 -
@@ -26,5 +27,5 @@
   I verify that the onchange of product on sale order line was correctly triggered
 -
   !assert {model: sale.order, id: sale_order_onchange1, string: The onchange function of product was not correctly triggered}:
-    - order_line[0].name == u'Devil Worship Book'
+    - order_line[0].name == u'[DWB00001] Devil Worship Book'
     - order_line[0].price_unit == 66.6

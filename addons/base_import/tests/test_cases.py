@@ -210,9 +210,6 @@ class test_preview(TransactionCase):
         })
         self.assertTrue('error' in result)
 
-    def test_csv_errors(self):
-        Import, id = self.make_import()
-
         result = Import.parse_preview(self.cr, self.uid, id, {
                 'quoting': '"',
                 'separator': 'bob',
@@ -325,6 +322,28 @@ class test_convert_import_data(TransactionCase):
             ('', '6'),
         ])
 
+    def test_empty_rows(self):
+        Import = self.registry('base_import.import')
+        id = Import.create(self.cr, self.uid, {
+            'res_model': 'base_import.tests.models.preview',
+            'file': 'name,Some Value\n'
+                    'foo,1\n'
+                    '\n'
+                    'bar,2\n'
+                    '     \n'
+                    '\t \n'
+        })
+        record = Import.browse(self.cr, self.uid, id)
+        data, fields = Import._convert_import_data(
+            record, ['name', 'somevalue'],
+            {'quoting': '"', 'separator': ',', 'headers': True,})
+
+        self.assertItemsEqual(fields, ['name', 'somevalue'])
+        self.assertItemsEqual(data, [
+            ('foo', '1'),
+            ('bar', '2'),
+        ])
+
     def test_nofield(self):
         Import = self.registry('base_import.import')
 
@@ -356,3 +375,32 @@ class test_convert_import_data(TransactionCase):
             Import._convert_import_data,
             record, [False, False, False],
             {'quoting': '"', 'separator': ',', 'headers': True,})
+
+class test_failures(TransactionCase):
+    def test_big_attachments(self):
+        """
+        Ensure big fields (e.g. b64-encoded image data) can be imported and
+        we're not hitting limits of the default CSV parser config
+        """
+        import csv, cStringIO
+        from PIL import Image
+
+        im = Image.new('RGB', (1920, 1080))
+        fout = cStringIO.StringIO()
+
+        writer = csv.writer(fout, dialect=None)
+        writer.writerows([
+            ['name', 'db_datas'],
+            ['foo', im.tobytes().encode('base64')]
+        ])
+
+        Import = self.env['base_import.import']
+        imp = Import.create({
+            'res_model': 'ir.attachment',
+            'file': fout.getvalue()
+        })
+        [results] = imp.do(
+            ['name', 'db_datas'],
+            {'headers': True, 'separator': ',', 'quoting': '"'})
+        self.assertFalse(
+            results, "results should be empty on successful import")

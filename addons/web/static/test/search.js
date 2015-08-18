@@ -292,7 +292,7 @@ openerp.testing.section('search.defaults', {
             });
     });
     test("M2O default: value", {asserts: 5}, function (instance, $s, mock) {
-        var view = {inputs: []}, id = 4;
+        var view = {inputs: [], dataset: {get_context: function () {}}}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
@@ -322,7 +322,7 @@ openerp.testing.section('search.defaults', {
             });
     });
     test("M2O default: value array", {asserts: 2}, function (instance, $s, mock) {
-        var view = {inputs: []}, id = 5;
+        var view = {inputs: [], dataset: {get_context: function () {}}}, id = 5;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
@@ -344,7 +344,7 @@ openerp.testing.section('search.defaults', {
         });
     });
     test("M2O default: value", {asserts: 1}, function (instance, $s, mock) {
-        var view = {inputs: []}, id = 4;
+        var view = {inputs: [], dataset: {get_context: function () {}}}, id = 4;
         var f = new instance.web.search.ManyToOneField(
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},

@@ -1,0 +1,1794 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 08:18+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: website_forum
+#: model:email.template,body_html:website_forum.validation_email
+msgid ""
+"\n"
+"<p>\n"
+"    Hello ${object.name},\n"
+"</p>\n"
+"<p>\n"
+"    You have been invited to validate your email in order to get access to \"${object.company_id.name}\" Q/A Forums.\n"
+"</p>\n"
+"<p>\n"
+"    To validate your email, please click on the following link:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${ctx.get('token_url')}\">Validate my account for \"${object.company_id.name}\" Q/A Forums</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"<pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"</pre>"
+msgstr ""
+
+#. module: website_forum
+#: model:email.template,subject:website_forum.validation_email
+msgid "${object.company_id.name} Forums validation"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "(only one answer per question is allowed)"
+msgstr "(разрешается дать только один ответ на вопрос)"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "- it really helps to select the best questions and answers!"
+msgstr "- действительно помогает выбрать лучшие вопросы и ответы!"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "- no need to answer the same question twice. Also, please"
+msgstr "- не нужно отвечать на один и тот же вопрос два раза. Также, пожалуйста,"
+
+#. module: website_forum
+#: selection:forum.post.vote,vote:0
+msgid "-1"
+msgstr "-1"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:374
+#, python-format
+msgid ""
+"<p>A new answer for <i>%s</i> has been posted. <a "
+"href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
+msgstr "<p>Новый ответ для <i>%s</i> был опубликован. <a href=\"%s/forum/%s/question/%s\">Нажмите здесь, чтобы перейти к публикации.</a></p>"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:380
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s. <a "
+"href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
+msgstr "<p>Новый вопрос <i>%s</i> был задан по %s. <a href=\"%s/forum/%s/question/%s\">Нажмите здесь, чтобы перейти к вопросу.</a></p>"
+
+#. module: website_forum
+#: model:forum.forum,description:website_forum.forum_help
+msgid ""
+"<p>This community is for professionals and enthusiasts of our products and "
+"services.</p>"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.tag
+msgid ""
+"A tag is a label that categorizes your question with other,\n"
+"            similar questions. Using the right tags makes it easier for\n"
+"            others to find and answer your question."
+msgstr "Вкладка - это ярлык, который упорядочивает ваш вопрос с другими,\n            похожими вопросами. Используя правильные вкладки, остальные\n            могут легче найти и ответить на ваш вопрос."
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "About This Forum"
+msgstr "Об этом форуме"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_own:0
+msgid "Accept an answer on its own questions"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_answer_accept_all:0
+msgid "Accept an answer to all questions"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accept:0
+msgid "Accepting an answer"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.post,active:0 selection:forum.post,state:0
+msgid "Active"
+msgstr "Активный"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Activity"
+msgstr "Активность"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "All"
+msgstr "Все"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "Answer"
+msgstr "Ответ"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:411
+#: model:mail.message.subtype,description:website_forum.mt_answer_edit
+#: model:mail.message.subtype,name:website_forum.mt_answer_edit
+#, python-format
+msgid "Answer Edited"
+msgstr "Ответ отредактирован"
+
+#. module: website_forum
+#: field:forum.forum,karma_answer:0
+msgid "Answer a question"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_accepted:0
+msgid "Answer accepted"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_downvote:0
+msgid "Answer downvoted"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_flagged:0
+msgid "Answer flagged"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_answer_upvote:0
+msgid "Answer upvoted"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Answered on"
+msgstr "Отвечено на"
+
+#. module: website_forum
+#: field:forum.post,child_count:0 field:forum.post,child_ids:0
+#: view:website:website_forum.display_post
+#: view:website:website_forum.user_detail_full
+msgid "Answers"
+msgstr "Ответы"
+
+#. module: website_forum
+#: view:website:website_forum.header field:forum.forum,karma_ask:0
+msgid "Ask a Question"
+msgstr "Задать вопрос"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Ask your Question"
+msgstr "Задать ваш вопрос"
+
+#. module: website_forum
+#: field:forum.post,create_date:0
+#: view:website:website_forum.post_description_full
+msgid "Asked on"
+msgstr "Задан вопрос по"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Asked:"
+msgstr "Задано:"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_new:0
+msgid "Asking a question"
+msgstr ""
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Author"
+msgstr "Автор"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_1
+msgid "Autobiographer"
+msgstr "Автобиограф"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Back to"
+msgstr "Назад к"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "Badge \""
+msgstr "Значок \""
+
+#. module: website_forum
+#: field:res.users,badge_ids:0 view:website:website_forum.badge
+#: view:website:website_forum.header
+#: view:website:website_forum.user_detail_full
+msgid "Badges"
+msgstr "Значки"
+
+#. module: website_forum
+#: view:website:website_forum.badge
+msgid ""
+"Besides gaining reputation with your questions and answers,\n"
+"            you receive badges for being especially helpful. Badges\n"
+"            appear on your profile page, and your posts."
+msgstr "Помимо зарабатывания репутации с ваших вопросов и ответов,\n            вы получаете значки, будучи особо полезным. Значки\n            появляются на вашей странице профиля и ваших публикациях."
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Biography"
+msgstr "Биография"
+
+#. module: website_forum
+#: field:forum.post,can_accept:0
+msgid "Can Accept"
+msgstr "Можно принять"
+
+#. module: website_forum
+#: field:forum.post,can_answer:0
+msgid "Can Answer"
+msgstr "Можно ответить"
+
+#. module: website_forum
+#: field:forum.post,can_ask:0
+msgid "Can Ask"
+msgstr "Можно спросить"
+
+#. module: website_forum
+#: field:forum.post,can_close:0
+msgid "Can Close"
+msgstr "Можно закрыть"
+
+#. module: website_forum
+#: field:forum.post,can_comment:0
+msgid "Can Comment"
+msgstr "Можно прокомментировать"
+
+#. module: website_forum
+#: field:forum.post,can_comment_convert:0
+msgid "Can Convert to Comment"
+msgstr "Можно преобразовать в комментарий"
+
+#. module: website_forum
+#: field:forum.post,can_downvote:0
+msgid "Can Downvote"
+msgstr "Можно поставить минус"
+
+#. module: website_forum
+#: field:forum.post,can_edit:0
+msgid "Can Edit"
+msgstr "Можно отредактировать"
+
+#. module: website_forum
+#: field:forum.post,can_unlink:0
+msgid "Can Unlink"
+msgstr "Можно отменить связь"
+
+#. module: website_forum
+#: field:forum.post,can_upvote:0
+msgid "Can Upvote"
+msgstr "Можно поставить плюс"
+
+#. module: website_forum
+#: field:forum.forum,karma_retag:0
+msgid "Change question tags"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.user_badges
+msgid "Check available badges"
+msgstr "Проверить доступные значки"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_4
+#: model:gamification.challenge,name:website_forum.challenge_chief_commentator
+msgid "Chief Commentator"
+msgstr "Главный комментатор"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "City"
+msgstr "Город"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Click here to send a verification email allowing you to participate to the "
+"forum."
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_clickable_link:0
+msgid "Clickable links (Editor)"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Close"
+msgstr "Закрыть"
+
+#. module: website_forum
+#: field:forum.forum,karma_close_all:0
+msgid "Close all posts"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_close_own:0
+msgid "Close its own posts"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Close question"
+msgstr "Закрыть вопрос"
+
+#. module: website_forum
+#: field:forum.post,closed_uid:0
+msgid "Closed by"
+msgstr "Закрыто"
+
+#. module: website_forum
+#: field:forum.post,closed_date:0
+msgid "Closed on"
+msgstr "Закрыто"
+
+#. module: website_forum
+#: view:website:website_forum.display_post_answer
+#: view:website:website_forum.post_description_full
+msgid "Comment"
+msgstr "Комментарии"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_all:0
+msgid "Comment all posts"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_own:0
+msgid "Comment its own posts"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.post_comment
+msgid "Comment this post..."
+msgstr "Комментировать эту публикацию..."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_2
+#: model:gamification.challenge,name:website_forum.challenge_commentator
+#: model:gamification.goal.definition,name:website_forum.definition_commentator
+msgid "Commentator"
+msgstr "Комментатор"
+
+#. module: website_forum
+#: view:website:website_forum.display_post_answer
+msgid "Comments"
+msgstr "Комментарии"
+
+#. module: website_forum
+#: help:forum.post,website_message_ids:0
+msgid "Comments on forum post"
+msgstr "Комментирует сообщение в форуме"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_configure_profile
+msgid "Complete own biography"
+msgstr "Заполнить собственную биографию"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_configure_profile
+msgid "Completed own biography"
+msgstr "Заполнил собственную биографию"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid ""
+"Congratulations! Your email has just been validated. You may now participate"
+" to our forums."
+msgstr ""
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+#: field:forum.post,content:0
+msgid "Content"
+msgstr "Содержание"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_all:0
+msgid "Convert all answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_convert_own:0
+msgid "Convert its own answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: help:forum.post,is_correct:0
+msgid "Correct Answer or Answer on this question accepted."
+msgstr "Правильный ответ или Ответ на этот вопрос принят."
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Country"
+msgstr "Страна"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Country..."
+msgstr "Страна..."
+
+#. module: website_forum
+#: field:forum.post.vote,create_date:0
+msgid "Create Date"
+msgstr "Дата создания"
+
+#. module: website_forum
+#: field:forum.forum,create_uid:0 field:forum.post,create_uid:0
+#: field:forum.post.reason,create_uid:0 field:forum.post.vote,create_uid:0
+#: field:forum.tag,create_uid:0
+msgid "Created by"
+msgstr "Создано"
+
+#. module: website_forum
+#: field:forum.forum,create_date:0 field:forum.post.reason,create_date:0
+#: field:forum.tag,create_date:0
+msgid "Created on"
+msgstr "Создан"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_4
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
+msgid "Credible Question"
+msgstr "Достоверный вопрос"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_5
+#: model:gamification.challenge,name:website_forum.challenge_critic
+#: model:gamification.goal.definition,name:website_forum.definition_critic
+msgid "Critic"
+msgstr "Критик"
+
+#. module: website_forum
+#: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Дата последнего сообщения размещенного в отчете."
+
+#. module: website_forum
+#: field:forum.forum,karma_unlink_all:0
+msgid "Delete all posts"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_unlink_own:0
+msgid "Delete its own posts"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,description:0
+msgid "Description"
+msgstr "Описание"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_6
+#: model:gamification.challenge,name:website_forum.challenge_disciplined
+#: model:gamification.goal.definition,name:website_forum.definition_disciplined
+msgid "Disciplined"
+msgstr "Упорядочено"
+
+#. module: website_forum
+#: field:forum.forum,karma_downvote:0
+msgid "Downvote"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Edit Profile"
+msgstr "Редактировать профиль"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Edit Your Bio"
+msgstr "Редактировать вашу биографию"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Edit Your Previous Answer"
+msgstr "Редактировать ваш предыдущий ответ"
+
+#. module: website_forum
+#: field:forum.forum,karma_edit_all:0
+msgid "Edit all posts"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit answer"
+msgstr "Редактировать ответ"
+
+#. module: website_forum
+#: field:forum.forum,karma_edit_own:0
+msgid "Edit its own posts"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit question"
+msgstr "Редактировать вопрос"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Edit your Question"
+msgstr "Редактировать ваш вопрос"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_7
+#: model:gamification.challenge,name:website_forum.challenge_editor
+#: model:gamification.goal.definition,name:website_forum.definition_editor
+msgid "Editor"
+msgstr "Редактор"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Email"
+msgstr "Email"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_5
+#: model:gamification.challenge,name:website_forum.challenge_enlightened
+#: model:gamification.goal.definition,name:website_forum.definition_enlightened
+msgid "Enlightened"
+msgstr "Проинформировано"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Enter your Question"
+msgstr "Введите ваш вопрос"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_3
+#: model:gamification.challenge,name:website_forum.challenge_famous_question
+msgid "Famous Question"
+msgstr "Известный вопрос"
+
+#. module: website_forum
+#: field:forum.post,favourite_count:0
+msgid "Favorite Count"
+msgstr "Статистика избранного"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_5
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
+msgid "Favorite Question"
+msgstr "Избранный вопрос"
+
+#. module: website_forum
+#: field:forum.post,favourite_ids:0
+msgid "Favourite"
+msgstr "Избранное"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
+msgid "Favourite Question (1)"
+msgstr "Избранный вопрос (1)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
+msgid "Favourite Question (25)"
+msgstr "Избранный вопрос (25)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
+msgid "Favourite Question (5)"
+msgstr "Избранный вопрос (5)"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Favourite Questions"
+msgstr "Избранные вопросы"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Filter on"
+msgstr "Фильтр включен"
+
+#. module: website_forum
+#: field:forum.forum,karma_flag:0
+msgid "Flag a post as offensive"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Followed"
+msgstr "Подписано"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "Followed Questions"
+msgstr "Отслеживаемые вопросы"
+
+#. module: website_forum
+#: field:forum.forum,message_follower_ids:0
+#: field:forum.post,message_follower_ids:0
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+#: view:forum.post:website_forum.view_forum_post_search
+#: field:forum.post,forum_id:0 field:forum.post.vote,forum_id:0
+#: field:forum.tag,forum_id:0
+#: model:ir.actions.act_url,name:website_forum.action_open_forum
+#: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:website.menu,name:website_forum.menu_questions
+msgid "Forum"
+msgstr "Форум"
+
+#. module: website_forum
+#: field:gamification.badge,level:0
+msgid "Forum Badge Level"
+msgstr "Уровень значка форума"
+
+#. module: website_forum
+#: view:res.users:website_forum.view_users_form_forum
+msgid "Forum Karma"
+msgstr "Карма форума"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_form
+#: model:ir.model,name:website_forum.model_forum_post
+msgid "Forum Post"
+msgstr "Пост форума"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_list
+#: model:ir.actions.act_window,name:website_forum.action_forum_post
+msgid "Forum Posts"
+msgstr "Сообщения форума"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_list
+#: model:ir.actions.act_window,name:website_forum.action_forum_forum
+#: model:ir.model,name:website_forum.model_forum_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum view:website:website.layout
+msgid "Forums"
+msgstr "Форумы"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_badge
+msgid "Gamification badge"
+msgstr "Значок игрофикации"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr "Задача игрофикации"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_3
+#: model:gamification.challenge,name:website_forum.challenge_good_answer
+msgid "Good Answer"
+msgstr "Хороший ответ"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_answer
+msgid "Good Answer (6)"
+msgstr "Хороший ответ (6)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_9
+#: model:gamification.challenge,name:website_forum.challenge_good_question
+msgid "Good Question"
+msgstr "Хороший вопрос"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_4
+#: model:gamification.challenge,name:website_forum.challenge_great_answer
+msgid "Great Answer"
+msgstr "Прекрасный ответ"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_answer
+msgid "Great Answer (15)"
+msgstr "Прекрасный ответ (15)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_10
+#: model:gamification.challenge,name:website_forum.challenge_great_question
+msgid "Great Question"
+msgstr "Прекрасный вопрос"
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Group By"
+msgstr "Группировать по"
+
+#. module: website_forum
+#: field:forum.forum,faq:0
+msgid "Guidelines"
+msgstr "Руководство"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_6
+#: model:gamification.challenge,name:website_forum.challenge_guru
+msgid "Guru"
+msgstr "Специалист"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_guru
+msgid "Guru (15)"
+msgstr "Специалист (15)"
+
+#. module: website_forum
+#: field:forum.post,uid_has_answered:0
+msgid "Has Answered"
+msgstr "Ответил"
+
+#. module: website_forum
+#: field:forum.post,has_validated_answer:0
+msgid "Has a Validated Answered"
+msgstr "Есть подтвержденный ответ"
+
+#. module: website_forum
+#: model:forum.forum,name:website_forum.forum_help
+msgid "Help"
+msgstr "Помощь"
+
+#. module: website_forum
+#: help:forum.forum,message_summary:0 help:forum.post,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Содержит обзор чата (количество сообщений, ...). Это краткое изложение непосредственно в HTML формате для того, чтобы вставить в виды kanban."
+
+#. module: website_forum
+#: field:forum.forum,id:0 field:forum.post,id:0 field:forum.post.reason,id:0
+#: field:forum.post.vote,id:0 field:forum.tag,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: website_forum
+#: help:forum.forum,message_unread:0 help:forum.post,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Если проверенные новые сообщения требуют вашего внимания."
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid ""
+"If you close this question, it will be hidden for most users. Only\n"
+"            users having a high karma can see closed questions to moderate\n"
+"            them."
+msgstr "Если вы закроете этот вопрос, то он будет скрыт для большинства пользователей. Только\n            пользователи с высокой кармой могут видеть закрытые вопросы и изменять\n            их."
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "If you wanted to comment on the question or answer, just"
+msgstr "Если вы хотели прокомментировать вопрос или ответ, просто"
+
+#. module: website_forum
+#: field:forum.forum,message_is_follower:0
+#: field:forum.post,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Является подписчиком"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "It appears your email has not been verified."
+msgstr ""
+
+#. module: website_forum
+#: field:res.users,karma:0 view:website:website_forum.user_detail_full
+msgid "Karma"
+msgstr "Карма"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Gains"
+msgstr ""
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+msgid "Karma Requirements"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.post,karma_accept:0
+msgid "Karma to accept this answer"
+msgstr "Карма для принятия этого ответа"
+
+#. module: website_forum
+#: field:forum.post,karma_answer:0
+msgid "Karma to answer"
+msgstr "Карма для ответа"
+
+#. module: website_forum
+#: field:forum.post,karma_ask:0
+msgid "Karma to ask"
+msgstr "Карма для вопроса"
+
+#. module: website_forum
+#: field:forum.post,karma_close:0
+msgid "Karma to close"
+msgstr "Карма для закрытия"
+
+#. module: website_forum
+#: field:forum.post,karma_comment:0
+msgid "Karma to comment"
+msgstr "Карма для комментирования"
+
+#. module: website_forum
+#: field:forum.post,karma_downvote:0
+msgid "Karma to downvote"
+msgstr "Карма для минусования"
+
+#. module: website_forum
+#: field:forum.post,karma_edit:0
+msgid "Karma to edit"
+msgstr "Карма для редактирования"
+
+#. module: website_forum
+#: field:forum.post,karma_unlink:0
+msgid "Karma to unlink"
+msgstr "Карма для отмены связи"
+
+#. module: website_forum
+#: field:forum.post,karma_upvote:0
+msgid "Karma to upvote"
+msgstr "Карма для плюсования"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Keep Informed"
+msgstr "Держать в курсе"
+
+#. module: website_forum
+#: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
+msgid "Last Message Date"
+msgstr "Дата последнего сообщения"
+
+#. module: website_forum
+#: field:forum.forum,write_uid:0 field:forum.post.reason,write_uid:0
+#: field:forum.post.vote,write_uid:0 field:forum.tag,write_uid:0
+msgid "Last Updated by"
+msgstr "Последний раз обновлено"
+
+#. module: website_forum
+#: field:forum.forum,write_date:0 field:forum.post.reason,write_date:0
+#: field:forum.post.vote,write_date:0 field:forum.tag,write_date:0
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Last activity date"
+msgstr "Дата последней активности"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Last updated:"
+msgstr "Последнее обновление:"
+
+#. module: website_forum
+#: field:forum.forum,karma_editor_link_files:0
+msgid "Linking files (Editor)"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,message_ids:0 field:forum.post,message_ids:0
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: website_forum
+#: help:forum.forum,message_ids:0 help:forum.post,message_ids:0
+msgid "Messages and communication history"
+msgstr "Сообщения и журнал обращений"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Most answered"
+msgstr "Больше всего ответов"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Most voted"
+msgstr "Больше всего голосов"
+
+#. module: website_forum
+#: field:forum.post,user_favourite:0
+msgid "My Favourite"
+msgstr "Мое избранное"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "My Profile"
+msgstr "Мой профиль"
+
+#. module: website_forum
+#: field:forum.post,user_vote:0
+msgid "My Vote"
+msgstr "Мои голоса"
+
+#. module: website_forum
+#: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
+#: field:forum.tag,name:0
+msgid "Name"
+msgstr "Имя"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
+msgid "New Answer"
+msgstr "Новый ответ"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:11
+#: view:website:website.layout
+#, python-format
+msgid "New Forum"
+msgstr "Новый форум"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_question_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_question_new
+#: model:mail.message.subtype,name:website_forum.mt_question_new
+msgid "New Question"
+msgstr "Новый вопрос"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Newest"
+msgstr "Свежайшее"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_2
+#: model:gamification.challenge,name:website_forum.challenge_nice_answer
+msgid "Nice Answer"
+msgstr "Замечательный ответ"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_answer
+msgid "Nice Answer (4)"
+msgstr "Замечательный ответ (4)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_8
+msgid "Nice Quesiotn"
+msgstr "Замечательный вопрос"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_nice_question
+msgid "Nice Question"
+msgstr "Замечательный вопрос"
+
+#. module: website_forum
+#: view:website:website_forum.user_badges
+msgid "No badge yet!"
+msgstr "Пока ни одного значка!"
+
+#. module: website_forum
+#: view:website:website_forum.user_votes
+msgid "No vote given by you yet!"
+msgstr "Вы еще не оставили ни одного голоса!"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_2
+#: model:gamification.challenge,name:website_forum.challenge_notable_question
+msgid "Notable Question"
+msgstr "Достойный вопрос"
+
+#. module: website_forum
+#: field:forum.tag,posts_count:0
+msgid "Number of Posts"
+msgstr "Количество публикаций"
+
+#. module: website_forum
+#: field:forum.post,views:0
+msgid "Number of Views"
+msgstr "Количество просмотров"
+
+#. module: website_forum
+#: field:res.users,bronze_badge:0
+msgid "Number of bronze badges"
+msgstr "Количество бронзовых значков"
+
+#. module: website_forum
+#: field:res.users,gold_badge:0
+msgid "Number of gold badges"
+msgstr "Количество золотых значков"
+
+#. module: website_forum
+#: field:res.users,silver_badge:0
+msgid "Number of silver badges"
+msgstr "Количество серебряных значков"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Offensive"
+msgstr "Оскорбительно"
+
+#. module: website_forum
+#: view:website:website_forum.forum_all
+msgid "Our forums"
+msgstr "Наши форумы"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_23
+#: model:gamification.challenge,name:website_forum.challenge_peer_pressure
+#: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
+msgid "Peer Pressure"
+msgstr "Давление общественности"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "People"
+msgstr "Люди"
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Please enter a descriptive question (should finish by a '?')"
+msgstr "Пожалуйста, введите описательный вопрос (должен заканчиваться '?')"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Please enter a descriptive question (should finish with a '?')"
+msgstr "Пожалуйста, введите описательный вопрос (должен заканчиваться '?')"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr "Пожалуйста, введите действительный адрес электронной почты, чтобы получать уведомления об ответах или комментариях."
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Please remember that you can always"
+msgstr "Пожалуйста, помните, что вы всегда можете"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Please try to give a substantial answer."
+msgstr "Пожалуйста, постарайтесь дать содержательный ответ."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_1
+#: model:gamification.challenge,name:website_forum.challenge_popular_question
+msgid "Popular Question"
+msgstr "Популярный вопрос"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_popular_question
+msgid "Popular Question (150)"
+msgstr "Популярный вопрос (150)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_notable_question
+msgid "Popular Question (250)"
+msgstr "Популярный вопрос (250)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_famous_question
+msgid "Popular Question (500)"
+msgstr "Популярный вопрос (500)"
+
+#. module: website_forum
+#: field:forum.post.vote,post_id:0 view:website:website_forum.post_comment
+msgid "Post"
+msgstr "Опубликовать"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_reason
+msgid "Post Closing Reason"
+msgstr "Опубликовать причину закрытия"
+
+#. module: website_forum
+#: field:forum.post,website_message_ids:0
+msgid "Post Messages"
+msgstr "Опубликовать сообщения"
+
+#. module: website_forum
+#: field:forum.post.reason,name:0
+msgid "Post Reason"
+msgstr "Опубликовать причину"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Post Your Answer"
+msgstr "Опубликовать ваш ответ"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "Post Your Question"
+msgstr "Опубликовать ваш вопрос"
+
+#. module: website_forum
+#: field:forum.tag,post_ids:0
+#: model:ir.ui.menu,name:website_forum.menu_forum_posts
+msgid "Posts"
+msgstr "Посты"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Public profile"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_25
+#: model:gamification.challenge,name:website_forum.challenge_pundit
+#: model:gamification.goal.definition,name:website_forum.definition_pundit
+msgid "Pundit"
+msgstr "Эксперт"
+
+#. module: website_forum
+#: view:website:website.layout
+msgid "Q&A"
+msgstr "Вопрос-ответ"
+
+#. module: website_forum
+#: field:forum.post,parent_id:0
+msgid "Question"
+msgstr "Вопрос"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:414
+#: model:mail.message.subtype,description:website_forum.mt_question_edit
+#: model:mail.message.subtype,name:website_forum.mt_question_edit
+#, python-format
+msgid "Question Edited"
+msgstr "Вопрос отредактирован"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_downvote:0
+msgid "Question downvoted"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.404
+msgid "Question not found!"
+msgstr "Вопрос не найден!"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Question tools"
+msgstr "Инструменты вопроса"
+
+#. module: website_forum
+#: field:forum.forum,karma_gen_question_upvote:0
+msgid "Question upvoted"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Question:"
+msgstr "Вопрос:"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index view:website:website_forum.header
+#: view:website:website_forum.user_detail_full
+msgid "Questions"
+msgstr "Вопросы"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:376
+#, python-format
+msgid "Re: %s"
+msgstr "Re: %s"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Read Guidelines"
+msgstr "Читать руководство"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Real name"
+msgstr "Реальное имя"
+
+#. module: website_forum
+#: field:forum.post,closed_reason_id:0
+msgid "Reason"
+msgstr "Причина"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "Reason:"
+msgstr "Причина:"
+
+#. module: website_forum
+#: view:website:website_forum.404 view:website:website_forum.private_profile
+msgid "Return to the question list."
+msgstr "Вернуться к списку вопросов."
+
+#. module: website_forum
+#: view:website:website_forum.edit_post
+msgid "Save"
+msgstr "Сохранить"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_26
+#: model:gamification.challenge,name:website_forum.challenge_scholar
+#: model:gamification.goal.definition,name:website_forum.definition_scholar
+msgid "Scholar"
+msgstr "Ученый"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Search"
+msgstr "Искать"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Search a question..."
+msgstr "Поиск вопроса..."
+
+#. module: website_forum
+#: view:forum.post:website_forum.view_forum_post_search
+msgid "Search in Post"
+msgstr "Искать в публикации"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Seen:"
+msgstr "Просмотрено:"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_8
+#: model:gamification.challenge,name:website_forum.challenge_self_learner
+#: model:gamification.goal.definition,name:website_forum.definition_self_learner
+msgid "Self-Learner"
+msgstr "Самообучение"
+
+#. module: website_forum
+#: view:forum.forum:website_forum.view_forum_forum_form
+#: view:forum.post:website_forum.view_forum_post_form
+msgid "Send a message to the group"
+msgstr "Отправить сообщение группе"
+
+#. module: website_forum
+#: view:website:website_forum.404
+msgid "Sorry, this question is not available anymore."
+msgstr "Извините, этот вопрос больше не доступен."
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Sort by"
+msgstr "Сортировать по"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Stats"
+msgstr "Статистика"
+
+#. module: website_forum
+#: field:forum.post,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_6
+#: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
+msgid "Stellar Question"
+msgstr "Ведущий вопрос"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_7
+#: model:gamification.challenge,name:website_forum.challenge_student
+msgid "Student"
+msgstr "Студент"
+
+#. module: website_forum
+#: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
+msgid "Summary"
+msgstr "Резюме"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_31
+#: model:gamification.challenge,name:website_forum.challenge_supporter
+#: model:gamification.goal.definition,name:website_forum.definition_supporter
+msgid "Supporter"
+msgstr "Помощник"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_tag
+msgid "Tag"
+msgstr "Тег"
+
+#. module: website_forum
+#: field:forum.post,tag_ids:0 view:website:website_forum.ask_question
+#: view:website:website_forum.edit_post view:website:website_forum.forum_index
+#: view:website:website_forum.header view:website:website_forum.tag
+msgid "Tags"
+msgstr "Теги"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_32
+#: model:gamification.challenge,name:website_forum.challenge_taxonomist
+#: model:gamification.goal.definition,name:website_forum.definition_taxonomist
+msgid "Taxonomist"
+msgstr "Таксономист"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_1
+#: model:gamification.challenge,name:website_forum.challenge_teacher
+#: model:gamification.goal.definition,name:website_forum.definition_teacher
+msgid "Teacher"
+msgstr "Учитель"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "The question has been closed"
+msgstr "Вопрос был закрыт"
+
+#. module: website_forum
+#: help:forum.post.vote,recipient_id:0
+msgid "The user receiving the vote"
+msgstr ""
+
+#. module: website_forum
+#: view:website:website_forum.private_profile
+msgid "This profile is private!"
+msgstr "Это приватный профиль!"
+
+#. module: website_forum
+#: field:forum.post,name:0
+msgid "Title"
+msgstr "Заголовок"
+
+#. module: website_forum
+#: field:forum.post.vote,recipient_id:0
+msgid "To"
+msgstr "Кому"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "Toggle navigation"
+msgstr "Переключить навигацию"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "Unanswered"
+msgstr "Не отвечено"
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_unlink_all:0
+msgid "Unlink all comments"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,karma_comment_unlink_own:0
+msgid "Unlink its own comments"
+msgstr ""
+
+#. module: website_forum
+#: field:forum.forum,message_unread:0 field:forum.post,message_unread:0
+msgid "Unread Messages"
+msgstr "Непрочитанные сообщения"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Update"
+msgstr "Обновить"
+
+#. module: website_forum
+#: field:forum.post,write_date:0
+msgid "Update on"
+msgstr "Обновить"
+
+#. module: website_forum
+#: field:forum.post,write_uid:0
+msgid "Updated by"
+msgstr "Обновлено"
+
+#. module: website_forum
+#: field:forum.forum,karma_upvote:0
+msgid "Upvote"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_student
+msgid "Upvoted question (1)"
+msgstr "Вопрос с плюсами (1)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_great_question
+msgid "Upvoted question (15)"
+msgstr "Вопрос с плюсами (15)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_nice_question
+msgid "Upvoted question (4)"
+msgstr "Вопрос с плюсами (4)"
+
+#. module: website_forum
+#: model:gamification.goal.definition,name:website_forum.definition_good_question
+msgid "Upvoted question (6)"
+msgstr "Вопрос с плюсами (6)"
+
+#. module: website_forum
+#: field:forum.post.vote,user_id:0
+msgid "User"
+msgstr "Пользователь"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_res_users
+msgid "Users"
+msgstr "Пользователи"
+
+#. module: website_forum
+#: field:forum.post,is_correct:0
+msgid "Valid Answer"
+msgstr "Корректный ответ"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "View Your Badges"
+msgstr "Посмотреть ваши значки"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "Views"
+msgstr "Просмотры"
+
+#. module: website_forum
+#: field:forum.post.vote,vote:0
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Vote"
+msgstr "Голосовать"
+
+#. module: website_forum
+#: field:forum.post,vote_count:0 field:forum.post,vote_ids:0
+#: view:website:website_forum.user_detail_full
+msgid "Votes"
+msgstr "Голоса"
+
+#. module: website_forum
+#: view:website:website_forum.edit_profile
+msgid "Website"
+msgstr "Вебсайт"
+
+#. module: website_forum
+#: field:forum.forum,website_message_ids:0
+msgid "Website Messages"
+msgstr "Сообщения сайта"
+
+#. module: website_forum
+#: help:forum.forum,website_message_ids:0
+msgid "Website communication history"
+msgstr "История переписки сайта"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_description:0
+#: field:forum.post,website_meta_description:0
+#: field:forum.tag,website_meta_description:0
+msgid "Website meta description"
+msgstr "Сайт мета-описание"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_keywords:0
+#: field:forum.post,website_meta_keywords:0
+#: field:forum.tag,website_meta_keywords:0
+msgid "Website meta keywords"
+msgstr "Сайт мета ключевые слова"
+
+#. module: website_forum
+#: field:forum.forum,website_meta_title:0
+#: field:forum.post,website_meta_title:0 field:forum.tag,website_meta_title:0
+msgid "Website meta title"
+msgstr "Сайт мета название"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "Your answer"
+msgstr "Ваш ответ"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "[Closed]"
+msgstr "[Закрыто]"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "[Deleted]"
+msgstr "[Удалено]"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "and"
+msgstr "и"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "answers"
+msgstr "ответы"
+
+#. module: website_forum
+#: view:website:website_forum.badge view:website:website_forum.user_badges
+msgid "awarded users"
+msgstr "награжденные пользователи"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "back to question"
+msgstr "обратно к вопросу"
+
+#. module: website_forum
+#: view:website:website_forum.users
+msgid "badges:"
+msgstr "значки:"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid ""
+"be clear and concise, avoid unnecessary introductions (Hi, ... Thanks...)"
+msgstr "будьте ясны и кратки, избегайте ненужных вступлений (Привет, ... Спасибо...)"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "bio"
+msgstr "биография"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "bronze"
+msgstr "бронза"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_description_full
+msgid "by"
+msgstr "по"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by activity date"
+msgstr "по дате действия"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by creation date"
+msgstr "по дате создания"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by most answered"
+msgstr "по большинству ответов"
+
+#. module: website_forum
+#: view:website:website_forum.forum_index
+msgid "by most voted"
+msgstr "по большинству голосов"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_7
+msgid "contains offensive or malicious remarks"
+msgstr "содержит оскорбительные или злобные замечания"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "contributions"
+msgstr "вклады"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "don't forget to vote"
+msgstr "не забудьте проголосовать"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_1
+msgid "duplicate question"
+msgstr "дублировать вопрос"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "follower(s)"
+msgstr "подписчик(и)"
+
+#. module: website_forum
+#: view:website:website_forum.post_description_full
+msgid "for reason:"
+msgstr "по причине:"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "gold"
+msgstr "золото"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "karma"
+msgstr "карма"
+
+#. module: website_forum
+#: field:forum.post,karma_comment_convert:0
+msgid "karma to convert as a comment"
+msgstr "карма для преобразования в комментарий"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "last connection"
+msgstr "последнее подключение"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "location"
+msgstr "местоположение"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "member since"
+msgstr "участник с"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_4
+msgid "not a real question"
+msgstr "недействительный вопрос"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_6
+msgid "not relevant or out dated"
+msgstr "неактуальный или устаревший"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_2
+msgid "off-topic or not relevant"
+msgstr "не по теме или неактуальный"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.post_comment
+#: view:website:website_forum.post_description_full
+msgid "on"
+msgstr "на"
+
+#. module: website_forum
+#: view:website:website_forum.close_question
+msgid "or"
+msgstr "или"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "please, try to make your question interesting to others"
+msgstr "пожалуйста, постарайтесь, чтобы ваш вопрос был интересным для других"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "profile"
+msgstr "профиль"
+
+#. module: website_forum
+#: view:website:website_forum.ask_question
+msgid "provide enough details and, if possible, give an example"
+msgstr "предоставьте достаточно деталей или, если возможно, дайте пример"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "received this badge:"
+msgstr "получил этот значок:"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "revise your answers"
+msgstr "проверить ваши ответы"
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "silver"
+msgstr "серебро"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_8
+msgid "spam or advertising"
+msgstr "спам или реклама"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "stats"
+msgstr "статистика"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "time"
+msgstr "время"
+
+#. module: website_forum
+#: view:website:website_forum.header
+msgid "times"
+msgstr "раз"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_9
+msgid "too localized"
+msgstr "слишком локализовано"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_3
+msgid "too subjective and argumentative"
+msgstr "слишком субъективно и спорно"
+
+#. module: website_forum
+#: field:forum.post,self_reply:0
+msgid "unknown"
+msgstr "неизвестно"
+
+#. module: website_forum
+#: view:website:website_forum.post_answer
+msgid "use the commenting tool."
+msgstr "используйте инструмент для комментариев."
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "user"
+msgstr "пользователь"
+
+#. module: website_forum
+#: view:website:website_forum.badge_user
+msgid "users"
+msgstr "пользователи"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "views"
+msgstr "просмотры"
+
+#. module: website_forum
+#: view:website:website_forum.display_post view:website:website_forum.vote
+msgid "vote"
+msgstr "голос"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+#: view:website:website_forum.user_detail_full view:website:website_forum.vote
+msgid "votes"
+msgstr "голосов"
+
+#. module: website_forum
+#: view:website:website_forum.user_detail_full
+msgid "website"
+msgstr "веб-сайт"
+
+#. module: website_forum
+#: view:website:website_forum.display_post
+msgid "with"
+msgstr "с"

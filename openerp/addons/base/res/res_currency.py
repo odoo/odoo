@@ -134,6 +134,16 @@ class res_currency(osv.osv):
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if not default:
+            default = {}
+        default.update(name=_("%s (copy)")
+                       % (self.browse(cr, uid, id, context=context).name))
+        return super(res_currency, self).copy(
+            cr, uid, id, default=default, context=context)
+
     @api.v8
     def round(self, amount):
         """ Return `amount` rounded according to currency `self`. """
@@ -276,7 +286,7 @@ class res_currency(osv.osv):
             That function expects the number as first parameter and the currency id as second parameter. In case of failure it returns undefined."""
         function = ""
         for row in self.search_read(cr, uid, domain=[], fields=['id', 'name', 'symbol', 'rounding', 'position'], context=context):
-            digits = int(math.log10(1 / row['rounding']))
+            digits = int(math.ceil(math.log10(1 / row['rounding'])))
             symbol = row['symbol'] or row['name']
 
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(digits) + "]}, 0.00)"
@@ -300,5 +310,24 @@ class res_currency_rate(osv.osv):
         'name': lambda *a: time.strftime('%Y-%m-%d 00:00:00'),
     }
     _order = "name desc"
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if operator in ['=', '!=']:
+            try:
+                date_format = '%Y-%m-%d'
+                if context.get('lang'):
+                    lang_obj = self.pool['res.lang']
+                    lang_ids = lang_obj.search(cr, user, [('code', '=', context['lang'])], context=context)
+                    if lang_ids:
+                        date_format = lang_obj.browse(cr, user, lang_ids[0], context=context).date_format
+                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
+            except ValueError:
+                try:
+                    args.append(('rate', operator, float(name)))
+                except ValueError:
+                    return []
+                name = ''
+                operator = 'ilike'
+        return super(res_currency_rate, self).name_search(cr, user, name, args=args, operator=operator, context=context, limit=limit)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

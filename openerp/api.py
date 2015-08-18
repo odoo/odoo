@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013 OpenERP (<http://www.openerp.com>).
+#    Copyright (C) 2013-2014 OpenERP (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -38,9 +38,9 @@
 
     may also be written as::
 
-        env = Env(cr, uid, context)         # cr, uid, context wrapped in env
-        recs = env[MODEL]                   # retrieve an instance of MODEL
-        recs = recs.search(DOMAIN)          # search returns a recordset
+        env = Environment(cr, uid, context) # cr, uid, context wrapped in env
+        model = env[MODEL]                  # retrieve an instance of MODEL
+        recs = model.search(DOMAIN)         # search returns a recordset
         for rec in recs:                    # iterate over the records
             print rec.name
         recs.write(VALUES)                  # update all records in recs
@@ -68,12 +68,11 @@ from pprint import pformat
 from weakref import WeakSet
 from werkzeug.local import Local, release_local
 
-from openerp.tools import frozendict
+from openerp.tools import frozendict, classproperty
 
 _logger = logging.getLogger(__name__)
 
 # The following attributes are used, and reflected on wrapping methods:
-#  - method._api: decorator function, used for re-applying decorator
 #  - method._constrains: set by @constrains, specifies constraint dependencies
 #  - method._depends: set by @depends, specifies compute dependencies
 #  - method._returns: set by @returns, specifies return model
@@ -81,10 +80,11 @@ _logger = logging.getLogger(__name__)
 #  - method.clear_cache: set by @ormcache, used to clear the cache
 #
 # On wrapping method only:
+#  - method._api: decorator function, used for re-applying decorator
 #  - method._orig: original method
 #
 
-WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_api', '_constrains',
+WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
                  '_depends', '_onchange', '_returns', 'clear_cache')
 
 INHERITED_ATTRS = ('_returns',)
@@ -120,14 +120,18 @@ class Meta(type):
 identity = lambda x: x
 
 def decorate(method, attr, value):
-    """ Decorate `method` or its original method. """
-    # decorate the original method, and re-apply the api decorator, if any
-    orig = getattr(method, '_orig', method)
-    setattr(orig, attr, value)
-    return getattr(method, '_api', identity)(orig)
+    """ Decorate ``method`` or its original method. """
+    if getattr(method, '_api', False):
+        # decorate the original method, and re-apply the api decorator
+        setattr(method._orig, attr, value)
+        return method._api(method._orig)
+    else:
+        # simply decorate the method itself
+        setattr(method, attr, value)
+        return method
 
 def propagate(from_method, to_method):
-    """ Propagate decorators from `from_method` to `to_method`, and return the
+    """ Propagate decorators from ``from_method`` to ``to_method``, and return the
         resulting method.
     """
     if from_method:
@@ -197,14 +201,14 @@ def depends(*args):
 
 
 def returns(model, downgrade=None):
-    """ Return a decorator for methods that return instances of `model`.
+    """ Return a decorator for methods that return instances of ``model``.
 
         :param model: a model name, or ``'self'`` for the current model
 
-        :param downgrade: a function `downgrade(value)` to convert the
-            record-style `value` to a traditional-style output
+        :param downgrade: a function ``downgrade(value)`` to convert the
+            record-style ``value`` to a traditional-style output
 
-        The decorator adapts the method output to the api style: `id`, `ids` or
+        The decorator adapts the method output to the api style: ``id``, ``ids`` or
         ``False`` for the traditional style, and recordset for the record style::
 
             @model
@@ -227,8 +231,8 @@ def returns(model, downgrade=None):
     return lambda method: decorate(method, '_returns', (model, downgrade))
 
 
-def make_wrapper(method, old_api, new_api):
-    """ Return a wrapper method for `method`. """
+def make_wrapper(decorator, method, old_api, new_api):
+    """ Return a wrapper method for ``method``. """
     def wrapper(self, *args, **kwargs):
         # avoid hasattr(self, '_ids') because __getattr__() is overridden
         if '_ids' in self.__dict__:
@@ -240,14 +244,15 @@ def make_wrapper(method, old_api, new_api):
     for attr in WRAPPED_ATTRS:
         if hasattr(method, attr):
             setattr(wrapper, attr, getattr(method, attr))
+    wrapper._api = decorator
     wrapper._orig = method
 
     return wrapper
 
 
 def get_downgrade(method):
-    """ Return a function `downgrade(value)` that adapts `value` from
-        record-style to traditional-style, following the convention of `method`.
+    """ Return a function `downgrade(value)` that adapts ``value`` from
+        record-style to traditional-style, following the convention of ``method``.
     """
     spec = getattr(method, '_returns', None)
     if spec:
@@ -258,8 +263,8 @@ def get_downgrade(method):
 
 
 def get_upgrade(method):
-    """ Return a function `upgrade(self, value)` that adapts `value` from
-        traditional-style to record-style, following the convention of `method`.
+    """ Return a function `upgrade(self, value)` that adapts ``value`` from
+        traditional-style to record-style, following the convention of ``method``.
     """
     spec = getattr(method, '_returns', None)
     if spec:
@@ -274,7 +279,7 @@ def get_upgrade(method):
 
 def get_aggregate(method):
     """ Return a function `aggregate(self, value)` that aggregates record-style
-        `value` for a method decorated with ``@one``.
+        ``value`` for a method decorated with ``@one``.
     """
     spec = getattr(method, '_returns', None)
     if spec:
@@ -289,7 +294,7 @@ def get_aggregate(method):
 
 
 def get_context_split(method):
-    """ Return a function `split` that extracts the context from a pair of
+    """ Return a function ``split`` that extracts the context from a pair of
         positional and keyword arguments::
 
             context, args, kwargs = split(args, kwargs)
@@ -306,7 +311,7 @@ def get_context_split(method):
 
 
 def model(method):
-    """ Decorate a record-style method where `self` is a recordset, but its
+    """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::
 
             @api.model
@@ -320,9 +325,8 @@ def model(method):
 
             model.method(cr, uid, args, context=context)
 
-        Notice that no `ids` are passed to the method in the traditional style.
+        Notice that no ``ids`` are passed to the method in the traditional style.
     """
-    method._api = model
     split = get_context_split(method)
     downgrade = get_downgrade(method)
 
@@ -332,11 +336,11 @@ def model(method):
         result = method(recs, *args, **kwargs)
         return downgrade(result)
 
-    return make_wrapper(method, old_api, method)
+    return make_wrapper(model, method, old_api, method)
 
 
 def multi(method):
-    """ Decorate a record-style method where `self` is a recordset. The method
+    """ Decorate a record-style method where ``self`` is a recordset. The method
         typically defines an operation on records. Such a method::
 
             @api.multi
@@ -350,7 +354,6 @@ def multi(method):
 
             model.method(cr, uid, ids, args, context=context)
     """
-    method._api = multi
     split = get_context_split(method)
     downgrade = get_downgrade(method)
 
@@ -360,14 +363,15 @@ def multi(method):
         result = method(recs, *args, **kwargs)
         return downgrade(result)
 
-    return make_wrapper(method, old_api, method)
+    return make_wrapper(multi, method, old_api, method)
 
 
 def one(method):
-    """ Decorate a record-style method where `self` is expected to be a
+    """ Decorate a record-style method where ``self`` is expected to be a
         singleton instance. The decorated method automatically loops on records,
         and makes a list with the results. In case the method is decorated with
-        @returns, it concatenates the resulting instances. Such a method::
+        :func:`returns`, it concatenates the resulting instances. Such a
+        method::
 
             @api.one
             def method(self, args):
@@ -380,7 +384,6 @@ def one(method):
 
             names = model.method(cr, uid, ids, args, context=context)
     """
-    method._api = one
     split = get_context_split(method)
     downgrade = get_downgrade(method)
     aggregate = get_aggregate(method)
@@ -395,11 +398,11 @@ def one(method):
         result = [method(rec, *args, **kwargs) for rec in self]
         return aggregate(self, result)
 
-    return make_wrapper(method, old_api, new_api)
+    return make_wrapper(one, method, old_api, new_api)
 
 
 def cr(method):
-    """ Decorate a traditional-style method that takes `cr` as a parameter.
+    """ Decorate a traditional-style method that takes ``cr`` as a parameter.
         Such a method may be called in both record and traditional styles, like::
 
             # recs = model.browse(cr, uid, ids, context)
@@ -407,7 +410,6 @@ def cr(method):
 
             model.method(cr, args)
     """
-    method._api = cr
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -415,12 +417,11 @@ def cr(method):
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr, method, method, new_api)
 
 
 def cr_context(method):
-    """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
-    method._api = cr_context
+    """ Decorate a traditional-style method that takes ``cr``, ``context`` as parameters. """
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -429,12 +430,11 @@ def cr_context(method):
         result = method(self._model, cr, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_context, method, method, new_api)
 
 
 def cr_uid(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
-    method._api = cr_uid
+    """ Decorate a traditional-style method that takes ``cr``, ``uid`` as parameters. """
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -442,11 +442,11 @@ def cr_uid(method):
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid, method, method, new_api)
 
 
 def cr_uid_context(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `context` as
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``context`` as
         parameters. Such a method may be called in both record and traditional
         styles, like::
 
@@ -455,7 +455,6 @@ def cr_uid_context(method):
 
             model.method(cr, uid, args, context=context)
     """
-    method._api = cr_uid_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -464,15 +463,14 @@ def cr_uid_context(method):
         result = method(self._model, cr, uid, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_context, method, method, new_api)
 
 
 def cr_uid_id(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `id` as
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id`` as
         parameters. Such a method may be called in both record and traditional
         styles. In the record style, the method automatically loops on records.
     """
-    method._api = cr_uid_id
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -480,12 +478,12 @@ def cr_uid_id(method):
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_id, method, method, new_api)
 
 
 def cr_uid_id_context(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `id`,
-        `context` as parameters. Such a method::
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``id``,
+        ``context`` as parameters. Such a method::
 
             @api.cr_uid_id
             def method(self, cr, uid, id, args, context=None):
@@ -498,7 +496,6 @@ def cr_uid_id_context(method):
 
             model.method(cr, uid, id, args, context=context)
     """
-    method._api = cr_uid_id_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -507,15 +504,14 @@ def cr_uid_id_context(method):
         result = [method(self._model, cr, uid, id, *args, **kwargs) for id in self.ids]
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_id_context, method, method, new_api)
 
 
 def cr_uid_ids(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids` as
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids`` as
         parameters. Such a method may be called in both record and traditional
         styles.
     """
-    method._api = cr_uid_ids
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -523,12 +519,12 @@ def cr_uid_ids(method):
         result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_ids, method, method, new_api)
 
 
 def cr_uid_ids_context(method):
-    """ Decorate a traditional-style method that takes `cr`, `uid`, `ids`,
-        `context` as parameters. Such a method::
+    """ Decorate a traditional-style method that takes ``cr``, ``uid``, ``ids``,
+        ``context`` as parameters. Such a method::
 
             @api.cr_uid_ids_context
             def method(self, cr, uid, ids, args, context=None):
@@ -543,7 +539,6 @@ def cr_uid_ids_context(method):
 
         It is generally not necessary, see :func:`guess`.
     """
-    method._api = cr_uid_ids_context
     upgrade = get_upgrade(method)
 
     def new_api(self, *args, **kwargs):
@@ -552,7 +547,7 @@ def cr_uid_ids_context(method):
         result = method(self._model, cr, uid, self.ids, *args, **kwargs)
         return upgrade(self, result)
 
-    return make_wrapper(method, method, new_api)
+    return make_wrapper(cr_uid_ids_context, method, method, new_api)
 
 
 def v7(method_v7):
@@ -575,7 +570,7 @@ def v7(method_v7):
     method = frame.f_locals.get(method_v7.__name__)
     method_v8 = getattr(method, '_v8', method)
 
-    wrapper = make_wrapper(method_v7, method_v7, method_v8)
+    wrapper = make_wrapper(v7, method_v7, method_v7, method_v8)
     wrapper._v7 = method_v7
     wrapper._v8 = method_v8
     return wrapper
@@ -601,7 +596,7 @@ def v8(method_v8):
     method = frame.f_locals.get(method_v8.__name__)
     method_v7 = getattr(method, '_v7', method)
 
-    wrapper = make_wrapper(method_v8, method_v7, method_v8)
+    wrapper = make_wrapper(v8, method_v8, method_v7, method_v8)
     wrapper._v7 = method_v7
     wrapper._v8 = method_v8
     return wrapper
@@ -614,7 +609,7 @@ def noguess(method):
 
 
 def guess(method):
-    """ Decorate `method` to make it callable in both traditional and record
+    """ Decorate ``method`` to make it callable in both traditional and record
         styles. This decorator is applied automatically by the model's
         metaclass, and has no effect on already-decorated methods.
 
@@ -644,7 +639,7 @@ def guess(method):
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id':
+                elif names[3] == 'id' or names[3] == 'res_id':
                     if 'context' in names or kwname:
                         return cr_uid_id_context(method)
                     else:
@@ -663,8 +658,8 @@ def guess(method):
 
 
 def expected(decorator, func):
-    """ Decorate `func` with `decorator` if `func` is not wrapped yet. """
-    return decorator(func) if not hasattr(func, '_orig') else func
+    """ Decorate ``func`` with ``decorator`` if ``func`` is not wrapped yet. """
+    return decorator(func) if not hasattr(func, '_api') else func
 
 
 
@@ -679,6 +674,10 @@ class Environment(object):
         structure to manage recomputations.
     """
     _local = Local()
+
+    @classproperty
+    def envs(cls):
+        return cls._local.environments
 
     @classmethod
     @contextmanager
@@ -705,7 +704,7 @@ class Environment(object):
         args = (cr, uid, context)
 
         # if env already exists, return it
-        env, envs = None, cls._local.environments
+        env, envs = None, cls.envs
         for env in envs:
             if env.args == args:
                 return env
@@ -717,7 +716,7 @@ class Environment(object):
         self.cache = defaultdict(dict)      # {field: {id: value, ...}, ...}
         self.prefetch = defaultdict(set)    # {model_name: set(id), ...}
         self.computed = defaultdict(set)    # {field: set(id), ...}
-        self.dirty = set()                  # set(record)
+        self.dirty = defaultdict(set)       # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -727,7 +726,7 @@ class Environment(object):
         return self.registry[model_name]._browse(self, ())
 
     def __call__(self, cr=None, user=None, context=None):
-        """ Return an environment based on `self` with modified parameters.
+        """ Return an environment based on ``self`` with modified parameters.
 
             :param cr: optional database cursor to change the current cursor
             :param user: optional user/user id to change the current user
@@ -739,7 +738,7 @@ class Environment(object):
         return Environment(cr, uid, context)
 
     def ref(self, xml_id, raise_if_not_found=True):
-        """ return the record corresponding to the given `xml_id` """
+        """ return the record corresponding to the given ``xml_id`` """
         return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
 
     @property
@@ -791,7 +790,7 @@ class Environment(object):
             environments.
 
             :param spec: what to invalidate, a list of `(field, ids)` pair,
-                where `field` is a field object, and `ids` is a list of record
+                where ``field`` is a field object, and ``ids`` is a list of record
                 ids or ``None`` (to invalidate all records).
         """
         if not spec:
@@ -815,15 +814,33 @@ class Environment(object):
             env.computed.clear()
             env.dirty.clear()
 
+    def clear(self):
+        """ Clear all record caches, and discard all fields to recompute.
+            This may be useful when recovering from a failed ORM operation.
+        """
+        self.invalidate_all()
+        self.all.todo.clear()
+
+    @contextmanager
+    def clear_upon_failure(self):
+        """ Context manager that clears the environments (caches and fields to
+            recompute) upon exception.
+        """
+        try:
+            yield
+        except Exception:
+            self.clear()
+            raise
+
     def field_todo(self, field):
-        """ Check whether `field` must be recomputed, and returns a recordset
-            with all records to recompute for `field`.
+        """ Check whether ``field`` must be recomputed, and returns a recordset
+            with all records to recompute for ``field``.
         """
         if field in self.all.todo:
             return reduce(operator.or_, self.all.todo[field])
 
     def check_todo(self, field, record):
-        """ Check whether `field` must be recomputed on `record`, and if so,
+        """ Check whether ``field`` must be recomputed on ``record``, and if so,
             returns the corresponding recordset to recompute.
         """
         for recs in self.all.todo.get(field, []):
@@ -831,12 +848,12 @@ class Environment(object):
                 return recs
 
     def add_todo(self, field, records):
-        """ Mark `field` to be recomputed on `records`. """
+        """ Mark ``field`` to be recomputed on ``records``. """
         recs_list = self.all.todo.setdefault(field, [])
         recs_list.append(records)
 
     def remove_todo(self, field, records):
-        """ Mark `field` as recomputed on `records`. """
+        """ Mark ``field`` as recomputed on ``records``. """
         recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
         recs_list = filter(None, recs_list)
         if recs_list:
@@ -878,6 +895,26 @@ class Environment(object):
         if invalids:
             raise Warning('Invalid cache for fields\n' + pformat(invalids))
 
+    @property
+    def recompute(self):
+        return self.all.recompute
+
+    @contextmanager
+    def norecompute(self):
+        tmp = self.all.recompute
+        self.all.recompute = False
+        try:
+            yield
+        finally:
+            self.all.recompute = tmp
+
+    @property
+    def recompute_old(self):
+        return self.all.recompute_old
+
+    def clear_recompute_old(self):
+        del self.all.recompute_old[:]
+
 
 class Environments(object):
     """ A common object for all environments in a request. """
@@ -885,9 +922,11 @@ class Environments(object):
         self.envs = WeakSet()           # weak set of environments
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
+        self.recompute = True
+        self.recompute_old = []        # list of old api compute fields to recompute
 
     def add(self, env):
-        """ Add the environment `env`. """
+        """ Add the environment ``env``. """
         self.envs.add(env)
 
     def __iter__(self):

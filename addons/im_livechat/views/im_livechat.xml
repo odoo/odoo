@@ -86,7 +86,7 @@
         <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
         <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
             <!-- css style -->
-            <link t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
+            <link property='stylesheet' t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
             <script t-att-src="'%s/web/js/im_livechat.internal_lib' % (url)" type="text/javascript" />
             <!-- the loader -->
@@ -108,7 +108,8 @@
         <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
         <template id="internal_lib" name="Librairies of the Livechat">
             <!-- Datejs -->
-            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+            <script type="text/javascript" t-att-src="'/web/static/lib/datejs/globalization/%s.js'
+                % (request.session.context.get('lang').replace('_','-'))"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
             <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
@@ -123,19 +124,21 @@
 
         <!-- the js code to initialize the LiveSupport object -->
         <template id="loader" name="Javascript initializing the LiveSupport">
-            (function() {
-                window.livesupport = new openerp.im_livechat.LiveSupport(
-                    "<t t-esc="url"/>",
-                    "<t t-esc="dbname"/>",
-                    <t t-esc="channel"/>,
-                    {
-                        buttonText: "<t t-esc="buttonText"/>",
-                        inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
-                        defaultMessage: "<t t-esc="defaultMessage"/>" || '',
-                        auto: window.oe_im_livechat_auto || false,
-                        defaultUsername: "<t t-esc="username"/>" || undefined,
-                    });
-            })();
+            <t t-translate="off">
+                (function() {
+                    window.livesupport = new openerp.im_livechat.LiveSupport(
+                        "<t t-esc="url"/>",
+                        "<t t-esc="dbname"/>",
+                        <t t-esc="channel"/>,
+                        {
+                            buttonText: "<t t-esc="buttonText"/>",
+                            inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
+                            defaultMessage: "<t t-esc="defaultMessage"/>" || '',
+                            auto: window.oe_im_livechat_auto || false,
+                            defaultUsername: "<t t-esc="username"/>" || undefined,
+                        });
+                })();
+            </t>
         </template>
 
     </data>

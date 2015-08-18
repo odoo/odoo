@@ -194,13 +194,10 @@ class account_invoice(osv.osv):
                 reference_type = vals['reference_type']
             else:
                 reference_type = inv.reference_type or ''
-            if reference_type == 'bba':
-                if vals.has_key('reference'):
-                    bbacomm = vals['reference']
-                else:
-                    bbacomm = inv.reference or ''
-                if self.check_bbacomm(bbacomm):
-                    reference = re.sub('\D', '', bbacomm)
+
+            if reference_type == 'bba' and 'reference' in vals:
+                if self.check_bbacomm(vals['reference']):
+                    reference = re.sub('\D', '', vals['reference'])
                     vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
                     same_ids = self.search(cr, uid,
                         [('id', '!=', inv.id), ('type', '=', 'out_invoice'),
@@ -227,7 +224,7 @@ class account_invoice(osv.osv):
     _columns = {
         'reference': fields.char('Communication', help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Communication Type',
-            required=True),
+            required=True, readonly=True),
     }
     _constraints = [
         (_check_communication, 'Invalid BBA Structured Communication !', ['Communication']),

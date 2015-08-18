@@ -39,4 +39,4 @@
     procurement = self.browse(cr, uid, ref('procurement_order_testcase0'))
     procurement.purchase_line_id.unlink()
     procurement.refresh()
-    assert procurement.state == 'cancel', 'Procurement should be cancelled'
+    assert procurement.state == 'exception', 'Procurement should be in exception'

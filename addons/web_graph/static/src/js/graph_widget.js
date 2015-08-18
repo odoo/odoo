@@ -54,7 +54,9 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
             self.$('.graph_options_selection label').last().toggle(result);
         });
 
-        return this.model.call('fields_get', []).then(function (f) {
+        return this.model.call('fields_get', {
+                    context: this.graph_view.dataset.context
+                }).then(function (f) {
             self.fields = f;
             self.fields.__count = {field:'__count', type: 'integer', string:_t('Count')};
             self.groupby_fields = self.get_groupby_fields();
@@ -225,7 +227,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         var field = (_.contains(f, ':')) ? f.split(':')[0] : f,
             groupby_field = _.findWhere(this.groupby_fields, {field:field}),
             string = groupby_field ? groupby_field.string : this.fields[field].string,
-            result =  {field: f, string: string, type: this.fields[field].type };
+            result =  {field: f, string: string, type: this.fields[field].type, digits: this.fields[field].digits };
 
         if (groupby_field) {
             result.filter = groupby_field.filter;
@@ -269,11 +271,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
         event.preventDefault();
         event.stopPropagation();
         var measure_field = event.target.getAttribute('data-choice');
-        var measure = {
-            field: measure_field,
-            type: this.fields[measure_field].type,
-            string: this.fields[measure_field].string
-        };
+        var measure = this.create_field_value(measure_field);
 
         this.pivot.toggle_measure(measure).then(this.proxy('display_data'));
         this.put_measure_checkmarks();
@@ -494,7 +492,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
     },
 
     make_cell: function (row, col, value, index, raw) {
-        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, {type:this.pivot.measures[index].type}),
+        var formatted_value = raw && !_.isUndefined(value) ? value : openerp.web.format_value(value, this.pivot.measures[index]),
             cell = {value:formatted_value};
 
         if (this.heatmap_mode === 'none') { return cell; }
@@ -759,6 +757,7 @@ openerp.web_graph.Graph = openerp.web.Widget.extend({
                 .reduceXTicks(false)
                 .stacked(self.bar_ui === 'stack')
                 .showControls(show_controls);
+          chart.yAxis.tickFormat(function(d) { return openerp.web.format_value(d, { type : 'float' });});
 
             if (self.width / data[0].values.length < 80) {
                 chart.rotateLabels(-15);

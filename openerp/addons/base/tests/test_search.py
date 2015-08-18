@@ -104,6 +104,21 @@ class test_search(common.TransactionCase):
         self.assertEqual(test_user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
         users_obj._order = old_order
 
+    def test_11_indirect_inherits_m2order(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+        Cron = registry('ir.cron')
+        Users = registry('res.users')
+
+        user_ids = {}
+        cron_ids = {}
+        for u in 'BAC':
+            user_ids[u] = Users.create(cr, uid, {'name': u, 'login': u})
+            cron_ids[u] = Cron.create(cr, uid, {'name': u, 'user_id': user_ids[u]})
+
+        ids = Cron.search(cr, uid, [('id', 'in', cron_ids.values())], order='user_id')
+        expected_ids = [cron_ids[l] for l in 'ABC']
+        self.assertEqual(ids, expected_ids)
+
 
 if __name__ == '__main__':
     unittest2.main()

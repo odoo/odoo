@@ -145,7 +145,6 @@
                                 <form string="Depreciation Lines"> 
                                     <group>
                                         <group>
-                                            <field name="asset_id" invisible="1"/>
                                             <field name="parent_state" invisible="1"/>
                                             <field name="name"/>
                                             <field name="amount"/>
@@ -156,8 +155,8 @@
                                         <group>
                                             <field name="sequence"/>
                                             <field name="depreciation_date"/>
-                                            <field name="depreciated_value" readonly="1"/>
-                                            <field name="remaining_value" readonly="1"/>
+                                            <field name="depreciated_value"/>
+                                            <field name="remaining_value"/>
                                         </group>
                                     </group>
                                 </form>

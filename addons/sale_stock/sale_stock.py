@@ -147,21 +147,6 @@ class sale_order(osv.osv):
                     move_obj.write(cr, uid, [x.id for x in picking.move_lines], {'invoice_state': 'invoiced'}, context=context)
         return res
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_order_line_obj = self.pool.get('sale.order.line')
-        proc_obj = self.pool.get('procurement.order')
-        stock_obj = self.pool.get('stock.picking')
-        for sale in self.browse(cr, uid, ids, context=context):
-            for pick in sale.picking_ids:
-                if pick.state not in ('draft', 'cancel'):
-                    raise osv.except_osv(
-                        _('Cannot cancel sales order!'),
-                        _('You must first cancel all delivery order(s) attached to this sales order.'))
-            stock_obj.signal_workflow(cr, uid, [p.id for p in sale.picking_ids], 'button_cancel')
-        return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
-
     def action_wait(self, cr, uid, ids, context=None):
         res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
         for o in self.browse(cr, uid, ids):
@@ -197,6 +182,8 @@ class sale_order(osv.osv):
     def has_stockable_products(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
+                if order_line.state == 'cancel':
+                    continue
                 if order_line.product_id and order_line.product_id.type in ('product', 'consu'):
                     return True
         return False
@@ -209,7 +196,7 @@ class product_product(osv.osv):
         #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
         for product in self.browse(cr, uid, ids, context=context):
-            if product.type != 'service':
+            if product.id and product.type != 'service':
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
 
@@ -281,6 +268,29 @@ class sale_order_line(osv.osv):
 
         return {'value': result, 'warning': warning}
 
+    def _check_routing(self, cr, uid, ids, product, warehouse_id, context=None):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified
+        """
+        is_available = False
+        if warehouse_id:
+            warehouse = self.pool['stock.warehouse'].browse(cr, uid, warehouse_id, context=context)
+            for product_route in product.route_ids:
+                if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
+                    is_available = True
+                    break
+        else:
+            try:
+                mto_route_id = self.pool['stock.warehouse']._get_mto_route(cr, uid, context=context)
+            except osv.except_osv:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                mto_route_id = False
+            if mto_route_id:
+                for product_route in product.route_ids:
+                    if product_route.id == mto_route_id:
+                        is_available = True
+                        break
+        return is_available
 
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -288,7 +298,6 @@ class sale_order_line(osv.osv):
         context = context or {}
         product_uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        warehouse_obj = self.pool['stock.warehouse']
         warning = {}
         #UoM False due to hack which makes sure uom changes price, ... in product_id_change
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty=qty,
@@ -298,6 +307,14 @@ class sale_order_line(osv.osv):
         if not product:
             res['value'].update({'product_packaging': False})
             return res
+
+        # set product uom in context to get virtual stock in current uom
+        if 'product_uom' in res.get('value', {}):
+            # use the uom changed by super call
+            context = dict(context, uom=res['value']['product_uom'])
+        elif uom:
+            # fallback on selected
+            context = dict(context, uom=uom)
 
         #update of result obtained in super function
         product_obj = product_obj.browse(cr, uid, product, context=context)
@@ -309,28 +326,11 @@ class sale_order_line(osv.osv):
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
 
         if product_obj.type == 'product':
-            #determine if the product is MTO or not (for a further check)
-            isMto = False
-            if warehouse_id:
-                warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
-                for product_route in product_obj.route_ids:
-                    if warehouse.mto_pull_id and warehouse.mto_pull_id.route_id and warehouse.mto_pull_id.route_id.id == product_route.id:
-                        isMto = True
-                        break
-            else:
-                try:
-                    mto_route_id = warehouse_obj._get_mto_route(cr, uid, context=context)
-                except:
-                    # if route MTO not found in ir_model_data, we treat the product as in MTS
-                    mto_route_id = False
-                if mto_route_id:
-                    for product_route in product_obj.route_ids:
-                        if product_route.id == mto_route_id:
-                            isMto = True
-                            break
+            #determine if the product needs further check for stock availibility
+            is_available = self._check_routing(cr, uid, ids, product_obj, warehouse_id, context=context)
 
             #check if product is available, and if not: raise a warning, but do this only for products that aren't processed in MTO
-            if not isMto:
+            if not is_available:
                 uom_record = False
                 if uom:
                     uom_record = product_uom_obj.browse(cr, uid, uom, context=context)
@@ -355,12 +355,20 @@ class sale_order_line(osv.osv):
         res.update({'warning': warning})
         return res
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        lines = self.browse(cr, uid, ids, context=context)
+        for procurement in lines.mapped('procurement_ids'):
+            for move in procurement.move_ids:
+                if move.state == 'done' and not move.scrapped:
+                    raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line which is linked to a stock move already done.'))
+        return super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
 
     def _create_invoice_line_from_vals(self, cr, uid, move, invoice_line_vals, context=None):
         invoice_line_id = super(stock_move, self)._create_invoice_line_from_vals(cr, uid, move, invoice_line_vals, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if context.get('inv_type') in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             self.pool.get('sale.order.line').write(cr, uid, [sale_line.id], {
                 'invoice_lines': [(4, invoice_line_id)]
@@ -368,17 +376,28 @@ class stock_move(osv.osv):
             self.pool.get('sale.order').write(cr, uid, [sale_line.order_id.id], {
                 'invoice_ids': [(4, invoice_line_vals['invoice_id'])],
             })
+            sale_line_obj = self.pool.get('sale.order.line')
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', '=', move.procurement_id.sale_line_id.order_id.id), ('invoiced', '=', False), '|', ('product_id', '=', False), ('product_id.type', '=', 'service')], context=context)
+            if sale_line_ids:
+                created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
+                invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_line_vals['invoice_id']}, context=context)
+
         return invoice_line_id
 
     def _get_master_data(self, cr, uid, move, company, context=None):
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if context.get('inv_type') in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.order_policy == 'picking':
             sale_order = move.procurement_id.sale_line_id.order_id
+            return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
+        elif move.picking_id.sale_id and context.get('inv_type') in ('out_invoice', 'out_refund'):
+            # In case of extra move, it is better to use the same data as the original moves
+            sale_order = move.picking_id.sale_id
             return sale_order.partner_invoice_id, sale_order.user_id.id, sale_order.pricelist_id.currency_id.id
         return super(stock_move, self)._get_master_data(cr, uid, move, company, context=context)
 
     def _get_invoice_line_vals(self, cr, uid, move, partner, inv_type, context=None):
         res = super(stock_move, self)._get_invoice_line_vals(cr, uid, move, partner, inv_type, context=context)
-        if move.procurement_id and move.procurement_id.sale_line_id:
+        if inv_type in ('out_invoice', 'out_refund') and move.procurement_id and move.procurement_id.sale_line_id:
             sale_line = move.procurement_id.sale_line_id
             res['invoice_line_tax_id'] = [(6, 0, [x.id for x in sale_line.tax_id])]
             res['account_analytic_id'] = sale_line.order_id.project_id and sale_line.order_id.project_id.id or False
@@ -390,8 +409,29 @@ class stock_move(osv.osv):
                     sale_line.order_id.partner_id, context=context)[sale_line.order_id.pricelist_id.id]
             else:
                 res['price_unit'] = sale_line.price_unit
+            uos_coeff = move.product_uom_qty and move.product_uos_qty / move.product_uom_qty or 1.0
+            res['price_unit'] = res['price_unit'] / uos_coeff
         return res
 
+    def _get_moves_taxes(self, cr, uid, moves, inv_type, context=None):
+        is_extra_move, extra_move_tax = super(stock_move, self)._get_moves_taxes(cr, uid, moves, inv_type, context=context)
+        if inv_type == 'out_invoice':
+            for move in moves:
+                if move.procurement_id and move.procurement_id.sale_line_id:
+                    is_extra_move[move.id] = False
+                    extra_move_tax[move.picking_id, move.product_id] = [(6, 0, [x.id for x in move.procurement_id.sale_line_id.tax_id])]
+                elif move.picking_id.sale_id and move.product_id.product_tmpl_id.taxes_id:
+                    fp = move.picking_id.sale_id.fiscal_position
+                    res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), context=context)
+                    extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
+                else:
+                    extra_move_tax[0, move.product_id] = [(6, 0, [x.id for x in move.product_id.product_tmpl_id.taxes_id])]
+        return (is_extra_move, extra_move_tax)
+
+    def _get_taxes(self, cr, uid, move, context=None):
+        if move.procurement_id.sale_line_id.tax_id:
+            return [tax.id for tax in move.procurement_id.sale_line_id.tax_id]
+        return super(stock_move, self)._get_taxes(cr, uid, move, context=context)
 
 class stock_location_route(osv.osv):
     _inherit = "stock.location.route"
@@ -407,11 +447,12 @@ class stock_picking(osv.osv):
         """ Inherit the original function of the 'stock' module
             We select the partner of the sales order as the partner of the customer invoice
         """
-        saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
-        saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
-        if saleorders and saleorders[0]:
-            saleorder = saleorders[0]
-            return saleorder.partner_invoice_id.id
+        if picking.sale_id:
+            saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
+            saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
+            if saleorders and saleorders[0] and saleorders[0].order_policy == 'picking':
+                saleorder = saleorders[0]
+                return saleorder.partner_invoice_id.id
         return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
     
     def _get_sale_id(self, cr, uid, ids, name, args, context=None):
@@ -434,11 +475,18 @@ class stock_picking(osv.osv):
         sale_line_obj = self.pool.get('sale.order.line')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoice_id = super(stock_picking, self)._create_invoice_from_picking(cr, uid, picking, vals, context=context)
-        if picking.group_id:
-            sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
-            if sale_ids:
-                sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', 'in', sale_ids), ('product_id.type', '=', 'service'), ('invoiced', '=', False)], context=context)
-                if sale_line_ids:
-                    created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
-                    invoice_line_obj.write(cr, uid, created_lines, {'invoice_id': invoice_id}, context=context)
         return invoice_id
+
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, move, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, move, context=context)
+        sale = move.picking_id.sale_id
+        if sale:
+            inv_vals.update({
+                'fiscal_position': sale.fiscal_position.id,
+                'payment_term': sale.payment_term.id,
+                'user_id': sale.user_id.id,
+                'section_id': sale.section_id.id,
+                'name': sale.client_order_ref or '',
+                'comment': sale.note,
+                })
+        return inv_vals

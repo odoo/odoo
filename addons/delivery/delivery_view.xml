@@ -237,9 +237,9 @@
                         <div>
                             <field name="weight" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                            <field name="number_of_packages"/>
                         </div>
                         <field name="weight_net" groups="base.group_no_one"/>
+                        <field name="number_of_packages"/>
                     </group>
                 </group>
                 </xpath>
@@ -276,12 +276,14 @@
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='main_grp']" position="inside">
-                    <label for="weight" string="Weight"/>
-                    <div>
-                        <field name="weight" class="oe_inline"/>
-                        <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
-                    </div>
-                    <field name="weight_net" groups="base.group_no_one" class="oe_inline"/>
+                    <group>
+                        <label for="weight"/>
+                        <div>
+                            <field name="weight" nolabel="1" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                    </group>
                 </xpath>
             </field>
         </record>

@@ -33,8 +33,8 @@ class pos_details(osv.osv_memory):
         'user_ids': fields.many2many('res.users', 'pos_details_report_user_rel', 'user_id', 'wizard_id', 'Salespeople'),
     }
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_end': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': fields.date.context_today,
+        'date_end': fields.date.context_today,
     }
 
     def print_report(self, cr, uid, ids, context=None):

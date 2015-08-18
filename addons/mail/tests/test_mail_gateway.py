@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests.common import TestMail
+from .common import TestMail
 from openerp.tools import mute_logger
 import socket
 
@@ -68,7 +68,7 @@ MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com
 To: {to}
 Received: by mail1.openerp.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
-From: Sylvie Lelitre <sylvie.lelitre@agrolait.com>
+From: Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>
 Subject: {subject}
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -525,6 +525,16 @@ class TestMailgateway(TestMail):
         self.assertEqual(frog_group.message_ids[0].author_id.id, extra_partner_id,
                          'message_process: email_from -> author_id wrong')
 
+        # Do: post a new message with a non-existant email that is a substring of a partner email
+        format_and_process(MAIL_TEMPLATE, email_from='Not really Lombrik Lubrik <oul@email.com>',
+                           subject='Re: news (2)',
+                           msg_id='<zzzbbbaaaa@agrolait.com>',
+                           extra='In-Reply-To: <1198923581.41972151344608186760.JavaMail@agrolait.com>\n')
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: author must not be set, otherwise the system is confusing different users
+        self.assertFalse(frog_group.message_ids[0].author_id, 'message_process: email_from -> mismatching author_id')
+
         # Do: post a new message, with a known partner -> duplicate emails -> user
         frog_group.message_unsubscribe([extra_partner_id])
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': 'test_raoul@email.com'})
@@ -618,7 +628,7 @@ class TestMailgateway(TestMail):
 
         # 1. In-Reply-To header
         reply_msg2 = format(MAIL_TEMPLATE, to='erroneous@example.com',
-                            extra='In-Reply-To: %s' % msg1.message_id,
+                            extra='In-Reply-To:\r\n\t%s' % msg1.message_id,
                             msg_id='<1198923581.41972151344608186760.JavaMail.3@agrolait.com>')
         self.mail_group.message_process(cr, uid, None, reply_msg2)
 
@@ -726,3 +736,31 @@ class TestMailgateway(TestMail):
                          'message_post: private discussion: incorrect recipients when replying')
         self.assertEqual(set(msg_nids), set(test_nids),
                          'message_post: private discussion: incorrect notified recipients when replying')
+
+        # Do bert forward it to an alias
+        mail_group_model_id = self.ir_model.search(cr, uid, [('model', '=', 'mail.group')])[0]
+        self.mail_alias.create(cr, uid, {
+            'alias_name': 'groups',
+            'alias_user_id': False,
+            'alias_model_id': mail_group_model_id,
+            'alias_parent_model_id': mail_group_model_id,
+            'alias_parent_thread_id': self.group_pigs_id,
+            'alias_contact': 'everyone'})
+
+        msg = self.mail_message.browse(cr, uid, msg1_id)
+        # forward it to a new thread AND an existing thread
+        for i, to in enumerate(['groups', 'group+pigs']):
+            fw_msg_id = '<THIS.IS.A.FW.MESSAGE.%d@bert.fr>' % (i,)
+            fw_message = format(MAIL_TEMPLATE, to='%s@whatever.tld' % (to,),
+                                subject='FW: Re: 1',
+                                email_from='bert@bert.fr',
+                                extra='References: %s' % msg.message_id,
+                                msg_id=fw_msg_id)
+            self.mail_thread.message_process(cr, uid, None, fw_message)
+
+            msg_ids = self.mail_message.search(cr, uid, [('message_id', '=', fw_msg_id)])
+            self.assertEqual(len(msg_ids), 1)
+            msg_fw = self.mail_message.browse(cr, uid, msg_ids[0])
+
+            self.assertEqual(msg_fw.model, 'mail.group')
+            self.assertFalse(msg_fw.parent_id)

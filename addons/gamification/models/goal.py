@@ -268,6 +268,25 @@ class gamification_goal(osv.Model):
                 return {'to_update': True}
         return {}
 
+    def _get_write_values(self, cr, uid, goal, new_value, context=None):
+        """Generate values to write after recomputation of a goal score"""
+        if new_value == goal.current:
+            # avoid useless write if the new value is the same as the old one
+            return {}
+
+        result = {goal.id: {'current': new_value}}
+        if (goal.definition_id.condition == 'higher' and new_value >= goal.target_goal) \
+          or (goal.definition_id.condition == 'lower' and new_value <= goal.target_goal):
+            # success, do no set closed as can still change
+            result[goal.id]['state'] = 'reached'
+
+        elif goal.end_date and fields.date.today() > goal.end_date:
+            # check goal failure
+            result[goal.id]['state'] = 'failed'
+            result[goal.id]['closed'] = True
+
+        return result
+
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -281,14 +300,8 @@ class gamification_goal(osv.Model):
         commit = context.get('commit_gamification', False)
 
         goals_by_definition = {}
-        all_goals = {}
         for goal in self.browse(cr, uid, ids, context=context):
-            if goal.state in ('draft', 'canceled'):
-                # draft or canceled goals should not be recomputed
-                continue
-
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
-            all_goals[goal.id] = goal
 
         for definition, goals in goals_by_definition.items():
             goals_to_write = dict((goal.id, {}) for goal in goals)
@@ -313,10 +326,12 @@ class gamification_goal(osv.Model):
                     # the result of the evaluated codeis put in the 'result' local variable, propagated to the context
                     result = cxt.get('result')
                     if result is not None and type(result) in (float, int, long):
-                        if result != goal.current:
-                            goals_to_write[goal.id]['current'] = result
+                        goals_to_write.update(
+                            self._get_write_values(cr, uid, goal, result, context=context)
+                        )
+
                     else:
-                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s' % definition.name))
+                        _logger.exception(_('Invalid return content from the evaluation of code for definition %s') % definition.name)
 
             else:  # count or sum
 
@@ -356,8 +371,9 @@ class gamification_goal(osv.Model):
                                     queried_value = queried_value[0]
                                 if queried_value == query_goals[goal.id]:
                                     new_value = user_value.get(field_name+'_count', goal.current)
-                                    if new_value != goal.current:
-                                        goals_to_write[goal.id]['current'] = new_value
+                                    goals_to_write.update(
+                                        self._get_write_values(cr, uid, goal, new_value, context=context)
+                                    )
 
                 else:
                     for goal in goals:
@@ -379,26 +395,14 @@ class gamification_goal(osv.Model):
                         else:  # computation mode = count
                             new_value = obj.search(cr, uid, domain, context=context, count=True)
 
-                        # avoid useless write if the new value is the same as the old one
-                        if new_value != goal.current:
-                            goals_to_write[goal.id]['current'] = new_value
+                        goals_to_write.update(
+                            self._get_write_values(cr, uid, goal, new_value, context=context)
+                        )
 
             for goal_id, value in goals_to_write.items():
                 if not value:
                     continue
-                goal = all_goals[goal_id]
-
-                # check goal target reached
-                if (goal.definition_id.condition == 'higher' and value.get('current', goal.current) >= goal.target_goal) \
-                  or (goal.definition_id.condition == 'lower' and value.get('current', goal.current) <= goal.target_goal):
-                    value['state'] = 'reached'
-
-                # check goal failure
-                elif goal.end_date and fields.date.today() > goal.end_date:
-                    value['state'] = 'failed'
-                    value['closed'] = True
-                if value:
-                    self.write(cr, uid, [goal.id], value, context=context)
+                self.write(cr, uid, [goal_id], value, context=context)
             if commit:
                 cr.commit()
         return True

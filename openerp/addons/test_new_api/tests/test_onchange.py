@@ -146,9 +146,6 @@ class TestOnChange(common.TransactionCase):
             }),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
-                'body': BODY,
-                'author': USER.id,
-                'size': len(BODY),
             }),
         ])
 

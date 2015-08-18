@@ -42,6 +42,5 @@ e.g. To have an invoice generated automatically periodically:
     'demo': ['subscription_demo.xml',],
     'installable': True,
     'auto_install': False,
-    'images': ['images/subscription_document_fields.jpeg','images/subscriptions.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

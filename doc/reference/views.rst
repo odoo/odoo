@@ -1,5 +1,6 @@
-.. highlight:: xml
+:banner: banners/views.jpg
 
+.. highlight:: xml
 .. _reference/views:
 
 =====
@@ -12,7 +13,7 @@ Common Structure
 ================
 
 View objects expose a number of fields, they are optional unless specified
-otherwise)
+otherwise.
 
 ``name`` (mandatory)
     only useful as a mnemonic/description of the view when looking for one in
@@ -21,7 +22,7 @@ otherwise)
     the model linked to the view, if applicable (it doesn't for QWeb views)
 ``priority``
     client programs can request views by ``id``, or by ``(model, type)``. For
-    the latter, all the views for the right type and model will be looked for,
+    the latter, all the views for the right type and model will be searched,
     and the one with the lowest ``priority`` number will be returned (it is
     the "default view").
 
@@ -85,8 +86,8 @@ There are three types of inheritance specs:
 * any other element, the first element with the same name and identical
   attributes (ignoring ``position``) is matched
 
-The inheritance spec can an optional ``position`` attribute specifhing how
-the matched node should be altered:
+The inheritance spec may have an optional ``position`` attribute specifying
+how the matched node should be altered:
 
 ``inside`` (default)
     the content of the inheritance spec is appended to the matched node
@@ -98,7 +99,7 @@ the matched node should be altered:
 ``before``
     the content of the inheritance spec is added to the matched node's
     parent, before the matched node
-``attribute``
+``attributes``
     the content of the inheritance spec should be ``attribute`` elements
     with a ``name`` attribute and an optional body:
 
@@ -132,13 +133,21 @@ root can have the following attributes:
     <reference/views/form>`'s fields and buttons are thus accepted by list
     views although they may not have any meaning if the list view is
     non-editable
+``default_order``
+    overrides the ordering of the view, replacing the model's default order.
+    The value is a comma-separated list of fields, postfixed by ``desc`` to
+    sort in reverse order:
+
+    .. code-block:: xml
+
+        <tree default_order="sequence,name desc">
 ``colors``
     allows changing the color of a row's text based on the corresponding
     record's attributes.
 
     Defined as a mapping of colors to Python expressions. Values are of the
     form: :samp:`{color}:{expr}[;...]`. For each record, pairs are tested
-    in-order, the expression is evaluated for the record and if ``true`` the
+    in order, the expression is evaluated for the record and if ``true`` the
     corresponding color is applied to the row. If no color matches, uses the
     default text color (black).
 
@@ -222,8 +231,8 @@ Possible children elements of the list view are:
         Possible attributes are ``invisible`` (hides the button) and
         ``readonly`` (disables the button but still shows it)
     ``states``
-        shorthand for ``invisible`` ``attrs``: a list of space, separated
-        states, requires that the model has a ``state`` field and that it is
+        shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
+        requires that the model has a ``state`` field and that it is
         used in the view.
 
         Makes the button ``invisible`` if the record is *not* in one of the
@@ -563,7 +572,7 @@ Button Box
 ..........
 
 Many relevant actions or links can be displayed in the form. For example, in
-Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" take
+Opportunity form, the actions "Schedule a Call" and "Schedule a Meeting" have
 an important place in the use of the CRM. Instead of placing them in the
 "More" menu, put them directly in the sheet as buttons (on the top right) to
 make them more visible and more easily accessible.
@@ -571,8 +580,8 @@ make them more visible and more easily accessible.
 .. image:: forms/header3.png
    :class: img-responsive
 
-Technically, the buttons are placed inside a <div> to group them as a block on
-the right-hand side of the sheet.
+Technically, the buttons are placed inside a ``<div>`` to group them as a
+block on the right-hand side of the sheet.
 
 ::
 
@@ -632,7 +641,7 @@ place inside the field, it *must not* be an example as they are often confused
 with filled data.
 
 One can also group fields together by rendering them "inline" inside an
-explicit block element like `<div>``. This allows grouping semantically
+explicit block element like ``<div>``. This allows grouping semantically
 related fields as if they were a single (composite) fields.
 
 The following example, taken from the *Leads* form, shows both placeholders and
@@ -843,7 +852,9 @@ Possible children of the view element are:
     an object with all the requested fields as its attributes. Each field has
     two attributes ``value`` and ``raw_value``, the former is formatted
     according to current user parameters, the latter is the direct value from
-    a :meth:`~openerp.models.Model.read`
+    a :meth:`~openerp.models.Model.read` (except for date and datetime fields
+    that are `formatted according to user's locale
+    <https://github.com/odoo/odoo/blob/8.0/addons/web_kanban/static/src/js/kanban.js#L900>`_)
   ``read_only_mode``
     self-explanatory
 
@@ -926,9 +937,9 @@ calendar view are:
 
 ``date_start`` (required)
     name of the record's field holding the start date for the event
-``date_end``
+``date_stop``
     name of the record's field holding the end date for the event, if
-    ``date_end`` is provided records become movable (via drag and drop)
+    ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
     alternative to ``date_end``, provides the duration of the event instead of

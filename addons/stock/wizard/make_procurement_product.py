@@ -74,6 +74,7 @@ class make_procurement(osv.osv_memory):
                 'product_id': proc.product_id.id,
                 'product_qty': proc.qty,
                 'product_uom': proc.uom_id.id,
+                'warehouse_id': proc.warehouse_id.id,
                 'location_id': wh.lot_stock_id.id,
                 'company_id': wh.company_id.id,
             })
