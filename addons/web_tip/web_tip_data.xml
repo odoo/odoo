@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="web.tip" id="web_tip_1">
+            <field name="title"></field>
+            <field name="description">Use the breadcrumb to go back to preceeding screens. This is super useful to navigate between documents.</field>
+            <field name="model"></field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.o_form_buttons_view:visible,ol.breadcrumb a</field>
+            <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
+            <field name="placement">bottom</field>
+        </record>
+
+    </data>
+</openerp>

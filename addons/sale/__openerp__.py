@@ -60,6 +60,7 @@ The Dashboard for the Sales Manager will include
         'views/report_saleorder.xml',
         'views/sale.xml',
         'sales_team_dashboard.xml',
+        'sale_tip_data.xml',
     ],
     'demo': ['sale_demo.xml'],
     'test': [

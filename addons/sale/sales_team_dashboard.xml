@@ -42,6 +42,10 @@
                 </div>
             </xpath>
 
+            <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
+                <button class="btn btn-primary" name="%(sale.action_quotations_salesteams)d" type="action">Quotations</button>
+            </xpath>
+
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
                 <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
                     <field name="invoiced_forecast" widget="progress" options="{'title': 'Invoicing', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': true, 'on_change': 'action_forecast'}"/>

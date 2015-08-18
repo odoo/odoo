@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+       <record model="web.tip" id="sale_tip_1">
+            <field name="title"></field>
+            <field name="description"><![CDATA[This bar represents the different stages your Quotation will go through.
+                Use the action buttons on the left (Send by Email, Confirm) to progress through the stages.]]></field>
+            <field name="model">sale.order</field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.oe_form_field_status.oe_form_status:visible</field>
+            <field name="highlight_selector">.oe_form_field_status.oe_form_status</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <record model="web.tip" id="sale_tip_2">
+            <field name="title"></field>
+            <field name="description"><![CDATA[Use Pivot and Graph views to analyze your Sales Pipeline.
+                Combine Measures, Filters and Group By to get the exact KPI or visualization you want.]]></field>
+            <field name="model">sale.order</field>
+            <field name="mode">pivot</field>
+            <field name="trigger_selector">.o-pivot-table .table</field>
+            <field name="highlight_selector">.oe-search-options.btn-group</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
+
+    </data>
+</openerp>
