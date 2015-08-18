@@ -220,12 +220,25 @@ class product_pricelist(osv.osv):
         cr.execute(
             'SELECT i.id '
             'FROM product_pricelist_item AS i '
+            'LEFT OUTER JOIN ( '
+                'WITH RECURSIVE subtree(depth, categ_id, parent_id) AS ( '
+                        'SELECT 0, id, parent_id FROM product_category WHERE parent_id is NULL '
+                    'UNION '
+                        'SELECT depth+1, m.id, m.parent_id '
+                        'FROM subtree t, product_category m '
+                        'WHERE m.parent_id = t.categ_id '
+                ') '
+                'SELECT * '
+                'FROM subtree '
+                'WHERE ((categ_id IS NULL) OR (categ_id = any(%s))) '
+            ') AS p '
+                'on i.categ_id = p.categ_id '
             'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = any(%s)) '
                 'AND (product_id IS NULL OR (product_id = any(%s))) '
-                'AND ((categ_id IS NULL) OR (categ_id = any(%s))) '
+                'AND ((i.categ_id IS NULL) OR (i.categ_id = any(%s))) '
                 'AND (price_version_id = %s) '
-            'ORDER BY sequence, min_quantity desc',
-            (prod_tmpl_ids, prod_ids, categ_ids, version.id))
+            'ORDER BY sequence, min_quantity desc, depth desc',
+            (categ_ids, prod_tmpl_ids, prod_ids, categ_ids, version.id))
         
         item_ids = [x[0] for x in cr.fetchall()]
         items = self.pool.get('product.pricelist.item').browse(cr, uid, item_ids, context=context)
