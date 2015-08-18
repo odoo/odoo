@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import werkzeug
 
 import openerp
-from openerp.addons.auth_signup.res_users import SignupError
+from openerp.addons.auth_signup.models.res_users import SignupError
 from openerp.addons.web.controllers.main import ensure_db
 from openerp import http
 from openerp.http import request

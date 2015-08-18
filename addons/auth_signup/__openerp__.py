@@ -17,10 +17,10 @@ Allow users to sign up and reset their password
         'web',
     ],
     'data': [
-        'auth_signup_data.xml',
-        'res_config.xml',
-        'res_users_view.xml',
-        'views/auth_signup_login.xml',
+        'views/res_config_views.xml',
+        'views/res_users_views.xml',
+        'views/auth_signup_login_templates.xml',
+        'data/auth_signup_data.xml',
     ],
     'bootstrap': True,
 }
