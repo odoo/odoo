@@ -137,6 +137,26 @@ class mrp_production_workcenter_line(osv.osv):
         self.write(cr, uid, ids, {'state':'startworking', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True
 
+    def action_button_done(self, cr, uid, ids, context=None):
+        workcenter = self.browse(cr, uid, ids, context=context)[0]
+        if workcenter.production_id.product_id.tracking != 'none':
+            open_count = self.search_count(cr,uid,[('production_id','=',workcenter.production_id.id), ('state', 'not in', ('cancel', 'done'))])
+            if open_count == 1:
+                view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'mrp.view_mrp_product_produce_wizard')
+                return {
+                    'name': _('Produce'),
+                    'type': 'ir.actions.act_window',
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'mrp.product.produce',
+                    'views': [(view_id, 'form')],
+                    'view_id': view_id,
+                    'target': 'new',
+                    'context': {'active_id': workcenter.production_id.id, 'production_lot': True}
+                }
+        self.signal_workflow(cr, uid, [workcenter.id], 'button_done')
+        return True
+
     def action_done(self, cr, uid, ids, context=None):
         """ Sets state to done, writes finish date and calculates delay.
         @return: True
