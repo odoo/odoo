@@ -175,8 +175,6 @@ class test_expression(common.TransactionCase):
         partner_bank_ids_col = partner_obj._columns.get('bank_ids')  # one2many on res.partner to res.partner.bank
         category_id_col = partner_obj._columns.get('category_id')  # many2many on res.partner to res.partner.category
 
-        # Get the first bank account type to be able to create a res.partner.bank
-        bank_type = bank_obj._bank_type_get(cr, uid)[0]
         # Get country/state data
         country_us_id = registry('res.country').search(cr, uid, [('code', 'like', 'US')])[0]
         state_ids = registry('res.country.state').search(cr, uid, [('country_id', '=', country_us_id)], limit=2)
@@ -187,9 +185,9 @@ class test_expression(common.TransactionCase):
         p_aa = partner_obj.create(cr, uid, {'name': 'test__AA', 'parent_id': p_a, 'state_id': state_ids[0]})
         p_ab = partner_obj.create(cr, uid, {'name': 'test__AB', 'parent_id': p_a, 'state_id': state_ids[1]})
         p_ba = partner_obj.create(cr, uid, {'name': 'test__BA', 'parent_id': p_b, 'state_id': state_ids[0]})
-        b_aa = bank_obj.create(cr, uid, {'acc_number': '123', 'state': 'bank', 'partner_id': p_aa})
-        b_ab = bank_obj.create(cr, uid, {'acc_number': '456', 'state': 'bank', 'partner_id': p_ab})
-        b_ba = bank_obj.create(cr, uid, {'acc_number': '789', 'state': 'bank', 'partner_id': p_ba})
+        b_aa = bank_obj.create(cr, uid, {'acc_number': '123', 'acc_type': 'bank', 'partner_id': p_aa})
+        b_ab = bank_obj.create(cr, uid, {'acc_number': '456', 'acc_type': 'bank', 'partner_id': p_ab})
+        b_ba = bank_obj.create(cr, uid, {'acc_number': '789', 'acc_type': 'bank', 'partner_id': p_ba})
 
         # --------------------------------------------------
         # Test1: basics about the attribute

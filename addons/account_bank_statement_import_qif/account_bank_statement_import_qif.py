@@ -65,7 +65,7 @@ class AccountBankStatementImport(models.TransientModel):
                     vals_line['name'] = 'name' in vals_line and line[1:] + ': ' + vals_line['name'] or line[1:]
                     # Since QIF doesn't provide account numbers, we'll have to find res.partner and res.partner.bank here
                     # (normal behavious is to provide 'account_number', which the generic module uses to find partner/bank)
-                    partner_bank = self.env['res.partner.bank'].search([('owner_name', '=', line[1:])], limit=1)
+                    partner_bank = self.env['res.partner.bank'].search([('partner_id.name', '=', line[1:])], limit=1)
                     if partner_bank:
                         vals_line['bank_account_id'] = partner_bank.id
                         vals_line['partner_id'] = partner_bank.partner_id.id

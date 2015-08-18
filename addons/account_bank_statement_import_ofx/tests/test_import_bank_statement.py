@@ -11,7 +11,7 @@ class TestOfxFile(TransactionCase):
         ofx_file = open(ofx_file_path, 'rb').read().encode('base64')
 
         # Create a bank account and journal corresponding to the OFX file (same currency and account number)
-        bank_account_id = self.env['res.partner.bank'].create({'acc_number': '123456', 'bank_name': 'a', 'state': 'bank', 'partner_id': self.env.ref('base.main_partner').id}).id
+        bank_account_id = self.env['res.partner.bank'].create({'acc_number': '123456', 'bank_name': 'a', 'acc_type': 'bank', 'partner_id': self.env.ref('base.main_partner').id}).id
         bank_journal_id = self.env['account.journal'].create({'name': 'Bank 123456', 'code': 'BNK67', 'currency_id': self.env.ref("base.USD").id, 'type': 'bank', 'bank_account_id': bank_account_id}).id
         
         # Use an import wizard to process the file

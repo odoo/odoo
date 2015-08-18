@@ -37,7 +37,7 @@ class TestResPartnerBank(TransactionCase):
         partner_bank = partner_bank_model.create({
             'acc_number': acc_number,
             'partner_id': self.ref('base.res_partner_2'),
-            'state': 'bank',
+            'acc_type': 'bank',
         })
         vals = partner_bank_model.search([('acc_number', '=', acc_number)])
         self.assertEquals(1, len(vals))

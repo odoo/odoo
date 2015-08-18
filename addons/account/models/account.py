@@ -246,9 +246,9 @@ class AccountJournal(models.Model):
     display_on_footer = fields.Boolean("Show in invoices footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     bank_statements_source = fields.Selection([('manual', 'Record Manually')], default='manual', string='Bank Feeds', required=True)
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
-    bank_acc_type = fields.Selection(related='bank_account_id.state')
-    bank_bic = fields.Char(related='bank_account_id.bank_bic')
-    bank_name = fields.Char(related='bank_account_id.bank_name')
+    bank_acc_type = fields.Selection(related='bank_account_id.acc_type')
+    bank_name = fields.Char(related='bank_account_id.bank_id.name')
+    bank_bic = fields.Char(related='bank_account_id.bank_id.bic')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -392,7 +392,7 @@ class AccountJournal(models.Model):
                 'acc_number': vals.get('bank_acc_number'),
                 'bank_name': vals.get('bank_name'),
                 'bank_bic': vals.get('bank_bic'),
-                'state': vals.get('bank_acc_type'),
+                'acc_type': vals.get('bank_acc_type'),
                 'company_id': company_id,
                 'partner_id': self.env['res.company'].browse(company_id).partner_id.id,
             }).id

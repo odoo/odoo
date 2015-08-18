@@ -165,7 +165,7 @@ class AccountBankStatementImport(models.TransientModel):
             bank_code = 'bank'
         return self.env['res.partner.bank'].create({
             'acc_number': account_number,
-            'state': bank_code,
+            'acc_type': bank_code,
         })
 
     def _complete_stmts_vals(self, stmts_vals, journal, account_number):

@@ -15,7 +15,6 @@ with a single statement.
     'website': 'https://www.odoo.com',
     'depends': ['account_accountant'],
     'demo': ['demo/iban_demo.xml'],
-    'data': ['base_iban_data.xml' , 'base_iban_view.xml'],
     'installable': True,
     'auto_install': False,
 }

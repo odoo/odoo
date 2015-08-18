@@ -47,7 +47,7 @@ class ResCompany(models.Model):
         super(ResCompany, self).onchange_footer()
         if not self.custom_footer:
             # FIXME: self.id in an onchange is a openerp.models.NewId, making following line useless
-            bank_accounts = self.env['account.journal'].search([('company_id', '=', self.id), ('display_on_footer', '=', True)]).mapped(lambda r: r.bank_account_id)
+            bank_accounts = self.bank_ids.filtered(lambda r: r.display_on_footer).mapped(lambda r: r.bank_account_id)
             if not bank_accounts:
                 return
             title = _('Bank Accounts') if len(bank_accounts) > 1 else _('Bank Account')
