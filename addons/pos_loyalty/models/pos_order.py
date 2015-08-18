@@ -1,30 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
-from openerp.osv import fields, osv
-
-_logger = logging.getLogger(__name__)
+from openerp import api, fields, models
 
 
-class pos_order(osv.osv):
+class PosOrder(models.Model):
     _inherit = 'pos.order'
 
-    _columns = {
-        'loyalty_points': fields.float('Loyalty Points', help='The amount of Loyalty points the customer won or lost with this order'),
-    }
+    loyalty_points = fields.Float(help='The amount of Loyalty points the customer won or lost with this order')
 
-    def _order_fields(self, cr, uid, ui_order, context=None):
-        fields = super(pos_order, self)._order_fields(cr, uid, ui_order, context)
+    @api.model
+    def _order_fields(self, ui_order):
+        fields = super(PosOrder, self)._order_fields(ui_order)
         fields['loyalty_points'] = ui_order.get('loyalty_points', 0)
         return fields
 
-    def create_from_ui(self, cr, uid, orders, context=None):
-        ids = super(pos_order, self).create_from_ui(cr, uid, orders, context=context)
+    @api.model
+    def create_from_ui(self, orders):
+        order_ids = super(PosOrder, self).create_from_ui(orders)
         for order in orders:
             if order['data']['loyalty_points'] != 0 and order['data']['partner_id']:
-                partner = self.pool.get('res.partner').browse(cr, uid, order['data']['partner_id'], context=context)
+                partner = self.env['res.partner'].browse(order['data']['partner_id'])
                 partner.write({'loyalty_points': partner['loyalty_points'] + order['data']['loyalty_points']})
-
-        return ids
+        return order_ids

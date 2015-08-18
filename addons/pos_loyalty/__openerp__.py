@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Loyalty Program',
     'version': '1.0',
@@ -17,7 +16,6 @@ the point of sale, where the customers earn loyalty points
 and get rewards.
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['point_of_sale'],
     'data': [
         'views/pos_loyalty_views.xml',
@@ -29,5 +27,4 @@ and get rewards.
         'data/pos_loyalty_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
 }
