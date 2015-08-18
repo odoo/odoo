@@ -56,8 +56,7 @@ class repair_cancel(osv.osv_memory):
                 <form string="Cancel Repair" version="7.0">
                     <header>
                         <button name="cancel_repair" string="_Yes" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string="Cancel" class="oe_link btn-default" special="cancel"/>
                     </header>
                     <label string="Do you want to continue?"/>
                 </form>

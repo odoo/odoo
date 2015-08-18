@@ -709,8 +709,7 @@ class test_views(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button"/>
-                        or
-                        <button string="Skip" special="cancel" />
+                        <button string="Skip" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             """
@@ -777,8 +776,7 @@ class test_views(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button"/>
-                        or
-                        <button string="Skip" special="cancel" />
+                        <button string="Skip" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             """

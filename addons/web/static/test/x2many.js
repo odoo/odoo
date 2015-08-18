@@ -383,7 +383,7 @@ Tour.register({
         {
             title:      "cancel change",
             waitFor:    '.oe_list_field_cell:containsExact(ddd)',
-            element:    'a.oe_form_button_cancel',
+            element:    'button.oe_form_button_cancel',
             onload: function () {
                 // remove the window alert (can't click on it with JavaScript tour)
                 $('.oe_form_dirty').removeClass('oe_form_dirty');
