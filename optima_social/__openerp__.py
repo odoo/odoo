@@ -8,6 +8,7 @@
     'description': """
         This modules adds the fields for social media IDs for the company. facebook Id, Twitter Handle and Google-Plus Id. These Ids can then be dispalyed in the reports such as invoice, payslips etc
     """,
+    'images': ['static/description/id1.png'],
     'price': 2,
     'currency': 'EUR',
     'author': "Optima ICT",
