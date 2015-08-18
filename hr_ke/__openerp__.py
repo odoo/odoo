@@ -8,7 +8,7 @@
     'description': """
         In this module, we are adding Kenya specific HR details and requirements for processing payroll. NSSF, NHIF, Next Of Kin, PAYE, HELB and others
     """,
-    'images': ['static/description/hr.png']
+    'images': ['static/description/hr.png'],
     'author': "Optima ICT Services LTD",
     'website': "http://www.optima.co.ke",
     'price': 400,
