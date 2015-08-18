@@ -86,7 +86,7 @@
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="type"/>
+                                <field name="event_type_id"/>
                                 <field name="date_begin"/>
                                 <field name="date_end"/>
                                 <field name="date_tz" />
@@ -134,7 +134,7 @@
             <field name="arch" type="xml">
                 <tree string="Events" decoration-bf="message_unread==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="event_type_id"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
                     <field name="seats_reserved"/>
@@ -213,9 +213,9 @@
             <field name="model">event.event</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="type" date_start="date_begin" date_stop="date_end" string="Event Organization">
+                <calendar color="event_type_id" date_start="date_begin" date_stop="date_end" string="Event Organization">
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="event_type_id"/>
                 </calendar>
             </field>
         </record>
@@ -234,11 +234,11 @@
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
                     <filter string="Upcoming" name="upcoming" domain="[('date_begin','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Upcoming events from today" />
-                    <field name="type"/>
+                    <field name="event_type_id"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible" context="{'group_by': 'user_id'}"/>
-                        <filter string="Event Type" context="{'group_by':'type'}"/>
+                        <filter string="Event Type" context="{'group_by':'event_type_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>
                         <filter string="Start Month" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>

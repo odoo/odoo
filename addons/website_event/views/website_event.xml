@@ -73,8 +73,8 @@
                                     "widget": "contact",
                                     "fields": ["city"]
                                     }'/>
-                                <div class="text-muted" t-if="event.type">
-                                    <i class="fa fa-tag"></i> <span t-field="event.type"/>
+                                <div class="text-muted" t-if="event.event_type_id">
+                                    <i class="fa fa-tag"></i> <span t-field="event.event_type_id"/>
                                 </div>
                             </div>
                         </li>
@@ -204,8 +204,8 @@
                 <div class="col-sm-7" id="event_menu">
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
                         <li><a href="/event">All Events</a></li>
-                        <li t-if="event.type">
-                            <a t-attf-href="/event?type=#{event.type.id}" t-esc="event.type.name"/>
+                        <li t-if="event.event_type_id">
+                            <a t-attf-href="/event?type=#{event.event_type_id.id}" t-esc="event.event_type_id.name"/>
                         </li>
                         <li t-if="event.country_id">
                             <a t-attf-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>

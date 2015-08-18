@@ -42,9 +42,10 @@ class event_event(models.Model):
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer',
         default=lambda self: self.env.user.company_id.partner_id)
-    type = fields.Many2one(
+    event_type_id = fields.Many2one(
         'event.type', string='Category',
-        readonly=False, states={'done': [('readonly', True)]})
+        readonly=False, states={'done': [('readonly', True)]},
+        oldname='type')
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many('event.mail', 'event_id', string='Mail Schedule', default=lambda self: self._default_event_mail_ids())
 
@@ -237,12 +238,12 @@ class event_event(models.Model):
     def button_confirm(self):
         self.state = 'confirm'
 
-    @api.onchange('type')
+    @api.onchange('event_type_id')
     def _onchange_type(self):
-        if self.type:
-            self.seats_min = self.type.default_registration_min
-            self.seats_max = self.type.default_registration_max
-            self.reply_to = self.type.default_reply_to
+        if self.event_type_id:
+            self.seats_min = self.event_type_id.default_registration_min
+            self.seats_max = self.event_type_id.default_registration_max
+            self.reply_to = self.event_type_id.default_reply_to
 
     @api.multi
     def action_event_registration_report(self):
