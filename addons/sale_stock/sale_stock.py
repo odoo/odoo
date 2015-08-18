@@ -445,16 +445,18 @@ class stock_picking(osv.osv):
         This function returns an action that display existing invoices of given Transfer ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         ModelData = self.pool['ir.model.data']
-        InvoicePool = self.pool.get('account.invoice')
+        InvoiceLine = self.pool['account.invoice.line']
         result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account', 'action_invoice_tree1', context=context)
         inv_ids = []
 
         for do in self.browse(cr, uid, ids, context=context):
-            inv_ids = InvoicePool.search(cr, uid, [('origin', '=', do.name)])
+            moves = map( lambda x : x.id, do.move_lines)
+            line_ids = InvoiceLine.search(cr, uid, [('move_id', 'in', moves)])
+            inv_ids.extend([line.invoice_id.id for line in InvoiceLine.browse(cr, uid, line_ids)])
 
         if not inv_ids:
             raise UserError(_('No invoices created for this Delivery Order.'))
-
+        inv_ids = list(set(inv_ids))
         #choose the view_mode according to invoices
         if len(inv_ids)>1:
             result['domain'] = ('id', 'in', inv_ids)
