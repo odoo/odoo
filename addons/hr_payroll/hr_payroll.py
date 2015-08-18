@@ -943,11 +943,9 @@ class hr_employee(osv.osv):
         return res
 
     def _payslip_count(self, cr, uid, ids, field_name, arg, context=None):
-        Payslip = self.pool['hr.payslip']
-        return {
-            employee_id: Payslip.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
-            for employee_id in ids
-        }
+        Payslip_data = self.pool['hr.payslip'].read_group(cr, uid, [('employee_id', 'in', ids)], ['employee_id'], ['employee_id'], context=context)
+        mapped_data = dict([(m['employee_id'][0], m['employee_id_count']) for m in Payslip_data])
+        return mapped_data
 
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),

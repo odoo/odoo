@@ -291,21 +291,34 @@ class fleet_vehicle(osv.Model):
         return model_id
     
     def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        Odometer = self.pool['fleet.vehicle.odometer']
-        LogFuel = self.pool['fleet.vehicle.log.fuel']
-        LogService = self.pool['fleet.vehicle.log.services']
-        LogContract = self.pool['fleet.vehicle.log.contract']
-        Cost = self.pool['fleet.vehicle.cost']
-        return {
-            vehicle_id: {
-                'odometer_count': Odometer.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
-                'fuel_logs_count': LogFuel.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
-                'service_count': LogService.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
-                'contract_count': LogContract.search_count(cr, uid, [('vehicle_id', '=', vehicle_id)], context=context),
-                'cost_count': Cost.search_count(cr, uid, [('vehicle_id', '=', vehicle_id), ('parent_id', '=', False)], context=context)
-            }
-            for vehicle_id in ids
-        }
+        res = dict([(id, {'odometer_count': 0, 'fuel_logs_count': 0, 'service_count': 0, 'contract_count': 0, 'cost_count': 0}) for id in ids])
+
+        Odometer_data = self.pool['fleet.vehicle.odometer'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        for Odometer in Odometer_data:
+            vehicle_id = Odometer['vehicle_id'][0]
+            res[vehicle_id]['odometer_count'] = Odometer['vehicle_id_count']
+
+        LogFuel_data = self.pool['fleet.vehicle.log.fuel'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        for LogFuel in LogFuel_data:
+            vehicle_id = LogFuel['vehicle_id'][0]
+            res[vehicle_id]['fuel_logs_count'] = LogFuel['vehicle_id_count']
+
+        LogService_data = self.pool['fleet.vehicle.log.services'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        for LogService in LogService_data:
+            vehicle_id = LogService['vehicle_id'][0]
+            res[vehicle_id]['service_count'] = LogService['vehicle_id_count']
+
+        LogContract_data = self.pool['fleet.vehicle.log.contract'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        for LogContract in LogContract_data:
+            vehicle_id = LogContract['vehicle_id'][0]
+            res[vehicle_id]['contract_count'] = LogContract['vehicle_id_count']
+
+        Cost_data = self.pool['fleet.vehicle.cost'].read_group(cr, uid, [('vehicle_id', 'in', ids), ('parent_id', '=', False)], ['vehicle_id'], ['vehicle_id'], context=context)
+        for Cost in Cost_data:
+            vehicle_id = Cost['vehicle_id'][0]
+            res[vehicle_id]['cost_count'] = Cost['vehicle_id_count']
+
+        return res
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'

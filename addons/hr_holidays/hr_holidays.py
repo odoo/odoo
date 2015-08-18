@@ -568,14 +568,18 @@ class hr_employee(osv.Model):
         return result
 
     def _leaves_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
+        res = dict([(id, {'leaves_count': 0, 'approved_leaves_count': 0}) for id in ids])
         Holidays = self.pool['hr.holidays']
+        leaves_data = Holidays.read_group(cr, uid, [('employee_id', 'in', ids), ('type', '=', 'remove')], ['employee_id'], ['employee_id'], context=context)
+        for leaves in leaves_data:
+            employee_id = leaves['employee_id'][0]
+            res[employee_id]['leaves_count'] = leaves['employee_id_count']
         date_begin = date.today().replace(day=1)
         date_end = date_begin.replace(day=calendar.monthrange(date_begin.year, date_begin.month)[1])
-        for employee_id in ids:
-            leaves = Holidays.search_count(cr, uid, [('employee_id', '=', employee_id), ('type', '=', 'remove')], context=context)
-            approved_leaves = Holidays.search_count(cr, uid, [('employee_id', '=', employee_id), ('type', '=', 'remove'), ('date_from', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('date_from', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('state', '=', 'validate'), ('payslip_status', '=', False)], context=context)
-            res[employee_id] = {'leaves_count': leaves, 'approved_leaves_count': approved_leaves}
+        approved_leaves_data = Holidays.read_group(cr, uid, [('employee_id', 'in', ids), ('type', '=', 'remove'), ('date_from', '>=', date_begin.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('date_from', '<=', date_end.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)), ('state', '=', 'validate'), ('payslip_status', '=', False)], ['employee_id'], ['employee_id'], context=context)
+        for app_leaves in approved_leaves_data:
+            employee_id = app_leaves['employee_id'][0]
+            res[employee_id]['approved_leaves_count'] = app_leaves['employee_id_count']
         return res
 
     def _absent_employee(self, cr, uid, ids, field_name, arg, context=None):
