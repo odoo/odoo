@@ -241,14 +241,11 @@ class AccountJournal(models.Model):
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
     # Bank journals fields
-    company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id')
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict')
-    display_on_footer = fields.Boolean("Show in invoices footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
-    bank_statements_source = fields.Selection([('manual', 'Record Manually')], default='manual', string='Bank Feeds', required=True)
+    display_on_footer = fields.Boolean("Show in Invoices Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
+    bank_statements_source = fields.Selection([('manual', 'Record Manually')], string='Bank Feeds')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
-    bank_acc_type = fields.Selection(related='bank_account_id.acc_type')
-    bank_name = fields.Char(related='bank_account_id.bank_id.name')
-    bank_bic = fields.Char(related='bank_account_id.bank_id.bic')
+    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -274,12 +271,13 @@ class AccountJournal(models.Model):
             if self.bank_account_id.partner_id != self.company_id.partner_id:
                 raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
 
-    @api.one
-    @api.constrains('type', 'bank_statements_source', 'bank_account_id')
-    def _check_bank_statements_source(self):
-        if self.type == 'bank' and not self.bank_account_id and self.bank_statements_source != 'manual':
-            bank_st_src_label = next(val[1] for val in self._fields['bank_statements_source']._description_selection(self.env) if val[0] == self.bank_statements_source)
-            raise ValidationError(_('You cannot use "%s" as bank feed without configuring a bank account.') % bank_st_src_label)
+    # FIXME: if you set bank_statements_source and bank_acc_number at the same time, the constraint doesn't get a value for bank_acc_number and triggers a false positive
+    # @api.one
+    # @api.constrains('type', 'bank_statements_source', 'bank_account_id', 'bank_acc_number')
+    # def _check_bank_statements_source(self):
+    #     if self.type == 'bank' and not self.bank_account_id and not self.bank_acc_number and self.bank_statements_source and self.bank_statements_source != 'manual':
+    #         bank_st_src_label = next(val[1] for val in self._fields['bank_statements_source']._description_selection(self.env) if val[0] == self.bank_statements_source)
+    #         raise ValidationError(_('You cannot use "%s" as bank feed without configuring a bank account.') % bank_st_src_label)
 
     @api.onchange('bank_acc_number')
     def onchange_bank_acc_number(self):
@@ -318,7 +316,14 @@ class AccountJournal(models.Model):
                 if journal.refund_sequence_id:
                     new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
                     journal.refund_sequence_id.write({'prefix': new_prefix})
-        return super(AccountJournal, self).write(vals)
+        result = super(AccountJournal, self).write(vals)
+
+        # Create the bank_account_id if necessary
+        if 'bank_acc_number' in vals:
+            for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
+                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+        return result
 
     @api.model
     def _get_sequence_prefix(self, code, refund=False):
@@ -385,18 +390,6 @@ class AccountJournal(models.Model):
     @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
-
-        if vals.get('type') == 'bank' and vals.get('bank_acc_number'):
-            # Create the bank account from values passed through the related fields
-            vals['bank_account_id'] = self.env['res.partner.bank'].create({
-                'acc_number': vals.get('bank_acc_number'),
-                'bank_name': vals.get('bank_name'),
-                'bank_bic': vals.get('bank_bic'),
-                'acc_type': vals.get('bank_acc_type'),
-                'company_id': company_id,
-                'partner_id': self.env['res.company'].browse(company_id).partner_id.id,
-            }).id
-
         if vals.get('type') in ('bank', 'cash'):
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
@@ -424,7 +417,25 @@ class AccountJournal(models.Model):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
-        return super(AccountJournal, self).create(vals)
+
+        journal = super(AccountJournal, self).create(vals)
+
+        # Create the bank_account_id if necessary
+        if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
+            journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+        return journal
+
+    def set_bank_account(self, acc_number, bank_id=None):
+        """ Create a res.partner.bank and set it as value of the  field bank_account_id """
+        self.ensure_one()
+        self.bank_account_id = self.env['res.partner.bank'].create({
+            'acc_number': acc_number,
+            'bank_id': bank_id,
+            'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.company_id.partner_id.id,
+        }).id
 
     @api.multi
     @api.depends('name', 'currency_id', 'company_id', 'company_id.currency_id')

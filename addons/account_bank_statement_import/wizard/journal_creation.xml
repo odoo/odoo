@@ -11,13 +11,12 @@
                     <p>Just click OK to create the account/journal and finish the import. If this was a mistake, hit cancel to abort the import.</p>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="currency_id"/>
+                            <field name="name" string="Bank Journal Name"/>
+                            <field name="bank_acc_number" readonly="1"/>
+                            <field name="bank_id"/>
                         </group>
                         <group>
-                            <field name="company_partner_id" invisible="1"/>
-                            <field name="bank_account_id" required="1" domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', False)]"
-                                context="{'form_view_ref':'account.view_bank_account_form', 'default_acc_number': context['bank_acc_number'], 'default_company_id': company_id, 'default_partner_id': company_partner_id}"/>
+                            <field name="currency_id" readonly="1" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>

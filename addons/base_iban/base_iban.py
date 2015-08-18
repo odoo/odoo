@@ -43,7 +43,14 @@ def validate_iban(iban):
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
-    acc_type = fields.Selection(selection_add=[('iban', 'IBAN')])
+    @api.one
+    @api.depends('acc_type')
+    def _compute_acc_type(self):
+        try:
+            validate_iban(self.acc_number)
+            self.acc_type = 'iban'
+        except ValidationError:
+            super(ResPartnerBank, self)._compute_acc_type()
 
     def get_bban(self):
         if self.acc_type != 'iban':

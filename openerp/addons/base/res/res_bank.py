@@ -3,6 +3,7 @@
 import re
 
 from openerp import api, fields, models, _
+from openerp.osv import expression
 from openerp.exceptions import UserError
 
 def sanitize_account_number(acc_number):
@@ -15,7 +16,7 @@ class Bank(models.Model):
     _name = 'res.bank'
     _order = 'name'
 
-    name = fields.Char(select=True)
+    name = fields.Char(required=True)
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char()
@@ -26,7 +27,7 @@ class Bank(models.Model):
     phone = fields.Char()
     fax = fields.Char()
     active = fields.Boolean(default=True)
-    bic = fields.Char('Bank Identifier Code', help="Sometimes called BIC or Swift.")
+    bic = fields.Char('Bank Identifier Code', select=True, help="Sometimes called BIC or Swift.")
 
     @api.multi
     @api.depends('name', 'bic')
@@ -37,16 +38,24 @@ class Bank(models.Model):
             result.append((bank.id, name))
         return result
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
+            if operator in expression.NEGATIVE_TERM_OPERATORS:
+                domain = ['&'] + domain
+        banks = self.search(domain + args, limit=limit)
+        return banks.name_get()
+
 class ResPartnerBank(models.Model):
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'
     _order = 'sequence'
 
-    def _default_acc_type(self):
-        return self._fields['acc_type'].get_values(self.env)[-1]
-
-    acc_type = fields.Selection([('bank', 'Normal')], 'Bank Account Type', default=_default_acc_type, required=True)
+    acc_type = fields.Char(compute='_compute_acc_type', help='Bank account type, inferred from account number')
     acc_number = fields.Char('Account Number', required=True)
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     partner_id = fields.Many2one('res.partner', 'Account Holder', ondelete='cascade', select=True, domain=['|', ('is_company', '=', True), ('parent_id', '=', False)])
@@ -65,6 +74,11 @@ class ResPartnerBank(models.Model):
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
         self.sanitized_acc_number = sanitize_account_number(self.acc_number)
+
+    @api.one
+    @api.depends('acc_type')
+    def _compute_acc_type(self):
+        self.acc_type = 'bank'
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):

@@ -19,8 +19,7 @@
         <record id="bank_iban_main_partner" model="res.partner.bank">
             <field name="acc_type">iban</field>
             <field name="acc_number">BE61310126985517</field>
-            <field name="bank_name">ING</field>
-            <field name="bank_bic">BBRUBEBB</field>
+            <field name="bank_id" ref="base.bank_ing" />
             <field name="partner_id" ref="base.res_partner_4"/>
         </record>
 

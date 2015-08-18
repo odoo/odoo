@@ -7,8 +7,6 @@ class account_bank_statement_import_journal_creation(models.TransientModel):
     _description = 'Import Bank Statement Journal Creation Wizard'
 
     journal_id = fields.Many2one('account.journal', delegate=True, required=True, ondelete='cascade')
-    # Delegation does not work for related field, that's why company_partner_id is redefined here
-    company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id')
 
     @api.multi
     def create_journal(self):

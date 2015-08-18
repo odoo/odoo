@@ -200,15 +200,17 @@
                     </t>
 
                     <t t-name="JournalBodyBankCash">
-                        <!-- On the left, display a button to get statements and, if applicable, a button to reconcile statements -->
+                        <!-- On the left, display :
+                            - A button corresponding to the bank_statements_source, if it wasn't configured, a button for each of them
+                            - If there are statements to reconcile, a link to reconcile them -->
                         <div class="col-xs-6 o_kanban_primary_left">
                             <t t-if="journal_type == 'bank'">
-                                <t t-if="dashboard.no_statement">
+                                <t t-if="! dashboard.bank_statements_source">
                                     <div name="bank_journal_default_cta">
                                         <button type="object" name="create_bank_statement" class="btn btn-primary btn-sm">Create Statement</button>
                                     </div>
                                 </t>
-                                <t t-if="!dashboard.no_statement">
+                                <t t-if="dashboard.bank_statements_source">
                                     <div name="bank_journal_cta">
                                         <button t-if="dashboard.bank_statements_source == 'manual'" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">Create Statement</button>
                                     </div>

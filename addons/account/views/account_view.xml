@@ -215,6 +215,7 @@
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
@@ -241,14 +242,8 @@
                         <group>
                             <group>
                                 <field name="type"/>
-                                <field name="company_partner_id" invisible="1"/>
-                                <field name="bank_account_id" attrs="{'invisible': [('type', '!=', 'bank')]}"
-                                    domain="[('partner_id', '=', company_partner_id), ('journal_id', '=', False)]"
-                                    context="{'form_view_ref':'account.view_bank_account_form', 'default_company_id': company_id, 'default_partner_id': company_partner_id}" />
-                                <field name="display_on_footer" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
                             </group>
                             <group>
-                                <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}" invisible="1"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>
@@ -286,6 +281,18 @@
                                     </group>
                                 </group>
                             </page>
+                            <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                <group>
+                                    <group>
+                                        <field name="bank_acc_number"/>
+                                        <field name="bank_id"/>
+                                        <field name="display_on_footer"/>
+                                    </group>
+                                    <group >
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
@@ -295,6 +302,7 @@
         <record id="view_account_bank_journal_tree" model="ir.ui.view">
             <field name="name">account.bank.journal.tree</field>
             <field name="model">account.journal</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Account Journal">
                     <field name='sequence' widget='handle'/>
@@ -317,23 +325,13 @@
                             <label for="bank_acc_number" required="1" class="oe_edit_only"/>
                             <h1><field name="bank_acc_number" required="1"/></h1>
                         </div>
-                        <group>
-                            <group>
-                                <field name="bank_acc_type"/>
-                                <field name="display_on_footer"/>
-                            </group>
-                            <group>
-                                <field name="bank_name"/>
-                                <field name="bank_bic" attrs="{'required': [('bank_acc_type', '=', 'iban')]}"/>
-                            </group>
-                            <group>
-                                <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
-                                <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
-                            </group>
-                            <group>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                            </group>
+                        <group col="4">
+                            <field name="bank_id"/>
+                            <field name="display_on_footer"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                         </group>
                     </sheet>
                 </form>

@@ -69,10 +69,9 @@ class AccountBankStatementImport(models.TransientModel):
             'target': 'new',
             'context': {
                 'statement_import_transient_id': self.env.context['active_id'],
-                # To be passed as default value for the journal's bank account 'acc_number' field
-                'bank_acc_number': account_number,
-                'default_currency_id': currency and currency.id or False,
+                'default_bank_acc_number': account_number,
                 'default_name': _('Bank') + ' ' + account_number,
+                'default_currency_id': currency and currency.id or False,
                 'default_type': 'bank',
                 'default_bank_statements_source': 'file_import',
             }
@@ -133,12 +132,16 @@ class AccountBankStatementImport(models.TransientModel):
             if currency == company_currency:
                 currency = False
 
-        # Find the journal from context or statement account number
         journal = journal_obj.browse(self.env.context.get('journal_id', []))
         if account_number:
-            if journal and journal.bank_account_id.sanitized_acc_number != sanitized_account_number:
+            # No bank account on the journal : create one from the account number of the statement
+            if journal and not journal.bank_account_id:
+                journal.set_bank_account(account_number)
+            # Already a bank account on the journal : check it's the same as on the statement
+            elif journal and journal.bank_account_id.sanitized_acc_number != sanitized_account_number:
                 raise UserError(_('The account of this statement (%s) is not the same as the journal (%s).') % (account_number, journal.bank_account_id.acc_number))
-            else:
+            # No journal passed to the wizard : try to find one using the account number of the statement
+            elif not journal:
                 journal = journal_obj.search([('bank_account_id.sanitized_acc_number', '=', sanitized_account_number)])
 
         # If importing into an existing journal, its currency must be the same as the bank statement
@@ -156,17 +159,6 @@ class AccountBankStatementImport(models.TransientModel):
             raise UserError(_('Cannot find in which journal import this statement. Please manually select a journal.'))
 
         return currency, journal
-
-    def _create_bank_account(self, account_number):
-        try:
-            bank_type = self.env.ref('bank.bank_normal')
-            bank_code = bank_type.code
-        except ValueError:
-            bank_code = 'bank'
-        return self.env['res.partner.bank'].create({
-            'acc_number': account_number,
-            'acc_type': bank_code,
-        })
 
     def _complete_stmts_vals(self, stmts_vals, journal, account_number):
         for st_vals in stmts_vals:
@@ -190,7 +182,7 @@ class AccountBankStatementImport(models.TransientModel):
                             bank_account_id = partner_bank.id
                             partner_id = partner_bank.partner_id.id
                         else:
-                            bank_account_id = self._create_bank_account(line_vals['account_number']).id
+                            bank_account_id = self.env['res.partner.bank'].create({'acc_number': line_vals['account_number']}).id
                     line_vals['partner_id'] = partner_id
                     line_vals['bank_account_id'] = bank_account_id
 

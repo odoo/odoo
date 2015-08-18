@@ -175,7 +175,7 @@ class AccountConfigSettings(models.TransientModel):
 
     @api.multi
     def open_bank_accounts(self):
-        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_bank_account_form')
+        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_bank_journal_form')
         return action_rec.read([])[0]
 
     @api.multi
