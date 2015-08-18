@@ -281,9 +281,10 @@ class ResPartner(models.Model):
 
     @api.multi
     def _journal_item_count(self):
+        movelines = self.env['account.move.line'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        result = dict((line['partner_id'][0], line['partner_id_count']) for line in movelines)
         for partner in self:
-            partner.journal_item_count = self.env['account.move.line'].search_count([('partner_id', '=', partner.id)])
-            partner.contracts_count = self.env['account.analytic.account'].search_count([('partner_id', '=', partner.id)])
+            partner.journal_item_count = result.get(partner.id, 0)
 
     def get_followup_lines_domain(self, date, overdue_only=False, only_unblocked=False):
         domain = [('reconciled', '=', False), ('account_id.deprecated', '=', False), ('account_id.internal_type', '=', 'receivable')]
@@ -365,7 +366,6 @@ class ResPartner(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', store=True, readonly=True,
         help='Utility field to express amount currency')
 
-    contracts_count = fields.Integer(compute='_journal_item_count', string="Contracts", type='integer')
     journal_item_count = fields.Integer(compute='_journal_item_count', string="Journal Items", type="integer")
     issued_total = fields.Char(compute='_compute_issued_total', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,

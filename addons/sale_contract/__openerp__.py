@@ -25,6 +25,7 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'views/account_analytic_analysis.xml',
         'views/product_template_view.xml',
         'report/sale_contract_report_view.xml',
+        'views/res_partner_view.xml',
     ],
     'demo': ['demo/sale_contract_demo.xml'],
     'installable': True,
