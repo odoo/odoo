@@ -2476,7 +2476,6 @@ define(['summernote/summernote'], function () {
             if ($media.hasClass("media_iframe_video")) {
                 var src = $media.data('src');
                 this.$("input#urlvideo").val(src);
-                this.$("#autoplay").attr("checked", src.indexOf('autoplay=1') != -1);
                 this.get_video();
             } else {
                 this.add_class = "pull-left";
