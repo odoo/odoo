@@ -19,6 +19,22 @@
 #
 ##############################################################################
 
+import time
+
+timers = {}
+timers_sum = {}
+def logt(name):
+    if name in timers:
+        _logger.log(25, "-" *80)
+        _logger.log(25, "BEGIN %s", name)
+        t0, t0_sql = timers.pop(name)
+        timers_sum[name] = timers_sum.get(name,0) + time.time() - t0
+        _logger.log(25, "END %s in %.2fs, %s queries  SUM %s ", name, time.time() - t0, openerp.sql_db.sql_counter - t0_sql, timers_sum[name])
+    else:
+        t0 = time.time()
+        t0_sql = openerp.sql_db.sql_counter
+        timers[name] = t0, t0_sql
+
 """ Models registries.
 
 """
@@ -33,6 +49,8 @@ from openerp.tools import assertion_report, lazy_property, classproperty, config
 from openerp.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
+
+modelscache = {}
 
 class Registry(Mapping):
     """ Model registry for a particular database.
@@ -52,6 +70,7 @@ class Registry(Mapping):
         self._init_parent = {}
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
+        self._triggers = {}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -84,6 +103,8 @@ class Registry(Mapping):
             _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
         cr.close()
+
+
 
     #
     # Mapping abstract methods implementation
@@ -161,11 +182,24 @@ class Registry(Mapping):
         for cls in models.MetaModel.module_to_models.get(module.name, []):
             # models register themselves in self.models
             model = cls._build_model(self, cr)
+            key = model.__class__.__mro__
+            print "Load", model._name
+            if key in modelscache:
+                model = modelscache[key]
+
             if model._name not in models_to_load:
                 # avoid double-loading models whose declaration is split
                 models_to_load.append(model._name)
 
         return [self.models[m] for m in models_to_load]
+
+    def add_trigger(self, field, trigger):
+        #print "TRIGGER", field, trigger
+        if field in self._triggers:
+            if trigger not in self._triggers[field]:
+                self._triggers[field] += (trigger,)
+        else:
+            self._triggers[field] = (trigger,)
 
     def setup_models(self, cr, partial=False):
         """ Complete the setup of models.
@@ -181,20 +215,43 @@ class Registry(Mapping):
         for (model_name,) in cr.fetchall():
             ir_model.instanciate(cr, SUPERUSER_ID, model_name, {})
 
-        # prepare the setup on all models
-        for model in self.models.itervalues():
-            model._prepare_setup(cr, SUPERUSER_ID)
+        # only process new models
+        models = []
+        for m in self.models.itervalues():
+            # skip inherits temproraly
+            if m._inherits:
+                models.append(m)
+            elif not m._fields_done:
+                models.append(m)
 
+        logt('prepare')
+        # prepare the setup on all models
+        for model in models:
+            model._prepare_setup(cr, SUPERUSER_ID)
+        logt('prepare')
+
+        logt('base')
         # do the actual setup from a clean state
         self._m2m = {}
-        for model in self.models.itervalues():
+        for model in models:
             model._setup_base(cr, SUPERUSER_ID, partial)
+        logt('base')
 
-        for model in self.models.itervalues():
+
+        logt('fields')
+        for model in models:
             model._setup_fields(cr, SUPERUSER_ID)
+        logt('fields')
 
+        logt('complete')
+        # Alawys setup complete for triggers on registry
         for model in self.models.itervalues():
             model._setup_complete(cr, SUPERUSER_ID)
+            model._fields_done = True
+            modelscache[model.__class__.__mro__] = model
+        logt('complete')
+
+        print len(modelscache)
 
     def clear_caches(self):
         """ Clear the caches

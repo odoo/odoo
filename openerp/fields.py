@@ -613,22 +613,20 @@ class Field(object):
                 continue
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
-            field.add_trigger((self, '.'.join(path0 or ['id'])))
+            #field.add_trigger((self, '.'.join(path0 or ['id'])))
+            env.registry.add_trigger(field, (self, '.'.join(path0 or ['id'])))
 
             # add trigger on inverse fields, too
             for invf in field.inverse_fields:
                 #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invf.add_trigger((self, '.'.join(path0 + [head])))
+                #invf.add_trigger((self, '.'.join(path0 + [head])))
+                env.registry.add_trigger(invf, (self, '.'.join(path0 or ['id'])))
 
             # recursively traverse the dependency
             if tail:
                 comodel = env[field.comodel_name]
                 self._setup_dependency(path0 + [head], comodel, tail)
 
-    @property
-    def dependents(self):
-        """ Return the computed fields that depend on ``self``. """
-        return (field for field, path in self._triggers)
 
     ############################################################################
     #
@@ -953,7 +951,7 @@ class Field(object):
         """
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
-        for field, path in self._triggers:
+        for field, path in records.env.registry._triggers.get(self,[]):
             if path and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
@@ -979,7 +977,7 @@ class Field(object):
         # invalidate the fields on the records in cache that depend on
         # ``records``, except fields currently being computed
         spec = []
-        for field, path in self._triggers:
+        for field, path in records.env.registry._triggers.get(self,[]):
             target = env[field.model_name]
             computed = target.browse(env.computed[field])
             if path == 'id':

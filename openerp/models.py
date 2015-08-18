@@ -639,6 +639,7 @@ class BaseModel(object):
             '_constraints': constraints.values(),
             '_sql_constraints': sql_constraints,
             '_original_module': original_module,
+            '_fields_done': False,
         })
 
         # instantiate the model, and initialize it
@@ -5711,8 +5712,8 @@ class BaseModel(object):
         """
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
-        return field.name in self._onchange_methods or \
-            any(dep in other_fields for dep in field.dependents)
+        dependents = (field for field, path in self.pool._triggers.get(field,[]))
+        return field.name in self._onchange_methods or any(dep in other_fields for dep in dependents)
 
     @api.model
     def _onchange_spec(self, view_info=None):
