@@ -4,5 +4,3 @@
 # Copyright (c) 2008 JAILLET Simon - CrysaLEAD - www.crysalead.fr
 
 import l10n_fr
-import report
-import wizard
