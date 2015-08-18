@@ -420,7 +420,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         if (this.$buttons) {
 
             var fields_def = new instance.web.Model(this.dataset.model).call('fields_get', {
-                    context: this.dataset.context
+                    context: this.dataset.get_context()
                 });
 
             this.groupby_menu = new my.GroupByMenu(this, this.groupbys, fields_def);
