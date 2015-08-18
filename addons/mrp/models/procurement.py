@@ -57,7 +57,6 @@ class ProcurementOrder(models.Model):
         date_planned = date_planned - relativedelta(days=self.company_id.manufacturing_lead)
         return date_planned
 
-    @api.model
     def _prepare_mo_vals(self):
         res_id = self.move_dest_id and self.move_dest_id.id or False
         newdate = self._get_date_planned()
