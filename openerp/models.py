@@ -4555,6 +4555,9 @@ class BaseModel(object):
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
+        # Prevent recursion when order field refers to self.
+        if dest_model._table == self._table:
+            m2o_order = dest_model._rec_name
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
