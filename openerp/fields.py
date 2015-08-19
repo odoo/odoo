@@ -1014,10 +1014,13 @@ class Integer(Field):
     type = 'integer'
     _slots = {
         'group_operator': None,         # operator for aggregating values
+        'group_expression': None,       # advance expression for aggregating values
     }
 
     _related_group_operator = property(attrgetter('group_operator'))
     _column_group_operator = property(attrgetter('group_operator'))
+    _related_group_expression = property(attrgetter('group_expression'))
+    _column_group_expression = property(attrgetter('group_expression'))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
@@ -1052,6 +1055,7 @@ class Float(Field):
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
         'group_operator': None,         # operator for aggregating values
+        'group_expression': None,       # advance expression for aggregating values
     }
 
     def __init__(self, string=None, digits=None, **kwargs):
@@ -1067,12 +1071,14 @@ class Float(Field):
 
     _related__digits = property(attrgetter('_digits'))
     _related_group_operator = property(attrgetter('group_operator'))
+    _related_group_expression = property(attrgetter('group_expression'))
 
     _description_digits = property(attrgetter('digits'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
     _column_group_operator = property(attrgetter('group_operator'))
+    _column_group_expression = property(attrgetter('group_expression'))
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
