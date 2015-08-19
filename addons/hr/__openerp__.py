@@ -4,10 +4,10 @@
 {
     'name': 'Employee Directory',
     'version': '1.1',
-    'author': 'OpenERP SA',
+    'author': 'Odoo S.A.',
     'category': 'Human Resources',
     'sequence': 21,
-    'website': 'https://www.odoo.com',
+    'website': 'https://www.odoo.com/page/employees',
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
@@ -22,8 +22,6 @@ You can manage:
 * HR Departments
 * HR Jobs
     """,
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',
         'images/hr_employee.jpeg',
@@ -40,23 +38,18 @@ You can manage:
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
-        'hr_view.xml',
-        'hr_installer.xml',
-        'hr_data.xml',
-        'hr_tip_data.xml',
-        'res_config_view.xml',
-        'mail_hr_view.xml',
-        'views/hr.xml',
-        'hr_dashboard.xml',
+        'views/hr_employee_views.xml',
+        'views/hr_job_views.xml',
+        'views/hr_department_views.xml',
+        'data/hr_data.xml',
+        'data/hr_tip_data.xml',
+        'views/res_config_views.xml',
+        'views/mail_message_views.xml',
+        'views/hr_templates.xml',
+        'views/hr_dashboard.xml',
     ],
-    'demo': ['hr_demo.xml'],
-    'test': [
-        'test/hr_users.yml',
-        'test/open2recruit2close_job.yml',
-        'test/hr_demo.yml',
-    ],
+    'demo': ['data/hr_demo.xml'],
     'installable': True,
     'application': True,
-    'auto_install': False,
     'qweb': [],
 }

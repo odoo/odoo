@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data noupdate="0">
+<odoo>
 
-    <record model="res.groups" id="base.group_user">
+    <record id="base.group_user" model="res.groups">
         <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
     </record>
 
@@ -25,21 +24,20 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-</data>
 <data noupdate="1">
 
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>
         <field name="model_id" ref="model_hr_department"/>
-        <field eval="True" name="global"/>
+        <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
     <record id="hr_job_comp_rule" model="ir.rule">
         <field name="name">Job multi company rule</field>
         <field name="model_id" ref="model_hr_job"/>
-        <field eval="True" name="global"/>
+        <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 </data>
-</openerp>
+</odoo>

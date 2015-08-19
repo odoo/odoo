@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record model="ir.actions.act_window" id="mail.mail_message_action_inbox">
+<odoo>
+        <record id="mail.mail_message_action_inbox" model="ir.actions.act_window">
             <field name="name">Inbox</field>
             <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
@@ -20,5 +19,4 @@
                  ('author_id.user_ids', 'in', [uid]),
             ]</field>
         </record>
-    </data>
-</openerp>
+</odoo>
