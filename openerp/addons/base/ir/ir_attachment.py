@@ -104,7 +104,7 @@ class ir_attachment(osv.osv):
 
     def force_storage(self, cr, uid, context=None):
         """Force all attachments to be stored in the currently configured storage"""
-        if not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             raise AccessError(_('Only administrators can execute this action.'))
 
         location = self._storage(cr, uid, context)

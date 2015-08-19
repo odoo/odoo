@@ -568,6 +568,10 @@ class res_users(osv.osv):
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
+    @api.multi
+    def _is_admin(self):
+        return self.id == openerp.SUPERUSER_ID or self.sudo(self).has_group('base.group_erp_manager')
+
     def get_company_currency_id(self, cr, uid, context=None):
         return self.browse(cr, uid, uid, context=context).company_id.currency_id.id
 
@@ -933,7 +937,7 @@ class users_view(osv.osv):
     def fields_get(self, cr, uid, allfields=None, context=None, write_access=True, attributes=None):
         res = super(users_view, self).fields_get(cr, uid, allfields, context, write_access, attributes)
         # add reified groups fields
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             return res
         for app, kind, gs in self.pool['res.groups'].get_groups_by_application(cr, uid, context):
             if kind == 'selection':
