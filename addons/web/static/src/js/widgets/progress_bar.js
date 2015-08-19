@@ -84,7 +84,7 @@ var ProgressBar = Widget.extend({
                 if(this.edit_max_value) {
                     this.max_value = $(e.target).val();
                 } else {
-                    this.value = $(e.target).val();
+                    this.value = $(e.target).val() || 0;
                 }
 
                 this._render_value();
