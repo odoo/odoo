@@ -1740,7 +1740,7 @@ class _RelationalMulti(_Relational):
         # return the recordset value as a list of commands; the commands may
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
-        fields = [(name, value._fields[name]) for name in (fnames or [])]
+        fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
         result = [(5,)]
         for record in value:
             vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
