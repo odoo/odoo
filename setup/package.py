@@ -123,12 +123,12 @@ class OdooDocker(object):
     def __init__(self):
         self.log_file = NamedTemporaryFile(mode='w+b', prefix="bash", suffix=".txt", delete=False)
         self.port = 8069  # TODO sle: reliable way to get a free port?
-        self.prompt_re = '\[root@nightly-tests\] #'
+        self.prompt_re = '[root@nightly-tests] # '
         self.timeout = 600
 
     def system(self, command):
         self.docker.sendline(command)
-        self.docker.expect(self.prompt_re)
+        self.docker.expect_exact(self.prompt_re)
 
     def start(self, docker_image, build_dir, pub_dir):
         self.build_dir = build_dir
@@ -137,7 +137,8 @@ class OdooDocker(object):
         self.docker = pexpect.spawn(
             'docker run -v %s:/opt/release -p 127.0.0.1:%s:8069'
             ' -t -i %s /bin/bash --noediting' % (self.build_dir, self.port, docker_image),
-            timeout=self.timeout
+            timeout=self.timeout,
+            searchwindowsize=len(self.prompt_re) + 1,
         )
         time.sleep(2)  # let the bash start
         self.docker.logfile_read = self.log_file
@@ -266,11 +267,12 @@ def build_deb(o):
     subprocess.call(cmd, cwd=o.build_dir)
     deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
     deb.logfile = stdout
-    deb.expect_exact('Enter passphrase: ', timeout=1200)
-    deb.send(GPGPASSPHRASE + '\r\n')
-    deb.expect_exact('Enter passphrase: ')
-    deb.send(GPGPASSPHRASE + '\r\n')
-    deb.expect(pexpect.EOF)
+    if GPGPASSPHRASE:
+        deb.expect_exact('Enter passphrase: ', timeout=1200)
+        deb.send(GPGPASSPHRASE + '\r\n')
+        deb.expect_exact('Enter passphrase: ')
+        deb.send(GPGPASSPHRASE + '\r\n')
+    deb.expect(pexpect.EOF, timeout=1200)
     system(['mv', glob('%s/../odoo_*.deb' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*.dsc' % o.build_dir)[0], '%s' % o.build_dir])
     system(['mv', glob('%s/../odoo_*_amd64.changes' % o.build_dir)[0], '%s' % o.build_dir])
@@ -288,27 +290,36 @@ def build_exe(o):
 # Stage: testing
 #----------------------------------------------------------
 def _prepare_testing(o):
-    if not o.no_tarball or not o.no_debian:
+    if not o.no_tarball:
+        subprocess.call(["mkdir", "docker_src"], cwd=o.build_dir)
+        subprocess.call(["cp", "package.dfsrc", os.path.join(o.build_dir, "docker_src", "Dockerfile")],
+                        cwd=os.path.join(o.odoo_dir, "setup"))
+        # Use rsync to copy requirements.txt in order to keep original permissions
+        subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_src")],
+                        cwd=os.path.join(o.odoo_dir))
+        subprocess.call(["docker", "build", "-t", "odoo-%s-src-nightly-tests" % version, "."],
+                        cwd=os.path.join(o.build_dir, "docker_src"))
+    if not o.no_debian:
         subprocess.call(["mkdir", "docker_debian"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dfdebian", os.path.join(o.build_dir, "docker_debian", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
         # Use rsync to copy requirements.txt in order to keep original permissions
         subprocess.call(["rsync", "-a", "requirements.txt", os.path.join(o.build_dir, "docker_debian")],
                         cwd=os.path.join(o.odoo_dir))
-        subprocess.call(["docker", "build", "-t", "odoo-debian-nightly-tests", "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-debian-nightly-tests" % version, "."],
                         cwd=os.path.join(o.build_dir, "docker_debian"))
     if not o.no_rpm:
         subprocess.call(["mkdir", "docker_centos"], cwd=o.build_dir)
         subprocess.call(["cp", "package.dfcentos", os.path.join(o.build_dir, "docker_centos", "Dockerfile")],
                         cwd=os.path.join(o.odoo_dir, "setup"))
-        subprocess.call(["docker", "build", "-t", "odoo-centos-nightly-tests", "."],
+        subprocess.call(["docker", "build", "-t", "odoo-%s-centos-nightly-tests" % version, "."],
                         cwd=os.path.join(o.build_dir, "docker_centos"))
 
 def test_tgz(o):
-    with docker('odoo-debian-nightly-tests', o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
-        wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
+        wheezy.system('pip install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
@@ -318,7 +329,7 @@ def test_tgz(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo.py --addons-path=/usr/local/lib/python2.7/dist-packages/openerp/addons -d mycompany &"')
 
 def test_deb(o):
-    with docker('odoo-debian-nightly-tests', o.build_dir, o.pub) as wheezy:
+    with docker('odoo-%s-debian-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.deb'
         wheezy.system("service postgresql start")
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')
@@ -328,7 +339,7 @@ def test_deb(o):
         wheezy.system('su odoo -s /bin/bash -c "odoo.py -c /etc/odoo/openerp-server.conf -d mycompany &"')
 
 def test_rpm(o):
-    with docker('odoo-centos-nightly-tests', o.build_dir, o.pub) as centos7:
+    with docker('odoo-%s-centos-nightly-tests' % version, o.build_dir, o.pub) as centos7:
         centos7.release = '*.noarch.rpm'
         # Start postgresql
         centos7.system('su postgres -c "/usr/bin/pg_ctl -D /var/lib/postgres/data start"')

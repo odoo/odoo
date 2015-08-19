@@ -21,6 +21,7 @@
 
 """ High-level objects for fields. """
 
+from collections import OrderedDict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
@@ -29,12 +30,13 @@ import logging
 import pytz
 import xmlrpclib
 
-from openerp.tools import float_round, ustr, html_sanitize
+from openerp.tools import float_round, frozendict, html_sanitize, ustr, OrderedSet
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+EMPTY_DICT = frozendict()
 
 _logger = logging.getLogger(__name__)
 
@@ -53,13 +55,13 @@ class FailedValue(SpecialValue):
         raise self.exception
 
 def _check_value(value):
-    """ Return `value`, or call its getter if `value` is a :class:`SpecialValue`. """
+    """ Return ``value``, or call its getter if ``value`` is a :class:`SpecialValue`. """
     return value.get() if isinstance(value, SpecialValue) else value
 
 
 def resolve_all_mro(cls, name, reverse=False):
-    """ Return the (successively overridden) values of attribute `name` in `cls`
-        in mro order, or inverse mro order if `reverse` is true.
+    """ Return the (successively overridden) values of attribute ``name`` in ``cls``
+        in mro order, or inverse mro order if ``reverse`` is true.
     """
     klasses = reversed(cls.__mro__) if reverse else cls.__mro__
     for klass in klasses:
@@ -71,10 +73,25 @@ class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
 
+    def __new__(meta, name, bases, attrs):
+        """ Combine the ``_slots`` dict from parent classes, and determine
+        ``__slots__`` for them on the new class.
+        """
+        base_slots = {}
+        for base in reversed(bases):
+            base_slots.update(getattr(base, '_slots', ()))
+
+        slots = dict(base_slots)
+        slots.update(attrs.get('_slots', ()))
+
+        attrs['__slots__'] = set(slots) - set(base_slots)
+        attrs['_slots'] = slots
+        return type.__new__(meta, name, bases, attrs)
+
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
-        if cls.type:
-            cls.by_type[cls.type] = cls
+        if cls.type and cls.type not in MetaField.by_type:
+            MetaField.by_type[cls.type] = cls
 
         # compute class attributes to avoid calling dir() on fields
         cls.column_attrs = []
@@ -135,7 +152,7 @@ class Field(object):
         One can define a field whose value is computed instead of simply being
         read from the database. The attributes that are specific to computed
         fields are given below. To define such a field, simply provide a value
-        for the attribute `compute`.
+        for the attribute ``compute``.
 
         :param compute: name of a method that computes the field
 
@@ -146,7 +163,10 @@ class Field(object):
         :param store: whether the field is stored in database (boolean, by
             default ``False`` on computed fields)
 
-        The methods given for `compute`, `inverse` and `search` are model
+        :param compute_sudo: whether the field should be recomputed as superuser
+            to bypass access rights (boolean, by default ``False``)
+
+        The methods given for ``compute``, ``inverse`` and ``search`` are model
         methods. Their signature is shown in the following example::
 
             upper = fields.Char(compute='_compute_upper',
@@ -156,11 +176,11 @@ class Field(object):
             @api.depends('name')
             def _compute_upper(self):
                 for rec in self:
-                    self.upper = self.name.upper() if self.name else False
+                    rec.upper = rec.name.upper() if rec.name else False
 
             def _inverse_upper(self):
                 for rec in self:
-                    self.name = self.upper.lower() if self.upper else False
+                    rec.name = rec.upper.lower() if rec.upper else False
 
             def _search_upper(self, operator, value):
                 if operator == 'like':
@@ -190,7 +210,7 @@ class Field(object):
 
         The search method is invoked when processing domains before doing an
         actual search on the model. It must return a domain equivalent to the
-        condition: `field operator value`.
+        condition: ``field operator value``.
 
         .. _field-related:
 
@@ -203,10 +223,10 @@ class Field(object):
         :param related: sequence of field names
 
         Some field attributes are automatically copied from the source field if
-        they are not redefined: `string`, `help`, `readonly`, `required` (only
-        if all fields in the sequence are required), `groups`, `digits`, `size`,
-        `translate`, `sanitize`, `selection`, `comodel_name`, `domain`,
-        `context`. All semantic-free attributes are copied from the source
+        they are not redefined: ``string``, ``help``, ``readonly``, ``required`` (only
+        if all fields in the sequence are required), ``groups``, ``digits``, ``size``,
+        ``translate``, ``sanitize``, ``selection``, ``comodel_name``, ``domain``,
+        ``context``. All semantic-free attributes are copied from the source
         field.
 
         By default, the values of related fields are not stored to the database.
@@ -249,55 +269,92 @@ class Field(object):
     """
     __metaclass__ = MetaField
 
-    _attrs = None               # dictionary with all field attributes
-    _free_attrs = None          # list of semantic-free attribute names
+    type = None                         # type of the field (string)
+    relational = False                  # whether the field is a relational one
 
-    automatic = False           # whether the field is automatically created ("magic" field)
-    inherited = False           # whether the field is inherited (_inherits)
-    column = None               # the column corresponding to the field
-    setup_done = False          # whether the field has been set up
+    _slots = {
+        '_attrs': EMPTY_DICT,           # dictionary of field attributes; it contains:
+                                        #  - all attributes after __init__()
+                                        #  - free attributes only after set_class_name()
 
-    name = None                 # name of the field
-    type = None                 # type of the field (string)
-    relational = False          # whether the field is a relational one
-    model_name = None           # name of the model of this field
-    comodel_name = None         # name of the model of values (if relational)
-    inverse_fields = None       # list of inverse fields (objects)
+        'automatic': False,             # whether the field is automatically created ("magic" field)
+        'inherited': False,             # whether the field is inherited (_inherits)
+        'column': None,                 # the column corresponding to the field
+        'setup_done': False,            # whether the field has been set up
 
-    store = True                # whether the field is stored in database
-    index = False               # whether the field is indexed in database
-    manual = False              # whether the field is a custom field
-    copy = True                 # whether the field is copied over by BaseModel.copy()
-    depends = ()                # collection of field dependencies
-    recursive = False           # whether self depends on itself
-    compute = None              # compute(recs) computes field on recs
-    inverse = None              # inverse(recs) inverses field on recs
-    search = None               # search(recs, operator, value) searches on self
-    related = None              # sequence of field names, for related fields
-    related_sudo = True         # whether related fields should be read as admin
-    company_dependent = False   # whether `self` is company-dependent (property field)
-    default = None              # default(recs) returns the default value
+        'name': None,                   # name of the field
+        'model_name': None,             # name of the model of this field
+        'comodel_name': None,           # name of the model of values (if relational)
 
-    string = None               # field label
-    help = None                 # field tooltip
-    readonly = False
-    required = False
-    states = None
-    groups = False              # csv list of group xml ids
-    change_default = None       # whether the field may trigger a "user-onchange"
-    deprecated = None           # whether the field is ... deprecated
+        'store': True,                  # whether the field is stored in database
+        'index': False,                 # whether the field is indexed in database
+        'manual': False,                # whether the field is a custom field
+        'copy': True,                   # whether the field is copied over by BaseModel.copy()
+        'depends': (),                  # collection of field dependencies
+        'recursive': False,             # whether self depends on itself
+        'compute': None,                # compute(recs) computes field on recs
+        'compute_sudo': False,          # whether field should be recomputed as admin
+        'inverse': None,                # inverse(recs) inverses field on recs
+        'search': None,                 # search(recs, operator, value) searches on self
+        'related': None,                # sequence of field names, for related fields
+        'related_sudo': True,           # whether related fields should be read as admin
+        'company_dependent': False,     # whether ``self`` is company-dependent (property field)
+        'default': None,                # default(recs) returns the default value
+
+        'string': None,                 # field label
+        'help': None,                   # field tooltip
+        'readonly': False,              # whether the field is readonly
+        'required': False,              # whether the field is required
+        'states': None,                 # set readonly and required depending on state
+        'groups': None,                 # csv list of group xml ids
+        'change_default': False,        # whether the field may trigger a "user-onchange"
+        'deprecated': None,             # whether the field is deprecated
+
+        'inverse_fields': (),           # collection of inverse fields (objects)
+        'computed_fields': (),          # fields computed with the same method as self
+        'related_field': None,          # corresponding related field
+        '_triggers': (),                # invalidation and recomputation triggers
+    }
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
-        self._attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
-        self._free_attrs = []
+        attrs = {key: val for key, val in kwargs.iteritems() if val is not None}
+        self._attrs = attrs or EMPTY_DICT
+
+    def __getattr__(self, name):
+        """ Access non-slot field attribute. """
+        try:
+            return self._attrs[name]
+        except KeyError:
+            raise AttributeError(name)
+
+    def __setattr__(self, name, value):
+        """ Set slot or non-slot field attribute. """
+        try:
+            object.__setattr__(self, name, value)
+        except AttributeError:
+            if self._attrs:
+                self._attrs[name] = value
+            else:
+                self._attrs = {name: value}     # replace EMPTY_DICT
+
+    def __delattr__(self, name):
+        """ Remove non-slot field attribute. """
+        try:
+            del self._attrs[name]
+        except KeyError:
+            raise AttributeError(name)
 
     def new(self, **kwargs):
-        """ Return a field of the same type as `self`, with its own parameters. """
+        """ Return a field of the same type as ``self``, with its own parameters. """
         return type(self)(**kwargs)
 
     def set_class_name(self, cls, name):
-        """ Assign the model class and field name of `self`. """
+        """ Assign the model class and field name of ``self``. """
+        self_attrs = self._attrs
+        for attr, value in self._slots.iteritems():
+            setattr(self, attr, value)
+
         self.model_name = cls._name
         self.name = name
 
@@ -308,9 +365,9 @@ class Field(object):
                 attrs.update(field._attrs)
             else:
                 attrs.clear()
-        attrs.update(self._attrs)       # necessary in case self is not in cls
+        attrs.update(self_attrs)        # necessary in case self is not in cls
 
-        # initialize `self` with `attrs`
+        # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
             # by default, computed fields are not stored, not copied and readonly
             attrs['store'] = attrs.get('store', False)
@@ -326,8 +383,6 @@ class Field(object):
             attrs.pop('store', None)
 
         for attr, value in attrs.iteritems():
-            if not hasattr(self, attr):
-                self._free_attrs.append(attr)
             setattr(self, attr, value)
 
         if not self.string and not self.related:
@@ -338,8 +393,8 @@ class Field(object):
         self._determine_default(cls, name)
 
     def _determine_default(self, cls, name):
-        """ Retrieve the default value for `self` in the hierarchy of `cls`, and
-            determine `self.default` and `cls._defaults` accordingly.
+        """ Retrieve the default value for ``self`` in the hierarchy of ``cls``, and
+            determine ``self.default`` and ``cls._defaults`` accordingly.
         """
         self.default = None
 
@@ -391,18 +446,8 @@ class Field(object):
     # Field setup
     #
 
-    def reset(self):
-        """ Prepare `self` for a new setup. """
-        self.setup_done = False
-        # self._triggers is a set of pairs (field, path) that represents the
-        # computed fields that depend on `self`. When `self` is modified, it
-        # invalidates the cache of each `field`, and registers the records to
-        # recompute based on `path`. See method `modified` below for details.
-        self._triggers = set()
-        self.inverse_fields = []
-
     def setup(self, env):
-        """ Make sure that `self` is set up, except for recomputation triggers. """
+        """ Make sure that ``self`` is set up, except for recomputation triggers. """
         if not self.setup_done:
             if self.related:
                 self._setup_related(env)
@@ -476,10 +521,9 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr in field._free_attrs:
-            if attr not in self._free_attrs:
-                self._free_attrs.append(attr)
-                setattr(self, attr, getattr(field, attr))
+        for attr, value in field._attrs.iteritems():
+            if attr not in self._attrs:
+                setattr(self, attr, value)
 
         # special case for states: copy it only for inherited fields
         if not self.states and self.inherited:
@@ -490,7 +534,7 @@ class Field(object):
             self.required = all(field.required for field in fields)
 
     def _compute_related(self, records):
-        """ Compute the related field `self` on `records`. """
+        """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
         for record, other in zip(records, others):
@@ -503,7 +547,7 @@ class Field(object):
             record[self.name] = other[self.related[-1]]
 
     def _inverse_related(self, records):
-        """ Inverse the related field `self` on `records`. """
+        """ Inverse the related field ``self`` on ``records``. """
         for record in records:
             other = record
             # traverse the intermediate fields, and keep at most one record
@@ -513,7 +557,7 @@ class Field(object):
                 other[self.related[-1]] = record[self.name]
 
     def _search_related(self, records, operator, value):
-        """ Determine the domain to search on field `self`. """
+        """ Determine the domain to search on field ``self``. """
         return [('.'.join(self.related), operator, value)]
 
     # properties used by _setup_related() to copy values from related field
@@ -525,23 +569,33 @@ class Field(object):
 
     @property
     def base_field(self):
-        """ Return the base field of an inherited field, or `self`. """
-        return self.related_field if self.inherited else self
+        """ Return the base field of an inherited field, or ``self``. """
+        return self.related_field.base_field if self.inherited else self
 
     #
     # Setup of field triggers
     #
+    # The triggers is a collection of pairs (field, path) of computed fields
+    # that depend on ``self``. When ``self`` is modified, it invalidates the cache
+    # of each ``field``, and registers the records to recompute based on ``path``.
+    # See method ``modified`` below for details.
+    #
+
+    def add_trigger(self, trigger):
+        """ Add a recomputation trigger on ``self``. """
+        if trigger not in self._triggers:
+            self._triggers += (trigger,)
 
     def setup_triggers(self, env):
-        """ Add the necessary triggers to invalidate/recompute `self`. """
+        """ Add the necessary triggers to invalidate/recompute ``self``. """
         model = env[self.model_name]
         for path in self.depends:
             self._setup_dependency([], model, path.split('.'))
 
     def _setup_dependency(self, path0, model, path1):
-        """ Make `self` depend on `model`; `path0 + path1` is a dependency of
-            `self`, and `path0` is the sequence of field names from `self.model`
-            to `model`.
+        """ Make ``self`` depend on ``model``; `path0 + path1` is a dependency of
+            ``self``, and ``path0`` is the sequence of field names from ``self.model``
+            to ``model``.
         """
         env = model.env
         head, tail = path1[0], path1[1:]
@@ -559,12 +613,12 @@ class Field(object):
                 continue
 
             #_logger.debug("Add trigger on %s to recompute %s", field, self)
-            field._triggers.add((self, '.'.join(path0 or ['id'])))
+            field.add_trigger((self, '.'.join(path0 or ['id'])))
 
             # add trigger on inverse fields, too
             for invf in field.inverse_fields:
                 #_logger.debug("Add trigger on %s to recompute %s", invf, self)
-                invf._triggers.add((self, '.'.join(path0 + [head])))
+                invf.add_trigger((self, '.'.join(path0 + [head])))
 
             # recursively traverse the dependency
             if tail:
@@ -573,7 +627,7 @@ class Field(object):
 
     @property
     def dependents(self):
-        """ Return the computed fields that depend on `self`. """
+        """ Return the computed fields that depend on ``self``. """
         return (field for field, path in self._triggers)
 
     ############################################################################
@@ -582,7 +636,7 @@ class Field(object):
     #
 
     def get_description(self, env):
-        """ Return a dictionary that describes the field `self`. """
+        """ Return a dictionary that describes the field ``self``. """
         desc = {'type': self.type}
         for attr, prop in self.description_attrs:
             value = getattr(self, prop)
@@ -635,16 +689,19 @@ class Field(object):
     #
 
     def to_column(self):
-        """ return a low-level field object corresponding to `self` """
-        assert self.store or self.column
+        """ Return a column object corresponding to ``self``, or ``None``. """
+        if not self.store and self.compute:
+            # non-stored computed fields do not have a corresponding column
+            self.column = None
+            return None
 
         # determine column parameters
         #_logger.debug("Create fields._column for Field %s", self)
         args = {}
         for attr, prop in self.column_attrs:
             args[attr] = getattr(self, prop)
-        for attr in self._free_attrs:
-            args[attr] = getattr(self, attr)
+        for attr, value in self._attrs.iteritems():
+            args[attr] = value
 
         if self.company_dependent:
             # company-dependent fields are mapped to former property fields
@@ -653,7 +710,7 @@ class Field(object):
             self.column = fields.property(**args)
         elif self.column:
             # let the column provide a valid column for the given parameters
-            self.column = self.column.new(**args)
+            self.column = self.column.new(_computed_field=bool(self.compute), **args)
         else:
             # create a fresh new column of the right type
             self.column = getattr(fields, self.type)(**args)
@@ -683,19 +740,19 @@ class Field(object):
         return False
 
     def convert_to_cache(self, value, record, validate=True):
-        """ convert `value` to the cache level in `env`; `value` may come from
+        """ convert ``value`` to the cache level in ``env``; ``value`` may come from
             an assignment, or have the format of methods :meth:`BaseModel.read`
             or :meth:`BaseModel.write`
 
             :param record: the target record for the assignment, or an empty recordset
 
             :param bool validate: when True, field-specific validation of
-                `value` will be performed
+                ``value`` will be performed
         """
         return value
 
     def convert_to_read(self, value, use_name_get=True):
-        """ convert `value` from the cache to a value as returned by method
+        """ convert ``value`` from the cache to a value as returned by method
             :meth:`BaseModel.read`
 
             :param bool use_name_get: when True, value's diplay name will
@@ -705,7 +762,7 @@ class Field(object):
         return False if value is None else value
 
     def convert_to_write(self, value, target=None, fnames=None):
-        """ convert `value` from the cache to a valid value for method
+        """ convert ``value`` from the cache to a valid value for method
             :meth:`BaseModel.write`.
 
             :param target: optional, the record to be modified with this value
@@ -715,21 +772,21 @@ class Field(object):
         return self.convert_to_read(value)
 
     def convert_to_onchange(self, value):
-        """ convert `value` from the cache to a valid value for an onchange
+        """ convert ``value`` from the cache to a valid value for an onchange
             method v7.
         """
         return self.convert_to_write(value)
 
     def convert_to_export(self, value, env):
-        """ convert `value` from the cache to a valid value for export. The
-            parameter `env` is given for managing translations.
+        """ convert ``value`` from the cache to a valid value for export. The
+            parameter ``env`` is given for managing translations.
         """
-        if env.context.get('export_raw_data'):
-            return value
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return value if env.context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record=None):
-        """ convert `value` from the cache to a suitable display name. """
+        """ convert ``value`` from the cache to a suitable display name. """
         return ustr(value)
 
     ############################################################################
@@ -738,7 +795,7 @@ class Field(object):
     #
 
     def __get__(self, record, owner):
-        """ return the value of field `self` on `record` """
+        """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
 
@@ -766,7 +823,7 @@ class Field(object):
         return record._cache[self]
 
     def __set__(self, record, value):
-        """ set the value of field `self` on `record` """
+        """ set the value of field ``self`` on ``record`` """
         env = record.env
 
         # only a single record may be updated
@@ -802,7 +859,7 @@ class Field(object):
     #
 
     def _compute_value(self, records):
-        """ Invoke the compute method on `records`. """
+        """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
         for field in self.computed_fields:
             records._cache[field] = field.null(records.env)
@@ -812,7 +869,7 @@ class Field(object):
             records.env.computed[field].difference_update(records._ids)
 
     def compute_value(self, records):
-        """ Invoke the compute method on `records`; the results are in cache. """
+        """ Invoke the compute method on ``records``; the results are in cache. """
         with records.env.do_in_draft():
             try:
                 self._compute_value(records)
@@ -825,7 +882,7 @@ class Field(object):
                         record._cache[self.name] = FailedValue(exc)
 
     def determine_value(self, record):
-        """ Determine the value of `self` for `record`. """
+        """ Determine the value of ``self`` for ``record``. """
         env = record.env
 
         if self.column and not (self.depends and env.in_draft):
@@ -866,19 +923,19 @@ class Field(object):
             record._cache[self] = self.null(env)
 
     def determine_draft_value(self, record):
-        """ Determine the value of `self` for the given draft `record`. """
+        """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
             self._compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
 
     def determine_inverse(self, records):
-        """ Given the value of `self` on `records`, inverse the computation. """
+        """ Given the value of ``self`` on ``records``, inverse the computation. """
         if self.inverse:
             self.inverse(records)
 
     def determine_domain(self, records, operator, value):
-        """ Return a domain representing a condition on `self`. """
+        """ Return a domain representing a condition on ``self``. """
         if self.search:
             return self.search(records, operator, value)
         else:
@@ -890,7 +947,7 @@ class Field(object):
     #
 
     def modified(self, records):
-        """ Notify that field `self` has been modified on `records`: prepare the
+        """ Notify that field ``self`` has been modified on ``records``: prepare the
             fields/records to recompute, and return a spec indicating what to
             invalidate.
         """
@@ -903,7 +960,13 @@ class Field(object):
                 target = env[field.model_name].search([(path, 'in', records.ids)])
                 if target:
                     spec.append((field, target._ids))
-                    target.with_env(records.env)._recompute_todo(field)
+                    # recompute field on target in the environment of records,
+                    # and as user admin if required
+                    if field.compute_sudo:
+                        target = target.with_env(records.env(user=SUPERUSER_ID))
+                    else:
+                        target = target.with_env(records.env)
+                    target._recompute_todo(field)
             else:
                 spec.append((field, None))
 
@@ -914,7 +977,7 @@ class Field(object):
         env = records.env
 
         # invalidate the fields on the records in cache that depend on
-        # `records`, except fields currently being computed
+        # ``records``, except fields currently being computed
         spec = []
         for field, path in self._triggers:
             target = env[field.model_name]
@@ -948,10 +1011,11 @@ class Boolean(Field):
 
 class Integer(Field):
     type = 'integer'
-    group_operator = None       # operator for aggregating values
+    _slots = {
+        'group_operator': None,         # operator for aggregating values
+    }
 
     _related_group_operator = property(attrgetter('group_operator'))
-
     _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
@@ -971,6 +1035,11 @@ class Integer(Field):
         # special case, when an integer field is used as inverse for a one2many
         records._cache[self] = value.id or 0
 
+    def convert_to_export(self, value, env):
+        if value or value == 0:
+            return value if env.context.get('export_raw_data') else ustr(value)
+        return ''
+
 
 class Float(Field):
     """ The precision digits are given by the attribute
@@ -979,27 +1048,31 @@ class Float(Field):
                    cursor and returning a pair (total, decimal)
     """
     type = 'float'
-    _digits = None              # digits argument passed to class initializer
-    digits = None               # digits as computed by setup()
-    group_operator = None       # operator for aggregating values
+    _slots = {
+        '_digits': None,                # digits argument passed to class initializer
+        'group_operator': None,         # operator for aggregating values
+    }
 
     def __init__(self, string=None, digits=None, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
+    @property
+    def digits(self):
+        if callable(self._digits):
+            with fields._get_cursor() as cr:
+                return self._digits(cr)
+        else:
+            return self._digits
+
     def _setup_digits(self, env):
-        """ Setup the digits for `self` and its corresponding column """
-        self.digits = self._digits(env.cr) if callable(self._digits) else self._digits
-        if self.digits:
-            assert isinstance(self.digits, (tuple, list)) and len(self.digits) >= 2, \
-                "Float field %s with digits %r, expecting (total, decimal)" % (self, self.digits)
-        if self.column:
-            self.column.digits_change(env.cr)
+        """ Setup the digits for ``self`` and its corresponding column """
+        pass
 
     def _setup_regular(self, env):
         super(Float, self)._setup_regular(env)
         self._setup_digits(env)
 
-    _related_digits = property(attrgetter('digits'))
+    _related__digits = property(attrgetter('_digits'))
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
@@ -1010,20 +1083,26 @@ class Float(Field):
 
     def convert_to_cache(self, value, record, validate=True):
         # apply rounding here, otherwise value in cache may be wrong!
-        if self.digits:
-            return float_round(float(value or 0.0), precision_digits=self.digits[1])
-        else:
-            return float(value or 0.0)
+        value = float(value or 0.0)
+        digits = self.digits
+        return float_round(value, precision_digits=digits[1]) if digits else value
+
+    def convert_to_export(self, value, env):
+        if value or value == 0.0:
+            return value if env.context.get('export_raw_data') else ustr(value)
+        return ''
 
 
 class _String(Field):
     """ Abstract class for string fields. """
-    translate = False
+    _slots = {
+        'translate': False,             # whether the field is translated
+    }
 
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
     _description_translate = property(attrgetter('translate'))
-
+    
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
@@ -1033,16 +1112,18 @@ class Char(_String):
     :param bool translate: whether the values of this field can be translated
     """
     type = 'char'
-    size = None
+    _slots = {
+        'size': None,                   # maximum size of values (deprecated)
+    }
+
+    _column_size = property(attrgetter('size'))
+    _related_size = property(attrgetter('size'))
+    _description_size = property(attrgetter('size'))
 
     def _setup_regular(self, env):
         super(Char, self)._setup_regular(env)
         assert isinstance(self.size, (NoneType, int)), \
             "Char field %s with non-integer size %r" % (self, self.size)
-
-    _column_size = property(attrgetter('size'))
-    _related_size = property(attrgetter('size'))
-    _description_size = property(attrgetter('size'))
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1064,17 +1145,24 @@ class Text(_String):
 
 class Html(_String):
     type = 'html'
-    sanitize = True                     # whether value must be sanitized
+    _slots = {
+        'sanitize': True,               # whether value must be sanitized
+        'strip_style': False,           # whether to strip style attributes
+    }
 
     _column_sanitize = property(attrgetter('sanitize'))
     _related_sanitize = property(attrgetter('sanitize'))
     _description_sanitize = property(attrgetter('sanitize'))
 
+    _column_strip_style = property(attrgetter('strip_style'))
+    _related_strip_style = property(attrgetter('strip_style'))
+    _description_strip_style = property(attrgetter('strip_style'))
+
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
             return False
         if validate and self.sanitize:
-            return html_sanitize(value)
+            return html_sanitize(value, strip_style=self.strip_style)
         return value
 
 
@@ -1113,7 +1201,7 @@ class Date(Field):
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM `value` into a :class:`date` value. """
+        """ Convert an ORM ``value`` into a :class:`date` value. """
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
@@ -1133,9 +1221,9 @@ class Date(Field):
         return self.to_string(value)
 
     def convert_to_export(self, value, env):
-        if value and env.context.get('export_raw_data'):
-            return self.from_string(value)
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
 
 
 class Datetime(Field):
@@ -1164,21 +1252,20 @@ class Datetime(Field):
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz_name = record._context.get('tz') or record.env.user.tz
+        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
         if tz_name:
             try:
-                utc = pytz.timezone('UTC')
                 context_tz = pytz.timezone(tz_name)
-                utc_timestamp = utc.localize(timestamp, is_dst=False)  # UTC = no DST
                 return utc_timestamp.astimezone(context_tz)
             except Exception:
                 _logger.debug("failed to compute context/client-specific timestamp, "
                               "using the UTC value",
                               exc_info=True)
-        return timestamp
+        return utc_timestamp
 
     @staticmethod
     def from_string(value):
-        """ Convert an ORM `value` into a :class:`datetime` value. """
+        """ Convert an ORM ``value`` into a :class:`datetime` value. """
         value = value[:DATETIME_LENGTH]
         if len(value) == DATE_LENGTH:
             value += " 00:00:00"
@@ -1203,9 +1290,9 @@ class Datetime(Field):
         return self.to_string(value)
 
     def convert_to_export(self, value, env):
-        if value and env.context.get('export_raw_data'):
-            return self.from_string(value)
-        return bool(value) and ustr(value)
+        if not value:
+            return ''
+        return self.from_string(value) if env.context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record=None):
         assert record, 'Record expected'
@@ -1219,18 +1306,19 @@ class Binary(Field):
 class Selection(Field):
     """
     :param selection: specifies the possible values for this field.
-        It is given as either a list of pairs (`value`, `string`), or a
+        It is given as either a list of pairs (``value``, ``string``), or a
         model method, or a method name.
     :param selection_add: provides an extension of the selection in the case
-        of an overridden field. It is a list of pairs (`value`, `string`).
+        of an overridden field. It is a list of pairs (``value``, ``string``).
 
-    The attribute `selection` is mandatory except in the case of
+    The attribute ``selection`` is mandatory except in the case of
     :ref:`related fields <field-related>` or :ref:`field extensions
     <field-incremental-definition>`.
     """
     type = 'selection'
-    selection = None        # [(value, string), ...], function or method name
-    selection_add = None    # [(value, string), ...]
+    _slots = {
+        'selection': None,              # [(value, string), ...], function or method name
+    }
 
     def __init__(self, selection=None, string=None, **kwargs):
         if callable(selection):
@@ -1251,18 +1339,18 @@ class Selection(Field):
     def set_class_name(self, cls, name):
         super(Selection, self).set_class_name(cls, name)
         # determine selection (applying 'selection_add' extensions)
-        selection = None
         for field in resolve_all_mro(cls, name, reverse=True):
             if isinstance(field, type(self)):
                 # We cannot use field.selection or field.selection_add here
-                # because those attributes are overridden by `set_class_name`.
+                # because those attributes are overridden by ``set_class_name``.
                 if 'selection' in field._attrs:
-                    selection = field._attrs['selection']
+                    self.selection = field._attrs['selection']
                 if 'selection_add' in field._attrs:
-                    selection = selection + field._attrs['selection_add']
+                    # use an OrderedDict to update existing values
+                    selection_add = field._attrs['selection_add']
+                    self.selection = OrderedDict(self.selection + selection_add).items()
             else:
-                selection = None
-        self.selection = selection
+                self.selection = None
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1312,7 +1400,7 @@ class Selection(Field):
     def convert_to_export(self, value, env):
         if not isinstance(self.selection, list):
             # FIXME: this reproduces an existing buggy behavior!
-            return value
+            return value if value else ''
         for item in self._description_selection(env):
             if item[0] == value:
                 return item[1]
@@ -1321,19 +1409,17 @@ class Selection(Field):
 
 class Reference(Selection):
     type = 'reference'
-    size = None
+    _slots = {
+        'size': None,                   # maximum size of values (deprecated)
+    }
 
-    def __init__(self, selection=None, string=None, **kwargs):
-        super(Reference, self).__init__(selection=selection, string=string, **kwargs)
+    _related_size = property(attrgetter('size'))
+    _column_size = property(attrgetter('size'))
 
     def _setup_regular(self, env):
         super(Reference, self)._setup_regular(env)
         assert isinstance(self.size, (NoneType, int)), \
             "Reference field %s with non-integer size %r" % (self, self.size)
-
-    _related_size = property(attrgetter('size'))
-
-    _column_size = property(attrgetter('size'))
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, BaseModel):
@@ -1351,7 +1437,7 @@ class Reference(Selection):
         return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_export(self, value, env):
-        return bool(value) and value.name_get()[0][1]
+        return value.name_get()[0][1] if value else ''
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value and value.display_name)
@@ -1360,8 +1446,10 @@ class Reference(Selection):
 class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
-    domain = None                       # domain for searching values
-    context = None                      # context for searching values
+    _slots = {
+        'domain': [],                   # domain for searching values
+        'context': {},                  # context for searching values
+    }
 
     def _setup_regular(self, env):
         super(_Relational, self)._setup_regular(env)
@@ -1425,13 +1513,15 @@ class Many2one(_Relational):
     :param delegate: set it to ``True`` to make fields of the target model
         accessible from the current model (corresponds to ``_inherits``)
 
-    The attribute `comodel_name` is mandatory except in the case of related
+    The attribute ``comodel_name`` is mandatory except in the case of related
     fields or field extensions.
     """
     type = 'many2one'
-    ondelete = 'set null'               # what to do when value is deleted
-    auto_join = False                   # whether joins are generated upon search
-    delegate = False                    # whether self implements delegation
+    _slots = {
+        'ondelete': 'set null',         # what to do when value is deleted
+        'auto_join': False,             # whether joins are generated upon search
+        'delegate': False,              # whether self implements delegation
+    }
 
     def __init__(self, comodel_name=None, string=None, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
@@ -1446,7 +1536,7 @@ class Many2one(_Relational):
     _column_auto_join = property(attrgetter('auto_join'))
 
     def _update(self, records, value):
-        """ Update the cached value of `self` for `records` with `value`. """
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
         records._cache[self] = value
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1469,7 +1559,11 @@ class Many2one(_Relational):
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
-                return value.sudo().name_get()[0]
+                value_sudo = value.sudo()
+                # performance trick: make sure that all records of the same
+                # model as value in value.env will be prefetched in value_sudo.env
+                value_sudo.env.prefetch[value._name].update(value.env.prefetch[value._name])
+                return value_sudo.name_get()[0]
             except MissingError:
                 # Should not happen, unless the foreign key is missing.
                 return False
@@ -1483,7 +1577,7 @@ class Many2one(_Relational):
         return value.id
 
     def convert_to_export(self, value, env):
-        return bool(value) and value.name_get()[0][1]
+        return value.name_get()[0][1] if value else ''
 
     def convert_to_display_name(self, value, record=None):
         return ustr(value.display_name)
@@ -1509,7 +1603,7 @@ class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
     def _update(self, records, value):
-        """ Update the cached value of `self` for `records` with `value`. """
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
         for record in records:
             if self in record._cache:
                 record._cache[self] = record[self.name] | value
@@ -1522,34 +1616,33 @@ class _RelationalMulti(_Relational):
                 return value.with_env(record.env)
         elif isinstance(value, list):
             # value is a list of record ids or commands
-            if not record.id:
-                record = record.browse()        # new record has no value
-            result = record[self.name]
-            # modify result with the commands;
-            # beware to not introduce duplicates in result
+            comodel = record.env[self.comodel_name]
+            ids = OrderedSet(record[self.name].ids)
+            # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
-                        result += result.new(command[2])
+                        ids.add(comodel.new(command[2]).id)
                     elif command[0] == 1:
-                        result.browse(command[1]).update(command[2])
-                        result += result.browse(command[1]) - result
+                        comodel.browse(command[1]).update(command[2])
+                        ids.add(command[1])
                     elif command[0] == 2:
                         # note: the record will be deleted by write()
-                        result -= result.browse(command[1])
+                        ids.discard(command[1])
                     elif command[0] == 3:
-                        result -= result.browse(command[1])
+                        ids.discard(command[1])
                     elif command[0] == 4:
-                        result += result.browse(command[1]) - result
+                        ids.add(command[1])
                     elif command[0] == 5:
-                        result = result.browse()
+                        ids.clear()
                     elif command[0] == 6:
-                        result = result.browse(command[2])
+                        ids = OrderedSet(command[2])
                 elif isinstance(command, dict):
-                    result += result.new(command)
+                    ids.add(comodel.new(command).id)
                 else:
-                    result += result.browse(command) - result
-            return result
+                    ids.add(command)
+            # return result as a recordset
+            return comodel.browse(list(ids))
         elif not value:
             return self.null(record.env)
         raise ValueError("Wrong value for %s: %s" % (self, value))
@@ -1590,13 +1683,13 @@ class _RelationalMulti(_Relational):
         return result
 
     def convert_to_export(self, value, env):
-        return bool(value) and ','.join(name for id, name in value.name_get())
+        return ','.join(name for id, name in value.name_get()) if value else ''
 
     def convert_to_display_name(self, value, record=None):
         raise NotImplementedError()
 
     def _compute_related(self, records):
-        """ Compute the related field `self` on `records`. """
+        """ Compute the related field ``self`` on ``records``. """
         for record in records:
             value = record
             # traverse the intermediate fields, and keep at most one record
@@ -1607,13 +1700,13 @@ class _RelationalMulti(_Relational):
 
 class One2many(_RelationalMulti):
     """ One2many field; the value of such a field is the recordset of all the
-        records in `comodel_name` such that the field `inverse_name` is equal to
+        records in ``comodel_name`` such that the field ``inverse_name`` is equal to
         the current record.
 
         :param comodel_name: name of the target model (string)
 
-        :param inverse_name: name of the inverse `Many2one` field in
-            `comodel_name` (string)
+        :param inverse_name: name of the inverse ``Many2one`` field in
+            ``comodel_name`` (string)
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
@@ -1626,14 +1719,16 @@ class One2many(_RelationalMulti):
 
         :param limit: optional limit to use upon read (integer)
 
-        The attributes `comodel_name` and `inverse_name` are mandatory except in
+        The attributes ``comodel_name`` and ``inverse_name`` are mandatory except in
         the case of related fields or field extensions.
     """
     type = 'one2many'
-    inverse_name = None                 # name of the inverse field
-    auto_join = False                   # whether joins are generated upon search
-    limit = None                        # optional limit to use upon read
-    copy = False                        # o2m are not copied by default
+    _slots = {
+        'inverse_name': None,           # name of the inverse field
+        'auto_join': False,             # whether joins are generated upon search
+        'limit': None,                  # optional limit to use upon read
+        'copy': False,                  # o2m are not copied by default
+    }
 
     def __init__(self, comodel_name=None, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
@@ -1650,12 +1745,12 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = env[self.comodel_name]
             invf = comodel._fields[self.inverse_name]
-            # In some rare cases, a `One2many` field can link to `Int` field
+            # In some rare cases, a ``One2many`` field can link to ``Int`` field
             # (res_model/res_id pattern). Only inverse the field if this is
-            # a `Many2one` field.
+            # a ``Many2one`` field.
             if isinstance(invf, Many2one):
-                self.inverse_fields.append(invf)
-                invf.inverse_fields.append(self)
+                self.inverse_fields += (invf,)
+                invf.inverse_fields += (self,)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1669,21 +1764,21 @@ class Many2many(_RelationalMulti):
 
         :param comodel_name: name of the target model (string)
 
-        The attribute `comodel_name` is mandatory except in the case of related
+        The attribute ``comodel_name`` is mandatory except in the case of related
         fields or field extensions.
 
         :param relation: optional name of the table that stores the relation in
             the database (string)
 
         :param column1: optional name of the column referring to "these" records
-            in the table `relation` (string)
+            in the table ``relation`` (string)
 
         :param column2: optional name of the column referring to "those" records
-            in the table `relation` (string)
+            in the table ``relation`` (string)
 
-        The attributes `relation`, `column1` and `column2` are optional. If not
+        The attributes ``relation``, ``column1`` and ``column2`` are optional. If not
         given, names are automatically generated from model names, provided
-        `model_name` and `comodel_name` are different!
+        ``model_name`` and ``comodel_name`` are different!
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
@@ -1695,10 +1790,12 @@ class Many2many(_RelationalMulti):
 
     """
     type = 'many2many'
-    relation = None                     # name of table
-    column1 = None                      # column of table referring to model
-    column2 = None                      # column of table referring to comodel
-    limit = None                        # optional limit to use upon read
+    _slots = {
+        'relation': None,               # name of table
+        'column1': None,                # column of table referring to model
+        'column2': None,                # column of table referring to comodel
+        'limit': None,                  # optional limit to use upon read
+    }
 
     def __init__(self, comodel_name=None, relation=None, column1=None, column2=None,
                  string=None, **kwargs):
@@ -1714,18 +1811,20 @@ class Many2many(_RelationalMulti):
     def _setup_regular(self, env):
         super(Many2many, self)._setup_regular(env)
 
-        if not self.relation:
-            if isinstance(self.column, fields.many2many):
+        if not self.relation and self.store:
+            # retrieve self.relation from the corresponding column
+            column = self.to_column()
+            if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = \
-                    self.column._sql_names(env[self.model_name])
+                    column._sql_names(env[self.model_name])
 
         if self.relation:
             m2m = env.registry._m2m
             # if inverse field has already been setup, it is present in m2m
             invf = m2m.get((self.relation, self.column2, self.column1))
             if invf:
-                self.inverse_fields.append(invf)
-                invf.inverse_fields.append(self)
+                self.inverse_fields += (invf,)
+                invf.inverse_fields += (self,)
             else:
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
@@ -1746,15 +1845,15 @@ class Serialized(Field):
 
 class Id(Field):
     """ Special case for field 'id'. """
-    store = True
-    #: Can't write this!
-    readonly = True
-
-    def __init__(self, string=None, **kwargs):
-        super(Id, self).__init__(type='integer', string=string, **kwargs)
+    type = 'integer'
+    _slots = {
+        'string': 'ID',
+        'store': True,
+        'readonly': True,
+    }
 
     def to_column(self):
-        self.column = fields.integer('ID')
+        self.column = fields.integer(self.string)
         return self.column
 
     def __get__(self, record, owner):
@@ -1768,7 +1867,7 @@ class Id(Field):
         raise TypeError("field 'id' cannot be assigned")
 
 # imported here to avoid dependency cycle issues
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, registry
 from .exceptions import Warning, AccessError, MissingError
 from .models import BaseModel, MAGIC_COLUMNS
 from .osv import fields

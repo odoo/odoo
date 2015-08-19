@@ -49,7 +49,8 @@ import pytz
 import re
 import time
 from collections import defaultdict, MutableMapping
-from inspect import getmembers
+from inspect import getmembers, currentframe
+from operator import itemgetter
 
 import babel.dates
 import dateutil.relativedelta
@@ -64,8 +65,9 @@ from .api import Environment
 from .exceptions import except_orm, AccessError, MissingError, ValidationError
 from .osv import fields
 from .osv.query import Query
-from .tools import lazy_property, ormcache
+from .tools import frozendict, lazy_property, ormcache
 from .tools.config import config
+from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval as eval
 from .tools.translate import _
@@ -73,7 +75,7 @@ from .tools.translate import _
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
 
-regex_order = re.compile('^( *([a-z0-9:_]+|"[a-z0-9:_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
@@ -120,7 +122,7 @@ def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
 def same_name(f, g):
-    """ Test whether functions `f` and `g` are identical or have the same name """
+    """ Test whether functions ``f`` and ``g`` are identical or have the same name """
     return f == g or getattr(f, '__name__', 0) == getattr(g, '__name__', 1)
 
 def fix_import_export_id_paths(fieldname):
@@ -190,7 +192,7 @@ def get_pg_type(f, type_override=None):
     elif issubclass(field_type, (fields.char, fields.reference)):
         pg_type = ('varchar', pg_varchar(f.size))
     elif issubclass(field_type, fields.selection):
-        if (isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
+        if (f.selection and isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
                 or getattr(f, 'size', None) == -1:
             pg_type = ('int4', 'INTEGER')
         else:
@@ -226,9 +228,9 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            # The (OpenERP) module name can be in the `openerp.addons` namespace
-            # or not.  For instance, module `sale` can be imported as
-            # `openerp.addons.sale` (the right way) or `sale` (for backward
+            # The (OpenERP) module name can be in the ``openerp.addons`` namespace
+            # or not.  For instance, module ``sale`` can be imported as
+            # ``openerp.addons.sale`` (the right way) or ``sale`` (for backward
             # compatibility).
             module_parts = self.__module__.split('.')
             if len(module_parts) > 2 and module_parts[:2] == ['openerp', 'addons']:
@@ -335,13 +337,6 @@ class BaseModel(object):
     #                   field_column_obj, origina_parent_model), ... }
     _inherit_fields = {}
 
-    # Mapping field name/column_info object
-    # This is similar to _inherit_fields but:
-    # 1. includes self fields,
-    # 2. uses column_info instead of a triple.
-    # Warning: _all_columns is deprecated, use _fields instead
-    _all_columns = {}
-
     _table = None
     _log_create = False
     _sql_constraints = []
@@ -399,21 +394,21 @@ class BaseModel(object):
         ir_model_fields_obj = self.pool.get('ir.model.fields')
 
         # sparse field should be created at the end, as it depends on its serialized field already existing
-        model_fields = sorted(self._columns.items(), key=lambda x: 1 if x[1]._type == 'sparse' else 0)
+        model_fields = sorted(self._fields.items(), key=lambda x: 1 if x[1].type == 'sparse' else 0)
         for (k, f) in model_fields:
             vals = {
                 'model_id': model_id,
                 'model': self._name,
                 'name': k,
                 'field_description': f.string,
-                'ttype': f._type,
-                'relation': f._obj or '',
-                'select_level': tools.ustr(int(f.select)),
+                'ttype': f.type,
+                'relation': f.comodel_name or '',
+                'select_level': tools.ustr(int(f.index)),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
-                'selectable': (f.selectable and 1) or 0,
-                'translate': (f.translate and 1) or 0,
-                'relation_field': f._fields_id if isinstance(f, fields.one2many) else '',
+                'selectable': (f.search or f.store and 1) or 0,
+                'translate': (f.translate if hasattr(f,'translate') else False and 1) or 0,
+                'relation_field': f.inverse_name if hasattr(f, 'inverse_name') else '',
                 'serialization_field_id': None,
             }
             if getattr(f, 'serialization_field', None):
@@ -471,7 +466,7 @@ class BaseModel(object):
 
     @classmethod
     def _add_field(cls, name, field):
-        """ Add the given `field` under the given `name` in the class """
+        """ Add the given ``field`` under the given ``name`` in the class """
         # add field as an attribute and in cls._fields (for reflection)
         if not isinstance(getattr(cls, name, field), Field):
             _logger.warning("In model %r, field %r overriding existing value", cls._name, name)
@@ -485,12 +480,11 @@ class BaseModel(object):
 
     @classmethod
     def _pop_field(cls, name):
-        """ Remove the field with the given `name` from the model.
+        """ Remove the field with the given ``name`` from the model.
             This method should only be used for manual fields.
         """
         field = cls._fields.pop(name)
         cls._columns.pop(name, None)
-        cls._all_columns.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
@@ -516,7 +510,7 @@ class BaseModel(object):
               '2013-06-18 08:31:32.821177'
         """
         def add(name, field):
-            """ add `field` with the given `name` if it does not exist yet """
+            """ add ``field`` with the given ``name`` if it does not exist yet """
             if name not in cls._fields:
                 cls._add_field(name, field)
 
@@ -569,11 +563,22 @@ class BaseModel(object):
 
         """
 
-        # IMPORTANT: the registry contains an instance for each model. The class
-        # of each model carries inferred metadata that is shared among the
-        # model's instances for this registry, but not among registries. Hence
-        # we cannot use that "registry class" for combining model classes by
-        # inheritance, since it confuses the metadata inference process.
+        # The model's class inherits from cls and the classes of the inherited
+        # models. All those classes are combined in a flat hierarchy:
+        #
+        #         Model                 the base class of all models
+        #        /  |  \
+        #      cls  c2  c1              the classes defined in modules
+        #        \  |  /
+        #       ModelClass              the final class of the model
+        #        /  |  \
+        #     model   recordset ...     the class' instances
+        #
+        # The registry contains the instance ``model``. Its class, ``ModelClass``,
+        # carries inferred metadata that is shared between all the model's
+        # instances for this registry only. When we '_inherit' from another
+        # model, we do not inherit its ``ModelClass``, but this class' parents.
+        # This is a limitation of the inheritance mechanism.
 
         # Keep links to non-inherited constraints in cls; this is useful for
         # instance when exporting translations
@@ -590,64 +595,54 @@ class BaseModel(object):
         # determine the module that introduced the model
         original_module = pool[name]._original_module if name in parents else cls._module
 
-        # build the class hierarchy for the model
+        # determine all the classes the model should inherit from
+        bases = [cls]
+        hierarchy = cls
         for parent in parents:
             if parent not in pool:
                 raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                     'You may need to add a dependency on the parent class\' module.' % (name, parent))
-            parent_model = pool[parent]
+            parent_class = type(pool[parent])
+            bases += parent_class.__bases__
+            hierarchy = type(name, (hierarchy, parent_class), {'_register': False})
 
-            # do no use the class of parent_model, since that class contains
-            # inferred metadata; use its ancestor instead
-            parent_class = type(parent_model).__base__
+        # order bases following the mro of class hierarchy
+        bases = [base for base in hierarchy.mro() if base in bases]
 
-            inherits = dict(parent_class._inherits)
-            inherits.update(cls._inherits)
+        # determine the attributes of the model's class
+        inherits = {}
+        depends = {}
+        constraints = {}
+        sql_constraints = []
 
-            depends = dict(parent_class._depends)
-            for m, fs in cls._depends.iteritems():
-                depends[m] = depends.get(m, []) + fs
+        for base in reversed(bases):
+            inherits.update(base._inherits)
 
-            old_constraints = parent_class._constraints
-            new_constraints = cls._constraints
-            # filter out from old_constraints the ones overridden by a
-            # constraint with the same function name in new_constraints
-            constraints = new_constraints + [oldc
-                for oldc in old_constraints
-                if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
-                           for newc in new_constraints)
-            ]
+            for mname, fnames in base._depends.iteritems():
+                depends[mname] = depends.get(mname, []) + fnames
 
-            sql_constraints = cls._sql_constraints + \
-                              parent_class._sql_constraints
+            for cons in base._constraints:
+                # cons may override a constraint with the same function name
+                constraints[getattr(cons[0], '__name__', id(cons[0]))] = cons
 
-            attrs = {
-                '_name': name,
-                '_register': False,
-                '_inherits': inherits,
-                '_depends': depends,
-                '_constraints': constraints,
-                '_sql_constraints': sql_constraints,
-            }
-            cls = type(name, (cls, parent_class), attrs)
+            sql_constraints += base._sql_constraints
 
-        # introduce the "registry class" of the model;
-        # duplicate some attributes so that the ORM can modify them
-        attrs = {
+        # build the actual class of the model
+        ModelClass = type(name, tuple(bases), {
             '_name': name,
             '_register': False,
-            '_columns': {},             # filled by _setup_fields()
-            '_defaults': {},            # filled by Field._determine_default()
-            '_inherits': dict(cls._inherits),
-            '_depends': dict(cls._depends),
-            '_constraints': list(cls._constraints),
-            '_sql_constraints': list(cls._sql_constraints),
+            '_columns': None,           # recomputed in _setup_fields()
+            '_defaults': None,          # recomputed in _setup_base()
+            '_fields': frozendict(),    # idem
+            '_inherits': inherits,
+            '_depends': depends,
+            '_constraints': constraints.values(),
+            '_sql_constraints': sql_constraints,
             '_original_module': original_module,
-        }
-        cls = type(cls._name, (cls,), attrs)
+        })
 
         # instantiate the model, and initialize it
-        model = object.__new__(cls)
+        model = object.__new__(ModelClass)
         model.__init__(pool, cr)
         return model
 
@@ -658,8 +653,6 @@ class BaseModel(object):
 
         # process store of low-level function fields
         for fname, column in cls._columns.iteritems():
-            if hasattr(column, 'digits_change'):
-                column.digits_change(cr)
             # filter out existing store about this field
             pool._store_function[cls._name] = [
                 stored
@@ -745,15 +738,40 @@ class BaseModel(object):
         for (key, _, msg) in cls._sql_constraints:
             cls.pool._sql_error[cls._table + '_' + key] = msg
 
-        # collect constraint and onchange methods
-        cls._constraint_methods = []
-        cls._onchange_methods = defaultdict(list)
-        for attr, func in getmembers(cls, callable):
-            if hasattr(func, '_constrains'):
-                cls._constraint_methods.append(func)
-            if hasattr(func, '_onchange'):
-                for name in func._onchange:
-                    cls._onchange_methods[name].append(func)
+    @property
+    def _constraint_methods(self):
+        """ Return a list of methods implementing Python constraints. """
+        def is_constraint(func):
+            return callable(func) and hasattr(func, '_constrains')
+
+        cls = type(self)
+        methods = []
+        for attr, func in getmembers(cls, is_constraint):
+            if not all(name in cls._fields for name in func._constrains):
+                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            methods.append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._constraint_methods = methods
+        return methods
+
+    @property
+    def _onchange_methods(self):
+        """ Return a dictionary mapping field names to onchange methods. """
+        def is_onchange(func):
+            return callable(func) and hasattr(func, '_onchange')
+
+        cls = type(self)
+        methods = defaultdict(list)
+        for attr, func in getmembers(cls, is_onchange):
+            for name in func._onchange:
+                if name not in cls._fields:
+                    _logger.warning("@onchange%r parameters must be field names", func._onchange)
+                methods[name].append(func)
+
+        # optimization: memoize result on cls, it will not be recomputed
+        cls._onchange_methods = methods
+        return methods
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -800,22 +818,6 @@ class BaseModel(object):
                 "TransientModels must have log_access turned on, " \
                 "in order to implement their access rights policy"
 
-        # retrieve new-style fields (from above registry class) and duplicate
-        # them (to avoid clashes with inheritance between different models)
-        cls._fields = {}
-        above = cls.__bases__[0]
-        for attr, field in getmembers(above, Field.__instancecheck__):
-            cls._add_field(attr, field.new())
-
-        # introduce magic fields
-        cls._add_magic_fields()
-
-        # register constraints and onchange methods
-        cls._init_constraints_onchanges()
-
-        # prepare ormcache, which must be shared by all instances of the model
-        cls._ormcache = {}
-
     @api.model
     @ormcache()
     def _is_an_ordinary_table(self):
@@ -827,7 +829,7 @@ class BaseModel(object):
         return bool(self.env.cr.fetchone())
 
     def __export_xml_id(self):
-        """ Return a valid xml_id for the record `self`. """
+        """ Return a valid xml_id for the record ``self``. """
         if not self._is_an_ordinary_table():
             raise Exception(
                 "You can not export the column ID of model %s, because the "
@@ -856,7 +858,7 @@ class BaseModel(object):
 
     @api.multi
     def __export_rows(self, fields):
-        """ Export fields of the records in `self`.
+        """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
             :return: list of lists of corresponding values
@@ -1092,6 +1094,13 @@ class BaseModel(object):
             ids = False
         return {'ids': ids, 'messages': messages}
 
+    def _add_fake_fields(self, cr, uid, fields, context=None):
+        from openerp.fields import Char, Integer
+        fields[None] = Char('rec_name')
+        fields['id'] = Char('External ID')
+        fields['.id'] = Integer('Database ID')
+        return fields
+
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data sequence.
@@ -1107,13 +1116,9 @@ class BaseModel(object):
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
-        from openerp.fields import Char, Integer
         fields = dict(self._fields)
         # Fake fields to avoid special cases in extractor
-        fields[None] = Char('rec_name')
-        fields['id'] = Char('External ID')
-        fields['.id'] = Integer('Database ID')
-
+        fields = self._add_fake_fields(cr, uid, fields, context=context)
         # m2o fields can't be on multiple lines so exclude them from the
         # is_relational field rows filter, but special-case it later on to
         # be handled with relational fields (as it can have subfields)
@@ -1241,7 +1246,7 @@ class BaseModel(object):
         errors = []
         for fun, msg, names in self._constraints:
             try:
-                # validation must be context-independent; call `fun` without context
+                # validation must be context-independent; call ``fun`` without context
                 valid = not (set(names) & field_names) or fun(self._model, cr, uid, ids)
                 extra_error = None
             except Exception, e:
@@ -1279,7 +1284,7 @@ class BaseModel(object):
     def default_get(self, fields_list):
         """ default_get(fields) -> default_values
 
-        Return default values for the fields in `fields_list`. Default
+        Return default values for the fields in ``fields_list``. Default
         values are determined by the context, user defaults, and the model
         itself.
 
@@ -1358,7 +1363,7 @@ class BaseModel(object):
 
     def user_has_groups(self, cr, uid, groups, context=None):
         """Return true if the user is at least member of one of the groups
-           in groups_str. Typically used to resolve `groups` attribute
+           in groups_str. Typically used to resolve ``groups`` attribute
            in view and model definitions.
 
            :param str groups: comma-separated list of fully-qualified group
@@ -1427,8 +1432,8 @@ class BaseModel(object):
         :rtype: etree._Element
         """
         def set_first_of(seq, in_, to):
-            """Sets the first value of `seq` also found in `in_` to
-            the `to` attribute of the view being closed over.
+            """Sets the first value of ``seq`` also found in ``in_`` to
+            the ``to`` attribute of the view being closed over.
 
             Returns whether it's found a suitable value (and set it on
             the attribute) or not
@@ -1592,6 +1597,7 @@ class BaseModel(object):
             'views': [(view_id, 'form')],
             'target': 'current',
             'res_id': id,
+            'context': context,
         }
 
     def get_access_action(self, cr, uid, id, context=None):
@@ -1620,7 +1626,7 @@ class BaseModel(object):
 
     @api.returns('self')
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None])
+        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
 
         Searches for records based on the ``args``
         :ref:`search domain <reference/orm/domains>`.
@@ -1630,6 +1636,7 @@ class BaseModel(object):
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
+        :param bool count: if True, only counts and returns the number of matching records (default: False)
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
@@ -1695,8 +1702,8 @@ class BaseModel(object):
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
         Search for records that have a display name matching the given
-        `name` pattern when compared with the given `operator`, while also
-        matching the optional search domain (`args`).
+        ``name`` pattern when compared with the given ``operator``, while also
+        matching the optional search domain (``args``).
 
         This is used for example to provide suggestions based on a partial
         value for a relational field. Sometimes be seen as the inverse
@@ -1709,7 +1716,7 @@ class BaseModel(object):
         :param str name: the name pattern to match
         :param list args: optional search domain (see :meth:`~.search` for
                           syntax), specifying further restrictions
-        :param str operator: domain operator for matching `name`, such as
+        :param str operator: domain operator for matching ``name``, such as
                              ``'like'`` or ``'='``.
         :param int limit: optional max number of records to return
         :rtype: list
@@ -1812,7 +1819,7 @@ class BaseModel(object):
         ``tools.ormcache`` or ``tools.ormcache_multi``.
         """
         try:
-            self._ormcache.clear()
+            self.pool.cache.clear_prefix((self._name,))
             self.pool._any_cache_cleared = True
         except AttributeError:
             pass
@@ -1939,7 +1946,7 @@ class BaseModel(object):
         gb_function = split[1] if len(split) == 2 else None
         temporal = field_type in ('date', 'datetime')
         tz_convert = field_type == 'datetime' and context.get('tz') in pytz.all_timezones
-        qualified_field = self._inherits_join_calc(split[0], query)
+        qualified_field = self._inherits_join_calc(self._table, split[0], query)
         if temporal:
             display_formats = {
                 # Careful with week/year formats:
@@ -2096,7 +2103,7 @@ class BaseModel(object):
             if getattr(self._fields[f].base_field.column, '_classic_write', False)
         ]
 
-        field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(f, query), f)
+        field_formatter = lambda f: (self._fields[f].group_operator or 'sum', self._inherits_join_calc(self._table, f, query), f)
         select_terms = ["%s(%s) AS %s" % field_formatter(f) for f in aggregated_fields]
 
         for gb in annotated_groupbys:
@@ -2170,23 +2177,30 @@ class BaseModel(object):
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
-    def _inherits_join_calc(self, field, query):
+    def _inherits_join_calc(self, alias, field, query):
         """
         Adds missing table select and join clause(s) to ``query`` for reaching
         the field coming from an '_inherits' parent table (no duplicates).
 
+        :param alias: name of the initial SQL alias
         :param field: name of inherited field to reach
         :param query: query object on which the JOIN should be added
         :return: qualified name of field, to be used in SELECT clause
         """
-        current_table = self
-        parent_alias = '"%s"' % current_table._table
-        while field in current_table._inherit_fields and not field in current_table._columns:
-            parent_model_name = current_table._inherit_fields[field][0]
-            parent_table = self.pool[parent_model_name]
-            parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
-            current_table = parent_table
-        return '%s."%s"' % (parent_alias, field)
+        # INVARIANT: alias is the SQL alias of model._table in query
+        model = self
+        while field in model._inherit_fields and field not in model._columns:
+            # retrieve the parent model where field is inherited from
+            parent_model_name = model._inherit_fields[field][0]
+            parent_model = self.pool[parent_model_name]
+            parent_field = model._inherits[parent_model_name]
+            # JOIN parent_model._table AS parent_alias ON alias.parent_field = parent_alias.id
+            parent_alias, _ = query.add_join(
+                (alias, parent_model._table, parent_field, 'id', parent_field),
+                implicit=True,
+            )
+            model, alias = parent_model, parent_alias
+        return '"%s"."%s"' % (alias, field)
 
     def _parent_store_compute(self, cr):
         if not self._parent_store:
@@ -2309,7 +2323,7 @@ class BaseModel(object):
                        (relation_table, self._module, self._name))
             self.invalidate_cache(cr, SUPERUSER_ID)
 
-    # checked version: for direct m2o starting from `self`
+    # checked version: for direct m2o starting from ``self``
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
         assert self.is_transient() or not dest_model.is_transient(), \
             'Many2One relationships from non-transient Model to TransientModel are forbidden'
@@ -2420,8 +2434,17 @@ class BaseModel(object):
         """
         self._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
-        if context is None:
-            context = {}
+
+        # This prevents anything called by this method (in particular default
+        # values) from prefetching a field for which the corresponding column
+        # has not been added in database yet!
+        context = dict(context or {}, prefetch_fields=False)
+
+        # Make sure an environment is available for get_pg_type(). This is
+        # because we access column.digits, which retrieves a cursor from
+        # existing environments.
+        env = api.Environment(cr, SUPERUSER_ID, context)
+
         store_compute = False
         stored_fields = []              # new-style stored fields with compute
         todo_end = []
@@ -2459,7 +2482,9 @@ class BaseModel(object):
                     self._o2m_raise_on_missing_reference(cr, f)
 
                 elif isinstance(f, fields.many2many):
-                    self._m2m_raise_or_create_relation(cr, f)
+                    res = self._m2m_raise_or_create_relation(cr, f)
+                    if res and self._fields[k].depends:
+                        stored_fields.append(self._fields[k])
 
                 else:
                     res = column_data.get(k)
@@ -2508,7 +2533,7 @@ class BaseModel(object):
                             if f_pg_type == 'varchar' and f._type in ('char', 'selection') and f_pg_size and (f.size is None or f_pg_size < f.size):
                                 try:
                                     with cr.savepoint():
-                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)))
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" TYPE %s' % (self._table, k, pg_varchar(f.size)), log_exceptions=False)
                                 except psycopg2.NotSupportedError:
                                     # In place alter table cannot be done because a view is depending of this field.
                                     # Do a manual copy. This will drop the view (that will be recreated later)
@@ -2754,6 +2779,9 @@ class BaseModel(object):
                     raise except_orm('Programming Error', "There is no reference field '%s' found for '%s'" % (f._fields_id, f._obj,))
 
     def _m2m_raise_or_create_relation(self, cr, f):
+        """ Create the table for the relation if necessary.
+        Return ``True`` if the relation had to be created.
+        """
         m2m_tbl, col1, col2 = f._sql_names(self)
         # do not create relations for custom fields as they do not belong to a module
         # they will be automatically removed when dropping the corresponding ir.model.field
@@ -2780,6 +2808,7 @@ class BaseModel(object):
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
+            return True
 
 
     def _add_sql_constraints(self, cr):
@@ -2862,10 +2891,15 @@ class BaseModel(object):
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
             for name, field in parent._fields.iteritems():
+                # inherited fields are implemented as related fields, with the
+                # following specific properties:
+                #  - reading inherited fields should not bypass access rights
+                #  - copy inherited fields iff their original field is copied
                 fields[name] = field.new(
                     inherited=True,
                     related=(parent_field, name),
                     related_sudo=False,
+                    copy=field.copy,
                 )
 
         # add inherited fields that are not redefined locally
@@ -2875,28 +2909,27 @@ class BaseModel(object):
 
     @classmethod
     def _inherits_reload(cls):
-        """ Recompute the _inherit_fields and _all_columns mappings. """
+        """ Recompute the _inherit_fields mapping. """
         cls._inherit_fields = struct = {}
         for parent_model, parent_field in cls._inherits.iteritems():
             parent = cls.pool[parent_model]
+            parent._inherits_reload()
             for name, column in parent._columns.iteritems():
                 struct[name] = (parent_model, parent_field, column, parent_model)
             for name, source in parent._inherit_fields.iteritems():
                 struct[name] = (parent_model, parent_field, source[2], source[3])
 
-        # old-api stuff
-        cls._all_columns = cls._get_column_infos()
-
-    @classmethod
-    def _get_column_infos(cls):
-        """Returns a dict mapping all fields names (direct fields and
-           inherited field via _inherits) to a ``column_info`` struct
-           giving detailed columns """
+    @property
+    def _all_columns(self):
+        """ Returns a dict mapping all fields names (self fields and inherited
+        field via _inherits) to a ``column_info`` object giving detailed column
+        information. This property is deprecated, use ``_fields`` instead.
+        """
         result = {}
         # do not inverse for loops, since local fields may hide inherited ones!
-        for k, (parent, m2o, col, original_parent) in cls._inherit_fields.iteritems():
+        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
             result[k] = fields.column_info(k, col, parent, m2o, original_parent)
-        for k, col in cls._columns.iteritems():
+        for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
         return result
 
@@ -2936,25 +2969,27 @@ class BaseModel(object):
         if cls._setup_done:
             return
 
-        # first make sure that parent models determine all their fields
+        # 1. determine the proper fields of the model; duplicate them on cls to
+        # avoid clashes with inheritance between different models
+        for name in getattr(cls, '_fields', {}):
+            delattr(cls, name)
+
+        # retrieve fields from parent classes
+        cls._fields = {}
+        cls._defaults = {}
+        for attr, field in getmembers(cls, Field.__instancecheck__):
+            cls._add_field(attr, field.new())
+
+        # add magic and custom fields
+        cls._add_magic_fields()
+        cls._init_manual_fields(self._cr, partial)
+
+        # 2. make sure that parent models determine their own fields, then add
+        # inherited fields to cls
         cls._inherits_check()
         for parent in cls._inherits:
             self.env[parent]._setup_base(partial)
-
-        # remove inherited fields from cls._fields
-        for name, field in cls._fields.items():
-            if field.inherited:
-                del cls._fields[name]
-
-        # retrieve custom fields
-        cls._init_manual_fields(self._cr, partial)
-
-        # retrieve inherited fields
         cls._init_inherited_fields()
-
-        # prepare the setup of fields
-        for field in cls._fields.itervalues():
-            field.reset()
 
         cls._setup_done = True
 
@@ -2963,20 +2998,23 @@ class BaseModel(object):
         """ Setup the fields, except for recomputation triggers. """
         cls = type(self)
 
-        # set up fields, and update their corresponding columns
+        # set up fields, and determine their corresponding column
+        cls._columns = {}
         for name, field in cls._fields.iteritems():
             field.setup(self.env)
-            if field.store or field.column:
-                cls._columns[name] = field.to_column()
+            column = field.to_column()
+            if column:
+                cls._columns[name] = column
 
-        # group fields by compute to determine field.computed_fields
-        fields_by_compute = defaultdict(list)
+        # determine field.computed_fields
+        computed_fields = defaultdict(list)
         for field in cls._fields.itervalues():
             if field.compute:
-                field.computed_fields = fields_by_compute[field.compute]
-                field.computed_fields.append(field)
-            else:
-                field.computed_fields = []
+                computed_fields[field.compute].append(field)
+
+        for fields in computed_fields.itervalues():
+            for field in fields:
+                field.computed_fields = fields
 
     @api.model
     def _setup_complete(self):
@@ -2994,22 +3032,17 @@ class BaseModel(object):
                 model = self.env[model_name]
                 for field_name in field_names:
                     field = model._fields[field_name]
-                    field._triggers.update(triggers)
+                    for trigger in triggers:
+                        field.add_trigger(trigger)
 
-        # determine old-api cls._inherit_fields and cls._all_columns
+        # determine old-api structures about inherited fields
         cls._inherits_reload()
 
         # register stuff about low-level function fields
         cls._init_function_fields(cls.pool, self._cr)
 
-        # check constraints
-        for func in cls._constraint_methods:
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
-        for name in cls._onchange_methods:
-            if name not in cls._fields:
-                func = cls._onchange_methods[name]
-                _logger.warning("@onchange%r parameters must be field names", func._onchange)
+        # register constraints and onchange methods
+        cls._init_constraints_onchanges()
 
         # check defaults
         for name in cls._defaults:
@@ -3081,7 +3114,7 @@ class BaseModel(object):
             return fields or list(self._fields)
 
         def valid(fname):
-            """ determine whether user has access to field `fname` """
+            """ determine whether user has access to field ``fname`` """
             field = self._fields.get(fname)
             if field and field.groups:
                 return self.user_has_groups(cr, user, groups=field.groups, context=context)
@@ -3114,7 +3147,7 @@ class BaseModel(object):
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
 
-        Reads the requested fields for the records in `self`, low-level/RPC
+        Reads the requested fields for the records in ``self``, low-level/RPC
         method. In Python code, prefer :meth:`~.browse`.
 
         :param fields: list of field names to return (default is all fields)
@@ -3128,17 +3161,20 @@ class BaseModel(object):
         fields = self.check_field_access_rights('read', fields)
 
         # split fields into stored and computed fields
-        stored, computed = [], []
+        stored, inherited, computed = [], [], []
         for name in fields:
             if name in self._columns:
                 stored.append(name)
             elif name in self._fields:
                 computed.append(name)
+                field = self._fields[name]
+                if field.inherited and field.base_field.column:
+                    inherited.append(name)
             else:
                 _logger.warning("%s.read() with unknown field '%s'", self._name, name)
 
         # fetch stored fields from the database to the cache
-        self._read_from_database(stored)
+        self._read_from_database(stored, inherited)
 
         # retrieve results from records; this takes values from the cache and
         # computes remaining fields
@@ -3158,8 +3194,8 @@ class BaseModel(object):
 
     @api.multi
     def _prefetch_field(self, field):
-        """ Read from the database in order to fetch `field` (:class:`Field`
-            instance) for `self` in cache.
+        """ Read from the database in order to fetch ``field`` (:class:`Field`
+            instance) for ``self`` in cache.
         """
         # fetch the records of this model without field_name in their cache
         records = self._in_cache_without(field)
@@ -3195,10 +3231,11 @@ class BaseModel(object):
         try:
             result = records.read(list(fnames), load='_classic_write')
         except AccessError:
-            pass
+            # not all records may be accessible, try with only current record
+            result = self.read(list(fnames), load='_classic_write')
 
         # check the cache, and update it if necessary
-        if not self._cache.contains(field):
+        if field not in self._cache:
             for values in result:
                 record = self.browse(values.pop('id'))
                 record._cache.update(record._convert_to_cache(values, validate=False))
@@ -3207,50 +3244,61 @@ class BaseModel(object):
                 self._cache[field] = FailedValue(e)
 
     @api.multi
-    def _read_from_database(self, field_names):
-        """ Read the given fields of the records in `self` from the database,
+    def _read_from_database(self, field_names, inherited_field_names=[]):
+        """ Read the given fields of the records in ``self`` from the database,
             and store them in cache. Access errors are also stored in cache.
+
+            :param field_names: list of column names of model ``self``; all those
+                fields are guaranteed to be read
+            :param inherited_field_names: list of column names from parent
+                models; some of those fields may not be read
         """
         env = self.env
         cr, user, context = env.args
 
-        # FIXME: The query construction needs to be rewritten using the internal Query
-        # object, as in search(), to avoid ambiguous column references when
-        # reading/sorting on a table that is auto_joined to another table with
-        # common columns (e.g. the magical columns)
+        # make a query object for selecting ids, and apply security rules to it
+        query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [])
+        self._apply_ir_rules(query, 'read')
+        order_str = self._generate_order_by(None, query)
 
-        # Construct a clause for the security rules.
-        # 'tables' holds the list of tables necessary for the SELECT, including
-        # the ir.rule clauses, and contains at least self._table.
-        rule_clause, rule_params, tables = env['ir.rule'].domain_get(self._name, 'read')
+        # determine the fields that are stored as columns in tables;
+        # for the sake of simplicity, discard inherited translated fields
+        fields = map(self._fields.get, field_names + inherited_field_names)
+        fields_pre = [
+            field
+            for field in fields
+            if field.base_field.column._classic_write
+            if not (field.inherited and field.base_field.column.translate)
+        ]
 
-        # determine the fields that are stored as columns in self._table
-        fields_pre = [f for f in field_names if self._columns[f]._classic_write]
-
-        # we need fully-qualified column names in case len(tables) > 1
-        def qualify(f):
-            if isinstance(self._columns.get(f), fields.binary) and \
-                    context.get('bin_size_%s' % f, context.get('bin_size')):
-                # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast 
-                return 'pg_size_pretty(length(%s."%s")::bigint) as "%s"' % (self._table, f, f)
+        # the query may involve several tables: we need fully-qualified names
+        def qualify(field):
+            col = field.name
+            if field.inherited:
+                res = self._inherits_join_calc(self._table, field.name, query)
             else:
-                return '%s."%s"' % (self._table, f)
-        qual_names = map(qualify, set(fields_pre + ['id']))
+                res = '"%s"."%s"' % (self._table, col)
+            if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
+                # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
+                res = 'pg_size_pretty(length(%s)::bigint) as "%s"' % (res, col)
+            return res
 
-        query = """ SELECT %(qual_names)s FROM %(tables)s
-                    WHERE %(table)s.id IN %%s AND (%(extra)s)
-                    ORDER BY %(order)s
-                """ % {
-                    'qual_names': ",".join(qual_names),
-                    'tables': ",".join(tables),
-                    'table': self._table,
-                    'extra': " OR ".join(rule_clause) if rule_clause else "TRUE",
-                    'order': self._parent_order or self._order,
-                }
+        qual_names = map(qualify, set(fields_pre + [self._fields['id']]))
+
+        # determine the actual query to execute
+        from_clause, where_clause, where_params = query.get_sql()
+        query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
+                        WHERE %(where_clause)s %(order_str)s
+                    """ % {
+                        'qual_names': ",".join(qual_names),
+                        'from_clause': from_clause,
+                        'where_clause': where_clause,
+                        'order_str': order_str,
+                    }
 
         result = []
         for sub_ids in cr.split_for_in_conditions(self.ids):
-            cr.execute(query, [tuple(sub_ids)] + rule_params)
+            cr.execute(query_str, [tuple(sub_ids)] + where_params)
             result.extend(cr.dictfetchall())
 
         ids = [vals['id'] for vals in result]
@@ -3259,8 +3307,9 @@ class BaseModel(object):
             # translate the fields if necessary
             if context.get('lang'):
                 ir_translation = env['ir.translation']
-                for f in fields_pre:
-                    if self._columns[f].translate:
+                for field in fields_pre:
+                    if not field.inherited and field.column.translate:
+                        f = field.name
                         #TODO: optimize out of this loop
                         res_trans = ir_translation._get_ids(
                             '%s,%s' % (self._name, f), 'model', context['lang'], ids)
@@ -3268,9 +3317,10 @@ class BaseModel(object):
                             vals[f] = res_trans.get(vals['id'], False) or vals[f]
 
             # apply the symbol_get functions of the fields we just read
-            for f in fields_pre:
-                symbol_get = self._columns[f]._symbol_get
+            for field in fields_pre:
+                symbol_get = field.base_field.column._symbol_get
                 if symbol_get:
+                    f = field.name
                     for vals in result:
                         vals[f] = symbol_get(vals[f])
 
@@ -3279,7 +3329,8 @@ class BaseModel(object):
                 record = self.browse(vals['id'])
                 record._cache.update(record._convert_to_cache(vals, validate=False))
 
-            # determine the fields that must be processed now
+            # determine the fields that must be processed now;
+            # for the sake of simplicity, we ignore inherited fields
             fields_post = [f for f in field_names if not self._columns[f]._classic_write]
 
             # Compute POST fields, grouped by multi
@@ -3358,13 +3409,14 @@ class BaseModel(object):
                     * write_uid: last user who changed the record
                     * write_date: date of the last change to the record
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
+                    * noupdate: A boolean telling if the record will be updated or not
         """
         fields = ['id']
         if self._log_access:
             fields += ['create_uid', 'create_date', 'write_uid', 'write_date']
         quoted_table = '"%s"' % self._table
         fields_str = ",".join('%s.%s' % (quoted_table, field) for field in fields)
-        query = '''SELECT %s, __imd.module, __imd.name
+        query = '''SELECT %s, __imd.noupdate, __imd.module, __imd.name
                    FROM %s LEFT JOIN ir_model_data __imd
                        ON (__imd.model = %%s and __imd.res_id = %s.id)
                    WHERE %s.id IN %%s''' % (fields_str, quoted_table, quoted_table, quoted_table)
@@ -3406,7 +3458,7 @@ class BaseModel(object):
 
     def _check_record_rules_result_count(self, cr, uid, ids, result_ids, operation, context=None):
         """Verify the returned rows after applying record rules matches
-           the length of `ids`, and raise an appropriate exception if it does not.
+           the length of ``ids``, and raise an appropriate exception if it does not.
         """
         if context is None:
             context = {}
@@ -3433,8 +3485,8 @@ class BaseModel(object):
                     # errors for non-transactional search/read sequences coming from clients
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
-                raise except_orm(_('Missing document(s)'),
-                                 _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
+                raise MissingError(
+                    _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
 
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
@@ -3952,10 +4004,10 @@ class BaseModel(object):
                     recs.invalidate_cache(['parent_left', 'parent_right'])
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
-        result.sort()
 
         done = {}
-        for order, model_name, ids_to_update, fields_to_recompute in result:
+        recs.env.recompute_old.extend(result)
+        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
             key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
@@ -3966,9 +4018,10 @@ class BaseModel(object):
                     if id not in deleted_related[model_name]:
                         todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+        recs.env.clear_recompute_old()
 
         # recompute new-style fields
-        if context.get('recompute', True):
+        if recs.env.recompute and context.get('recompute', True):
             recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
@@ -4215,20 +4268,22 @@ class BaseModel(object):
         # check Python constraints
         recs._validate_fields(vals)
 
-        if context.get('recompute', True):
-            result += self._store_get_values(cr, user, [id_new],
+        result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-            result.sort()
+        recs.env.recompute_old.extend(result)
+
+        if recs.env.recompute and context.get('recompute', True):
             done = []
-            for order, model_name, ids, fields2 in result:
+            for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
+            recs.env.clear_recompute_old()
             # recompute new-style fields
             recs.recompute()
 
-        if self._log_create and context.get('recompute', True):
+        if self._log_create and recs.env.recompute and context.get('recompute', True):
             message = self._description + \
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
@@ -4469,9 +4524,9 @@ class BaseModel(object):
         for inherited_model in self._inherits:
             rule_where_clause, rule_where_clause_params, rule_tables = rule_obj.domain_get(cr, uid, inherited_model, mode, context=context)
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
-                        parent_model=inherited_model)
+                       parent_model=inherited_model)
 
-    def _generate_m2o_order_by(self, order_field, query):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -4481,10 +4536,10 @@ class BaseModel(object):
         """
         if order_field not in self._columns and order_field in self._inherit_fields:
             # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(order_field, query)
+            qualified_field = self._inherits_join_calc(alias, order_field, query)
             order_field_column = self._inherit_fields[order_field][2]
         else:
-            qualified_field = '"%s"."%s"' % (self._table, order_field)
+            qualified_field = '"%s"."%s"' % (alias, order_field)
             order_field_column = self._columns[order_field]
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
@@ -4500,19 +4555,59 @@ class BaseModel(object):
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
-        else:
-            # extract the field names, to be able to qualify them and add desc/asc
-            m2o_order_list = []
-            for order_part in m2o_order.split(","):
-                m2o_order_list.append(order_part.strip().split(" ", 1)[0].strip())
-            m2o_order = m2o_order_list
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"', '').split('.', 1)
         dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
-        qualify = lambda field: '"%s"."%s"' % (dst_alias, field)
-        return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
+        return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
+                                                   reverse_direction=reverse_direction)
+
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
+        order_by_elements = []
+        self._check_qorder(order_spec)
+        for order_part in order_spec.split(','):
+            order_split = order_part.strip().split(' ')
+            order_field = order_split[0].strip()
+            order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+            if reverse_direction:
+                order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
+            do_reverse = order_direction == 'DESC'
+            order_column = None
+            inner_clauses = []
+            add_dir = False
+            if order_field == 'id':
+                order_by_elements.append('"%s"."%s" %s' % (alias, order_field, order_direction))
+            elif order_field in self._columns:
+                order_column = self._columns[order_field]
+                if order_column._classic_read:
+                    inner_clauses = ['"%s"."%s"' % (alias, order_field)]
+                    add_dir = True
+                elif order_column._type == 'many2one':
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                else:
+                    continue  # ignore non-readable or "non-joinable" fields
+            elif order_field in self._inherit_fields:
+                parent_obj = self.pool[self._inherit_fields[order_field][3]]
+                order_column = parent_obj._columns[order_field]
+                if order_column._classic_read:
+                    inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
+                    add_dir = True
+                elif order_column._type == 'many2one':
+                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                else:
+                    continue  # ignore non-readable or "non-joinable" fields
+            else:
+                raise ValueError(_("Sorting field %s not found on model %s") % (order_field, self._name))
+            if order_column and order_column._type == 'boolean':
+                inner_clauses = ["COALESCE(%s, false)" % inner_clauses[0]]
+
+            for clause in inner_clauses:
+                if add_dir:
+                    order_by_elements.append("%s %s" % (clause, order_direction))
+                else:
+                    order_by_elements.append(clause)
+        return order_by_elements
 
     def _generate_order_by(self, order_spec, query):
         """
@@ -4524,43 +4619,7 @@ class BaseModel(object):
         order_by_clause = ''
         order_spec = order_spec or self._order
         if order_spec:
-            order_by_elements = []
-            self._check_qorder(order_spec)
-            for order_part in order_spec.split(','):
-                order_split = order_part.strip().split(' ')
-                order_field = order_split[0].strip()
-                order_direction = order_split[1].strip() if len(order_split) == 2 else ''
-                order_column = None
-                inner_clause = None
-                if order_field == 'id':
-                    order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
-                elif order_field in self._columns:
-                    order_column = self._columns[order_field]
-                    if order_column._classic_read:
-                        inner_clause = '"%s"."%s"' % (self._table, order_field)
-                    elif order_column._type == 'many2one':
-                        inner_clause = self._generate_m2o_order_by(order_field, query)
-                    else:
-                        continue  # ignore non-readable or "non-joinable" fields
-                elif order_field in self._inherit_fields:
-                    parent_obj = self.pool[self._inherit_fields[order_field][3]]
-                    order_column = parent_obj._columns[order_field]
-                    if order_column._classic_read:
-                        inner_clause = self._inherits_join_calc(order_field, query)
-                    elif order_column._type == 'many2one':
-                        inner_clause = self._generate_m2o_order_by(order_field, query)
-                    else:
-                        continue  # ignore non-readable or "non-joinable" fields
-                else:
-                    raise ValueError( _("Sorting field %s not found on model %s") %( order_field, self._name))
-                if order_column and order_column._type == 'boolean':
-                    inner_clause = "COALESCE(%s, false)" % inner_clause
-                if inner_clause:
-                    if isinstance(inner_clause, list):
-                        for clause in inner_clause:
-                            order_by_elements.append("%s %s" % (clause, order_direction))
-                    else:
-                        order_by_elements.append("%s %s" % (inner_clause, order_direction))
+            order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
 
@@ -4792,7 +4851,7 @@ class BaseModel(object):
     def exists(self):
         """  exists() -> records
 
-        Returns the subset of records in `self` that exist, and marks deleted
+        Returns the subset of records in ``self`` that exist, and marks deleted
         records as such in cache. It can be used as a test on records::
 
             if record.exists():
@@ -4938,7 +4997,7 @@ class BaseModel(object):
 
     def print_report(self, cr, uid, ids, name, data, context=None):
         """
-        Render the report `name` for the given IDs. The report must be defined
+        Render the report ``name`` for the given IDs. The report must be defined
         for this model, not another.
         """
         report = self.pool['ir.actions.report.xml']._lookup_report(cr, name)
@@ -5105,7 +5164,7 @@ class BaseModel(object):
     @classmethod
     def _patch_method(cls, name, method):
         """ Monkey-patch a method for all instances of this model. This replaces
-            the method called `name` by `method` in the given class.
+            the method called ``name`` by ``method`` in the given class.
             The original method is then accessible via ``method.origin``, and it
             can be restored with :meth:`~._revert_method`.
 
@@ -5135,7 +5194,7 @@ class BaseModel(object):
 
     @classmethod
     def _revert_method(cls, name):
-        """ Revert the original method called `name` in the given class.
+        """ Revert the original method called ``name`` in the given class.
             See :meth:`~._patch_method`.
         """
         method = getattr(cls, name)
@@ -5157,7 +5216,7 @@ class BaseModel(object):
 
     @classmethod
     def _browse(cls, env, ids):
-        """ Create an instance attached to `env`; `ids` is a tuple of record
+        """ Create an instance attached to ``env``; ``ids`` is a tuple of record
             ids.
         """
         records = object.__new__(cls)
@@ -5249,9 +5308,9 @@ class BaseModel(object):
         return self.with_env(self.env(context=context))
 
     def _convert_to_cache(self, values, update=False, validate=True):
-        """ Convert the `values` dictionary into cached values.
+        """ Convert the ``values`` dictionary into cached values.
 
-            :param update: whether the conversion is made for updating `self`;
+            :param update: whether the conversion is made for updating ``self``;
                 this is necessary for interpreting the commands of *2many fields
             :param validate: whether values must be checked
         """
@@ -5264,7 +5323,7 @@ class BaseModel(object):
         }
 
     def _convert_to_write(self, values):
-        """ Convert the `values` dictionary into the format of :meth:`write`. """
+        """ Convert the ``values`` dictionary into the format of :meth:`write`. """
         fields = self._fields
         result = {}
         for name, value in values.iteritems():
@@ -5279,8 +5338,8 @@ class BaseModel(object):
     #
 
     def _mapped_func(self, func):
-        """ Apply function `func` on all records in `self`, and return the
-            result as a list or a recordset (if `func` returns recordsets).
+        """ Apply function ``func`` on all records in ``self``, and return the
+            result as a list or a recordset (if ``func`` returns recordsets).
         """
         if self:
             vals = [func(rec) for rec in self]
@@ -5290,8 +5349,8 @@ class BaseModel(object):
             return vals if isinstance(vals, BaseModel) else []
 
     def mapped(self, func):
-        """ Apply `func` on all records in `self`, and return the result as a
-            list or a recordset (if `func` return recordsets). In the latter
+        """ Apply ``func`` on all records in ``self``, and return the result as a
+            list or a recordset (if ``func`` return recordsets). In the latter
             case, the order of the returned recordset is arbitrary.
 
             :param func: a function or a dot-separated sequence of field names
@@ -5305,7 +5364,7 @@ class BaseModel(object):
             return self._mapped_func(func)
 
     def _mapped_cache(self, name_seq):
-        """ Same as `~.mapped`, but `name_seq` is a dot-separated sequence of
+        """ Same as `~.mapped`, but ``name_seq`` is a dot-separated sequence of
             field names, and only cached values are used.
         """
         recs = self
@@ -5316,7 +5375,7 @@ class BaseModel(object):
         return recs
 
     def filtered(self, func):
-        """ Select the records in `self` such that `func(rec)` is true, and
+        """ Select the records in ``self`` such that ``func(rec)`` is true, and
             return them as a recordset.
 
             :param func: a function or a dot-separated sequence of field names
@@ -5327,7 +5386,7 @@ class BaseModel(object):
         return self.browse([rec.id for rec in self if func(rec)])
 
     def sorted(self, key=None, reverse=False):
-        """ Return the recordset `self` ordered by `key`.
+        """ Return the recordset ``self`` ordered by ``key``.
 
             :param key: either a function of one argument that returns a
                 comparison key for each record, or ``None``, in which case
@@ -5339,10 +5398,10 @@ class BaseModel(object):
             recs = self.search([('id', 'in', self.ids)])
             return self.browse(reversed(recs._ids)) if reverse else recs
         else:
-            return self.browse(map(int, sorted(self, key=key, reverse=reverse)))
+            return self.browse(map(itemgetter('id'), sorted(self, key=key, reverse=reverse)))
 
     def update(self, values):
-        """ Update record `self[0]` with `values`. """
+        """ Update record `self[0]` with ``values``. """
         for name, value in values.iteritems():
             self[name] = value
 
@@ -5379,17 +5438,17 @@ class BaseModel(object):
     #
 
     def _is_dirty(self):
-        """ Return whether any record in `self` is dirty. """
+        """ Return whether any record in ``self`` is dirty. """
         dirty = self.env.dirty
         return any(record in dirty for record in self)
 
     def _get_dirty(self):
-        """ Return the list of field names for which `self` is dirty. """
+        """ Return the list of field names for which ``self`` is dirty. """
         dirty = self.env.dirty
         return list(dirty.get(self, ()))
 
     def _set_dirty(self, field_name):
-        """ Mark the records in `self` as dirty for the given `field_name`. """
+        """ Mark the records in ``self`` as dirty for the given ``field_name``. """
         dirty = self.env.dirty
         for record in self:
             dirty[record].add(field_name)
@@ -5399,20 +5458,20 @@ class BaseModel(object):
     #
 
     def __nonzero__(self):
-        """ Test whether `self` is nonempty. """
+        """ Test whether ``self`` is nonempty. """
         return bool(getattr(self, '_ids', True))
 
     def __len__(self):
-        """ Return the size of `self`. """
+        """ Return the size of ``self``. """
         return len(self._ids)
 
     def __iter__(self):
-        """ Return an iterator over `self`. """
+        """ Return an iterator over ``self``. """
         for id in self._ids:
             yield self._browse(self.env, (id,))
 
     def __contains__(self, item):
-        """ Test whether `item` (record or field name) is an element of `self`.
+        """ Test whether ``item`` (record or field name) is an element of ``self``.
             In the first case, the test is fully equivalent to::
 
                 any(item == record for record in self)
@@ -5431,7 +5490,7 @@ class BaseModel(object):
         return self.browse(self._ids + other._ids)
 
     def __sub__(self, other):
-        """ Return the recordset of all the records in `self` that are not in `other`. """
+        """ Return the recordset of all the records in ``self`` that are not in ``other``. """
         if not isinstance(other, BaseModel) or self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
         other_ids = set(other._ids)
@@ -5457,7 +5516,9 @@ class BaseModel(object):
         """ Test whether two recordsets are equivalent (up to reordering). """
         if not isinstance(other, BaseModel):
             if other:
-                _logger.warning("Comparing apples and oranges: %s == %s", self, other)
+                filename, lineno = frame_codeinfo(currentframe(), 1)
+                _logger.warning("Comparing apples and oranges: %r == %r (%s:%s)",
+                                self, other, filename, lineno)
             return False
         return self._name == other._name and set(self._ids) == set(other._ids)
 
@@ -5502,9 +5563,9 @@ class BaseModel(object):
             return hash(self._name)
 
     def __getitem__(self, key):
-        """ If `key` is an integer or a slice, return the corresponding record
-            selection as an instance (attached to `self.env`).
-            Otherwise read the field `key` of the first record in `self`.
+        """ If ``key`` is an integer or a slice, return the corresponding record
+            selection as an instance (attached to ``self.env``).
+            Otherwise read the field ``key`` of the first record in ``self``.
 
             Examples::
 
@@ -5522,7 +5583,7 @@ class BaseModel(object):
             return self._browse(self.env, (self._ids[key],))
 
     def __setitem__(self, key, value):
-        """ Assign the field `key` to `value` in record `self`. """
+        """ Assign the field ``key`` to ``value`` in record ``self``. """
         # important: one must call the field's setter
         return self._fields[key].__set__(self, value)
 
@@ -5532,13 +5593,13 @@ class BaseModel(object):
 
     @lazy_property
     def _cache(self):
-        """ Return the cache of `self`, mapping field names to values. """
+        """ Return the cache of ``self``, mapping field names to values. """
         return RecordCache(self)
 
     @api.model
     def _in_cache_without(self, field):
-        """ Make sure `self` is present in cache (for prefetching), and return
-            the records of model `self` in cache that have no value for `field`
+        """ Make sure ``self`` is present in cache (for prefetching), and return
+            the records of model ``self`` in cache that have no value for ``field``
             (:class:`Field` instance).
         """
         env = self.env
@@ -5559,7 +5620,7 @@ class BaseModel(object):
     @api.model
     def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
-            If both `fnames` and `ids` are ``None``, the whole cache is cleared.
+            If both ``fnames`` and ``ids`` are ``None``, the whole cache is cleared.
 
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
@@ -5578,12 +5639,12 @@ class BaseModel(object):
 
     @api.multi
     def modified(self, fnames):
-        """ Notify that fields have been modified on `self`. This invalidates
+        """ Notify that fields have been modified on ``self``. This invalidates
             the cache, and prepares the recomputation of stored function fields
             (new-style fields only).
 
             :param fnames: iterable of field names that have been modified on
-                records `self`
+                records ``self``
         """
         # each field knows what to invalidate and recompute
         spec = []
@@ -5602,17 +5663,17 @@ class BaseModel(object):
         self.env.invalidate(spec)
 
     def _recompute_check(self, field):
-        """ If `field` must be recomputed on some record in `self`, return the
+        """ If ``field`` must be recomputed on some record in ``self``, return the
             corresponding records that must be recomputed.
         """
         return self.env.check_todo(field, self)
 
     def _recompute_todo(self, field):
-        """ Mark `field` to be recomputed. """
+        """ Mark ``field`` to be recomputed. """
         self.env.add_todo(field, self)
 
     def _recompute_done(self, field):
-        """ Mark `field` as recomputed. """
+        """ Mark ``field`` as recomputed. """
         self.env.remove_todo(field, self)
 
     @api.model
@@ -5623,12 +5684,18 @@ class BaseModel(object):
         while self.env.has_todo():
             field, recs = self.env.get_todo()
             # evaluate the fields to recompute, and save them to database
-            for rec, rec1 in zip(recs, recs.with_context(recompute=False)):
+            names = [
+                f.name
+                for f in field.computed_fields
+                if f.store and self.env.field_todo(f)
+            ]
+            for rec in recs:
                 try:
                     values = rec._convert_to_write({
-                        f.name: rec[f.name] for f in field.computed_fields
+                        name: rec[name] for name in names
                     })
-                    rec1._write(values)
+                    with rec.env.norecompute():
+                        rec._write(values)
                 except MissingError:
                     pass
             # mark the computed fields as done
@@ -5639,8 +5706,8 @@ class BaseModel(object):
     #
 
     def _has_onchange(self, field, other_fields):
-        """ Return whether `field` should trigger an onchange event in the
-            presence of `other_fields`.
+        """ Return whether ``field`` should trigger an onchange event in the
+            presence of ``other_fields``.
         """
         # test whether self has an onchange method for field, or field is a
         # dependency of any field in other_fields
@@ -5674,9 +5741,9 @@ class BaseModel(object):
         return result
 
     def _onchange_eval(self, field_name, onchange, result):
-        """ Apply onchange method(s) for field `field_name` with spec `onchange`
-            on record `self`. Value assignments are applied on `self`, while
-            domain and warning messages are put in dictionary `result`.
+        """ Apply onchange method(s) for field ``field_name`` with spec ``onchange``
+            on record ``self``. Value assignments are applied on ``self``, while
+            domain and warning messages are put in dictionary ``result``.
         """
         onchange = onchange.strip()
 
@@ -5715,9 +5782,13 @@ class BaseModel(object):
             }
             params = eval("[%s]" % params, global_vars, field_vars)
 
-            # call onchange method
+            # call onchange method with context when possible
             args = (self._cr, self._uid, self._origin.ids) + tuple(params)
-            method_res = getattr(self._model, method)(*args)
+            try:
+                method_res = getattr(self._model, method)(*args, context=self._context)
+            except TypeError:
+                method_res = getattr(self._model, method)(*args)
+
             if not isinstance(method_res, dict):
                 return
             if 'value' in method_res:
@@ -5734,13 +5805,20 @@ class BaseModel(object):
 
             :param values: dictionary mapping field names to values, giving the
                 current state of modification
-            :param field_name: name of the modified field_name
+            :param field_name: name of the modified field, or list of field
+                names (in view order), or False
             :param field_onchange: dictionary mapping field names to their
                 on_change attribute
         """
         env = self.env
+        if isinstance(field_name, list):
+            names = field_name
+        elif field_name:
+            names = [field_name]
+        else:
+            names = []
 
-        if field_name and field_name not in self._fields:
+        if not all(name in self._fields for name in names):
             return {}
 
         # determine subfields for field.convert_to_write() below
@@ -5752,30 +5830,38 @@ class BaseModel(object):
                 name, subname = dotname.split('.')
                 subfields[name].add(subname)
 
-        # create a new record with values, and attach `self` to it
+        # create a new record with values, and attach ``self`` to it
         with env.do_in_onchange():
             record = self.new(values)
             values = dict(record._cache)
-            # attach `self` with a different context (for cache consistency)
+            # attach ``self`` with a different context (for cache consistency)
             record._origin = self.with_context(__onchange=True)
 
-        # determine which field should be triggered an onchange
-        todo = set([field_name]) if field_name else set(values)
+        # load fields on secondary records, to avoid false changes
+        with env.do_in_onchange():
+            for field_seq in secondary:
+                record.mapped(field_seq)
+
+        # determine which field(s) should be triggered an onchange
+        todo = list(names) or list(values)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
         for name in todo:
+            if name == 'id':
+                continue
             value = record[name]
             field = self._fields[name]
-            if not field_name and field.type == 'many2one' and field.delegate and not value:
+            if field.type == 'many2one' and field.delegate and not value:
                 # do not nullify all fields of parent record for new records
                 continue
             record[name] = value
 
         result = {'value': {}}
 
+        # process names in order (or the keys of values if no name given)
         while todo:
-            name = todo.pop()
+            name = todo.pop(0)
             if name in done:
                 continue
             done.add(name)
@@ -5799,7 +5885,7 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # keep result: newval may have been dirty before
                             pass
@@ -5809,14 +5895,15 @@ class BaseModel(object):
                             result['value'][name] = field.convert_to_write(
                                 newval, record._origin, subfields.get(name),
                             )
-                            todo.add(name)
+                            todo.append(name)
                         else:
                             # clean up result to not return another value
                             result['value'].pop(name, None)
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
-        if field_name and self._fields[field_name].type in ('one2many', 'many2many'):
+        if field_name and not isinstance(field_name, list) and \
+                self._fields[field_name].type in ('one2many', 'many2many'):
             result['value'].pop(field_name, None)
 
         return result
@@ -5831,13 +5918,13 @@ class RecordCache(MutableMapping):
         self._recs = records
 
     def contains(self, field):
-        """ Return whether `records[0]` has a value for `field` in cache. """
+        """ Return whether `records[0]` has a value for ``field`` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         return self._recs.id in self._recs.env.cache[field]
 
     def __contains__(self, field):
-        """ Return whether `records[0]` has a regular value for `field` in cache. """
+        """ Return whether `records[0]` has a regular value for ``field`` in cache. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         dummy = SpecialValue(None)
@@ -5845,22 +5932,22 @@ class RecordCache(MutableMapping):
         return not isinstance(value, SpecialValue)
 
     def __getitem__(self, field):
-        """ Return the cached value of `field` for `records[0]`. """
+        """ Return the cached value of ``field`` for `records[0]`. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         value = self._recs.env.cache[field][self._recs.id]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def __setitem__(self, field, value):
-        """ Assign the cached value of `field` for all records in `records`. """
+        """ Assign the cached value of ``field`` for all records in ``records``. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         values = dict.fromkeys(self._recs._ids, value)
         self._recs.env.cache[field].update(values)
 
     def update(self, *args, **kwargs):
-        """ Update the cache of all records in `records`. If the argument is a
-            `SpecialValue`, update all fields (except "magic" columns).
+        """ Update the cache of all records in ``records``. If the argument is a
+            ``SpecialValue``, update all fields (except "magic" columns).
         """
         if args and isinstance(args[0], SpecialValue):
             values = dict.fromkeys(self._recs._ids, args[0])
@@ -5871,7 +5958,7 @@ class RecordCache(MutableMapping):
             return super(RecordCache, self).update(*args, **kwargs)
 
     def __delitem__(self, field):
-        """ Remove the cached value of `field` for all `records`. """
+        """ Remove the cached value of ``field`` for all ``records``. """
         if isinstance(field, basestring):
             field = self._recs._fields[field]
         field_cache = self._recs.env.cache[field]

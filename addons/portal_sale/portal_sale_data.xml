@@ -26,7 +26,7 @@
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
        &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
        &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
-       &nbsp;&nbsp;Order date: ${object.date_order}<br />
+       &nbsp;&nbsp;Order date:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif

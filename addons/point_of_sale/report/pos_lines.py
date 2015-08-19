@@ -46,7 +46,8 @@ class pos_lines(report_sxw.rml_parse):
     def __taxes__(self, obj):
         self.cr.execute ( " Select acct.name from pos_order as po " \
                               " LEFT JOIN pos_order_line as pol ON po.id = pol.order_id " \
-                              " LEFT JOIN product_taxes_rel as ptr ON pol.product_id = ptr.prod_id " \
+                              " LEFT JOIN product_product as pp ON pol.product_id = pp.id"
+                              " LEFT JOIN product_taxes_rel as ptr ON pp.product_tmpl_id = ptr.prod_id " \
                               " LEFT JOIN account_tax as acct ON acct.id = ptr.tax_id " \
                               " WHERE pol.id = %s", (obj.id,))
         res=self.cr.fetchone()[0]

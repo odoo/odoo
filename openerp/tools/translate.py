@@ -169,7 +169,8 @@ class GettextAlias(object):
             return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
-        # try, in order: cr, cursor, self.env.cr, self.cr
+        # try, in order: cr, cursor, self.env.cr, self.cr,
+        # request.env.cr
         if 'cr' in frame.f_locals:
             return frame.f_locals['cr'], False
         if 'cursor' in frame.f_locals:
@@ -179,6 +180,11 @@ class GettextAlias(object):
             return s.env.cr, False
         if hasattr(s, 'cr'):
             return s.cr, False
+        try:
+            from openerp.http import request
+            return request.env.cr, False
+        except RuntimeError:
+            pass
         if allow_create:
             # create a new cursor
             db = self._get_db()
@@ -197,7 +203,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang')
+        # self.env.lang, self.localcontext.get('lang'), request.env.lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -212,6 +218,12 @@ class GettextAlias(object):
             if not lang:
                 if hasattr(s, 'localcontext'):
                     lang = s.localcontext.get('lang')
+            if not lang:
+                try:
+                    from openerp.http import request
+                    lang = request.env.lang
+                except RuntimeError:
+                    pass
             if not lang:
                 # Last resort: attempt to guess the language of the user
                 # Pitfall: some operations are performed in sudo mode, and we
@@ -342,6 +354,8 @@ class TinyPoFile(object):
                 elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
                     fuzzy = True
                 line = self.lines.pop(0).strip()
+            if not self.lines:
+                raise StopIteration()
             while not line:
                 # allow empty lines between comments and msgid
                 line = self.lines.pop(0).strip()
@@ -566,6 +580,7 @@ def trans_parse_view(element, callback):
     for el in element.iter():
         if (not isinstance(el, SKIPPED_ELEMENT_TYPES)
                 and el.tag.lower() not in SKIPPED_ELEMENTS
+                and el.get("translation", '').strip() != "off"
                 and el.text):
             _push(callback, el.text, el.sourceline)
         if el.tail:
@@ -848,6 +863,8 @@ def trans_generate(lang, modules, cr):
         display_path = "addons%s" % frelativepath
         module = get_module_from_path(fabsolutepath)
         if ('all' in modules or module in modules) and module in installed_modules:
+            if os.path.sep != '/':
+                display_path = display_path.replace(os.path.sep, '/')
             return module, fabsolutepath, frelativepath, display_path
         return None, None, None, None
 

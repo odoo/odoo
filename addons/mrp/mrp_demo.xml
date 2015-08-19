@@ -454,6 +454,25 @@
             <field name="type">normal</field>
         </record>
 
+        <record id="mrp_bom_property_0" model="mrp.bom">
+            <field name="name">PC Assemble + DDR 512MB</field>
+            <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="type">normal</field>
+            <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
+        </record>
+
+        <record id="mrp_bom_property_line" model="mrp.bom">
+            <field name="name">RAM SR2 PLUS</field>
+            <field name="product_id" ref="product.product_product_14"/>
+            <field name="product_tmpl_id" ref="product.product_product_14_product_template"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="type">phantom</field>
+            <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
+        </record>
+
         <record id="mrp_bom_line_17" model="mrp.bom.line">
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_qty">1</field>
@@ -503,7 +522,7 @@
             <field name="name">PC Assemble + 512MB RAM</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="sequence">5</field>            
+            <field name="sequence">4</field>
             <field name="routing_id" ref="mrp_routing_2"/>
             <field name="type">phantom</field>
         </record>
@@ -639,6 +658,35 @@
             <field name="sequence">3</field>            
             <field name="type">normal</field>
             <field name="bom_id" ref="mrp_bom_11"/>
+        </record>
+
+        <record id="mrp_bom_line_prop_1" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="type">normal</field>
+            <field name="property_ids" eval="[(6,0,[ref('mrp_property_8')])]"/>
+            <field name="bom_id" ref="mrp_bom_property_line"/>
+        </record>
+
+        <record id="mrp_bom_line_prop_2" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="type">normal</field>
+            <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
+            <field name="bom_id" ref="mrp_bom_property_line"/>
+        </record>
+
+        <record id="mrp_bom_line_prop_3" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="type">normal</field>
+            <field name="bom_id" ref="mrp_bom_property_line"/>
         </record>
 
 

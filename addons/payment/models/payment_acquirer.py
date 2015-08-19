@@ -14,7 +14,7 @@ def _partner_format_address(address1=False, address2=False):
 
 
 def _partner_split_name(partner_name):
-    return [' '.join(partner_name.split()[-1:]), ' '.join(partner_name.split()[:-1])]
+    return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
 
 
 class ValidationError(ValueError):
@@ -341,7 +341,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange', copy=False),
+            track_visibility='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment
@@ -371,8 +371,15 @@ class PaymentTransaction(osv.Model):
                                          help='Reference of the customer in the acquirer database'),
     }
 
-    _sql_constraints = [
-        ('reference_uniq', 'UNIQUE(reference)', 'The payment transaction reference must be unique!'),
+    def _check_reference(self, cr, uid, ids, context=None):
+        transaction = self.browse(cr, uid, ids[0], context=context)
+        if transaction.state not in ['cancel', 'error']:
+            if self.search(cr, uid, [('reference', '=', transaction.reference), ('id', '!=', transaction.id)], context=context, count=True):
+                return False
+        return True
+
+    _constraints = [
+        (_check_reference, 'The payment transaction reference must be unique!', ['reference', 'state']),
     ]
 
     _defaults = {

@@ -190,7 +190,7 @@ class email_template(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         records = self.pool[model].browse(cr, uid, res_ids, context=context) or [None]
         variables = {
-            'format_tz': lambda dt, tz=False, format=False: format_tz(self.pool, cr, uid, dt, tz, format, context),
+            'format_tz': lambda dt, tz=False, format=False, context=context: format_tz(self.pool, cr, uid, dt, tz, format, context),
             'user': user,
             'ctx': context,  # context kw would clash with mako internals
         }

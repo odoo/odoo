@@ -220,6 +220,12 @@
             <field name="act_to" ref="act_done"/>
             <field name="condition">invoiced</field>
         </record>
+        <record id="trans_invoice_end_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_invoice_end"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+            <field name="condition">invoice_method&lt;&gt;'order'</field>
+        </record>
 
     </data>
 </openerp>

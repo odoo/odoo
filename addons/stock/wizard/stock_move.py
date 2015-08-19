@@ -88,16 +88,16 @@ class stock_move_scrap(osv.osv_memory):
                              context=context)
         if context.get('active_id'):
             move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-            return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.picking',
-                'type': 'ir.actions.act_window',
-                'res_id': move.picking_id.id,
-                'context': context
-            }
-        else:
-            return {'type': 'ir.actions.act_window_close'}
+            if move.picking_id:
+                return {
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'stock.picking',
+                    'type': 'ir.actions.act_window',
+                    'res_id': move.picking_id.id,
+                    'context': context
+                }
+        return {'type': 'ir.actions.act_window_close'}
 
 
 

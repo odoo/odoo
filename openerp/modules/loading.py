@@ -142,7 +142,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
-        new_install = package.installed_version is None
+        new_install = package.state == 'to install'
         if new_install:
             py_module = sys.modules['openerp.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
@@ -361,7 +361,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 if model in registry and not registry[model].is_transient() and not isinstance(registry[model], openerp.osv.orm.AbstractModel):
-                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,0,0,0',
                         model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have

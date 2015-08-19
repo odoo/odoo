@@ -607,16 +607,14 @@
                                     <field name="date" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="name" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="partner_id" domain="[
-                                        '&amp;',
-                                            '|',('parent_id','=',False),('is_company','=',True),
-                                            '|',('customer','=',True),('supplier','=',True)]"
+                                    <field name="partner_id" domain="['|',('parent_id','=',False),('is_company','=',True)]"
                                          context="{'default_supplier': 1}"
                                          attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="amount_currency" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
                                     <field name="currency_id" groups="base.group_multi_currency" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"/>
-                                    <field name="bank_account_id" groups="base.group_no_one"/>
+                                    <field name="bank_account_id" groups="base.group_no_one" attrs="{'readonly' : [('journal_entry_id', '!=', False)] }"
+                                        domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
                                 </tree>
                             </field>
                         </page>
@@ -662,7 +660,7 @@
             <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_bank_statement_form"/>
             <field name="act_window_id" ref="action_bank_statement_tree"/>
@@ -874,6 +872,7 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="sum_period"/>
@@ -893,6 +892,7 @@
                             <field name="code"/>
                             <field name="parent_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
                         </group>
                         <group string="Reporting Configuration">
                             <field name="notprintable"/>
@@ -1199,8 +1199,8 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
-                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="period_id" options='{"no_open":True}'/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -2149,6 +2149,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code Template" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="parent_id" invisible="1"/>
@@ -2178,6 +2179,7 @@
                         <field name="code"/>
                         <field name="parent_id"/>
                         <field name="sign"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Description"/>
                     <field name="info"/>

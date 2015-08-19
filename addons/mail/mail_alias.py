@@ -28,6 +28,7 @@ from openerp.tools import ustr
 from openerp.modules.registry import RegistryManager
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 

@@ -7,6 +7,7 @@ import openerp
 import openerp.service.report
 import uuid
 import collections
+import babel.dates
 from werkzeug.exceptions import BadRequest
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -94,7 +95,7 @@ class calendar_attendee(osv.Model):
         'email': fields.char('Email', help="Email of Invited Person"),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
         'access_token': fields.char('Invitation Token'),
-        'event_id': fields.many2one('calendar.event', 'Meeting linked'),
+        'event_id': fields.many2one('calendar.event', 'Meeting linked', ondelete='cascade'),
     }
     _defaults = {
         'state': 'needsAction',
@@ -124,9 +125,9 @@ class calendar_attendee(osv.Model):
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return datetime.strptime(idate.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT).replace(tzinfo=pytz.timezone('UTC'))
+                    return openerp.fields.Date.from_string(idate)
                 else:
-                    return datetime.strptime(idate.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT).replace(tzinfo=pytz.timezone('UTC'))
+                    return openerp.fields.Datetime.from_string(idate).replace(tzinfo=pytz.timezone('UTC'))
             return False
 
         try:
@@ -172,10 +173,11 @@ class calendar_attendee(osv.Model):
         return res
 
     def _send_mail_to_attendees(self, cr, uid, ids, email_from=tools.config.get('email_from', False),
-                                template_xmlid='calendar_template_meeting_invitation', context=None):
+                                template_xmlid='calendar_template_meeting_invitation', force=False, context=None):
         """
         Send mail for event invitation to event attendees.
         @param email_from: email address for user sending the mail
+        @param force: If set to True, email will be sent to user himself. Usefull for example for alert, ...
         """
         res = False
 
@@ -208,7 +210,7 @@ class calendar_attendee(osv.Model):
         })
 
         for attendee in self.browse(cr, uid, ids, context=context):
-            if attendee.email and email_from and attendee.email != email_from:
+            if attendee.email and email_from and (attendee.email != email_from or force):
                 ics_file = self.get_ics_file(cr, uid, attendee.event_id, context=context)
                 mail_id = template_pool.send_mail(cr, uid, template_id, attendee.id, context=local_context)
 
@@ -372,12 +374,12 @@ class calendar_alarm_manager(osv.AbstractModel):
             tuple_params += (partner_id, )
 
         #Add filter on hours
-        tuple_params += (seconds, seconds,)
+        tuple_params += (seconds,)
 
         cr.execute("""SELECT *
                         FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
                        WHERE ALL_EVENTS.first_alarm < (now() at time zone 'utc' + interval '%%s' second )
-                         AND ALL_EVENTS.last_alarm > (now() at time zone 'utc' - interval '%%s' second )
+                         AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
                    """ % base_request, tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in cr.fetchall():
@@ -394,20 +396,30 @@ class calendar_alarm_manager(osv.AbstractModel):
 
         return res
 
-    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, after=False, notif=True, mail=True, context=None):
-        res = []
-        alarm_type = []
+    def do_check_alarm_for_one_date(self, cr, uid, one_date, event, event_maxdelta, in_the_next_X_seconds, after=False, notif=True, mail=True, missing=False, context=None):
+        # one_date: date of the event to check (not the same that in the event browse if recurrent)
+        # event: Event browse record
+        # event_maxdelta: biggest duration from alarms for this event
+        # in_the_next_X_seconds: looking in the future (in seconds)
+        # after: if not False: will return alert if after this date (date as string - todo: change in master)
+        # missing: if not False: will return alert even if we are too late
+        # notif: Looking for type notification
+        # mail: looking for type email
 
+        res = []
+
+        # TODO: replace notif and email in master by alarm_type + remove event_maxdelta and if using it
+        alarm_type = []
         if notif:
             alarm_type.append('notification')
         if mail:
             alarm_type.append('email')
 
-        if one_date - timedelta(minutes=event_maxdelta) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
+        if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
                 if alarm.type in alarm_type and \
-                    one_date - timedelta(minutes=alarm.duration_minutes) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
-                        (not after or one_date - timedelta(minutes=alarm.duration_minutes) > datetime.strptime(after.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)):
+                    one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
+                        (not after or one_date - timedelta(minutes=alarm.duration_minutes) > openerp.fields.Datetime.from_string(after)):
                         alert = {
                             'alarm_id': alarm.id,
                             'event_id': event.id,
@@ -417,65 +429,63 @@ class calendar_alarm_manager(osv.AbstractModel):
         return res
 
     def get_next_mail(self, cr, uid, context=None):
+        now = openerp.fields.Datetime.to_string(datetime.now())
+
+        icp = self.pool['ir.config_parameter']
+        last_notif_mail = icp.get_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', default=False) or now
+
         try:
-            cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+            cron = self.pool['ir.model.data'].get_object(cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
             _logger.error("Cron for " + self._name + " can not be identified !")
             return False
 
-        if cron.interval_type == "weeks":
-            cron_interval = cron.interval_number * 7 * 24 * 60 * 60
-        elif cron.interval_type == "days":
-            cron_interval = cron.interval_number * 24 * 60 * 60
-        elif cron.interval_type == "hours":
-            cron_interval = cron.interval_number * 60 * 60
-        elif cron.interval_type == "minutes":
-            cron_interval = cron.interval_number * 60
-        elif cron.interval_type == "seconds":
-            cron_interval = cron.interval_number
-        else:
-            cron_interval = False
+        interval_to_second = {
+            "weeks": 7 * 24 * 60 * 60,
+            "days": 24 * 60 * 60,
+            "hours": 60 * 60,
+            "minutes": 60,
+            "seconds": 1
+        }
 
-        if not cron_interval:
+        if cron.interval_type not in interval_to_second.keys():
             _logger.error("Cron delay can not be computed !")
             return False
 
+        cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
+
         all_events = self.get_next_potential_limit_alarm(cr, uid, cron_interval, notif=False, context=context)
 
-        for event in all_events:  # .values()
-            max_delta = all_events[event]['max_duration']
-            curEvent = self.pool.get('calendar.event').browse(cr, uid, event, context=context)
+        for curEvent in self.pool.get('calendar.event').browse(cr, uid, all_events.keys(), context=context):
+            max_delta = all_events[curEvent.id]['max_duration']
+
             if curEvent.recurrency:
-                bFound = False
-                LastFound = False
+                at_least_one = False
+                last_found = False
                 for one_date in self.pool.get('calendar.event').get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
-                    if LastFound:
-                        for alert in LastFound:
-                            self.do_mail_reminder(cr, uid, alert, context=context)
-
-                        if not bFound:  # if it's the first alarm for this recurrent event
-                            bFound = True
-                    if bFound and not LastFound:  # if the precedent event had an alarm but not this one, we can stop the search for this event
+                    last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
+                    for alert in last_found:
+                        self.do_mail_reminder(cr, uid, alert, context=context)
+                        at_least_one = True  # if it's the first alarm for this recurrent event
+                    if at_least_one and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, cron_interval, notif=False, context=context)
-                if LastFound:
-                    for alert in LastFound:
-                        self.do_mail_reminder(cr, uid, alert, context=context)
+                last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
+                for alert in last_found:
+                    self.do_mail_reminder(cr, uid, alert, context=context)
+        icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
 
     def get_next_notif(self, cr, uid, context=None):
         ajax_check_every_seconds = 300
-        partner = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id
+        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
         all_notif = []
 
         if not partner:
             return []
 
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner.id, mail=False, context=context)
+        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
 
         for event in all_events:  # .values()
             max_delta = all_events[event]['max_duration']
@@ -485,7 +495,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 LastFound = False
                 for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
                     in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner.calendar_last_notif_ack, mail=False, context=context)
+                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
                     if LastFound:
                         for alert in LastFound:
                             all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -495,7 +505,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                         break
             else:
                 in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, partner.calendar_last_notif_ack, mail=False, context=context)
+                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
                 if LastFound:
                     for alert in LastFound:
                         all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
@@ -510,7 +520,15 @@ class calendar_alarm_manager(osv.AbstractModel):
         alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
 
         if alarm.type == 'email':
-            res = self.pool['calendar.attendee']._send_mail_to_attendees(cr, uid, [att.id for att in event.attendee_ids], template_xmlid='calendar_template_meeting_reminder', context=context)
+            res = self.pool['calendar.attendee']._send_mail_to_attendees(
+                cr,
+                uid,
+                [att.id for att in event.attendee_ids],
+                email_from=event.user_id.partner_id.email,
+                template_xmlid='calendar_template_meeting_reminder',
+                force=True,
+                context=context
+            )
 
         return res
 
@@ -555,7 +573,7 @@ class calendar_alarm(osv.Model):
         'type': fields.selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True),
         'duration': fields.integer('Amount', required=True),
         'interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), ('days', 'Days')], 'Unit', required=True),
-        'duration_minutes': fields.function(_get_duration, type='integer', string='duration_minutes', store=True),
+        'duration_minutes': fields.function(_get_duration, type='integer', string='Duration in minutes', store=True),
     }
 
     _defaults = {
@@ -567,7 +585,7 @@ class calendar_alarm(osv.Model):
     def _update_cron(self, cr, uid, context=None):
         try:
             cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+                cr, SUPERUSER_ID, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
             return False
         return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
@@ -638,18 +656,18 @@ class ir_model(osv.Model):
 original_exp_report = openerp.service.report.exp_report
 
 
-def exp_report(db, uid, object, ids, data=None, context=None):
+def exp_report(db, uid, object, ids, datas=None, context=None):
     """
     Export Report
     """
     if object == 'printscreen.list':
-        original_exp_report(db, uid, object, ids, data, context)
+        original_exp_report(db, uid, object, ids, datas, context)
     new_ids = []
     for id in ids:
         new_ids.append(calendar_id2real_id(id))
-    if data.get('id', False):
-        data['id'] = calendar_id2real_id(data['id'])
-    return original_exp_report(db, uid, object, new_ids, data, context)
+    if datas.get('id', False):
+        datas['id'] = calendar_id2real_id(datas['id'])
+    return original_exp_report(db, uid, object, new_ids, datas, context)
 
 
 openerp.service.report.exp_report = exp_report
@@ -682,6 +700,9 @@ class calendar_event(osv.Model):
             if not val.tzinfo:
                 val = pytz.UTC.localize(val)
             return val.astimezone(timezone)
+
+        if context is None:
+            context = {}
 
         timezone = pytz.timezone(context.get('tz') or 'UTC')
         startdate = pytz.UTC.localize(datetime.strptime(event.start, DEFAULT_SERVER_DATETIME_FORMAT))  # Add "+hh:mm" timezone
@@ -876,12 +897,12 @@ class calendar_event(osv.Model):
                 stop_date = values.get('stop_date') or event.stop_date
                 start_date = values.get('start_date') or event.start_date
                 if stop_date and start_date:
-                    diff = datetime.strptime(stop_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT) - datetime.strptime(start_date.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+                    diff = openerp.fields.Date.from_string(stop_date) - openerp.fields.Date.from_string(start_date)
             elif values.get('stop_datetime') or values.get('start_datetime'):
                 stop_datetime = values.get('stop_datetime') or event.stop_datetime
                 start_datetime = values.get('start_datetime') or event.start_datetime
                 if stop_datetime and start_datetime:
-                    diff = datetime.strptime(stop_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT) - datetime.strptime(start_datetime.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+                    diff = openerp.fields.Datetime.from_string(stop_datetime) - openerp.fields.Datetime.from_string(start_datetime)
             if diff:
                 duration = float(diff.days) * 24 + (float(diff.seconds) / 3600)
                 values['duration'] = round(duration, 2)
@@ -939,7 +960,7 @@ class calendar_event(osv.Model):
 
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'color_partner_id': fields.related('user_id', 'partner_id', 'id', type="integer", string="colorize", store=False),  # Color of creator
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the event alarm information without removing it."),
         'categ_ids': fields.many2many('calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.one2many('calendar.attendee', 'event_id', 'Attendees', ondelete='cascade'),
         'partner_ids': fields.many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}),
@@ -1003,7 +1024,7 @@ class calendar_event(osv.Model):
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
 
             if starttime:
-                start = datetime.strptime(starttime.split(' ')[0], DEFAULT_SERVER_DATE_FORMAT)
+                start = openerp.fields.Datetime.from_string(starttime)
                 startdate = tz.localize(start)  # Add "+hh:mm" timezone
                 startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
@@ -1398,6 +1419,12 @@ class calendar_event(osv.Model):
             del context['default_date']
         return super(calendar_event, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
+        return super(calendar_event, self).message_subscribe(cr, uid, get_real_ids(ids), partner_ids, subtype_ids=subtype_ids, context=context)
+
+    def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
+        return super(calendar_event, self).message_unsubscribe(cr, uid, get_real_ids(ids), partner_ids, context=context)
+
     def do_sendmail(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context):
             current_user = self.pool['res.users'].browse(cr, uid, uid, context=context)
@@ -1423,22 +1450,40 @@ class calendar_event(osv.Model):
         return invitation
 
     def get_interval(self, cr, uid, ids, date, interval, tz=None, context=None):
-        #Function used only in calendar_event_data.xml for email template
-        date = datetime.strptime(date.split('.')[0], DEFAULT_SERVER_DATETIME_FORMAT)
+        ''' Format and localize some dates to be used in email templates
+
+            :param string date: date/time to be formatted
+            :param string interval: Among 'day', 'month', 'dayname' and 'time' indicating the desired formatting
+            :param string tz: Timezone indicator (optional)
+
+            :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
+
+            (Function used only in calendar_event_data.xml) '''
+
+        date = openerp.fields.Datetime.from_string(date)
 
         if tz:
             timezone = pytz.timezone(tz or 'UTC')
             date = date.replace(tzinfo=pytz.timezone('UTC')).astimezone(timezone)
 
         if interval == 'day':
-            res = str(date.day)
+            # Day number (1-31)
+            res = unicode(date.day)
+
         elif interval == 'month':
-            res = date.strftime('%B') + " " + str(date.year)
+            # Localized month name and year
+            res = babel.dates.format_date(date=date, format='MMMM y', locale=context.get('lang', 'en_US'))
+
         elif interval == 'dayname':
-            res = date.strftime('%A')
+            # Localized day name
+            res = babel.dates.format_date(date=date, format='EEEE', locale=context.get('lang', 'en_US'))
+
         elif interval == 'time':
+            # Localized time
+
             dummy, format_time = self.get_date_formats(cr, uid, context=context)
-            res = date.strftime(format_time + " %Z")
+            res = tools.ustr(date.strftime(format_time + " %Z"))
+
         return res
 
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
@@ -1617,12 +1662,6 @@ class calendar_event(osv.Model):
         virtual_id = context.get('virtual_id', True)
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby, lazy=lazy)
-        for result in res:
-            #remove the count, since the value is not consistent with the result of the search when expand the group
-            for groupname in groupby:
-                if result.get(groupname + "_count"):
-                    del result[groupname + "_count"]
-            result.get('__context', {}).update({'virtual_id': virtual_id})
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -1711,7 +1750,6 @@ class calendar_event(osv.Model):
 
         return res
 
-
 class mail_message(osv.Model):
     _inherit = "mail.message"
 
@@ -1789,6 +1827,8 @@ class invite_wizard(osv.osv_memory):
         '''
         in case someone clicked on 'invite others' wizard in the followers widget, transform virtual ids in real ids
         '''
+        if 'default_res_id' in context:
+            context = dict(context, default_res_id=get_real_ids(context['default_res_id']))
         result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
         if 'res_id' in result:
             result['res_id'] = get_real_ids(result['res_id'])

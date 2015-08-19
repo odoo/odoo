@@ -60,7 +60,7 @@ $(document).ready(function () {
     }
 
     function track_ga() {
-        website_ga = this._gaw || function(){};
+        website_ga = this.ga || function(){};
         website_ga.apply(this, arguments);
     }
 

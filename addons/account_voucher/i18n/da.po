@@ -1,32 +1,29 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:26+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
+"* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 
@@ -44,7 +41,7 @@ msgstr "(Opdatér)"
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "(update)"
-msgstr ""
+msgstr "Opdater"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -52,8 +49,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new supplier payment.\n"
 "              </p><p>\n"
-"                Odoo helps you easily track payments you make and the "
-"remaining balances you need to pay your suppliers.\n"
+"                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -64,8 +60,7 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a sale receipt.\n"
 "              </p><p>\n"
-"                When the sale receipt is confirmed, you can record the "
-"customer\n"
+"                When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
@@ -78,10 +73,8 @@ msgid ""
 "                Click to register a new payment. \n"
 "              </p><p>\n"
 "                Enter the customer and the payment method and then, either\n"
-"                create manually a payment record or Odoo will propose to "
-"you\n"
-"                automatically the reconciliation of this payment with the "
-"open\n"
+"                create manually a payment record or Odoo will propose to you\n"
+"                automatically the reconciliation of this payment with the open\n"
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
@@ -103,8 +96,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
 msgid ""
 "<p>\n"
-"            From this report, you can have an overview of the amount "
-"invoiced\n"
+"            From this report, you can have an overview of the amount invoiced\n"
 "            to your customer as well as payment delays. The tool search can\n"
 "            also be used to personalise your Invoices reports and so, match\n"
 "            this analysis to your needs.\n"
@@ -113,16 +105,15 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
+#: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr ""
+msgstr "Konto indtastning"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -139,12 +130,12 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Beløb"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyse konto"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -200,7 +191,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "Cancel"
-msgstr ""
+msgstr "Annuller"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -216,10 +207,9 @@ msgid "Cancel Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,state:0
-#: selection:sale.receipt.report,state:0
+#: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annulleret"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:959
@@ -235,12 +225,11 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,company_id:0
-#: field:account.voucher.line,company_id:0
+#: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Virksomhed"
 
 #. module: account_voucher
 #: help:account.voucher,writeoff_amount:0
@@ -266,21 +255,20 @@ msgid "Counterpart Comment"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,create_uid:0
-#: field:account.voucher.line,create_uid:0
+#: field:account.voucher,create_uid:0 field:account.voucher.line,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oprettet af"
 
 #. module: account_voucher
 #: field:account.voucher,create_date:0
 #: field:account.voucher.line,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oprettet den"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
 msgid "Credit"
-msgstr ""
+msgstr "Kredit"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -296,7 +284,7 @@ msgstr ""
 #: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -310,7 +298,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_customer_pay
 #: view:account.voucher:account_voucher.view_voucher_filter_sale
 msgid "Customer"
-msgstr ""
+msgstr "Kunde"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
@@ -320,21 +308,20 @@ msgid "Customer Payments"
 msgstr "Kundebetalinger"
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-#: field:account.voucher.line,date_original:0
+#: field:account.voucher,date:0 field:account.voucher.line,date_original:0
 #: field:sale.receipt.report,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: account_voucher
 #: help:account.voucher,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for sidste besked på denne post."
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
 msgid "Debit"
-msgstr ""
+msgstr "Debet"
 
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
@@ -349,7 +336,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
@@ -371,7 +358,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Udkast"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -384,11 +371,10 @@ msgid "Draft Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,date_due:0
-#: field:account.voucher.line,date_due:0
+#: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
 #: field:sale.receipt.report,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Forfaldsdato"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -405,22 +391,22 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1063
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fejl!"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Omregnings kurs"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Expense Lines"
-msgstr ""
+msgstr "Udgifts linier"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Udvidede filtre"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -432,7 +418,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Folk der følger dig"
 
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
@@ -444,7 +430,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1104
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Gå til konfigurations fanebladet"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -454,7 +440,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppér efter"
 
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
@@ -466,19 +452,18 @@ msgstr ""
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "Indeholder chat sammendraget (antal beskeder). Dette sammendrag er i html format for at kunne sættes ind i kanban views."
 
 #. module: account_voucher
-#: field:account.voucher,id:0
-#: field:account.voucher.line,id:0
+#: field:account.voucher,id:0 field:account.voucher.line,id:0
 #: field:sale.receipt.report,id:0
 msgid "ID"
-msgstr ""
+msgstr "Id"
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Hvis afmærket, kræver nye beskeder din attention"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -487,18 +472,18 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "Interne noter"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:959
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Ulovlig handling!"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -509,7 +494,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Er en \"følger\""
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -521,7 +506,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -536,7 +521,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_form
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr ""
+msgstr "journal poster"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
@@ -552,19 +537,17 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Sidste besked Dato"
 
 #. module: account_voucher
-#: field:account.voucher,write_uid:0
-#: field:account.voucher.line,write_uid:0
+#: field:account.voucher,write_uid:0 field:account.voucher.line,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Sidst opdateret af"
 
 #. module: account_voucher
-#: field:account.voucher,write_date:0
-#: field:account.voucher.line,write_date:0
+#: field:account.voucher,write_date:0 field:account.voucher.line,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Sidst opdateret den"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -574,12 +557,12 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Beskeder"
 
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Besked- og kommunikations historik"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -595,7 +578,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
-msgstr ""
+msgstr "Noter"
 
 #. module: account_voucher
 #: field:account.voucher,number:0
@@ -635,12 +618,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
 msgid "Other Information"
-msgstr ""
+msgstr "Anden information"
 
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
-msgstr ""
+msgstr "Betalt"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -655,12 +638,11 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
-#: field:account.voucher,partner_id:0
-#: field:account.voucher.line,partner_id:0
+#: field:account.voucher,partner_id:0 field:account.voucher.line,partner_id:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_voucher
 #: view:account.invoice:account_voucher.view_invoice_supplier
@@ -673,8 +655,7 @@ msgid "Pay Bill"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
 msgstr ""
 
@@ -685,19 +666,16 @@ msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,pay_now:0
-#: selection:sale.receipt.report,pay_now:0
+#: selection:account.voucher,pay_now:0 selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
 msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
-#: field:account.voucher,pay_now:0
-#: selection:account.voucher,type:0
-#: field:sale.receipt.report,pay_now:0
-#: selection:sale.receipt.report,type:0
+#: field:account.voucher,pay_now:0 selection:account.voucher,type:0
+#: field:sale.receipt.report,pay_now:0 selection:sale.receipt.report,type:0
 msgid "Payment"
-msgstr ""
+msgstr "Betaling"
 
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
@@ -746,7 +724,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: field:account.voucher,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1058
@@ -758,7 +736,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1064
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Vælg en bilagsserie på journalen"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:518
@@ -769,7 +747,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Post"
-msgstr ""
+msgstr "Send"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -781,7 +759,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Posteret"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -802,7 +780,7 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -810,10 +788,9 @@ msgid "Pro-forma Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Indløb"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -833,10 +810,9 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr ""
+msgstr "Modtagelse"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
@@ -855,10 +831,9 @@ msgid "Register Payment"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: selection:sale.receipt.report,type:0
+#: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
 msgid "Sale"
-msgstr ""
+msgstr "Salg"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -897,7 +872,7 @@ msgstr ""
 #. module: account_voucher
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Sælger"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -915,7 +890,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Sæt til udkast"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -926,7 +901,7 @@ msgstr ""
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
@@ -941,7 +916,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Sammendrag"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -952,7 +927,7 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:187
 #, python-format
 msgid "Supplier"
-msgstr ""
+msgstr "Leverandør"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
@@ -975,12 +950,12 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: field:account.voucher,tax_id:0
 msgid "Tax"
-msgstr ""
+msgstr "Moms"
 
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
 msgid "Tax Amount"
-msgstr ""
+msgstr "Momsbeløb"
 
 #. module: account_voucher
 #: help:account.voucher,paid:0
@@ -1004,8 +979,8 @@ msgstr ""
 #: help:account.voucher,payment_option:0
 msgid ""
 "This field helps you to choose what you want to do with the eventual "
-"difference between the paid amount and the sum of allocated amounts. You can "
-"either choose to keep open this difference on the partner's account, or "
+"difference between the paid amount and the sum of allocated amounts. You can"
+" either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
 msgstr ""
 
@@ -1020,13 +995,13 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_voucher_filter
 #: field:account.voucher,audit:0
 msgid "To Review"
-msgstr ""
+msgstr "Til gennemgang"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -1051,7 +1026,7 @@ msgstr ""
 #. module: account_voucher
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Total før moms"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -1062,18 +1037,18 @@ msgstr ""
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,type:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ulæste beskeder"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Unreconcile"
-msgstr ""
+msgstr "Fjern udligning"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
@@ -1086,7 +1061,7 @@ msgstr ""
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Validate"
-msgstr ""
+msgstr "Validér"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -1148,7 +1123,7 @@ msgstr ""
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
+msgstr "Status"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -1158,12 +1133,12 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
 msgid "Website Messages"
-msgstr ""
+msgstr "Website beskeder"
 
 #. module: account_voucher
 #: help:account.voucher,website_message_ids:0
 msgid "Website communication history"
-msgstr ""
+msgstr "Website kommunikations historik"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:377
@@ -1186,7 +1161,8 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1243
 #, python-format
 msgid ""
-"You have to configure account base code and account tax code on the '%s' tax!"
+"You have to configure account base code and account tax code on the '%s' "
+"tax!"
 msgstr ""
 
 #. module: account_voucher
@@ -1232,4 +1208,4 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 msgid "or"
-msgstr ""
+msgstr "eller"

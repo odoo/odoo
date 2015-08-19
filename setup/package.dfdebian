@@ -3,9 +3,6 @@
 FROM debian:stable
 MAINTAINER Odoo S.A. <info@odoo.com>
 
-# Change policy-rc.d so that services start automatically once installed
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
-
 RUN apt-get update && \
 	apt-get install -y locales && \
 	rm -rf /var/lib/apt/lists/*
@@ -19,19 +16,9 @@ ENV LC_ALL C.UTF-8
 RUN apt-get update -qq &&  \
 	apt-get upgrade -qq -y && \
 	apt-get install \
-		postgresql \
-		postgresql-server-dev-all \
-		postgresql-client \
 		adduser \
-		libxml2-dev \
-		libxslt1-dev \
-		libldap2-dev \
-		libsasl2-dev \
-		libssl-dev \
-		libjpeg-dev \
-		python-dev \
-		python-pip \
-		build-essential \
+		postgresql \
+		postgresql-client \
 		python \
 		python-dateutil \
 		python-decorator \
@@ -64,9 +51,5 @@ RUN apt-get update -qq &&  \
 		python-xlwt \
 		python-yaml -y && \
 	rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt /opt/release/requirements.txt
-
-RUN pip install -r /opt/release/requirements.txt
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

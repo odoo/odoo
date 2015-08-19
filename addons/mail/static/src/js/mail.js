@@ -436,7 +436,7 @@ openerp.mail = function (session) {
         */
         on_attachment_loaded: function (event, result) {
 
-            if (result.erorr || !result.id ) {
+            if (result.error || !result.id ) {
                 this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
             } else {
@@ -541,7 +541,9 @@ openerp.mail = function (session) {
                     context: context,
                 };
 
-                self.do_action(action);
+                self.do_action(action, {
+                    'on_close': function(){ self.is_log && self.parent_thread.message_fetch() }
+                });
                 self.on_cancel();
             });
 
@@ -800,7 +802,8 @@ openerp.mail = function (session) {
 
             _.each(messages, function (thread) {
                 if (thread.author_id && !thread.author_id[0] &&
-                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];})) {
+                    !_.find(self.recipients, function (recipient) {return recipient.email_address == thread.author_id[3];}) &&
+                    _.some([thread.author_id[1], thread.author_id[2], thread.author_id[3]])) {
                     self.recipients.push({  'full_name': thread.author_id[1],
                                             'name': thread.author_id[2],
                                             'email_address': thread.author_id[3],
@@ -1815,10 +1818,9 @@ openerp.mail = function (session) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
-
             this.node.params = _.extend(this.node.params, {
                 'message_ids': this.get_value(),
-                'show_compose_message': this.view.is_action_enabled('edit'),
+                'show_compose_message': true,
             });
             this.node.context = {
                 'mail_read_set_read': true,  // set messages as read in Chatter

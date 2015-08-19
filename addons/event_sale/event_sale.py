@@ -105,6 +105,8 @@ class sale_order_line(osv.osv):
         context = dict(context or {})
         registration_obj = self.pool.get('event.registration')
         for order_line in self.browse(cr, uid, ids, context=context):
+            if order_line.state == 'cancel':
+                continue
             if order_line.event_id:
                 dic = {
                     'name': order_line.order_id.partner_invoice_id.name,
@@ -161,7 +163,10 @@ class event_event(osv.osv):
     @api.one
     @api.depends('event_ticket_ids.seats_max')
     def _compute_seats_max(self):
-        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
+        if any(ticket.seats_max == 0 for ticket in self.event_ticket_ids):
+            self.seats_max = 0
+        else:
+            self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'

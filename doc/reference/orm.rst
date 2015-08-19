@@ -1,3 +1,5 @@
+:banner: banners/orm_api.jpg
+
 .. _reference/orm:
 
 =======
@@ -498,7 +500,7 @@ Two decorators can expose a new-style method to the old API:
     empty. Its "old API" signature is ``cr, uid, *arguments, context``::
 
         @api.model
-        def some_method(foo):
+        def some_method(self, a_value):
             pass
         # can be called as
         old_style_model.some_method(cr, uid, a_value, context=context)
@@ -508,7 +510,7 @@ Two decorators can expose a new-style method to the old API:
     "old API" signature is ``cr, uid, ids, *arguments, context``::
 
         @api.multi
-        def some_method(foo):
+        def some_method(self, a_value):
             pass
         # can be called as
         old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
@@ -525,7 +527,7 @@ return lists of ids, there is also a decorator managing this:
 
         >>> @api.multi
         ... @api.returns('self')
-        ... def some_method():
+        ... def some_method(self):
         ...     return self
         >>> new_style_model = env['a.model'].browse(1, 2, 3)
         >>> new_style_model.some_method()

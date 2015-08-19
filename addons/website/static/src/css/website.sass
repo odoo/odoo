@@ -72,7 +72,7 @@ header
 // the beginning of paragraphs so they don't "disappear" after saving when
 // used solely for spacing.
 #wrapwrap p:empty:after
-    content: '\2060'
+    content: '\202f'
 
 /* ----- Snippets Styles ----- */
 
@@ -142,10 +142,6 @@ footer
     padding-bottom: 12px
 
 /* ----- BOOTSTRAP FIX ----- */
-
-.col-md-12
-    float: left
-    width: 100%
 
 @-moz-document url-prefix()
     .table .img-responsive
@@ -483,6 +479,9 @@ div.media_iframe_video
         height: 100%
         display: none
         z-index: 2
+
+html[data-browser^="msie"] div.media_iframe_video iframe
+    margin-left: 0
 
 /* Mobile view */
 

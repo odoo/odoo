@@ -468,12 +468,13 @@ class hr_applicant(osv.Model):
                         'post': True,
                         'notify': True,
                     }, context=compose_ctx)
+                values = self.pool['mail.compose.message'].onchange_template_id(
+                    cr, uid, [compose_id], stage.template_id.id, 'mass_mail', self._name, False, context=compose_ctx)['value']
+                if values.get('attachment_ids'):
+                    values['attachment_ids'] = [(6, 0, values['attachment_ids'])]
                 self.pool['mail.compose.message'].write(
                     cr, uid, [compose_id],
-                    self.pool['mail.compose.message'].onchange_template_id(
-                        cr, uid, [compose_id],
-                        stage.template_id.id, 'mass_mail', self._name, False,
-                        context=compose_ctx)['value'],
+                    values,
                     context=compose_ctx)
                 self.pool['mail.compose.message'].send_mail(cr, uid, [compose_id], context=compose_ctx)
         return res

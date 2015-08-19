@@ -44,6 +44,7 @@ except ImportError:
 
 import openerp
 from openerp import SUPERUSER_ID
+from openerp.service.server import memory_info
 from openerp.service import security, model as service_model
 from openerp.tools.func import lazy_property
 from openerp.tools import ustr
@@ -95,7 +96,7 @@ def dispatch_rpc(service_name, method, params):
             start_time = time.time()
             start_rss, start_vms = 0, 0
             if psutil:
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
             if rpc_request and rpc_response_flag:
                 openerp.netsvc.log(rpc_request, logging.DEBUG, '%s.%s' % (service_name, method), replace_request_password(params))
 
@@ -117,7 +118,7 @@ def dispatch_rpc(service_name, method, params):
             end_time = time.time()
             end_rss, end_vms = 0, 0
             if psutil:
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
             logline = '%s.%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (service_name, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
             if rpc_response_flag:
                 openerp.netsvc.log(rpc_response, logging.DEBUG, logline, result)
@@ -201,7 +202,11 @@ class WebRequest(object):
     def env(self):
         """
         The :class:`~openerp.api.Environment` bound to current request.
+        Raises a :class:`RuntimeError` if the current requests is not bound
+        to a database.
         """
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         return openerp.api.Environment(self.cr, self.uid, self.context)
 
     @lazy_property
@@ -236,6 +241,8 @@ class WebRequest(object):
         """
         # can not be a lazy_property because manual rollback in _call_function
         # if already set (?)
+        if not self.db:
+            return RuntimeError('request not bound to a database')
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
@@ -396,14 +403,18 @@ def route(route=None, **kw):
             response = f(*args, **kw)
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
-            elif isinstance(response, werkzeug.wrappers.BaseResponse):
+
+            if isinstance(response, basestring):
+                return Response(response)
+
+            if isinstance(response, werkzeug.exceptions.HTTPException):
+                response = response.get_response(request.httprequest.environ)
+            if isinstance(response, werkzeug.wrappers.BaseResponse):
                 response = Response.force_type(response)
                 response.set_default()
                 return response
-            elif isinstance(response, basestring):
-                return Response(response)
-            else:
-                _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
+
+            _logger.warn("<function %s.%s> returns an invalid response type for an http request" % (f.__module__, f.__name__))
             return response
         response_wrap.routing = routing
         response_wrap.original_func = f
@@ -555,7 +566,7 @@ class JsonRequest(WebRequest):
                 start_time = time.time()
                 _, start_vms = 0, 0
                 if psutil:
-                    _, start_vms = psutil.Process().get_memory_info()
+                    _, start_vms = memory_info(psutil.Process(os.getpid()))
                 if rpc_request and rpc_response_flag:
                     rpc_request.debug('%s: %s %s, %s',
                         endpoint, model, method, pprint.pformat(args))
@@ -566,7 +577,7 @@ class JsonRequest(WebRequest):
                 end_time = time.time()
                 _, end_vms = 0, 0
                 if psutil:
-                    _, end_vms = psutil.Process().get_memory_info()
+                    _, end_vms = memory_info(psutil.Process(os.getpid()))
                 logline = '%s: %s %s: time:%.3fs mem: %sk -> %sk (diff: %sk)' % (
                     endpoint, model, method, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
                 if rpc_response_flag:
@@ -892,7 +903,8 @@ class Model(object):
                 raise Exception("Access denied")
             mod = request.registry[self.model]
             meth = getattr(mod, method)
-            cr = request.cr
+            # make sure to instantiate an environment
+            cr = request.env.cr
             result = meth(cr, request.uid, *args, **kw)
             # reorder read
             if method == "read":
@@ -908,6 +920,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def __init__(self, *args, **kwargs):
         self.inited = False
         self.modified = False
+        self.rotate = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
         self._default_values()
@@ -968,6 +981,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             if not (keep_db and k == 'db'):
                 del self[k]
         self._default_values()
+        self.rotate = True
 
     def _default_values(self):
         self.setdefault("db", None)
@@ -1364,6 +1378,10 @@ class Root(object):
             response = result
 
         if httprequest.session.should_save:
+            if httprequest.session.rotate:
+                self.session_store.delete(httprequest.session)
+                httprequest.session.sid = self.session_store.generate_key()
+                httprequest.session.modified = True
             self.session_store.save(httprequest.session)
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
         # There are two reasons to this:

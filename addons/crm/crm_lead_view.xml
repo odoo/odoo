@@ -128,7 +128,7 @@
                                     <field name="state_id" on_change="onchange_state(state_id)" options='{"no_open": True}' placeholder="State" style="width: 24%%"/>
                                     <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
                             </div>
                         </group>
                         <group>
@@ -159,7 +159,6 @@
                             <field name="priority" widget="priority"/>
                             <field name="categ_ids"
                                 widget="many2many_tags"
-                                domain="[('object_id.model','=','crm.lead')]"
                                 context="{'object_name': 'crm.lead'}"
                             />
                         </group>
@@ -295,7 +294,7 @@
                                         <field name="partner_id"/>
                                     </div>
                                     <div style="padding-left: 0.5em">
-                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                         <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
@@ -372,8 +371,8 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="case_mark_won" string="Mark Won" type="object" class="oe_highlight"/>
-                        <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"/>
+                        <button name="case_mark_won" string="Mark Won" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" attrs="{'invisible': [('probability', '=', 100)]}" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
@@ -434,9 +433,7 @@
                             <group>
                                 <field name="categ_ids"
                                     widget="many2many_tags"
-                                    context="{'object_name': 'crm.lead'}"
-                                    domain="[('object_id.model', '=', 'crm.lead')]"/>
-
+                                    context="{'object_name': 'crm.lead'}"/>
                             </group>
                         </group>
 
@@ -457,7 +454,7 @@
                                             <field name="state_id" options='{"no_open": True}' on_change="onchange_state(state_id)" placeholder="State" style="width: 24%%"/>
                                             <field name="zip" placeholder="ZIP" style="width: 34%%"/>
                                         </div>
-                                        <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                        <field name="country_id" placeholder="Country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
                                 </group>
 

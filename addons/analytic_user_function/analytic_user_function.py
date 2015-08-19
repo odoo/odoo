@@ -118,7 +118,7 @@ class hr_analytic_timesheet(osv.osv):
             res ['value']['general_account_id']= a
         return res
 
-    def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
+    def on_change_user_id(self, cr, uid, ids, user_id, account_id=False, unit_amount=0):
         res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
 
         if account_id:

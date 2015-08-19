@@ -226,6 +226,7 @@
             var item = false;
             if (record) {
                 item = record.attributes;
+                this.dataset.select_id(record.get('id'));
             } else {
                 record = this.make_empty_record(false);
                 this.records.add(record, {
@@ -432,7 +433,8 @@
             var self = this;
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
-            return this.dataset.call(on_write_callback, [source_record.get('id')])
+            var context = new instance.web.CompoundContext(self.dataset.get_context(), {'on_write_domain': self.dataset.domain}).eval();
+            return this.dataset.call(on_write_callback, [source_record.get('id'), context])
                 .then(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(
@@ -649,7 +651,7 @@
             var form = this.editor.form;
             var last_field = _(form.fields_order).chain()
                 .map(function (name) { return form.fields[name]; })
-                .filter(function (field) { return field.$el.is(':visible'); })
+                .filter(function (field) { return field.$el.is(':visible') && !field.get('effective_readonly'); })
                 .last()
                 .value();
             // tabbed from last field in form
@@ -657,6 +659,7 @@
                 e.preventDefault();
                 return this._next();
             }
+            this.editor.form.__clicked_inside = true;
             return $.when();
         }
     });

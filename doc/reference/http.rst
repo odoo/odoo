@@ -1,3 +1,5 @@
+:banner: banners/web_controllers.jpg
+
 ===============
 Web Controllers
 ===============

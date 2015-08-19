@@ -1,0 +1,534 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:44+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment
+#: help:account.config.settings,module_payment_adyen:0
+msgid "-It installs the module payment_adyen."
+msgstr "-Энэ нь payment_adyen модулийг суулгадаг."
+
+#. module: payment
+#: help:account.config.settings,module_payment_buckaroo:0
+msgid "-It installs the module payment_buckaroo."
+msgstr "-Энэ нь payment_buckaroo модулийг суулгадаг."
+
+#. module: payment
+#: help:account.config.settings,module_payment_ogone:0
+msgid "-It installs the module payment_ogone."
+msgstr "-Энэ нь payment_ogone модулийг суулгадаг."
+
+#. module: payment
+#: help:account.config.settings,module_payment_paypal:0
+msgid "-It installs the module payment_paypal."
+msgstr "-Энэ нь payment_paypal модулийг суулгадаг."
+
+#. module: payment
+#: field:payment.transaction,acquirer_id:0
+msgid "Acquirer"
+msgstr "Хүлээн авагч"
+
+#. module: payment
+#: field:payment.transaction,acquirer_reference:0
+msgid "Acquirer Order Reference"
+msgstr "Хүлээн авагчийн захиалгын код"
+
+#. module: payment
+#: field:payment.transaction,partner_address:0
+msgid "Address"
+msgstr "Хаяг"
+
+#. module: payment
+#: field:payment.transaction,amount:0
+msgid "Amount"
+msgstr "Дүн"
+
+#. module: payment
+#: help:payment.transaction,amount:0
+msgid "Amount in cents"
+msgstr "Дүн центээр"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Automatic"
+msgstr "Автомат"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Canceled"
+msgstr "Цуцлагдсан"
+
+#. module: payment
+#: field:payment.transaction,partner_city:0
+msgid "City"
+msgstr "Хот"
+
+#. module: payment
+#: field:payment.acquirer,company_id:0
+msgid "Company"
+msgstr "Компани"
+
+#. module: payment
+#: field:payment.acquirer,fees_active:0
+msgid "Compute fees"
+msgstr "Төлбөрийг тооцоолох"
+
+#. module: payment
+#: field:payment.transaction,partner_country_id:0
+msgid "Country"
+msgstr "Улс"
+
+#. module: payment
+#: field:payment.acquirer,create_uid:0 field:payment.transaction,create_uid:0
+msgid "Created by"
+msgstr "Үүсгэсэн"
+
+#. module: payment
+#: field:payment.acquirer,create_date:0
+#: field:payment.transaction,create_date:0
+msgid "Created on"
+msgstr "Үүсгэсэн"
+
+#. module: payment
+#: field:payment.transaction,date_create:0
+msgid "Creation Date"
+msgstr "Үүсгэсэн огноо"
+
+#. module: payment
+#: field:payment.transaction,currency_id:0
+msgid "Currency"
+msgstr "Валют"
+
+#. module: payment
+#: help:payment.transaction,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Бичлэгэнд хамгийн сүүлийн мессеж илгээгдсэн огноо."
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Done"
+msgstr "Дууссан"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: payment
+#: field:payment.transaction,partner_email:0
+msgid "Email"
+msgstr "Имэйл"
+
+#. module: payment
+#: field:payment.acquirer,environment:0
+msgid "Environment"
+msgstr "Орчин"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Error"
+msgstr "Алдаа"
+
+#. module: payment
+#: field:payment.transaction,fees:0
+msgid "Fees"
+msgstr "Ажлын хөлс"
+
+#. module: payment
+#: help:payment.transaction,fees:0
+msgid "Fees amount; set by the system because depends on the acquirer"
+msgstr "Төлбөрийн дүн; хүлээн авагчаас хамаарах тул системээр тохируулагдсан"
+
+#. module: payment
+#: help:payment.transaction,state_message:0
+msgid "Field used to store error and/or validation messages for information"
+msgstr "Алдааг хадгалах болон шалгах зурвасыг мэдээллийн зорилгоор хадгалах талбар"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_fixed:0
+msgid "Fixed domestic fees"
+msgstr "Орон нутагийн тогтмол төлбөр"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_fixed:0
+msgid "Fixed international fees"
+msgstr "Олон улсын тогтмол шимтгэл"
+
+#. module: payment
+#: field:payment.transaction,message_follower_ids:0
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Form"
+msgstr "Маягт"
+
+#. module: payment
+#: field:payment.acquirer,view_template_id:0
+msgid "Form Button Template"
+msgstr "Маягтын Даруулын үлгэр"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+msgid "Group By"
+msgstr "Бүлэглэх"
+
+#. module: payment
+#: help:payment.transaction,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+
+#. module: payment
+#: field:payment.acquirer,id:0 field:payment.transaction,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: payment
+#: help:payment.transaction,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: payment
+#: field:payment.transaction,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Дагагч эсэх"
+
+#. module: payment
+#: field:payment.transaction,partner_lang:0
+msgid "Lang"
+msgstr "Хэл"
+
+#. module: payment
+#: field:payment.transaction,message_last_post:0
+msgid "Last Message Date"
+msgstr "Сүүлийн зурвасын огноо"
+
+#. module: payment
+#: field:payment.acquirer,write_uid:0 field:payment.transaction,write_uid:0
+msgid "Last Updated by"
+msgstr "Сүүлийн засвар хийсэн"
+
+#. module: payment
+#: field:payment.acquirer,write_date:0 field:payment.transaction,write_date:0
+msgid "Last Updated on"
+msgstr "Сүүлийн шинэчлэлт"
+
+#. module: payment
+#: help:payment.acquirer,website_published:0
+msgid "Make this payment acquirer available (Customer invoices, etc.)"
+msgstr "Энэ төлбөр хүлээн авагчийг бэлэн болгох (Захиалагчийн Нэхэмжлэл, гм.)"
+
+#. module: payment
+#: field:account.config.settings,module_payment_adyen:0
+msgid "Manage Payments Using Adyen"
+msgstr "Adyen-г хэрэглэн төлбөрийг удирдах"
+
+#. module: payment
+#: field:account.config.settings,module_payment_buckaroo:0
+msgid "Manage Payments Using Buckaroo"
+msgstr "Buckaroo-г хэрэглэн төлбөрийг удирдах"
+
+#. module: payment
+#: field:account.config.settings,module_payment_ogone:0
+msgid "Manage Payments Using Ogone"
+msgstr "Ogone ашиглан төлбөрийг удирдах"
+
+#. module: payment
+#: field:account.config.settings,module_payment_paypal:0
+msgid "Manage Payments Using Paypal"
+msgstr "Paypal ашиглан төлбөрийг удирдах"
+
+#. module: payment
+#: selection:payment.acquirer,validation:0
+msgid "Manual"
+msgstr "Гараар"
+
+#. module: payment
+#: field:payment.acquirer,pre_msg:0 field:payment.transaction,state_message:0
+msgid "Message"
+msgstr "Зурвас"
+
+#. module: payment
+#: help:payment.acquirer,post_msg:0
+msgid "Message displayed after having done the payment process."
+msgstr "Төлбөрийн процесс хийгдэж дууссаны дараа мессеж дэлгцэнд харагдана."
+
+#. module: payment
+#: help:payment.acquirer,pre_msg:0
+msgid "Message displayed to explain and help the payment process."
+msgstr "Төлбөрийн процессыг тайлбарлах зурвасыг харуулдаг бөгөөд тусладаг."
+
+#. module: payment
+#: field:payment.transaction,message_ids:0
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: payment
+#: help:payment.transaction,message_ids:0
+msgid "Messages and communication history"
+msgstr "Зурвас болон харилцсан түүх"
+
+#. module: payment
+#: field:payment.acquirer,name:0
+msgid "Name"
+msgstr "Нэр"
+
+#. module: payment
+#: field:payment.transaction,reference:0
+msgid "Order Reference"
+msgstr "Захиалгын лавлах"
+
+#. module: payment
+#: field:payment.transaction,partner_id:0
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: payment
+#: field:payment.transaction,partner_name:0
+msgid "Partner Name"
+msgstr "Харилцагчийн нэр"
+
+#. module: payment
+#: field:payment.transaction,partner_reference:0
+msgid "Partner Reference"
+msgstr "Харилцагчийн лавлах"
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:274
+#, python-format
+msgid "Pay safely online"
+msgstr "Аюулгүйгээр онлайнаар төлөх"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_acquirer
+#: view:payment.acquirer:payment.acquirer_form
+msgid "Payment Acquirer"
+msgstr "Төлбөр Хүлээн авагч"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_acquirer
+#: model:ir.ui.menu,name:payment.payment_acquirer_menu
+#: view:payment.acquirer:payment.acquirer_list
+msgid "Payment Acquirers"
+msgstr "Худалдаг авагчийн төлөлт"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Төлбөрийн гүйлгээ"
+
+#. module: payment
+#: model:ir.actions.act_window,name:payment.action_payment_transaction
+#: model:ir.ui.menu,name:payment.payment_transaction_menu
+#: view:payment.transaction:payment.transaction_form
+#: view:payment.transaction:payment.transaction_list
+msgid "Payment Transactions"
+msgstr "Төлбөрийн гүйлгээнүүд"
+
+#. module: payment
+#: model:ir.ui.menu,name:payment.root_payment_menu
+msgid "Payments"
+msgstr "Төлбөрүүд"
+
+#. module: payment
+#: selection:payment.transaction,state:0
+msgid "Pending"
+msgstr "Хүлээгдэж буй"
+
+#. module: payment
+#: field:payment.transaction,partner_phone:0
+msgid "Phone"
+msgstr "Утас"
+
+#. module: payment
+#: field:payment.acquirer,validation:0
+msgid "Process Method"
+msgstr "Процессын Арга"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Production"
+msgstr "Үйлдвэрлэл"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_search
+#: field:payment.acquirer,provider:0
+msgid "Provider"
+msgstr "Нийлүүлэгч"
+
+#. module: payment
+#: help:payment.transaction,acquirer_reference:0
+msgid "Reference of the TX as stored in the acquirer database"
+msgstr ""
+
+#. module: payment
+#: help:payment.transaction,partner_reference:0
+msgid "Reference of the customer in the acquirer database"
+msgstr "Хүлээн авагчийн өгөгдлийн бааз дахь захиалагчийн код"
+
+#. module: payment
+#: constraint:payment.acquirer:0
+msgid "Required fields not filled"
+msgstr "Шаардагдах талбаруудыг бөглөөгүй байна"
+
+#. module: payment
+#: view:payment.transaction:payment.transaction_form
+msgid "Send a message to the group"
+msgstr "Бүлгэм рүү зурвас илгээх"
+
+#. module: payment
+#: selection:payment.transaction,type:0
+msgid "Server To Server"
+msgstr "Серверээс серверт"
+
+#. module: payment
+#: help:payment.acquirer,validation:0
+msgid "Static payments are payments like transfer, that require manual steps."
+msgstr "Статик төлбөр нь шилжүүлэг шиг төлбөрүүд юм, гар алхамууд шаардагддаг."
+
+#. module: payment
+#: field:payment.transaction,state:0
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: payment
+#: field:payment.transaction,message_summary:0
+msgid "Summary"
+msgstr "Хураангуй"
+
+#. module: payment
+#: selection:payment.acquirer,environment:0
+msgid "Test"
+msgstr "Тест"
+
+#. module: payment
+#: field:payment.acquirer,post_msg:0
+msgid "Thanks Message"
+msgstr "Талархлын Зурвас"
+
+#. module: payment
+#: sql_constraint:payment.transaction:0
+msgid "The payment transaction reference must be unique!"
+msgstr "Төлбөрийн гүйлгээний лавлахыг заавал бөглөнө!"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"This template renders the acquirer button with all necessary values.\n"
+"                                    It is be rendered with qWeb with the following evaluation context:"
+msgstr "Энэ үлгэр нь хүлээн авагч даруулыг бүх шаардлагатай утгатайгаар харуулдаг.\n                                    Энэ нь qWeb-р дараах тооцоолсон агуулгатайгаар харуулдаг:"
+
+#. module: payment
+#: field:payment.transaction,type:0
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: payment
+#: field:payment.transaction,message_unread:0
+msgid "Unread Messages"
+msgstr "Уншаагүй Зурвасууд"
+
+#. module: payment
+#: field:payment.transaction,date_validate:0
+msgid "Validation Date"
+msgstr "Баталсан огноо"
+
+#. module: payment
+#: field:payment.acquirer,fees_dom_var:0
+msgid "Variable domestic fees (in percents)"
+msgstr "Орон нутагийн хувьсах төлбөр (процентоор)"
+
+#. module: payment
+#: field:payment.acquirer,fees_int_var:0
+msgid "Variable international fees (in percents)"
+msgstr "Олон улсын хувьсах төлбөр (процентоор)"
+
+#. module: payment
+#: field:payment.acquirer,website_published:0
+msgid "Visible in Portal / Website"
+msgstr "Портал / Вебсайтад харагдах"
+
+#. module: payment
+#: field:payment.transaction,website_message_ids:0
+msgid "Website Messages"
+msgstr "Вебсайтын зурвасууд"
+
+#. module: payment
+#: help:payment.transaction,website_message_ids:0
+msgid "Website communication history"
+msgstr "Вебсайтын харилцааны түүх"
+
+#. module: payment
+#: field:payment.transaction,partner_zip:0
+msgid "Zip"
+msgstr "Зип код"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "acquirer: payment.acquirer browse record"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "amount: the transaction amount, a float"
+msgstr "дүн: гүйлгээний дүн, float буюу хөвөгч таслалтай бодит тоо"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "context: the current context dictionary"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "currency: the transaction currency browse record"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "partner: the buyer partner browse record, not necessarily set"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid ""
+"partner_values: specific values about the buyer, for example coming from a "
+"shipping form"
+msgstr "partner_values: худалдан авагчийн тухай тусгай утга, тухайлбал хүргэлтийн маягтаас ирнэ"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "reference: the transaction reference number"
+msgstr "код: гүйлгээний кодын дугаар"
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_url: transaction URL to post the form"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "tx_values: transaction values"
+msgstr ""
+
+#. module: payment
+#: view:payment.acquirer:payment.acquirer_form
+msgid "user: current user browse record"
+msgstr ""

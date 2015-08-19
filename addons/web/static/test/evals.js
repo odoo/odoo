@@ -261,9 +261,21 @@ openerp.testing.section('eval.types', {
     });
     test('relastivedelta', function (instance) {
         strictEqual(
-            py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
+            py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=1)).strftime('%Y-%m-%d')",
                     instance.web.pyeval.context()),
-            "2012-02-14 23:59:59");
+            "2012-02-16");
+        strictEqual(
+            py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d')",
+                    instance.web.pyeval.context()),
+            "2012-02-14");
+        strictEqual(
+            py.eval("(datetime.date(2012, 2, 1) + relativedelta(days=-1)).strftime('%Y-%m-%d')",
+                    instance.web.pyeval.context()),
+            '2012-01-31');
+        strictEqual(
+            py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
+                    instance.web.pyeval.context()),
+            '2015-02-02');
     });
     test('datetime.tojson', function (instance) {
         var result = py.eval(

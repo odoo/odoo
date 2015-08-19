@@ -38,11 +38,16 @@ import openerp
 from openerp.modules.registry import RegistryManager
 from openerp.release import nt_service_name
 import openerp.tools.config as config
-from openerp.tools.misc import stripped_sys_argv, dumpstacks
+from openerp.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
+
+def memory_info(process):
+    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
+    get_memory_info """
+    return (getattr(process, 'memory_info', None) or process.get_memory_info)()
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -212,6 +217,10 @@ class CommonServer(object):
         try:
             sock.shutdown(socket.SHUT_RDWR)
         except socket.error, e:
+            if e.errno == errno.EBADF:
+                # Werkzeug > 0.9.6 closes the socket itself (see commit
+                # https://github.com/mitsuhiko/werkzeug/commit/4d8ca089)
+                return
             # On OSX, socket shutdowns both sides if any side closes it
             # causing an error 57 'Socket is not connected' on shutdown
             # of the other side (or something), see
@@ -296,6 +305,7 @@ class ThreadedServer(CommonServer):
             signal.signal(signal.SIGCHLD, self.signal_handler)
             signal.signal(signal.SIGHUP, self.signal_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
         elif os.name == 'nt':
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
@@ -389,6 +399,7 @@ class GeventServer(CommonServer):
 
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
+            signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         gevent.spawn(self.watch_parent)
         self.httpd = WSGIServer((self.interface, self.port), self.app)
@@ -510,6 +521,9 @@ class PreforkServer(CommonServer):
             elif sig == signal.SIGQUIT:
                 # dump stacks on kill -3
                 self.dumpstacks()
+            elif sig == signal.SIGUSR1:
+                # log ormcache stats on kill -SIGUSR1
+                log_ormcache_stats()
             elif sig == signal.SIGTTIN:
                 # increase number of workers
                 self.population += 1
@@ -586,6 +600,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGTTIN, self.signal_handler)
         signal.signal(signal.SIGTTOU, self.signal_handler)
         signal.signal(signal.SIGQUIT, dumpstacks)
+        signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
         # listen to socket
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -603,8 +618,13 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
             for pid in self.workers.keys():
-                self.worker_kill(pid, signal.SIGTERM)
+                self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
+                try:
+                    self.process_signals()
+                except KeyboardInterrupt:
+                    _logger.info("Forced shutdown.")
+                    break
                 self.process_zombie()
                 time.sleep(0.1)
         else:
@@ -685,7 +705,7 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = psutil.Process(os.getpid()).get_memory_info()
+        rss, vms = memory_info(psutil.Process(os.getpid()))
         if vms > config['limit_memory_soft']:
             _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False      # Commit suicide after the request.
@@ -808,7 +828,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
+                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
             import openerp.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
@@ -819,7 +839,7 @@ class WorkerCron(Worker):
                 openerp.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
                 vms_diff = (end_vms - start_vms) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
                     (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)

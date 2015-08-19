@@ -32,6 +32,7 @@ class PosController(http.Controller):
         modules =  simplejson.dumps(module_boot(request.db))
         init =  """
                  var wc = new s.web.WebClient();
+                 wc._title_changed = function() {}
                  wc.show_application = function(){
                      wc.action_manager.do_action("pos.ui");
                  };

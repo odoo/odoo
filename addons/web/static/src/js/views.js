@@ -381,6 +381,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             search_disable_custom_filters: action.context && action.context.search_disable_custom_filters
         });
         action.menu_id = options.action_menu_id;
+        action.context.params = _.extend({ 'action' : action.id }, action.context.params);
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
@@ -860,6 +861,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             if (_.isString(groupby)) {
                 groupby = [groupby];
             }
+            if (!controller.grouped && !_.isEmpty(groupby)){
+                self.dataset.set_sort([]);
+            }
             $.when(controller.do_search(results.domain, results.context, groupby || [])).then(function() {
                 self.view_completely_inited.resolve();
             });
@@ -1160,7 +1164,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
     init: function(parent) {
         var self = this;
         this._super(parent);
-        var view = this.getParent();
+        this.view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
             { 'name' : 'other', 'label' : _t('More'), }
@@ -1269,10 +1273,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 new instance.web.Dialog(this, { title: _t("Warning"), size: 'medium',}, $("<div />").text(_t("You must choose at least one record."))).open();
                 return false;
             }
+            var dataset = self.getParent().dataset;
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model,
+                active_model: dataset.model,
             };
 
             $.when(domain).done(function (domain) {
@@ -1285,7 +1290,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
 
                 self.rpc("/web/action/load", {
                     action_id: item.action.id,
-                    context: c
+                    context: new instance.web.CompoundContext(
+                    dataset.get_context(), active_ids_context).eval()
                 }).done(function(result) {
                     result.context = new instance.web.CompoundContext(
                         result.context || {}, active_ids_context)
@@ -1445,7 +1451,7 @@ instance.web.View = instance.web.Widget.extend({
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
                 var ncontext = new instance.web.CompoundContext(
                     _.object(_.reject(_.pairs(dataset.get_context().eval()), function(pair) {
-                      return pair[0].match('^(?:(?:default_|search_default_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                      return pair[0].match('^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
                     }))
                 );
                 ncontext.add(action_data.context || {});
@@ -1652,7 +1658,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return sindent + node;
+        return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
             _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),

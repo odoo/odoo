@@ -1,3 +1,5 @@
+:banner: banners/installing_odoo.jpg
+
 .. _setup/install:
 
 ===============
@@ -124,8 +126,10 @@ daemon and automatically start it.
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
             not support headers and footers so it can not be installed
-            automatically. Use the version available on
-            `the wkhtmltopdf download page`_.
+            automatically. The recommended version is 0.12.1 and is available on
+            `the wkhtmltopdf download page`_, in the archive section. As there
+            is no official release for Debian Jessie, you can find ours on
+            http://nightly.odoo.com/extra/.
 
 Configuration
 '''''''''''''
@@ -219,7 +223,7 @@ There are two way to get the odoo source source zip or git.
 
   The git repository is https://github.com/odoo/odoo.git.
 
-  Downloading it requires a `a git client <http://git-scm.com/download/>`_
+  Downloading it requires a `git client <http://git-scm.com/download/>`_
   (which may be available via your distribution on linux) and can be performed
   using the following command:
 
@@ -287,7 +291,7 @@ Source installation requires manually installing dependencies:
     ldap) it may be necessary to install development tools and native
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
-    Postgres, libxml2, libxslt, libevent and libsasl2. Then the Python
+    Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
     dependecies can themselves be installed:
 
     .. code-block:: console

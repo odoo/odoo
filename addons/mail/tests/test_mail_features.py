@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.mail_mail import mail_mail
-from openerp.addons.mail.mail_thread import mail_thread
-from openerp.addons.mail.tests.common import TestMail
+from ..mail_mail import mail_mail
+from ..mail_thread import mail_thread
+from .common import TestMail
 from openerp.tools import mute_logger, email_split, html2plaintext
 from openerp.tools.mail import html_sanitize
 

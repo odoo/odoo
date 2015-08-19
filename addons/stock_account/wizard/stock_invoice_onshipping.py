@@ -22,6 +22,16 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+JOURNAL_TYPE_MAP = {
+    ('outgoing', 'customer'): ['sale'],
+    ('outgoing', 'supplier'): ['purchase_refund'],
+    ('outgoing', 'transit'): ['sale', 'purchase_refund'],
+    ('incoming', 'supplier'): ['purchase'],
+    ('incoming', 'customer'): ['sale_refund'],
+    ('incoming', 'transit'): ['purchase', 'sale_refund'],
+}
+
+
 class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
         journal_obj = self.pool.get('account.journal')
@@ -35,24 +45,13 @@ class stock_invoice_onshipping(osv.osv_memory):
         res_ids = context and context.get('active_ids', [])
         pick_obj = self.pool.get('stock.picking')
         pickings = pick_obj.browse(cr, uid, res_ids, context=context)
-        vals = []
         pick = pickings and pickings[0]
         if not pick or not pick.move_lines:
             return 'sale'
-        src_usage = pick.move_lines[0].location_id.usage
-        dest_usage = pick.move_lines[0].location_dest_id.usage
         type = pick.picking_type_id.code
-        if type == 'outgoing' and dest_usage == 'supplier':
-            journal_type = 'purchase_refund'
-        elif type == 'outgoing' and dest_usage == 'customer':
-            journal_type = 'sale'
-        elif type == 'incoming' and src_usage == 'supplier':
-            journal_type = 'purchase'
-        elif type == 'incoming' and src_usage == 'customer':
-            journal_type = 'sale_refund'
-        else:
-            journal_type = 'sale'
-        return journal_type
+        usage = pick.move_lines[0].location_id.usage if type == 'incoming' else pick.move_lines[0].location_dest_id.usage
+
+        return JOURNAL_TYPE_MAP.get((type, usage), ['sale'])[0]
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
@@ -67,6 +66,23 @@ class stock_invoice_onshipping(osv.osv_memory):
         'journal_type': _get_journal_type,
         'journal_id' : _get_journal,
     }
+
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        if context is None:
+            context = {}
+        domain = {}
+        value = {}
+        active_id = context.get('active_id')
+        if active_id:
+            picking = self.pool['stock.picking'].browse(cr, uid, active_id, context=context)
+            type = picking.picking_type_id.code
+            usage = picking.move_lines[0].location_id.usage if type == 'incoming' else picking.move_lines[0].location_dest_id.usage
+            journal_types = JOURNAL_TYPE_MAP.get((type, usage), ['sale', 'purchase', 'sale_refund', 'purchase_refund'])
+            domain['journal_id'] = [('type', 'in', journal_types)]
+        if journal_id:
+            journal = self.pool['account.journal'].browse(cr, uid, journal_id, context=context)
+            value['journal_type'] = journal.type
+        return {'value': value, 'domain': domain}
 
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:

@@ -17,7 +17,7 @@
         </record>
         <!-- 利润表科目 -->
         <record id="user_type_pl1" model="account.account.type">
-            <field name="name">一、主营业务收入</field>
+            <field name="name">一、营业收入</field>
             <field name="code">pl1</field>
             <field name="close_method">none</field>
             <field name="report_type">income</field>
@@ -29,7 +29,7 @@
             <field name="report_type">income</field>
         </record>
         <record id="user_type_pl3" model="account.account.type">
-            <field name="name">减：主营业务成本</field>
+            <field name="name">减：营业成本</field>
             <field name="code">pl3</field>
             <field name="close_method">none</field>
             <field name="report_type">expense</field>
@@ -47,7 +47,7 @@
             <field name="report_type">income</field>
         </record>
         <record id="user_type_pl11" model="account.account.type">
-            <field name="name">减：营业费用</field>
+            <field name="name">    销售费用</field>
             <field name="code">pl11</field>
             <field name="close_method">none</field>
             <field name="report_type">expense</field>
@@ -125,10 +125,16 @@
             <field name="close_method">unreconciled</field>
             <field name="report_type">asset</field>
         </record>
+        <record id="user_type_bs8" model="account.account.type">
+            <field name="name">预付账款</field>
+            <field name="code">bs8</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">asset</field>
+        </record>
         <record id="user_type_bs7" model="account.account.type">
             <field name="name">其他应收款</field>
             <field name="code">bs7</field>
-            <field name="close_method">balance</field>
+            <field name="close_method">unreconciled</field>
             <field name="report_type">asset</field>
         </record>
         <record id="user_type_bs10" model="account.account.type">
@@ -197,6 +203,12 @@
             <field name="close_method">balance</field>
             <field name="report_type">asset</field>
         </record>
+        <record id="user_type_bs47" model="account.account.type">
+            <field name="name">生产性生物资产</field>
+            <field name="code">bs47</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
         <record id="user_type_bs51" model="account.account.type">
             <field name="name">无形资产</field>
             <field name="code">bs51</field>
@@ -207,6 +219,12 @@
             <field name="name">长期待摊费用</field>
             <field name="code">bs52</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="user_type_bs53" model="account.account.type">
+            <field name="name">待处理财产损溢-无结转</field>
+            <field name="code">bs53</field>
+            <field name="close_method">none</field>
             <field name="report_type">asset</field>
         </record>
         <record id="user_type_bs61" model="account.account.type">
@@ -233,6 +251,12 @@
             <field name="close_method">unreconciled</field>
             <field name="report_type">liability</field>
         </record>
+        <record id="user_type_bs73" model="account.account.type">
+            <field name="name">其他应付款</field>
+            <field name="code">bs73</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
+        </record>
         <record id="user_type_bs71" model="account.account.type">
             <field name="name">预收账款</field>
             <field name="code">bs71</field>
@@ -240,8 +264,20 @@
             <field name="report_type">liability</field>
         </record>
         <record id="user_type_bs72" model="account.account.type">
-            <field name="name">应付工资</field>
+            <field name="name">应付职工薪酬</field>
             <field name="code">bs72</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs174" model="account.account.type">
+            <field name="name">应付利息</field>
+            <field name="code">bs174</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="user_type_bs175" model="account.account.type">
+            <field name="name">应付利润</field>
+            <field name="code">bs175</field>
             <field name="close_method">balance</field>
             <field name="report_type">liability</field>
         </record>
@@ -281,6 +317,13 @@
             <field name="close_method">balance</field>
             <field name="report_type">liability</field>
         </record>
+         <record id="user_type_bs104" model="account.account.type">
+            <field name="name">递延收益</field>
+            <field name="code">bs104</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+
         <record id="user_type_bs115" model="account.account.type">
             <field name="name">实收资本</field>
             <field name="code">bs115</field>
@@ -299,11 +342,35 @@
             <field name="close_method">balance</field>
             <field name="report_type">liability</field>
         </record>
+        <record id="user_type_bs120" model="account.account.type">
+            <field name="name">本年利润</field>
+            <field name="code">bs120</field>
+            <field name="close_method">none</field>
+            <field name="report_type">liability</field>
+        </record>
         <record id="user_type_bs121" model="account.account.type">
             <field name="name">未分配利润</field>
             <field name="code">bs121</field>
             <field name="close_method">balance</field>
             <field name="report_type">liability</field>
-        </record>        
+        </record>
+        <record id="user_type_cost1" model="account.account.type">
+            <field name="name">成本类-余额结转</field>
+            <field name="code">cost</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">none</field>
+        </record>
+        <record id="user_type_cost2" model="account.account.type">
+            <field name="name">成本-无结转</field>
+            <field name="code">cost_no</field>
+            <field name="close_method">none</field>
+            <field name="report_type">none</field>
+        </record>
+        <record id="user_type_cost3" model="account.account.type">
+            <field name="name">开发支出</field>
+            <field name="code">cost-dev</field>
+            <field name="close_method">none</field>
+            <field name="report_type">none</field>
+        </record>
     </data>
 </openerp>

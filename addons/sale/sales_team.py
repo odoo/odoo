@@ -24,8 +24,7 @@ class crm_case_section(osv.osv):
             created_domain = [('section_id', '=', id), ('state', '=', 'draft'), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
-            res[id]['monthly_confirmed'] = json.dumps(self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
-
+            res[id]['monthly_confirmed'] = json.dumps(self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_untaxed', 'date_order'], 'amount_untaxed', 'date_order', context=context))
         return res
 
     def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
@@ -36,7 +35,7 @@ class crm_case_section(osv.osv):
 
         res = {}
         for id in ids:
-            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
+            created_domain = [('type', 'in', ['out_invoice', 'out_refund']), ('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', date_begin), ('date', '<=', date_end)]
             values = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
             for value in values:
                 value['value'] = float_repr(value.get('value', 0), precision_digits=self.pool['decimal.precision'].precision_get(cr, uid, 'Account'))

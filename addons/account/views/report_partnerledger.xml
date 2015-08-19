@@ -117,7 +117,7 @@
                                 <span t-esc="formatLang(line['progress'], currency_obj=res_company.currency_id)"/>
                             </td>
                             <td t-if="amount_currency">
-                                <span t-esc="formatLang(line['amount_currency'])"/>
+                                <span t-esc="formatLang(line['amount_currency'])"/>&amp;nbsp;<span t-esc="line['currency_code']"/>
                             </td>
                         </tr>
                         </t>

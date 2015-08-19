@@ -222,7 +222,6 @@
                 ['milliseconds', zero], ['minutes', zero], ['hours', zero],
                 ['weeks', zero]
             ]);
-
             var d = 0, s = 0, m = 0;
             var days = args.days.toJSON() + args.weeks.toJSON() * 7;
             var seconds = args.seconds.toJSON()
@@ -496,13 +495,14 @@
             if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;
             }
+
             var s = tmxxx(this.year, this.month, this.day + other.days);
             return datetime.date.fromJSON(s.year, s.month, s.day);
         },
         __radd__: function (other) { return this.__add__(other); },
         __sub__: function (other) {
             if (py.PY_isInstance(other, datetime.timedelta)) {
-                return this.__add__(other.__neg__());
+                return py.PY_add(this, py.PY_negative(other));
             }
             if (py.PY_isInstance(other, datetime.date)) {
                 // FIXME: getattr and sub API methods
@@ -562,103 +562,182 @@
         return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
     });
 
-    var args = _.map(('year month day hour minute second microsecond '
-                    + 'years months weeks days hours minutes secondes microseconds '
-                    + 'weekday leakdays yearday nlyearday').split(' '), function (arg) {
-        return [arg, null];
+    var args = _.map(('year month day '
+                    + 'years months weeks days '
+                    + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
+        switch (arg) {
+        case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+            return [arg, zero];
+        case 'year':case 'month':case 'day':case 'weekday':
+        case 'yearday':case 'nlyearday':
+            return [arg, null];
+        default:
+            throw new Error("Unknown relativedelta argument " + arg);
+        }
     });
     args.unshift('*');
+    var utils = {
+        divmod: function (x, y) {
+            var rem = x % y;
+            return {
+                div: (x - rem) / y,
+                mod: rem
+            };
+        },
+        monthrange: function (year, month) {
+            if (month < 1 || month > 12) {
+                throw new Error("Illegal month " + month);
+            }
+
+            var day1 = this.weekday(year, month, 1);
+            var ndays = this.mdays[month] + (month == this.February && this.isleap(year));
+            return [day1, ndays];
+        },
+        weekday: function (year, month, day) {
+            var date = py.PY_call(datetime.date, [year, month, day]);
+            return py.PY_call(py.PY_getAttr(date, 'weekday'));
+        },
+        isleap: function (year) {
+            return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)
+        },
+        mdays: [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        January: 1,
+        February: 2
+    };
     var relativedelta = py.type('relativedelta', null, {
         __init__: function () {
             this.ops = py.PY_parseArgs(arguments, args);
+            this.ops.days = py.float.fromJSON(
+                asJS(this.ops.days) + asJS(this.ops.weeks) * 7
+            );
+
+            var yday = zero;
+            if (this.ops.nlyearday) {
+                yday = this.ops.nlyearday;
+            } else if (this.ops.yearday) {
+                yday = this.ops.yearday;
+                if (asJS(this.ops.yearday) > 59) {
+                    this.ops.leapdays = py.float.fromJS(-1);
+                }
+            }
+            if (py.PY_isTrue(yday)) {
+                var ydayidx = [31, 59, 90, 120, 151, 181, 212,
+                               243, 273, 304, 334, 366];
+                for(var idx=0; idx<ydayidx.length; ++idx) {
+                    var ydays = ydayidx[idx];
+                    if (asJS(yday) <= ydays) {
+                        this.ops.month = py.float.fromJSON(idx+1);
+                        if (!idx) {
+                            this.ops.day = yday;
+                        } else {
+                            this.ops.day = py.PY_subtract(
+                                yday,
+                                py.float.fromJSON(ydayidx[idx-1])
+                            );
+                        }
+                        break;
+                    }
+                }
+                if (idx === ydayidx.length) {
+                    throw new Error("Invalid year day (" + asJS(yday) + ")");
+                }
+            }
+            this._fix();
+        },
+        _fix: function () {
+            var months = asJS(this.ops.months);
+            if (Math.abs(months) > 11) {
+                var s = months > 0 ? 1 : -1;
+                var r = utils.divmod(months * s, 12);
+                this.ops.months = py.float.fromJSON(r.mod*s);
+                this.ops.years = py.float.fromJSON(
+                    asJS(this.ops.years) + r.div*s);
+            }
+            this._has_time = 0;
         },
         __add__: function (other) {
             if (!py.PY_isInstance(other, datetime.date)) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
-            var year = asJS(this.ops.year) || asJS(other.year);
-            if (asJS(this.ops.years)) {
-                year += asJS(this.ops.years);
-            }
-
+            var year = (asJS(this.ops.year) || asJS(other.year)) + asJS(this.ops.years);
             var month = asJS(this.ops.month) || asJS(other.month);
-            if (asJS(this.ops.months)) {
-                month += asJS(this.ops.months);
-                // FIXME: no divmod in JS?
-                while (month < 1) {
-                    year -= 1;
-                    month += 12;
+            var months;
+            if (months = asJS(this.ops.months)) {
+                if (Math.abs(months) < 1 || Math.abs(months) > 12) {
+                    throw new Error("Can only use relative months between -12 and +12");
                 }
-                while (month > 12) {
+                month += months;
+                if (month > 12) {
                     year += 1;
                     month -= 12;
                 }
+                if (month < 1) {
+                    year -= 1;
+                    month += 12;
+                }
             }
 
-            var lastMonthDay = new Date(year, month, 0).getDate();
-            var day = asJS(this.ops.day) || asJS(other.day);
-            if (day > lastMonthDay) { day = lastMonthDay; }
-            var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-            if (days_offset) {
-                day = new Date(year, month-1, day + days_offset).getDate();
+            var day = Math.min(utils.monthrange(year, month)[1],
+                               asJS(this.ops.day) || asJS(other.day));
+
+            var repl = {
+                year: py.float.fromJSON(year),
+                month: py.float.fromJSON(month),
+                day: py.float.fromJSON(day)
+            };
+
+            var days = asJS(this.ops.days);
+            if (py.PY_isTrue(this.ops.leapdays) && month > 2 && utils.isleap(year)) {
+                days += asJS(this.ops.leapdays);
             }
-            // TODO: leapdays?
-            // TODO: hours, minutes, seconds? Not used in XML domains
-            // TODO: weekday?
-            // FIXME: use date.replace
-            return py.PY_call(datetime.date, [
-                py.float.fromJSON(year),
-                py.float.fromJSON(month),
-                py.float.fromJSON(day)
-            ]);
+
+            var ret = py.PY_add(
+                py.PY_call(py.PY_getAttr(other, 'replace'), repl),
+                py.PY_call(datetime.timedelta, {
+                    days: py.float.fromJSON(days)
+                })
+            );
+
+            if (this.ops.weekday) {
+                // FIXME: only handles numeric weekdays, not decorated
+                var weekday = asJS(this.ops.weekday), nth = 1;
+                var jumpdays = (Math.abs(nth) - 1) * 7;
+
+                var ret_weekday = asJS(py.PY_call(py.PY_getAttr(ret, 'weekday')));
+                if (nth > 0) {
+                    jumpdays += (7-ret_weekday+weekday) % 7;
+                } else {
+                    jumpdays += (ret_weekday - weekday) % 7;
+                    jumpdays *= -1;
+                }
+                ret = py.PY_add(
+                    ret,
+                    py.PY_call(datetime.timedelta, {
+                        days: py.float.fromJSON(jumpdays)
+                    })
+                );
+            }
+
+            return ret;
         },
         __radd__: function (other) {
             return this.__add__(other);
         },
-
-        __sub__: function (other) {
-            if (!py.PY_isInstance(other, datetime.date)) {
-                return py.NotImplemented;
-            }
-            // TODO: test this whole mess
-            var year = asJS(this.ops.year) || asJS(other.year);
-            if (asJS(this.ops.years)) {
-                year -= asJS(this.ops.years);
-            }
-
-            var month = asJS(this.ops.month) || asJS(other.month);
-            if (asJS(this.ops.months)) {
-                month -= asJS(this.ops.months);
-                // FIXME: no divmod in JS?
-                while (month < 1) {
-                    year -= 1;
-                    month += 12;
-                }
-                while (month > 12) {
-                    year += 1;
-                    month -= 12;
-                }
-            }
-
-            var lastMonthDay = new Date(year, month, 0).getDate();
-            var day = asJS(this.ops.day) || asJS(other.day);
-            if (day > lastMonthDay) { day = lastMonthDay; }
-            var days_offset = ((asJS(this.ops.weeks) || 0) * 7) + (asJS(this.ops.days) || 0);
-            if (days_offset) {
-                day = new Date(year, month-1, day - days_offset).getDate();
-            }
-            // TODO: leapdays?
-            // TODO: hours, minutes, seconds? Not used in XML domains
-            // TODO: weekday?
-            return py.PY_call(datetime.date, [
-                py.float.fromJSON(year),
-                py.float.fromJSON(month),
-                py.float.fromJSON(day)
-            ]);
-        },
         __rsub__: function (other) {
-            return this.__sub__(other);
+            return this.__neg__().__radd__(other);
+        },
+        __neg__: function () {
+            return py.PY_call(relativedelta, {
+                years: py.PY_negative(this.ops.years),
+                months: py.PY_negative(this.ops.months),
+                days: py.PY_negative(this.ops.days),
+                leapdays: this.ops.leapdays,
+                year: this.ops.year,
+                month: this.ops.month,
+                day: this.ops.day,
+                weekday: this.ops.weekday
+            });
         }
     });
 

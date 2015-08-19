@@ -1,21 +1,26 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-08-12 18:53+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:13+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
@@ -27,38 +32,25 @@ msgid ""
 "                projects in order to track the invoicing progress.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"               单击添加 客户合同 联系人。\n"
-"              </p><p>\n"
-"                为了跟踪开票进程，你将在这里找到跟客户项目相关的合同.\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               单击添加 客户合同 联系人。\n              </p><p>\n                为了跟踪开票进程，你将在这里找到跟客户项目相关的合同.\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:56
 #, python-format
 msgid ""
-"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
-"'%s'.</p>"
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
 msgstr "<p class=\"oe_view_nocontent_create\">记录你为项目所做的计工单 '%s'.</p>"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "<p>\n"
-"                You will find here timesheets and purchases you did for "
-"contracts that can be reinvoiced to the customer.\n"
-"                If you want to record new jobs to invoice, you should use "
-"the timesheet menu instead.\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p>\n"
-"                你可以在这里找到为了合同而产生的计工单和采购，并可以由此重开发票给客人。\n"
-"                如果你要记录新的任务到发票，你必须使用计工单菜单替代。\n"
-"              </p>\n"
-"            "
+msgstr "<p>\n                你可以在这里找到为了合同而产生的计工单和采购，并可以由此重开发票给客人。\n                如果你要记录新的任务到发票，你必须使用计工单菜单替代。\n              </p>\n            "
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:59
@@ -71,18 +63,18 @@ msgstr "<p>根据合同的条款，项目的计工单可开票给 %s </p>"
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
 msgid "Analytic Account/Project"
-msgstr "辅助核算项/项目"
+msgstr "分析账户/项目"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "辅助核算明细"
+msgstr "分析行"
 
 #. module: project_timesheet
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
 #: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
 msgid "Analytic account/project"
-msgstr "辅助核算项目"
+msgstr "分析账户/项目"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -101,12 +93,12 @@ msgstr "八月"
 #: code:addons/project_timesheet/project_timesheet.py:97
 #, python-format
 msgid "Bad Configuration!"
-msgstr ""
+msgstr "设置错误！"
 
 #. module: project_timesheet
 #: view:project.project:project_timesheet.project_invoice_search
 msgid "Billable"
-msgstr "应记账"
+msgstr "可开账单"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
@@ -137,7 +129,7 @@ msgstr "二月"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Group By"
-msgstr ""
+msgstr "分组"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
@@ -157,7 +149,7 @@ msgstr "小时"
 #. module: project_timesheet
 #: field:report.timesheet.task.user,id:0
 msgid "ID"
-msgstr ""
+msgstr "标识"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:294
@@ -169,7 +161,7 @@ msgstr "非法的动作"
 #: code:addons/project_timesheet/project_timesheet.py:321
 #, python-format
 msgid "Invalid Analytic Account!"
-msgstr ""
+msgstr "无效的分析账户！"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
@@ -240,29 +232,23 @@ msgstr "请为用户 \"%s\"定义员工。你必须创建一个。"
 msgid ""
 "Please define journal on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr "请在相关的员工上定义账簿。填在员工表单的计工单标签。"
+msgstr "请在相关的员工上定义分类账。填在员工表单的计工单标签。"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:87
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the HR Settings tab of the employee form."
-msgstr ""
-"请在相关的员工上面定义产品和产品分类属性科目。\n"
-"填在员工表单的人力资源标签。"
+msgstr "请在相关的员工上面定义产品和产品分类属性科目。\n填在员工表单的人力资源标签。"
 
 #. module: project_timesheet
 #: code:addons/project_timesheet/project_timesheet.py:98
 #, python-format
 msgid ""
-"Please define product and product category property account on the related "
-"employee.\n"
+"Please define product and product category property account on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
-msgstr ""
-"请在相关的员工上面定义产品和产品分类属性科目。\n"
-"填在员工表单的计工单标签。"
+msgstr "请在相关的员工上面定义产品和产品分类属性科目。\n填在员工表单的计工单标签。"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_project
@@ -272,12 +258,12 @@ msgstr "项目"
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
 msgid "Project Task Work"
-msgstr "任务进度"
+msgstr "项目任务工作"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
 msgid "Related Timeline Id"
-msgstr "有关的时间ID"
+msgstr "相关的时间线 ID"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -287,7 +273,7 @@ msgstr "九月"
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "按项目 签入 / 签出"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -309,7 +295,7 @@ msgstr "每月的任务工时"
 #. module: project_timesheet
 #: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
 msgid "Tasks by User"
-msgstr "按用户打印任务"
+msgstr "用户的任务"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
@@ -348,4 +334,4 @@ msgstr "你不能删除被指派给项目的合作伙伴，但你能不选中“
 #, python-format
 msgid ""
 "You cannot select a Analytic Account which is in Close or Cancelled state."
-msgstr "你不能选择关闭或者取消状态的辅助核算项"
+msgstr "你不能选择关闭或者取消状态的分析账户"

@@ -1,21 +1,23 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_margin
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-08-07 12:18+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:10+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_margin
 #: field:product.product,purchase_num_invoiced:0
@@ -30,7 +32,7 @@ msgstr "# 销售开票"
 #. module: product_margin
 #: view:product.product:product_margin.view_product_margin_tree
 msgid "#Purchased"
-msgstr "采购"
+msgstr "# 采购"
 
 #. module: product_margin
 #: view:product.product:product_margin.view_product_margin_form
@@ -45,7 +47,7 @@ msgstr "客户发票中的平均价格"
 #. module: product_margin
 #: help:product.product,purchase_avg_price:0
 msgid "Avg. Price in Supplier Invoices "
-msgstr "供应商发票平均单价 "
+msgstr "供应商发票中的平均价格"
 
 #. module: product_margin
 #: field:product.product,purchase_avg_price:0
@@ -61,23 +63,23 @@ msgstr "取消"
 #. module: product_margin
 #: view:product.product:product_margin.view_product_margin_form
 msgid "Catalog Price"
-msgstr "(产品列表价格)标价"
+msgstr "目录价格"
 
 #. module: product_margin
 #: field:product.margin,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: product_margin
 #: field:product.margin,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Draft, Open and Paid"
-msgstr "草稿、待处理和支付"
+msgstr "草稿、开放和已付"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -102,12 +104,12 @@ msgstr "预计销售 - 标准成本"
 #. module: product_margin
 #: help:product.product,sales_gap:0
 msgid "Expected Sale - Turn Over"
-msgstr "预计售价 - 订单价格"
+msgstr "预计销售 -  营业额"
 
 #. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "预计利润 / 预计销售 * 100"
+msgstr "预计利润 * 100 / 预计销售"
 
 #. module: product_margin
 #: field:product.margin,from_date:0
@@ -122,23 +124,22 @@ msgstr "一般信息"
 #. module: product_margin
 #: field:product.margin,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: product_margin
-#: field:product.margin,invoice_state:0
-#: field:product.product,invoice_state:0
+#: field:product.margin,invoice_state:0 field:product.product,invoice_state:0
 msgid "Invoice State"
 msgstr "发票状态"
 
 #. module: product_margin
 #: field:product.margin,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新"
 
 #. module: product_margin
 #: field:product.margin,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后一次更新"
 
 #. module: product_margin
 #: field:product.product,date_from:0
@@ -174,13 +175,13 @@ msgstr "待处理利润"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Open and Paid"
-msgstr "待处理和支付"
+msgstr "待处理和已付"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
-msgstr "支付"
+msgstr "已付"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -206,7 +207,7 @@ msgstr "产品利润"
 #. module: product_margin
 #: view:product.margin:product_margin.product_margin_form_view
 msgid "Properties categories"
-msgstr "属性分类"
+msgstr "属性类别"
 
 #. module: product_margin
 #: field:product.product,purchase_gap:0
@@ -254,7 +255,8 @@ msgstr "供应商发票的开票价格和数量相乘的合计 "
 #. module: product_margin
 #: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
 msgstr "客户发票的销售分类价格和数量相乘的汇总"
 
 #. module: product_margin
@@ -286,12 +288,12 @@ msgstr "总利润"
 #. module: product_margin
 #: field:product.product,total_margin_rate:0
 msgid "Total Margin Rate(%)"
-msgstr "总盈利率(%)"
+msgstr "总利润率(%)"
 
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
 msgid "Total margin * 100 / Turnover"
-msgstr "总利润 / 营业额 * 100"
+msgstr "总利润 * 100 / 营业额"
 
 #. module: product_margin
 #: view:product.product:product_margin.view_product_margin_tree
@@ -307,4 +309,4 @@ msgstr "营业额-标准价格"
 #. module: product_margin
 #: view:product.margin:product_margin.product_margin_form_view
 msgid "or"
-msgstr "or"
+msgstr "或"

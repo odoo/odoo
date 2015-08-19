@@ -31,12 +31,10 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(ids)
         self.assertTrue(partners)
 
-        # partners and its contents are instance of the model, and share its ormcache
+        # partners and its contents are instance of the model
         self.assertIsRecordset(partners, 'res.partner')
-        self.assertIs(partners._ormcache, self.env['res.partner']._ormcache)
         for p in partners:
             self.assertIsRecord(p, 'res.partner')
-            self.assertIs(p._ormcache, self.env['res.partner']._ormcache)
 
         self.assertEqual([p.id for p in partners], ids)
         self.assertEqual(self.env['res.partner'].browse(ids), partners)

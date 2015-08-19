@@ -104,7 +104,7 @@ header a.navbar-brand img {
 }
 
 #wrapwrap p:empty:after {
-  content: "\2060";
+  content: "\202f";
 }
 
 /* ----- Snippets Styles ----- */
@@ -189,10 +189,6 @@ footer {
 }
 
 /* ----- BOOTSTRAP FIX ----- */
-.col-md-12 {
-  float: left;
-  width: 100%;
-}
 
 @-moz-document url-prefix() {
   .table .img-responsive {
@@ -600,6 +596,10 @@ div.media_iframe_video .css_editable_mode_display {
   height: 100%;
   display: none;
   z-index: 2;
+}
+
+html[data-browser^="msie"] div.media_iframe_video iframe {
+  margin-left: 0;
 }
 
 /* Mobile view */

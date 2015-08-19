@@ -149,10 +149,7 @@ class hr_employee(osv.osv):
 
     def _attendance_access(self, cr, uid, ids, name, args, context=None):
         # this function field use to hide attendance button to singin/singout from menu
-        group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_hr_attendance')
-        visible = False
-        if uid in [user.id for user in group.users]:
-            visible = True
+        visible = self.pool.get("res.users").has_group(cr, uid, "base.group_hr_attendance")
         return dict([(x, visible) for x in ids])
 
     _columns = {

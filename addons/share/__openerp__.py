@@ -45,6 +45,7 @@ synchronization with other companies.
     'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
+        'security/ir.model.access.csv',
         'res_users_view.xml',
         'wizard/share_wizard_view.xml',
         'share_data.xml',
