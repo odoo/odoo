@@ -5,6 +5,15 @@ from openerp.http import request
 import openerp.addons.web.controllers.main as webmain
 import json
 
+class Controller(openerp.addons.bus.bus.Controller):
+    def _poll(self, dbname, channels, last, options):
+        if request.session.uid:
+            ## For performance issue, the real time status notification is disabled. This means a change of status are still braoadcasted
+            ## but not received by anyone. Otherwise, all listening user restart their longpolling at the same time and cause a 'ConnectionPool Full Error'
+            ## since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
+            # channel to receive message
+            channels.append((request.db, 'calendar.alarm'))
+        return super(Controller, self)._poll(dbname, channels, last, options)
 
 class meeting_invitation(http.Controller):
 
@@ -50,22 +59,3 @@ class meeting_invitation(http.Controller):
 
         values = dict(init="s.calendar.event('%s', '%s', '%s', '%s' , '%s');" % (db, action, id, 'form', json.dumps(attendee_data)))
         return request.render('web.webclient_bootstrap', values)
-
-    # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
-    @http.route('/calendar/notify', type='json', auth="none")
-    def notify(self):
-        registry = request.registry
-        uid = request.session.uid
-        context = request.session.context
-        with registry.cursor() as cr:
-            res = registry.get("calendar.alarm_manager").get_next_notif(cr, uid, context=context)
-            return res
-
-    @http.route('/calendar/notify_ack', type='json', auth="none")
-    def notify_ack(self, type=''):
-        registry = request.registry
-        uid = request.session.uid
-        context = request.session.context
-        with registry.cursor() as cr:
-            res = registry.get("res.partner")._set_calendar_last_notif_ack(cr, uid, context=context)
-            return res

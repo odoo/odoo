@@ -313,11 +313,6 @@ class res_partner(osv.Model):
             datas.append(data)
         return datas
 
-    def _set_calendar_last_notif_ack(self, cr, uid, context=None):
-        partner = self.pool['res.users'].browse(cr, uid, uid, context=context).partner_id
-        self.write(cr, uid, partner.id, {'calendar_last_notif_ack': datetime.now()}, context=context)
-        return
-
 
 class calendar_alarm_manager(osv.AbstractModel):
     _name = 'calendar.alarm_manager'
@@ -477,40 +472,6 @@ class calendar_alarm_manager(osv.AbstractModel):
                     self.do_mail_reminder(cr, uid, alert, context=context)
         icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
 
-    def get_next_notif(self, cr, uid, context=None):
-        ajax_check_every_seconds = 300
-        partner = self.pool['res.users'].read(cr, SUPERUSER_ID, uid, ['partner_id', 'calendar_last_notif_ack'], context=context)
-        all_notif = []
-
-        if not partner:
-            return []
-
-        all_events = self.get_next_potential_limit_alarm(cr, uid, ajax_check_every_seconds, partner_id=partner['partner_id'][0], mail=False, context=context)
-
-        for event in all_events:  # .values()
-            max_delta = all_events[event]['max_duration']
-            curEvent = self.pool.get('calendar.event').browse(cr, uid, event, context=context)
-            if curEvent.recurrency:
-                bFound = False
-                LastFound = False
-                for one_date in self.pool.get("calendar.event").get_recurrent_date_by_event(cr, uid, curEvent, context=context):
-                    in_date_format = one_date.replace(tzinfo=None)
-                    LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
-                    if LastFound:
-                        for alert in LastFound:
-                            all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-                        if not bFound:  # if it's the first alarm for this recurrent event
-                            bFound = True
-                    if bFound and not LastFound:  # if the precedent event had alarm but not this one, we can stop the search fot this event
-                        break
-            else:
-                in_date_format = datetime.strptime(curEvent.start, DEFAULT_SERVER_DATETIME_FORMAT)
-                LastFound = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, ajax_check_every_seconds, after=partner['calendar_last_notif_ack'], mail=False, context=context)
-                if LastFound:
-                    for alert in LastFound:
-                        all_notif.append(self.do_notif_reminder(cr, uid, alert, context=context))
-        return all_notif
-
     def do_mail_reminder(self, cr, uid, alert, context=None):
         if context is None:
             context = {}
@@ -531,24 +492,6 @@ class calendar_alarm_manager(osv.AbstractModel):
             )
 
         return res
-
-    def do_notif_reminder(self, cr, uid, alert, context=None):
-        alarm = self.pool['calendar.alarm'].browse(cr, uid, alert['alarm_id'], context=context)
-        event = self.pool['calendar.event'].browse(cr, uid, alert['event_id'], context=context)
-
-        if alarm.type == 'notification':
-            message = event.display_time
-
-            delta = alert['notify_at'] - datetime.now()
-            delta = delta.seconds + delta.days * 3600 * 24
-
-            return {
-                'event_id': event.id,
-                'title': event.name,
-                'message': message,
-                'timer': delta,
-                'notify_at': alert['notify_at'].strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            }
 
 
 class calendar_alarm(osv.Model):
@@ -1652,6 +1595,8 @@ class calendar_event(osv.Model):
         self.write(cr, uid, [res], {'final_date': final_date}, context=context)
 
         self.create_attendees(cr, uid, [res], context=context)
+
+        self.send_bus_notif(cr, uid, res, context)
         return res
 
     def export_data(self, cr, uid, ids, *args, **kwargs):
@@ -1661,6 +1606,43 @@ class calendar_event(osv.Model):
             if real_id not in real_ids:
                 real_ids.append(real_id)
         return super(calendar_event, self).export_data(cr, uid, real_ids, *args, **kwargs)
+
+    def send_bus_notif(self, cr, uid, event_id, context=None):
+        """store notification in bus based on reminder and partner
+        """
+        event = self.browse(cr, uid, event_id, context=context)
+        alarm_type = ['notification']
+        notifications = []
+        timezone = pytz.timezone(context.get('tz') or 'UTC')
+        for alarm in event.alarm_ids:
+            if alarm.type in alarm_type:
+                startdate = datetime.strptime(event.start, DEFAULT_SERVER_DATETIME_FORMAT)
+                # startdate = startdate.astimezone(timezone)
+                notify_at = startdate - timedelta(minutes=alarm.duration_minutes)
+                # notify_at = notify_at.replace(tzinfo=None)
+                delta = notify_at - datetime.now()
+                delta = delta.seconds + delta.days * 3600 * 24
+                for partner_id in event.partner_ids:
+                    for user_id in partner_id.user_ids:
+                        notifications.append([(cr.dbname, 'calendar.alarm'), {
+                                'event_id': event.id,
+                                'user_id': user_id.id,
+                                'title': event.name,
+                                'message': event.display_time,
+                                'timer': delta,
+                                'duration_minutes': alarm.duration_minutes,
+                                'notify_at': notify_at.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                            }])
+        if notifications:
+            self.pool['bus.bus'].sendmany(cr, uid, notifications)
+        return
+
+    def send_bus_snooze(self, cr, uid, message, context=None):
+        notify_at = datetime.strptime(message['notify_at'], DEFAULT_SERVER_DATETIME_FORMAT)
+        notify_at = notify_at + timedelta(minutes=message['duration_minutes'])
+        message['notify_at'] = notify_at.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        self.pool['bus.bus'].sendone(cr, uid, (cr.dbname, 'calendar.alarm'), message)
+        return
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
         context = dict(context or {})

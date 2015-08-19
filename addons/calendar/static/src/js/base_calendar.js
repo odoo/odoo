@@ -132,69 +132,66 @@ function reload_favorite_list(result) {
         },
     });
 
-    instance.web.WebClient = instance.web.WebClient.extend({
-        
+    instance.calendar.AlarmManager = openerp.Widget.extend({
+        init: function(parent, options) {
+            var self = this;
+            this._super(parent);
+            this.bus = openerp.bus.bus;
+            this.bus.on("notification", this, this.on_notification);
+            this.bus.options["calendar"] = true;
+        },
+        dateCheck: function(check) {
+            var checkDate;
+            var fromDate = new Date();
+            var toDate = new Date();
+            fromDate.setSeconds(fromDate.getSeconds() - 50);
+            toDate.setSeconds(toDate.getSeconds() + 50);
+            checkDate = Date.parse(check);
 
+            if((checkDate <= toDate && checkDate >= fromDate))
+                return true;
+            return false;
+        },
         get_notif_box: function(me) {
             return $(me).closest(".ui-notify-message-style");
         },
-        get_next_notif: function() {
-            var self= this;
-            this.rpc("/calendar/notify")
-            .done(
-                function(result) {
-                    _.each(result,  function(res) {
-                        setTimeout(function() {
-                            //If notification not already displayed, we add button and action on it
-                            if (!($.find(".eid_"+res.event_id)).length) {
-                                res.title = QWeb.render('notify_title', {'title': res.title, 'id' : res.event_id});
-                                res.message += QWeb.render("notify_footer");
-                                a = self.do_notify(res.title,res.message,true);
-                                
-                                $(".link2event").on('click', function() {
-                                    self.rpc("/web/action/load", {
-                                        action_id: "calendar.action_calendar_event_notify",
-                                    }).then( function(r) {
-                                        r.res_id = res.event_id;
-                                        return self.action_manager.do_action(r);
-                                    });
-                                });
-                                a.element.find(".link2recall").on('click',function() {
-                                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                                });
-                                a.element.find(".link2showed").on('click',function() {
-                                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                                    self.rpc("/calendar/notify_ack");
-                                });
-                            }
-                            //If notification already displayed in the past, we remove the css attribute which hide this notification
-                            else if (self.get_notif_box($.find(".eid_"+res.event_id)).attr("style") !== ""){
-                                self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");
-                            }
-                        },res.timer * 1000);
+        on_notification: function(notification) {
+            var self = this;
+            var channel = notification[0];
+            var message = notification[1];
+
+            if (message.event_id){
+                title = QWeb.render('notify_title', {'title': message.title, 'id' : channel[0]});
+                msg = message.message
+                msg += QWeb.render("notify_footer");
+                a = self.do_notify(title,msg,true);
+
+                $(".link2event").on('click', function() {
+                    self.rpc("/web/action/load", {
+                        action_id: "calendar.action_calendar_event_notify",
+                    }).then( function(r) {
+                        r.res_id = message.event_id;
+                        return self.getParent().action_manager.do_action(r);
                     });
-                }
-            )
-            .fail(function (err, ev) {
-                if (err.code === -32098) {
-                    // Prevent the CrashManager to display an error
-                    // in case of an xhr error not due to a server error
-                    ev.preventDefault();
-                }
-            });
-        },
-        check_notifications: function() {
-            var self= this;
-            self.get_next_notif();
-            self.intervalNotif = setInterval(function(){
-                self.get_next_notif();
-            }, 5 * 60 * 1000 );
-        },
+                });
+                a.element.find(".link2showed").on('click',function() {
+                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                });
+                a.element.find(".link2recall").on('click',function() {
+                    self.get_notif_box(this).find('.ui-notify-close').trigger("click");
+                    new instance.web.Model("calendar.event").call("send_bus_snooze", [message]);
+                });
+            }
+        }
+    });
+
+    instance.web.WebClient = instance.web.WebClient.extend({
         
         //Override the show_application of addons/web/static/src/js/chrome.js       
         show_application: function() {
             this._super();
-            this.check_notifications();
+            new instance.calendar.AlarmManager(this);
+            openerp.bus.bus.start_polling();
         },
         //Override addons/web/static/src/js/chrome.js       
         on_logout: function() {
