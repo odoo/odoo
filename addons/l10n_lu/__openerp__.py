@@ -30,17 +30,17 @@ Notes:
         # basic accounting data
         'account_financial_report.xml',
         'account_financial_report_abr.xml',
-        'account.account.type-2011.csv',
-        'account.account.template-2011.csv',
         'account_chart_template.xml',
+        'account.account.template-2011.csv',
         'account.tax.template-2015.csv',
         'account.fiscal.position.template-2011.csv',
         'account.fiscal.position.tax.template-2015.csv',
         # configuration wizard, views, reports...
-        'l10n_lu_wizard.xml',
+        'account.chart.template.csv',
+        'account_chart_template.yml',
     ],
     'test': [],
     'demo': [],
-    'installable': False,
+    'installable': True,
     'auto_install': False,
 }
