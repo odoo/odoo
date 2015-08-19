@@ -215,7 +215,7 @@ var KanbanView = View.extend({
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
-                    group.id = value;
+                    group.id = value instanceof Array ? value[0] : value;
                     var field = self.fields_view.fields[self.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
