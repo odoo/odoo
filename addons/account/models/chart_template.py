@@ -262,9 +262,22 @@ class AccountChartTemplate(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
+            tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
+            acc_ref.update(tmp1)
+            taxes_ref.update(tmp2)
+            return acc_ref, taxes_ref
+
         tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
+
+        # Create Journals
+        self.generate_journals(acc_ref, company)
+        # generate properties function
+        self.generate_properties(acc_ref, company)
+        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
+        self.generate_fiscal_position(taxes_ref, acc_ref, company)
+
         return acc_ref, taxes_ref
 
     @api.multi
@@ -309,15 +322,6 @@ class AccountChartTemplate(models.Model):
                     'refund_account_id': account_ref.get(value['refund_account_id'], False),
                     'account_id': account_ref.get(value['account_id'], False),
                 })
-
-        # Create Journals
-        self.generate_journals(account_ref, company)
-
-        # generate properties function
-        self.generate_properties(account_ref, company)
-
-        # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        self.generate_fiscal_position(taxes_ref, account_ref, company)
 
         return account_ref, taxes_ref
 
