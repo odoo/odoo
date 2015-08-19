@@ -23,10 +23,10 @@ class TransferPaymentAcquirer(osv.Model):
         return '/payment/transfer/feedback'
 
     def _format_transfer_data(self, cr, uid, context=None):
-        bank_ids = [bank.id for bank in self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.bank_ids]
+        company_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.id
         # filter only bank accounts marked as visible
-        bank_ids = self.pool['res.partner.bank'].search(cr, uid, [('id', 'in', bank_ids), ('footer', '=', True)], context=context)
-        accounts = self.pool['res.partner.bank'].name_get(cr, uid, bank_ids, context=context)
+        journal_ids = self.pool['account.journal'].search(cr, uid, [('type', '=', 'bank'), ('display_on_footer', '=', True), ('company_id', '=', company_id)], context=context)
+        accounts = self.pool['account.journal'].browse(cr, uid, journal_ids, context=context).mapped('bank_account_id').name_get()
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
         post_msg = '''<div>

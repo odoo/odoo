@@ -2,13 +2,6 @@
   !context
     journal_type: 'bank'
 -
-  We create a new bank with the company as partner in order to be sure to have at least one bank journal
--
-  !record {model: res.partner.bank, id: test_bank}:
-    acc_number: BE123456789
-    bank_name: BNP Test bank
-    partner_id: base.main_partner
--
   In order to test Bank Statement feature of account I create a bank statement line and confirm it and check it's move created
 -
   I select the period and journal for the bank statement

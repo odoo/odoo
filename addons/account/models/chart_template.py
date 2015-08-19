@@ -751,42 +751,21 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def _create_bank_journals_from_o2m(self, company, acc_template_ref):
         '''
         This function creates bank journals and its accounts for each line encoded in the field bank_account_ids of the
-        wizard.
+        wizard (which is currently only used to create a default bank and cash journal when the CoA is installed).
 
-        :param company_id: the id of the company for which the wizard is running.
+        :param company: the company for which the wizard is running.
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
-        :return: True
         '''
         self.ensure_one()
-        # Build a list with all the data to process
-        journal_data = []
-        if self.bank_account_ids:
-            for acc in self.bank_account_ids:
-                vals = {
-                    'acc_name': acc.acc_name,
-                    'account_type': acc.account_type,
-                    'currency_id': acc.currency_id.id,
-                }
-                journal_data.append(vals)
-
-        for line in journal_data:
-            if line['account_type'] == 'bank':
-                #create the bank account that will trigger the journal and account.account creation
-                res_partner_bank_vals = {
-                    'acc_number': line['acc_name'],
-                    'currency_id': line['currency_id'],
-                    'company_id': company.id,
-                    'owner_name': company.partner_id.name,
-                    'partner_id': company.partner_id.id,
-                    'footer': True
-                }
-                self.env['res.partner.bank'].create(res_partner_bank_vals)
-            else:
-                #create the cash journal that will trigger the account.account creation
-                vals_journal = self.env['account.journal']._prepare_bank_journal(company, line)
-                self.env['account.journal'].create(vals_journal)
-        return True
+        # Create the journals that will trigger the account.account creation
+        for acc in self.bank_account_ids:
+            self.env['account.journal'].create({
+                'name': acc.acc_name,
+                'type': acc.account_type,
+                'company_id': company.id,
+                'currency_id': acc.currency_id.id,
+            })
 
 
 class AccountBankAccountsWizard(models.TransientModel):

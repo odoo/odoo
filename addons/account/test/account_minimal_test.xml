@@ -237,6 +237,12 @@
             <field name="refund_sequence" eval="True"/>
         </record>
 
+        <record id="bank_account" model="res.partner.bank">
+            <field name="acc_number">987654321</field>
+            <field name="acc_type">bank</field>
+            <field name="bank_name">Bank</field>
+            <field name="partner_id" ref="base.main_partner"/>
+        </record>
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank - Test</field>
             <field name="code">TBNK</field>
@@ -244,6 +250,7 @@
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="analytic.sit"/>
+            <field name="bank_account_id" ref="bank_account"/>
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash - Test</field>
@@ -271,6 +278,12 @@
             <field name="show_on_dashboard" eval="False"/>
         </record>
 
+        <record id="bank_account_usd" model="res.partner.bank">
+            <field name="acc_number">123456789</field>
+            <field name="acc_type">bank</field>
+            <field name="bank_name">Bank US</field>
+            <field name="partner_id" ref="base.main_partner"/>
+        </record>
         <record id="bank_journal_usd" model="account.journal">
             <field name="name">USD Bank - Test</field>
             <field name="code">TUBK</field>
@@ -278,6 +291,7 @@
             <field name="default_debit_account_id" ref="usd_bnk"/>
             <field name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency_id" ref="base.USD"/>
+            <field name="bank_account_id" ref="bank_account_usd"/>
         </record>
         <record id="base.main_company" model="res.company">
             <field name="currency_exchange_journal_id" ref="currency_diff_journal"/>

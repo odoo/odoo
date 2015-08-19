@@ -92,16 +92,8 @@
                 <li t-if="company.website">Website: <span t-field="company.website"/></li>
             </ul>
 
-            <ul t-if="not company.custom_footer" class="list-inline">
+            <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
                 <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
-                <t t-set="is_first" t-value="True"/>
-                <t t-foreach="company.bank_ids" t-as="bank">
-                    <t t-if="bank.footer">
-                        <li t-if="(is_first and company.vat) or (not is_first)">&amp;bull;</li>
-                        <li><span t-esc="bank.bank_name"/>: (<span t-esc="bank.bank_bic"/>) <span t-esc="bank.acc_number"/></li>
-                        <t t-set="is_first" t-value="False"/>
-                    </t>
-                </t>
             </ul>
 
             <t t-if="company.custom_footer">

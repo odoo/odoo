@@ -2,7 +2,7 @@
 
 import re
 
-from openerp import models, api, _
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError, ValidationError
 
 
@@ -40,34 +40,45 @@ def validate_iban(iban):
         raise ValidationError(_("This IBAN does not pass the validation check, please verify it."))
 
 
-class res_partner_bank(models.Model):
+class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
+    @api.one
+    @api.depends('acc_type')
+    def _compute_acc_type(self):
+        try:
+            validate_iban(self.acc_number)
+            self.acc_type = 'iban'
+        except ValidationError:
+            super(ResPartnerBank, self)._compute_acc_type()
+
     def get_bban(self):
-        if self.state != 'iban':
+        if self.acc_type != 'iban':
             raise UserError(_("Cannot compute the BBAN because the account number is not an IBAN."))
         return get_bban_from_iban(self.acc_number)
 
-    def create(self, cr, uid, vals, context=None):
-        if (vals.get('state') == 'iban') and vals.get('acc_number'):
+    @api.model
+    def create(self, vals):
+        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
-        return super(res_partner_bank, self).create(cr, uid, vals, context)
+        return super(ResPartnerBank, self).create(vals)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if (vals.get('state') == 'iban') and vals.get('acc_number'):
+    @api.model
+    def write(self, vals):
+        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
-        return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
+        return super(ResPartnerBank, self).write(vals)
 
     @api.one
-    @api.constrains('state', 'acc_number')
+    @api.constrains('acc_type', 'acc_number')
     def _check_iban(self):
-        if self.state == 'iban':
+        if self.acc_type == 'iban':
             validate_iban(self.acc_number)
 
     @api.one
-    @api.constrains('state', 'bank_bic')
+    @api.constrains('acc_type', 'bank_bic')
     def _check_bank_bic(self):
-        if self.state == 'iban' and not self.bank_bic:
+        if self.acc_type == 'iban' and not self.bank_bic:
             raise ValidationError(_("Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments."))
 
 

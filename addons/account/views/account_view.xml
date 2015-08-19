@@ -215,6 +215,7 @@
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
@@ -230,6 +231,7 @@
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <sheet>
@@ -249,7 +251,7 @@
                             <page name="journal_entries" string="Journal Entries">
                                 <group>
                                     <group>
-                                        <field name="code"/>
+                                        <field name="code" attrs="{'readonly': ['|',('type', 'in', ['bank','cash']),('sequence_id','!=',False)], 'required': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="sequence_id" required="0" groups="base.group_no_one"/>
                                         <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}" required="0" groups="base.group_no_one"/>
@@ -279,11 +281,79 @@
                                     </group>
                                 </group>
                             </page>
+                            <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">
+                                <group>
+                                    <group>
+                                        <field name="bank_acc_number"/>
+                                        <field name="bank_id"/>
+                                        <field name="display_on_footer"/>
+                                    </group>
+                                    <group >
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
+        <record id="view_account_bank_journal_tree" model="ir.ui.view">
+            <field name="name">account.bank.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Account Journal">
+                    <field name='sequence' widget='handle'/>
+                    <field name="name"/>
+                    <field name="display_on_footer"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_bank_journal_form" model="ir.ui.view">
+            <field name="name">account.bank.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form string="Bank Account">
+                    <sheet>
+                        <field name="type" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <div class="oe_title">
+                            <label for="bank_acc_number" required="1" class="oe_edit_only"/>
+                            <h1><field name="bank_acc_number" required="1"/></h1>
+                        </div>
+                        <group col="4">
+                            <field name="bank_id"/>
+                            <field name="display_on_footer"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                            <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_account_bank_journal_form" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
+            <field name="domain">[('type', '=', 'bank')]</field>
+            <field name="context">{'default_type': 'bank', 'default_display_on_footer': True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a bank account.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_account_bank_journal_form" id="menu_action_account_bank_journal_form" parent="account_account_menu"/>
+
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>

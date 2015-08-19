@@ -206,7 +206,7 @@
         # that don't have OpenERP has a parent company, you expect to find,
         # among others, the companies that don't have parent company.
         #
-       
+
         # existing values be treated similarly if we simply check that some
         # existing value belongs to them.
 
@@ -367,52 +367,14 @@
     Equivalent queries, one2many.
 -
     !python {model: res.company }: |
-        # Search the company via its one2many (the one2many must point back at the company).
         company = self.browse(cr, uid, ref('ymltest_company3'))
-        max_currency_id = max(self.pool['res.partner.bank'].search(cr, uid, []))
-        bank_ids1 = self.pool['res.partner.bank'].search(cr, uid, [('acc_number', 'not like', 'probably_unexisting_name')])
-        bank_ids2 = self.pool['res.partner.bank'].search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
-        bank_ids3 = self.pool['res.partner.bank'].search(cr, uid, [('id', 'not in', [])])
-        assert bank_ids1 == bank_ids2 == bank_ids3, 'All 3 results should have be the same: all banks'
-        default_company = self.browse(cr, uid, 1)
 
-        # set manually a bank  to the default company.
-        self.pool['res.partner.bank'].write(cr, uid, bank_ids1, {'company_id': default_company.id})
         # one2many towards same model
         res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])]) # any company having a child of company3 as child
         res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])]) # any company having the first child of company3 as child
-        # one2many towards another model
-        res_3 = self.search(cr, uid, [('bank_ids', 'in', [x.id for x in default_company.bank_ids])]) # companies having a currency of main company
-        res_4 = self.search(cr, uid, [('bank_ids', 'in', [default_company.bank_ids[0].id])]) # companies having first currency of main company
-        res_5 = self.search(cr, uid, [('bank_ids', 'in', default_company.bank_ids[0].id)]) # companies having first currency of main company
-        # res_6 = self.search(cr, uid, [('bank_ids', 'in', [default_company.currency_ids[0].name])]) # TODO
-        res_7 = self.search(cr, uid, [('bank_ids', '=', default_company.bank_ids[0].acc_number)])
-        res_8 = self.search(cr, uid, [('bank_ids', 'like', default_company.bank_ids[0].acc_number)])
-
-        res_9 = self.search(cr, uid, [('bank_ids', 'like', 'probably_unexisting_name')])
-        # self.search(cr, uid, [('bank_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
         assert res_1 == [ref('ymltest_company3')], "res_1"
         assert res_2 == [ref('ymltest_company3')], "res_2"
-        assert res_3 == [1], "res_3"
-        assert res_4 == [1], "res_4"
-        assert res_5 == [1], "res_5"
-        assert res_7 == [1], "res_7"
-        assert res_8 == [1], "res_8"
-        assert res_9 == [], "res_9"
 
-        # get the companies referenced by some currency (this is normally the main company) using a weird negative domain
-        res_10 = self.search(cr, uid, [('bank_ids', 'not like', 'probably_unexisting_name')])
-        res_11 = self.search(cr, uid, [('bank_ids', 'not in', [max_currency_id + 1])])
-        res_12 = self.search(cr, uid, [('bank_ids', '!=', False)])
-        res_13 = self.search(cr, uid, [('bank_ids', 'not in', [])])
-        res_10.sort()
-        res_11.sort()
-        res_12.sort()
-        res_13.sort()
-        assert res_10 == res_11
-        assert res_10 == res_12
-        assert res_10 == res_13
-        
         # try testing real subsets with IN/NOT IN
         res_partner = self.pool.get('res.partner')
         res_users = self.pool.get('res.users')
@@ -443,6 +405,53 @@
         assert res_2 == expected
         assert res_3 == expected
         assert res_4 == expected
+-
+    Equivalent queries, one2many.
+-
+    !python {model: res.currency }: |
+        # Create a currency and a currency rate
+        res_currency = self.pool['res.currency']
+        res_currency_rate = self.pool['res.currency.rate']
+        currency = res_currency.create(cr, uid, {'name': 'ZZZ', 'symbol': 'ZZZ', 'rounding': 1.0})
+        currency_rate = self.pool['res.currency.rate'].create(cr, uid, {'name': '2010-01-01', 'currency_id': currency, 'rate': 1.0})
+
+        # Search the currency via its rates one2many (the one2many must point back at the currency).
+        max_currency_rate_id = max(res_currency_rate.search(cr, uid, []))
+        currency_rate1 = res_currency_rate.search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        currency_rate2 = res_currency_rate.search(cr, uid, [('id', 'not in', [max_currency_rate_id + 1003])])
+        currency_rate3 = res_currency_rate.search(cr, uid, [('id', 'not in', [])])
+        assert currency_rate1 == currency_rate2 == currency_rate3, 'All 3 results should be the same : empty'
+        default_currency = self.browse(cr, uid, 1)
+
+        # one2many towards another model
+        res_3 = self.search(cr, uid, [('rate_ids', 'in', [x.id for x in default_currency.rate_ids])]) # currencies having a rate of main currency
+        res_4 = self.search(cr, uid, [('rate_ids', 'in', [default_currency.rate_ids[0].id])]) # currencies having first rate of main currency
+        res_5 = self.search(cr, uid, [('rate_ids', 'in', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
+        # res_6 = self.search(cr, uid, [('rate_ids', 'in', [default_currency.rate_ids[0].name])])
+        # res_7 = self.search(cr, uid, [('rate_ids', '=', default_currency.rate_ids[0].name)])
+        # res_8 = self.search(cr, uid, [('rate_ids', 'like', default_currency.rate_ids[0].name)])
+
+        res_9 = self.search(cr, uid, [('rate_ids', 'like', 'probably_unexisting_name')])
+        # self.search(cr, uid, [('rate_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
+        assert res_3 == [1], "res_3"
+        assert res_4 == [1], "res_4"
+        assert res_5 == [1], "res_5"
+        # assert res_7 == [1], "res_7"
+        # assert res_8 == [1], "res_8"
+        assert res_9 == [], "res_9"
+
+        # get the currencies referenced by some currency rates using a weird negative domain
+        res_10 = self.search(cr, uid, [('rate_ids', 'not like', 'probably_unexisting_name')])
+        res_11 = self.search(cr, uid, [('rate_ids', 'not in', [max_currency_rate_id + 1])])
+        res_12 = self.search(cr, uid, [('rate_ids', '!=', False)])
+        res_13 = self.search(cr, uid, [('rate_ids', 'not in', [])])
+        res_10.sort()
+        res_11.sort()
+        res_12.sort()
+        res_13.sort()
+        assert res_10 == res_11, 'res_11'
+        assert res_10 == res_12, 'res_12'
+        assert res_10 == res_13, 'res_13'
 -
     Unaccent. Create a company with an accent in its name.
 -

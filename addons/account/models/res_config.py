@@ -174,14 +174,9 @@ class AccountConfigSettings(models.TransientModel):
         return True
 
     @api.multi
-    def open_company_form(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Configure your Company',
-            'res_model': 'res.company',
-            'res_id': self.company_id.id,
-            'view_mode': 'form',
-        }
+    def open_bank_accounts(self):
+        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_bank_journal_form')
+        return action_rec.read([])[0]
 
     @api.multi
     def set_transfer_account(self):

@@ -25,7 +25,7 @@
                         <tr>
                             <td>
                                 <p class="text-center">
-                                    <strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-esc="o.company_id.bank_ids and o.company_id.bank_ids[0].acc_number"/> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>
+                                    <strong>Payment Advice from <span t-esc="o.name"/> A/C no. <span t-esc="o.company_id.partner_id.bank_ids and o.company_id.partner_id.bank_ids[0].acc_number"/> form period  <span t-esc="get_month(o.date)['from_name']"/> to <span t-esc="get_month(o.date)['to_name']"/></strong>
                                 </p>
                             </td>
                         </tr>

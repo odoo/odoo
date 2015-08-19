@@ -13,6 +13,12 @@
             <field name="country_id" ref="be"/>
         </record>
 
+        <record model="res.partner.bank" id="bank_partner_demo">
+            <field name="acc_number">60-16-13 31926819</field>
+            <field name="acc_type">bank</field>
+            <field name="partner_id" ref="partner_demo" />
+        </record>
+
         <record id="main_partner" model="res.partner">
             <field name="name">YourCompany</field>
             <field name="street">1725 Slough Ave.</field>
@@ -27,12 +33,6 @@
         <record id="main_company" model="res.company">
             <field name="name">YourCompany</field>
         </record>
-
-        <record model="res.partner.bank" id="bank_company">
-            <field name="acc_number">BE123456789</field>
-            <field name="partner_id" ref="main_partner" />
-        </record>
-
 
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>
