@@ -182,11 +182,7 @@ class ir_model(osv.osv):
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
-            ctx = dict(context,
-                field_name=vals['name'],
-                field_state='manual',
-                select=vals.get('select_level', '0'),
-                update_custom_fields=True)
+            ctx = dict(context, update_custom_fields=True)
             model._auto_init(cr, ctx)
             model._auto_end(cr, ctx) # actually create FKs!
             RegistryManager.signal_registry_change(cr.dbname)
@@ -454,11 +450,7 @@ class ir_model_fields(osv.osv):
                 self.pool.setup_models(cr, partial=(not self.pool.ready))
                 # update database schema
                 model = self.pool[vals['model']]
-                ctx = dict(context,
-                    field_name=vals['name'],
-                    field_state='manual',
-                    select=vals.get('select_level', '0'),
-                    update_custom_fields=True)
+                ctx = dict(context, update_custom_fields=True)
                 model._auto_init(cr, ctx)
                 model._auto_end(cr, ctx) # actually create FKs!
                 RegistryManager.signal_registry_change(cr.dbname)
@@ -571,10 +563,7 @@ class ir_model_fields(osv.osv):
             # was called earlier, they will be in-sync before the _auto_init.
             # Anything we don't update in _columns now will be reset from
             # the model into ir.model.fields (db).
-            ctx = dict(context,
-                select=vals.get('select_level', '0'),
-                update_custom_fields=True,
-            )
+            ctx = dict(context, update_custom_fields=True)
 
             for obj, model_patches in patches.iteritems():
                 for field_name, field_patches in model_patches.iteritems():

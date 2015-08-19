@@ -404,14 +404,6 @@ class BaseModel(object):
                     raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
 
-            # When its a custom field,it does not contain f.select
-            if context.get('field_state', 'base') == 'manual':
-                if context.get('field_name', '') == k:
-                    vals['select_level'] = context.get('select', '0')
-                #setting value to let the problem NOT occur next time
-                elif k in cols:
-                    vals['select_level'] = cols[k]['select_level']
-
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -672,6 +664,7 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
+                'index': bool(int(field['select_level'])),
                 'copy': bool(field['copy']),
                 'related': field['related'],
                 'required': bool(field['required']),
