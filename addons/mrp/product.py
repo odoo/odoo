@@ -7,13 +7,11 @@ from openerp.osv import fields, osv
 class product_template(osv.osv):
     _inherit = "product.template"
     def _bom_orders_count(self, cr, uid, ids, field_name, arg, context=None):
-        Bom = self.pool('mrp.bom')
-        res = {}
-        for product_tmpl_id in ids:
-            nb = Bom.search_count(cr, uid, [('product_tmpl_id', '=', product_tmpl_id)], context=context)
-            res[product_tmpl_id] = {
-                'bom_count': nb,
-            }
+        res = dict([(id, {'bom_count': 0}) for id in ids])
+        bom_data = self.pool['mrp.bom'].read_group(cr, uid, [('product_tmpl_id', 'in', ids)], ['product_tmpl_id'], ['product_tmpl_id'], context=context)
+        for bom in bom_data:
+            product_tmpl_id = bom['product_tmpl_id'][0]
+            res[product_tmpl_id]['bom_count'] = bom['product_tmpl_id_count']
         return res
 
     def _bom_orders_count_mo(self, cr, uid, ids, name, arg, context=None):
