@@ -218,17 +218,16 @@ class account_payment(models.Model):
     def _onchange_partner_type(self):
         # Set partner_id domain
         if self.partner_type:
-            if getattr(self.partner_id, self.partner_type) is False:
-                self.partner_id = False
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
-        # Set default partner type for the payment type
-        if self.payment_type == 'inbound':
-            self.partner_type = 'customer'
-        elif self.payment_type == 'outbound':
-            self.partner_type = 'supplier'
+        if not self.invoice_ids:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            elif self.payment_type == 'outbound':
+                self.partner_type = 'supplier'
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
@@ -240,15 +239,15 @@ class account_payment(models.Model):
     @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
-        invoice_ids = rec.get('invoice_ids') and rec['invoice_ids'][0][2] or None
-        if invoice_ids and len(invoice_ids) == 1:
-            invoice = self.env['account.invoice'].browse(invoice_ids)
-            rec['communication'] = invoice.reference
-            rec['currency_id'] = invoice.currency_id.id
-            rec['payment_type'] = invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type]
-            rec['partner_id'] = invoice.partner_id.id
-            rec['amount'] = invoice.residual_signed
+        invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
+        if invoice_defaults and len(invoice_defaults) == 1:
+            invoice = invoice_defaults[0]
+            rec['communication'] = invoice['reference']
+            rec['currency_id'] = invoice['currency_id'][0]
+            rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
+            rec['partner_id'] = invoice['partner_id'][0]
+            rec['amount'] = invoice['residual']
         return rec
 
     def _get_invoices(self):
