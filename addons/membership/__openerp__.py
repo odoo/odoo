@@ -34,9 +34,7 @@ invoice and send propositions for membership renewal.
     ],
     'website': 'https://www.odoo.com/page/community-builder',
     'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/test_membership.yml',
-        'test/membership_demo.yml'
+        '../account/test/account_minimal_test.xml'
     ],
     'installable': True,
 }

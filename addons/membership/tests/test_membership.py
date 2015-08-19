@@ -60,7 +60,7 @@ class TestMembership(TestMembershipCommon):
         self.assertEqual(
             self.partner_2.membership_state, 'free',
             'membership: free member customer should be in free state')
-        self.partner_2.write({'free_member': False, 'associate_member': self.partner_1.id})
+        self.partner_2.write({'free_member': False, 'associate_member_id': self.partner_1.id})
         self.assertEqual(
             self.partner_2.membership_state, 'paid',
             'membership: associated customer should be in paid state')
