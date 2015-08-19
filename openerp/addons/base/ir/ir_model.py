@@ -502,7 +502,7 @@ class ir_model_fields(osv.osv):
                         raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')
-                    column_rename = (obj._table, item.name, vals['name'])
+                    column_rename = (obj._table, item.name, vals['name'], bool(int(item.select_level)))
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
@@ -519,8 +519,11 @@ class ir_model_fields(osv.osv):
         self.pool.clear_manual_fields()
 
         if column_rename:
-            # rename column in database
-            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename)
+            # rename column in database, and its corresponding index if present
+            table, oldname, newname, index = column_rename
+            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (table, oldname, newname))
+            if index:
+                cr.execute('ALTER INDEX "%s_%s_index" RENAME TO "%s_%s_index"' % (table, oldname, table, newname))
 
         if column_rename or patched_models:
             # setup models, this will reload all manual fields in registry
