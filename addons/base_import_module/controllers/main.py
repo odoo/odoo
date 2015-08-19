@@ -17,7 +17,7 @@ class ImportModule(Controller):
     def check_user(self, uid=None):
         if uid is None:
             uid = request.uid
-        is_admin = request.registry['res.users'].has_group(request.cr, uid, 'base.group_erp_manager')
+        is_admin = request.registry['res.users']._is_admin(request.cr, uid, [uid])
         if not is_admin:
             raise openerp.exceptions.AccessError("Only administrators can upload a module")
 
