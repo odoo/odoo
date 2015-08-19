@@ -177,8 +177,7 @@ class ir_model(osv.osv):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
-            # add model in registry
-            self.instanciate(cr, user, vals['model'], vals.get('transient', False), context)
+            # setup models; this automatically adds model in registry
             self.pool.setup_models(cr, partial=(not self.pool.ready))
             # update database schema
             model = self.pool[vals['model']]
@@ -406,7 +405,7 @@ class ir_model_fields(osv.osv):
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
         if not context.get(MODULE_UNINSTALL_FLAG):
-            # The field we just deleted might have be inherited, and registry is
+            # The field we just deleted might be inherited, and the registry is
             # inconsistent in this case; therefore we reload the registry.
             cr.commit()
             api.Environment.reset()
@@ -441,12 +440,7 @@ class ir_model_fields(osv.osv):
             self.pool.clear_manual_fields()
 
             if vals['model'] in self.pool:
-                model = self.pool[vals['model']]
-                if vals['model'].startswith('x_') and vals['name'] == 'x_name':
-                    model._rec_name = 'x_name'
-
-                # re-initialize model in registry
-                model.__init__(self.pool, cr)
+                # setup models; this re-initializes model in registry
                 self.pool.setup_models(cr, partial=(not self.pool.ready))
                 # update database schema
                 model = self.pool[vals['model']]
@@ -474,72 +468,46 @@ class ir_model_fields(osv.osv):
         # if set, *one* column can be renamed here
         column_rename = None
 
-        # field patches {model: {field_name: {prop_name: prop_value, ...}, ...}, ...}
-        patches = defaultdict(lambda: defaultdict(dict))
-
-        # static table of properties
-        model_props = [ # (our-name, fields.prop, set_fn)
-            ('field_description', 'string', tools.ustr),
-            ('help', 'help', lambda s: s and tools.ustr(s) or None),
-            ('required', 'required', bool),
-            ('readonly', 'readonly', bool),
-            ('domain', 'domain', eval),
-            ('size', 'size', int),
-            ('on_delete', 'ondelete', str),
-            ('translate', 'translate', bool),
-            ('select_level', 'index', lambda x: bool(int(x))),
-            ('selection', 'selection', eval),
-        ]
-        if context.get('lang') not in (None, 'en_US'):
-            # do not patch registry with translations of field string and help
-            model_props = model_props[2:]
+        # names of the models to patch
+        patched_models = set()
 
         if vals and ids:
-            checked_selection = False # need only check it once, so defer
+            # check selection if given
+            if vals.get('selection'):
+                self._check_selection(cr, user, vals['selection'], context=context)
 
             for item in self.browse(cr, user, ids, context=context):
-                obj = self.pool.get(item.model)
-                field = getattr(obj, '_fields', {}).get(item.name)
-
                 if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                         'Please modify them through Python code, '
                                         'preferably through a custom addon!'))
 
-                if item.ttype == 'selection' and 'selection' in vals \
-                        and not checked_selection:
-                    self._check_selection(cr, user, vals['selection'], context=context)
-                    checked_selection = True
-
-                final_name = item.name
-                if 'name' in vals and vals['name'] != item.name:
-                    # We need to rename the column
-                    if column_rename:
-                        raise UserError(_('Can only rename one column at a time!'))
-                    if vals['name'] in obj._columns:
-                        raise UserError(_('Cannot rename column to %s, because that column already exists!') % vals['name'])
-                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
-                        raise UserError(_('New column name must still start with x_ , because it is a custom field!'))
-                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
-                        raise ValueError('Invalid character in column name')
-                    column_rename = (obj, (obj._table, item.name, vals['name']))
-                    final_name = vals['name']
-
-                if 'model_id' in vals and vals['model_id'] != item.model_id.id:
+                if vals.get('model_id', item.model_id.id) != item.model_id.id:
                     raise UserError(_("Changing the model of a field is forbidden!"))
 
-                if 'ttype' in vals and vals['ttype'] != item.ttype:
-                    raise UserError(_("Changing the type of a column is not yet supported. " "Please drop it and create it again!"))
+                if vals.get('ttype', item.ttype) != item.ttype:
+                    raise UserError(_("Changing the type of a field is not yet supported. "
+                                      "Please drop it and create it again!"))
+
+                obj = self.pool.get(item.model)
+                field = getattr(obj, '_fields', {}).get(item.name)
+
+                if vals.get('name', item.name) != item.name:
+                    # We need to rename the column
+                    if column_rename:
+                        raise UserError(_('Can only rename one field at a time!'))
+                    if vals['name'] in obj._fields:
+                        raise UserError(_('Cannot rename field to %s, because that field already exists!') % vals['name'])
+                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                        raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
+                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
+                        raise ValueError('Invalid character in column name')
+                    column_rename = (obj._table, item.name, vals['name'])
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
                 if obj is not None and field is not None:
-                    # find out which properties (per model) we need to update
-                    for field_name, prop_name, func in model_props:
-                        if field_name in vals:
-                            prop_value = func(vals[field_name])
-                            if getattr(field, prop_name) != prop_value:
-                                patches[obj][final_name][prop_name] = prop_value
+                    patched_models.add(obj._name)
 
         # These shall never be written (modified)
         for column_name in ('model_id', 'model', 'state'):
@@ -548,36 +516,25 @@ class ir_model_fields(osv.osv):
 
         res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
 
+        self.pool.clear_manual_fields()
+
         if column_rename:
-            obj, rename = column_rename
-            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % rename)
-            # This is VERY risky, but let us have this feature:
-            # we want to change the key of field in obj._fields and obj._columns
-            field = obj._pop_field(cr, user, rename[1], context=context)
-            obj._add_field(cr, user, rename[2], field, context=context)
+            # rename column in database
+            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename)
+
+        if column_rename or patched_models:
+            # setup models, this will reload all manual fields in registry
             self.pool.setup_models(cr, partial=(not self.pool.ready))
 
-        if patches:
-            # We have to update _columns of the model(s) and then call their
-            # _auto_init to sync the db with the model. Hopefully, since write()
-            # was called earlier, they will be in-sync before the _auto_init.
-            # Anything we don't update in _columns now will be reset from
-            # the model into ir.model.fields (db).
+        if patched_models:
+            # update the database schema of the models to patch
             ctx = dict(context, update_custom_fields=True)
-
-            for obj, model_patches in patches.iteritems():
-                for field_name, field_patches in model_patches.iteritems():
-                    # update field properties, and adapt corresponding column
-                    field = obj._fields[field_name]
-                    attrs = dict(field.args, **field_patches)
-                    obj._add_field(cr, user, field_name, field.new(**attrs), context=context)
-
-                # update database schema
-                self.pool.setup_models(cr, partial=(not self.pool.ready))
+            for model_name in patched_models:
+                obj = self.pool[model_name]
                 obj._auto_init(cr, ctx)
                 obj._auto_end(cr, ctx) # actually create FKs!
 
-        if column_rename or patches:
+        if column_rename or patched_models:
             RegistryManager.signal_registry_change(cr.dbname)
 
         return res
