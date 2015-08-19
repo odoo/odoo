@@ -271,19 +271,6 @@ class AccountJournal(models.Model):
             if self.bank_account_id.partner_id != self.company_id.partner_id:
                 raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
 
-    # FIXME: if you set bank_statements_source and bank_acc_number at the same time, the constraint doesn't get a value for bank_acc_number and triggers a false positive
-    # @api.one
-    # @api.constrains('type', 'bank_statements_source', 'bank_account_id', 'bank_acc_number')
-    # def _check_bank_statements_source(self):
-    #     if self.type == 'bank' and not self.bank_account_id and not self.bank_acc_number and self.bank_statements_source and self.bank_statements_source != 'manual':
-    #         bank_st_src_label = next(val[1] for val in self._fields['bank_statements_source']._description_selection(self.env) if val[0] == self.bank_statements_source)
-    #         raise ValidationError(_('You cannot use "%s" as bank feed without configuring a bank account.') % bank_st_src_label)
-
-    @api.onchange('bank_acc_number')
-    def onchange_bank_acc_number(self):
-        if self.bank_acc_number:
-            self.name = _('Bank') + ' ' + self.bank_acc_number
-
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
         if not self.default_credit_account_id:
