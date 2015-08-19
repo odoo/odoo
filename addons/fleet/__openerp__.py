@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Fleet Management',
-    'version' : '0.1',
-    'author' : 'OpenERP S.A.',
+    'name': 'Fleet Management',
+    'version': '0.1',
+    'author': 'Odoo S.A.',
     'sequence': 110,
     'category': 'Managing vehicles and contracts',
-    'website' : 'https://www.odoo.com/page/fleet',
-    'summary' : 'Vehicle, leasing, insurances, costs',
-    'description' : """
+    'website': 'https://www.odoo.com/page/fleet',
+    'summary': 'Vehicle, leasing, insurances, costs',
+    'description': """
 Vehicle, leasing, insurances, cost
 ==================================
 With this module, Odoo helps you managing all your vehicles, the
 contracts associated to those vehicle as well as services, fuel log
-entries, costs and many other features necessary to the management 
+entries, costs and many other features necessary to the management
 of your fleet of vehicle(s)
 
 Main Features
@@ -25,22 +25,21 @@ Main Features
 * Show all costs associated to a vehicle or to a type of service
 * Analysis graph for costs
 """,
-    'depends' : [
+    'depends': [
         'base',
         'mail',
         'board'
     ],
-    'data' : [
+    'data': [
         'security/fleet_security.xml',
         'security/ir.model.access.csv',
-        'fleet_view.xml',
-        'fleet_cars.xml',
-        'fleet_data.xml',
-        'fleet_board_view.xml',
+        'views/fleet_views.xml',
+        'data/fleet_cars_data.xml',
+        'data/fleet_data.xml',
     ],
 
-    'demo': ['fleet_demo.xml'],
+    'demo': ['data/fleet_demo_data.xml'],
 
-    'installable' : True,
-    'application' : True,
+    'installable': True,
+    'application': True,
 }

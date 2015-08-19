@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
-<openerp>
-    <data noupdate="0">
-        <record model="ir.module.category" id="module_fleet_category">
+<odoo>
+        <record id="module_fleet_category" model="ir.module.category">
             <field name="name">Fleet</field>
             <field name="sequence">17</field>
         </record>
@@ -15,7 +14,6 @@
             <field name="category_id" ref="module_fleet_category"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
-    </data>
 
     <data noupdate="1">
         <record id="fleet_user_contract_visibility" model="ir.rule">
@@ -110,4 +108,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

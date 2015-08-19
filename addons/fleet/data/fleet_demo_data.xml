@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
+    <data noupdate="1">
       <!--Users-->
       <record id="base.user_demo" model="res.users">
         <field name="groups_id" eval="[(4, ref('fleet.group_fleet_manager'))]" />
       </record>
 
-      <record id="vehicle_state_inshop" model="fleet.vehicle.state">
+      <record id="vehicle_stage_inshop" model="fleet.vehicle.stage">
         <field name="name">In shop</field>
         <field name="sequence">1</field>
       </record>
 
-      <record id="vehicle_state_active" model="fleet.vehicle.state">
+      <record id="vehicle_stage_active" model="fleet.vehicle.stage">
         <field name="name">Active</field>
         <field name="sequence">2</field>
       </record>
 
-      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
+      <record id="vehicle_stage_inactive" model="fleet.vehicle.stage">
         <field name="name">Inactive</field>
         <field name="sequence">3</field>
       </record>
 
-      <record id="vehicle_state_sold" model="fleet.vehicle.state">
+      <record id="vehicle_stage_sold" model="fleet.vehicle.stage">
         <field name="name">Sold</field>
         <field name="sequence">4</field>
       </record>
@@ -35,7 +35,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.user_demo_res_partner" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -50,7 +50,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_19" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_inactive"/>
+          <field name="stage_id" ref="vehicle_stage_inactive"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
@@ -65,7 +65,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_17" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -80,7 +80,7 @@
           <field name="doors">3</field>
           <field name="driver_id" ref="base.res_partner_address_16" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -95,7 +95,7 @@
           <field name="doors">5</field>
           <field name="driver_id" ref="base.res_partner_address_15" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="stage_id" ref="vehicle_stage_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
@@ -115,7 +115,7 @@
           <field name="liter">40</field>
           <field name="price_per_liter">1.3</field>
           <field name="amount">52</field>
-          <field name="inv_ref">67458</field>
+          <field name="invoice_reference">67458</field>
           <field name="odometer_id" ref="log_odometer_1" />
           <field name="notes">First refueling</field>
       </record>
@@ -134,7 +134,7 @@
           <field name="liter">50</field>
           <field name="price_per_liter">1.3</field>
           <field name="amount">65</field>
-          <field name="inv_ref">455812</field>
+          <field name="invoice_reference">455812</field>
           <field name="odometer_id" ref="log_odometer_2" />
           <field name="notes">Second refueling of the car</field>
       </record>
@@ -153,7 +153,7 @@
           <field name="liter">45</field>
           <field name="price_per_liter">1.32</field>
           <field name="amount">59.4</field>
-          <field name="inv_ref">45199877</field>
+          <field name="invoice_reference">45199877</field>
           <field name="odometer_id" ref="log_odometer_3" />
           <field name="notes">Some notes ...</field>
       </record>
@@ -172,7 +172,7 @@
           <field name="liter">55</field>
           <field name="price_per_liter">1.32</field>
           <field name="amount">72.6</field>
-          <field name="inv_ref">654</field>
+          <field name="invoice_reference">654</field>
           <field name="odometer_id" ref="log_odometer_4" />
           <field name="notes">Some notes</field>
       </record>
@@ -191,7 +191,7 @@
           <field name="liter">40</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">54</field>
-          <field name="inv_ref">55488</field>
+          <field name="invoice_reference">55488</field>
           <field name="odometer_id" ref="log_odometer_5" />
           <field name="notes">Some notes</field>
       </record>
@@ -210,7 +210,7 @@
           <field name="liter">55.8</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
-          <field name="inv_ref">4952</field>
+          <field name="invoice_reference">4952</field>
           <field name="odometer_id" ref="log_odometer_6" />
           <field name="notes">Some notes</field>
       </record>
@@ -229,7 +229,7 @@
           <field name="liter">55.8</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
-          <field name="inv_ref">4952</field>
+          <field name="invoice_reference">4952</field>
           <field name="odometer_id" ref="log_odometer_7" />
           <field name="notes">Some notes</field>
       </record>
@@ -248,7 +248,7 @@
           <field name="liter">47.8</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">64.53</field>
-          <field name="inv_ref">15151</field>
+          <field name="invoice_reference">15151</field>
           <field name="odometer_id" ref="log_odometer_8" />
           <field name="notes">Some notes</field>
       </record>
@@ -267,7 +267,7 @@
           <field name="liter">25</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">33.75</field>
-          <field name="inv_ref">874195</field>
+          <field name="invoice_reference">874195</field>
           <field name="odometer_id" ref="log_odometer_9" />
           <field name="notes">Some notes</field>
       </record>
@@ -286,7 +286,7 @@
           <field name="liter">51.2</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">69.12</field>
-          <field name="inv_ref">4431</field>
+          <field name="invoice_reference">4431</field>
           <field name="odometer_id" ref="log_odometer_10" />
           <field name="notes">Some notes</field>
       </record>
@@ -305,7 +305,7 @@
           <field name="liter">45.36</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">61.236</field>
-          <field name="inv_ref">11234</field>
+          <field name="invoice_reference">11234</field>
           <field name="odometer_id" ref="log_odometer_11" />
           <field name="notes">Some notes</field>
       </record>
@@ -324,7 +324,7 @@
           <field name="liter">53.4</field>
           <field name="price_per_liter">1.37</field>
           <field name="amount">73.158</field>
-          <field name="inv_ref">798846</field>
+          <field name="invoice_reference">798846</field>
           <field name="odometer_id" ref="log_odometer_12" />
           <field name="notes">Some notes</field>
       </record>
@@ -343,7 +343,7 @@
           <field name="liter">48.5</field>
           <field name="price_per_liter">1.37</field>
           <field name="amount">66.445</field>
-          <field name="inv_ref">7954</field>
+          <field name="invoice_reference">7954</field>
           <field name="odometer_id" ref="log_odometer_13" />
           <field name="notes">Some notes</field>
       </record>
@@ -362,7 +362,7 @@
           <field name="liter">35</field>
           <field name="price_per_liter">1.4</field>
           <field name="amount">49</field>
-          <field name="inv_ref">545</field>
+          <field name="invoice_reference">545</field>
           <field name="odometer_id" ref="log_odometer_14" />
           <field name="notes">Some notes</field>
       </record>
@@ -381,7 +381,7 @@
           <field name="liter">45</field>
           <field name="price_per_liter">1.27</field>
           <field name="amount">57.15</field>
-          <field name="inv_ref">5881418</field>
+          <field name="invoice_reference">5881418</field>
           <field name="odometer_id" ref="log_odometer_15" />
           <field name="notes">First refueling</field>
       </record>
@@ -400,7 +400,7 @@
           <field name="liter">30</field>
           <field name="price_per_liter">1.3</field>
           <field name="amount">39</field>
-          <field name="inv_ref">884351</field>
+          <field name="invoice_reference">884351</field>
           <field name="odometer_id" ref="log_odometer_16" />
           <field name="notes">Second refueling of the car</field>
       </record>
@@ -419,7 +419,7 @@
           <field name="liter">52</field>
           <field name="price_per_liter">1.32</field>
           <field name="amount">68.64</field>
-          <field name="inv_ref">984</field>
+          <field name="invoice_reference">984</field>
           <field name="odometer_id" ref="log_odometer_17" />
           <field name="notes">Some notes ...</field>
       </record>
@@ -438,7 +438,7 @@
           <field name="liter">35</field>
           <field name="price_per_liter">1.32</field>
           <field name="amount">46.2</field>
-          <field name="inv_ref">777</field>
+          <field name="invoice_reference">777</field>
           <field name="odometer_id" ref="log_odometer_18" />
           <field name="notes">Some notes</field>
       </record>
@@ -457,7 +457,7 @@
           <field name="liter">55</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">74.25</field>
-          <field name="inv_ref">4454112</field>
+          <field name="invoice_reference">4454112</field>
           <field name="odometer_id" ref="log_odometer_19" />
           <field name="notes">Some notes</field>
       </record>
@@ -476,7 +476,7 @@
           <field name="liter">41.8</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">56.43</field>
-          <field name="inv_ref">98754</field>
+          <field name="invoice_reference">98754</field>
           <field name="odometer_id" ref="log_odometer_20" />
           <field name="notes">Some notes</field>
       </record>
@@ -495,7 +495,7 @@
           <field name="liter">50</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">67.5</field>
-          <field name="inv_ref">4952</field>
+          <field name="invoice_reference">4952</field>
           <field name="odometer_id" ref="log_odometer_21" />
           <field name="notes">Some notes</field>
       </record>
@@ -514,7 +514,7 @@
           <field name="liter">50</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">67.5</field>
-          <field name="inv_ref">8976435</field>
+          <field name="invoice_reference">8976435</field>
           <field name="odometer_id" ref="log_odometer_22" />
           <field name="notes">Some notes</field>
       </record>
@@ -533,7 +533,7 @@
           <field name="liter">50</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">67.5</field>
-          <field name="inv_ref">9564</field>
+          <field name="invoice_reference">9564</field>
           <field name="odometer_id" ref="log_odometer_23" />
           <field name="notes">Some notes</field>
       </record>
@@ -552,7 +552,7 @@
           <field name="liter">20</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">27</field>
-          <field name="inv_ref">975</field>
+          <field name="invoice_reference">975</field>
           <field name="odometer_id" ref="log_odometer_24" />
           <field name="notes">Some notes</field>
       </record>
@@ -571,7 +571,7 @@
           <field name="liter">44.5</field>
           <field name="price_per_liter">1.35</field>
           <field name="amount">60.075</field>
-          <field name="inv_ref">9876</field>
+          <field name="invoice_reference">9876</field>
           <field name="odometer_id" ref="log_odometer_25" />
           <field name="notes">Some notes</field>
       </record>
@@ -590,7 +590,7 @@
           <field name="liter">48.5</field>
           <field name="price_per_liter">1.37</field>
           <field name="amount">66.445</field>
-          <field name="inv_ref">786</field>
+          <field name="invoice_reference">786</field>
           <field name="odometer_id" ref="log_odometer_26" />
           <field name="notes">Some notes</field>
       </record>
@@ -609,7 +609,7 @@
           <field name="liter">55</field>
           <field name="price_per_liter">1.37</field>
           <field name="amount">75.35</field>
-          <field name="inv_ref">895</field>
+          <field name="invoice_reference">895</field>
           <field name="odometer_id" ref="log_odometer_27" />
           <field name="notes">Some notes</field>
       </record>
@@ -628,7 +628,7 @@
           <field name="liter">35</field>
           <field name="price_per_liter">1.4</field>
           <field name="amount">49</field>
-          <field name="inv_ref">545</field>
+          <field name="invoice_reference">545</field>
           <field name="odometer_id" ref="log_odometer_28" />
           <field name="notes">Some notes</field>
       </record>
@@ -645,7 +645,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">4586</field>
+        <field name="invoice_reference">4586</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">Usual vehicle repairing</field>
       </record>
@@ -680,7 +680,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-11-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">4814</field>
+        <field name="invoice_reference">4814</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">After crash repairing</field>
       </record>
@@ -715,7 +715,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-10-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">124</field>
+        <field name="invoice_reference">124</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">Maintenance</field>
       </record>
@@ -726,7 +726,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-10-08</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">20984</field>
+        <field name="invoice_reference">20984</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">Maintenance</field>
       </record>
@@ -737,7 +737,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-25</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">241</field>
+        <field name="invoice_reference">241</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">Maintenance</field>
       </record>
@@ -748,7 +748,7 @@
         <field name="cost_subtype_id" ref="type_service_service_8"/>
         <field name="date">2012-09-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="inv_ref">22513</field>
+        <field name="invoice_reference">22513</field>
         <field name="vendor_id" ref="base.res_partner_13" />
         <field name="notes">Maintenance</field>
       </record>
@@ -943,4 +943,4 @@
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
     </data>
-</openerp>
+</odoo>
