@@ -22,5 +22,5 @@ OpenERP Website CMS
         'data/demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'application': True,
+    'application': False,
 }
