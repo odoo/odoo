@@ -273,7 +273,10 @@ class account_analytic_line(osv.osv):
 
         for (key_id, company_id, currency_id), analytic_lines in invoice_grouping.items():
             # key_id is an account.analytic.account
-            partner = analytic_lines[0].account_id.partner_id  # will be the same for every line
+            account = analytic_lines[0].account_id
+            partner = account.partner_id  # will be the same for every line
+            if (not partner) or not (currency_id):
+                raise osv.except_osv(_('Error!'), _('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
             curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_lines, context=context)
             invoice_context = dict(context,
@@ -288,8 +291,6 @@ class account_analytic_line(osv.osv):
             invoice_lines_grouping = {}
             for analytic_line in analytic_lines:
                 account = analytic_line.account_id
-                if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Error!'), _('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
                 if not analytic_line.to_invoice:
                     raise osv.except_osv(_('Error!'), _('Trying to invoice non invoiceable line for %s.') % (analytic_line.product_id.name))
