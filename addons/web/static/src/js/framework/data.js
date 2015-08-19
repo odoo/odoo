@@ -911,7 +911,7 @@ var BufferedDataSet = DataSetStatic.extend({
         var return_records = function() {
             var records = _.map(ids, function(id) {
                 var cache = _.find(self.cache, function(cache) {return cache.id === id;});
-                return _.extend({}, cache.values, {"id": id}, options.readonly_fields || {});
+                return _.extend({}, cache && cache.values, {"id": id}, options.readonly_fields || {});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
