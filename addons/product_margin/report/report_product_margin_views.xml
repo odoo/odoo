@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="report_product_margin_view_pivot" model="ir.ui.view">
+        <field name="name">report.product.margin.pivot</field>
+        <field name="model">report.product.margin</field>
+        <field name="arch" type="xml">
+            <pivot string="Margin Analysis" disable_linking="True">
+                <field name="invoice_state" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="turnover" type="measure"/>
+                <field name="total_cost" type="measure"/>
+                <field name="total_margin" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="report_product_margin_view_search" model="ir.ui.view">
+        <field name="name">report.product.margin.search</field>
+        <field name="model">report.product.margin</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Analysis">
+                <field name="product_id"/>
+                <field name="product_tmpl_id"/>
+                <group expand="1" string="Group By">
+                    <filter string="Invoice state" name="invoice_state" context="{'group_by': 'invoice_state'}"/>
+                    <filter string="Invoice Date" name="invoice_date" context="{'group_by': 'invoice_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="report_product_margin_action" model="ir.actions.act_window">
+        <field name="name">Product Margin Analysis</field>
+        <field name="res_model">report.product.margin</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot</field>
+        <field name="search_view_id" ref="report_product_margin_view_search"/>
+        <field name="context">{'search_default_invoice_state': 1}</field>
+    </record>
+
+    <menuitem name="Product Margin" action="report_product_margin_action" id="report_product_margin_menu" parent="account.account_reports_management_menu" sequence="20"/>
+
+</odoo>
