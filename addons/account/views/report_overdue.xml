@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="account.report_overdue_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-7">
+                    <span t-field="o.name"/><br/>
+                    <span t-raw="o._address_display(None, None)[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
+                    <span t-field="o.vat"/>
+                </div>
+                <p>
+                    Document: Customer account statement<br/>
+                    Date: <span t-esc="Date"/><br/>
+                    <t t-if="o.ref">Customer ref: <span t-field="o.ref"/></t>
+                </p>
+
+                <p t-if="Lines[o.id]">
+                    <span t-field="res_company.overdue_msg"/>
+                </p>
+
+                <table class="table table-condensed" t-if="Lines[o.id]">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th class="text-center">Ref</th>
+                            <th class="text-center">Maturity Date</th>
+                            <th class="text-right">Due</th>
+                            <th class="text-right">Paid</th>
+                            <th class="text-right">Maturity</th>
+                            <th class="text-center">Excl.</th>
+                        </tr>
+                    </thead>
+                    <tr t-foreach="Lines[o.id]" t-as="line">
+                        <td>
+                            <span t-esc="line['date']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['name']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['ref']"/>
+                        </td>
+                        <td>
+                            <span t-esc="line['date_maturity']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="line['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-center">
+                            <span t-if="line['blocked']">x</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td><strong>Sub-Total :</strong></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['due']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td><strong>Balance :</strong></td>
+                        <td class="text-right">
+                            <span t-esc="Totals[o.id]['due'] - Totals[o.id]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                </table>
+                <p t-if="Totals[o.id]['total']">
+                    Total amount due:
+                    <span t-esc="Totals[o.id]['total']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                </p>
+
+                <p t-if="not Lines[o.id]">
+                    <strong>There is nothing due with this customer.</strong>
+                </p>
+            </div>
+        </div>
+   </t>
+</template>
+
+<template id="report_overdue">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="account.report_overdue_document" t-lang="o.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>
