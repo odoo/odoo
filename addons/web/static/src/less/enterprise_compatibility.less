@@ -240,8 +240,16 @@ div.o_checkbox {
         }
     }
 
-    .o_row > * {
-        width: auto!important; // oe_inline
+    .o_row {
+        > * {
+            width: auto!important; // oe_inline
+        }
+        > div {
+            display: inline-block;
+            + div  {
+                margin-left: 5px;
+            }
+        }
     }
 
     .oe_form label {
