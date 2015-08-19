@@ -395,6 +395,26 @@
           <field name="search_view_id" ref="view_registration_search"/>
         </record>
 
+        <!--MASS MAILING-->
+        <act_window
+            name="Send Email"
+            res_model="mail.compose.message"
+            src_model="event.registration"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+            id="event.action_event_registration_mass_mail"
+            context="{'default_composition_mode': 'mass_mail',
+                      'default_email_to': '{($object.email or \'\')|safe}',
+                      'default_use_template': True,
+                      'default_template_id': ref('event.event_rescheduled_mail'),
+                      }"/>
+
+        <record id="email_template_event_mail" model="mail.template">
+            <field name="ref_ir_act_window" ref="event.action_event_registration_mass_mail"/>
+        </record>
+
         <menuitem name="Attendees"
             id="menu_action_registration" parent="event.event_main_menu"
             action="action_registration" groups="base.group_no_one"/>

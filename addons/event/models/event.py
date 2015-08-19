@@ -120,10 +120,10 @@ class event_event(models.Model):
     date_tz = fields.Selection('_tz_get', string='Timezone', default=lambda self: self.env.user.tz)
     date_begin = fields.Datetime(
         string='Start Date', required=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        track_visibility='onchange', states={'done': [('readonly', True)]})
     date_end = fields.Datetime(
         string='End Date', required=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+        track_visibility='onchange', states={'done': [('readonly', True)]})
     date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
 

@@ -23,6 +23,7 @@ Key Features
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
+        'data/email_template_reschedule.xml',
         'views/event_views.xml',
         'report/report_event_registration_view.xml',
         'report/event_event_templates.xml',

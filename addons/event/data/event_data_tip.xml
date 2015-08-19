@@ -10,4 +10,26 @@
         <field name="highlight_selector">div.oe_button_box:visible > button.oe_event_attendee_button</field>
         <field name="placement">bottom</field>
     </record>
+
+     <record model="web.tip" id="event_tip_2">
+         <field name="title"></field>
+         <field name="description">Click here to select an attendee.</field>
+         <field name="action_id" ref="event.act_event_registration_from_event"/>
+         <field name="model">event.registration</field>
+         <field name="mode">tree</field>
+         <field name="trigger_selector">th.oe_list_record_selector > input</field>
+         <field name="highlight_selector">th.oe_list_record_selector > input:eq(0)</field>
+         <field name="placement">bottom</field>
+    </record>
+
+    <record model="web.tip" id="event_tip_3">
+        <field name="title"></field>
+        <field name="description">Use the 'More' button to send an email to all the selected attendees</field>
+        <field name="action_id" ref="event.act_event_registration_from_event"/>
+        <field name="model">event.registration</field>
+        <field name="mode">tree</field>
+        <field name="trigger_selector">div:not(.o_hidden) > .oe_sidebar</field>
+        <field name="highlight_selector">div:not(.o_hidden) > .oe_sidebar > :eq(1)</field>
+        <field name="placement">bottom</field>
+    </record>
 </odoo>
