@@ -19,9 +19,13 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
