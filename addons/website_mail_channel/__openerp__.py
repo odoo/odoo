@@ -10,7 +10,7 @@ Odoo Mail Group : Mailing List Archives
         """,
     'depends': ['website_mail'],
     'data': [
-        'views/website_mail_channel.xml',
+        'views/website_mail_channel_templates.xml',
         'views/snippets.xml',
     ],
     'qweb': [],
