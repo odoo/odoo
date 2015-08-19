@@ -30,7 +30,7 @@
                                 <field name="email_from" nolabel="1'" readonly="1"
                                         attrs="{'required': [('state', '=', 'email')]}"/>
                                 <p attrs="{'invisible': [('email_from', '!=', False)]}">
-                                    Your template does not defined any email_from. Please update your template.
+                                    Your template does not defined the email address of the sender. Please update your template.
                                 </p>
                             </div>
                             <field name="email_to" readonly="1"/>
