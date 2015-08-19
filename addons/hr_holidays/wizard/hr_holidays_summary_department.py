@@ -1,32 +1,34 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import time
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp import api, fields, models, _
 from openerp.exceptions import UserError
 
-class hr_holidays_summary_dept(osv.osv_memory):
-    _name = 'hr.holidays.summary.dept'
+
+class HrHolidaysSummaryDepartmentWizard(models.TransientModel):
+    _name = 'hr.holidays.summary.department'
     _description = 'HR Leaves Summary Report By Department'
-    _columns = {
-        'date_from': fields.date('From', required=True),
-        'depts': fields.many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id', 'Department(s)'),
-        'holiday_type': fields.selection([('Approved','Approved'),('Confirmed','Confirmed'),('both','Both Approved and Confirmed')], 'Leave Type', required=True)
-    }
 
-    _defaults = {
-         'date_from': lambda *a: time.strftime('%Y-%m-01'),
-         'holiday_type': 'Approved'
-    }
+    date_from = fields.Date(string='From', required=True,
+        default=lambda self: time.strftime('%Y-%m-01'))
+    depts = fields.Many2many('hr.department', 'summary_dept_rel', 'sum_id', 'dept_id',
+        string='Department(s)')
+    holiday_type = fields.Selection([
+        ('approved', 'Approved'),
+        ('confirmed', 'Confirmed'),
+        ('both', 'Both Approved and Confirmed')
+    ], string='Leave Type', required=True, default='approved')
 
-    def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, context=context)[0]
-        if not data['depts']:
+    @api.multi
+    def print_report(self):
+        record = self.read()[0]
+        if not record['depts']:
             raise UserError(_('You have to select at least one Department. And try again.'))
         datas = {
-             'ids': [],
-             'model': 'hr.department',
-             'form': data
-            }
-        return self.pool['report'].get_action(cr, uid, data['depts'], 'hr_holidays.report_holidayssummary', data=datas, context=context)
+            'model': 'hr.department',
+            'form': record
+        }
+        return self.env['report'].get_action(self,
+            'hr_holidays.report_holidayssummary', data=datas)

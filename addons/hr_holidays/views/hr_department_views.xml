@@ -1,0 +1,121 @@
+<odoo>
+    <record id="hr_holidays_action_request_from_department" model="ir.actions.act_window">
+        <field name="name">Leave Request to Approve</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('request_type','=','remove')]</field>
+        <field name="view_id" ref="view_holiday"/>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+
+    <record id="hr_holidays_action_allocation_from_department" model="ir.actions.act_window">
+        <field name="name">Allocation Requests to Approve</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('request_type','=','add')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+
+    <record id="action_hr_holidays_leaves_analysis" model="ir.actions.act_window">
+        <field name="name">Leaves Analysis</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+
+    <record id="action_hr_holidays_leaves_analysis_filtered" model="ir.actions.act_window">
+        <field name="name">Leaves Analysis</field>
+        <field name="res_model">hr.holidays</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="search_view_id" ref="hr_holidays.view_hr_holidays_filter"/>
+    </record>
+
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <field name="leave_to_approve_count"/>
+                    <field name="allocation_to_approve_count"/>
+                    <field name="total_employee"/>
+                    <field name="absence_of_today"/>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
+                    <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
+                        <div class="col-xs-9">
+                            <a name="%(hr_holidays_action_request_from_department)d" type="action"
+                            context="{'default_request_type': 'remove', 'search_default_department_id': [active_id],
+                            'default_department_id': active_id, 'search_default_approve': 1}">
+                            <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
+                        </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <field name="leave_to_approve_count"/>
+                        </div>
+                    </div>
+                    <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row">
+                        <div class="col-xs-9">
+                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action"
+                            context="{'default_request_type': 'add', 'search_default_department_id': [active_id],
+                            'default_department_id': active_id, 'search_default_approve': 1}">
+                                <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            <field name="allocation_to_approve_count"/>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
+                    <div class="col-xs-12 o_kanban_primary_bottom">
+                        <field name="absence_of_today" widget="progress" options="{'title': 'Absence', 'current_value': 'absence_of_today', 'max_value': 'total_employee', 'editable': false}"/>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(hr_holidays_action_request_from_department)d" type="action"
+                                context="{'default_request_type': 'remove', 'search_default_department_id': [active_id],
+                                'default_department_id': active_id, 'search_default_approve': 1}">
+                                <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(hr_holidays_action_allocation_from_department)d" type="action"
+                                context="{'default_request_type': 'add', 'search_default_department_id': [active_id],
+                                'default_department_id': active_id, 'search_default_approve': 1}">
+                                <t t-esc="record.allocation_to_approve_count.raw_value or 0"/> Allocation Requests
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <div class="row">
+                        <div class="col-xs-12 text-left">
+                            <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action"
+                                context="{'search_default_department_id': [active_id], 'default_department_id': active_id}">
+                                Leaves
+                            </a>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

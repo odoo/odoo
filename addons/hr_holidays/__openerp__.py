@@ -5,7 +5,7 @@
 {
     'name': 'Leave Management',
     'version': '1.5',
-    'author': 'OpenERP SA',
+    'author': 'Odoo SA',
     'category': 'Human Resources',
     'sequence': 27,
     'summary': 'Holidays, Allocation and Leave Requests',
@@ -18,7 +18,7 @@ This application controls the holiday schedule of your company. It allows employ
 
 You can configure several kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
 
-You can keep track of leaves in different ways by following reports: 
+You can keep track of leaves in different ways by following reports:
 
 * Leaves Summary
 * Leaves by Department
@@ -28,28 +28,22 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
 """,
     'depends': ['hr', 'calendar', 'resource'],
     'data': [
-        'data/report_paperformat.xml',
+        'security/hr_holidays_security.xml',
         'security/ir.model.access.csv',
-        'security/ir_rule.xml',
-        'hr_holidays_workflow.xml',
-        'hr_holidays_view.xml',
-        'hr_holidays_data.xml',
-        'hr_holidays_report.xml',
+        'data/report_paperformat.xml',
+        'data/hr_holidays_data.xml',
+        'views/hr_holidays_views.xml',
+        'views/hr_employee_views.xml',
+        'views/hr_department_views.xml',
         'views/report_hr_holidays_summary.xml',
+        'views/hr_holidays_workflow.xml',
+        'views/hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',
         'report/available_holidays_view.xml',
         'wizard/hr_holidays_summary_department_view.xml',
         'wizard/hr_holidays_summary_employees_view.xml',
-        'hr_dashboard.xml',
-        ],
-    'demo': ['hr_holidays_demo.xml',],
-    'qweb': [
-        'static/src/xml/*.xml',
     ],
-    'test': ['test/test_hr_holiday.yml',
-             'test/hr_holidays_report.yml',
-    ],
+    'demo': ['data/hr_holidays_demo.xml'],
     'installable': True,
-    'application': True,
-    'auto_install': False,
+    'application': True
 }
