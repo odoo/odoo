@@ -183,7 +183,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 cp_content: _.extend({}, self.control_elements, view_control_elements),
                 hidden: self.flags.headless,
                 searchview: self.searchview,
-                search_view_hidden: view_controller.searchable === false,
+                search_view_hidden: view_controller.searchable === false || view_controller.searchview_hidden,
             };
             self.update_control_panel(cp_status);
 
