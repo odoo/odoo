@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_inherit_product_margin" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+                <button type="action"
+                    class="oe_stat_button"
+                    id="product_margin_button"
+                    icon="fa-line-chart"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                    name="%(product_margin.report_product_margin_action)d"
+                    context="{'search_default_product_tmpl_id': active_id,'default_product_tmpl_id': active_id}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value"><field name="total_margin"/></span>
+                        <span class="o_stat_text">Total Margin</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_inherit_product_margin" model="ir.ui.view">
+        <field name="name">product.product.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <button name="toggle_active" position="before">
+                <button type="action"
+                    class="oe_stat_button"
+                    id="product_margin_button"
+                    icon="fa-line-chart"
+                    name="%(product_margin.report_product_margin_action)d"
+                    context="{'search_default_product_id': active_id,'default_product_id': active_id}">
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value"><field name="total_margin"/></span>
+                        <span class="o_stat_text">Total Margin</span>
+                    </div>
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>
