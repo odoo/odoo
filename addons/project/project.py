@@ -34,7 +34,7 @@ class project_task_type(osv.osv):
         'legend_normal': fields.char(
             'Kanban Ongoing Explanation', translate=True,
             help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
-        'fold': fields.boolean('Folded in Kanban View',
+        'fold': fields.boolean('Folded in Tasks Pipeline',
                                help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
     }

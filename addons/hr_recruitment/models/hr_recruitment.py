@@ -63,7 +63,7 @@ class RecruitmentStage(models.Model):
         'mail.template', "Use template",
         help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.")
     fold = fields.Boolean(
-        "Folded in Kanban View",
+        "Folded in Recruitment Pipe",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
 
 

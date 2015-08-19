@@ -14,7 +14,7 @@ class HrEquipmentStage(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=20)
-    fold = fields.Boolean('Folded in Kanban View')
+    fold = fields.Boolean('Folded in Recruitment Pipe')
 
 
 class HrEquipmentCategory(models.Model):
@@ -40,7 +40,7 @@ class HrEquipmentCategory(models.Model):
         'mail.alias', 'Alias', ondelete='cascade', required=True,
         help="Email alias for this equipment category. New emails will automatically "
         "create new maintenance request for this equipment category.")
-    fold = fields.Boolean(string='Folded in Kanban View', compute='_compute_fold', store=True)
+    fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     @api.multi
     def _compute_equipment_count(self):

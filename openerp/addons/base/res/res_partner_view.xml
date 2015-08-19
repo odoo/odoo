@@ -158,7 +158,6 @@
                                 domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
                                 attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
                                 on_change="onchange_parent_id(parent_id)"/>
-                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </div>
                     </div>
 
@@ -198,6 +197,7 @@
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                         </group>
                     </group>
 
