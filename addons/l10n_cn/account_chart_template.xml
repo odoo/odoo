@@ -10,6 +10,16 @@
 -->
     <data noupdate="True">
 
+        <record id="action_client_l10n_cn_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_cn_menu"/>
+            <field name="state">open</field>
+        </record>
+
 
         <!-- 科目表模板-->
         <record id="cn_root" model="account.account.template">
