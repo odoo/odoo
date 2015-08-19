@@ -14,19 +14,8 @@ class stock_picking(osv.osv):
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
         for picking in self.browse(cr, uid, ids, context=context):
-            total_weight = total_weight_net = 0.00
-
-            for move in picking.move_lines:
-                if move.state != 'cancel':
-                    total_weight += move.weight
-                    total_weight_net += move.weight_net
-
-            res[picking.id] = {
-                                'weight': total_weight,
-                                'weight_net': total_weight_net,
-                              }
+            res[picking.id] = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
         return res
-
 
     def _get_picking_line(self, cr, uid, ids, context=None):
         result = {}
@@ -38,12 +27,7 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume', copy=False),
-        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
-                  store={
-                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
-                 'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
-                 }),
-        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'),
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 40),
                  'stock.move': (_get_picking_line, ['state', 'picking_id', 'product_id','product_uom_qty','product_uom'], 40),
@@ -93,6 +77,7 @@ class stock_picking(osv.osv):
             fpos = picking.sale_id.fiscal_position_id
         elif picking.partner_id:
             fpos = partner.property_account_position_id
+        # TDE FIXME: spotted undefined variable
         account_id = fpos_obj.map_account(cr, uid, fpos, account_id, context=context)
         taxes_ids = fpos_obj.map_tax(cr, uid, fpos, taxes, context=context)
 
@@ -136,28 +121,15 @@ class stock_move(osv.osv):
 
     def _cal_move_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
-        uom_obj = self.pool.get('product.uom')
         for move in self.browse(cr, uid, ids, context=context):
-            weight = weight_net = 0.00
+            weight = 0.00
             if move.product_id.weight > 0.00:
-                converted_qty = move.product_qty
-                weight = (converted_qty * move.product_id.weight)
-
-                if move.product_id.weight_net > 0.00:
-                    weight_net = (converted_qty * move.product_id.weight_net)
-
-            res[move.id] =  {
-                            'weight': weight,
-                            'weight_net': weight_net,
-                            }
+                weight = move.product_qty * move.product_id.weight
+            res[move.id] = weight
         return res
 
     _columns = {
-        'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
-                  store={
-                 'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
-                 }),
-        'weight_net': fields.function(_cal_move_weight, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+        'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'),
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_uom_qty', 'product_uom'], 30),
                  }),

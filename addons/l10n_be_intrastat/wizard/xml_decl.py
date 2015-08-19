@@ -313,9 +313,9 @@ class xml_decl(osv.TransientModel):
             if (not inv_line.uos_id.category_id
                     or not inv_line.product_id.uom_id.category_id
                     or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):
-                weight = inv_line.product_id.weight_net * inv_line.quantity
+                weight = inv_line.product_id.weight * inv_line.quantity
             else:
-                weight = (inv_line.product_id.weight_net *
+                weight = (inv_line.product_id.weight *
                           inv_line.quantity * inv_line.uos_id.factor)
             if (not inv_line.uos_id.category_id or not inv_line.product_id.uom_id.category_id
                     or inv_line.uos_id.category_id.id != inv_line.product_id.uom_id.category_id.id):

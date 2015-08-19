@@ -4338,7 +4338,6 @@ class stock_warehouse_orderpoint(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, copy=False),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
-        'logic': fields.selection([('max', 'Order to Max'), ('price', 'Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '=', 'product')]),
@@ -4367,7 +4366,6 @@ class stock_warehouse_orderpoint(osv.osv):
         'active': lambda *a: 1,
         'lead_days': lambda *a: 1,
         'lead_type': lambda *a: 'supplier',
-        'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
         'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').next_by_code(cr, uid, 'stock.orderpoint') or '',
         'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),

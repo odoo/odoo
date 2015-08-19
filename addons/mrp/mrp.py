@@ -10,7 +10,6 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools import float_compare, float_is_zero
 from openerp.tools.translate import _
 from openerp import tools, SUPERUSER_ID
-from openerp.addons.product import _common
 from openerp.exceptions import UserError, AccessError
 
 
@@ -276,7 +275,10 @@ class mrp_bom(osv.osv):
 
         def _factor(factor, product_efficiency, product_rounding):
             factor = factor / (product_efficiency or 1.0)
-            factor = _common.ceiling(factor, product_rounding)
+            if product_rounding:
+                factor = tools.float_round(factor,
+                                           precision_rounding=product_rounding,
+                                           rounding_method='UP')
             if factor < product_rounding:
                 factor = product_rounding
             return factor

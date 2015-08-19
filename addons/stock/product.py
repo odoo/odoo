@@ -235,7 +235,6 @@ class product_product(osv.osv):
                  "or any of its children.\n"
                  "Otherwise, this includes goods stored in any Stock Location "
                  "with 'internal' type."),
-        'qty_available2': fields.related('qty_available', type="float", relation="product.product", string="On Hand"),
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float', digits_compute=dp.get_precision('Product Unit of Measure'),
             string='Forecast Quantity',
@@ -273,8 +272,6 @@ class product_product(osv.osv):
                  "any of its children.\n"
                  "Otherwise, this includes goods leaving any Stock "
                  "Location with 'internal' type."),
-        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
-        'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
         'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),
         'reordering_min_qty': fields.function(_compute_nbr_reordering_rules, type='float', multi=True),
@@ -397,7 +394,6 @@ class product_template(osv.osv):
 
     _columns = {
         'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
-        'qty_available2': fields.related('qty_available', type="float", relation="product.template", string="On Hand"),
         'property_stock_procurement': fields.property(
             type='many2one',
             relation='stock.location',
@@ -417,10 +413,8 @@ class product_template(osv.osv):
             domain=[('usage','like','inventory')],
             help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."),
         'sale_delay': fields.float('Customer Lead Time', help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
-        'loc_rack': fields.char('Rack', size=16),
-        'loc_row': fields.char('Row', size=16),
-        'loc_case': fields.char('Case', size=16),
         'tracking': fields.selection(selection=[('serial', 'By Unique Serial Number'), ('lot', 'By Lots'), ('none', 'No Tracking')], string="Tracking", required=True),
+        'description_picking': fields.text('Description on Picking', translate=True),
         # sum of product variant qty
         # 'reception_count': fields.function(_product_available, multi='qty_available',
         #     fnct_search=_search_product_quantity, type='float', string='Quantity On Hand'),
@@ -434,7 +428,8 @@ class product_template(osv.osv):
             fnct_search=_search_product_quantity, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_available, multi='qty_available', digits_compute=dp.get_precision('Product Unit of Measure'),
             fnct_search=_search_product_quantity, type='float', string='Outgoing'),
-        
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
+        'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         'route_ids': fields.many2many('stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes', domain="[('product_selectable', '=', True)]",
                                     help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,..."),
         'nbr_reordering_rules': fields.function(_compute_nbr_reordering_rules, string='Reordering Rules', type='integer', multi=True),

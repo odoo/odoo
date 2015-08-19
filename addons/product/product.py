@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import math
 import re
 import time
-from _common import ceiling
-
 
 from openerp import api, tools, SUPERUSER_ID
 from openerp.osv import osv, fields, expression
@@ -478,8 +475,7 @@ class product_template(osv.osv):
                                           help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                 "Expressed in the default unit of measure of the product..", groups="base.group_user", store=True),
         'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store=True),
-        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg.", store=True),
-        'weight_net': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg.", store=True),
+        'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store=True),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
@@ -693,8 +689,6 @@ class product_template(osv.osv):
             related_vals['volume'] = vals['volume']
         if vals.get('weight'):
             related_vals['weight'] = vals['weight']
-        if vals.get('weight_net'):
-            related_vals['weight_net'] = vals['weight_net']
         if related_vals:
             self.write(cr, uid, product_template_id, related_vals, context=context)
 
@@ -952,8 +946,7 @@ class product_product(osv.osv):
                                                "Expressed in the default unit of measure of the product.",
                                           groups="base.group_user", string="Cost Price"),
         'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
-        'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
     }
 
     _defaults = {

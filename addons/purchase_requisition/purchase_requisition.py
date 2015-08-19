@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
 
@@ -369,7 +367,16 @@ class product_template(osv.osv):
     _inherit = 'product.template'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Call for Tenders', help="Check this box to generate Call for Tenders instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.selection(
+            [('rfq', 'Create a draft purchase order'),
+             ('tenders', 'Propose a call for tenders')],
+            string='Procurement',
+            help="Check this box to generate Call for Tenders instead of generating "
+                 "requests for quotation from procurement."),
+    }
+
+    _defaults = {
+        'purchase_requisition': 'rfq',
     }
 
 
@@ -386,7 +393,7 @@ class procurement_order(osv.osv):
         res = {}
         for procurement in self.browse(cr, uid, ids, context=context):
             res[procurement.id] = False
-            if procurement.product_id.purchase_requisition:
+            if procurement.product_id.purchase_requisition == 'tenders':
                 warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
                 requisition_id = requisition_obj.create(cr, uid, {
                     'origin': procurement.origin,
@@ -411,7 +418,7 @@ class procurement_order(osv.osv):
         return res
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
+        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition == 'tenders':
             if procurement.requisition_id.state == 'done':
                 if any([purchase.shipped for purchase in procurement.requisition_id.purchase_ids]):
                     return True

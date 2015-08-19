@@ -126,13 +126,6 @@
                         <field name="virtual_available"/>
                     </group>
                 </group>
-                <group name="status" position="after">
-                    <group name="store" string="Storage Location" attrs="{'invisible':[('type','=','service')]}">
-                        <field name="loc_rack"/>
-                        <field name="loc_row"/>
-                        <field name="loc_case"/>
-                    </group>
-                </group>
                 <group name="status" position="before">
                     <group name="lot" groups="stock.group_production_lot" string="Lots" attrs="{'invisible':[('type','=','service')]}">
                         <field name="tracking" on_change="onchange_tracking(tracking)" widget="radio"/>
@@ -224,7 +217,7 @@
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                        <field name="qty_available2" widget="statinfo"/>
+                        <field name="qty_available" widget="statinfo"/>
                     </button>
                    <button class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action"
@@ -257,7 +250,7 @@
                            name="action_open_quants"
                            icon="fa-building-o"
                            type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
-                        <field name="qty_available2" widget="statinfo"/>
+                        <field name="qty_available" widget="statinfo"/>
                    </button>
                    <button class="oe_stat_button" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_stat_button" name="action_view_orderpoints" type="object"

@@ -37,7 +37,6 @@
                     <field name="standard_price"/>
                     <field name="volume"/>
                     <field name="weight"/>
-                    <field name="weight_net"/>
                     <field name="categ_id"/>
                     <field name="type"/>
                     <field name="state"/>
@@ -114,7 +113,6 @@
                                     <group name="weight" string="Weights" attrs="{'invisible':['|', ('type','=','service'), ('product_variant_count','>',1)]}">
                                         <field digits="(14, 3)" name="volume"/>
                                         <field name="weight"/>
-                                        <field name="weight_net"/>
                                     </group>
                                 </group>
                                 <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">
@@ -252,7 +250,6 @@
                                 <group name="weight" string="Weights">
                                     <field digits="(14, 3)" name="volume"/>
                                     <field digits="(14, 3)" name="weight"/>
-                                    <field digits="(14, 3)" name="weight_net"/>
                                 </group>
                             </group>
                         </group>
@@ -453,7 +450,6 @@
                     <group name="weight" string="Weights" attrs="{'invisible':['|', ('type','=','service'), ('product_variant_count','=',1)]}">
                         <field digits="(14, 3)" name="volume"/>
                         <field digits="(14, 3)" name="weight"/>
-                        <field digits="(14, 3)" name="weight_net"/>
                     </group>
                 </group>
                 <xpath expr="//div[@class='oe_title']" position="inside">
