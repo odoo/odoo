@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.osv import osv
+from openerp import api, models
 
 
-class change_production_qty(osv.osv_memory):
+class ChangeProductionQty(models.TransientModel):
     _inherit = 'change.production.qty'
 
-    def _update_product_to_produce(self, cr, uid, prod, qty, context=None):
-        bom_obj = self.pool.get('mrp.bom')
-        move_lines_obj = self.pool.get('stock.move')
-        prod_obj = self.pool.get('mrp.production')
-        for m in prod.move_created_ids:
-            if m.product_id.id == prod.product_id.id:
-                move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': qty})
-            else:
-                for sub_product_line in prod.bom_id.sub_products:
-                    if sub_product_line.product_id.id == m.product_id.id:
-                        factor = prod_obj._get_subproduct_factor(cr, uid, prod.id, m.id, context=context)
-                        subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty * factor or sub_product_line.product_qty
-                        move_lines_obj.write(cr, uid, [m.id], {'product_uom_qty': subproduct_qty})
+    @api.model
+    def _update_product_to_produce(self, production, qty):
+        for move in production.move_created_ids:
+            if move.product_id.id == production.product_id.id:
+                move.write({'product_uom_qty': qty})
+                continue
+            for sub_product_line in production.bom_id.sub_products_ids.filtered(lambda line: line.product_id.id == move.product_id.id):
+                factor = production._get_subproduct_factor(move.id)
+                subproduct_qty = sub_product_line.subproduct_type == 'variable' and qty *\
+                    factor or sub_product_line.product_qty
+                move.write({'product_uom_qty': subproduct_qty})

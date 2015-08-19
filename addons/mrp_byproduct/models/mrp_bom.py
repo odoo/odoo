@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.osv import fields
-from openerp.osv import osv
+from openerp import fields, models
 
 
-class mrp_bom(osv.osv):
-    _name = 'mrp.bom'
-    _description = 'Bill of Material'
+class MrpBom(models.Model):
     _inherit = 'mrp.bom'
 
-    _columns = {
-        'sub_products': fields.one2many('mrp.subproduct', 'bom_id', 'Byproducts', copy=True),
-    }
+    sub_products_ids = fields.One2many('mrp.subproduct', inverse_name='bom_id', string='Byproducts', copy=True, oldname='sub_products')
