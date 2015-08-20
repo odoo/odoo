@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
+from datetime import datetime
 from dateutil import relativedelta
 
-from openerp import tools, SUPERUSER_ID
-from openerp.addons.web import http
-from openerp.addons.website.models.website import slug
-from openerp.addons.web.http import request
+from odoo import http, fields
+from odoo.http import request
+from odoo.addons.website.models.website import slug
 
 
 class MailGroup(http.Controller):
@@ -37,46 +37,36 @@ class MailGroup(http.Controller):
 
     @http.route("/groups", type='http', auth="public", website=True)
     def view(self, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        group_obj = request.registry.get('mail.channel')
-        mail_message_obj = request.registry.get('mail.message')
-        group_ids = group_obj.search(cr, uid, [('alias_id', '!=', False), ('alias_id.alias_name', '!=', False)], context=context)
-        groups = group_obj.browse(cr, uid, group_ids, context)
+        groups = request.env['mail.channel'].search([('alias_id.alias_name', '!=', False)])
 
         # compute statistics
-        month_date = datetime.datetime.today() - relativedelta.relativedelta(months=1)
-        result = mail_message_obj.read_group(
-            cr, SUPERUSER_ID,
-            [('model', '=', 'mail.channel'), ('date', '>=', month_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT))],
-            [], ['res_id'],
-            context=context)
-        result = dict([(x['res_id'], x['res_id_count']) for x in result])
+        month_date = datetime.today() - relativedelta.relativedelta(months=1)
+        messages = request.env['mail.message'].read_group(
+            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date))],
+            [], ['res_id'])
+        message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
-        group_data = dict()
-        for group in groups:
-            group_data[group.id] = {'monthly_message_nbr': result.get(group.id, 0)}
-
-        values = {'groups': groups, 'group_data': group_data}
-        return request.website.render('website_mail_channel.mail_channels', values)
+        group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
+        return request.website.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)
     def is_member(self, channel_id=0, **kw):
         """ Determine if the current user is member of the given channel_id
             :param channel_id : the channel_id to check
         """
-        current_user_id = request.uid
+        current_user = request.env.user
         session_partner_id = request.session.get('partner_id')
-        public_id = request.website.user_id.id
+        public_user = request.website.user_id
         partner = None
         # find the current partner
-        if current_user_id != public_id:
-            partner = request.env['res.users'].sudo().browse(current_user_id).partner_id
+        if current_user != public_user:
+            partner = current_user.partner_id
         elif session_partner_id:
             partner = request.env['res.partner'].sudo().browse(session_partner_id)
 
         values = {
-            'is_user': current_user_id != public_id,
-            'email': partner and partner.email or "",
+            'is_user': current_user != public_user,
+            'email': partner.email if partner else "",
             'is_member': False,
             'alias_name': False,
         }
@@ -98,15 +88,13 @@ class MailGroup(http.Controller):
         partner_ids = []
 
         # search partner_id
-        current_user_id = request.uid
-        public_id = request.website.user_id.id
-        if current_user_id != public_id:
-            partner_ids = [request.env['res.users'].browse(current_user_id).partner_id.id]
+        if request.env.user != request.website.user_id:
+            partner_ids = request.env.user.partner_id.ids
         else:  # mail_thread method
             partner_ids = channel.sudo()._find_partner_from_emails([email], check_followers=True)
             if not partner_ids or not partner_ids[0]:
                 name = email.split('@')[0]
-                partner_ids = [request.env['res.partner'].sudo().create({'name': name, 'email': email}).id]
+                partner_ids = request.env['res.partner'].sudo().create({'name': name, 'email': email}).ids
 
         # add or remove channel members
         if subscribe:
@@ -124,8 +112,7 @@ class MailGroup(http.Controller):
         "/groups/<model('mail.channel'):group>/page/<int:page>"
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        thread_obj = request.registry.get('mail.message')
+        Message = request.env['mail.message']
 
         domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('message_type', '!=', 'notification')]
         if mode == 'thread':
@@ -133,16 +120,14 @@ class MailGroup(http.Controller):
         if date_begin and date_end:
             domain += [('date', '>=', date_begin), ('date', '<=', date_end)]
 
-        thread_count = thread_obj.search_count(cr, uid, domain, context=context)
         pager = request.website.pager(
             url='/groups/%s' % slug(group),
-            total=thread_count,
+            total=Message.search_count(domain),
             page=page,
             step=self._thread_per_page,
             url_args={'mode': mode, 'date_begin': date_begin or '', 'date_end': date_end or ''},
         )
-        thread_ids = thread_obj.search(cr, uid, domain, limit=self._thread_per_page, offset=pager['offset'])
-        messages = thread_obj.browse(cr, uid, thread_ids, context)
+        messages = Message.search(domain, limit=self._thread_per_page, offset=pager['offset'])
         values = {
             'messages': messages,
             'group': group,
@@ -159,20 +144,13 @@ class MailGroup(http.Controller):
         '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
-        cr, uid, context = request.cr, request.uid, request.context
-        Message = request.registry['mail.message']
+        Message = request.env['mail.message']
         if mode == 'thread':
             base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id), ('parent_id', '=', message.parent_id and message.parent_id.id or False)]
         else:
             base_domain = [('model', '=', 'mail.channel'), ('res_id', '=', group.id)]
-        next_message = None
-        next_message_ids = Message.search(cr, uid, base_domain + [('date', '<', message.date)], order="date DESC", limit=1, context=context)
-        if next_message_ids:
-            next_message = Message.browse(cr, uid, next_message_ids[0], context=context)
-        prev_message = None
-        prev_message_ids = Message.search(cr, uid, base_domain + [('date', '>', message.date)], order="date ASC", limit=1, context=context)
-        if prev_message_ids:
-            prev_message = Message.browse(cr, uid, prev_message_ids[0], context=context)
+        next_message = Message.search(base_domain + [('date', '<', message.date)], order="date DESC", limit=1) or None
+        prev_message = Message.search(base_domain + [('date', '>', message.date)], order="date", limit=1) or None
         values = {
             'message': message,
             'group': group,
@@ -193,16 +171,15 @@ class MailGroup(http.Controller):
         last_displayed_id = post.get('last_displayed_id')
         if not last_displayed_id:
             return False
-        Message = request.registry['mail.message']
+
         replies_domain = [('id', '<', int(last_displayed_id)), ('parent_id', '=', message.id)]
-        msg_ids = Message.search(request.cr, request.uid, replies_domain, limit=self._replies_per_page, context=request.context)
-        msg_count = Message.search(request.cr, request.uid, replies_domain, count=True, context=request.context)
-        messages = Message.browse(request.cr, request.uid, msg_ids, context=request.context)
+        messages = request.env['mail.message'].search(replies_domain, limit=self._replies_per_page)
+        message_count = request.env['mail.message'].search_count(replies_domain)
         values = {
             'group': group,
             'thread_header': message,
             'messages': messages,
-            'msg_more_count': msg_count - self._replies_per_page,
+            'msg_more_count': message_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
         return request.env.ref('website_mail_channel.messages_short').render(values, engine='ir.qweb')
