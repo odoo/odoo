@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
-from dateutil import relativedelta
 import random
 
+from openerp import _
 from openerp import tools
-from openerp import models, api, _
 from openerp import SUPERUSER_ID
 from openerp.exceptions import UserError
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools import ustr
 from openerp.osv import osv, fields
 
 
@@ -449,7 +447,7 @@ class MassMailing(osv.Model):
         return res
     def _get_next_departure(self, cr, uid, ids, name, arg, context=None):
         mass_mailings = self.browse(cr, uid, ids, context=context)
-        cron_next_call = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, 'mass_mailing.ir_cron_mass_mailing_queue', context=context).nextcall
+        cron_next_call = self.pool.get('ir.model.data').xmlid_to_object(cr, SUPERUSER_ID, 'mass_mailing.ir_cron_mass_mailing_queue', context=context).nextcall
 
         result = {}
         for mass_mailing in mass_mailings:

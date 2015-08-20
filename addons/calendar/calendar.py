@@ -436,7 +436,7 @@ class calendar_alarm_manager(osv.AbstractModel):
         last_notif_mail = icp.get_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', default=False) or now
 
         try:
-            cron = self.pool['ir.model.data'].get_object(cr, uid, 'calendar', 'ir_cron_scheduler_alarm', context=context)
+            cron = self.pool['ir.model.data'].get_object(cr, SUPERUSER_ID, 'calendar', 'ir_cron_scheduler_alarm', context=context)
         except ValueError:
             _logger.error("Cron for " + self._name + " can not be identified !")
             return False
