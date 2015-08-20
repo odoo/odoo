@@ -21,7 +21,8 @@
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-accesskey="widget.node.attrs.accesskey">
+        t-att-accesskey="widget.node.attrs.accesskey"
+        t-att-barcode_trigger="widget.node.attrs.barcode_trigger">
         <t t-if="widget.node.attrs.icon">
             <img t-if="!widget.fa_icon" t-att-src="widget.node.attrs.icon"/>
             <div t-if="widget.fa_icon" t-attf-class="fa fa-fw #{widget.node.attrs.icon} o_button_icon"/>
