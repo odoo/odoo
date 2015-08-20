@@ -26,6 +26,5 @@ With this module:
        'security/ir.model.access.csv',
        'views/mrp_byproduct_view.xml',
     ],
-    'test': ['tests/mrp_byproduct.yml'],
     'installable': True,
 }
