@@ -23,6 +23,7 @@ Adds support for:
         'data/website_event_track_data.xml',
         'views/website_event_track_templates.xml',
         'views/website_event_track_views.xml',
+        'views/event_views.xml',
         'data/website_event_track_tip_data.xml',
         'security/ir.model.access.csv',
         'security/website_event_track_security.xml',
