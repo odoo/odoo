@@ -258,10 +258,11 @@ return Widget.extend({
 });
 
 odoo.define('web.FilterMenu', function (require) {
+"use strict";
 
-var search_filters = require('web.search_filters'),
-    search_inputs = require('web.search_inputs'),
-    Widget = require('web.Widget');
+var search_filters = require('web.search_filters');
+var search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
 
 return Widget.extend({
     template: 'SearchView.FilterMenu',
@@ -365,10 +366,11 @@ return Widget.extend({
 });
 
 odoo.define('web.GroupByMenu', function (require) {
+"use strict";
 
-var Widget = require('web.Widget'),
-    core = require('web.core'),
-    search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
+var core = require('web.core');
+var search_inputs = require('web.search_inputs');
 
 var QWeb = core.qweb;
 
