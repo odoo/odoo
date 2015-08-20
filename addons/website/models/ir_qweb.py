@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+from openerp import models
 from openerp.addons.web.http import request
-from openerp.osv import orm
 
 
-class QWeb(orm.AbstractModel):
+class QWeb(models.AbstractModel):
     """ QWeb object for rendering stuff in the website context
     """
     _inherit = 'ir.qweb'

@@ -10,21 +10,23 @@ import werkzeug.routing
 import werkzeug.utils
 
 import openerp
+from openerp import api, models
 from openerp.addons.base import ir
 from openerp.addons.base.ir import ir_qweb
 from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
 from openerp.http import request
 from openerp.tools import config
-from openerp.osv import orm
 from openerp.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
+
 
 class RequestUID(object):
     def __init__(self, **kw):
         self.__dict__.update(kw)
 
-class ir_http(orm.AbstractModel):
+
+class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     rerouting_limit = 10
@@ -32,18 +34,25 @@ class ir_http(orm.AbstractModel):
 
     def _get_converters(self):
         return dict(
-            super(ir_http, self)._get_converters(),
+            super(IrHttp, self)._get_converters(),
             model=ModelConverter,
             page=PageConverter,
         )
 
+    #TODO MBA Check later on
+    @api.v7
+    def _auth_method_public(self):
+        new_obj = self.browse(request.cr, request.uid, [])
+        return new_obj._auth_method_public()
+
+    @api.v8
     def _auth_method_public(self):
         if not request.session.uid:
-            website = self.pool['website'].get_current_website(request.cr, openerp.SUPERUSER_ID, context=request.context)
+            website = self.env['website'].sudo().get_current_website()
             if website:
                 request.uid = website.user_id.id
             else:
-                request.uid = self.pool['ir.model.data'].xmlid_to_res_id(request.cr, openerp.SUPERUSER_ID, 'base', 'public_user')
+                request.uid = self.env.ref('base.public_user').id
         else:
             request.uid = request.session.uid
 
@@ -127,7 +136,7 @@ class ir_http(orm.AbstractModel):
                 return self._handle_exception(e)
 
             request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
-            request.website = request.registry['website'].get_current_website(request.cr, request.uid, context=request.context)
+            request.website = request.env['website'].get_current_website()
             request.context['website_id'] = request.website.id
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
@@ -187,7 +196,7 @@ class ir_http(orm.AbstractModel):
             resp = cache_response
         else:
             request.cache_save = key if cache_enable else False
-            resp = super(ir_http, self)._dispatch()
+            resp = super(IrHttp, self)._dispatch()
 
         if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
@@ -209,11 +218,11 @@ class ir_http(orm.AbstractModel):
         return self._dispatch()
 
     def _postprocess_args(self, arguments, rule):
-        super(ir_http, self)._postprocess_args(arguments, rule)
+        super(IrHttp, self)._postprocess_args(arguments, rule)
 
         for key, val in arguments.items():
             # Replace uid placeholder by the current request.uid
-            if isinstance(val, orm.BaseModel) and isinstance(val._uid, RequestUID):
+            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 arguments[key] = val.sudo(request.uid)
 
         try:
@@ -236,10 +245,10 @@ class ir_http(orm.AbstractModel):
         is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
         if not is_website_request:
             # Don't touch non website requests exception handling
-            return super(ir_http, self)._handle_exception(exception)
+            return super(IrHttp, self)._handle_exception(exception)
         else:
             try:
-                response = super(ir_http, self)._handle_exception(exception)
+                response = super(IrHttp, self)._handle_exception(exception)
                 if isinstance(response, Exception):
                     exception = response
                 else:
@@ -274,9 +283,7 @@ class ir_http(orm.AbstractModel):
             if code == 500:
                 logger.error("500 Internal Server Error:\n\n%s", values['traceback'])
                 if 'qweb_exception' in values:
-                    view = request.registry.get("ir.ui.view")
-                    views = view._views_get(request.cr, request.uid, exception.qweb['template'],
-                                            context=request.context)
+                    views = request.env["ir.ui.view"]._views_get(exception.qweb['template'])
                     to_reset = [v for v in views if v.model_data_id.noupdate is True and not v.page]
                     values['views'] = to_reset
             elif code == 403:
@@ -317,6 +324,7 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def to_url(self, value):
         return slug(value)
 
+    #TODO MBA Check later on
     def to_python(self, value):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
@@ -328,25 +336,25 @@ class ModelConverter(ir.ir_http.ModelConverter):
         return request.registry[self.model].browse(
             request.cr, _uid, record_id, context=request.context)
 
-    def generate(self, cr, uid, query=None, args=None, context=None):
-        obj = request.registry[self.model]
+    def generate(self, query=None, args=None):
+        Obj = request.env[self.model]
         domain = eval( self.domain, (args or {}).copy())
         if query:
-            domain.append((obj._rec_name, 'ilike', '%'+query+'%'))
-        for record in obj.search_read(cr, uid, domain=domain, fields=['write_date',obj._rec_name], context=context):
-            if record.get(obj._rec_name, False):
-                yield {'loc': (record['id'], record[obj._rec_name])}
+            domain.append((Obj._rec_name, 'ilike', '%'+query+'%'))
+        for record in Obj.search_read(domain=domain, fields=['write_date',Obj._rec_name]):
+            if record.get(Obj._rec_name, False):
+                yield {'loc': (record['id'], record[Obj._rec_name])}
 
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
-    def generate(self, cr, uid, query=None, args={}, context=None):
-        View = request.registry['ir.ui.view']
+    def generate(self, query=None, args={}):
+        View = request.env['ir.ui.view']
         domain = [('page', '=', True)]
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
 
-        views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
+        views = View.search_read(domain, fields=['key', 'priority', 'write_date'], order='name')
         for view in views:
             xid = view['key'].startswith('website.') and view['key'][8:] or view['key']
             # the 'page/homepage' url is indexed as '/', avoid aving the same page referenced twice
