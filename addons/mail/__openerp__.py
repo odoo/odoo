@@ -4,7 +4,7 @@
     'name': 'Social Network',
     'version': '1.0',
     'category': 'Social Network',
-    'sequence': 2,
+    'sequence': 25,
     'summary': 'Discussions, Mailing Lists, News',
     'description': """
 Business oriented Social Networking

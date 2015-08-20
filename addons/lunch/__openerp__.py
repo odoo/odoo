@@ -2,6 +2,7 @@
 
 {
     'name': 'Lunch',
+    'sequence': 120,
     'version': '1.0',
     'depends': ['base', 'web', 'decimal_precision'],
     'category': 'Tools',

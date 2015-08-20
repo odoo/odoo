@@ -5,7 +5,7 @@
     'name': 'Issue Tracking',
     'version': '1.0',
     'category': 'Project Management',
-    'sequence': 9,
+    'sequence': 40,
     'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """
 Track Issues/Bugs Management for Projects

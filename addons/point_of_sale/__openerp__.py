@@ -5,7 +5,7 @@
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
-    'sequence': 6,
+    'sequence': 20,
     'summary': 'Touchscreen Interface for Shops',
     'description': """
 Quick and Easy sale process

@@ -3,7 +3,7 @@
     'name' : 'Instant Messaging',
     'version': '1.0',
     'summary': 'Chat between users',
-    'sequence': '18',
+    'sequence': 115,
     'category': 'Tools',
     'complexity': 'easy',
     'website': 'https://www.odoo.com/page/live-chat',

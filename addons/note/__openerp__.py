@@ -19,7 +19,7 @@ Notes can be found in the 'Home' menu.
 """,
     'website': 'https://www.odoo.com/page/notes',
     'summary': 'Sticky notes, Collaborative, Memos',
-    'sequence': 9,
+    'sequence': 45,
     'depends': [
         'mail',
     ],

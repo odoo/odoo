@@ -3,6 +3,7 @@
 {
     'name': 'Gamification',
     'version': '1.0',
+    'sequence': 160,
     'category': 'Human Resources',
     'website' : 'https://www.odoo.com/page/gamification',
     'depends': ['mail', 'web_kanban_gauge'],

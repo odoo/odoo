@@ -2,6 +2,7 @@
 {
     'name' : 'Live Chat',
     'version': '1.0',
+    'sequence': 170,
     'summary': 'Live Chat with Visitors/Customers',
     'category': 'Tools',
     'complexity': 'easy',

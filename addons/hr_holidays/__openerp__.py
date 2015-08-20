@@ -6,7 +6,7 @@
     'name': 'Leave Management',
     'version': '1.5',
     'category': 'Human Resources',
-    'sequence': 27,
+    'sequence': 85,
     'summary': 'Holidays, Allocation and Leave Requests',
     'website': 'https://www.odoo.com/page/employees',
     'description': """

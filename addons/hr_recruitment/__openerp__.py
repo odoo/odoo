@@ -5,7 +5,7 @@
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 25,
+    'sequence': 90,
     'summary': 'Jobs, Recruitment, Applications, Job Interviews, Surveys',
     'description': """
 Manage job positions and the recruitment process

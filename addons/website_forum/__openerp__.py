@@ -4,6 +4,7 @@
 {
     'name': 'Forum',
     'category': 'Website',
+    'sequence': 150,
     'summary': 'Forum, FAQ, Q&A',
     'version': '1.0',
     'description': """

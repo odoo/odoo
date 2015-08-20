@@ -6,7 +6,7 @@
     'name': 'Expense Tracker',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 29,
+    'sequence': 95,
     'summary': 'Expenses Validation, Invoicing',
     'description': """
 Manage expenses by Employees

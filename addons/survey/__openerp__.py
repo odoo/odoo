@@ -35,5 +35,5 @@ sent mails with personal token for the invitation of the survey.
     'installable': True,
     'auto_install': False,
     'application': True,
-    'sequence': 10,
+    'sequence': 105,
 }

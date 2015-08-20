@@ -4,7 +4,7 @@
     'name' : 'Invoicing',
     'version' : '1.1',
     'summary': 'Send Invoices and Track Payments',
-    'sequence': 4,
+    'sequence': 30,
     'description': """
 Invoicing & Payments
 ====================

@@ -6,7 +6,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
-    'sequence': 19,
+    'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills',
     'description': """
 Manage goods requirement by Purchase Orders easily

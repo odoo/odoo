@@ -10,6 +10,7 @@ marketing campaigns performance to improve conversion rates. Design
 professional emails and reuse templates in a few clicks.
     """,
     'version': '2.0',
+    'sequence': 110,
     'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing',
     'depends': [

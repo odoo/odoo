@@ -6,7 +6,7 @@
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 24,
+    'sequence': 80,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
 Record and validate timesheets and attendances easily

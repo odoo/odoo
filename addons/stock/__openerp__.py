@@ -34,7 +34,7 @@ Dashboard / Reports for Inventory Management will include:
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['product', 'procurement', 'barcodes'],
     'category': 'Inventory Management',
-    'sequence': 16,
+    'sequence': 13,
     'demo': [
         'stock_demo_pre.yml',
         'stock_demo.xml',

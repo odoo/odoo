@@ -4,7 +4,7 @@
     'name': 'Accounting and Finance',
     'version': '1.1',
     'category': 'Accounting & Finance',
-    'sequence': 10,
+    'sequence': 35,
     'summary': 'Financial and Analytic Accounting',
     'description': """
 Accounting Access Rights

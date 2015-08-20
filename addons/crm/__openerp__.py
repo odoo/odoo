@@ -6,7 +6,7 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    'sequence': 2,
+    'sequence': 5,
     'summary': 'Leads, Opportunities, Activities',
     'description': """
 The generic OpenERP Customer Relationship Management

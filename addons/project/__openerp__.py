@@ -6,7 +6,7 @@
     'version': '1.1',
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Project Management',
-    'sequence': 8,
+    'sequence': 10,
     'summary': 'Projects, Tasks',
     'depends': [
         'base_setup',

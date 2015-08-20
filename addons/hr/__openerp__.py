@@ -5,7 +5,7 @@
     'name': 'Employee Directory',
     'version': '1.1',
     'category': 'Human Resources',
-    'sequence': 21,
+    'sequence': 75,
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
