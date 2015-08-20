@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.addons.website_mail.controllers.main import WebsiteMail
-from openerp.tools import mute_logger, email_split
+from odoo.addons.mail.tests.common import TestMail
+from odoo.addons.website_mail.controllers.main import WebsiteMail
+from odoo.tools import mute_logger, email_split
 
 
 class TestControllers(TestMail):
 
     def test_00_subscribe(self):
-        # from openerp.addons.web.http import request
+        # from odoo.addons.web.http import request
         # print request
 
         cr, uid = self.cr, self.uid

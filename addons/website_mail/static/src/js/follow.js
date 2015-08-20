@@ -11,7 +11,7 @@ animation.registry.follow = animation.Class.extend({
         this.is_user = false;
         ajax.jsonRpc('/website_mail/is_follower', 'call', {
             model: this.$target.data('object'),
-            id: this.$target.data('id'),
+            res_id: this.$target.data('id'),
         }).always(function (data) {
             self.is_user = data.is_user;
             self.email = data.email;
