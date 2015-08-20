@@ -10,7 +10,7 @@ OpenERP Website Google Map
         """,
     'depends': ['base_geolocalize', 'website_partner', 'crm_partner_assign'],
     'data': [
-        'views/google_map.xml',
+        'views/google_map_templates.xml',
     ],
     'installable': True,
     'auto_install': False,
