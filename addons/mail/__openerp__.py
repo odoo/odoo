@@ -34,7 +34,6 @@ Main Features
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
-        'views/mail_thread_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/res_config_views.xml',
@@ -59,7 +58,6 @@ Main Features
     'installable': True,
     'application': True,
     'qweb': [
-        'static/src/xml/mail.xml',
         'static/src/xml/mail_thread.xml',
         'static/src/xml/mail_chatter.xml',
         'static/src/xml/mail_chat_common.xml',

@@ -37,60 +37,6 @@ function get_text2html(text) {
         .replace(/[\n\r]/g,'<br/>');
 }
 
-/* Returns the complete domain with "&"
- * TDE note: please add some comments to explain how/why
- */
-function expand_domain(domain) {
-    var nb_and = -1;
-    var k;
-    // TDE note: smarted code maybe ?
-    for (k = domain.length-1; k >= 0 ; k-- ) {
-        if (typeof domain[k] != 'object' ) {
-            nb_and -= 2;
-            continue;
-        }
-        nb_and += 1;
-    }
-
-    for (k = 0; k < nb_and ; k++) {
-        domain.unshift('&');
-    }
-
-    return domain;
-}
-
-// inserts zero width space between each letter of a string so that
-// the word will correctly wrap in html boxes smaller than the text
-function breakword(str){
-    var out = '';
-    if (!str) {
-        return str;
-    }
-    for(var i = 0, len = str.length; i < len; i++){
-        out += _.str.escapeHTML(str[i]) + '&#8203;';
-    }
-    return out;
-}
-
-
-// TODO JEM : remove me in master
-function bindTooltipTo($el, value, position) {
-    $el.tooltip({
-        'title': value,
-        'placement': position,
-        'html': true,
-        'trigger': 'manual',
-        'animation': false,
-    }).on("mouseleave", function () {
-        setTimeout(function () {
-            if (!$(".tooltip:hover").length) {
-                $el.tooltip("hide");
-            }
-        }, 100);
-    });
-}
-
-
 /**
  * ------------------------------------------------------------
  * MailChat Utils
@@ -169,9 +115,6 @@ function beep(session){
 return {
     parse_email: parse_email,
     get_text2html: get_text2html,
-    expand_domain: expand_domain,
-    breakword: breakword,
-    bindTooltipTo: bindTooltipTo,
     shortcode_apply: shortcode_apply,
     shortcode_substitution: shortcode_substitution,
     attachment_filetype_to_fa_class: attachment_filetype_to_fa_class,

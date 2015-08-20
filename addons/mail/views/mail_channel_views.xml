@@ -177,10 +177,6 @@
             <field name="search_view_id" ref="mail_channel_view_search"/>
         </record>
 
-        <!-- left-side menu: Groups !-->
-        <menuitem id="mail_channel_menu_root" parent="mail_thread_menu_root" sequence="2" name="Channels"/>
-        <menuitem id="mail_channel_menu_all" parent="mail_channel_menu_root" sequence="100" action="mail_channel_action_view"/>
-
         <!-- settings !-->
         <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="90"
             name="Channels" action="mail_channel_action_view"
