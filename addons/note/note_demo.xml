@@ -1,6 +1,36 @@
 <?xml version="1.0"?>
 <openerp>
   <data noupdate="1">
+    <record model="note.stage" id="note_stage_00">
+      <field name="name">New</field>
+      <field name="sequence" eval="0"/>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_01">
+      <field name="name">Today</field>
+      <field name="sequence">1</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_02">
+      <field name="name">This Week</field>
+      <field name="sequence">2</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_03">
+      <field name="name">Later</field>
+      <field name="sequence">3</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_04">
+      <field name="name">Notes</field>
+      <field name="sequence">4</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
     <record model="note.stage" id="demo_note_stage_01">
       <field name="name">Today</field>
       <field name="sequence">1</field>
@@ -22,7 +52,7 @@
     <record model="note.stage" id="demo_note_stage_04">
       <field name="name">This Week</field>
       <field name="sequence">4</field>
-      <field name="user_id" ref="base.user_root"/>
+      <field name="user_id" ref="base.user_demo"/>
     </record>
 
     <record id="note_1" model="note.note">
@@ -34,7 +64,6 @@
     <br/>*  We should use the term Calendar, not Meeting.
      ]]>
       </field>
-      <field name="stage_id" ref="demo_note_stage_01"/>
       <field name="color">2</field>
       <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -44,7 +73,6 @@
     <br/><br/>* Followed by the telephone conversation and mail about D.544.3
     ]]>
       </field>
-      <field name="stage_id" ref="demo_note_stage_01"/>
     </record>
 
     <record id="note_4" model="note.note">
@@ -60,7 +88,6 @@
     <br/>* wine
     ]]>
       </field>
-      <field name="stage_id" ref="demo_note_stage_02"/>
       <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
@@ -102,7 +129,6 @@
       <br/>* Odoo for Retail and Industrial Management
       ]]>
       </field>
-      <field name="stage_id" ref="demo_note_stage_02"/>
     </record>
 
     <record id="note_12" model="note.note">
