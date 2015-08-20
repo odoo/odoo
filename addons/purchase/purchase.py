@@ -886,6 +886,9 @@ class purchase_order(osv.osv):
         self.message_post(cr, uid, ids, body=_("Products received"), context=context)
         return True
 
+    def _get_merge_order_key(self):
+        return ('partner_id', 'location_id', 'pricelist_id', 'currency_id')
+
     def do_merge(self, cr, uid, ids, context=None):
         """
         To merge similar type of purchase orders.
@@ -930,7 +933,7 @@ class purchase_order(osv.osv):
 
         order_lines_to_move = {}
         for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
-            order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id', 'currency_id'))
+            order_key = make_key(porder, self._get_merge_order_key())
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
             order_infos = new_order[0]
