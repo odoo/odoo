@@ -314,7 +314,7 @@ def login_redirect():
     # built the redirect url, keeping all the query parameters of the url
     redirect_url = '%s?%s' % (request.httprequest.base_url, werkzeug.urls.url_encode(request.params))
     return """<html><head><script>
-        window.location = '%sredirect=' + encodeURIComponent("%s");
+        window.location = '%sredirect=' + encodeURIComponent("%s" + location.hash);
     </script></head></html>
     """ % (url, redirect_url)
 
