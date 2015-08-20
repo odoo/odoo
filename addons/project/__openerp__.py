@@ -12,7 +12,6 @@
         'base_setup',
         'product',
         'analytic',
-        'board',
         'mail',
         'resource',
         'web_kanban',

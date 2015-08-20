@@ -36,7 +36,6 @@ Dashboard for CRM will include:
         'mail',
         'calendar',
         'resource',
-        'board',
         'fetchmail',
         'utm',
         'web_tip',

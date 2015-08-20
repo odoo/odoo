@@ -10,7 +10,7 @@
 The module adds the possibility to display data from OpenERP in Google Spreadsheets in real time.
 =================================================================================================
 """,
-    'depends': ['board', 'google_drive'],
+    'depends': ['google_drive'],
     'data' : [
         'google_spreadsheet_view.xml',
         'google_spreadsheet_data.xml',

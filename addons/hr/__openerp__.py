@@ -31,7 +31,6 @@ You can manage:
         'base_setup',
         'mail',
         'resource',
-        'board',
         'web_kanban',
     ],
     'data': [
