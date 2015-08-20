@@ -257,8 +257,8 @@
                                         <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}" required="0" groups="base.group_no_one"/>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" attrs="{'invisible': [('default_debit_account_id', '=', False), ('type', 'in', ['bank', 'cash'])]}"/>
-                                        <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" attrs="{'invisible': [('default_credit_account_id', '=', False), ('type', 'in', ['bank', 'cash'])]}"/>
+                                        <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
+                                        <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" />
                                         <field name="analytic_journal_id" groups="analytic.group_analytic_accounting" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
