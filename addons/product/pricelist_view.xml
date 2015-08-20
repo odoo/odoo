@@ -65,7 +65,7 @@
                         <group col="6" colspan="6">
                             <field name="base" colspan="6"/>
                             <label string="New Price ="/>
-                            <label string="Public Price  -  " attrs="{'invisible':[('base', '=', 'pricelist')]}"/>
+                            <label string="Public Price  -  " attrs="{'invisible':[('base', 'not in', ('list_price','standard_price'))]}"/>
                             <label string="Other Pricelist  -  " attrs="{'invisible':[('base', '!=', 'pricelist')]}"/>
                             <div><field name="price_discount" nolabel="1" class="oe_inline"/>%%</div>
                             <label string=" + "/>

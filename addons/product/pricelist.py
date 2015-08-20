@@ -214,7 +214,7 @@ class product_pricelist(osv.osv):
                             price = min(price, price_limit + rule.price_max_margin)
                     rule_id = rule.id
                 break
-            # Final price conversion into pricelist currency curreny and UoM
+            # Final price conversion into pricelist currency and UoM
             user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
             currency_price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
             price = product_uom_obj._compute_price(cr, uid, product.uom_id.id, currency_price, price_uom_id)
@@ -231,29 +231,6 @@ class product_pricelist(osv.osv):
         return res
 
 class product_pricelist_item(osv.osv):
-
-    def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
-        if context is None:
-            context = {}
-        res = super(product_pricelist_item, self).default_get(cr, uid, fields, context=context)
-        pricelist_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'product.list0')
-        if 'pricelist_id' in fields:
-            res.update({'pricelist_id': pricelist_id or False})
-        if context.get('default_product_id'):
-            product = self.pool['product.product'].browse(cr, uid, context.get('default_product_id'), context=context)
-            res.update({'fixed_price': product.lst_price if product else 0.0})
-        if context.get('default_product_tmpl_id'):
-            template = self.pool['product.template'].browse(cr, uid, context.get('default_product_tmpl_id'), context=context)
-            res.update({'fixed_price': template.list_price if template else 0.0})
-        return res
 
     def onchange_apply(self, cr, uid, ids, applied_on, context=None):
         data = {'1': {'product_id': False, 'categ_id': False},

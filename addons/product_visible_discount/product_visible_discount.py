@@ -10,7 +10,7 @@ class product_pricelist(osv.osv):
     _columns = {
         'discount_policy': fields.selection([('with_discount', 'Discount included in the price'), ('without_discount', 'Show discount in the sale order')], string="Discount Policy"),
     }
-    _defaults = {'discount_policy': 'without_discount'}
+    _defaults = {'discount_policy': 'with_discount'}
 
 
 class sale_order_line(osv.osv):
@@ -76,7 +76,7 @@ class sale_order_line(osv.osv):
                     # new_list_price is in company's currency while price in pricelist currency
                     ctx = dict(context_partner, date=date_order)
                     new_list_price = self.pool['res.currency'].compute(cr, uid,
-                        currency_id.id, so_pricelist.currency_id.id,
+                        currency_id, so_pricelist.currency_id.id,
                         new_list_price, context=ctx)
                 discount = (new_list_price - price) / new_list_price * 100
                 if discount > 0:

@@ -570,9 +570,9 @@ class product_template(osv.osv):
                 uom = product.uom_id or product.uos_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, res[product.id], context['uom'])
-            # Convert from price_type currency to asked one
+            # Convert from current user company currency to asked one
             if 'currency_id' in context:
-                # Take the price_type currency from the product field
+                # Take current user company currency.
                 # This is right cause a field cannot be in more than one currency
                 res[product.id] = self.pool.get('res.currency').compute(cr, uid, currency_id,
                     context['currency_id'], res[product.id], context=context)
