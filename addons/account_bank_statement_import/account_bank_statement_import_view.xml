@@ -35,7 +35,7 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
         <field name="arch" type="xml">
-            <xpath expr='//div[@name="bank_journal_default_cta"]/button' position='after'>
+            <xpath expr='//div[@name="bank_journal_default_cta"]' position='inside'>
                 <br/><button type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
             </xpath>
             <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
