@@ -448,15 +448,15 @@ class stock_picking(osv.osv):
         InvoiceLine = self.pool['account.invoice.line']
         result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account', 'action_invoice_tree1', context=context)
         inv_ids = []
-
-        for do in self.browse(cr, uid, ids, context=context):
-            moves = map( lambda x : x.id, do.move_lines)
-            line_ids = InvoiceLine.search(cr, uid, [('move_id', 'in', moves)])
-            inv_ids.extend([line.invoice_id.id for line in InvoiceLine.browse(cr, uid, line_ids)])
-
+        cr.execute('select ai.id as invoice_id from stock_picking sp '\
+                        'left join stock_move sm on (sm.picking_id=sp.id) '\
+                        'left join account_invoice_line ail on (ail.move_id=sm.id) '\
+                        'left join account_invoice ai on (ail.invoice_id = ai.id) '\
+                        'where sp.id in %s and ail.move_id is not null '
+                        'group by sp.id,ai.id', (tuple(ids),))
+        inv_ids =  cr.fetchone()
         if not inv_ids:
             raise UserError(_('No invoices created for this Delivery Order.'))
-        inv_ids = list(set(inv_ids))
         #choose the view_mode according to invoices
         if len(inv_ids)>1:
             result['domain'] = ('id', 'in', inv_ids)

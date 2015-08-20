@@ -194,10 +194,13 @@ class stock_picking(osv.osv):
             view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.action_invoice_tree2')
             result = self.pool['ir.actions.act_window'].read(cr, uid, [view_id], context=context)[0]
             inv_ids = []
-
-            for in_ship in self.browse(cr, uid, ids, context=context):
-                inv_ids = InvoicePool.search(cr, uid, [('origin', '=', in_ship.name)])
-
+            cr.execute('select ai.id as invoice_id from stock_picking sp '\
+                            'left join stock_move sm on (sm.picking_id=sp.id) '\
+                            'left join account_invoice_line ail on (ail.move_id=sm.id) '\
+                            'left join account_invoice ai on (ail.invoice_id = ai.id) '\
+                            'where sp.id in %s and ail.move_id is not null '
+                            'group by sp.id,ai.id', (tuple(ids),))
+            inv_ids =  cr.fetchone()
             if not inv_ids:
                 raise UserError(_('No invoices created for this Incoming Shipment.'))
 

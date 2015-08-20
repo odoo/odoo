@@ -289,36 +289,31 @@ class fleet_vehicle(osv.Model):
         except ValueError:
             model_id = False
         return model_id
-    
-    def _count_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict([(id, {'odometer_count': 0, 'fuel_logs_count': 0, 'service_count': 0, 'contract_count': 0, 'cost_count': 0}) for id in ids])
 
-        Odometer_data = self.pool['fleet.vehicle.odometer'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
-        for Odometer in Odometer_data:
-            vehicle_id = Odometer['vehicle_id'][0]
-            res[vehicle_id]['odometer_count'] = Odometer['vehicle_id_count']
-
-        LogFuel_data = self.pool['fleet.vehicle.log.fuel'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
-        for LogFuel in LogFuel_data:
-            vehicle_id = LogFuel['vehicle_id'][0]
-            res[vehicle_id]['fuel_logs_count'] = LogFuel['vehicle_id_count']
-
-        LogService_data = self.pool['fleet.vehicle.log.services'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
-        for LogService in LogService_data:
-            vehicle_id = LogService['vehicle_id'][0]
-            res[vehicle_id]['service_count'] = LogService['vehicle_id_count']
-
-        LogContract_data = self.pool['fleet.vehicle.log.contract'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
-        for LogContract in LogContract_data:
-            vehicle_id = LogContract['vehicle_id'][0]
-            res[vehicle_id]['contract_count'] = LogContract['vehicle_id_count']
-
+    def _cost_count(self, cr, uid, ids, field_name, arg, context=None):
         Cost_data = self.pool['fleet.vehicle.cost'].read_group(cr, uid, [('vehicle_id', 'in', ids), ('parent_id', '=', False)], ['vehicle_id'], ['vehicle_id'], context=context)
-        for Cost in Cost_data:
-            vehicle_id = Cost['vehicle_id'][0]
-            res[vehicle_id]['cost_count'] = Cost['vehicle_id_count']
+        mapped_data = dict([(m['vehicle_id'][0], m['vehicle_id_count']) for m in Cost_data])
+        return mapped_data
 
-        return res
+    def _count_contract(self, cr, uid, ids, field_name, arg, context=None):
+        LogContract_data = self.pool['fleet.vehicle.log.contract'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        mapped_data = dict([(m['vehicle_id'][0], m['vehicle_id_count']) for m in LogContract_data])
+        return mapped_data
+
+    def _count_service(self, cr, uid, ids, field_name, arg, context=None):
+        LogService_data = self.pool['fleet.vehicle.log.services'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        mapped_data = dict([(m['vehicle_id'][0], m['vehicle_id_count']) for m in LogService_data])
+        return mapped_data
+
+    def _count_fuel_logs(self, cr, uid, ids, field_name, arg, context=None):
+        LogFuel_data = self.pool['fleet.vehicle.log.fuel'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        mapped_data = dict([(m['vehicle_id'][0], m['vehicle_id_count']) for m in LogFuel_data])
+        return mapped_data
+
+    def _count_odometer(self, cr, uid, ids, field_name, arg, context=None):
+        Odometer_data = self.pool['fleet.vehicle.odometer'].read_group(cr, uid, [('vehicle_id', 'in', ids)], ['vehicle_id'], ['vehicle_id'], context=context)
+        mapped_data = dict([(m['vehicle_id'][0], m['vehicle_id_count']) for m in Odometer_data])
+        return mapped_data
 
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
@@ -333,11 +328,11 @@ class fleet_vehicle(osv.Model):
         'log_fuel': fields.one2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs'),
         'log_services': fields.one2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs'),
         'log_contracts': fields.one2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts'),
-        'cost_count': fields.function(_count_all, type='integer', string="Costs" , multi=True),
-        'contract_count': fields.function(_count_all, type='integer', string='Contracts', multi=True),
-        'service_count': fields.function(_count_all, type='integer', string='Services', multi=True),
-        'fuel_logs_count': fields.function(_count_all, type='integer', string='Fuel Logs', multi=True),
-        'odometer_count': fields.function(_count_all, type='integer', string='Odometer', multi=True),
+        'cost_count': fields.function(_cost_count, type='integer', string="Costs"),
+        'contract_count': fields.function(_count_contract, type='integer', string='Contracts'),
+        'service_count': fields.function(_count_service, type='integer', string='Services'),
+        'fuel_logs_count': fields.function(_count_fuel_logs, type='integer', string='Fuel Logs'),
+        'odometer_count': fields.function(_count_odometer, type='integer', string='Odometer'),
         'acquisition_date': fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color': fields.char('Color', help='Color of the vehicle'),
         'state_id': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ondelete="set null"),
