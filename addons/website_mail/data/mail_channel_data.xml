@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
 
-        <record model="mail.channel" id="channel_public">
+        <record id="channel_public" model="mail.channel">
             <field name="name">Discussion Group</field>
             <field name="public">public</field>
             <field name="description">Public Discussion Group</field>
@@ -127,9 +127,10 @@
     <data noupdate="1">
         <function
             id="mail_template_function_module_install_website_mail"
-            model="mail.template" 
+            model="mail.template"
             name="send_mail"
             eval="[ref('mail_template_data_module_install_website_mail'), ref('base.module_website_mail')]"/>
     </data>
 
-</openerp>
+</odoo>
+
