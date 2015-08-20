@@ -4526,7 +4526,7 @@ class BaseModel(object):
             apply_rule(rule_where_clause, rule_where_clause_params, rule_tables,
                        parent_model=inherited_model)
 
-    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -4536,18 +4536,18 @@ class BaseModel(object):
         """
         if order_field not in self._columns and order_field in self._inherit_fields:
             # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(alias, order_field, query)
             order_field_column = self._inherit_fields[order_field][2]
+            qualified_field = self._inherits_join_calc(alias, order_field, query)
+            alias, order_field = qualified_field.replace('"', '').split('.', 1)
         else:
-            qualified_field = '"%s"."%s"' % (alias, order_field)
             order_field_column = self._columns[order_field]
 
         assert order_field_column._type == 'many2one', 'Invalid field passed to _generate_m2o_order_by()'
         if not order_field_column._classic_write and not getattr(order_field_column, 'store', False):
-            _logger.debug("Many2one function/related fields must be stored " \
-                "to be used as ordering fields! Ignoring sorting for %s.%s",
-                self._name, order_field)
-            return
+            _logger.debug("Many2one function/related fields must be stored "
+                          "to be used as ordering fields! Ignoring sorting for %s.%s",
+                          self._name, order_field)
+            return []
 
         # figure out the applicable order_by for the m2o
         dest_model = self.pool[order_field_column._obj]
@@ -4558,12 +4558,14 @@ class BaseModel(object):
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
-        src_table, src_field = qualified_field.replace('"', '').split('.', 1)
-        dst_alias, dst_alias_statement = query.add_join((src_table, dest_model._table, src_field, 'id', src_field), implicit=False, outer=True)
+        join = (alias, dest_model._table, order_field, 'id', order_field)
+        dst_alias, dst_alias_statement = query.add_join(join, implicit=False, outer=True)
         return dest_model._generate_order_by_inner(dst_alias, m2o_order, query,
-                                                   reverse_direction=reverse_direction)
+                                                   reverse_direction=reverse_direction, seen=seen)
 
-    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False):
+    def _generate_order_by_inner(self, alias, order_spec, query, reverse_direction=False, seen=None):
+        if seen is None:
+            seen = set()
         order_by_elements = []
         self._check_qorder(order_spec)
         for order_part in order_spec.split(','):
@@ -4584,7 +4586,10 @@ class BaseModel(object):
                     inner_clauses = ['"%s"."%s"' % (alias, order_field)]
                     add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                    key = (self._name, order_column._obj, order_field)
+                    if key not in seen:
+                        seen.add(key)
+                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             elif order_field in self._inherit_fields:
@@ -4594,7 +4599,10 @@ class BaseModel(object):
                     inner_clauses = [self._inherits_join_calc(alias, order_field, query)]
                     add_dir = True
                 elif order_column._type == 'many2one':
-                    inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse)
+                    key = (parent_obj._name, order_column._obj, order_field)
+                    if key not in seen:
+                        seen.add(key)
+                        inner_clauses = self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
                 else:
                     continue  # ignore non-readable or "non-joinable" fields
             else:
