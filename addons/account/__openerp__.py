@@ -52,6 +52,9 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_report_common_view.xml',
         'wizard/account_report_general_ledger_view.xml',
         'views/report_generalledger.xml',
+        'wizard/account_report_partner_ledger_view.xml',
+        'views/report_partnerledger.xml',
+        'views/report_partnerledgerother.xml',
     ],
     'demo': [
         'demo/account_demo.xml',

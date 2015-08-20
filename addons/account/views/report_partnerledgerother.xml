@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_partnerledgerother">
+    <t t-call="report.html_container">
+        <t t-foreach="Partners" t-as="partner">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h2>Partner Ledger</h2>
+
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <strong>Journals:</strong>
+                            <p t-esc="', '.join([ lt or '' for lt in print_journal ])"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Partner's</strong>
+                            <p t-if="data['result_selection'] == 'customer'">Receivable Accounts</p>
+                            <p t-if="data['result_selection'] == 'supplier'">Payable Accounts</p>
+                            <p t-if="data['result_selection'] == 'customer_supplier'">Receivable and Payable Accounts</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Filter By:</strong>
+                            <p>
+                                <span t-if="data['filters'] == 'filter_no'">Not filtered</span>
+                                <span t-if="data['filters'] == 'filter_date'">Filtered by date</span>
+                                <p t-if="data['filters'] == 'filter_date'">
+                                    Date from : <span t-esc="data['date_from']"/><br />
+                                    Date to : <span t-esc="data['date_to']"/>
+                                </p>
+                                <span t-if="data['filters'] == 'unreconciled'">Filtered by Unreconciled Entries</span>
+                            </p>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Target Moves:</strong>
+                            <p t-if="data['target_move'] == 'all'">All Entries</p>
+                            <p t-if="data['target_move'] == 'posted'">All Posted Entries</p>
+                        </div>
+                    </div>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>JRNL</th>
+                                <th>Ref</th>
+                                <th>Account</th>
+                                <th>Entry Label</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                                <th t-if="data['amount_currency']">Currency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5">
+                                    <strong t-esc="partner['ref']"/>
+                                    - <strong t-esc="partner['name']"/>
+                                </td>
+                                <td class="text-right">
+                                    <strong t-esc="partner['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <strong t-esc="partner['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <strong t-esc="partner['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                            </tr>
+                            <tr t-foreach="partner['move_lines']" t-as="line">
+                                <td>
+                                    <span t-esc="line['ldate']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['code']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['move_name']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['a_code']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['ref']"/>-<span t-esc="line['name']"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="line['balance']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                </td>
+                                <td t-if="data['amount_currency']">
+                                    <span t-esc="line['amount_currency']"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>
