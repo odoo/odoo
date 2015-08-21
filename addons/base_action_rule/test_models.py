@@ -11,6 +11,7 @@ AVAILABLE_STATES = [
 
 class lead_test(osv.Model):
     _name = "base.action.rule.lead.test"
+    _description = "Action Rule Test"
 
     _columns = {
         'name': fields.char('Subject', required=True, select=1),
