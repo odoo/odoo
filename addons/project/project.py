@@ -45,6 +45,7 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Folded in Kanban View',
                                help='This stage is folded in the kanban view when'
                                'there are no records in that stage to display.'),
+        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
     }
 
     def _get_default_project_ids(self, cr, uid, ctx={}):
@@ -56,6 +57,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1,
         'project_ids': _get_default_project_ids,
+        'closed': False,
     }
     _order = 'sequence'
 
