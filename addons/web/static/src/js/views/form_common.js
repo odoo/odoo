@@ -461,7 +461,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                delay: { show: 500, hide: 0 },
+                delay: { show: 1000, hide: 0 },
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
