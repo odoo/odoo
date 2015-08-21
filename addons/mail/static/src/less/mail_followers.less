@@ -1,0 +1,123 @@
+
+.o_web_client .o_timeline_followers {
+    position: relative;
+    display: inline-block;
+    width: 270px;
+    height: 0px;
+    float: right;
+    margin-right: 20px;
+    z-index: 1;
+}
+
+.o_web_client .o_timeline_followers .oe_actions {
+    float: right;
+    position: relative;
+}
+
+.o_web_client .o_timeline_followers button.o_timeline_follower {
+    background-color: white;
+    text-align: center;
+    width: 110px;
+}
+
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_following {
+    width: 110px;
+    color: #337ab7;
+}
+
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_following:hover {
+    width: 110px;
+    color: #D43F3A;
+    text-overflow: ellipsis;
+}
+
+.o_web_client .o_timeline_followers button.o_timeline_follower .o_timeline_follow,
+.o_web_client .o_timeline_followers button.o_timeline_follower .o_timeline_unfollow,
+.o_web_client .o_timeline_followers button.o_timeline_follower .o_timeline_following {
+    display: none;
+}
+/*  a.1) when following, show 'following' */
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_following .o_timeline_following {
+    display: inline;
+}
+/*  a.2) when following and hovering, show 'unfollow' */
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_following:hover .o_timeline_following {
+    display: none;
+}
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_following:hover .o_timeline_unfollow {
+    display: inline;
+}
+/*  a.3) when not following  show 'follow' */
+.o_web_client .o_timeline_followers button.o_timeline_follower.o_timeline_notfollow .o_timeline_follow {
+    display: inline;
+}
+
+.o_web_client .o_timeline_followers .o_timeline_follower_title {
+    display: inline;
+    padding-right: 10px;
+}
+
+.o_web_client .o_timeline_followers .o_timeline_follower_title_box {
+    position: relative;
+    float: right;
+    margin-left: 10px;
+}
+
+.o_web_client .o_timeline_followers button.o_timeline_partner_list {
+    width: 110px;
+}
+
+.o_web_client .o_timeline_followers .o_timeline_follower_list {
+    height: auto;
+    max-height: 350px;
+    overflow-x: hidden;
+}
+
+.o_web_client .o_timeline_followers .oe_partner {
+    height: 32px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 120px;
+}
+
+.o_web_client .o_timeline_followers .oe_partner img {
+    width: 32px;
+    margin-right: 4px;
+    border-radius: 2px;
+}
+
+.o_web_client .o_timeline_followers .oe_partner a,
+.o_web_client .o_timeline_followers .oe_invite a {
+    font-size: 0.95em;
+    color: #337ab7;
+}
+
+.o_web_client .o_timeline_followers .oe_remove_follower {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    height: 25px;
+    vertical-align: middle;
+}
+
+.o_web_client .o_timeline_followers .oe_remove_follower.fa-remove {
+    margin-top: 6px;
+}
+
+.o_web_client .o_timeline_followers .oe_partner .oe_hidden {
+    display: none;
+}
+
+.o_web_client .o_timeline_followers .o_timeline_sbtp_list {
+    margin-left: -5px;
+}
+
+.o_web_client .o_timeline_followers .oe_subtype {
+    padding-left: 5px;
+}
+
+.o_web_client .o_timeline_followers .oe_subtype_border {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
