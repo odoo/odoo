@@ -126,20 +126,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
         </record>
 
-        <record id="res_partner_8" model="res.partner">
-            <field name="name">Mediapole</field>
-            <field eval="1" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_16')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Munich</field>
-            <field name="street">Luckenwalder Strasse</field>
-            <field name="zip">80352</field>
-            <field name="country_id" ref="base.de"/>
-            <field name="phone">+49 8932 450203 </field>
-            <field name="email">mediapole@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_8-image.jpg"/>
-        </record>
         <record id="res_partner_9" model="res.partner">
             <field name="name">Best Designers</field>
             <field eval="0" name="supplier"/>

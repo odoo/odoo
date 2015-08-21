@@ -111,7 +111,7 @@
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="1"/>
         <field name="color">2</field>
-        <field eval="[(4, ref('base.res_partner_8'))]" name="speaker_ids"/>
+        <field eval="[(4, ref('base.res_partner_12'))]" name="speaker_ids"/>
         <field name="state">published</field>
     </record>
     <record id="event_track10" model="event.track">
@@ -141,7 +141,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="0.5"/>
-        <field eval="[(4, ref('base.res_partner_2')),(4, ref('base.res_partner_8'))]" name="speaker_ids"/>
+        <field eval="[(4, ref('base.res_partner_2')),(4, ref('base.res_partner_12'))]" name="speaker_ids"/>
         <field name="state">announced</field>
     </record>
     <record id="event_track13" model="event.track">
