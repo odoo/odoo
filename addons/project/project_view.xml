@@ -195,7 +195,24 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p><p>
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_config" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">list,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current': 1}</field>
             <field name="help" type="html">
@@ -574,6 +591,8 @@
         <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
+
 
         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
