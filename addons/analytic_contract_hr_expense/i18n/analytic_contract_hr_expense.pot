@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2015-08-25 08:59+0000\n"
+"PO-Revision-Date: 2015-08-25 08:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,76 +16,71 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: analytic_contract_hr_expense
+#: model:ir.ui.view,arch_db:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+msgid "<span attrs=\"{'invisible': [('expense_to_invoice','&lt;&gt;',0)]}\" class=\"oe_grey\">\n"
+"                                Nothing to invoice, create \n"
+"                            </span>"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
 #: model:ir.model,name:analytic_contract_hr_expense.model_account_analytic_account
 msgid "Analytic Account"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,charge_expenses:0
+#: model:ir.model.fields,field_description:analytic_contract_hr_expense.field_account_analytic_account_charge_expenses
 msgid "Charge Expenses"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,est_expenses:0
+#: model:ir.model.fields,field_description:analytic_contract_hr_expense.field_account_analytic_account_est_expenses
 msgid "Estimation of Expenses to Invoice"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+#: model:ir.ui.view,arch_db:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "Expenses"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+#: model:ir.ui.view,arch_db:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "Expenses and Timesheet Invoicing Ratio"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:135
+#: model:ir.model.fields,field_description:analytic_contract_hr_expense.field_account_analytic_account_expense_invoiced
+msgid "Expenses invoiced"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:117
 #, python-format
 msgid "Expenses of %s"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:143
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:125
 #, python-format
 msgid "Expenses to Invoice of %s"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
-msgid "Nothing to invoice, create"
+#: model:ir.model.fields,field_description:analytic_contract_hr_expense.field_account_analytic_account_expense_to_invoice
+msgid "Expenses to invoice"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+#: model:ir.model.fields,field_description:analytic_contract_hr_expense.field_account_analytic_account_remaining_expense
+msgid "Remaining Expenses"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: model:ir.ui.view,arch_db:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "or view"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,expense_invoiced:0
-#: field:account.analytic.account,expense_to_invoice:0
-#: field:account.analytic.account,remaining_expense:0
-msgid "unknown"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
-msgid "{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
-msgid "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)], 'invisible':[('invoice_on_timesheets','=',False), ('charge_expenses','=',False)]}"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
-msgid "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
-msgstr ""
-
-#. module: analytic_contract_hr_expense
-#: view:account.analytic.account:analytic_contract_hr_expense.account_analytic_account_form_expense_form
+#: model:ir.ui.view,arch_db:analytic_contract_hr_expense.account_analytic_account_form_expense_form
 msgid "⇒ Invoice"
 msgstr ""
 

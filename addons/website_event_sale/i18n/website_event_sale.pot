@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,34 +16,73 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "&nbsp;"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Free</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
-#, python-format
-msgid "Error!"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>Unlimited</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Free"
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.index
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,help:website_event_sale.field_product_product_to_weight
+msgid "Check if the product should be weighted using the hardware scale integration"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,help:website_event_sale.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,help:website_event_sale.field_product_product_purchase_requisition
+msgid "Check this box to generate Call for Tenders instead of generating requests for quotation from procurement."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_landed_cost_ok
+msgid "Landed Costs"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_purchase_line_warn_msg
+msgid "Message for Purchase Order Line"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Order Now"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Price"
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_purchase_requisition
+msgid "Procurement"
 msgstr ""
 
 #. module: website_event_sale
@@ -52,18 +91,13 @@ msgid "Product"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Quantity"
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_purchase_line_warn
+msgid "Purchase Order Line"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.index
+#: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
-msgstr ""
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Sales End"
 msgstr ""
 
 #. module: website_event_sale
@@ -72,13 +106,41 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-#: view:website:website_event.index
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_sale_line_warn
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,help:website_event_sale.field_product_product_purchase_line_warn
+#: model:ir.model.fields,help:website_event_sale.field_product_product_sale_line_warn
+msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.ui.view,arch_db:website_event_sale.index
+#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:66
+#: code:addons/website_event_sale/models/sale_order.py:73
+#, python-format
+msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:79
+#, python-format
+msgid "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_split_method
+msgid "Split Method"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:65
 #, python-format
 msgid "Subscription"
 msgstr ""
@@ -90,17 +152,17 @@ msgid "The ticket doesn't match with this product."
 msgstr ""
 
 #. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "Ticket Type"
+#: model:ir.model.fields,help:website_event_sale.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product_to_weight
+msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr ""
-
-#. module: website_event_sale
-#: view:website:website_event.event_description_full
-msgid "left"
 msgstr ""
 

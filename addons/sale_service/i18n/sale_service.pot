@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,23 +16,51 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_service
-#: field:project.task.type,closed:0
-msgid "Close"
+#: model:ir.actions.act_window,help:sale_service.open_service_type_products
+msgid "Another way to create tasks from sales is to use template of contracts\n"
+"                linked to a project having pre-defined tasks that will be duplicated \n"
+"                per contract reusing this project."
 msgstr ""
 
 #. module: sale_service
-#: field:product.template,auto_create_task:0
+#: model:ir.model.fields,field_description:sale_service.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_hr_expense_ok
+msgid "Can be Expensed"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.actions.act_window,help:sale_service.open_service_type_products
+msgid "Click to define a new service."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_auto_create_task
+#: model:ir.model.fields,field_description:sale_service.field_product_template_auto_create_task
 msgid "Create Task Automatically"
 msgstr ""
 
 #. module: sale_service
-#: view:project.task:sale_service.view_sale_service_inherit_form2
+#: model:ir.model.fields,field_description:sale_service.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_project_task_type_closed
+msgid "Is a close stage"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.ui.view,arch_db:sale_service.view_sale_service_inherit_form2
 msgid "Order Line"
 msgstr ""
 
 #. module: sale_service
 #: model:ir.model,name:sale_service.model_procurement_order
-#: field:project.task,procurement_id:0
+#: model:ir.model.fields,field_description:sale_service.field_project_task_procurement_id
 msgid "Procurement"
 msgstr ""
 
@@ -42,28 +70,67 @@ msgid "Product"
 msgstr ""
 
 #. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_alert_time
+msgid "Product Alert Time"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_life_time
+msgid "Product Life Time"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_removal_time
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_product_template
 msgid "Product Template"
 msgstr ""
 
 #. module: sale_service
-#: field:product.template,project_id:0
+#: model:ir.model.fields,field_description:sale_service.field_product_product_use_time
+msgid "Product Use Time"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,field_description:sale_service.field_product_product_project_id
+#: model:ir.model.fields,field_description:sale_service.field_product_template_project_id
 msgid "Project"
 msgstr ""
 
 #. module: sale_service
-#: view:product.template:sale_service.view_product_task_form
+#: model:ir.ui.view,arch_db:sale_service.view_product_task_form
 msgid "Project Management Information"
 msgstr ""
 
 #. module: sale_service
-#: field:project.task,sale_line_id:0
+#: model:ir.model.fields,field_description:sale_service.field_project_task_sale_line_id
 msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_service
+#: model:ir.actions.act_window,name:sale_service.open_service_type_products
+#: model:ir.ui.menu,name:sale_service.menu_products_services
+msgid "Services"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.actions.act_window,help:sale_service.open_service_type_products
+msgid "Services can be sold on quotations or sales order.\n"
+"                All services defined from this menu will create tasks when the\n"
+"                quotation is confirmed."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_hr_expense_ok
+msgid "Specify if the product can be selected in an HR expense line."
+msgstr ""
+
+#. module: sale_service
 #: model:ir.model,name:sale_service.model_project_task
-#: field:procurement.order,task_id:0
+#: model:ir.model.fields,field_description:sale_service.field_procurement_order_task_id
 msgid "Task"
 msgstr ""
 
@@ -73,18 +140,39 @@ msgid "Task Stage"
 msgstr ""
 
 #. module: sale_service
-#: code:addons/sale_service/models/sale_service.py:96
+#: code:addons/sale_service/models/sale_service.py:78
 #, python-format
 msgid "Task created"
 msgstr ""
 
 #. module: sale_service
-#: help:project.task.type,closed:0
+#: model:ir.model.fields,help:sale_service.field_project_task_type_closed
 msgid "Tasks in this stage are considered as closed."
 msgstr ""
 
 #. module: sale_service
-#: help:product.template,auto_create_task:0
+#: model:ir.model.fields,help:sale_service.field_product_product_auto_create_task
+#: model:ir.model.fields,help:sale_service.field_product_template_auto_create_task
 msgid "Tick this option if you want to create a task automatically each time this product is sold"
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_alert_time
+msgid "When a new a Serial Number is issued, this is the number of days before an alert should be notified."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_life_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods may become dangerous and must not be consumed."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_removal_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods should be removed from the stock."
+msgstr ""
+
+#. module: sale_service
+#: model:ir.model.fields,help:sale_service.field_product_product_use_time
+msgid "When a new a Serial Number is issued, this is the number of days before the goods starts deteriorating, without being dangerous yet."
 msgstr ""
 

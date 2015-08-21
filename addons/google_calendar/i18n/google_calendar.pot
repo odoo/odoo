@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,58 +16,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"/google_account/authentication\""
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_meeting_count
+msgid "# Meetings"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Calendar API\""
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "<br/> You can now click on <b>'Create Client ID'</b>\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Consent Screen\""
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Create Project\""
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "\"Redirect RI\""
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Create Client ID'"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Create New Client ID'"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Credentials'"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "'Web Application'"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "(from menu APIs and auth) and click on button"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid ") that you need to insert in the 2 fields below !"
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "<br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field <b>\"Authorized redirect URI\"</b>\n"
+"                                    and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):\n"
+"                                    <br/>==&gt;"
 msgstr ""
 
 #. module: google_calendar
@@ -82,21 +45,28 @@ msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:55
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:77
+#, python-format
+msgid "Accounts"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:67
 #, python-format
 msgid "All events have been disconnected from your previous account. You can now restart the synchronization"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:38
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:49
 #, python-format
 msgid "An administrator needs to configure Google Synchronization before you can use it!"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:58
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:71
 #, python-format
 msgid "An error occured while disconnecting events from your previous account. Please retry or contact your administrator."
 msgstr ""
@@ -107,48 +77,59 @@ msgid "Attendee information"
 msgstr ""
 
 #. module: google_calendar
-#: view:res.users:google_calendar.view_users_form
+#: model:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Calendar"
 msgstr ""
 
 #. module: google_calendar
-#: field:res.users,google_calendar_cal_id:0
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
 msgid "Calendar ID"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Click on"
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "Check that the Application type is set on <b>'Web Application'</b>, then click on <b>'Configure consent screen'</b>.\n"
+"                                    <br/> Specify an email address and a product name, then save.\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Client ID"
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "Click on <b>'Create Project'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Client Secret"
-msgstr ""
-
-#. module: google_calendar
-#: field:base.config.settings,cal_client_id:0
+#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
 msgid "Client_id"
 msgstr ""
 
 #. module: google_calendar
-#: field:base.config.settings,cal_client_secret:0
+#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_secret
 msgid "Client_key"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:46
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:50
+#, python-format
+msgid "Configuration"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Connect on your google account and go to"
 msgstr ""
 
 #. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:47
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:58
 #, python-format
 msgid "Do you want to do this now?"
 msgstr ""
@@ -159,29 +140,31 @@ msgid "Event"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Fill in the Name of application and check that the platform is well on"
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:72
+#, python-format
+msgid "Event disconnection error"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/xml/web_calendar.xml:8
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:68
 #, python-format
-msgid "Google"
+msgid "Event disconnection success"
 msgstr ""
 
 #. module: google_calendar
-#: field:calendar.attendee,google_internal_event_id:0
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client ID"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Google Client Secret"
 msgstr ""
 
@@ -191,110 +174,137 @@ msgid "Google ID should be unique!"
 msgstr ""
 
 #. module: google_calendar
-#: field:google.calendar,id:0
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
 msgid "ID"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:46
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:57
 #, python-format
 msgid "In order to do this, you first need to disconnect all existing events from the old account."
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "In the menu on left side, select the sub menu"
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "In the menu on left side, select the sub menu APIs (from menu APIs and auth) and activate"
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "In the menu on left side, select the sub menu APIs (from menu APIs and auth) and click on <b>'Calendar API'</b>.\n"
+"                                    <br/> Activate the Calendar API by clicking on the blue button <b>'Enable API'</b>.\n"
+"                                    <br/> When it's done, the Calendar API overview will be available\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: help:res.users,google_calendar_cal_id:0
+#: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
 msgid "Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID"
 msgstr ""
 
 #. module: google_calendar
-#: field:res.users,google_calendar_last_sync_date:0
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
 msgid "Last synchro date"
 msgstr ""
 
 #. module: google_calendar
-#: field:calendar.attendee,oe_synchro_date:0
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_meeting_ids
+msgid "Meetings"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
 msgid "Odoo Synchro Date"
 msgstr ""
 
 #. module: google_calendar
-#: field:calendar.event,oe_update_date:0
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
 msgid "Odoo Update Date"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "Once done, you will have the both informations ("
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!\n"
+"                                    <br/><br/>"
 msgstr ""
 
 #. module: google_calendar
-#: field:res.users,google_calendar_rtoken:0
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_opportunity_ids
+msgid "Opportunities"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_opportunity_count
+msgid "Opportunity"
+msgstr ""
+
+#. module: google_calendar
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:38
+#, python-format
+msgid "Redirection"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
 msgid "Refresh Token"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "Return at Top"
 msgstr ""
 
 #. module: google_calendar
-#: field:base.config.settings,google_cal_sync:0
-msgid "Show tutorial to know how to get my 'Client ID' and my 'Client Secret'"
+#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_google_cal_sync
+msgid "Show Tutorial"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/xml/web_calendar.xml:8
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:87
 #, python-format
-msgid "Sync with"
+msgid "Sync with <b>Google</b>"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:33
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:42
 #, python-format
 msgid "The Google Synchronization needs to be configured before you can use it, do you want to do it now?"
 msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:45
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:56
 #, python-format
 msgid "The account you are trying to synchronize (%s) is not the same as the last one used (%s)!"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "To finish, you just need to create a \"consent screen\" by clicking on"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
 msgid "To setup the signin process with Google, first you have to perform the following steps"
 msgstr ""
 
 #. module: google_calendar
-#: field:res.users,google_calendar_token_validity:0
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
 msgstr ""
 
 #. module: google_calendar
-#: field:base.config.settings,server_uri:0
+#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
 msgid "URI for tuto"
 msgstr ""
 
 #. module: google_calendar
-#: field:res.users,google_calendar_token:0
+#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
 msgid "User token"
 msgstr ""
 
@@ -304,64 +314,24 @@ msgid "Users"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "When it's done, check that the button of"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "You can now click on"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field"
-msgstr ""
-
-#. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/calendar_sync.js:28
+#: code:addons/google_calendar/static/src/js/calendar_sync.js:34
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "You will need to accept again the \"Google APIs Terms of services\" and \"Calendar API Terms of service\""
+#: model:ir.model,name:google_calendar.model_base_config_settings
+msgid "base.config.settings"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "and"
+#: model:ir.model,name:google_calendar.model_google_calendar
+msgid "google.calendar"
 msgstr ""
 
 #. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "and enter a project name and change your id if you want. Don't forget to accept the Terms of Services"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "and set as value  (your own domain followed by"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "by clicking on button \"OFF\"."
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "https://cloud.google.com/console"
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "in the left menu."
-msgstr ""
-
-#. module: google_calendar
-#: view:base.config.settings:google_calendar.view_calendar_config_settings
-msgid "is well in green and with text \"ON\""
+#: model:ir.ui.view,arch_db:google_calendar.view_calendar_config_settings
+msgid "https://console.developers.google.com/"
 msgstr ""
 

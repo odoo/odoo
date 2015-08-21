@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2015-08-25 08:59+0000\n"
+"PO-Revision-Date: 2015-08-25 08:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,90 +16,100 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_layout
-#: view:website:sale_layout.category_template
-msgid "&bull;"
+#: model:ir.ui.view,arch_db:sale_layout.category_template
+msgid "&amp;bull;"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:sale.report_saleorder_document
-msgid "</tbody>\n"
-"                            </table>\n"
-"                            <p style=\"page-break-before:always;\"> </p>\n"
-"                            <table class=\"table table-condensed\">"
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
+msgid "&lt;/tbody&gt;\n"
+"                            &lt;/table&gt;\n"
+"                            &lt;p style=\"page-break-before:always;\"&gt; &lt;/p&gt;\n"
+"                            &lt;table class=\"table table-condensed\"&gt;"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-msgid "</tbody>\n"
-"                    </table>\n"
-"                    <p style=\"page-break-before:always;\"> </p>\n"
-"                    <table class=\"table table-condensed\">"
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+msgid "&lt;/tbody&gt;\n"
+"                    &lt;/table&gt;\n"
+"                    &lt;p style=\"page-break-before:always;\"&gt; &lt;/p&gt;\n"
+"                    &lt;table class=\"table table-condensed\"&gt;"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-#: view:website:sale.report_saleorder_document
-msgid "<tbody>"
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
+msgid "&lt;tbody&gt;"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,pagebreak:0
+#: model:ir.ui.view,arch_db:sale_layout.separator_template
+msgid "***"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
+msgid "<span>Disc.(%)</span>"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.ui.view,arch_db:sale_layout.subtotal_template
+msgid "<strong>Subtotal: </strong>"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_pagebreak
 msgid "Add pagebreak"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,separator:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_separator
 msgid "Add separator"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,subtotal:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_subtotal
 msgid "Add subtotal"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-msgid "Amount"
-msgstr ""
-
-#. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Break"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,create_uid:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,create_date:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Description"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
 msgid "Disc.(%)"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-msgid "Discount (%)"
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Group By Name"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,id:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_id
 msgid "ID"
 msgstr ""
 
@@ -114,42 +124,53 @@ msgid "Invoice Line"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,write_uid:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,write_date:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: sale_layout
-#: field:account.invoice.line,categ_sequence:0
-#: field:sale.order.line,categ_sequence:0
+#: model:ir.model.fields,field_description:sale_layout.field_account_invoice_line_categ_sequence
+#: model:ir.model.fields,field_description:sale_layout.field_sale_order_line_categ_sequence
 msgid "Layout Sequence"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
-#: field:sale_layout.category,name:0
+#: model:sale_layout.category,name:sale_layout.sale_layout_cat_2
+msgid "Material"
+msgstr ""
+
+#. module: sale_layout
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_name
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Name"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Price"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Quantity"
 msgstr ""
 
 #. module: sale_layout
 #: model:ir.actions.act_window,name:sale_layout.report_configuration_action
-#: view:sale_layout.category:sale_layout.report_configuration_form_view
-#: view:sale_layout.category:sale_layout.report_configuration_tree_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_form_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_tree_view
 msgid "Report Configuration"
 msgstr ""
 
@@ -169,55 +190,55 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Search Name"
 msgstr ""
 
 #. module: sale_layout
-#: field:account.invoice.line,sale_layout_cat_id:0
-#: field:sale.order.line,sale_layout_cat_id:0
+#: model:ir.model.fields,field_description:sale_layout.field_account_invoice_line_sale_layout_cat_id
+#: model:ir.model.fields,field_description:sale_layout.field_sale_order_line_sale_layout_cat_id
 msgid "Section"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Separator"
 msgstr ""
 
 #. module: sale_layout
-#: field:sale_layout.category,sequence:0
+#: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_sequence
 msgid "Sequence"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:sale_layout.subtotal_template
-msgid "Subtotal:"
+#: model:sale_layout.category,name:sale_layout.sale_layout_cat_1
+msgid "Services"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Taxes"
 msgstr ""
 
 #. module: sale_layout
-#: view:sale_layout.category:sale_layout.report_configuration_search_view
+#: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Total"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:sale_layout.category_template
+#: model:ir.ui.view,arch_db:sale_layout.category_template
 msgid "Uncategorized"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-#: view:website:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Unit Price"
 msgstr ""
 
 #. module: sale_layout
-#: view:website:account.report_invoice_document
-msgid "Unit of measure"
+#: model:ir.model,name:sale_layout.model_sale_layout_category
+msgid "sale_layout.category"
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_active
 msgid "Active"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,create_uid:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,create_date:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: sale_journal
-#: help:sale.order,invoice_type_id:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.model.fields,help:sale_journal.field_sale_order_invoice_type_id
 msgid "Generate invoice based on the selected option."
 msgstr ""
 
@@ -41,23 +46,23 @@ msgid "Grouped"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,id:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_id
 msgid "ID"
 msgstr ""
 
 #. module: sale_journal
-#: help:sale_journal.invoice.type,active:0
+#: model:ir.model.fields,help:sale_journal.field_sale_journal_invoice_type_active
 msgid "If the active field is set to False, it will allow you to hide the invoice type without removing it."
 msgstr ""
 
 #. module: sale_journal
-#: view:sale.order:sale_journal.view_sales_order_search
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
-#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_tree
-#: field:sale_journal.invoice.type,name:0
-#: view:stock.picking:sale_journal.view_picking_internal_search
-#: field:stock.picking,invoice_type_id:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_name
+#: model:ir.model.fields,field_description:sale_journal.field_sale_order_invoice_type_id
+#: model:ir.model.fields,field_description:sale_journal.field_stock_picking_invoice_type_id
+#: model:ir.ui.view,arch_db:sale_journal.view_picking_internal_search
+#: model:ir.ui.view,arch_db:sale_journal.view_sale_journal_invoice_type_form
+#: model:ir.ui.view,arch_db:sale_journal.view_sale_journal_invoice_type_tree
+#: model:ir.ui.view,arch_db:sale_journal.view_sales_order_search
 msgid "Invoice Type"
 msgstr ""
 
@@ -74,27 +79,27 @@ msgid "Invoice types are used for partners, sales orders and delivery orders. Yo
 msgstr ""
 
 #. module: sale_journal
-#: view:res.partner:sale_journal.view_partner_property_form
-msgid "Invoicing"
-msgstr ""
-
-#. module: sale_journal
-#: field:res.partner,property_invoice_type:0
+#: model:ir.model.fields,field_description:sale_journal.field_res_partner_property_invoice_type
 msgid "Invoicing Type"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_invoicing_method
 msgid "Invoicing method"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,write_uid:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,write_date:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -104,28 +109,18 @@ msgid "Non grouped"
 msgstr ""
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
+#: model:ir.model.fields,field_description:sale_journal.field_sale_journal_invoice_type_note
 msgid "Note"
 msgstr ""
 
 #. module: sale_journal
-#: view:sale_journal.invoice.type:sale_journal.view_sale_journal_invoice_type_form
+#: model:ir.ui.view,arch_db:sale_journal.view_sale_journal_invoice_type_form
 msgid "Notes"
 msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr ""
-
-#. module: sale_journal
-#: view:res.partner:sale_journal.view_partner_property_form
-msgid "Sales & Purchases"
 msgstr ""
 
 #. module: sale_journal
@@ -139,7 +134,12 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
+#: model:ir.model.fields,help:sale_journal.field_res_partner_property_invoice_type
 msgid "This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Transfer"
 msgstr ""
 

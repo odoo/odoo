@@ -1,13 +1,13 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 #	* l10n_br
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2015-08-25 09:39+0000\n"
+"PO-Revision-Date: 2015-08-25 09:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,157 +16,702 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_br
-#: field:account.tax,tax_discount:0
-#: field:account.tax.code,tax_discount:0
-#: field:account.tax.code.template,tax_discount:0
-#: field:account.tax.template,tax_discount:0
+#: model:account.account.tag,name:l10n_br.tax_COFINS
+msgid "COFINS"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_COFINS_3%
+msgid "COFINS 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_cofins
+msgid "COFINS Entrada"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_cofins3
+msgid "COFINS Entrada 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_cofins
+msgid "COFINS Saida"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_cofins3
+msgid "COFINS Saida 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_CSLL
+#: model:account.tax.template,name:l10n_br.tax_template_out_csll
+msgid "CSLL"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_tax_discount
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_tax_discount
 msgid "Discount this Tax in Prince"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
-#: model:ir.model,name:l10n_br.model_l10n_br_account_cst
-#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
-#: view:l10n_br_account.cst:0
-msgid "Tax Situation Code"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_externo
+msgid "ICMS Entrada Externo"
 msgstr ""
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.despesa
-msgid "Despesas"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_externo12
+msgid "ICMS Entrada Externo 12%"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_code
-#: field:l10n_br_account.cst,tax_code_id:0
-msgid "Tax Code"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_externo7
+msgid "ICMS Entrada Externo 7%"
 msgstr ""
 
 #. module: l10n_br
-#: help:account.tax.code,domain:0
-#: help:account.tax.code.template,domain:0
-msgid "This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_interno
+msgid "ICMS Entrada Interno"
 msgstr ""
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.resultado
-msgid "Resultado"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_interno19
+msgid "ICMS Entrada Interno 19%"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_template
-msgid "account.tax.template"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_interno26
+msgid "ICMS Entrada Interno 26%"
 msgstr ""
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.passivo
-msgid "Passivo"
+#: model:account.tax.template,name:l10n_br.tax_template_in_icms_subist
+msgid "ICMS Entrada Subist"
 msgstr ""
 
 #. module: l10n_br
-#: field:l10n_br_account.cst,name:0
-#: field:l10n_br_account.cst.template,name:0
-msgid "Description"
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Externo
+msgid "ICMS Externo"
 msgstr ""
 
 #. module: l10n_br
-#: constraint:account.tax.code:0
-msgid "Error!\n"
-"You cannot create recursive accounts."
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Externo_12%
+msgid "ICMS Externo 12%"
 msgstr ""
 
 #. module: l10n_br
-#: field:account.tax,amount_mva:0
-#: field:account.tax.template,amount_mva:0
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Externo_7%
+msgid "ICMS Externo 7%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Interno
+msgid "ICMS Interno"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Interno_19%
+msgid "ICMS Interno 19%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Interno_26%
+msgid "ICMS Interno 26%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_externo
+msgid "ICMS Saida Externo"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_externo12
+msgid "ICMS Saida Externo 12%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_externo7
+msgid "ICMS Saida Externo 7%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_interno
+msgid "ICMS Saida Interno"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_interno19
+msgid "ICMS Saida Interno 19%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_interno26
+msgid "ICMS Saida Interno 26%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_icms_subist
+msgid "ICMS Saida Subist"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ICMS_Subist
+msgid "ICMS Subist"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_18%
+msgid "IIPI 18%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI
+msgid "IPI"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_10%
+msgid "IPI 10%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_12%
+msgid "IPI 12%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_13%
+msgid "IPI 13%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_15%
+msgid "IPI 15%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_16%
+msgid "IPI 16%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_2%
+msgid "IPI 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_20%
+msgid "IPI 20%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_22%
+msgid "IPI 22%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_24%
+msgid "IPI 24%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_25%
+msgid "IPI 25%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_27%
+msgid "IPI 27%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_3%
+msgid "IPI 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_30%
+msgid "IPI 30%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_300%
+msgid "IPI 300%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_330%
+msgid "IPI 330%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_35%
+msgid "IPI 35%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_4%
+msgid "IPI 4%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_40%
+msgid "IPI 40%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_42%
+msgid "IPI 42%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_45%
+msgid "IPI 45%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_5%
+msgid "IPI 5%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_50%
+msgid "IPI 50%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_60%
+msgid "IPI 60%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_7%
+msgid "IPI 7%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IPI_8%
+msgid "IPI 8%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi
+msgid "IPI Entrada"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi10
+msgid "IPI Entrada 10%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi12
+msgid "IPI Entrada 12%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi13
+msgid "IPI Entrada 13%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi15
+msgid "IPI Entrada 15%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi16
+msgid "IPI Entrada 16%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi18
+msgid "IPI Entrada 18%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi2
+msgid "IPI Entrada 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi20
+msgid "IPI Entrada 20%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi22
+msgid "IPI Entrada 22%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi24
+msgid "IPI Entrada 24%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi25
+msgid "IPI Entrada 25%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi27
+msgid "IPI Entrada 27%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi3
+msgid "IPI Entrada 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi30
+msgid "IPI Entrada 30%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi300
+msgid "IPI Entrada 300%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi330
+msgid "IPI Entrada 330%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi35
+msgid "IPI Entrada 35%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi4
+msgid "IPI Entrada 4%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi40
+msgid "IPI Entrada 40%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi42
+msgid "IPI Entrada 42%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi45
+msgid "IPI Entrada 45%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi5
+msgid "IPI Entrada 5%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi50
+msgid "IPI Entrada 50%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi60
+msgid "IPI Entrada 60%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi7
+msgid "IPI Entrada 7%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_ipi8
+msgid "IPI Entrada 8%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi
+msgid "IPI Saída"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi10
+msgid "IPI Saída 10%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi12
+msgid "IPI Saída 12%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi13
+msgid "IPI Saída 13%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi15
+msgid "IPI Saída 15%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi16
+msgid "IPI Saída 16%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi18
+msgid "IPI Saída 18%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi2
+msgid "IPI Saída 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi20
+msgid "IPI Saída 20%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi22
+msgid "IPI Saída 22%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi24
+msgid "IPI Saída 24%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi25
+msgid "IPI Saída 25%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi27
+msgid "IPI Saída 27%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi3
+msgid "IPI Saída 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi30
+msgid "IPI Saída 30%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi300
+msgid "IPI Saída 300%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi330
+msgid "IPI Saída 330%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi35
+msgid "IPI Saída 35%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi4
+msgid "IPI Saída 4%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi40
+msgid "IPI Saída 40%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi42
+msgid "IPI Saída 42%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi45
+msgid "IPI Saída 45%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi5
+msgid "IPI Saída 5%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi50
+msgid "IPI Saída 50%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi60
+msgid "IPI Saída 60%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi7
+msgid "IPI Saída 7%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_ipi8
+msgid "IPI Saída 8%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IR
+#: model:account.tax.template,name:l10n_br.tax_template_out_ir
+msgid "IR"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_IRPJ
+#: model:account.tax.template,name:l10n_br.tax_template_out_irpj
+msgid "IRPJ"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISS_4%
+msgid "ISS 4%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISSQN
+msgid "ISSQN"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISSQN_1%
+msgid "ISSQN 1%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISSQN_2%
+msgid "ISSQN 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISSQN_3%
+msgid "ISSQN 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.tag,name:l10n_br.tax_ISSQN_5%
+msgid "ISSQN 5%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_issqn2
+msgid "ISSQN Entrada 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn
+msgid "ISSQN Saida"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn1
+msgid "ISSQN Saida 1%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn2
+msgid "ISSQN Saida 2%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn3
+msgid "ISSQN Saida 3%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn4
+msgid "ISSQN Saida 4%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_issqn5
+msgid "ISSQN Saida 5%"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_amount_mva
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_amount_mva
 msgid "MVA Percent"
 msgstr ""
 
 #. module: l10n_br
-#: help:account.tax.template,amount_mva:0
-#: help:account.tax.template,base_reduction:0
-msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
-
-#. module: l10n_br
-#: field:account.tax,base_reduction:0
-#: field:account.tax.template,base_reduction:0
-msgid "Redution"
-msgstr ""
-
-#. module: l10n_br
-#: sql_constraint:account.tax:0
-msgid "Tax Name must be unique per company!"
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax
-msgid "account.tax"
-msgstr ""
-
-#. module: l10n_br
-#: model:account.account.type,name:l10n_br.receita
-msgid "Receita"
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_template_form
-#: model:ir.model,name:l10n_br.model_l10n_br_account_cst_template
-#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
-#: view:l10n_br_account.cst.template:0
-msgid "Tax Situation Code Template"
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
-msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
-"    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
-msgstr ""
-
-#. module: l10n_br
-#: constraint:account.tax.code.template:0
-msgid "Error!\n"
-"You cannot create recursive Tax Codes."
-msgstr ""
-
-#. module: l10n_br
-#: help:account.tax,tax_discount:0
-#: help:account.tax.code,tax_discount:0
-#: help:account.tax.code.template,tax_discount:0
-#: help:account.tax.template,tax_discount:0
+#: model:ir.model.fields,help:l10n_br.field_account_tax_tax_discount
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_tax_discount
 msgid "Mark it for (ICMS, PIS e etc.)."
 msgstr ""
 
 #. module: l10n_br
-#: model:account.account.type,name:l10n_br.ativo
-msgid "Ativo"
+#: model:ir.actions.client,name:l10n_br.action_client_l10n_br_menu
+msgid "Open Account Dashboard Menu"
 msgstr ""
 
 #. module: l10n_br
-#: field:account.tax.code,domain:0
-#: field:account.tax.code.template,domain:0
-msgid "Domain"
+#: model:account.account.tag,name:l10n_br.tax_PIS
+msgid "PIS"
 msgstr ""
 
 #. module: l10n_br
-#: field:l10n_br_account.cst,code:0
-#: field:l10n_br_account.cst.template,code:0
-msgid "Code"
+#: model:account.account.tag,name:l10n_br.tax_PIS_0_65%
+msgid "PIS 0,65%"
 msgstr ""
 
 #. module: l10n_br
-#: help:account.tax,amount_mva:0
-#: help:account.tax,base_reduction:0
+#: model:account.tax.template,name:l10n_br.tax_template_in_pis
+msgid "PIS Entrada"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_in_pis065
+msgid "PIS Entrada 0,65%"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_pis
+msgid "PIS Saida"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.tax.template,name:l10n_br.tax_template_out_pis065
+msgid "PIS Saida 0,65%"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_base_reduction
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax_template_base_reduction
+msgid "Redution"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "Tax"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model.fields,help:l10n_br.field_account_tax_amount_mva
+#: model:ir.model.fields,help:l10n_br.field_account_tax_base_reduction
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_amount_mva
+#: model:ir.model.fields,help:l10n_br.field_account_tax_template_base_reduction
 msgid "Um percentual decimal em % entre 0-1."
-msgstr ""
-
-#. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax_code_template
-#: field:l10n_br_account.cst.template,tax_code_template_id:0
-msgid "Tax Code Template"
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,48 +16,35 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_complete
-#: view:website:website_blog.blog_post_short
-#: view:website:website_blog.latest_blogs
-msgid "&nbsp;"
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:117
+#, python-format
+msgid " Click on this button to send your blog post online."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "&times;"
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid "&amp;times;"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid ", referenced in Google."
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid ";\n"
-"                   You can review titles, keywords and descriptions of all blogs at once."
-msgstr ""
-
-#. module: website_blog
-#: model:ir.actions.act_window,help:website_blog.action_blog_post
-msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                    Click to create a new blog post.\n"
-"                </p>\n"
-"            "
+#: model:ir.ui.view,arch_db:website_blog.blog_feed
+msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 msgstr ""
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_1
-msgid "<section class=\"mt16 mb16 readable\">\n"
-"            <iframe width=\"361\" height=\"200\" src=\"http://www.youtube.com/embed/EkbBFmIWoTE\" frameborder=\"0\" allowfullscreen></iframe>\n"
-"            <p data-chatter-id=\"counter_0/section\">\n"
+msgid "<div class=\"container\">\n"
+"        <section class=\"mt16 mb16 readable\">\n"
+"            <iframe width=\"100%\" height=\"250\" src=\"http://www.youtube.com/embed/EkbBFmIWoTE\" frameborder=\"0\" allowfullscreen></iframe>\n"
+"            <p data-chatter-id=\"counter_43941/div/section\">\n"
 "                Emails are broken.\n"
-"            </p><p data-chatter-id=\"counter_1/section\">\n"
+"            </p><p data-chatter-id=\"counter_52311/div/section\">\n"
 "                Emails make me waste my time. But I need them.\n"
 "                Given the importance that emails have in our lives,\n"
 "                it's incredible it's still one of the only software\n"
 "                areas that did not evolve in the past 20 years!\n"
-"            </p><p data-chatter-id=\"counter_2/section\">\n"
+"            </p><p data-chatter-id=\"counter_72560/div/section\">\n"
 "                Reading my inbox is the most unproductive task I do\n"
 "                on a daily basis. I have to spend one full hour a\n"
 "                day to process my emails. All the junk flows in the\n"
@@ -69,18 +56,18 @@ msgid "<section class=\"mt16 mb16 readable\">\n"
 "            </p>\n"
 "        </section>\n"
 "        <section class=\"mt16 mb16 readable\">\n"
-"            <p data-chatter-id=\"counter_3/section\">\n"
+"            <p data-chatter-id=\"counter_66635/div/section\">\n"
 "                At Odoo, we build tools to bring productivity to\n"
 "                enterprises. As emails and information flows are one of\n"
 "                the biggest wastes of time in companies, we have to fix\n"
 "                this.\n"
-"            </p><p data-chatter-id=\"counter_4/section\">\n"
+"            </p><p data-chatter-id=\"counter_46768/div/section\">\n"
 "                To disrupt emails, you need more than just another user\n"
 "                interface. We need to rethink the whole communication flow.\n"
 "            </p>\n"
 "            <h3>The Communication Mechanism of Odoo</h3>\n"
-"            <p data-chatter-id=\"counter_5/section\">\n"
-"                Here are the ideas behing the Odoo communication tools:\n"
+"            <p data-chatter-id=\"counter_68578/div/section\">\n"
+"                Here are the ideas behind the Odoo communication tools:\n"
 "            </p>\n"
 "            <ul>\n"
 "                <li>\n"
@@ -137,34 +124,33 @@ msgid "<section class=\"mt16 mb16 readable\">\n"
 "                </li>\n"
 "            </ul>\n"
 "        </section>\n"
+"    </div>\n"
 "\n"
 ""
 msgstr ""
 
 #. module: website_blog
 #: model:blog.post,content:website_blog.blog_post_2
-msgid "<section class=\"row readable\">\n"
-"            <div class=\"col-md-12 mb32\">\n"
-"                <img class=\"img-responsive\" src=\"/website_blog/static/src/img/CMS_WMS_screens.jpg\">\n"
-"            </div>\n"
-"            <div class=\"col-md-6 col-md-offset-3 mb16 mt16\">\n"
-"                <p class=\"text-center\" data-chatter-id=\"counter_0/section/div\">\n"
-"                    New Features Launched\n"
-"                </p>\n"
-"                <p class=\"text-center\" data-chatter-id=\"counter_1/section/div\">\n"
-"                    To add to an already comprehensive set of Odoo\n"
+msgid "<section><div class=\"container\">\n"
+"            <div class=\"row\">\n"
+"                <div class=\"col-md-6 mt16\"><img class=\"img img-responsive mb16\" src=\"/website_blog/static/src/img/CMS_WMS_screens.jpg\" style=\"\"></div>\n"
+"\n"
+"                <div class=\"col-md-6 mt16\">\n"
+"                    <h3>New Features Launched</h3>\n"
+"\n"
+"                    <p data-chatter-id=\"counter_0/section/div/div/div\">To add to an already comprehensive set of Odoo\n"
 "                    features, a website content management system (CMS\n"
 "                    or WMS) has been developed and a beta release is\n"
-"                    available from today, 31st January 2014.\n"
-"                </p>\n"
+"                    available from today, 31st January 2014.</p>\n"
+"                </div>\n"
 "            </div>\n"
-"        </section>\n"
+"        \n"
 "        <section class=\"readable\">\n"
-"            <p data-chatter-id=\"counter_2/section\">\n"
+"            <p data-chatter-id=\"counter_25302/section/div/section\">\n"
 "                Odoo claims to be 'the Open Source software that makes\n"
 "                building your company's website and selling your products\n"
 "                online easy'. So how true is this statement?\n"
-"            </p><p data-chatter-id=\"counter_3/section\">\n"
+"            </p><p data-chatter-id=\"counter_57561/section/div/section\">\n"
 "                \"Odoo's latest launch will allow a business to go from\n"
 "                zero to trading online quicker than ever before,&#8221; Stuart\n"
 "                Mackintosh, MD of Open Source specialist and Odoo\n"
@@ -175,18 +161,18 @@ msgid "<section class=\"row readable\">\n"
 "                performance previously reserved for the big IT investors.\"\n"
 "            </p>\n"
 "            <blockquote>\n"
-"                <p data-chatter-id=\"counter_4/section/blockquote\">\n"
+"                <p data-chatter-id=\"counter_47572/section/div/section/blockquote\">\n"
 "                    \"Finally, the leading edge is being brought to the masses.\n"
 "                    It will now be the turn of the big players to catch up to\n"
 "                    the superior technologies of the SME.\"\n"
 "                </p>\n"
 "            </blockquote>\n"
-"            <p data-chatter-id=\"counter_5/section\">\n"
+"            <p data-chatter-id=\"counter_81117/section/div/section\">\n"
 "                \"This is another clever and highly disruptive move by\n"
 "                Odoo,which will force other technology providers to\n"
 "                take another look at the value they are providing to ensure\n"
 "                that their 'solutions' can still compete.\"\n"
-"            </p><p data-chatter-id=\"counter_6/section\">\n"
+"            </p><p data-chatter-id=\"counter_64094/section/div/section\">\n"
 "                \"Odoo now competes on many fronts, with no real\n"
 "                competition out there to knock them off the top spot.\n"
 "                With the launch of their integrated CMS and Ecommerce\n"
@@ -197,21 +183,21 @@ msgid "<section class=\"row readable\">\n"
 "                employed by most industry providers.\"\n"
 "            </p>\n"
 "            <h4>Adding to industry leading technology</h4>\n"
-"            <p data-chatter-id=\"counter_7/section\">\n"
+"            <p data-chatter-id=\"counter_52814/section/div/section\">\n"
 "                Like many modern website editors, with Odoo you can edit\n"
 "                content in-line, enabling you to see exactly what you are\n"
 "                changing and ensure your changes suit the context.\n"
-"            </p><p data-chatter-id=\"counter_8/section\">\n"
+"            </p><p data-chatter-id=\"counter_28023/section/div/section\">\n"
 "                However, unlike other web content management systems, it\n"
 "                fully integrates into the back-end database. This means\n"
 "                that when you edit a product description, image or price,\n"
 "                it updates the product database in real time, providing a\n"
 "                true self-service window into the business.\n"
-"            </p><p data-chatter-id=\"counter_9/section\">\n"
+"            </p><p data-chatter-id=\"counter_66164/section/div/section\">\n"
 "                This provides a single source of data for your company and\n"
 "                removes the need to create offline synchronisation between\n"
 "                website and product database.\n"
-"            </p><p data-chatter-id=\"counter_10/section\">\n"
+"            </p><p data-chatter-id=\"counter_33386/section/div/section\">\n"
 "                As it comes, there is a default website based on Bootstrap\n"
 "                3, the latest industry standard for rapid development of\n"
 "                multi-device websites backed by Twitter, so can be directly\n"
@@ -220,74 +206,76 @@ msgid "<section class=\"row readable\">\n"
 "            </p>\n"
 "        </section>\n"
 "\n"
-""
+"</div></section>"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:211
+#: code:addons/website_blog/models/website_blog.py:219
 #, python-format
 msgid "A new post %s has been published on the %s blog."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
 msgid "About us"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:66
-#, python-format
-msgid "Add Another Block"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:24
 #, python-format
 msgid "Add Content"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_history
 msgid "Archives"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_search
-#: field:blog.post,author_id:0
-#: field:blog.post,create_uid:0
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Atom Feed"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_author_id
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_uid
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,author_avatar:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_author_avatar
 msgid "Avatar"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,background_image:0
-msgid "Background Image"
-msgstr ""
-
-#. module: website_blog
-#: view:blog.blog:website_blog.view_blog_blog_form
-#: view:blog.post:website_blog.view_blog_post_search
-#: field:blog.post,blog_id:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_blog_id
+#: model:ir.ui.menu,name:website_blog.menu_website_blog_root
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#: model:website.menu,name:website_blog.menu_news
 msgid "Blog"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,name:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_name
 msgid "Blog Name"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_form
-#: view:blog.post:website_blog.view_blog_post_search
-#: field:blog.post.history,post_id:0
+#: code:addons/website_blog/models/website_blog.py:266
 #: model:ir.model,name:website_blog.model_blog_post
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, python-format
 msgid "Blog Post"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:270
+#, python-format
+msgid "Blog Post <b>%s</b> seems to have a link to this page !"
 msgstr ""
 
 #. module: website_blog
@@ -298,29 +286,21 @@ msgid "Blog Post Created"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post.history:website_blog.view_blog_history_form
-#: model:ir.model,name:website_blog.model_blog_post_history
-msgid "Blog Post History"
-msgstr ""
-
-#. module: website_blog
-#: code:addons/website_blog/controllers/main.py:305
-#: code:addons/website_blog/models/website_blog.py:133
-#, python-format
+#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Post Title"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_list
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
 #: model:ir.ui.menu,name:website_blog.menu_page
-#: model:ir.ui.menu,name:website_blog.menu_wiki
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Blog Posts"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,subtitle:0
-#: view:blog.post:website_blog.view_blog_post_form
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_subtitle
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Blog Subtitle"
 msgstr ""
 
@@ -336,11 +316,16 @@ msgid "Blog Tags"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.blog:website_blog.view_blog_blog_list
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_blog_list
 msgid "Blogs"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Blue"
 msgstr ""
 
 #. module: website_blog
@@ -349,63 +334,101 @@ msgid "Building your company's website and selling your products online easy."
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post.history.show_diff:website_blog.view_wiki_show_diff
-msgid "Cancel"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_complete
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:58
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+#, python-format
 msgid "Change Cover"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:33
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:54
 #, python-format
-msgid "Click <em>Continue</em> to create the blog post."
+msgid "Change and customize your blog post cover."
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:212
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:108
+#, python-format
+msgid "Check Mobile Preview"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:68
+#, python-format
+msgid "Choose an image"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:69
+#, python-format
+msgid "Choose an image from the library."
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:220
 #, python-format
 msgid "Click here to access the post."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Click on \"Content\" on the top menu to write your first blog post."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:94
 #, python-format
-msgid "Click on this area and set a catchy title for your blog post."
+msgid "Click on '<em>Save</em>' button to record changes on the page."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:88
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:77
 #, python-format
-msgid "Click the <em>Save</em> button to record changes on the page."
+msgid "Click on '<em>Save</em>' to set the picture as cover."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website.tour.blog.js:102
 #, python-format
+msgid "Click on the mobile icon to preview how your blog post will be displayed on a mobile device."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.actions.act_window,help:website_blog.action_blog_post
+msgid "Click to create a new blog post."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:124
+#, python-format
 msgid "Close Tutorial"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Color"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
 msgid "Contact us"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_search
-#: field:blog.post,content:0
-#: field:blog.post.history,content:0
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:84
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_content
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, python-format
 msgid "Content"
 msgstr ""
 
@@ -418,163 +441,137 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
 #, python-format
-msgid "Create Blog Post"
+msgid "Cover"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_cover_properties
+msgid "Cover Properties"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:8
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:14
 #, python-format
 msgid "Create a blog post"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,create_uid:0
-#: field:blog.post.history.show_diff,create_uid:0
-#: field:blog.tag,create_uid:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,create_date:0
-#: field:blog.post,create_date:0
-#: field:blog.post.history.show_diff,create_date:0
-#: field:blog.tag,create_date:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_create_date
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_create_date
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_create_date
 msgid "Created on"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post.history,create_date:0
-msgid "Date"
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
+#, python-format
+msgid "Customize Cover"
 msgstr ""
 
 #. module: website_blog
-#: help:blog.blog,message_last_post:0
-#: help:blog.post,message_last_post:0
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_last_post
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_last_post
 msgid "Date of the last message posted on the record."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:80
-#, python-format
-msgid "Delete the block"
-msgstr ""
-
-#. module: website_blog
-#: field:blog.blog,description:0
-msgid "Description"
-msgstr ""
-
-#. module: website_blog
-#: field:blog.post.history.show_diff,diff:0
-msgid "Diff"
-msgstr ""
-
-#. module: website_blog
-#: view:blog.post.history.show_diff:website_blog.view_wiki_show_diff
-#: model:ir.actions.act_window,name:website_blog.action_view_wiki_show_diff
-#: model:ir.actions.act_window,name:website_blog.action_view_wiki_show_diff_values
-msgid "Difference"
-msgstr ""
-
-#. module: website_blog
-#: field:mail.message,path:0
+#: model:ir.model.fields,field_description:website_blog.field_mail_message_path
 msgid "Discussion Path"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post.history:website_blog.view_blog_history_tree
-msgid "Document History"
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_display_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_display_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:59
-#, python-format
-msgid "Drag & Drop a Block"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:73
-#, python-format
-msgid "Drag & Drop a block"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:74
-#, python-format
-msgid "Drag this block and drop it below the image block."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:60
-#, python-format
-msgid "Drag this block and drop it in your page."
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Duplicate"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
 msgid "Follow us"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,message_follower_ids:0
-#: field:blog.post,message_follower_ids:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_follower_ids
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_follower_ids
 msgid "Followers"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:81
-#, python-format
-msgid "From this toolbar you can move, duplicate or delete the selected zone. Click on the garbage can image to delete the block. Or click on the Title and delete it."
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_channel_ids
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_channel_ids
+msgid "Followers (Channels)"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_search
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_partner_ids
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Full Screen"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.blog,subtitle:website_blog.blog_blog_1
+msgid "Get in touch with us"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Green"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Group By"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,history_ids:0
-msgid "History"
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "High"
 msgstr ""
 
 #. module: website_blog
-#: help:blog.blog,message_summary:0
-#: help:blog.post,message_summary:0
-msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
-msgstr ""
-
-#. module: website_blog
-#: field:blog.blog,id:0
-#: field:blog.post,id:0
-#: field:blog.post.history,id:0
-#: field:blog.post.history.show_diff,id:0
-#: field:blog.tag,id:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_id
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_id
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_id
 msgid "ID"
 msgstr ""
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
-msgid "Ideas behing the Odoo communication tools."
+msgid "Ideas behind the Odoo communication tools."
 msgstr ""
 
 #. module: website_blog
-#: help:blog.blog,message_unread:0
-#: help:blog.post,message_unread:0
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_needaction
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_unread
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_needaction
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_unread
 msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid "In"
 msgstr ""
 
 #. module: website_blog
@@ -583,73 +580,63 @@ msgid "Integrating your CMS and E-Commerce"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,message_is_follower:0
-#: field:blog.post,message_is_follower:0
-msgid "Is a Follower"
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_is_follower
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_search
-#: field:blog.post,write_uid:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_write_uid
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Last Contributor"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,message_last_post:0
-#: field:blog.post,message_last_post:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_last_post
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_last_post
 msgid "Last Message Date"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,write_date:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog___last_update
+#: model:ir.model.fields,field_description:website_blog.field_blog_post___last_update
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_write_date
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag___last_update
 msgid "Last Modified on"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,write_uid:0
-#: field:blog.post.history,write_uid:0
-#: field:blog.post.history.show_diff,write_uid:0
-#: field:blog.tag,write_uid:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_uid
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,write_date:0
-#: field:blog.post.history,write_date:0
-#: field:blog.post.history.show_diff,write_date:0
-#: field:blog.tag,write_date:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_write_date
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: website_blog
-#: help:blog.post,history_ids:0
-msgid "Last post modifications"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "Latest Posts"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:52
-#, python-format
-msgid "Layout Your Blog Post"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:67
-#, python-format
-msgid "Let's add another block to your post."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:12
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:18
 #, python-format
 msgid "Let's go through the first steps to write beautiful blog posts."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Low"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Medium"
 msgstr ""
 
 #. module: website_blog
@@ -658,57 +645,84 @@ msgid "Message"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,message_ids:0
-#: field:blog.post,message_ids:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_ids
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_ids
 msgid "Messages"
 msgstr ""
 
 #. module: website_blog
-#: help:blog.blog,message_ids:0
-#: help:blog.post,message_ids:0
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_ids
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_ids
 msgid "Messages and communication history"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post.history,create_uid:0
-msgid "Modified By"
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
+#, python-format
+msgid "Mobile Preview"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_form
-#: field:blog.tag,name:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_name
 msgid "Name"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Narrow"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_needaction
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_needaction
+msgid "Need Action"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_needaction_counter
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_needaction_counter
+msgid "Need Action Counter"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:11
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:11
-#: view:website:website.layout
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:17
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:31
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:21
+#: model:ir.ui.view,arch_db:website_blog.content_new_blogpost
 #, python-format
 msgid "New Blog Post"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website.layout
-#: model:website.menu,name:website_blog.menu_news
+#: model:ir.ui.view,arch_db:website_blog.header_footer_custom
 msgid "News"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "No Cover"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "No blog post yet."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.latest_blogs
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "No keywords defined!"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,visits:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_visits
 msgid "No of Views"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "None"
 msgstr ""
 
 #. module: website_blog
@@ -719,8 +733,15 @@ msgid "Not Published"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "Not published"
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_needaction_counter
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_needaction_counter
+msgid "Number of needaction messages"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_blog_message_unread_counter
+#: model:ir.model.fields,help:website_blog.field_blog_post_message_unread_counter
+msgid "Number of unread messages"
 msgstr ""
 
 #. module: website_blog
@@ -729,58 +750,56 @@ msgid "Odoo, email"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Opacity"
+msgstr ""
+
+#. module: website_blog
+#: model:blog.blog,name:website_blog.blog_blog_1
+msgid "Our Blog"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_blogs
 msgid "Our Blogs"
 msgstr ""
 
 #. module: website_blog
-#: model:ir.actions.act_window,name:website_blog.action_related_page_history
-msgid "Page History"
-msgstr ""
-
-#. module: website_blog
-#: model:ir.actions.act_window,name:website_blog.action_history
-msgid "Page history"
-msgstr ""
-
-#. module: website_blog
-#: model:ir.ui.menu,name:website_blog.menu_page_history
-msgid "Pages history"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_follow_us
 msgid "Participate on our social stream."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:34
-#: view:website:website_blog.blog_post_complete
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:28
+#, python-format
+msgid "Please"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:31
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_post_complete_comment
 #, python-format
 msgid "Post"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.tag,post_ids:0
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:44
+#, python-format
+msgid "Post Headline"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_post_ids
 msgid "Posts"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,website_published:0
-msgid "Publish"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:95
+#: code:addons/website_blog/controllers/main.py:267
 #, python-format
-msgid "Publish Your Post"
-msgstr ""
-
-#. module: website_blog
-#: help:blog.post,website_published:0
-msgid "Publish on the website"
+msgid "Public user cannot post comments on blog post."
 msgstr ""
 
 #. module: website_blog
@@ -797,98 +816,141 @@ msgid "Published Post"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,ranking:0
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:116
+#, python-format
+msgid "Publishing status"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Purple"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_ranking
 msgid "Ranking"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_complete
-msgid "Read Next"
+#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
+msgid "Read Next <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Red"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:87
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:76
+#, python-format
+msgid "Save"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:93
 #, python-format
 msgid "Save Your Blog"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "Search Engine Optimization"
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:109
+#, python-format
+msgid "Scroll to check rendering and then close the mobile preview."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:26
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:61
+#, python-format
+msgid "Select this menu item to change blog cover."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:32
 #, python-format
 msgid "Select this menu item to create a new blog post."
 msgstr ""
 
 #. module: website_blog
-#: view:blog.blog:website_blog.view_blog_blog_form
-#: view:blog.post:website_blog.view_blog_post_form
-msgid "Send a message to the group"
-msgstr ""
-
-#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:45
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:29
 #, python-format
-msgid "Set a Title"
+msgid "Sign in"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Size"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:13
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
 #, python-format
 msgid "Skip"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:13
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
 #, python-format
 msgid "Start Tutorial"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,subtitle:0
+#. openerp-web
+#: code:addons/website_blog/models/website_blog.py:90
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:90
+#, python-format
+msgid "Start writing here..."
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:85
+#, python-format
+msgid "Start writing your story here. Click on save in the upper left corner when you are done."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_subtitle
 msgid "Sub Title"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/controllers/main.py:306
-#: code:addons/website_blog/models/website_blog.py:134
-#, python-format
+#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "Subtitle"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,message_summary:0
-#: field:blog.post,message_summary:0
-#: field:blog.post.history,summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: website_blog
-#: view:blog.tag:website_blog.blog_tag_form
+#: model:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Tag Form"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.tag:website_blog.blog_tag_tree
+#: model:ir.ui.view,arch_db:website_blog.blog_tag_tree
 msgid "Tag List"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,tag_ids:0
-#: view:website:website_blog.blog_post_short
+#: sql_constraint:blog.tag:0
+msgid "Tag name already exists !"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_tag_ids
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_tags
 msgid "Tags"
 msgstr ""
 
 #. module: website_blog
-#: view:blog.post:website_blog.view_blog_post_form
+#: model:ir.ui.view,arch_db:website_blog.view_blog_post_form
 msgid "Technical"
 msgstr ""
 
@@ -899,14 +961,8 @@ msgid "The Future of Emails"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:265
-#, python-format
-msgid "There are no changes in revisions."
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "This box will not be visible to your visitors."
+#: model:ir.model.fields,help:website_blog.field_blog_post_website_url
+msgid "The full URL to access the document through the website."
 msgstr ""
 
 #. module: website_blog
@@ -917,62 +973,65 @@ msgid "This is your new blog post. Let's edit it."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "This page is great to improve your"
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid "This page is great to improve your <strong>Search Engine Optimization</strong>;\n"
+"                   You can review titles, keywords and descriptions of all blogs at once."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:101
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:123
 #, python-format
-msgid "This tutorial is finished. To discover more features, improve the content of this page and try the <em>Promote</em> button in the top right menu."
+msgid "This tutorial is over. To discover more features and improve the content of this page, go to the upper right customize menu. You can also add some cool content with your text by clicking on 'Insert Blocks' in the edit mode."
 msgstr ""
 
 #. module: website_blog
-#: field:blog.post,name:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_name
 msgid "Title"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_complete
-msgid "True"
-msgstr ""
-
-#. module: website_blog
-#: field:blog.blog,message_unread:0
-#: field:blog.post,message_unread:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_unread
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_unread
 msgid "Unread Messages"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_message_unread_counter
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "Untitled Post"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:19
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:25
 #, python-format
 msgid "Use this <em>'Content'</em> menu to create a new blog post like any other document (page, menu, products, event, ...)."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:53
-#, python-format
-msgid "Use well designed building blocks to structure the content of your blog. Click 'Insert Blocks' to add new content."
-msgstr ""
-
-#. module: website_blog
-#: view:blog.tag:website_blog.blog_tag_form
+#: model:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Used in:"
 msgstr ""
 
 #. module: website_blog
-#: help:mail.message,path:0
+#: model:ir.model.fields,help:website_blog.field_mail_message_path
 msgid "Used to display messages in a paragraph-based chatter using a unique path;"
 msgstr ""
 
 #. module: website_blog
-#: code:addons/website_blog/models/website_blog.py:265
-#: code:addons/website_blog/wizard/document_page_show_diff.py:50
-#, python-format
-msgid "Warning!"
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_published
+msgid "Visible in Website"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_website
+msgid "Website"
 msgstr ""
 
 #. module: website_blog
@@ -981,101 +1040,72 @@ msgid "Website Blogs"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,website_message_ids:0
-#: field:blog.post,website_message_ids:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_message_ids
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_message_ids
 msgid "Website Messages"
 msgstr ""
 
 #. module: website_blog
-#: help:blog.blog,website_message_ids:0
-#: help:blog.post,website_message_ids:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_url
+msgid "Website URL"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_blog_blog_website_message_ids
+#: model:ir.model.fields,help:website_blog.field_blog_post_website_message_ids
 msgid "Website communication history"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,website_meta_description:0
-#: field:blog.post,website_meta_description:0
-#: field:blog.tag,website_meta_description:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_meta_description
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_meta_description
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_website_meta_description
 msgid "Website meta description"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,website_meta_keywords:0
-#: field:blog.post,website_meta_keywords:0
-#: field:blog.tag,website_meta_keywords:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_meta_keywords
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_meta_keywords
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_website_meta_keywords
 msgid "Website meta keywords"
 msgstr ""
 
 #. module: website_blog
-#: field:blog.blog,website_meta_title:0
-#: field:blog.post,website_meta_title:0
-#: field:blog.tag,website_meta_title:0
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog_website_meta_title
+#: model:ir.model.fields,field_description:website_blog.field_blog_post_website_meta_title
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag_website_meta_title
 msgid "Website meta title"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:26
-#: view:website:website_blog.blog_post_complete
 #, python-format
 msgid "Write a comment..."
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid "Write a small text here for when"
-msgstr ""
-
-#. module: website_blog
-#: code:addons/website_blog/wizard/document_page_show_diff.py:50
-#, python-format
-msgid "You need to select minimum one or maximum two history revisions!"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "You should"
+#: model:ir.ui.view,arch_db:website_blog.opt_blog_rc_about_us
+msgid "Write a small text here for when <b>new visitors</b> find your website\n"
+"            through your <b>blog entries</b>, referenced in Google."
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:32
+#: code:addons/website_blog/static/src/js/website.tour.blog.js:46
 #, python-format
-msgid "Your Email..."
+msgid "Write a title, the subtitle is optional."
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/website.tour.blog.js:96
-#, python-format
-msgid "Your blog post is not yet published. You can update this draft version and publish it once you are ready."
+#: model:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Yellow"
 msgstr ""
 
 #. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:29
-#, python-format
-msgid "Your name..."
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "add a banner on the top"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.latest_blogs
-msgid "as it is a frequent landing page for new visitors."
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid "blog entries"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_complete
-msgid "blog_title js_tweet"
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
+msgid "You should <strong>add a banner on the top</strong> as it is a frequent landing page for new visitors.\n"
+"                   <span class=\"text-muted\">This box will not be visible to your visitors.</span>"
 msgstr ""
 
 #. module: website_blog
@@ -1086,51 +1116,47 @@ msgid "by"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid "col-sm-8"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_short
-#: view:website:website_blog.latest_blogs
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "comment"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-#: view:website:website_blog.latest_blogs
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "comments"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid "find your website\n"
-"            through your"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_complete
-msgid "js_tweet mt32"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_short
-msgid "new visitors"
-msgstr ""
-
-#. module: website_blog
-#: view:website:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "not published"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_complete
+#: model:ir.ui.view,arch_db:website_blog.blog_post_complete
 msgid "on"
 msgstr ""
 
 #. module: website_blog
-#: view:website:website_blog.blog_post_short
-#: view:website:website_blog.latest_blogs
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+#: model:ir.ui.view,arch_db:website_blog.latest_blogs
 msgid "pull-right"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/xml/website_blog.inline.discussion.xml:29
+#, python-format
+msgid "to comment."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "view"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.ui.view,arch_db:website_blog.blog_post_short
+msgid "views"
 msgstr ""
 

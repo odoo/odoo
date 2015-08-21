@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-01-21 14:08+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: product_email_template
-#: model:email.template,body_html:product_email_template.product_online_training_email_template
+#: model:mail.template,body_html:product_email_template.product_online_training_email_template
 msgid " \n"
 "    <div style=\"height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;\">\n"
 "            Online Training + Certification\n"
@@ -45,7 +45,7 @@ msgid " \n"
 "        <table>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <img src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\"/>\n"
+"                    <img src=\"/product_email_template/static/img/online_training.png\"/>\n"
 "                </td>\n"
 "                <td style=\"height: auto;margin-top:10px;margin-bottom:10px;font-size:18px;color: #646464;\">\n"
 "                    <strong>There are three components to the training</strong>\n"
@@ -172,7 +172,6 @@ msgid " \n"
 "                        <li>Call, Meeting</li>\n"
 "                        <li>Partners & contacts</li>\n"
 "                        <li>Automated actions</li>\n"
-"                        <li>Import partners and contacts from LinkedIn</li>\n"
 "                    </ul>\n"
 "                </td>\n"
 "                <td style=\"width:50%;\">\n"
@@ -263,7 +262,7 @@ msgid " \n"
 "            <tr style=\"text-align: left;font-size : 16px;color: #646464;\">\n"
 "                <td style=\"width:50%;\">\n"
 "                    <ul>\n"
-"                        <li>Suppliers</li>\n"
+"                        <li>Vendors</li>\n"
 "                        <li>Products</li>\n"
 "                        <li>Request for Quotation</li>\n"
 "                        <li>Purchase order</li>\n"
@@ -277,7 +276,7 @@ msgid " \n"
 "                        <li>Better negotiate volumes and prices based on historical data</li>\n"
 "                        <li>Centralize all the data to be able to build reporting and statistics</li>\n"
 "                        <li>Control the invoicing process</li>\n"
-"                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>\n"
+"                        <li>Work with purchase requisitions to ask different vendors to submit quotations</li>\n"
 "                    </ul>\n"
 "                </td>\n"
 "            </tr>\n"
@@ -336,8 +335,8 @@ msgid " \n"
 "                <td style=\"width:50%;\">\n"
 "                    <ul>\n"
 "                        <li>Projects</li>\n"
-"                        <li>Tasks and tasks delegation</li>\n"
-"                        <li>Issues and issues escalation</li>\n"
+"                        <li>Tasks</li>\n"
+"                        <li>Issues</li>\n"
 "                    </ul>\n"
 "                </td>\n"
 "                <td style=\"width:50%;\">\n"
@@ -346,7 +345,6 @@ msgid " \n"
 "                        <li>Discover the Kanban view to quickly operate some actions and to quickly detect any bottlenecks in your projects flows</li>\n"
 "                        <li>Discover the Gantt view to see how your project has been planned and adapt it according to new elements or to the people agenda</li>\n"
 "                        <li>Define project members & delegate tasks</li>\n"
-"                        <li>Register issues and escalate them</li>\n"
 "                        <li>Create automatically timesheet lines in the Human Resources menu from recorded work activities</li>\n"
 "                        <li>Track and invoice (to customers) the costs associated to a project</li>\n"
 "                        <li>Manage a support ticket system</li>\n"
@@ -376,7 +374,7 @@ msgid " \n"
 "                        <li>Better negotiate volumes and prices based on historical data</li>\n"
 "                        <li>Centralize all the data to be able to build reporting and statistics</li>\n"
 "                        <li>Control the invoicing process</li>\n"
-"                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>\n"
+"                        <li>Work with purchase requisitions to ask different vendors to submit quotations</li>\n"
 "                    </ul>\n"
 "                    <strong>About Holidays:</strong>\n"
 "                    <ul>\n"
@@ -524,7 +522,7 @@ msgid " \n"
 "                        <li>Keep control on the pricing policy</li>\n"
 "                        <li>Allow discounts for some periods</li>\n"
 "                        <li>Ensure your margins even when you define discounts</li>\n"
-"                        <li>Allow different pricing by customer and/or supplier</li>\n"
+"                        <li>Allow different pricing by customer and/or vendor</li>\n"
 "                        <li>Update the prices in an easy way</li>\n"
 "                    </ul>\n"
 "                </td>\n"
@@ -645,12 +643,12 @@ msgid " \n"
 msgstr ""
 
 #. module: product_email_template
-#: view:email.template:product_email_template.email_template_form_simplified
+#: model:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
 msgid "Body"
 msgstr ""
 
 #. module: product_email_template
-#: view:email.template:product_email_template.email_template_form_simplified
+#: model:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
 msgid "Email Template"
 msgstr ""
 
@@ -660,13 +658,14 @@ msgid "Invoice"
 msgstr ""
 
 #. module: product_email_template
-#: model:email.template,subject:product_email_template.product_online_training_email_template
+#: model:mail.template,subject:product_email_template.product_online_training_email_template
+#: model:product.product,name:product_email_template.product_online_training
 #: model:product.template,name:product_email_template.product_online_training_product_template
 msgid "Online Training"
 msgstr ""
 
 #. module: product_email_template
-#: field:product.template,email_template_id:0
+#: model:ir.model.fields,field_description:product_email_template.field_product_template_email_template_id
 msgid "Product Email Template"
 msgstr ""
 
@@ -676,7 +675,7 @@ msgid "Product Template"
 msgstr ""
 
 #. module: product_email_template
-#: help:product.template,email_template_id:0
-msgid "When validating an invoice, an email will be sent to the customerbased on this template. The customer will receive an email for eachproduct linked to an email template."
+#: model:ir.model.fields,help:product_email_template.field_product_template_email_template_id
+msgid "When validating an invoice, an email will be sent to the customer based on this template. The customer will receive an email for each product linked to an email template."
 msgstr ""
 

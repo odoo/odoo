@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 8.0\n"
+"Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-01-21 14:07+0000\n"
+"POT-Creation-Date: 2015-08-25 09:00+0000\n"
+"PO-Revision-Date: 2015-08-25 09:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,9 +17,27 @@ msgstr ""
 
 #. module: im_chat
 #. openerp-web
-#: code:addons/im_chat/static/src/js/im_chat.js:88
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:89
+#: code:addons/im_chat/static/src/js/im_chat_common.js:92
 #, python-format
 msgid "%d Messages"
+msgstr ""
+
+#. module: im_chat
+#: code:addons/im_chat/models/im_chat_session.py:180
+#, python-format
+msgid "%s joined the conversation."
+msgstr ""
+
+#. module: im_chat
+#: code:addons/im_chat/models/im_chat_session.py:202
+#, python-format
+msgid "%s left the conversation."
+msgstr ""
+
+#. module: im_chat
+#: model:ir.actions.act_window,help:im_chat.im_chat_shortcode_action
+msgid "A shortcode is a keyboard shortcut. For instance, you type #gm and it will be transformed into \"Good Morning\"."
 msgstr ""
 
 #. module: im_chat
@@ -28,7 +46,7 @@ msgid "A user can only have one IM status."
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.message,from_id:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_from_id
 msgid "Author"
 msgstr ""
 
@@ -38,28 +56,78 @@ msgid "Away"
 msgstr ""
 
 #. module: im_chat
+#: model:ir.model,name:im_chat.model_im_chat_shortcode
+msgid "Canned Response / Shortcode"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model,name:im_chat.model_im_chat_session
+msgid "Chat Conversation"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model,name:im_chat.model_im_chat_conversation_state
+msgid "Chat Conversation State"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model,name:im_chat.model_im_chat_message
+msgid "Chat Message"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.actions.act_window,name:im_chat.im_chat_shortcode_action
+msgid "Chat Shortcode"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.actions.act_window,help:im_chat.im_chat_shortcode_action
+msgid "Click to define a new chat shortcode."
+msgstr ""
+
+#. module: im_chat
 #: selection:im_chat.conversation_state,state:0
 msgid "Closed"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.message,create_date:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_create_date
 msgid "Create Date"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,create_uid:0
-#: field:im_chat.message,create_uid:0
-#: field:im_chat.presence,create_uid:0
-#: field:im_chat.session,create_uid:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_create_date
+msgid "Create date"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_create_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_create_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_create_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_create_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,create_date:0
-#: field:im_chat.presence,create_date:0
-#: field:im_chat.session,create_date:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_create_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_create_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_create_date
 msgid "Created on"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_description
+msgid "Description"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_display_name
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_display_name
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_display_name
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_display_name
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: im_chat
@@ -68,59 +136,70 @@ msgid "Folded"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,id:0
-#: field:im_chat.message,id:0
-#: field:im_chat.presence,id:0
-#: field:im_chat.session,id:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_id
 msgid "ID"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.presence,status:0
-#: field:res.users,im_status:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_status
+#: model:ir.model.fields,field_description:im_chat.field_res_users_im_status
 msgid "IM Status"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.presence,last_poll:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message___last_update
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence___last_update
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session___last_update
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel___last_update
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode___last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_last_poll
 msgid "Last Poll"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.presence,last_presence:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_last_presence
 msgid "Last Presence"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,write_uid:0
-#: field:im_chat.message,write_uid:0
-#: field:im_chat.presence,write_uid:0
-#: field:im_chat.session,write_uid:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_write_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_write_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_write_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_write_uid
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,write_date:0
-#: field:im_chat.message,write_date:0
-#: field:im_chat.presence,write_date:0
-#: field:im_chat.session,write_date:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_write_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_write_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_write_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_write_date
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.message,message:0
-#: selection:im_chat.message,type:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_message
 msgid "Message"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.session,message_ids:0
-msgid "Messages"
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_type
+msgid "Message type"
 msgstr ""
 
 #. module: im_chat
-#: selection:im_chat.message,type:0
-msgid "Meta"
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_message_ids
+msgid "Messages"
 msgstr ""
 
 #. module: im_chat
@@ -139,58 +218,122 @@ msgid "Open"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.session,session_res_users_rel:0
+#. openerp-web
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:47
+#, python-format
+msgid "Quit discussion"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_session_res_users_rel
 msgid "Relation Session Users"
 msgstr ""
 
 #. module: im_chat
 #. openerp-web
-#: code:addons/im_chat/static/src/js/im_chat.js:18
+#: code:addons/im_chat/static/src/js/im_chat_common.js:24
 #, python-format
 msgid "Say something..."
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,session_id:0
+#. openerp-web
+#: code:addons/im_chat/static/src/xml/im_chat.xml:90
+#, python-format
+msgid "Search users..."
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_message_to_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_session_id
 msgid "Session"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.message,to_id:0
-msgid "Session To"
-msgstr ""
-
-#. module: im_chat
-#: field:im_chat.session,user_ids:0
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_user_ids
 msgid "Session Users"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.message,type:0
-msgid "Type"
+#. openerp-web
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:52
+#, python-format
+msgid "Shortcode"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.session,uuid:0
+#: model:ir.ui.view,arch_db:im_chat.im_chat_shortcode_view_form
+#: model:ir.ui.view,arch_db:im_chat.im_chat_shortcode_view_tree
+msgid "Shortcodes"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_source
+msgid "Shortcut"
+msgstr ""
+
+#. module: im_chat
+#. openerp-web
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:46
+#, python-format
+msgid "Shortcuts"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_state
+msgid "Status"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_shortcode_substitution
+msgid "Substitution"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,help:im_chat.field_im_chat_shortcode_substitution
+msgid "The excaped html code replacing the shortcut"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,help:im_chat.field_im_chat_shortcode_source
+msgid "The shortcut which must be replace in the Chat Messages"
+msgstr ""
+
+#. module: im_chat
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_uuid
 msgid "UUID"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,user_id:0
-#: field:im_chat.presence,user_id:0
+#: model:ir.model,name:im_chat.model_im_chat_presence
+msgid "User Chat Presence"
+msgstr ""
+
+#. module: im_chat
 #: model:ir.model,name:im_chat.model_res_users
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_presence_user_id
+#: model:ir.model.fields,field_description:im_chat.field_im_chat_session_res_users_rel_user_id
 msgid "Users"
 msgstr ""
 
 #. module: im_chat
 #. openerp-web
-#: code:addons/im_chat/static/src/js/im_chat.js:20
+#: code:addons/im_chat/static/src/js/im_chat_common.js:26
 #, python-format
 msgid "Visitor"
 msgstr ""
 
 #. module: im_chat
-#: field:im_chat.conversation_state,state:0
-msgid "unknown"
+#. openerp-web
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:70
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: im_chat
+#. openerp-web
+#: code:addons/im_chat/static/src/js/im_chat_backend.js:70
+#, python-format
+msgid "You are only 2 identified users. Just close the conversation to leave."
 msgstr ""
 
