@@ -156,21 +156,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
         </record>
 
-        <record id="res_partner_15" model="res.partner">
-            <field name="name">Millennium Industries</field>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="1500.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">89 Lingfield Tower</field>
-            <field name="country_id" ref="base.uk"/>
-            <field name="city">London</field>
-            <field name="phone">+44 20 1294 2193</field>
-            <field name="email">millennium@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_15-image.jpg"/>
-        </record>
-
         <record id="res_partner_16" model="res.partner">
             <field name="name">Spark Systems</field>
             <field eval="1" name="supplier"/>
