@@ -693,23 +693,38 @@ class MailComposeMessage(models.TransientModel):
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    @api.model
-    def _get_default_team(self):
-        default_team_id = self.env['crm.team']._get_default_team_id()
-        return self.env['crm.team'].browse(default_team_id)
+    _columns = {
+        'team_id': fields.many2one('crm.team', 'Sales Team', oldname='section_id'),
+        'sale_ids': fields.many2many('sale.order', 'sale_order_invoice_rel', 'invoice_id', 'order_id', 'Sale Orders',
+                             readonly=True, copy=False, help="This is the list of sale orders related to this invoice. One invoice may have multiple sale orders related. "),
+    }
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
+    _defaults = {
+        'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
+    }
 
-    @api.multi
-    def confirm_paid(self):
-        res = super(AccountInvoice, self).confirm_paid()
-        todo = set()
-        for invoice in self:
-            for line in invoice.invoice_line_ids:
-                for sale_line in line.sale_line_ids:
-                    todo.add((sale_line.order_id, invoice.number))
-        for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid") % (name))
+    def action_view_sale_order(self, cr, uid, ids, context=None):
+        ModelData = self.pool['ir.model.data']
+        sale_ids = []
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'sale', 'action_orders', context=context)
+        for invoice in self.browse(cr, uid, ids, context=context):
+            sale_ids = map(lambda x: x.id, invoice.sale_ids)
+        if not sale_ids:
+            raise UserError(_('No Sale Order referenced for this invoice.'))
+        if len(sale_ids) > 1:
+            result['domain'] = [('id', 'in', sale_ids)]
+        else:
+            view_id = ModelData.xmlid_to_res_id(cr, uid, 'sale.view_order_form')
+            result['views'] = [(view_id, 'form')]
+            result['res_id'] = sale_ids and sale_ids[0] or False
+        return result
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        sale_order_obj = self.pool.get('sale.order')
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        so_ids = sale_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        for so_id in so_ids:
+            sale_order_obj.message_post(cr, uid, so_id, body=_("Invoice paid"), context=context)
         return res
 
 
