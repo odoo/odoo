@@ -2,8 +2,10 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="im_livechat.chatButton">
-        <t t-esc="widget.text"/>
+    <t t-name="im_livechat.LivechatButton">
+        <div class="openerp o_livechat_button hidden-print" t-att-data-livechat-channel-id="widget.options.channel_id">
+                <t t-esc="widget.options.button_text"/>
+        </div>
     </t>
 
     <t t-name="im_livechat.feedback">
@@ -24,6 +26,5 @@
             </div>
         </div>
     </t>
-
 
 </templates>

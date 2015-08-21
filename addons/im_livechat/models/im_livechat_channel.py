@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import openerp
 import random
 import re
@@ -81,14 +82,14 @@ class ImLivechatChannel(models.Model):
             "dbname": self._cr.dbname,
         }
         for record in self:
-            values["channel"] = record.id
+            values["channel_id"] = record.id
             record.script_external = view.render(values)
 
     @api.multi
     def _compute_web_page_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%s/%i" % (base_url, self._cr.dbname, record.id)
+            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
 
     @api.multi
     @api.depends('channel_ids')
@@ -177,15 +178,44 @@ class ImLivechatChannel(models.Model):
 
     @api.model
     def get_channel_infos(self, channel_id):
-        url = self.env['ir.config_parameter'].get_param('web.base.url')
         channel = self.browse(channel_id)
         return {
-            "url": url,
-            'buttonText': channel.button_text,
-            'inputPlaceholder': channel.input_placeholder,
-            'defaultMessage': channel.default_message,
-            "channelName": channel.name,
+            'button_text': channel.button_text,
+            'input_placeholder': channel.input_placeholder,
+            'default_message': channel.default_message,
+            "channel_name": channel.name,
+            "channel_id": channel.id,
         }
+
+    @api.model
+    def match_rules(self, request, channel_id, username='Visitor'):
+        info = {
+            'server_url': self.env['ir.config_parameter'].get_param('web.base.url'),
+            'options': self.sudo().get_channel_infos(channel_id),
+        }
+        info['options']["default_username"] = username
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+        if country_code:
+            country_ids = self.env['res.country'].sudo().search([('code', '=', country_code)])
+            if country_ids:
+                country_id = country_ids[0]
+        # extract url
+        url = request.httprequest.headers.get('Referer') or request.httprequest.base_url
+        # find the match rule for the given country and url
+        rule = self.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
+        if rule:
+            if rule.action == 'hide_button':
+                # don't return the initialization script, since its blocked (in the country)
+                return False
+            rule_data = {
+                'action': rule.action,
+                'auto_popup_timer': rule.auto_popup_timer,
+                'regex_url': rule.regex_url,
+            }
+        info['rule'] = rule and rule_data or False
+        return info
 
 
 class ImLivechatChannelRule(models.Model):

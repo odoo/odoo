@@ -5,14 +5,17 @@
         <!--
             Integrate Livechat Conversation in the Mail Chat Client Action
         -->
-        <template id="assets_backend" name="im_livechat assets" inherit_id="web.assets_backend">
+        <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
             </xpath>
         </template>
 
-        <!-- Template rendering the external HTML support page -->
-        <template id="support_page" name="Livechat Support Page">
+
+        <!--
+            Template rendering the external HTML support page
+        -->
+        <template id="support_page" name="Livechat : Support Page">
             &lt;!DOCTYPE html&gt;
             <html style="height: 100%">
                 <head>
@@ -21,7 +24,7 @@
                     <title><t t-esc="channel_name"/> Livechat Support Page</title>
 
                     <!-- Call the external Bundle to render the css, js, and js loader tags -->
-                    <t t-call="im_livechat.external_loader"/>
+                    <t t-raw="channel.script_external"/>
 
                     <style type="text/css">
                         body {
@@ -72,36 +75,32 @@
 
                 <body>
                      <div class="main" style="opacity: 1;">
-                        <h1 class="channel_name"><t t-esc="channel_name"/></h1>
+                        <h1 class="channel_name"><t t-esc="channel.name"/></h1>
                         <div>Live Chat Powered by <strong>Odoo</strong>.</div>
                     </div>
                 </body>
             </html>
         </template>
 
-
-        <!-- Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo) -->
-        <template id="external_loader" name="All the scripts to launch the LiveSupport from an external Web Page">
+        <!--
+            Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo)
+        -->
+        <template id="external_loader" name="Livechat : external_script field of livechat channel">
             <!-- css style -->
             <link t-att-href="'%s/web/css/im_livechat.external_lib' % (url)" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript" />
+            <script t-att-src="'%s/web/js/im_livechat.external_lib' % (url)" type="text/javascript"/>
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
+            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel_id)" type="text/javascript"/>
         </template>
 
-        <!-- Template rendering all the scripts required to execute the Livechat from a page containing Odoo -->
-        <template id="internal_loader" name="All the scripts to launch the LiveSupport from an internal Web Page">
-            <!-- css style -->
-            <link t-att-href="'%s/web/css/im_livechat.internal_lib' % (url)" rel="stylesheet"/>
-            <!-- js of all the required lib -->
-            <script t-att-src="'%s/web/js/im_livechat.internal_lib' % (url)" type="text/javascript" />
-            <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%s/%i' % (url, dbname, channel)" type="text/javascript" />
-        </template>
 
-        <!-- Bundle of External Librairies of the Livechat -->
-        <template id="external_lib" name="External Librairies of the Livechat, required to make it work">
+        <!--
+            Bundle of External Librairies of the Livechat (Odoo + required modules)
+        -->
+        <template id="external_lib" name="Livechat : External Librairies of the Livechat, required to make it work">
+            <!-- Momentjs -->
+            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
             <!-- OpenERP minimal lib -->
             <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
@@ -110,7 +109,6 @@
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.timeago/jquery.timeago.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
-
             <!-- Qweb2 lib -->
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
@@ -126,46 +124,39 @@
             <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
-
-            <!-- add the internal lib -->
-            <t t-call="im_livechat.internal_lib"/>
-        </template>
-
-        <!-- Bundle of Librairies of the Bus, Chat, Livechat -->
-        <template id="internal_lib" name="Librairies of the Livechat">
-            <!-- Momentjs -->
-            <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
-            <!-- IM module -->
+            <!-- Bus, Mail, Livechat -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/mail_utils.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/mail_chat_common.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-            <!-- CSS -->
-            <link rel="stylesheet" href="/mail/static/src/css/mail_chat_common.css"></link>
+            <link rel="stylesheet" href="/mail/static/src/less/mail_chat_common.less"></link>
             <link rel="stylesheet" href="/im_livechat/static/src/css/im_livechat.css"/>
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->
-        <template id="loader" name="Javascript initializing the LiveSupport">
-            <t t-translate="off">
-                odoo.define('im_livechat.livesupport', function (require) {
-                    var im_livechat = require('im_livechat.im_livechat');
-                    window.livesupport = new im_livechat.LiveSupport(
-                        "<t t-esc="url"/>",
-                        "<t t-esc="dbname"/>",
-                        <t t-esc="channel"/>,
-                        {
-                            buttonText: "<t t-esc="buttonText"/>",
-                            inputPlaceholder: "<t t-esc="inputPlaceholder"/>",
-                            defaultMessage: "<t t-esc="defaultMessage"/>" || '',
-                            auto: window.oe_im_livechat_auto || false,
-                            defaultUsername: "<t t-esc="username"/>" || undefined,
-                        },
-                        <t t-raw="rule"/>
-                    );
+        <template id="loader" name="Livechat : Javascript appending the livechat button">
+
+            <t t-if="not info">
+                <t t-set="info" t-value="request.env['im_livechat.channel'].match_rules(request, channel)"/>
+            </t>
+
+            <t t-if="info" t-translate="off">
+                document.addEventListener("DOMContentLoaded", function(event) {
+                    odoo.define('im_livechat.livesupport', function (require) {
+                        var im_livechat = require('im_livechat.im_livechat');
+                        var button = new im_livechat.LivechatButton(
+                            $('body'),
+                            "<t t-esc="info['server_url']"/>",
+                            <t t-raw="json.dumps(info.get('options', {}))"/>,
+                            <t t-raw="json.dumps(info.get('rule', False))"/>
+                        );
+                        button.appendTo($('body'));
+                        window.livechat_button = button;
+                    });
                 });
             </t>
         </template>
+
 
     </data>
 </odoo>

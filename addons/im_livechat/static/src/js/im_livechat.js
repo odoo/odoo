@@ -13,11 +13,11 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 
-var COOKIE_NAME = 'livechat_conversation';
-
 /*
-The state of anonymous session is hold by the client and not the server.
-Override the method managing the state of normal conversation.
+ * Conversation Patch
+ *
+ * The state of anonymous session is hold by the client and not the
+ * server. Override the method managing the state of normal conversation.
 */
 mail_chat_common.Conversation.include({
     init: function(parent, session, options){
@@ -50,29 +50,37 @@ mail_chat_common.Conversation.include({
                     this.show();
                 }
             }
+            // session and cookie update
+            utils.set_cookie('im_livechat_session', JSON.stringify(this.get('session')), 60*60);
         }
-        // session and cookie update
         this._super(state);
-        utils.set_cookie(COOKIE_NAME, JSON.stringify(this.get('session')), 60*60);
     },
     on_click_close: function(event) {
+        var self = this;
+        event.stopPropagation();
         if(!this.feedback && (this.get('messages').length > 1)){
             this.feedback = new Feedback(this);
             this.$(".o_mail_chat_im_window_content").empty();
             this.$(".o_mail_chat_im_window_input").prop('disabled', true);
             this.feedback.appendTo(this.$(".o_mail_chat_im_window_content"));
             // bind event to close conversation
-            this.feedback.on("feedback_sent", this, this.on_click_close);
+            var args = arguments;
+            var _super = this._super;
+            this.feedback.on("feedback_sent", this, function(){
+                _super.apply(self, args);
+            });
         }else{
             this._super.apply(this, arguments);
-            utils.set_cookie(COOKIE_NAME, "", -1);
-            utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
         }
     },
 });
 
-// To avoid exeption when the anonymous has close his
-// conversation and when operator send him a message.
+/*
+ * Livechat Conversation Manager
+ *
+ * To avoid exeption when the anonymous has close his conversation and when operator send
+ * him a message. Extending ConversationManager is better than monkey-patching it.
+ */
 var LivechatConversationManager = mail_chat_common.ConversationManager.extend({
     message_receive: function(message) {
         try{
@@ -81,145 +89,144 @@ var LivechatConversationManager = mail_chat_common.ConversationManager.extend({
     }
 });
 
-
-var LiveSupport = Widget.extend({
-    init: function(server_url, db, channel, options, rule) {
-        this._super();
-        options = options || {};
-        _.defaults(options, {
-            buttonText: _t("Chat with one of our collaborators"),
-            inputPlaceholder: null,
-            defaultMessage: _t("How may I help you?"),
-            defaultUsername: _t("Visitor"),
+/**
+ * Livechat Button
+ *
+ * This widget is the Button to start a conversation with an operator on the livechat channel
+ * (defined in options.channel_id). This will auto-popup if the rule say so, create the conversation
+ * window if a session is saved in a cookie, ...
+ */
+var LivechatButton = Widget.extend({
+    template: 'im_livechat.LivechatButton',
+    events: {
+        "click": "on_click"
+    },
+    init: function(parent, server_url, options, rule) {
+        this._super.apply(this, arguments);
+        this.server_url = server_url;
+        this.options = _.defaults(options || {}, {
+            placeholder: _t('Ask something ...'),
+            default_username: _t("Visitor"),
+            button_text: _t("Chat with one of our collaborators"),
+            default_message: _t("How may I help you?"),
         });
+        this.rule = rule || false;
+        this.mail_channel = false;
         user_session.setup(server_url, {use_cors: false});
-        this.load_template(db, channel, options, rule);
     },
-    _get_template_list: function(){
-        return ['/im_livechat/static/src/xml/im_livechat.xml', '/mail/static/src/xml/mail_chat_common.xml'];
+    willStart: function(){
+        return $.when(this.load_qweb_template(), this._super());
     },
-    load_template: function(db, channel, options, rule){
+    start: function(){
         var self = this;
-        // load the qweb templates
+        return this._super.apply(this, arguments).then(function(){
+            // set up the manager
+            self.manager = new LivechatConversationManager(self, self.options);
+            self.manager.set("bottom_offset", self.$el.outerHeight());
+            // check if a session already exists in a cookie
+            var cookie = utils.get_cookie('im_livechat_session');
+            if(cookie){
+                self.set_conversation(JSON.parse(cookie), false);
+            }else{ // if not session, apply the rule
+                var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup') ? JSON.parse(utils.get_cookie('im_livechat_auto_popup')) : true;
+                self.auto_popup_cookie = auto_popup_cookie;
+                if (self.rule.action === 'auto_popup' && auto_popup_cookie){
+                    setTimeout(function() {
+                        self.on_click();
+                    }, self.rule.auto_popup_timer*1000);
+                }
+            }
+        });
+    },
+    load_qweb_template: function(){
+        var self = this;
         var defs = [];
-        var templates = this._get_template_list();
+        var templates = ['/mail/static/src/xml/mail_chat_common.xml', '/im_livechat/static/src/xml/im_livechat.xml'];
         _.each(templates, function(tmpl){
             defs.push(user_session.rpc('/web/proxy/load', {path: tmpl}).then(function(xml) {
                 QWeb.add_template(xml);
             }));
         });
-        return $.when.apply($, defs).then(function() {
-            self.setup(db, channel, options, rule);
+        return $.when.apply($, defs);
+    },
+    load_mail_channel: function(display_warning){
+        var self = this;
+        return user_session.rpc('/im_livechat/get_session', {
+            "channel_id" : this.options.channel_id,
+            "anonymous_name" : this.options.default_username,
+        }, {shadow: true}).then(function(channel){
+            if(channel){
+                self.set_conversation(channel, true);
+            }else{
+                if(display_warning){
+                    self.alert_available_message();
+                }
+            }
         });
     },
-    setup: function(db, channel, options, rule){
+    on_click: function(event){
         var self = this;
-        var cookie = utils.get_cookie(COOKIE_NAME);
-        if(cookie){
-            self.build_button(channel, options, JSON.parse(cookie), rule);
-        }else{
-            user_session.rpc("/im_livechat/available", {db: db, channel: channel}).then(function(activated) {
-                if(activated){
-                    self.build_button(channel, options, false, rule);
-                }
-            });
+        if(!this.mail_channel){
+            this.load_mail_channel(event !== undefined);
         }
     },
-    build_button: function(channel, options, session, rule){
-        var button = new ChatButton(null, channel, options, session);
-        button.appendTo($("body"));
-        var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup') ? JSON.parse(utils.get_cookie('im_livechat_auto_popup')) : true;
-        if (rule.action === 'auto_popup' && auto_popup_cookie){
-            setTimeout(function() {
-                button.click();
-            }, rule.auto_popup_timer*1000);
-        }
-    }
-});
-
-var ChatButton = Widget.extend({
-    className: "openerp_style oe_chat_button hidden-print",
-    events: {
-        "click": "click"
-    },
-    init: function(parent, channel, options, session) {
-        this._super(parent);
-        this.channel = channel;
-        this.options = options;
-        this.text = options.buttonText;
-        this.session = session || false;
-        this.conv = false;
-        this.no_session_message = _t("None of our collaborators seems to be available, please try again later.");
-    },
-    start: function() {
-        this.$().append(QWeb.render("im_livechat.chatButton", {widget: this}));
-        // set up the manager
-        this.manager = new LivechatConversationManager(this, this.options);
-        this.manager.set("bottom_offset", $('.oe_chat_button').outerHeight());
-        if(this.session){
-            this.set_conversation(this.session);
-        }
-    },
-    click: function() {
+    set_conversation: function(mail_channel, welcome_message){
         var self = this;
-        if (!this.conv){
-            user_session.rpc("/im_livechat/get_session", {
-                "channel_id" : self.channel,
-                "anonymous_name" : this.options.defaultUsername
-            }, {shadow: true}).then(function(session) {
-                if (! session) {
-                    alert(self.no_session_message);
-                    return;
-                }
-                session.state = 'open';
-                // save the session in a cookie
-                utils.set_cookie(COOKIE_NAME, JSON.stringify(session), 60*60);
-                // create the conversation with the received session
-                self.set_conversation(session, true);
-            });
-        }
-    },
-    set_conversation: function(session, welcome_message){
-        var self = this;
-        this.session = session;
-        if(session.state === 'closed'){
-            return;
-        }
-        this.conv = this.manager.session_apply(session);
+        // set the mail_channel and create the Conversation Window
+        this.mail_channel = mail_channel;
+        this.conv = this.manager.session_apply(mail_channel, {
+            'load_history': !welcome_message,
+            'focus': welcome_message
+        });
         this.conv.on("destroyed", this, function() {
             bus.bus.stop_polling();
             delete self.conv;
-            delete self.session;
+            delete self.mail_channel;
+            utils.set_cookie('im_livechat_session', "", -1); // delete the session cookie
         });
-        // start the polling
-        bus.bus.add_channel(session.uuid);
-        bus.bus.start_polling();
-        // add the automatic welcome message
-        if(welcome_message){
-            this.send_welcome_message();
-        }
+        // setup complet when the conversation window is appended
+        this.manager._session_defs[mail_channel.id].then(function(){
+            // start the polling
+            bus.bus.add_channel(mail_channel.uuid);
+            bus.bus.start_polling();
+            // add the automatic welcome message
+            if(welcome_message){
+                self.send_welcome_message();
+            }
+            // create the cookies
+            utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
+            utils.set_cookie('im_livechat_session', JSON.stringify(mail_channel), 60*60);
+        })
     },
     send_welcome_message: function(){
         var self = this;
-        if(this.session.operator_pid && self.options.defaultMessage) {
+        if(this.mail_channel.operator_pid && this.options.default_message) {
             setTimeout(function(){
                 self.conv.message_receive({
                     id : 1,
                     message_type: "comment",
                     model: 'mail.channel',
-                    body: self.options.defaultMessage,
+                    body: self.options.default_message,
                     date: time.datetime_to_str(new Date()),
-                    author_id: self.session.operator_pid,
-                    channel_ids: [self.session.id],
+                    author_id: self.mail_channel.operator_pid,
+                    channel_ids: [self.mail_channel.id],
                     tracking_value_ids: [],
                     attachment_ids: [],
                 });
             }, 1000);
         }
-    }
-});
+    },
+    alert_available_message: function(){
+        alert(_t("None of our collaborators seems to be available, please try again later."));
+    },
+})
 
-/* Rating livechat object */
+/*
+ * Rating for Livechat
+ *
+ * This widget display the 3 rating smileys, and a textarea to add a reason (only for red
+ * smileys), and sent the user feedback to the server.
+ */
 var Feedback = Widget.extend({
     template : "im_livechat.feedback",
     init: function(parent){
@@ -272,7 +279,7 @@ var Feedback = Widget.extend({
 
 return {
     Feedback: Feedback,
-    LiveSupport: LiveSupport,
+    LivechatButton: LivechatButton,
 };
 
 });

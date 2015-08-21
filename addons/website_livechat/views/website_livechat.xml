@@ -2,17 +2,33 @@
 <openerp>
     <data>
 
-        <template id="header" inherit_id="website.layout" name="LiveChat Import (internal) Scripts">
+        <!--
+            Integrate Livechat in Common Frontend for Website
+            Template registering all the assets required to execute the Livechat from a page containing Odoo
+        -->
+        <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/mail_utils.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/mail_chat_common.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
+                <link rel="stylesheet" href="/mail/static/src/css/mail_chat_common.css"></link>
+                <link rel="stylesheet" href="/im_livechat/static/src/css/im_livechat.css"/>
+            </xpath>
+        </template>
+
+        <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
             <xpath expr="//body" position="inside">
                 <t t-if="website and website.channel_id">
-                    <t t-call="im_livechat.internal_loader">
-                        <t t-set="url" t-value="website_livechat_url"/>
-                        <t t-set="dbname" t-value="website_livechat_dbname"/>
-                        <t t-set="channel" t-value="website_livechat_channel"/>
-                    </t>
+                     <script>
+                        <t t-call="im_livechat.loader">
+                            <t t-set="channel" t-value="website.channel_id.id"/>
+                        </t>
+                    </script>
                 </t>
             </xpath>
         </template>
+
 
         <!-- Layout add footer -->
         <template id="header_footer_custom" inherit_id="website.footer_default" name="Footer Rating Livechat Link">

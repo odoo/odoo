@@ -17,8 +17,8 @@ mail_chat_backend.ChatMailThread.include({
         this.on("change:channel_livechat", this, function(){
             self.channel_render('channel_livechat');
         });
-        return this._super.apply(this, arguments).then(function(){
             self.$el.on('click', '.o_mail_chat_channel_unpin', _.bind(self.on_click_channel_unpin, self));
+        return this._super.apply(this, arguments).then(function(){
         });
     },
     on_click_channel_unpin: function(event){
