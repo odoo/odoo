@@ -156,21 +156,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
         </record>
 
-       <record id="res_partner_17" model="res.partner">
-            <field name="name">Nebula Business</field>
-            <field eval="1" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="city">Rosario</field>
-            <field name="email">nebula@yourcompany.example.com</field>
-            <field name="street">34 Westwood Avenue</field>
-            <field name="street2">Capital Federal</field>
-            <field name="phone">+54 341 324 9459 </field>
-            <field name="country_id" ref="base.ar"/>
-            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
-            <field name="image" type="base64" file="base/static/img/res_partner_17-image.png"/>
-        </record>
-
         <record id="res_partner_18" model="res.partner">
             <field name="name">Think Big Systems</field>
             <field name="is_company">1</field>
