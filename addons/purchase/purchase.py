@@ -1188,7 +1188,7 @@ class purchase_order_line(osv.osv):
         cr.execute("SELECT s.id \
                     FROM product_supplierinfo AS s \
                     WHERE (s.name = %s) AND (s.product_tmpl_id = %s) \
-                    AND ((s.date_start IS NULL OR s.date_start<=%s) AND (s.date_end IS NULL OR s.date_end>=%s)) ORDER BY s.min_qty desc,s.price", (partner_id, product.product_tmpl_id.id, date, date))
+                    AND ((s.date_start IS NULL OR s.date_start<=%s) AND (s.date_end IS NULL OR s.date_end>=%s)) ORDER BY s.min_qty,s.price asc", (partner_id, product.product_tmpl_id.id, date, date))
         supp_ids = [x[0] for x in cr.fetchall()]
         suppliers = self.pool['product.supplierinfo'].browse(cr, uid, supp_ids, context=context)
         supplier_find = suppliers.filtered(lambda x: x.min_qty == qty) or suppliers

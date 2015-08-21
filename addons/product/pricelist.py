@@ -174,6 +174,7 @@ class product_pricelist(osv.osv):
 
             # if Public user try to access standard price from website sale, need to call _price_get.
             price = product.list_price or 0.0
+
             price_uom_id = qty_uom_id
             for rule in items:
                 if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
@@ -216,8 +217,10 @@ class product_pricelist(osv.osv):
                 break
             # Final price conversion into pricelist currency and UoM
             user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-            currency_price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
-            price = product_uom_obj._compute_price(cr, uid, product.uom_id.id, currency_price, price_uom_id)
+            if rule.compute_price != 'fixed':
+                price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
+
+            price = product_uom_obj._compute_price(cr, uid, product.uom_id.id, price, price_uom_id)
             results[product.id] = (price, rule_id)
         return results
 
@@ -269,7 +272,7 @@ class product_pricelist_item(osv.osv):
         res = {}
         for item in self.browse(cr, uid, ids, context=context):
             res[item.id] = {'name': '', 'price': ''}
-            
+
             if item.categ_id:
                 res[item.id]['name'] = _("Category: %s") % (item.categ_id.name)
             elif item.product_tmpl_id:
@@ -306,7 +309,7 @@ class product_pricelist_item(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'price_surcharge': fields.float('Price Surcharge',
             digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
-        'price_discount': fields.float('Price Discount', digits=(16,4)),
+        'price_discount': fields.float('Price Discount', digits=(16,2)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
             help="Sets the price so that it is a multiple of this value.\n" \
