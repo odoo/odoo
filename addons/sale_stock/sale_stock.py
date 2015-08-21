@@ -189,7 +189,99 @@ class SaleOrderLine(models.Model):
 class StockLocationRoute(models.Model):
     _inherit = "stock.location.route"
 
-    sale_selectable = fields.Boolean(string="Selectable on Sales Order Line")
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+
+    def action_view_sale_order(self, cr, uid, ids, context=None):
+        sale_ids = []
+        picking = self.browse(cr, uid, ids)[0]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'sale', 'action_orders', context=context)
+        if picking.move_lines:
+            for move in picking.move_lines:
+                if move.procurement_id and move.procurement_id.sale_line_id:
+                    sale_ids.append(move.procurement_id.sale_line_id.order_id.id)
+
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'sale.view_order_form')
+        result['views'] = [(view_id, 'form')]
+        result['res_id'] = sale_ids[0] or False
+        return result
+
+
+    def action_view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given Transfer ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        ModelData = self.pool['ir.model.data']
+        InvoiceLine = self.pool['account.invoice.line']
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account', 'action_invoice_tree1', context=context)
+        inv_ids = []
+        cr.execute('select ai.id as invoice_id from stock_picking sp '\
+                        'left join stock_move sm on (sm.picking_id=sp.id) '\
+                        'left join account_invoice_line ail on (ail.move_id=sm.id) '\
+                        'left join account_invoice ai on (ail.invoice_id = ai.id) '\
+                        'where sp.id in %s and ail.move_id is not null '
+                        'group by sp.id,ai.id', (tuple(ids),))
+        inv_ids =  cr.fetchone()
+        view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+        result['views'] = [(view_id or False, 'form')]
+        result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
+
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Inherit the original function of the 'stock' module
+            We select the partner of the sales order as the partner of the customer invoice
+        """
+        if picking.sale_id:
+            saleorder_ids = self.pool['sale.order'].search(cr, uid, [('procurement_group_id' ,'=', picking.group_id.id)], context=context)
+            saleorders = self.pool['sale.order'].browse(cr, uid, saleorder_ids, context=context)
+            if saleorders and saleorders[0] and saleorders[0].order_policy == 'picking':
+                saleorder = saleorders[0]
+                return saleorder.partner_invoice_id.id
+        return super(stock_picking, self)._get_partner_to_invoice(cr, uid, picking, context=context)
+    
+    def _get_sale_id(self, cr, uid, ids, name, args, context=None):
+        sale_obj = self.pool.get("sale.order")
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            res[picking.id] = False
+            if picking.group_id:
+                sale_ids = sale_obj.search(cr, uid, [('procurement_group_id', '=', picking.group_id.id)], context=context)
+                if sale_ids:
+                    res[picking.id] = sale_ids[0]
+        return res
+    
+    _columns = {
+        'sale_id': fields.function(_get_sale_id, type="many2one", relation="sale.order", string="Sale Order"),
+    }
+
+    def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
+        inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves, context=context)
+        if inv_type in ('out_invoice', 'out_refund'):
+            sales = [x.picking_id.sale_id or x.origin_returned_move_id.picking_id.sale_id for x in moves if x.picking_id.sale_id or x.origin_returned_move_id.picking_id.sale_id]
+            if sales:
+                sale = sales[0]
+                inv_vals.update({
+                    'fiscal_position_id': sale.fiscal_position_id.id,
+                    'payment_term_id': sale.payment_term_id.id,
+                    'user_id': sale.user_id.id,
+                    'team_id': sale.team_id.id,
+                    'name': sale.client_order_ref or '',
+                    'sale_ids': [(6, 0, list(set([x.id for x in sales])))],
+                    })
+        return inv_vals
+
+    def get_service_line_vals(self, cr, uid, moves, partner, inv_type, context=None):
+        res = super(stock_picking, self).get_service_line_vals(cr, uid, moves, partner, inv_type, context=context)
+        if inv_type == 'out_invoice':
+            sale_line_obj = self.pool.get('sale.order.line')
+            orders = list(set([x.procurement_id.sale_line_id.order_id.id for x in moves if x.procurement_id.sale_line_id]))
+            sale_line_ids = sale_line_obj.search(cr, uid, [('order_id', 'in', orders), ('invoiced', '=', False), '|', ('product_id', '=', False),
+                                                           ('product_id.type', '=', 'service')], context=context)
+            if sale_line_ids:
+                created_lines = sale_line_obj.invoice_line_create(cr, uid, sale_line_ids, context=context)
+                res += [(4, x) for x in created_lines]
+        return res
 
 
 class AccountInvoice(models.Model):
