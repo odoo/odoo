@@ -757,7 +757,11 @@ div.carousel .item.text_only .container > .carousel-image {
   position: inherit;
 }
 
-.oe_search_clear {
+#top_menu form.o_search_bar {
+  padding: 8px 0;
+}
+
+form.o_search_bar .form-group .input-group .o_search_clear {
   position: absolute;
   display: none;
   cursor: pointer;
@@ -767,9 +771,27 @@ div.carousel .item.text_only .container > .carousel-image {
   padding: 10px 0;
   top: 1px;
 }
-
-.oe_search_box {
+form.o_search_bar .form-group .input-group .o_search_input {
   padding-right: 23px;
+}
+form.o_search_bar .form-group .input-group .o_search_select, form.o_search_bar .form-group .input-group .o_search_size_select {
+  width: 206px !important;
+}
+form.o_search_bar .form-group .input-group .o_search_select {
+  position: absolute;
+}
+form.o_search_bar .form-group .input-group .o_search_search {
+  border: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+  padding-top: 5px;
+}
+form.o_search_bar .form-group .input-group .o_search_category {
+  margin-top: 5px;
+}
+form.o_search_bar .form-group .input-group .input-group-btn {
+  vertical-align: top;
 }
 
 .note-editor button {

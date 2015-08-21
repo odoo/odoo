@@ -560,6 +560,13 @@ class website(osv.osv):
     def image_url(self, cr, uid, record, field, size=None, context=None):
         return self.pool['ir.attachment'].image_url(cr, uid, record, field, size=size, context=context)
 
+    @openerp.tools.ormcache('module', 'needle', keys=('website_id',))
+    def _search_bar(self, cr, uid, ids, module=None, needle='', context=None):
+        return self.search_bar(cr, uid, ids, module=module, needle=needle, context=context)
+
+    def search_bar(self, cr, uid, ids, module=None, needle='', context=None):
+        return []
+
 class website_menu(osv.osv):
     _name = "website.menu"
     _description = "Website Menu"

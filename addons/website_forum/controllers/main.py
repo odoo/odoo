@@ -11,7 +11,6 @@ from openerp import tools, _
 from openerp.addons.web import http
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
-from openerp.tools.translate import _
 
 
 class WebsiteForum(http.Controller):

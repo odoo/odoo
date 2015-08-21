@@ -81,19 +81,16 @@
                                 <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
                             </a>
                         </li>
-                        <li>
-                            <form class="navbar-form" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
-                                <t t-call="website.website_search_box"/>
-                                <span class="dropdown" groups="base.group_erp_manager">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <i class="fa fa-cog"/>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum">Forum Settings</a></li>
-                                    </ul>
-                                </span>
-                            </form>
+                        <li class="navbar-form">
+                            <span class="dropdown" groups="base.group_erp_manager">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                                    <i class="fa fa-cog"/>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum">Forum Settings</a></li>
+                                </ul>
+                            </span>
                         </li>
                     </ul>
                 </div>

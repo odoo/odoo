@@ -261,3 +261,166 @@ var data = {
 return data;
 
 });
+
+
+odoo.define('website.search_box', function (require) {
+"use strict";
+
+var ajax = require('web.ajax');
+var base = require('web_editor.base');
+var core = require('web.core');
+var _t = core._t;
+
+$( "form.o_search_bar").each(function () {
+    var $form = $(this);
+
+    var $select = $form.find('input.o_search_select');
+    $select.val('').select2({
+            placeholder: _t("Search..."),
+            maximumSelectionSize: 4,
+            //minimumInputLength: 1,
+            multiple: true,
+            allowClear: false,
+            closeOnSelect: false,
+            openOnEnter: false,
+            ajax: {
+                cache: true,
+                url: function (term) {
+                    var datas = $select.select2('data');
+                    return '/website/search_bar?' + $.param({
+                            module: $form.data('module') || _.find(_.pluck(datas, 'module')),
+                            needle: encodeURIComponent(_.str.strip(term)),
+                        });
+                },
+                results: function (results, s, req) {
+                    var datas = $select.select2('data');
+                    var module = $form.data('module') || _.find(_.pluck(datas, 'module'));
+
+                    if (module) {
+                        results = _.filter(results, function (r) {
+                            return !r.module || r.module == module;
+                        });
+                    }
+
+                    function add_parent_data(parent, children) {
+                        return _.filter(children, function (c) {
+                            if (parent) {
+                                c.title = parent.text;
+                                c.module = parent.module;
+                                c.error = parent.error;
+                                c.url = parent.url;
+                            }
+
+                            if (datas.length && c.title && _.find(datas, function (d) { return c.title == d.title; })) {
+                                return false;
+                            }
+                            if (c.children) {
+                                c.children = add_parent_data(c, c.children);
+                                return !!c.children.length;
+                            } else {
+                                return true;
+                            }
+                        });
+                    }
+                    results = add_parent_data(null, results);
+
+                    results.sort(function (a, b) { return a.title != b.title ? (b.title > a.title ? -1 : 1) : (b.text > a.text ? -1 : 1); });
+
+                    if (_.str.strip(req.term)) {
+                        results.unshift({
+                            id: '?search=' + encodeURIComponent(req.term),
+                            text: req.term
+                        });
+                    }
+
+                    return {
+                        results: results
+                    };
+                },
+            },
+            formatResultCssClass: function (select){
+                return select.error ? 'bg-danger' : '';
+            },
+            formatSelectionCssClass: function (select, $div) {
+                if ($div.text().length > 24) {
+                    $div.attr('title', $div.text());
+                    $div.text($div.text().slice(0, 22) + '...');
+                }
+                return select.id.indexOf('?search=') === 0 ? 'o_search_search' : 'o_search_category';
+            },
+        });
+
+    $select.data('select2').container.on('keypress', 'input', function (event) {
+         if (event.keyCode === 13) {
+             $form.submit();
+         }
+     });
+
+    // default or previous search
+    var searches = localStorage.getItem('o_search_bar') || '{}';
+    if (searches) {
+        searches = JSON.parse(searches);
+        _.each(searches, function (datas, url) {
+            if (window.location.href.indexOf(url) === -1) {
+                return;
+            }
+
+            datas = _.filter(datas, function (d) {
+                if (d.id[0] !== '?') {
+                    // check id in location.href or convert slug into location.search
+                    return window.location.href.indexOf(d.id) !==-1 ||
+                    (d.id.indexOf('/') === 0 && window.location.search.indexOf(d.id.split('/')[1] + '=' + _.last(d.id.split('-'))) !==-1);
+                }
+                if (d.id.indexOf('?search=') === 0) {
+                    var s = window.location.search.match(/search=([^=&]*)/);
+                    return s && s[1].split(',').indexOf(d.id.slice(8)) !== -1;
+                }
+                return window.location.search.indexOf(d.id) !==-1 || window.location.search.indexOf('&' + d.id.slice(1)) !==-1;
+            });
+            $select.select2("data", datas);
+        });
+    }
+
+
+    // compute data and redirect
+    $form.on('submit', function (event) {
+        event.preventDefault();
+        var datas = $select.select2('data');
+        datas.sort(function (a, b) {
+            return a.id.indexOf('?search=') === b.id.indexOf('?search=') ?
+                (a.title != b.title ? (b.title > a.title ? -1 : 1) : (b.text > a.text ? -1 : 1)) :
+                (a.id.indexOf('?search=') ? -1 : 1);
+        });
+
+        searches[_.find(_.pluck(datas, 'url')) || '/'] = datas;
+        localStorage.setItem('o_search_bar', JSON.stringify(searches));
+
+        if (datas.length) {
+            var get = [];
+            var search = '';
+            var url = (_.find(datas, function (data) { return data.url; }) || {}).url || window.location.href.replace(/\?.*/, '');
+
+            _.each(datas, function (data) {
+                if (data.id.indexOf('?search=') === 0) {
+                    search += (search ? ',' : '') + _.str.strip(data.id.slice(8));
+                } else if (data.id.indexOf('?') === 0) {
+                    get.push(data.id.slice(1));
+                } else {
+                    url += data.id;
+                }
+            });
+
+            if (search) {
+                get.push('search=' + search);
+            }
+            if (odoo.debug) {
+                get.push('debug');
+            }
+
+            window.location.href = url + '?' + get.join('&');
+        }
+        return false;
+    });
+});
+
+});
