@@ -20,6 +20,12 @@
         template: 'website.theme_customize',
         events: {
             'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
+            'click label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
+                var self = this;
+                this.time_select = _.defer(function () {
+                    self.on_select($(event.target).find('input'));
+                });
+            },
             'click .close': 'close',
             'click': 'click',
         },
@@ -30,7 +36,7 @@
             this.flag = false;
             this.$el.addClass("theme_customize_modal");
             this.active_select_tags();
-            this.$inputs = $("input[data-xmlid],input[data-enable],input[data-disable]");
+            this.$inputs = this.$("input[data-xmlid],input[data-enable],input[data-disable]");
             setTimeout(function () {self.$el.addClass('in');}, 0);
             this.keydown_escape = function (event) {
                 if (event.keyCode === 27) {
@@ -83,10 +89,10 @@
                     self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
                     self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
                         if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
-                            $(this).prop("checked", false).change();
+                            $(this).prop("checked", false).trigger("change", true);
                         }
                         if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
-                            $(this).prop("checked", true).change();
+                            $(this).prop("checked", true).trigger("change", true);
                         }
                     });
                 }).fail(function (d, error) {
@@ -165,9 +171,8 @@
                 return $.Deferred();
             }
         },
-        enable_disable: function (data, enable) {
-            if (!data) return;
-            this.$('#'+data.split(",").join(", #")).each(function () {
+        enable_disable: function ($inputs, enable) {
+            $inputs.each(function () {
                 var check = $(this).prop("checked");
                 var $label = $(this).closest("label");
                 $(this).prop("checked", enable);
@@ -178,21 +183,31 @@
                 }
             });
         },
-        change_selection: function (event) {
+        change_selection: function (event, init_mode) {
             var self = this;
-            if (this.$el.hasClass("loading")) return;
+            clearTimeout(this.time_select);
 
+            if (this.$el.hasClass("loading")) return; // prevent to change selection when css is loading
+            
             var $option = $(event.target),
+                $options = $option,
                 checked = $option.prop("checked");
 
             if (checked) {
-                this.enable_disable($option.data('enable'), true);
-                this.enable_disable($option.data('disable'), false);
+                if($option.data('enable')) {
+                    var $inputs = this.get_inputs($option.data('enable'));
+                    $options = $options.add($inputs.filter(':not(:checked)'));
+                    this.enable_disable($inputs, true);
+                }
+                if($option.data('disable')) {
+                    var $inputs = this.get_inputs($option.data('disable'));
+                    $options = $options.add($inputs.filter(':checked'));
+                    this.enable_disable($inputs, false);
+                }
                 $option.closest("label").addClass("checked");
             } else {
                 $option.closest("label").removeClass("checked");
             }
-            $option.prop("checked", checked);
 
             var $enable = this.$inputs.filter('[data-xmlid]:checked');
             $enable.closest("label").addClass("checked");
@@ -227,13 +242,24 @@
 
             clearTimeout(this.timer);
             if (this.flag) {
-                this.timer = setTimeout(function () {
+                this.timer = _.defer(function () {
+                    if (!init_mode) self.on_select($options);
                     self.update_style(self.get_xml_ids($enable), self.get_xml_ids($disable), self.reload);
                     self.reload = false;
-                },0);
+                });
             } else {
-                this.timer = setTimeout(function () { self.reload = false; },0);
+                this.timer = _.defer(function () {
+                    if (!init_mode) self.on_select($options);
+                    self.reload = false;
+                });
             }
+        },
+        /* Method call when the user change the selection or click on an input
+         * @values: all changed inputs
+         */
+        on_select: function ($inputs) {
+            clearTimeout(this.time_select);
+            console.log($inputs.get());
         },
         click: function (event) {
             if (!$(event.target).closest("#theme_customize_modal > *").length) {
