@@ -206,16 +206,7 @@
                                 <div class="o_mg_link_content">
                                     <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
-                                            <t t-if="attachment.file_type == 'webimage'">
-                                                <img t-att-src="'/web/image/' + str(attachment.id) + '/100x80'"
-                                                    class='oe_attachment_embedded'
-                                                    t-att-title="attachment.name"/>
-                                            </t>
-                                            <t t-if="attachment.file_type != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type or 'disk') + '.png'"
-                                                    class='oe_attachment_webimage'
-                                                    t-att-title="attachment.name"/>
-                                            </t>
+                                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
                                             <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
                                         </a>
                                     </div>

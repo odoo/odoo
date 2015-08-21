@@ -112,7 +112,7 @@
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="file_type_icon"/>
+                    <field name="mimetype"/>
                     <field name="url"/>
                     <field name="name"/>
                     <templates>
@@ -120,13 +120,10 @@
                             <div class="oe_kanban_global_click">
                                 <div class="oe_kanban_vignette">
                                     <div class="oe_attachment">
-                                        <div t-if="record.file_type_icon.value != 'webimage'">
-                                            <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
+                                        <div t-if="!record.url.value">
+                                            <div class="o_image" t-att-data-mimetype="record.mimetype.value" t-attf-data-src="/web/image/#{record.id}/100x80"/>
                                         </div>
-                                        <div t-if="record.file_type_icon.value == 'webimage' and !record.url.value">
-                                            <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)"/>
-                                        </div>
-                                        <div t-if="record.file_type_icon.value and record.url.value">
+                                        <div t-if="record.url.value">
                                             <img t-att-src="record.url.value"/>
                                         </div>
                                         <div class="oe_name">

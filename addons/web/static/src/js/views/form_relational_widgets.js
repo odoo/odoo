@@ -12,6 +12,7 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
+var formats = require('web.formats');
 
 
 var _t = core._t;
@@ -1471,10 +1472,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         var _value = _.filter(ids, function (id) { return typeof self.data[id] == 'undefined'; } );
         // send request for get_name
         if (_value.length) {
-            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname']]).then(function (datas) {
+            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname', 'mimetype']]).then(function (datas) {
                 _.each(datas, function (data) {
                     data.no_unlink = true;
-                    data.url = '/web/content/' + data.id + '?download=true';
+                    data.url = self.get_file_url(data);
                     self.data[data.id] = data;
                 });
                 return ids;
@@ -1495,6 +1496,13 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
             $input.after($input.clone(true)).remove();
             self.$(".oe_fileupload").show();
 
+            // display image thumbnail
+            self.$(".o_image[data-mimetype^='image']").each(function () {
+                var $img = $(this);
+                if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                    $img.css('background-image', "url('" + $img.data('src') + "')");
+                }
+            });
         });
     },
     on_file_change: function (event) {
@@ -1548,20 +1556,9 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         } else {
             if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
                 delete this.data[0];
-                this.data[result.id] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
-            } else {
-                this.data[result.id] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
             }
+            result.url = this.get_file_url(result);
+            this.data[result.id] = result;
             var values = _.clone(this.get('value'));
             values.push(result.id);
             this.set({'value': values});
@@ -1570,7 +1567,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
     },
     on_file_delete: function (event) {
         event.stopPropagation();
-        var file_id=$(event.target).data("id");
+        var file_id=$(event.target).closest('.oe_delete').data("id");
         if (file_id) {
             var files = _.filter(this.get('value'), function (id) {return id != file_id;});
             if(!this.data[file_id].no_unlink) {

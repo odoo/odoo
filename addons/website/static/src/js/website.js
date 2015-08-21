@@ -230,6 +230,13 @@ base.ready().then(function () {
         }
     },0);
 
+// display image thumbnail
+$(".o_image[data-mimetype^='image']").each(function () {
+    var $img = $(this);
+    if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+        $img.css('background-image', "url('" + $img.data('src') + "')");
+    }
+});
 
 /**
  * Object who contains all method and bind for the top bar, the template is create server side.

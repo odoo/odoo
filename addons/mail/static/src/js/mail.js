@@ -14,6 +14,7 @@ var utils = require('web.utils');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
 var View = require('web.View');
+var formats = require('web.formats');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -902,7 +903,7 @@ var MailThread = Attachment.extend ({
         else if (author) {
             avt  = '/web/image/res.partner/' + author[0] + '/image_small';
         }else {
-            avt  = '/web/image/res.partner/' + session.uid + '/image_small';
+            avt  = '/web/image/res.users/' + session.uid + '/image_small';
         }
         return avt;
     },
@@ -1357,7 +1358,8 @@ var ComposeMessage = Attachment.extend ({
                 'name': filename,
                 'filename': filename,
                 'url': '',
-                'upload': true
+                'upload': true,
+                'mimetype': ''
             });
 
             this.$(".o_timeline_msg_attachment_list").html(this.display_attachments(this));
@@ -1379,6 +1381,7 @@ var ComposeMessage = Attachment.extend ({
                         'id': result.id,
                         'name': result.name,
                         'filename': result.filename,
+                        'mimetype': result.mimetype,
                         'url': '/web/content/' + result.id + '?download=true'
                     };
                 }

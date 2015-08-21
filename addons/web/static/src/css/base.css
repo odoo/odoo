@@ -1875,16 +1875,33 @@
   border: solid 1px rgba(124, 123, 173, 0.14);
 }
 .openerp .oe_fileupload .oe_attachments .oe_attachment {
+  background-repeat: no-repeat;
+  word-wrap: break-word;
   padding: 2px;
   padding-left: 4px;
   padding-right: 4px;
+  overflow: hidden;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .fa {
+.openerp .oe_fileupload .oe_attachments .oe_attachment a {
+  display: block;
+  background-repeat: no-repeat;
+  background-size: contain;
+  word-wrap: break-word;
+  width: 100px;
+  height: 80px;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment > .fa {
   font-size: 23px;
-  margin-top: -5px;
+  position: absolute;
+  top: -5px;
+  right: -8px;
 }
-.openerp .oe_fileupload .oe_attachments .oe_attachment .fa:hover {
+.openerp .oe_fileupload .oe_attachments .oe_attachment > .fa:hover {
   text-decoration: none;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment .fa-inverse {
+  font-size: 1.15em;
+  margin-top: 1px;
 }
 .openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(odd) {
   background: white;
