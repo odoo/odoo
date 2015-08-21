@@ -194,7 +194,6 @@ class partner_vat_intra(osv.osv_memory):
         :return: Value for next action.
         :rtype: dict
         """
-        mod_obj = self.pool.get('ir.model.data')
         xml_data = self._get_datas(cursor, user, ids, context=context)
         month_quarter = xml_data['period'][:2]
         year = xml_data['period'][2:]
@@ -235,8 +234,8 @@ class partner_vat_intra(osv.osv_memory):
         context = dict(context or {})
         context['file_save'] = data_file
 
-        model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
-        resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        resource_id = self.pool['ir.model.data'].xmlid_to_res_id(
+            cursor, user, 'l10n_be.view_vat_intra_save', context=context)
 
         return {
             'name': _('Save'),

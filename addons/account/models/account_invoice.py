@@ -327,7 +327,7 @@ class AccountInvoice(models.Model):
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
         def get_view_id(xid, name):
             try:
-                return self.env['ir.model.data'].xmlid_to_res_id('account.' + xid, raise_if_not_found=True)
+                return self.env.ref('account.' + xid)
             except ValueError:
                 view = self.env['ir.ui.view'].search([('name', '=', name)], limit=1)
                 if not view:
