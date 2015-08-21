@@ -65,7 +65,7 @@
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse}:
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment main_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     move_lines:
@@ -79,7 +79,7 @@
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse1}:
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     date: !eval "'%s-%s-15' %((datetime.now()-timedelta(days=60)).year, (datetime.now()-timedelta(days=60)).month)"
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
@@ -100,7 +100,7 @@
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse2}:
     picking_type_id: stock.picking_type_out
     origin: 'outgoing shipment your_company warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     date: !eval "'%s-%s-15' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
@@ -115,7 +115,7 @@
  !record {model: stock.picking, id: outgoing_shipment_main_warehouse3}:
     picking_type_id: stock.picking_type_out
     origin: 'your company warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_stock
     location_dest_id: stock.stock_location_customers
     move_lines:
@@ -145,7 +145,7 @@
  !record {model: stock.picking, id: incomming_shipment1}:
     picking_type_id: stock.picking_type_in
     origin: 'incoming_shipment'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
     move_lines:
@@ -159,7 +159,7 @@
  !record {model: stock.picking, id: incomming_shipment2}:
     picking_type_id: stock.picking_type_in
     origin: 'incoming_shipment main_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
     move_lines:
@@ -173,7 +173,7 @@
  !record {model: stock.picking, id: incomming_shipment3}:
     picking_type_id: stock.picking_type_in
     origin: 'incoming_shipment your_company warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_stock
     move_lines:
@@ -187,7 +187,7 @@
  !record {model: stock.picking, id: incomming_shipment4}:
    picking_type_id: stock.picking_type_in
    origin: 'incoming_shipment_main_warehouse'
-   partner_id: base.res_partner_6
+   partner_id: base.res_partner_1
    location_id: stock.stock_location_suppliers
    location_dest_id: stock.stock_location_stock
    move_lines:
@@ -203,7 +203,7 @@
  !record {model: stock.picking, id: incomming_chicago_warehouse}:
     picking_type_id: chi_picking_type_in
     origin: 'incoming_chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
     move_lines:
@@ -218,7 +218,7 @@
  !record {model: stock.picking, id: incomming_chicago_warehouse1}:
     picking_type_id: chi_picking_type_in
     origin: 'incoming_shipment_chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
     move_lines:
@@ -239,7 +239,7 @@
  !record {model: stock.picking, id: incomming_chicago_warehouse2}:
     picking_type_id: chi_picking_type_in
     origin: 'incoming_shipment chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
     move_lines:
@@ -253,7 +253,7 @@
  !record {model: stock.picking, id: incomming_chicago_warehouse3}:
     picking_type_id: chi_picking_type_in
     origin: 'chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     date: !eval "'%s-%s-2' % ((datetime.now()-timedelta(days=30)).month,(datetime.now()-timedelta(days=30)).month)"
     location_id: stock.stock_location_suppliers
     location_dest_id: stock.stock_location_shop0
@@ -270,7 +270,7 @@
  !record {model: stock.picking, id: outgoing_chicago_warehouse}:
     picking_type_id: chi_picking_type_out
     origin: 'outgoing_chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_shop0
     location_dest_id: stock.stock_location_customers
     move_lines:
@@ -284,7 +284,7 @@
  !record {model: stock.picking, id: outgoing_chicago_warehouse1}:
     picking_type_id: chi_picking_type_out
     origin: 'outgoing_shipment_chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_shop0
     location_dest_id: stock.stock_location_customers
     move_lines:
@@ -304,7 +304,7 @@
  !record {model: stock.picking, id: outgoing_chicago_warehouse2}:
     picking_type_id: chi_picking_type_out
     origin: 'chicago_warehouse'
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     location_id: stock.stock_location_shop0
     location_dest_id: stock.stock_location_customers
     move_lines:
@@ -320,7 +320,7 @@
     origin: 'outgoing chicago warehouse'
     location_id: stock.stock_location_shop0
     location_dest_id: stock.stock_location_customers
-    partner_id: base.res_partner_6
+    partner_id: base.res_partner_1
     move_lines:
       - product_id: product.product_product_5
         product_uom: product.product_uom_unit

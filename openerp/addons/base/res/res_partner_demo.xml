@@ -126,22 +126,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
         </record>
 
-        <record id="res_partner_6" model="res.partner">
-            <field name="name">OpenElec Applications</field>
-            <field eval="[(6, 0, [ref('res_partner_category_12')])]" name="category_id"/>
-            <field eval="1" name="supplier"/>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="zip">90001</field>
-            <field name="city">Los Angeles</field>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
-            <field name="street">23 Rockwell Lane</field>
-            <field name="email">openelecapplications@yourcompany.example.com</field>
-            <field name="phone">+1 312 349 2121</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_6-image.jpg"/>
-        </record>
-
         <record id="res_partner_7" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
             <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_4')])]" name="category_id"/>
@@ -478,7 +462,7 @@
         </record>
         <record id="res_partner_address_12" model="res.partner">
             <field name="name">James Miller</field>
-            <field name="parent_id" eval="ref('res_partner_6')"/>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Electrical Supervisor</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
