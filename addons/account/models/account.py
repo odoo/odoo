@@ -303,6 +303,11 @@ class AccountJournal(models.Model):
                 if journal.refund_sequence_id:
                     new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
                     journal.refund_sequence_id.write({'prefix': new_prefix})
+            if 'currency_id' in vals:
+                if not 'default_debit_account_id' in vals and self.default_debit_account_id:
+                    self.default_debit_account_id.currency_id = vals['currency_id']
+                if not 'default_credit_account_id' in vals and self.default_credit_account_id:
+                    self.default_credit_account_id.currency_id = vals['currency_id']
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
