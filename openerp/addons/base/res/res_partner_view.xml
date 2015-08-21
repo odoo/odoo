@@ -226,53 +226,34 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
-                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                                                <div class="oe_module_vignette">
-                                                    <a type="open" class="col-md-2">
-                                                        <t t-if="record.image.raw_value">
-                                                            <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                                    <t t-if="!record.image.raw_value">
+                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
+                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>
                                                         </t>
-                                                        <t t-if="!record.image.raw_value">
-                                                            <t t-if="record.type.raw_value === 'delivery'">
-                                                                <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                                            </t>
-                                                            <t t-if="record.type.raw_value === 'invoice'">
-                                                                <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                                            </t>
-                                                            <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
-                                                                <t t-if="record.is_company.raw_value === true">
-                                                                    <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                                                </t>
-                                                                <t t-if="record.is_company.raw_value === false">
-                                                                    <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
-                                                                </t>
-                                                            </t>
-                                                        </t>
-                                                    </a>
-                                                    <div class="oe_module_desc">
-                                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
-                                                             <h4><a type="open"><field name="name"/></a></h4>
-                                                                <i><div t-if="record.function.raw_value">
-                                                                    <field name="function"/></div></i>
-                                                                <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
-                                                                    <field name="email"/>
-                                                                </a></div>
-                                                                <div t-if="record.type.raw_value != 'contact'">
-                                                                    <div>
-                                                                        <field name="zip"/>
-                                                                        <field name="city"/>
-                                                                    </div>
-                                                                    <div t-if="record.state_id.raw_value">
-                                                                        <field name="state_id"/>
-                                                                    </div>
-                                                                    <field name="country_id"/>
-                                                                </div>
-                                                                <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
-                                                                <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
-                                                                <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
+                                                    </t>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name"/>
+                                                    <div t-if="record.function.raw_value"><field name="function"/></div>
+                                                    <div t-if="record.email.raw_value"><field name="email"/></div>
+                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                        <div>
+                                                            <field name="zip"/>
+                                                            <field name="city"/>
                                                         </div>
+                                                        <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                        <field name="country_id"/>
                                                     </div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
                                                 </div>
                                             </div>
                                         </t>
