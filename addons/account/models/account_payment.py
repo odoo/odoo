@@ -84,7 +84,7 @@ class account_abstract_payment(models.AbstractModel):
         total = 0
         payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         for inv in self._get_invoices():
-            total += inv.residual_signed
+            total += inv.residual_company_signed
         if self.company_id and self.company_id.currency_id != payment_currency:
             total = self.company_id.currency_id.with_context(date=self.payment_date).compute(total, payment_currency)
         return abs(total)

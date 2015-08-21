@@ -225,7 +225,7 @@ class AccountJournal(models.Model):
         help="Company related to this journal")
 
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
-    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
+    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=True)
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
@@ -328,8 +328,6 @@ class AccountJournal(models.Model):
     def _create_sequence(self, vals, refund=False):
         """ Create new no_gap entry sequence for every new Journal"""
         prefix = self._get_sequence_prefix(vals['code'], refund)
-        if refund:
-            prefix = 'R' + prefix
         seq = {
             'name': vals['name'],
             'implementation': 'no_gap',
@@ -407,7 +405,7 @@ class AccountJournal(models.Model):
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
+        if vals.get('type') in ('sale', 'puchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
 
         journal = super(AccountJournal, self).create(vals)

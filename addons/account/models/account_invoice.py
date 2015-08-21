@@ -44,13 +44,14 @@ class AccountInvoice(models.Model):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
         self.amount_tax = sum(line.amount for line in self.tax_line_ids)
         self.amount_total = self.amount_untaxed + self.amount_tax
-        amount_total_signed = self.amount_total
+        amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.currency_id != self.company_id.currency_id:
-            amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
+            amount_total_company_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
             amount_untaxed_signed = self.currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
-        self.amount_total_signed = amount_total_signed * sign
+        self.amount_total_company_signed = amount_total_company_signed * sign
+        self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
     @api.model
@@ -91,16 +92,18 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_signed = 0.0
+        residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                residual_signed += line.amount_residual * sign
+                residual_company_signed += line.amount_residual * sign
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual_signed = residual_signed
+        self.residual_company_signed = residual_company_signed
+        self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
         if float_is_zero(self.residual, digits_rounding_precision):
@@ -265,7 +268,10 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Monetary(string='Total',
         store=True, readonly=True, compute='_compute_amount')
-    amount_total_signed = fields.Monetary(string='Total', currency_field='company_currency_id',
+    amount_total_signed = fields.Monetary(string='Total', currency_field='currency_id',
+        store=True, readonly=True, compute='_compute_amount',
+        help="Total amount in the currency of the invoice, negative for credit notes.")
+    amount_total_company_signed = fields.Monetary(string='Total', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount',
         help="Total amount in the currency of the company, negative for credit notes.")
     currency_id = fields.Many2one('res.currency', string='Currency',
@@ -288,7 +294,9 @@ class AccountInvoice(models.Model):
 
     residual = fields.Monetary(string='Amount Due',
         compute='_compute_residual', store=True, help="Remaining amount due.")
-    residual_signed = fields.Monetary(string='Amount Due', currency_field='company_currency_id',
+    residual_signed = fields.Monetary(string='Amount Due', currency_field='currency_id',
+        compute='_compute_residual', store=True, help="Remaining amount due in the currency of the invoice.")
+    residual_company_signed = fields.Monetary(string='Amount Due', currency_field='company_currency_id',
         compute='_compute_residual', store=True, help="Remaining amount due in the currency of the company.")
     payment_ids = fields.Many2many('account.payment', 'account_invoice_payment_rel', 'invoice_id', 'payment_id', string="Payments", copy=False, readonly=True)
     payment_move_line_ids = fields.Many2many('account.move.line', string='Payments', compute='_compute_payments', store=True)
@@ -734,7 +742,7 @@ class AccountInvoice(models.Model):
             }
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
-            ctx['invoice_id'] = inv.move_name and inv or False
+            ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
             move = account_move.with_context(ctx_nolang).create(move_vals)

@@ -250,31 +250,19 @@ class ResPartner(models.Model):
 
             # generate where clause to include multicompany rules
             where_query = account_invoice_report._where_calc([
-                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel'])
+                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id)
             ])
             account_invoice_report._apply_ir_rules(where_query, 'read')
             from_clause, where_clause, where_clause_params = where_query.get_sql()
 
-            query = """ WITH currency_rate (currency_id, rate, date_start, date_end) AS (
-                                SELECT r.currency_id, r.rate, r.name AS date_start,
-                                    (SELECT name FROM res_currency_rate r2
-                                     WHERE r2.name > r.name AND
-                                           r2.currency_id = r.currency_id
-                                     ORDER BY r2.name ASC
-                                     LIMIT 1) AS date_end
-                                FROM res_currency_rate r
-                                )
-                      SELECT SUM(price_total * cr.rate) as total
-                        FROM account_invoice_report account_invoice_report, currency_rate cr
+            query = """
+                      SELECT SUM(price_total) as total
+                        FROM account_invoice_report account_invoice_report
                        WHERE %s
-                         AND cr.currency_id = %%s
-                         AND (COALESCE(account_invoice_report.date, NOW()) >= cr.date_start)
-                         AND (COALESCE(account_invoice_report.date, NOW()) < cr.date_end OR cr.date_end IS NULL)
                     """ % where_clause
 
-            # price_total is in the currency with rate = 1
-            # total_invoice should be displayed in the current user's currency
-            self.env.cr.execute(query, where_clause_params + [user_currency_id])
+            # price_total is in the company currency
+            self.env.cr.execute(query, where_clause_params)
             partner.total_invoiced = self.env.cr.fetchone()[0]
 
     @api.multi

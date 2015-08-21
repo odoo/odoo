@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <calendar string="Invoices" color="journal_id" date_start="date_invoice">
                     <field name="partner_id"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total_signed"/>
                 </calendar>
             </field>
         </record>
@@ -20,7 +20,7 @@
             <field name="arch" type="xml">
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
-                    <field name="amount_total" type="measure"/>
+                    <field name="amount_total_signed" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <graph string="Invoices">
                     <field name="partner_id"/>
-                    <field name="amount_total" type="measure"/>
+                    <field name="amount_total_signed" type="measure"/>
                 </graph>
             </field>
         </record>
@@ -133,8 +133,8 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total"/>
-                    <field name="residual"/>
+                    <field name="amount_total_signed"/>
+                    <field name="residual_signed"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -194,8 +194,8 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="amount_total"/>
-                    <field name="residual" string="To Pay"/>
+                    <field name="amount_total_signed"/>
+                    <field name="residual_signed" string="To Pay"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="state"/>
@@ -295,7 +295,6 @@
                                     <field name="amount_untaxed"/>
                                     <field name="amount_tax"/>
                                     <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                    <field name="amount_total_signed" groups="base.group_multi_currency" />
                                     <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                     <field name="residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                     <field name="reconciled" invisible="1"/>
@@ -440,7 +439,6 @@
                                 <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                <field name="amount_total_signed" groups="base.group_multi_currency" />
                                 <field name="payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                 <field name="residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                                 <field name="reconciled" invisible="1"/>
@@ -543,7 +541,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>

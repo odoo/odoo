@@ -111,7 +111,7 @@ class account_journal(models.Model):
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
+        select_sql_clause = """SELECT sum(residual_company_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
