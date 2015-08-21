@@ -156,23 +156,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
         </record>
 
-        <record id="res_partner_14" model="res.partner">
-            <field name="name">Chamber Works</field>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="15000.00" name="credit_limit"/>
-            <field eval="[(6, 0, [ref('res_partner_category_7'), ref('res_partner_category_9')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Detroit</field>
-            <field name="zip">48212</field>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','mi')]"/>
-            <field name="street">60, Rosewood Court</field>
-            <field name="email">chamberworks@yourcompany.example.com</field>
-            <field name="phone">+1 313 222 3456</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_14-image.jpg"/>
-        </record>
-
         <record id="res_partner_15" model="res.partner">
             <field name="name">Millennium Industries</field>
             <field eval="0" name="supplier"/>
