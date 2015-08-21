@@ -10,7 +10,6 @@ class AccountJournal(models.Model):
     @api.multi
     def import_statement(self):
         """return action to import bank/cash statements. This button should be called only on journals with type =='bank'"""
-        self.bank_statements_source = 'file_import'
         model = 'account.bank.statement'
         action_name = 'action_account_bank_statement_import'
         ir_model_obj = self.pool['ir.model.data']

@@ -46,6 +46,8 @@ class AccountBankStatementImport(models.TransientModel):
         stmts_vals = self._complete_stmts_vals(stmts_vals, journal, account_number)
         # Create the bank statements
         statement_ids, notifications = self._create_bank_statements(stmts_vals)
+        # Now that the import worked out, set it as the bank_statements_source of the journal
+        journal.bank_statements_source = 'file_import'
         # Finally dispatch to reconciliation interface
         action = self.env.ref('account.action_bank_reconcile_bank_statements')
         return {
@@ -73,7 +75,6 @@ class AccountBankStatementImport(models.TransientModel):
                 'default_name': _('Bank') + ' ' + account_number,
                 'default_currency_id': currency and currency.id or False,
                 'default_type': 'bank',
-                'default_bank_statements_source': 'file_import',
             }
         }
 
