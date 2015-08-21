@@ -54,6 +54,7 @@ class crm_team(osv.Model):
         'sales_to_invoice_amount': fields.function(_get_sales_to_invoice_amount,
             type='integer', readonly=True,
             string='Amount of sales to invoice'),
+        'currency_id': fields.related('company_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True),
     }
 
     _defaults = {

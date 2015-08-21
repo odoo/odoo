@@ -38,6 +38,7 @@
                     <div class="col-xs-3">
                         <!-- TODO: use monetary widget when available on kanban view -->
                         <t t-esc="record.sales_to_invoice_amount.raw_value or 0"/>
+                        <field name="currency_id"/>
                     </div>
                 </div>
             </xpath>

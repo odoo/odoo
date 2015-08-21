@@ -39,6 +39,7 @@ class crm_team(osv.Model):
 
     _defaults = {
         'active': 1,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'crm.team', context=context),
     }
 
     _sql_constraints = [
