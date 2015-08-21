@@ -138,6 +138,38 @@ class stock_picking(osv.osv):
                }),
     }
 
+    def action_view_purchase_order(self, cr, uid, ids, context=None):
+        pur_ids = []
+        picking = self.browse(cr, uid, ids)[0]
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'purchase', 'purchase_form_action', context=context)
+        for move in picking.move_lines.filtered(lambda x: x.purchase_line_id):
+            pur_ids.append(move.purchase_line_id.order_id.id)
+        view_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'purchase.purchase_order_form')
+        result['views'] = [(view_id, 'form')]
+        result['res_id'] = pur_ids[0] or False
+        return result
+
+    def action_open_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given shipment ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        ModelData = self.pool['ir.model.data']
+        InvoicePool = self.pool['account.invoice']
+        if context.get('picking_type_code', False) == 'incoming':
+            result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'account', 'action_invoice_tree2', context=context)
+            inv_ids = []
+            cr.execute('select ai.id as invoice_id from stock_picking sp '\
+                            'left join stock_move sm on (sm.picking_id=sp.id) '\
+                            'left join account_invoice_line ail on (ail.move_id=sm.id) '\
+                            'left join account_invoice ai on (ail.invoice_id = ai.id) '\
+                            'where sp.id in %s and ail.move_id is not null '
+                            'group by sp.id,ai.id', (tuple(ids),))
+            inv_ids =  cr.fetchone()
+            view_id = ModelData.xmlid_to_res_id(cr, uid, 'account.invoice_form')
+            result['views'] = [(view_id or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+            return result
+
     def _get_invoice_vals(self, cr, uid, key, inv_type, journal_id, moves, context=None):
         inv_vals = super(stock_picking, self)._get_invoice_vals(cr, uid, key, inv_type, journal_id, moves, context=context)
         purchases = []
