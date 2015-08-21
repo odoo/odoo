@@ -769,15 +769,15 @@ class groups_view(osv.osv):
         # and introduces the reified group fields
         # we have to try-catch this, because at first init the view does not exist
         # but we are already creating some basic groups
-        if not context or context.get('install_mode'):
+        user_context = dict(context or {})
+        if user_context.get('install_mode'):
             # use installation/admin language for translatable names in the view
-            context = dict(context or {})
-            context.update(self.pool['res.users'].context_get(cr, uid))
-        view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=context)
+            user_context.update(self.pool['res.users'].context_get(cr, uid))
+        view = self.pool['ir.model.data'].xmlid_to_object(cr, SUPERUSER_ID, 'base.user_groups_view', context=user_context)
         if view and view.exists() and view._name == 'ir.ui.view':
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="2"))
-            for app, kind, gs in self.get_groups_by_application(cr, uid, context):
+            for app, kind, gs in self.get_groups_by_application(cr, uid, user_context):
                 # hide groups in category 'Hidden' (except to group_no_one)
                 attrs = {'groups': 'base.group_no_one'} if app and app.xml_id == 'base.module_category_hidden' else {}
                 if kind == 'selection':
@@ -797,7 +797,7 @@ class groups_view(osv.osv):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, xml_declaration=True, encoding="utf-8")
-            view.write({'arch': xml_content})
+            view.with_context(context).write({'arch': xml_content})
         return True
 
     def get_application_groups(self, cr, uid, domain=None, context=None):
