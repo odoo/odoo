@@ -18,7 +18,7 @@
         <record id="base.res_partner_4" model="res.partner">
             <field name="notify_email">none</field>
         </record>
-        <record id="base.res_partner_5" model="res.partner">
+        <record id="base.res_partner_3" model="res.partner">
             <field name="notify_email">none</field>
         </record>
         <record id="base.res_partner_6" model="res.partner">
@@ -210,7 +210,7 @@
             ]]></field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="author_id" ref="base.res_partner_3"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
@@ -223,7 +223,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_3')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_2" model="mail.message">
@@ -232,7 +232,7 @@
             <field name="parent_id" ref="msg_discus2"/>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="author_id" ref="base.res_partner_3"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=35)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_3" model="mail.message">
@@ -242,7 +242,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_3')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_4" model="mail.message">
@@ -251,7 +251,7 @@
             <field name="parent_id" ref="msg_discus2"/>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="author_id" ref="base.res_partner_3"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M')"/>
         </record>

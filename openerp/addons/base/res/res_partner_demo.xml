@@ -126,21 +126,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
         </record>
 
-        <record id="res_partner_5" model="res.partner">
-            <field name="name">Epic Technologies</field>
-            <field eval="[(6, 0, [ref('res_partner_category_2')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field eval="0" name="customer"/>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','il')]"/>
-            <field name="zip">60610</field>
-            <field name="city">Chicago</field>
-            <field name="email">epic@yourcompany.example.com</field>
-            <field name="phone">+1 312 349 2324</field>
-            <field name="website">http://www.epic-tech.info//</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_5-image.jpg"/>
-        </record>
-
         <record id="res_partner_6" model="res.partner">
             <field name="name">OpenElec Applications</field>
             <field eval="[(6, 0, [ref('res_partner_category_12')])]" name="category_id"/>

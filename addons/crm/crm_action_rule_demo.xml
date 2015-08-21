@@ -52,7 +52,7 @@ object.write({'team_id': sales_team.id})
             <field name="kind">on_create</field>
             <field name="filter_id" ref="filter_usa_lead"/>
             <field name="act_user_id" ref="base.user_root"/>
-            <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
+            <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_3'), ref('base.res_partner_6')])]"/>
             <field name="server_action_ids" eval="[(6,0,[ref('action_set_team_sales_department')])]"/>
         </record>
     </data>
