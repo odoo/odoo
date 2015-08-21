@@ -1222,7 +1222,7 @@
             this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
             // clone the best candidate from template to use new features
-            var $snippets = this.BuildingBlock.$snippets;
+            var $snippets = this.buildingBlock.$snippets;
             //since saas-6, all snippets must start by s_
             var selection = this.$target.closest('[class*="s_"');
             if (_.isUndefined(selection)) {
