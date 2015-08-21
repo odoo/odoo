@@ -47,10 +47,9 @@ class product_product(osv.osv):
     _inherit = "product.product"
     def _bom_orders_count(self, cr, uid, ids, field_name, arg, context=None):
         Production = self.pool('mrp.production')
-        res = {}
-        for product_id in ids:
-            res[product_id] = Production.search_count(cr,uid, [('product_id', '=', product_id)], context=context)
-        return res
+        production_data = Production.read_group(cr, uid, [('product_id', 'in', ids)], ['product_id'], ['product_id'], context=context)
+        mapped_data = dict([(m['product_id'][0], m['product_id_count']) for m in production_data])
+        return mapped_data
 
     _columns = {
         'mo_count': fields.function(_bom_orders_count, string='# Manufacturing Orders', type='integer'),

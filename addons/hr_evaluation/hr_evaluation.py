@@ -87,9 +87,11 @@ class hr_employee(osv.Model):
     _inherit="hr.employee"
     
     def _appraisal_count(self, cr, uid, ids, field_name, arg, context=None):
-        Evaluation_data = self.pool['hr.evaluation.interview'].read_group(cr, uid, [('user_to_review_id', 'in', ids)], ['user_to_review_id'], ['user_to_review_id'], context=context)
-        mapped_data = dict([(m['user_to_review_id'][0], m['user_to_review_id_count']) for m in Evaluation_data])
-        return mapped_data
+        Evaluation = self.pool['hr.evaluation.interview']
+        return {
+            employee_id: Evaluation.search_count(cr, uid, [('user_to_review_id', '=', employee_id)], context=context)
+            for employee_id in ids
+        }
 
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),

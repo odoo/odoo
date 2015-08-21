@@ -238,10 +238,9 @@ class hr_payslip(osv.osv):
         return result
     
     def _count_detail_payslip(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for details in self.browse(cr, uid, ids, context=context):
-            res[details.id] = len(details.line_ids)
-        return res
+        payslip_data = self.pool['hr.payslip.line'].read_group(cr, uid, [('slip_id', 'in', ids)], ['slip_id'], ['slip_id'])
+        mapped_data = dict([(m['slip_id'][0], m['slip_id_count']) for m in payslip_data])
+        return mapped_data
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),

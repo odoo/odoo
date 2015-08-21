@@ -104,10 +104,11 @@ class ImLivechatChannel(models.Model):
             record.web_page = "%s/im_livechat/support/%s/%i" % (base_url, self._cr.dbname, record.id)
 
     @api.multi
-    @api.depends('session_ids')
     def _compute_nbr_session(self):
+        nbr_session_data =  self.env['im_chat.session'].read_group([('channel_id', 'in', self.ids)], ['channel_id'], ['channel_id'])
+        mapped_data = dict([(m['channel_id'][0], m['channel_id_count']) for m in nbr_session_data])
         for record in self:
-            record.nbr_session = len(record.session_ids)
+            record.nbr_session = mapped_data.get(record.id, 0)
 
     @api.multi
     @api.depends('session_ids.rating_ids')
