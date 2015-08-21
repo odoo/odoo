@@ -552,7 +552,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
             var channel_uuid = current_channel.uuid;
             return this.ChannelModel.call("channel_minimize", [channel_uuid, true]);
         }
-        return $.Deferred.reject();
+        return $.Deferred().reject();
     },
     on_click_button_invite: function(){
         new PartnerInviteDialog(this, {
