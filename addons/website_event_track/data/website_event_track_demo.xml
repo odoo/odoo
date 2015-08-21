@@ -253,7 +253,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:00:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location9"/>
         <field name="duration" eval="0.5"/>
-        <field eval="[(4, ref('base.res_partner_16'))]" name="speaker_ids"/>
+        <field eval="[(4, ref('base.res_partner_1'))]" name="speaker_ids"/>
         <field name="state">announced</field>
     </record>
     <record id="event_track24" model="event.track">

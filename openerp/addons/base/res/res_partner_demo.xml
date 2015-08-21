@@ -156,21 +156,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_12-image.jpg"/>
         </record>
 
-        <record id="res_partner_16" model="res.partner">
-            <field name="name">Spark Systems</field>
-            <field eval="1" name="supplier"/>
-            <field eval="0" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_16'), ref('res_partner_category_11')])]" name="category_id"/>
-            <field name="city">São Paulo</field>
-            <field name="zip">01060-324</field>
-            <field name="street">Rua Dom Carlos, 1073</field>
-            <field name="phone">+55 11 2402 2045</field>
-            <field name="country_id" ref="base.br"/>
-            <field name="is_company">1</field>
-            <field name="email">sparksystems@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_16-image.png"/>
-        </record>
-
        <record id="res_partner_17" model="res.partner">
             <field name="name">Nebula Business</field>
             <field eval="1" name="supplier"/>
@@ -368,14 +353,14 @@
         </record>
         <record id="res_partner_address_27" model="res.partner">
             <field name="name">Arthur Gomez</field>
-            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Software Developer</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>
         <record id="res_partner_address_26" model="res.partner">
             <field name="name">Julia Rivero</field>
-            <field name="parent_id" eval="ref('res_partner_16')"/>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Technical Director</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
