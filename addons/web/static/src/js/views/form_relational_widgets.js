@@ -224,7 +224,8 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
+            var has_changed = (self.get("value") === false || self.display_value["" + self.get("value")] !== self.$input.val());
+            if (used && has_changed && ! self.no_ed && ! (self.options && (self.options.no_create || self.options.no_quick_create))) {
                 self.ed_def.reject();
                 self.uned_def.reject();
                 self.ed_def = $.Deferred();
