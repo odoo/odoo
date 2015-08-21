@@ -2572,6 +2572,9 @@ class stock_move(osv.osv):
 
         #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
         uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP', context=context)
+        check_qty = uom_obj._compute_qty_obj(cr, uid, move.product_uom, uom_qty, move.product_id.uom_id, rounding_method='HALF-UP', context=context)
+        if float_compare(qty, check_qty, precision_rounding=move.product_id.uom_id.rounding) != 0:
+            raise osv.except_osv(_("Error"), _("The roundings of your Unit of Measures %s on the move vs. %s on the product don't allow to split this move like this.") % (move.product_uom.name, move.product_id.uom_id.name))
         uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
 
         defaults = {
