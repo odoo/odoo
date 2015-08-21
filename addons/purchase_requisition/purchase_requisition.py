@@ -18,6 +18,10 @@ class purchase_requisition(osv.osv):
                 result[element.id] += [po_line.id for po_line in po.order_line]
         return result
 
+    def _compute_rfq_count(self, cr, uid, ids, field_name, arg, context=None):
+        rfq_data = self.pool('purchase.order').read_group(cr, uid, [('requisition_id', 'in', ids), ('state', 'not in', ('done', 'cancel'))], ['requisition_id'], ['requisition_id'], context=context)
+        mapped_data = dict([(m['requisition_id'][0], m['requisition_id_count']) for m in rfq_data])
+        return mapped_data
     _columns = {
         'name': fields.char('Call for Tenders Reference', required=True, copy=False),
         'origin': fields.char('Source Document'),
@@ -41,6 +45,7 @@ class purchase_requisition(osv.osv):
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
+        'rfq_count': fields.function(_compute_rfq_count, string="RFQ Count", type="integer")
     }
 
     def _get_picking_in(self, cr, uid, context=None):
