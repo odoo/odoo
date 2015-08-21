@@ -143,22 +143,6 @@ class Message(models.Model):
         return [('needaction', '=', True)]
 
     #------------------------------------------------------
-    # download an attachment
-    #------------------------------------------------------
-
-    @api.multi
-    def download_attachment(self, attachment_id):
-        self.ensure_one()
-        if attachment_id in self.attachment_ids.ids:
-            attachment = self.env['ir.attachment'].sudo().browse(attachment_id)
-            if attachment.datas and attachment.datas_fname:
-                return {
-                    'base64': attachment.datas,
-                    'filename': attachment.datas_fname,
-                }
-        return False
-
-    #------------------------------------------------------
     # Notification API
     #------------------------------------------------------
 

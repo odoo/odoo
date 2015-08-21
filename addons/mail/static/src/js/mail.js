@@ -253,7 +253,7 @@ var Attachment = Widget.extend ({
         for (var l in message.attachment_ids) {
             var attach = message.attachment_ids[l];
             if (!attach.formating) {
-                attach.url = mail_utils.get_attachment_url(session, message.id, attach.id);
+                attach.url = '/web/content/' + attach.id + '?download=true';
                 attach.name = mail_utils.breakword(attach.name || attach.filename);
                 attach.formating = true;
             }
@@ -263,13 +263,6 @@ var Attachment = Widget.extend ({
 
     display_attachments: function (message) {
         return QWeb.render('ThreadMessageAttachments', {'record': message, 'widget': this});
-    },
-
-    /**
-     * Return the link to resized image
-     */
-    attachments_resize_image: function (id, resize) {
-        return mail_utils.get_image(session, 'ir.attachment', 'datas', id, resize);
     },
 });
 
@@ -907,11 +900,9 @@ var MailThread = Attachment.extend ({
             avt = ('/mail/static/src/img/email_icon.png');
         }
         else if (author) {
-            avt  = mail_utils.get_image(
-                session, 'res.partner', 'image_small', author[0]);
+            avt  = '/web/image/res.partner/' + author[0] + '/image_small';
         }else {
-            avt = mail_utils.get_image(
-                session, 'res.users', 'image_small', session.uid);
+            avt  = '/web/image/res.partner/' + session.uid + '/image_small';
         }
         return avt;
     },
@@ -1388,7 +1379,7 @@ var ComposeMessage = Attachment.extend ({
                         'id': result.id,
                         'name': result.name,
                         'filename': result.filename,
-                        'url': mail_utils.get_attachment_url(session, this.id, result.id)
+                        'url': '/web/content/' + result.id + '?download=true'
                     };
                 }
             }

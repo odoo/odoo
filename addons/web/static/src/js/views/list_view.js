@@ -1910,7 +1910,7 @@ var ColumnBinary = Column.extend({
         if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = session.url('/web/content', {model: options.model, field: this.id, id: options.id, download: true});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }

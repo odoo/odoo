@@ -375,7 +375,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         }
     },
     background_image_url: function(floor) { 
-        return '/web/binary/image?model=restaurant.floor&id='+floor.id+'&field=background_image';
+        return '/web/image?model=restaurant.floor&id='+floor.id+'&field=background_image';
     },
     get_floor_style: function() {
         var style = "";

@@ -208,7 +208,7 @@
         <t t-if="attachment.file_type_icon === 'webimage'">
             <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
                 <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
+                    <img t-attf-src="/web/image/#{attachment.id}/100x80"></img>
                     <div class='oe_name'><t t-raw='attachment.name'/></div>
                 </a>
                 <div class='oe_delete oe_e'>

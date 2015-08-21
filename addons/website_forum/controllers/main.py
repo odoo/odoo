@@ -6,12 +6,14 @@ import werkzeug.wrappers
 import simplejson
 import lxml
 from urllib2 import urlopen, URLError
+import base64
 
+import openerp
 from openerp import tools, _
 from openerp.addons.web import http
+from openerp.addons.web.controllers.main import binary_content
 from openerp.addons.web.http import request
 from openerp.addons.website.models.website import slug
-from openerp.tools.translate import _
 
 
 class WebsiteForum(http.Controller):
@@ -455,13 +457,14 @@ class WebsiteForum(http.Controller):
 
     @http.route(['/forum/user/<int:user_id>/avatar'], type='http', auth="public", website=True)
     def user_avatar(self, user_id=0, **post):
-        response = werkzeug.wrappers.Response()
-        User = request.env['res.users']
-        Website = request.env['website']
-        user = User.sudo().search([('id', '=', user_id)])
-        if not user.exists() or (user_id != request.session.uid and user.karma < 1):
-            return Website._image_placeholder(response)
-        return Website._image('res.users', user.id, 'image', response)
+        status, headers, content = binary_content(model='res.users', id=user_id, field='image', default_mimetype='image/png', env=request.env(openerp.SUPERUSER_ID))
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
     def open_user(self, forum, user_id=0, **post):

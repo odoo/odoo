@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ast
 import base64
 import csv
 import functools
@@ -39,7 +38,8 @@ from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp import http
-from openerp.http import request, serialize_exception as _serialize_exception
+import mimetypes
+from openerp.http import request, serialize_exception as _serialize_exception, STATIC_CACHE
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -432,6 +432,82 @@ def content_disposition(filename):
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
+def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    """ Get file, attachment or downloadable content
+
+    If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
+    binary field (via ``default_get``), otherwise fetches the field for
+    that precise record.
+
+    :param str xmlid: xmlid of the record
+    :param str model: name of the model to fetch the binary from
+    :param int id: id of the record from which to fetch the binary
+    :param str field: binary field
+    :param bool unique: add a max-age for the cache control
+    :param str filename: choose a filename
+    :param str filename_field: if not create an filename with model-id-field
+    :param bool download: apply headers to download the file
+    :param str mimetype: mintype of the field (for headers)
+    :param str default_mimetype: default mintype if no mintype found
+    :param Environment env: by default use request.env
+    :returns: (status, headers, content)
+    """
+    env = env or request.env
+    # get object and content
+    obj = None
+    if xmlid:
+        obj = env.ref(xmlid, False)
+    elif id and model in env.registry:
+        obj = env[model].browse(int(id))
+
+    # obj exists
+    if not obj or not obj.exists() or field not in obj:
+        return (404, [], None)
+
+    # check read access
+    try:
+        last_update = obj['__last_update']
+    except AccesError, e:
+        return (403, [], None)
+    status = 200
+
+    # filename
+    if not filename:
+        if filename_field in obj:
+            filename = obj[filename_field]
+        else:
+            filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
+
+    # mimetype
+    if not mimetype:
+        if 'mimetype' in obj and obj.mimetype:
+            mimetype = obj.mimetype
+        elif filename:
+            mimetype = mimetypes.guess_type(filename)[0]
+        if not mimetype:
+            mimetype = default_mimetype
+    headers = [('Content-Type', mimetype)]
+
+    # cache
+    etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
+    retag = hashlib.md5(last_update).hexdigest()
+    if etag == retag:
+        status = 304
+    headers.append(('ETag', retag))
+
+    if unique:
+        headers.append(('Cache-Control', 'max-age=%s' % STATIC_CACHE))
+    else:
+        headers.append(('Cache-Control', 'max-age=0'))
+
+    # content-disposition default name
+    if download:
+        headers.append(('Content-Disposition', content_disposition(filename)))
+
+    # get content after cache control
+    content = obj[field] or ''
+
+    return (status, headers, content)
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -978,138 +1054,74 @@ class TreeView(View):
 
 class Binary(http.Controller):
 
-    @http.route('/web/binary/image', type='http', auth="public")
-    def image(self, model, id, field, **kw):
-        last_update = '__last_update'
-        Model = request.registry[model]
-        cr, uid, context = request.cr, request.uid, request.context
-        headers = [('Content-Type', 'image/png')]
-        etag = request.httprequest.headers.get('If-None-Match')
-        hashed_session = hashlib.md5(request.session_id).hexdigest()
-        retag = hashed_session
-        id = None if not id else simplejson.loads(id)
-        if type(id) is list:
-            id = id[0] # m2o
-        try:
-            if etag:
-                if not id and hashed_session == etag:
-                    return werkzeug.wrappers.Response(status=304)
-                else:
-                    date = Model.read(cr, uid, [id], [last_update], context)[0].get(last_update)
-                    if hashlib.md5(date).hexdigest() == etag:
-                        return werkzeug.wrappers.Response(status=304)
-
-            if not id:
-                res = Model.default_get(cr, uid, [field], context).get(field)
-                image_base64 = res
-            else:
-                res = Model.read(cr, uid, [id], [last_update, field], context)[0]
-                retag = hashlib.md5(res.get(last_update)).hexdigest()
-                image_base64 = res.get(field)
-
-            if kw.get('resize'):
-                resize = kw.get('resize').split(',')
-                if len(resize) == 2 and int(resize[0]) and int(resize[1]):
-                    width = int(resize[0])
-                    height = int(resize[1])
-                    # resize maximum 500*500
-                    if width > 500: width = 500
-                    if height > 500: height = 500
-                    image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
-
-            image_data = base64.b64decode(image_base64)
-
-        except Exception:
-            image_data = self.placeholder()
-        headers.append(('ETag', retag))
-        headers.append(('Content-Length', len(image_data)))
-        try:
-            ncache = int(kw.get('cache'))
-            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
-        except:
-            pass
-        return request.make_response(image_data, headers)
-
     def placeholder(self, image='placeholder.png'):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    @http.route('/web/binary/saveas', type='http', auth="public")
-    @serialize_exception
-    def saveas(self, model, field, id=None, filename_field=None, **kw):
-        """ Download link for files stored as binary fields.
-
-        If the ``id`` parameter is omitted, fetches the default value for the
-        binary field (via ``default_get``), otherwise fetches the field for
-        that precise record.
-
-        :param str model: name of the model to fetch the binary from
-        :param str field: binary field
-        :param str id: id of the record from which to fetch the binary
-        :param str filename_field: field holding the file's name, if any
-        :returns: :class:`werkzeug.wrappers.Response`
-        """
-        Model = request.registry[model]
-        cr, uid, context = request.cr, request.uid, request.context
-        fields = [field]
-        content_type = 'application/octet-stream'
-        if filename_field:
-            fields.append(filename_field)
-        if id:
-            fields.append('file_type')
-            res = Model.read(cr, uid, [int(id)], fields, context)[0]
-            if res.get('file_type'):
-                content_type = res['file_type']
+    @http.route(['/web/content',
+        '/web/content/<string:xmlid>',
+        '/web/content/<string:xmlid>/<string:filename>',
+        '/web/content/<int:id>',
+        '/web/content/<int:id>/<string:filename>',
+        '/web/content/<string:model>/<int:id>/<string:field>',
+        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
+        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
+        if status == 304:
+            response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status != 200:
+            response = request.not_found()
         else:
-            res = Model.default_get(cr, uid, fields, context)
-        filecontent = base64.b64decode(res.get(field) or '')
-        if not filecontent:
+            content_base64 = base64.b64decode(content)
+            headers.append(('Content-Length', len(content_base64)))
+            response = request.make_response(content_base64, headers)
+        if token:
+            response.set_cookie('fileToken', token)
+        return response
+
+    @http.route(['/web/image',
+        '/web/image/<string:xmlid>',
+        '/web/image/<string:xmlid>/<string:filename>',
+        '/web/image/<string:xmlid>/<int:width>x<int:height>',
+        '/web/image/<string:xmlid>/<int:width>x<int:height>/<string:filename>',
+        '/web/image/<int:id>',
+        '/web/image/<int:id>/<string:filename>',
+        '/web/image/<string:model>/<int:id>/<string:field>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<string:filename>',
+        '/web/image/<int:id>/<int:width>x<int:height>',
+        '/web/image/<int:id>/<int:width>x<int:height>/<string:filename>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0):
+        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status != 200 and download:
             return request.not_found()
-        else:
-            filename = '%s_%s' % (model.replace('.', '_'), id)
-            if filename_field:
-                filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                [('Content-Type', content_type),
-                 ('Content-Disposition', content_disposition(filename))])
 
-    @http.route('/web/binary/saveas_ajax', type='http', auth="public")
-    @serialize_exception
-    def saveas_ajax(self, data, token):
-        jdata = simplejson.loads(data)
-        model = jdata['model']
-        field = jdata['field']
-        data = jdata['data']
-        id = jdata.get('id', None)
-        filename_field = jdata.get('filename_field', None)
-        context = jdata.get('context', {})
-        content_type = 'application/octet-stream'
+        if content and width and height:
+            # resize maximum 500*500
+            if width > 500:
+                width = 500
+            if height > 500:
+                height = 500
+            content = openerp.tools.image_resize_image(base64_source=content, size=(width, height), encoding='base64', filetype='PNG')
 
-        Model = request.session.model(model)
-        fields = [field]
-        if filename_field:
-            fields.append(filename_field)
-        if data:
-            res = {field: data, filename_field: jdata.get('filename', None)}
-        elif id:
-            fields.append('file_type')
-            res = Model.read([int(id)], fields, context)[0]
-            if res.get('file_type'):
-                content_type = res['file_type']
-        else:
-            res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field) or '')
-        if not filecontent:
-            raise ValueError(_("No content found for field '%s' on '%s:%s'") %
-                (field, model, id))
-        else:
-            filename = '%s_%s' % (model.replace('.', '_'), id)
-            if filename_field:
-                filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                headers=[('Content-Type', content_type),
-                        ('Content-Disposition', content_disposition(filename))],
-                cookies={'fileToken': token})
+        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
+
+    # backward compatibility
+    @http.route(['/web/binary/image'], type='http', auth="public")
+    def content_image_backward_compatibility(self, model, id, field, resize=None, **kw):
+        width = None
+        height = None
+        if resize:
+            width, height = resize.split(",")
+        return self.content_image(model=model, id=id, field=field, width=width, height=height)
+
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception
@@ -1145,6 +1157,7 @@ class Binary(http.Controller):
             }, request.context)
             args = {
                 'filename': ufile.filename,
+                'mimetype': ufile.content_type,
                 'id':  attachment_id
             }
         except Exception:

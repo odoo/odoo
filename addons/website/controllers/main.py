@@ -369,17 +369,3 @@ class Website(openerp.addons.web.controllers.main.Home):
         if res:
             return res
         return request.redirect('/')
-
-    #------------------------------------------------------
-    # image route for browse record
-    #------------------------------------------------------
-    @http.route([
-        '/website/image',
-        '/website/image/<xmlid>',
-        '/website/image/<xmlid>/<field>',
-        '/website/image/<model>/<id>/<field>',
-        '/website/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
-        ], type='http', auth="public")
-    def website_image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
-        logger.warning("Deprecated image controller, please use /web_editor/image/")
-        return Web_Editor().image(model=model, id=id, field=field, xmlid=xmlid, max_width=max_width, max_height=max_height)

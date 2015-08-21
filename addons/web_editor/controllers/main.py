@@ -128,66 +128,6 @@ class Web_Editor(http.Controller):
         return response
 
     #------------------------------------------------------
-    # image route for browse record
-    #------------------------------------------------------
-    def placeholder(self, response):
-        return request.registry['ir.attachment']._image_placeholder(response)
-
-    @http.route([
-        '/web_editor/image',
-        '/web_editor/image/<xmlid>',
-        '/web_editor/image/<xmlid>/<int:max_width>x<int:max_height>',
-        '/web_editor/image/<xmlid>/<field>',
-        '/web_editor/image/<xmlid>/<field>/<int:max_width>x<int:max_height>',
-        '/web_editor/image/<model>/<id>/<field>',
-        '/web_editor/image/<model>/<id>/<field>/<int:max_width>x<int:max_height>'
-        ], type='http', auth="public")
-    def image(self, model=None, id=None, field=None, xmlid=None, max_width=None, max_height=None):
-        """ Fetches the requested field and ensures it does not go above
-        (max_width, max_height), resizing it if necessary.
-
-        If the record is not found or does not have the requested field,
-        returns a placeholder image via :meth:`~.placeholder`.
-
-        Sets and checks conditional response parameters:
-        * :mailheader:`ETag` is always set (and checked)
-        * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``__last_update``)
-
-        The requested field is assumed to be base64-encoded image data in
-        all cases.
-
-        xmlid can be used to load the image. But the field image must by base64-encoded
-        """
-        if xmlid and "." in xmlid:
-            try:
-                record = request.env.ref(xmlid)
-                model, id = record._name, record.id
-            except:
-                raise werkzeug.exceptions.NotFound()
-            if model == 'ir.attachment' and not field:
-                if record.sudo().type == "url":
-                    field = "url"
-                else:
-                    field = "datas"
-
-        if not model or not id or not field:
-            raise werkzeug.exceptions.NotFound()
-
-        try:
-            idsha = str(id).split('_')
-            id = idsha[0]
-            response = werkzeug.wrappers.Response()
-            return request.registry['ir.attachment']._image(
-                request.cr, request.uid, model, id, field, response, max_width, max_height,
-                cache=STATIC_CACHE if len(idsha) > 1 else None)
-        except Exception:
-            logger.exception("Cannot render image field %r of record %s[%s] at size(%s,%s)",
-                             field, model, id, max_width, max_height)
-            response = werkzeug.wrappers.Response()
-            return self.placeholder(response)
-
-    #------------------------------------------------------
     # add attachment (images or link)
     #------------------------------------------------------
     @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
@@ -200,7 +140,6 @@ class Web_Editor(http.Controller):
         uploads = []
         message = None
         if not upload: # no image provided, storing the link and the image name
-            uploads.append({'website_url': url})
             name = url.split("/").pop()                       # recover filename
             attachment_id = Attachments.create(request.cr, request.uid, {
                 'name': name,
@@ -208,6 +147,7 @@ class Web_Editor(http.Controller):
                 'url': url,
                 'res_model': 'ir.ui.view',
             }, request.context)
+            uploads.append({'id': attachment_id})
         else:                                                  # images provided
             try:
                 attachment_ids = []
@@ -230,10 +170,7 @@ class Web_Editor(http.Controller):
                         'res_model': 'ir.ui.view',
                     }, request.context)
                     attachment_ids.append(attachment_id)
-
-                uploads = Attachments.read(
-                    request.cr, request.uid, attachment_ids, ['website_url'],
-                    context=request.context)
+                uploads = [{'id': id} for id in attachment_ids]
             except Exception, e:
                 logger.exception("Failed to upload image to attachment")
                 message = unicode(e)

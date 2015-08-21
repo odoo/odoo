@@ -73,7 +73,7 @@ odoo.define('website_blog.editor', function (require) {
                     var $img = $(this).find("img");
                     var css = window.getComputedStyle($img[0]);
                     $img.css({ width: css.width, height: css.height });
-                    $img.attr("src", "/web_editor/image/res.partner/"+self.ID+"/image");
+                    $img.attr("src", "/web/image/res.partner/"+self.ID+"/image");
                 });
                 setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
             }

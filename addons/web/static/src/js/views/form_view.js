@@ -333,6 +333,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 }
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
+                fields.push('__last_update');
                 return self.dataset.read_index(fields, {
                     context: { 'bin_size': true }
                 }).then(function(r) {

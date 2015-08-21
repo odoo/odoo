@@ -205,9 +205,9 @@
                                 </p>
                                 <div class="o_mg_link_content">
                                     <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
-                                        <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
                                             <t t-if="attachment.file_type == 'webimage'">
-                                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
+                                                <img t-att-src="'/web/image/' + str(attachment.id) + '/100x80'"
                                                     class='oe_attachment_embedded'
                                                     t-att-title="attachment.name"/>
                                             </t>
