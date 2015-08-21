@@ -253,7 +253,7 @@ $('.oe_website_sale').each(function () {
         $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
 
         var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-        $img.attr("src", "/web_editor/image/product.product/" + $(this).val() + "/image");
+        $img.attr("src", "/web/image/product.product/" + $(this).val() + "/image");
     });
 
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function (ev) {
@@ -290,7 +290,7 @@ $('.oe_website_sale').each(function () {
 
         if (product_id) {
             var $img = $(this).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-            $img.attr("src", "/web_editor/image/product.product/" + product_id + "/image");
+            $img.attr("src", "/web/image/product.product/" + product_id + "/image");
             $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                 .data('oe-model', 'product.product').data('oe-id', product_id);
         }

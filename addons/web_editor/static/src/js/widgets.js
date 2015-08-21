@@ -366,7 +366,7 @@ var ImageDialog = Widget.extend({
                 self.file_selected(null, error || !attachments.length);
             }
             for (var i=0; i<attachments.length; i++) {
-                self.file_selected(attachments[i]['local_url'] || '/web_editor/image/ir.attachment/'+attachments[i].id+'_'+(new Date().getTime())+'/datas', error);
+                self.file_selected(attachments[i]['local_url'] || '/web/image/'+attachments[i].id, error);
             }
         };
     },

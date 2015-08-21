@@ -127,7 +127,8 @@ var KanbanRecord = Widget.extend({
             id = JSON.stringify(id);
             if (options.preview_image)
                 field = options.preview_image;
-            url = session.url('/web/binary/image', {model: model, field: field, id: id});
+            var unique = this.record.__last_update.value.replace(/[^0-9]/g, '');
+            url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);

@@ -42,7 +42,7 @@
         <section id="discussion" class="hidden-print oe_website_portal">
             <section class="mb32 css_editable_mode_hidden hidden-print">
                 <form class="o_website_chatter_form" t-attf-action="/website_mail/post/#{chatter_mode}" method="POST" t-if="website.env.user != request.env['ir.model.data'].xmlid_to_object('base.public_user') or token or sha_in">
-                    <img class="img pull-left img-circle" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
+                    <img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 50px; margin-right: 10px;"/>
                     <div class="pull-left mb32" style="width: 75%%">
                         <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
                         <input type='hidden' name="res_model" t-att-value="object._model"/>

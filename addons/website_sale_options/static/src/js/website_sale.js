@@ -26,7 +26,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
             }).then(function (modal) {
                 var $modal = $(modal);
 
-                $modal.find('img:first').attr("src", "/web_editor/image/product.product/" + product_id + "/image_medium");
+                $modal.find('img:first').attr("src", "/web/image/product.product/" + product_id + "/image_medium");
 
                 $modal.appendTo($form)
                     .modal()

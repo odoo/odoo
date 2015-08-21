@@ -113,7 +113,7 @@ var Sidebar = Widget.extend({
     render_user_avatars: function(item) {
         item.find(".oe_user_avatar").each(function() {
             var user_id = parseInt( $(this).attr('data-id'), 10);
-            var url = session.url('/web/binary/image', {model: 'res.users', field: 'image_small', id: user_id});
+            var url = session.url('/web/image', {model: 'res.users', field: 'image_small', id: user_id});
             $(this).attr("src", url);
         });
     }

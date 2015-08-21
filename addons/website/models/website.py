@@ -5,6 +5,7 @@ import math
 import unicodedata
 import re
 import urlparse
+import hashlib
 
 from sys import maxint
 
@@ -122,8 +123,8 @@ _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
     "^/web/(css|js)/",
-    "^/website/image/",
-    "^/web_editor/image/",
+    "^/web/image",
+    "^/web/content",
 ]
 
 def unslug(s):
@@ -558,7 +559,11 @@ class website(osv.osv):
         return self.pool['ir.attachment']._image(cr, uid, model, id, field, response, max_width=max_width, max_height=max_height, cache=cache, context=context)
 
     def image_url(self, cr, uid, record, field, size=None, context=None):
-        return self.pool['ir.attachment'].image_url(cr, uid, record, field, size=size, context=context)
+        """Returns a local url that points to the image field of a given browse record."""
+        sudo_record = record.sudo()
+        sha = hashlib.sha1(sudo_record.write_date).hexdigest()[0:7]
+        size = '' if size is None else '/%s' % size
+        return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -636,17 +641,6 @@ class ir_attachment(osv.osv):
     _columns = {
         'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
     }
-
-    def _image(self, cr, uid, model, id_or_ids, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
-        Model = self.pool[model]
-        ids = isinstance(id_or_ids, (list, tuple)) and id_or_ids or [int(id_or_ids)]
-        ids = Model.search(cr, uid, [('id', 'in', ids)], context=context)
-
-        if not ids and 'website_published' in Model._fields:
-            ids = Model.search(cr, openerp.SUPERUSER_ID, [('id', 'in', ids), ('website_published', '=', True)], context=context)
-
-        return super(ir_attachment, self)._image(cr, openerp.SUPERUSER_ID, model, id_or_ids, field, response,
-            max_width=max_width, max_height=max_height, cache=cache, context=context)
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

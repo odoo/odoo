@@ -17,7 +17,7 @@ options.registry.many2one.include({
             var $img = $('.header .row img:first');
             var css = window.getComputedStyle($img[0]);
             $img.css("max-height", css.height+'px');
-            $img.attr("src", "/web_editor/image/res.partner/"+self.ID+"/image");
+            $img.attr("src", "/web/image/res.partner/"+self.ID+"/image");
             setTimeout(function () { $img.removeClass('o_dirty'); },0);
         }
     }

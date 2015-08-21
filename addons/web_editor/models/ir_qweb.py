@@ -15,6 +15,7 @@ import urllib2
 import urlparse
 import re
 import simplejson
+import hashlib
 
 import pytz
 from dateutil import parser
@@ -329,13 +330,16 @@ class Image(orm.AbstractModel):
         classes = ' '.join(itertools.imap(escape, aclasses))
 
         max_size = None
-        max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
-        if max_width or max_height:
-            max_size = '%sx%s' % (max_width, max_height)
-
-        src = self.pool['ir.attachment'].image_url(cr, uid, record, field_name, max_size)
         if options.get('resize'):
-            src = "%s/%s" % (src, options.get('resize'))
+            max_size = options.get('resize')
+        else:
+            max_width, max_height = options.get('max_width', 0), options.get('max_height', 0)
+            if max_width or max_height:
+                max_size = '%sx%s' % (max_width, max_height)
+
+        sha = hashlib.sha1(record.write_date).hexdigest()[0:7]
+        max_size = '' if max_size is None else '/%s' % max_size
+        src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
 
         img = '<img class="%s" src="%s" style="%s"/>' % (classes, src, options.get('style', ''))
         return ir_qweb.HTMLSafe(img)
@@ -346,8 +350,8 @@ class Image(orm.AbstractModel):
         url = element.find('img').get('src')
 
         url_object = urlparse.urlsplit(url)
-        if url_object.path.startswith('/web_editor/image'):
-            # url might be /web_editor/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
+        if url_object.path.startswith('/web/image'):
+            # url might be /web/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
             fragments = url_object.path.split('/')
             query = dict(urlparse.parse_qsl(url_object.query))
             model = query.get('model', fragments[3])

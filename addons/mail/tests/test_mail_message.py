@@ -186,11 +186,12 @@ class TestMailMessage(TestMail):
             'datas': 'My attachment'.encode('base64'),
             'name': 'doc.txt',
             'datas_fname': 'doc.txt'})
+        # attach the attachment to the message
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.message.sudo(self.user_employee).read()
-        # Test: Bert downloads attachment, ok because he can read message
-        self.message.sudo(self.user_employee).download_attachment(attachment.id)
+        # Test: Bert has access to attachment, ok because he can read message
+        attachment.sudo(self.user_employee).read(['name', 'datas'])
 
     def test_mail_message_access_read_author(self):
         self.message.write({'author_id': self.user_employee.partner_id.id})
