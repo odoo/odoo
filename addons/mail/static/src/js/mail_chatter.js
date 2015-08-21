@@ -346,7 +346,8 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
             'default_model': this.view.model || false,
         }, this.options.context || {});
         // fetch messages of current document
-        return this.message_format(this.get_value().slice(0, mail_thread.LIMIT_MESSAGE)).then(function(raw_messages){
+        var ids = this.get_value() || [];
+        return this.message_format(ids.slice(0, mail_thread.LIMIT_MESSAGE)).then(function(raw_messages){
             self._message_replace(self._message_preprocess(raw_messages));
             self.record_name = _.last(raw_messages) ? _.last(raw_messages).record_name : '';
             // set the thread as read
