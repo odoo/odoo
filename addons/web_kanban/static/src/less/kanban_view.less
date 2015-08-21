@@ -306,8 +306,16 @@
     }
 
     .o_kanban_group {
+        background-color: @odoo-webclient-background-color;
         &:nth-child(odd) {
             background-color: darken(@odoo-webclient-background-color, 3%);
+        }
+        &.ui-sortable-helper ~ .o_kanban_group, // Invert odd/even rule for groups which follows the helper (fixed)
+        &.ui-sortable-placeholder ~ .o_kanban_group.ui-sortable-helper { // Invert odd/even rule for the helper if the placeholder is before (so that it keep the same color)
+            background-color: @odoo-webclient-background-color;
+            &:nth-child(even) {
+                background-color: darken(@odoo-webclient-background-color, 3%);
+            }
         }
 
         &.o_kanban_dragged {
