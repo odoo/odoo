@@ -15,8 +15,6 @@ This module allows you to easily add extra costs on pickings and decide the spli
     'depends': ['stock_account', 'purchase'],
     'category': 'Warehouse Management',
     'sequence': 16,
-    'demo': [
-    ],
     'data': [
         'security/ir.model.access.csv',
         'stock_landed_costs_sequence.xml',
@@ -30,5 +28,4 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'test/stock_landed_costs.yml',
     ],
     'installable': True,
-    'auto_install': False,
 }
