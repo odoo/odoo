@@ -95,6 +95,7 @@ class View(models.Model):
         return result
 
     #TODO MBA lets check
+    @api.model
     @tools.ormcache_context('xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         if self.env.context and 'website_id' in self.env.context and not isinstance(xml_id, (int, long)):
@@ -144,6 +145,7 @@ class View(models.Model):
         translatable = editable and self.env.context.get('lang') != request.website.default_lang_code
         editable = not translatable and editable
 
+        #TODO  mba lets check
         qcontext = dict(
             self.env.context.copy(),
             website=request.website,
@@ -155,7 +157,7 @@ class View(models.Model):
             languages=request.website.get_languages(),
             translatable=translatable,
             editable=editable,
-            menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
+            menu_data=self.env['ir.ui.menu'].sudo().load_menus_root() if request.website.is_user() else None,
         )
         return qcontext
 
