@@ -10,6 +10,7 @@ var Widget = require('web.Widget');
 var Dialog = require('web.Dialog');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var SearchView = require('web.SearchView');
+var Sidebar = require('web.Sidebar');
 var WebClient = require('web.WebClient');
 
 var session = require('web.session');
@@ -484,8 +485,8 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.on('change:needaction_inbox_counter', this, this.needaction_inbox_change);
 
         return $.when(this._super.apply(this, arguments), this.cp_render_searchview()).then(function(){
-            // update control panel
-            self.cp_render_buttons();
+            // render control panel's elements
+            self.cp_render_elements();
             // apply default channel
             var channel_id = self.context.active_id || self.action.params.default_active_id || 'channel_inbox';
             if(!_.isString(channel_id)){
@@ -595,16 +596,19 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     },
     // control panel
     cp_update: function(){
-        var self = this;
+        // toggle cp elements
         var current_channel_id = this.get('current_channel_id');
-        // toggle cp buttons
         if(_.isString(current_channel_id)){
-            self.control_elements.$buttons.find('button').hide();
+            this.control_elements.$buttons.hide();
+            this.control_elements.$sidebar.hide();
         }else{
-            self.control_elements.$buttons.find('button').show();
-            var current_channel = this.channels[current_channel_id];
-            if(current_channel.channel_type == 'chat'){
-                self.control_elements.$buttons.find('.o_mail_chat_button_invite, .o_mail_chat_button_more').hide();
+            this.control_elements.$buttons.show();
+            if(this.channels[current_channel_id].channel_type === 'chat'){
+                this.control_elements.$buttons.find('.o_mail_chat_button_invite').hide();
+                this.control_elements.$sidebar.hide();
+            } else {
+                this.control_elements.$buttons.find('.o_mail_chat_button_invite').show();
+                this.control_elements.$sidebar.show();
             }
         }
 
@@ -612,22 +616,33 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         var status = {
             breadcrumbs: this.action_manager.get_breadcrumbs(),
             cp_content: {
-                $buttons: self.control_elements.$buttons,
-                $searchview: self.control_elements.$searchview,
-                $searchview_buttons: self.control_elements.$searchview_buttons,
-                $switch_buttons: false,
-                $pager: false,
+                $buttons: this.control_elements.$buttons,
+                $searchview: this.control_elements.$searchview,
+                $searchview_buttons: this.control_elements.$searchview_buttons,
+                $sidebar: this.control_elements.$sidebar,
             },
-            searchview: self.searchview,
+            searchview: this.searchview,
         };
-        this.update_control_panel(status, {clear: false});
+        this.update_control_panel(status);
     },
-    cp_render_buttons: function() {
+    cp_render_elements: function() {
         this.control_elements.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
-        this.control_elements.$buttons.on('click', '.o_mail_chat_button_minimize', _.bind(this.on_click_button_minimize, this));
         this.control_elements.$buttons.on('click', '.o_mail_chat_button_invite', _.bind(this.on_click_button_invite, this));
-        this.control_elements.$buttons.on('click', '.o_mail_chat_button_unsubscribe', _.bind(this.on_click_button_unsubscribe, this));
-        this.control_elements.$buttons.on('click', '.o_mail_chat_button_settings', _.bind(this.on_click_button_settings, this));
+        this.control_elements.$buttons.on('click', '.o_mail_chat_button_minimize', _.bind(this.on_click_button_minimize, this));
+
+        var $sidebar_container = $('<div>');
+        new Sidebar(this, {
+            sections: [
+                {name: 'more', label: _t('More')},
+            ],
+            items: {
+                more: [
+                    {label: _t('Unsubscribe'), classname: 'o_mail_chat_button_unsubscribe', callback: this.on_click_button_unsubscribe},
+                    {label: _t('Settings'), classname: 'o_mail_chat_button_settings', callback: this.on_click_button_settings},
+                ],
+            },
+        }).appendTo($sidebar_container);
+        this.control_elements.$sidebar = $sidebar_container.contents();
     },
     cp_render_searchview: function(){
         var self = this;

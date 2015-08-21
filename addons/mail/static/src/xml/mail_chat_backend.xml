@@ -135,21 +135,10 @@
         Buttons of the Control Panel
     -->
     <t t-name="mail.chat.ControlButtons">
-        <div class="o_mail_chat_cp_buttons">
+        <div>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" t-att-title='_t("Invite people")'>Invite</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_minimize" t-att-title='_t("Minimize the conversation")'>Minimize</button>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm dropdown-toggle o_mail_chat_button_more" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    More <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li class="o_mail_chat_button_unsubscribe"><a href="#">Unsubscribe</a></li>
-                    <li class="o_mail_chat_button_settings"><a href="#">Settings</a></li>
-                </ul>
-            </div>
-
         </div>
     </t>
-
 
 </templates>
