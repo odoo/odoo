@@ -194,7 +194,7 @@
             });
             var params = {
                     srcs : urls,
-                    index: 1,
+                    index: 0,
                     title: "",
                     interval : this.$target.data("interval") || false,
                     id: "slideshow_" + (uuid+1)
