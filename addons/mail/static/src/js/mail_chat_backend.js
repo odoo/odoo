@@ -578,7 +578,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
             views: [[false, 'form']],
             target: 'current'
         }, {
-            clear_breadcrumbs: true
+            'on_reverse_breadcrumb': this.on_reverse_breadcrumb,
         });
     },
     on_message_needaction: function(event){
@@ -597,7 +597,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     cp_update: function(){
         var self = this;
         var current_channel_id = this.get('current_channel_id');
-        var current_channel_name = this.get_current_channel_name();
         // toggle cp buttons
         if(_.isString(current_channel_id)){
             self.control_elements.$buttons.find('button').hide();
@@ -608,9 +607,10 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
                 self.control_elements.$buttons.find('.o_mail_chat_button_invite, .o_mail_chat_button_more').hide();
             }
         }
+
         // update control panel
         var status = {
-            breadcrumbs: this.action_manager.get_breadcrumbs().concat([{'title': current_channel_name, 'action': _.clone(this)}]),
+            breadcrumbs: this.action_manager.get_breadcrumbs(),
             cp_content: {
                 $buttons: self.control_elements.$buttons,
                 $searchview: self.control_elements.$searchview,
@@ -786,13 +786,16 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.mail_chat_compose_message.focus();
 
         // push state (the action is referred by action_manager, and no reloaded when jumping
-        // channel, so update context is requried)
+        // channel, so update context is required)
         this.action.context.active_id = current_channel_id;
         this.action.context.active_ids = [current_channel_id];
         web_client.action_manager.do_push_state({
             action: this.action.id,
             active_id: current_channel_id,
         });
+
+        // update title (to display in the breadcrumbs) according to current channel
+        this.set('title', this.get_current_channel_name());
 
         // update control panel
         this.cp_update();
