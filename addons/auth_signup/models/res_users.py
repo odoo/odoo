@@ -1,44 +1,30 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-import random
-import werkzeug
 
-from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
-from openerp.osv import osv, fields
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
 from ast import literal_eval
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
 
-class SignupError(Exception):
-    pass
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools.misc import ustr
 
-def random_token():
-    # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
-    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
+from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
+from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
-def now(**kwargs):
-    dt = datetime.now() + timedelta(**kwargs)
-    return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-class res_users(osv.Model):
+class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    def _get_state(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('active' if user.login_date else 'new')
-        return res
+    state = fields.Selection(compute='_compute_state', string='Status',
+                 selection=[('new', 'Never Connected'), ('active', 'Activated')])
 
-    _columns = {
-        'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'Never Connected'), ('active', 'Connected')]),
-    }
+    @api.multi
+    def _compute_state(self):
+        for user in self:
+            user.state = 'active' if user.login_date else 'new'
 
-    def signup(self, cr, uid, values, token=None, context=None):
+    @api.model
+    def signup(self, values, token=None):
         """ signup a user, to either:
             - create a new user (no token), or
             - create a user for a partner (with token, but no user for partner), or
@@ -49,9 +35,7 @@ class res_users(osv.Model):
         """
         if token:
             # signup with a token: find the corresponding partner id
-            res_partner = self.pool.get('res.partner')
-            partner = res_partner._signup_retrieve_partner(
-                            cr, uid, token, check_validity=True, raise_exception=True, context=None)
+            partner = self.env['res.partner']._signup_retrieve_partner(token, check_validity=True, raise_exception=True)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
 
@@ -69,7 +53,7 @@ class res_users(osv.Model):
                 values.pop('login', None)
                 values.pop('name', None)
                 partner_user.write(values)
-                return (cr.dbname, partner_user.login, values.get('password'))
+                return (self.env.cr.dbname, partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
                 values.update({
@@ -80,23 +64,25 @@ class res_users(osv.Model):
                 if partner.company_id:
                     values['company_id'] = partner.company_id.id
                     values['company_ids'] = [(6, 0, [partner.company_id.id])]
-                self._signup_create_user(cr, uid, values, context=context)
+                self._signup_create_user(values)
         else:
             # no token, sign up an external user
             values['email'] = values.get('email') or values.get('login')
-            self._signup_create_user(cr, uid, values, context=context)
+            self._signup_create_user(values)
 
-        return (cr.dbname, values.get('login'), values.get('password'))
+        return (self.env.cr.dbname, values.get('login'), values.get('password'))
 
-    def _signup_create_user(self, cr, uid, values, context=None):
+    @api.model
+    def _signup_create_user(self, values):
         """ create a new user from the template user """
-        ir_config_parameter = self.pool.get('ir.config_parameter')
-        template_user_id = literal_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
-        assert template_user_id and self.exists(cr, uid, template_user_id, context=context), 'Signup: invalid template user'
+        IrConfigParam = self.env['ir.config_parameter']
+        template_user_id = literal_eval(IrConfigParam.get_param('auth_signup.template_user_id', 'False'))
+        template_user = self.browse(template_user_id)
+        assert template_user.exists(), 'Signup: invalid template user'
 
         # check that uninvited users may sign up
         if 'partner_id' not in values:
-            if not literal_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
+            if not literal_eval(IrConfigParam.get_param('auth_signup.allow_uninvited', 'False')):
                 raise SignupError('Signup is not allowed for uninvited users')
 
         assert values.get('login'), "Signup: no login given for new user"
@@ -104,73 +90,67 @@ class res_users(osv.Model):
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
-        context = dict(context or {}, no_reset_password=True)
         try:
-            with cr.savepoint():
-                return self.copy(cr, uid, template_user_id, values, context=context)
+            with self.env.cr.savepoint():
+                return template_user.with_context(no_reset_password=True).copy(values)
         except Exception, e:
             # copy may failed if asked login is not available.
             raise SignupError(ustr(e))
 
-    def reset_password(self, cr, uid, login, context=None):
+    def reset_password(self, login):
         """ retrieve the user corresponding to login (login or email),
             and reset their password
         """
-        user_ids = self.search(cr, uid, [('login', '=', login)], context=context)
-        if not user_ids:
-            user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
-        if len(user_ids) != 1:
+        users = self.search([('login', '=', login)])
+        if not users:
+            users = self.search([('email', '=', login)])
+        if len(users) != 1:
             raise Exception(_('Reset password: invalid username or email'))
-        return self.action_reset_password(cr, uid, user_ids, context=context)
+        return users.action_reset_password()
 
-    def action_reset_password(self, cr, uid, ids, context=None):
+    @api.multi
+    def action_reset_password(self):
         """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
-        create_mode = bool(context.get('create_user'))
-        res_partner = self.pool.get('res.partner')
-        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
+        create_mode = bool(self.env.context.get('create_user'))
 
         # no time limit for initial invitation, only for reset password
         expiration = False if create_mode else now(days=+1)
 
-        res_partner.signup_prepare(cr, uid, partner_ids, signup_type="reset", expiration=expiration, context=context)
-
-        context = dict(context or {})
+        self.mapped('partner_id').signup_prepare(signup_type="reset", expiration=expiration)
 
         # send email to users with their signup url
         template = False
         if create_mode:
             try:
-                # get_object() raises ValueError if record does not exist
-                template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'set_password_email')
+                template = self.env.ref('auth_signup.set_password_email', raise_if_not_found=False)
             except ValueError:
                 pass
-        if not bool(template):
-            template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
+        if not template:
+            template = self.env.ref('auth_signup.reset_password_email')
         assert template._name == 'mail.template'
 
-        for user in self.browse(cr, uid, ids, context):
+        for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
-            context['lang'] = user.lang                
-            self.pool.get('mail.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
+            template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
 
-    def create(self, cr, uid, values, context=None):
-        if context is None:
-            context = {}
+    @api.model
+    def create(self, values):
         # overridden to automatically invite user to sign up
-        user_id = super(res_users, self).create(cr, uid, values, context=context)
-        user = self.browse(cr, uid, user_id, context=context)
-        if user.email and not context.get('no_reset_password'):
-            context = dict(context, create_user=True)
+        user = super(ResUsers, self).create(values)
+        if user.email and not self.env.context.get('no_reset_password'):
             try:
-                self.action_reset_password(cr, uid, [user.id], context=context)
+                user.with_context(create_user=True).action_reset_password()
             except MailDeliveryException:
-                self.pool.get('res.partner').signup_cancel(cr, uid, [user.partner_id.id], context=context)
-        return user_id
+                user.partner_id.with_context(create_user=True).signup_cancel()
+        return user
 
-    def copy(self, cr, uid, id, default=None, context=None):
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        context = self.env.context
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
-            context = dict(context or {}, reset_password=False)
-        return super(res_users, self).copy(cr, uid, id, default=default, context=context)
+            context['reset_password'] = False
+        return super(ResUsers, self.with_context(context)).copy(default=default)

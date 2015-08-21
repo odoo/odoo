@@ -6,7 +6,7 @@ import urllib2
 import json
 
 import openerp
-from openerp.addons.auth_signup.models.res_users import SignupError
+from openerp.addons.auth_signup.models.res_partner import SignupError
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 
