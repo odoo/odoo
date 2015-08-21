@@ -70,6 +70,11 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
+        if vals.get('state') == 'done' or vals.get('timesheet_ids'):  # show warning on click "Approve" button.
+            analytic_account = self.pool.get('account.analytic.account')
+            for timesheet in self.browse(cr, uid, ids):
+                account = timesheet.filtered(lambda r: r.timesheet_ids and r.state == 'confirm').timesheet_ids.mapped('account_id')
+                analytic_account._check_analytic_account_state(cr, uid, account, context=context)
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances

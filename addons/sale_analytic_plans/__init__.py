@@ -6,3 +6,4 @@
 #----------------------------------------------------------
 
 import sale_analytic_plans
+import sale_order

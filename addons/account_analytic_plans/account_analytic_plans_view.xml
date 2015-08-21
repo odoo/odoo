@@ -76,11 +76,11 @@
                 <field name="account_ids">
                     <tree string="Analytic Distribution" editable="bottom">
                         <field name="rate"/>
-                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                     </tree>
                     <form string="Analytic Distribution">
                         <field name="rate"/>
-                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                     </form>
                 </field>
             </form>
@@ -123,7 +123,7 @@
             <form string="Analytic Distribution Line">
                 <group col="4">
                     <field name="plan_id"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                     <field name="rate"/>
                 </group>
             </form>
@@ -136,7 +136,7 @@
         <field name="arch" type="xml">
             <tree string="Analytic Distribution Lines">
                 <field name="plan_id"/>
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                 <field name="rate"/>
             </tree>
         </field>
@@ -200,7 +200,7 @@
                 <group col="4">
                     <field name="name"/>
                     <field name="sequence"/>
-                    <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="root_analytic_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                     <newline/>
                     <field name="min_required"/>
                     <field name="max_required"/>
@@ -216,7 +216,7 @@
             <tree string="Analytic Plan Lines">
                 <field name="name"/>
                 <field name="sequence"/>
-                <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
+                <field name="root_analytic_id" groups="analytic.group_analytic_accounting" domain="[('type','!=','view'),('state','!=','cancelled')]"/>
                 <field name="min_required"/>
                 <field name="max_required"/>
             </tree>

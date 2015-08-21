@@ -163,7 +163,7 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'name': fields.char('Account/Contract Name', required=True, track_visibility='onchange'),
-        'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Name', store=True),
         'code': fields.char('Reference', select=True, track_visibility='onchange', copy=False),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\

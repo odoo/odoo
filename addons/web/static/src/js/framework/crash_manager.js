@@ -176,7 +176,11 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
             title: "Odoo " + (_.str.capitalize(error.type) || "Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    window.location.href = '#action='+error.data.arguments[1];
+                    if(_.isObject(error.data.arguments[1])) {
+                            openerp.webclient.action_manager.do_action(error.data.arguments[1])
+                    } else {
+                            window.location.href='#action='+error.data.arguments[1];
+                    }
                     self.destroy();
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
