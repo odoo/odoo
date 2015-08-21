@@ -22,7 +22,6 @@ var NBR_LIMIT_HISTORY = 20;
  **/
 var ConversationManager = Widget.extend({
     init: function(parent, options) {
-        var self = this;
         this._super(parent);
         this.options = _.clone(options) || {};
         _.defaults(this.options, {
@@ -56,8 +55,8 @@ var ConversationManager = Widget.extend({
         });
     },
     _setup: function(init_data){
-        this.emoji_list = init_data['emoji'];
-        this.options['emoji'] = mail_utils.shortcode_substitution(init_data['emoji']);
+        this.emoji_list = init_data.emoji;
+        this.options.emoji = mail_utils.shortcode_substitution(init_data.emoji);
     },
     on_notification: function(notification, options) {
         var self = this;
@@ -89,7 +88,6 @@ var ConversationManager = Widget.extend({
         mail_utils.beep(session);
     },
     window_title_change: function() {
-        var title = undefined;
         if (this.get("waiting_messages") !== 0) {
             this.window_beep();
         }
@@ -350,14 +348,13 @@ var Conversation = Widget.extend({
         this.set("messages", _.sortBy(this.get("messages").concat(messages), function(m){ return m.id; }));
     },
     message_render: function(){
-        var self = this;
         var message_html = $(QWeb.render("mail.chat.im.Conversation.messages", {"widget": this}));
         this.$('.o_mail_chat_im_window_content').html(message_html);
     },
     message_am_i_author: function(message){
         return message.author_id && message.author_id[0] === session.partner_id;
     },
-    message_pending_change: function(event){
+    message_pending_change: function(){
         if (this.get("pending") === 0) {
             this.$(".o_mail_chat_im_window_header_counter").text("");
         } else {
@@ -393,7 +390,7 @@ var Conversation = Widget.extend({
         this.$("input").val("");
         this.message_send(mes);
     },
-    on_click_header: function(event){
+    on_click_header: function(){
         this.session_fold();
     },
     on_click_close: function(event) {

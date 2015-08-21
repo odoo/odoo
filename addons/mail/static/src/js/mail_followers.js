@@ -64,7 +64,7 @@ var Followers = form_common.AbstractField.extend({
 
     reinit: function() {
         this.data_subtype = {};
-        this.message_is_follower == undefined;
+        this.message_is_follower = undefined;
         this.display_buttons();
     },
 
@@ -72,7 +72,7 @@ var Followers = form_common.AbstractField.extend({
         var self = this;
 
         // event: click on '(Un)Follow' button, that toggles the follow for uid
-        this.$('.o_timeline_follower').on('click', function (event) {
+        this.$('.o_timeline_follower').on('click', function () {
             if($(this).hasClass('o_timeline_notfollow')) {
                 self.do_follow();
             }
@@ -122,7 +122,7 @@ var Followers = form_common.AbstractField.extend({
         return self.fetch_subtypes(user_pid);
     },
 
-    on_invite_follower: function (event) {
+    on_invite_follower: function () {
         var self = this;
         var action = {
             type: 'ir.actions.act_window',
@@ -196,7 +196,7 @@ var Followers = form_common.AbstractField.extend({
     /** Read on res.partner failed: fall back on a generic case
         - fetch current user partner_id (call because no other smart solution currently) FIXME
         - then display a generic message about followers */
-    fetch_generic: function (error, event) {
+    fetch_generic: function () {
         var self = this;
 
         return this.ds_users.call('read', [[session.uid], ['partner_id']])
@@ -221,7 +221,7 @@ var Followers = form_common.AbstractField.extend({
 
     /* Display generic info about follower, for people not having access to res_partner */
     display_generic: function () {
-        var node_user_list = this.$('.o_timeline_follower_list').empty();
+        this.$('.o_timeline_follower_list').empty();
         this.$('.o_timeline_follower_title').html(this._format_followers(this.value.length));
     },
 
@@ -233,7 +233,7 @@ var Followers = form_common.AbstractField.extend({
         // clean and display title
         var node_user_list = this.$('.o_timeline_follower_list').empty();
         this.$('.o_timeline_follower_title').html(this._format_followers(this.followers.length));
-        var user_follower = _.filter(this.followers, function (rec) { return rec['is_uid'];});
+        var user_follower = _.filter(this.followers, function (rec) { return rec.is_uid;});
         this.message_is_follower = user_follower.length >= 1;
         this.follower_id = this.message_is_follower ? user_follower[0]['id'] : undefined;
         $(qweb.render('mail.Followers.add_more', {'widget': self})).appendTo(node_user_list);
@@ -241,7 +241,7 @@ var Followers = form_common.AbstractField.extend({
         // truncate number of displayed followers
         _(this.followers).each(function (record) {
             $(qweb.render('mail.Followers.partner', {
-                'record': _.extend(record, {'avatar_url': '/web/image/' + record['res_model'] + '/' + record['res_id'] + '/image_small'}),
+                'record': _.extend(record, {'avatar_url': '/web/image/' + record.res_model + '/' + record.res_id + '/image_small'}),
                 'widget': self})
             ).appendTo(node_user_list);
             // On mouse-enter it will show the edit_subtype pencil.
@@ -281,7 +281,7 @@ var Followers = form_common.AbstractField.extend({
             dialog = true;
         }
         else {
-            var subtype_list_ul = this.$('.o_timeline_subtype_list ul').empty();
+            this.$('.o_timeline_subtype_list ul').empty();
             if (! this.message_is_follower) {
                 this.$('.o_timeline_subtype_list > .dropdown-toggle').attr('disabled', true);
                 return;
@@ -310,7 +310,7 @@ var Followers = form_common.AbstractField.extend({
                 $list = this.$dialog.$el;
             }
 
-            var old_parent_model = undefined;
+            var old_parent_model;
             this.records_length = $.map(data, function(value, index) { return index; }).length;
 
             if (this.records_length > 1) {
@@ -391,7 +391,7 @@ var Followers = form_common.AbstractField.extend({
             oe_action = $('.oe_edit_actions input[type="checkbox"]');
         }
 
-        var checklist = new Array();
+        var checklist = [];
         _(oe_action).each(function (record) {
             if ($(record).is(':checked')) {
                 checklist.push(parseInt($(record).data('id')));

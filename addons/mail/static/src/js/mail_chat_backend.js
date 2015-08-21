@@ -1,7 +1,6 @@
 odoo.define('mail.chat_backend', function (require) {
 "use strict";
 
-var bus = require('bus.bus');
 var core = require('web.core');
 var data = require('web.data');
 var Model = require('web.Model');
@@ -14,10 +13,8 @@ var SearchView = require('web.SearchView');
 var WebClient = require('web.WebClient');
 
 var session = require('web.session');
-var utils = require('web.utils');
 var web_client = require('web.web_client');
 
-var mail_utils = require('mail.utils');
 var mail_chat_common = require('mail.chat_common');
 var mail_thread = require('mail.thread');
 
@@ -37,21 +34,21 @@ var ConversationManagerBackend = mail_chat_common.ConversationManager.extend({
     _setup: function(init_data){
         var self = this;
         this._super.apply(this, arguments);
-        _.each(init_data['notifications'], function(n){
+        _.each(init_data.notifications, function(n){
             self.on_notification(n);
         });
     },
     // window title
     window_title_change: function() {
         this._super.apply(this, arguments);
-        var title = undefined;
+        var title;
         if (this.get("waiting_messages") !== 0) {
             title = _.str.sprintf(_t("%d Messages"), this.get("waiting_messages"));
         }
         web_client.set_title_part("im_messages", title);
     },
     // sessions and messages
-    session_apply: function(active_session, options){
+    session_apply: function(active_session){
         // for chat windows
         if(active_session.is_minimized || (!active_session.is_minimized && active_session.state === 'closed')){
             this._super.apply(this, arguments);
@@ -126,7 +123,7 @@ var NotificationTopButton = Widget.extend({
     events: {
         "click": "on_click",
     },
-    init: function(parent){
+    init: function(){
         this._super.apply(this, arguments);
         this.set('counter', 0);
     },
@@ -137,7 +134,6 @@ var NotificationTopButton = Widget.extend({
         });
     },
     start: function() {
-        var self = this;
         this.on("change:counter", this, this.on_change_counter);
         // events
         internal_bus.on('mail_needaction_new', this, this.counter_increment);
@@ -193,7 +189,6 @@ var AbstractAddMoreSearch = Widget.extend({
         this.label = options.label;
     },
     start: function(){
-        var self = this;
         this.last_search_val = false;
         this.$input = this.$('.o_mail_chat_search_input');
         this._bind_events();
@@ -218,7 +213,7 @@ var AbstractAddMoreSearch = Widget.extend({
             select: function(event, ui) {
                 self.on_click_item(ui.item);
             },
-            focus: function(event, ui) {
+            focus: function(event) {
                 event.preventDefault();
             },
             html: true,
@@ -236,7 +231,7 @@ var AbstractAddMoreSearch = Widget.extend({
         this._toggle_elements();
     },
     // to be redefined
-    do_search: function(search_val){
+    do_search: function(){
         return $.when();
     },
     on_click_item: function(item){
@@ -250,13 +245,12 @@ var AbstractAddMoreSearch = Widget.extend({
     },
 });
 
-var PartnerAddMoreSeach = AbstractAddMoreSearch.extend({
+var PartnerAddMoreSearch = AbstractAddMoreSearch.extend({
     /**
      * Do the search call
      * @override
      */
     do_search: function(search_val){
-        var self = this;
         var Partner = new Model("res.partner");
         return Partner.call('im_search', [search_val, this.limit]).then(function(result){
             var values = [];
@@ -277,7 +271,6 @@ var ChannelAddMoreSearch = AbstractAddMoreSearch.extend({
      * @override
      */
     do_search: function(search_val){
-        var self = this;
         var Channel = new Model("mail.channel");
         return Channel.call('channel_search_to_join', [search_val]).then(function(result){
             var values = [];
@@ -347,7 +340,7 @@ var PartnerInviteDialog = Dialog.extend({
                 self.PartnersModel.call('im_search', [query.term, self.limit]).then(function(result){
                     var data = [];
                     _.each(result, function(partner){
-                        partner['text'] = partner.name;
+                        partner.text = partner.name;
                         data.push(partner);
                     });
                     query.callback({results: data});
@@ -405,7 +398,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.conv_manager = web_client.mail_conversation_manager;
         this.channel_search_widget = new ChannelAddMoreSearch(this, {'label': _t('+ Subscribe'), 'can_create': true});
         this.group_search_widget = new PrivateGroupAddMoreSearch(this, {'label': _t('+ New private group'), 'can_create': true});
-        this.partner_search_widget = new PartnerAddMoreSeach(this);
+        this.partner_search_widget = new PartnerAddMoreSearch(this);
         // options (update the default of MailThreadMixin)
         this.options = _.extend(this.options, {
             'display_document_link': true,
@@ -433,11 +426,11 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     willStart: function(){
         var self = this;
         return session.rpc('/mail/client_action').then(function(result){
-            self.chatter_needaction_auto = result['chatter_needaction_auto'];
-            self.set('needaction_inbox_counter', result['needaction_inbox_counter']);
-            self.set('partners', result['channel_slots']['partners']);
-            self.mapping = result['channel_slots']['mapping'];
-            self._channel_slot(_.omit(result['channel_slots'], 'partners', 'mapping'));
+            self.chatter_needaction_auto = result.chatter_needaction_auto;
+            self.set('needaction_inbox_counter', result.needaction_inbox_counter);
+            self.set('partners', result.channel_slots.partners);
+            self.mapping = result.channel_slots.mapping;
+            self._channel_slot(_.omit(result.channel_slots, 'partners', 'mapping'));
         });
     },
     start: function(){
@@ -490,11 +483,11 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         // needaction inbox counter
         this.on('change:needaction_inbox_counter', this, this.needaction_inbox_change);
 
-        return $.when(this._super.apply(this, arguments), this.cp_render_searchview()).then(function(res){
+        return $.when(this._super.apply(this, arguments), this.cp_render_searchview()).then(function(){
             // update control panel
             self.cp_render_buttons();
             // apply default channel
-            var channel_id = self.context.active_id || self.action.params['default_active_id'] || 'channel_inbox';
+            var channel_id = self.context.active_id || self.action.params.default_active_id || 'channel_inbox';
             if(!_.isString(channel_id)){
                 if(_.contains(_.keys(self.channels), channel_id)){
                     self.set('current_channel_id', channel_id);
@@ -561,23 +554,23 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         }
         return $.Deferred.reject();
     },
-    on_click_button_invite: function(event){
-        var dialog = new PartnerInviteDialog(this, {
+    on_click_button_invite: function(){
+        new PartnerInviteDialog(this, {
             title: _.str.sprintf(_t('Invite people to %s.'), this.get_current_channel_name()),
             channel: this.channels[this.get('current_channel_id')],
         }).open();
     },
-    on_click_button_unsubscribe: function(event){
+    on_click_button_unsubscribe: function(){
         var self = this;
         this.ChannelModel.call('action_unfollow', [[this.get('current_channel_id')]]).then(function(){
-            var channel = self.channels[self.get('current_channel_id')]
+            var channel = self.channels[self.get('current_channel_id')];
             var slot = self.get_channel_slot(channel);
             self.set(slot, _.filter(self.get(slot), function(c){ return c.id !== channel.id; }));
             self.do_notify(_t('Unsubscribe'), _.str.sprintf(_t('You unsubscribe from <b>%s</b>.'), self.get_current_channel_name()));
             self.set('current_channel_id', 'channel_inbox'); // jump to inbox
         });
     },
-    on_click_button_settings: function(event){
+    on_click_button_settings: function(){
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: "mail.channel",
@@ -630,7 +623,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.update_control_panel(status, {clear: false});
     },
     cp_render_buttons: function() {
-        var self = this;
         this.control_elements.$buttons = $(QWeb.render("mail.chat.ControlButtons", {}));
         this.control_elements.$buttons.on('click', '.o_mail_chat_button_minimize', _.bind(this.on_click_button_minimize, this));
         this.control_elements.$buttons.on('click', '.o_mail_chat_button_invite', _.bind(this.on_click_button_invite, this));
@@ -761,7 +753,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         });
     },
     channel_info: function(channel_id){
-        var self = this;
         return this.ChannelModel.call('channel_info', [[channel_id]]).then(function(channels){
             return channels[0];
         });
@@ -775,9 +766,10 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     channel_change: function(){
         var self = this;
         var current_channel_id = this.get('current_channel_id');
-        var current_channel = this.channels[current_channel_id];
         // mail chat compose message (destroy and replace it)
-        this.mail_chat_compose_message && this.mail_chat_compose_message.destroy();
+        if (this.mail_chat_compose_message) {
+            this.mail_chat_compose_message.destroy();
+        }
         this.mail_chat_compose_message = new mail_thread.MailComposeMessage(this, new data.DataSetSearch(this, 'mail.channel', this.context), {
             'emoji_list': this.options.emoji_list,
             'context': _.extend(this.context, {
@@ -795,8 +787,8 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
 
         // push state (the action is referred by action_manager, and no reloaded when jumping
         // channel, so update context is requried)
-        this.action.context['active_id'] = current_channel_id;
-        this.action.context['active_ids'] = [current_channel_id];
+        this.action.context.active_id = current_channel_id;
+        this.action.context.active_ids = [current_channel_id];
         web_client.action_manager.do_push_state({
             action: this.action.id,
             active_id: current_channel_id,
@@ -806,7 +798,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.cp_update();
 
         // fetch the messages
-        return this.message_load_new().then(function(raw_messages){
+        return this.message_load_new().then(function(){
             // allow loading history
             self.loading_history = true;
             // if normal channel, update last message id, and unbold
@@ -879,7 +871,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
             }
         });
     },
-    needaction_inbox_change: function(inc){
+    needaction_inbox_change: function(){
         var count = this.get('needaction_inbox_counter');
         var $elem = this.$('.o_mail_chat_needaction[data-channel-id="channel_inbox"]');
         $elem.html(count);
@@ -896,11 +888,11 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     message_receive: function(message){
         var self = this;
         // if current channel should reveice message, give it to it
-        if(_.contains(message['channel_ids'], this.get('current_channel_id'))){
+        if(_.contains(message.channel_ids, this.get('current_channel_id'))){
             this.message_insert([message]);
         }
         // for other message channel, get the channel if not loaded yet, and bolded them
-        var other_message_channel_ids = _.without(message['channel_ids'], this.get('current_channel_id'));
+        var other_message_channel_ids = _.without(message.channel_ids, this.get('current_channel_id'));
         var active_channel_ids = _.map(_.keys(this.channels), function(cid){
             return parseInt(cid);
         }); // integer as key of a dict is cast as string in javascript

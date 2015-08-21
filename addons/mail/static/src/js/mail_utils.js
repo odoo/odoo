@@ -92,7 +92,7 @@ function attachment_filetype_to_fa_class(file_type){
         'spreadsheet': 'fa fa-file-excel-o',
         'print': 'fa fa-file-pdf-o',
         'presentation': 'fa fa-file-powerpoint-o',
-    }
+    };
     if(_.contains(_.keys(mapping), file_type)){
         return mapping[file_type];
     }

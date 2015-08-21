@@ -2,10 +2,7 @@ odoo.define('mail.chatter', function (require) {
 "use strict";
 
 var core = require('web.core');
-var data = require('web.data');
-var session = require('web.session');
 var web_client = require('web.web_client');
-var Model = require('web.Model');
 var Widget = require('web.Widget');
 var form_common = require('web.form_common');
 var SystrayMenu = require('web.SystrayMenu');
@@ -47,7 +44,7 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
         this.$input = this.$('.o_mail_compose_message_input');
         this.$input.focus();
         // add mail compose message full button
-        this.$('.o_mail_compose_message_button_group').append('<button class="btn btn-default o_mail_compose_message_button_full_message" type="button" data-toggle="popover"><i class="fa fa-pencil-square-o"/></button>')
+        this.$('.o_mail_compose_message_button_group').append('<button class="btn btn-default o_mail_compose_message_button_full_message" type="button" data-toggle="popover"><i class="fa fa-pencil-square-o"/></button>');
         this.$('.o_mail_compose_message_button_full_message').on('click', this, this.on_compose_message);
         return this._super.apply(this, arguments);
     },
@@ -78,7 +75,7 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
     get_checked_suggested_partners: function(){
         var self = this;
         var checked_partners = [];
-        this.$('.o_mail_chatter_compose_message_suggested_partners input:checked').each(function(index){
+        this.$('.o_mail_chatter_compose_message_suggested_partners input:checked').each(function(){
             var $input = $(this);
             var full_name = $input.data('fullname');
             checked_partners = checked_partners.concat(_.filter(self.suggested_partners, function(item){
@@ -185,12 +182,12 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
         if(this.options.is_log) {
             var subtype_id = parseInt(this.$('.o_mail_chatter_compose_message_subtype_select').val());
             if(_.indexOf(_.pluck(this.internal_subtypes, 'id'), subtype_id) == -1) {
-                values['subtype'] = 'mail.mt_note'
+                values.subtype = 'mail.mt_note';
             }else{
-                values['subtype_id'] = subtype_id;
+                values.subtype_id = subtype_id;
             }
         }else{
-            values['subtype'] = 'mail.mt_comment';
+            values.subtype = 'mail.mt_comment';
         }
         // update partner_ids
         var def = $.when();
@@ -202,20 +199,20 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
             var checked_suggested_partners = this.get_checked_suggested_partners();
             this.check_suggested_partners(checked_suggested_partners).done(function(partner_ids){
                 // update context
-                values['partner_ids'] = partner_ids;
-                values['context'] = _.defaults(self.context, {
+                values.partner_ids = partner_ids;
+                values.context = _.defaults(self.context, {
                     'mail_post_autofollow': true,
                     'mail_post_autofollow_partner_ids': partner_ids,
                 });
                 def = _.bind(_super, self)(body, attachment_ids, values);
             });
         }
-        return def
+        return def;
     },
     is_empty: function(){
         return this.$input.val() === '';
     },
-    on_compose_message: function(event){
+    on_compose_message: function(){
         var self = this;
         if (!this.do_check_attachment_upload()){
             return false;
@@ -280,17 +277,17 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
         "click .o_mail_chatter_button_new_message": "on_open_composer",
         "click .o_mail_chatter_button_log_note": "on_open_composer",
         "blur .o_mail_compose_message_input": "on_close_composer",
-        "mousedown .o_mail_chatter_compose_message": function(event) {
+        "mousedown .o_mail_chatter_compose_message": function() {
             this.stay_open = true;
         },
-        "focus .o_mail_compose_message_input": function(event) {
+        "focus .o_mail_compose_message_input": function() {
             this.stay_open = false;
         },
-        "keydown .o_mail_compose_message_input": function(event) {
+        "keydown .o_mail_compose_message_input": function() {
             this.stay_open = false;
         },
     },
-    init: function (parent, node){
+    init: function (){
         this._super.apply(this, arguments);
         mail_thread.MailThreadMixin.init.call(this);
         this.message_composer = undefined;
@@ -309,7 +306,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
         mail_thread.MailThreadMixin.start.call(this);
         return this._super.apply(this, arguments);
     },
-    on_message_show_more: function(event){
+    on_message_show_more: function(){
         var self = this;
         this.message_load_history().then(function(messages){
             if(messages.length < mail_thread.LIMIT_MESSAGE){
@@ -378,12 +375,12 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
         });
         this.message_composer.appendTo(this.$('.o_mail_chatter_compose_message_wrap'));
         this.message_composer.on('message_sent', this, this.on_message_post);
-        this.message_composer.on('need_refresh', this, function(e){
+        this.message_composer.on('need_refresh', this, function(){
             self.message_refresh();
             self.on_close_composer();
         });
     },
-    on_close_composer: function(event){
+    on_close_composer: function(){
         if(this.message_composer && this.message_composer.is_empty() && !this.stay_open){
             this.$('.o_mail_chatter_compose_buttons').show();
             this.$('.o_mail_chatter_compose_message_wrap').hide();
@@ -410,7 +407,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
      * @override
      */
     _message_order: function(messages){
-        var messages = mail_thread.MailThreadMixin._message_order.call(this, messages);
+        messages = mail_thread.MailThreadMixin._message_order.call(this, messages);
         return messages.reverse();
     },
     /**

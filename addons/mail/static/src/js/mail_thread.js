@@ -186,7 +186,7 @@ var MailComposeMessage = Widget.extend({
         values = _.extend(values, {
             'body': this.mention_preprocess_message(body),
             'attachment_ids': attachment_ids || [],
-            'partner_ids': _.pluck(this.get('mention_selected_partners'), 'id').concat(values['partner_ids']),
+            'partner_ids': _.pluck(this.get('mention_selected_partners'), 'id').concat(values.partner_ids),
         });
         return this.thread_dataset._model.call('message_post', [this.context.default_res_id], values).then(function(message_id){
             self.reset(); // empty attachment, mention partners, ...
@@ -324,7 +324,7 @@ var MailComposeMessage = Widget.extend({
                 $active.click();
             }
         }else{ // navigation in propositions
-            var $to = undefined;
+            var $to;
             if(keycode === $.ui.keyCode.DOWN){
                 $to = $active.next('.o_mail_mention_proposition:not(.active)');
             }else{
@@ -374,7 +374,7 @@ var MailComposeMessage = Widget.extend({
             clearTimeout(this.mention_fetch_timer);
         }
     },
-    mention_fetch_partner: function(event){
+    mention_fetch_partner: function(){
         var self = this;
         var search_str = this.get('mention_word');
         this.PartnerModel.query(['id', 'name', 'email'])
@@ -388,10 +388,11 @@ var MailComposeMessage = Widget.extend({
         var mention_selected_partners = this.get('mention_selected_partners');
         var cursor = this.get_cursor_position();
         var input_text = this.$input.val();
+        var matches;
         switch(keycode) {
             // Remove a mention when a character belonging to a mention word is removed from the input text
             case $.ui.keyCode.BACKSPACE:
-                var matches = this.mention_get_match(this.$input.val());
+                matches = this.mention_get_match(this.$input.val());
                 for(var i=0 ; i< matches.length ; i++){
                     var m = matches[i];
                     if(m.index <= cursor && cursor <= m.index+m[0].length){
@@ -409,7 +410,7 @@ var MailComposeMessage = Widget.extend({
                 var deleted_binf = left_text.length;
                 var deleted_bsup = left_text.length + deleted_text.length;
 
-                var matches = this.mention_get_match(this.input_buffer);
+                matches = this.mention_get_match(this.input_buffer);
                 for(var i=0 ; i< matches.length ; i++){
                     var m = matches[i];
                     var m1 = m.index;
@@ -432,7 +433,7 @@ var MailComposeMessage = Widget.extend({
                 var match = matches[i];
                 var end_index = match.index+match[0].length;
                 var subtext = body.substring(start_index, end_index);
-                subtext = subtext.replace(match[0], _.str.sprintf("<span data-oe-model='res.partner' data-oe-id='%s'>%s</span>", partners[i].id, match[0]))
+                subtext = subtext.replace(match[0], _.str.sprintf("<span data-oe-model='res.partner' data-oe-id='%s'>%s</span>", partners[i].id, match[0]));
                 substrings.push(subtext);
                 start_index = end_index;
             }
@@ -470,7 +471,7 @@ var MailComposeMessage = Widget.extend({
         if(regex_str.length){
             var myRegexp = new RegExp(regex_str, 'g');
             var match = myRegexp.exec(input_text);
-            while (match != null) {
+            while (match !== null) {
                 result.push(match);
                 match = myRegexp.exec(input_text);
             }
@@ -598,7 +599,7 @@ var MailThreadMixin = {
         var $source = this.$(event.currentTarget);
         var mid = $source.data('message-id');
         var is_starred = !$source.hasClass('o_mail_message_starred');
-        return this.MessageDatasetSearch.call('set_message_starred', [[mid], is_starred]).then(function(res){
+        return this.MessageDatasetSearch.call('set_message_starred', [[mid], is_starred]).then(function(){
             $source.toggleClass('o_mail_message_starred');
             return mid;
         });
@@ -606,7 +607,7 @@ var MailThreadMixin = {
     on_message_needaction: function(event){
         var $source = this.$(event.currentTarget);
         var mid = $source.data('message-id');
-        return this.MessageDatasetSearch.call('set_message_done', [[mid]]).then(function(res){
+        return this.MessageDatasetSearch.call('set_message_done', [[mid]]).then(function(){
             $source.remove();
             return mid;
         });
@@ -659,7 +660,7 @@ var MailThreadMixin = {
         var self = this;
         return this.message_fetch(this.get_message_domain_history()).then(function(raw_messages){
             self.message_insert(raw_messages);
-            return raw_messages
+            return raw_messages;
         });
     },
     /**
@@ -672,7 +673,7 @@ var MailThreadMixin = {
         var self = this;
         return this.message_fetch(this.get_message_domain()).then(function(raw_messages){
             self._message_replace(self._message_preprocess(raw_messages));
-            return raw_messages
+            return raw_messages;
         });
     },
     /**
@@ -741,7 +742,7 @@ return {
     MailComposeMessage: MailComposeMessage,
     MailThreadMixin: MailThreadMixin,
     LIMIT_MESSAGE: LIMIT_MESSAGE,
-}
+};
 
 
 });
