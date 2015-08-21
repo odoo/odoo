@@ -78,7 +78,7 @@
 -
   I configure the account receivable of Customer.
 -
-  !record {model: res.partner, id: base.res_partner_13}:
+  !record {model: res.partner, id: base.res_partner_2}:
     property_account_payable_id: account_anglo_payable
     property_account_receivable_id: account_anglo_receivable
 -
@@ -199,7 +199,7 @@
   I create an Outgoing Picking order
 -
   !record {model: stock.picking, id: stock_picking_out001}:
-    partner_id: base.res_partner_13
+    partner_id: base.res_partner_2
     move_lines:
       - company_id: base.main_company
         location_id: stock.stock_location_stock
