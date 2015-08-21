@@ -21,6 +21,7 @@
 
 from datetime import date, datetime
 from dateutil import relativedelta
+import math
 import json
 import time
 
@@ -444,12 +445,50 @@ class stock_quant(osv.osv):
         if domain is None:
             domain = []
         quants = [(None, qty)]
+        qty_reduce = 0
         #don't look for quants in location that are of type production, supplier or inventory.
         if location.usage in ['inventory', 'production', 'supplier']:
             return quants
         res_qty = qty
         if not prefered_domain_list:
-            return self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
+            ava_qty = 0
+            uom = product.uom_id
+            move_id = context.get('move', False)
+            if move_id:
+                uom = self.pool.get('stock.move').browse(cr, uid, move_id, context).product_uom
+
+            # get the standard quants proposed by the system
+            quants = self.quants_get(cr, uid, location, product, qty, domain=domain, restrict_lot_id=restrict_lot_id, restrict_partner_id=restrict_partner_id, context=context)
+            for quant, qty in quants:
+                if quant:
+                    ava_qty += qty
+
+            qty_reduce = ava_qty % uom.factor_inv
+            ava_qty = ava_qty/uom.factor_inv
+            res_qty = res_qty/uom.factor_inv
+            # check, whether based on the rounding if qty from proosed to be recuce or not
+            if uom.rounding >= 1.0:
+                ava_qty = math.floor(ava_qty)
+                res_qty = math.floor(res_qty)
+
+            res_qty_cmp = float_compare(ava_qty, res_qty, precision_rounding=uom.rounding)
+            new_quants = []
+            # reduce the qty form proposed quants and propose a new quants
+            
+            quants.reverse()
+            if uom.rounding >= 1 and res_qty_cmp != 0:
+                for quant, qty in quants:
+                    if quant and qty_reduce > 0 and (qty_reduce - qty) >= 0:
+                        new_quants.append((None, qty))
+                        qty_reduce -= qty
+                    elif quant and qty_reduce > 0 and (qty - qty_reduce) > 0:
+                        new_quants.append((quant, qty - qty_reduce))
+                        qty_reduce = 0
+                    elif quant and qty_reduce == 0:
+                        new_quants.append((quant, qty))
+            else:
+                new_quants = quants
+            return new_quants      
         for prefered_domain in prefered_domain_list:
             res_qty_cmp = float_compare(res_qty, 0, precision_rounding=product.uom_id.rounding)
             if res_qty_cmp > 0:
@@ -2310,7 +2349,11 @@ class stock_move(osv.osv):
             if move.state != 'assigned':
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
+                
+                ctx = dict(context)
+                ctx['move'] = move.id
+
+                quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain[move.id], prefered_domain_list=[], restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=ctx)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
 
         #force assignation of consumable products and incoming from supplier/inventory/production
