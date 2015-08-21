@@ -7,3 +7,4 @@ import account_overdue_report
 import account_general_ledger
 import account_partner_ledger
 import account_balance
+import account_report_financial
