@@ -170,20 +170,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
         </record>
 
-        <record id="res_partner_21" model="res.partner">
-            <field name="name">Global Solutions</field>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">Union Road</field>
-            <field name="city">Liverpool</field>
-            <field name="country_id" ref="base.uk"/>
-            <field name="zip">L25 4RL</field>
-            <field name="email">globalsolutions@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_21-image.png"/>
-        </record>
-
         <record id="res_partner_22" model="res.partner">
             <field name="name">Vicking Direct</field>
             <field eval="[(6,0,[ref('res_partner_category_12')])]" name="category_id"/>
