@@ -6,8 +6,8 @@ from openerp import models, fields, api, _
 from openerp.tools import amount_to_text_en, float_round
 from openerp.exceptions import UserError, ValidationError
 
-class account_register_payments(models.TransientModel):
-    _inherit = "account.register.payments"
+class account_payment(models.Model):
+    _inherit = "account.payment"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
@@ -15,44 +15,6 @@ class account_register_payments(models.TransientModel):
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
         help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
              "you can manage the numbering in the journal configuration page.")
-
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        if hasattr(super(account_register_payments, self), '_onchange_journal_id'):
-            super(account_register_payments, self)._onchange_journal_id()
-        if self.journal_id.check_manual_sequencing:
-            self.check_number = self.journal_id.check_sequence_id.number_next_actual
-
-    @api.onchange('amount')
-    def _onchange_amount(self):
-        if hasattr(super(account_register_payments, self), '_onchange_amount'):
-            super(account_register_payments, self)._onchange_amount()
-        # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
-        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
-        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = self.amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
-        self.check_amount_in_words = check_amount_in_words
-
-    def get_payment_vals(self):
-        res = super(account_register_payments, self).get_payment_vals()
-        if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
-            res.update({
-                'check_amount_in_words': self.check_amount_in_words,
-                'check_manual_sequencing': self.check_manual_sequencing,
-            })
-        return res
-
-
-class account_payment(models.Model):
-    _inherit = "account.payment"
-
-    check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
-    check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
-        help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
-             "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
@@ -65,6 +27,7 @@ class account_payment(models.Model):
     def _onchange_amount(self):
         if hasattr(super(account_payment, self), '_onchange_amount'):
             super(account_payment, self)._onchange_amount()
+        # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
         check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
         check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
         decimals = self.amount % 1
