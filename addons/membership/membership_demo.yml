@@ -6,7 +6,7 @@
     vals = {'free_member': False}
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_18')
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_4')
-    self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_9')
+    self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_12')
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_1')
 
     if self.pool.get('account.invoice')._default_currency(cr, uid):
@@ -30,7 +30,7 @@
         self.create_membership_invoice(cr, uid, ref('base.res_partner_1'), ref('membership_1'), {'amount':180})
         self.create_membership_invoice(cr, uid, ref('base.res_partner_12'), ref('membership_1'), {'amount':180})
 
-        self.create_membership_invoice(cr, uid, ref('base.res_partner_9'), ref('membership_2'), {'amount':180})
+        self.create_membership_invoice(cr, uid, ref('base.res_partner_12'), ref('membership_2'), {'amount':180})
         self.create_membership_invoice(cr, uid, ref('base.res_partner_3'), ref('membership_2'), {'amount':180})
         self.create_membership_invoice(cr, uid, ref('base.res_partner_3'), ref('membership_2'), {'amount':180})
         self.create_membership_invoice(cr, uid, ref('base.res_partner_3'), ref('membership_2'), {'amount':180})
@@ -38,7 +38,7 @@
     vals = {'free_member': True}
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_18')
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_4')
-    self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_9')
+    self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_12')
     self.pool.get('ir.model.data')._update(cr, uid, 'res.partner', 'base', vals, 'res_partner_1')
 
     vals = {'associate_member': ref('base.res_partner_2')}
