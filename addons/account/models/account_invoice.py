@@ -127,7 +127,7 @@ class AccountInvoice(models.Model):
                     else:
                         amount_to_show = line.company_id.currency_id.compute(abs(line.amount_residual), self.currency_id)
                     info['content'].append({
-                        'ref': line.ref or line.move_id.name,
+                        'journal_name': line.ref or line.move_id.name,
                         'amount': amount_to_show,
                         'currency': self.currency_id.symbol,
                         'id': line.id,
@@ -161,12 +161,15 @@ class AccountInvoice(models.Model):
                     amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
                 info['content'].append({
                     'name': payment.name,
-                    'ref': payment.journal_id.name,
+                    'journal_name': payment.journal_id.name,
                     'amount': amount_to_show,
                     'currency': self.currency_id.symbol,
                     'digits': [69, self.currency_id.decimal_places],
                     'position': self.currency_id.position,
                     'date': payment.date,
+                    'payment_id': payment.id,
+                    'move_id': payment.move_id.id,
+                    'ref': payment.move_id.ref,
                 })
             self.payments_widget = json.dumps(info)
 
