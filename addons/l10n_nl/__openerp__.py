@@ -103,8 +103,8 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
               "account_fiscal_position_template.xml",
               "account_fiscal_position_tax_template.xml",
               "account_fiscal_position_account_template.xml",
-              'l10n_nl_wizard.xml'
+              "l10n_nl_account_chart.yml",
     ],
     'demo' : [],
-    'installable': False,
+    'installable': True,
 }
