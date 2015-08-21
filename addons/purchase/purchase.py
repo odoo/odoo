@@ -1593,7 +1593,7 @@ class procurement_order(osv.osv):
                     self.message_post(cr, uid, [proc.id], body=_("Purchase line created and linked to an existing Purchase Order"), context=context)
             po_obj.write(cr, uid, [add_purchase], {'order_line': line_values},context=context)
 
-            for procurment in procuremnts:
+            for procurement in procurements:
                 self.update_origin_po(cr, uid, po, procurement, context=context)
 
 
