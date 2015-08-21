@@ -26,30 +26,29 @@ var M2ODialog = Dialog.extend({
         this._super(parent, {
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
+            buttons: [
+                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                    if (this.$("input").val() !== ''){
+                        this.getParent()._quick_create(this.$("input").val());
+                        this.close();
+                    } else {
+                        e.preventDefault();
+                        this.$("input").focus();
+                    }
+                }},
+
+                {text: _t('Create and edit'), classes: 'btn-primary', close: true, click: function() {
+                    this.getParent()._search_create_popup("form", undefined, this.getParent()._create_context(this.$("input").val()));
+                }},
+
+                {text: _t('Cancel'), close: true}
+            ]
         });
     },
     start: function() {
-        var self = this;
-        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
-        this.$("p").text( text );
-        this.$buttons.html(QWeb.render("M2ODialog.buttons"));
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name);
+        this.$("p").text(text);
         this.$("input").val(this.getParent().$input.val());
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
-            if (self.$("input").val() !== ''){
-                self.getParent()._quick_create(self.$("input").val());
-                self.destroy();
-            } else{
-                e.preventDefault();
-                self.$("input").focus();
-            }
-        });
-        this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
-            self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
-            self.destroy();
-        });
-        this.$buttons.find(".oe_form_m2o_cancel_button").click(function(){
-            self.destroy();
-        });
     },
 });
 
