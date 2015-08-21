@@ -1188,24 +1188,23 @@ class purchase_order_line(osv.osv):
         cr.execute("SELECT s.id \
                     FROM product_supplierinfo AS s \
                     WHERE (s.name = %s) AND (s.product_tmpl_id = %s) \
-                    AND ((s.date_start IS NULL OR s.date_start<=%s) AND (s.date_end IS NULL OR s.date_end>=%s)) ORDER BY s.min_qty ,s.price asc ", (partner_id, product.product_tmpl_id.id, date, date))
+                    AND ((s.date_start IS NULL OR s.date_start<=%s) AND (s.date_end IS NULL OR s.date_end>=%s)) ORDER BY s.min_qty desc,s.price", (partner_id, product.product_tmpl_id.id, date, date))
         supp_ids = [x[0] for x in cr.fetchall()]
         suppliers = self.pool['product.supplierinfo'].browse(cr, uid, supp_ids, context=context)
-        if suppliers:
-            supplier_find = suppliers.filtered(lambda x: x.min_qty == qty) or suppliers
-            if supplier_find:
-                supplierinfo = supplier_find and supplier_find[0]
-                if supplierinfo.product_uom.id != uom_id:
-                    res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name}
-                min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-                price = supplierinfo.price
-                if float_compare(min_qty, qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
-                    if qty:
-                        res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
-                    qty = min_qty
-                suplier_currency = supplierinfo.currency_id.id
-                if currency_id != suplier_currency:
-                    price = self.pool['res.currency'].compute(cr, uid, suplier_currency, currency_id, price, context=dict(context or {}, date=date_order))
+        supplier_find = suppliers.filtered(lambda x: x.min_qty == qty) or suppliers
+        if supplier_find:
+            supplierinfo = supplier_find and supplier_find[0]
+            if supplierinfo.product_uom.id != uom_id:
+                res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name}
+            min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
+            price = supplierinfo.price
+            if float_compare(min_qty, qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
+                if qty:
+                    res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
+                qty = min_qty
+            supplier_currency = supplierinfo.currency_id.id
+            if currency_id != supplier_currency:
+                price = self.pool['res.currency'].compute(cr, uid, supplier_currency, currency_id, price, context=dict(context or {}, date=date_order))
         dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         qty = qty or 1.0
         res['value'].update({'date_planned': date_planned or dt})

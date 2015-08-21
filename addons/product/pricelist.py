@@ -265,10 +265,11 @@ class product_pricelist_item(osv.osv):
                 return False
         return True
 
-    def _price_list_item_name(self, cr, uid, ids, fields, args, context=None):
+    def _get_pricelist_item_name_price(self, cr, uid, ids, fields, args, context=None):
         res = {}
         for item in self.browse(cr, uid, ids, context=context):
             res[item.id] = {'name': '', 'price': ''}
+            
             if item.categ_id:
                 res[item.id]['name'] = _("Category: %s") % (item.categ_id.name)
             elif item.product_tmpl_id:
@@ -277,6 +278,7 @@ class product_pricelist_item(osv.osv):
                 res[item.id]['name'] = item.product_id.display_name.replace('[%s]' % item.product_id.code, '')
             else:
                 res[item.id]['name'] = _("All Products")
+
             if item.compute_price == 'fixed':
                 res[item.id]['price'] = ("%s %s") % (item.fixed_price, item.pricelist_id.currency_id.name)
             elif item.compute_price == 'percentage':
@@ -286,7 +288,7 @@ class product_pricelist_item(osv.osv):
         return res
 
     _columns = {
-        'name': fields.function(_price_list_item_name, type="char", string='Name', multi='price_item', help="Explicit rule name for this pricelist line."),
+        'name': fields.function(_get_pricelist_item_name_price, type="char", string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
@@ -324,7 +326,7 @@ class product_pricelist_item(osv.osv):
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
         'fixed_price': fields.float('Fixed Price'),
         'percent_price': fields.float('Percentage Price'),
-        'price': fields.function(_price_list_item_name, type="char", string='Price', multi='price_item', help="Explicit rule name for this pricelist line."),
+        'price': fields.function(_get_pricelist_item_name_price, type="char", string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line."),
     }
 
     _constraints = [
