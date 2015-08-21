@@ -73,7 +73,7 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <form string="Contact">
-                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
                         <h1>
@@ -103,7 +103,7 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Partner">
-                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium", "size": [90, 90]}' readonly="1"/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}' readonly="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>

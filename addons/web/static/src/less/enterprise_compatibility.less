@@ -217,20 +217,21 @@ div.o_checkbox {
             }
         }
 
-        + .oe_title {
-            width: 400px;
-        }
-
-        + .oe_avatar {
-            > img {
-                max-width: 90px;
-                max-height: 90px;
-            }
-
+        &, & + .oe_avatar {
             + .oe_title {
                 width: 400px;
-                padding-left: 95px;
             }
+        }
+    }
+
+    .oe_avatar {
+        > img {
+            max-width: 90px;
+            max-height: 90px;
+        }
+
+        + .oe_title {
+            padding-left: 95px;
         }
     }
 

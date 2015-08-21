@@ -223,12 +223,10 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
-                        <div class="oe_left" style="width: 500px;">
-                            <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
-                            <div class="oe_title" style="width: 390px;">
-                                <label class="oe_edit_only" for="name" string="Product Name"/>
-                                <h1><field name="name" class="oe_inline"/></h1>
-                            </div>
+                        <field name="image_medium" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label class="oe_edit_only" for="name" string="Product Name"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
