@@ -170,22 +170,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
         </record>
 
-        <record id="res_partner_19" model="res.partner">
-            <field name="name">Seagate</field>
-            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_15')])]" name="category_id"/>
-            <field eval="0" name="customer"/>
-            <field eval="1" name="supplier"/>
-            <field name="is_company">1</field>
-            <field name="city">Cupertino</field>
-            <field name="zip">95014</field>
-            <field name="country_id" ref="base.us"/>
-            <field model="res.country.state" name="state_id" search="[('code','ilike','ca')]"/>
-            <field name="street">10200 S. De Anza Blvd</field>
-            <field name="email">seagate@yourcompany.example.com</field>
-            <field name="phone">+1 800 732 4283</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_19-image.jpg"/>
-        </record>
-
 <!--        To be removed as its acquired by Seagate-->
         <record id="res_partner_20" model="res.partner">
             <field name="name">Maxtor</field>
@@ -193,7 +177,7 @@
             <field eval="0" name="customer"/>
             <field eval="1" name="supplier"/>
             <field eval="0" name="active"/>
-            <field name="parent_id" ref="res_partner_19"/>
+            <field name="parent_id" ref="res_partner_2"/>
             <field name="is_company">1</field>
         </record>
 
@@ -330,7 +314,7 @@
         </record>
         <record id="res_partner_address_31" model="res.partner">
             <field name="name">Edward Foster</field>
-            <field name="parent_id" eval="ref('res_partner_19')"/>
+            <field name="parent_id" eval="ref('res_partner_2')"/>
             <field name="function">Sales Representative</field>
             <field name="email">efoster@seagate.com</field>
             <field name="supplier">1</field>
