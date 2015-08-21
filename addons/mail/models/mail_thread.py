@@ -504,7 +504,7 @@ class MailThread(models.AbstractModel):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
             because portal users have a different Inbox action than classic users. """
-        return 'mail.mail_message_action_inbox'
+        return 'mail.mail_channel_action_client_slack'
 
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
