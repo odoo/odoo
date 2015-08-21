@@ -247,6 +247,8 @@
                 <field name="groups_id" position="after"/>
             </field>
         </record>
+        <!-- dummy update on group, to force the view above to be update -->
+        <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>
             <field name="type">ir.actions.act_window</field>
