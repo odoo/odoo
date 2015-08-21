@@ -1,11 +1,11 @@
-
-from openerp import api, fields, models
+# -*- coding: ascii -*-
+from odoo import api, fields, models
 
 class WebsiteConfigSettings(models.TransientModel):
     _name = 'website.config.settings'
     _inherit = 'res.config.settings'
 
-    website_id = fields.Many2one('website', string="website", required=True, default=lambda self: self.env['website'].search([])[0].id)
+    website_id = fields.Many2one('website', string="website", required=True, default=lambda self: self.env['website'].search([], limit=1).id)
     website_name = fields.Char(related='website_id.name', string="Website Name")
 
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', string='Languages')
@@ -26,7 +26,6 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_form_editor = fields.Boolean(string="Website form builder")
     module_website_version = fields.Boolean(string="Website A/B testing and versioning")
 
-
     @api.onchange('website_id')
     def on_change_website_id(self):
         if self.website_id:
@@ -35,12 +34,3 @@ class WebsiteConfigSettings(models.TransientModel):
             for fname, v in website_data.items():
                 if fname in self._columns:
                     self.fname = v[0] if v and self._columns[fname]._type == 'many2one' else v
-
-    # FIXME in trunk for god sake. Change the fields above to fields.char instead of fields.related, 
-    # and create the function set_website who will set the value on the website_id
-    # create does not forward the values to the related many2one. Write does.
-    @api.model
-    def create(self, vals):
-        config = super(WebsiteConfigSettings, self).create(vals)
-        config.write(vals)
-        return config

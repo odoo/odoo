@@ -4,27 +4,24 @@ import os
 import re
 import time
 import traceback
-
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
 
-import openerp
-from openerp import api, models
-from openerp.addons.base import ir
-from openerp.addons.base.ir import ir_qweb
-from openerp.addons.website.models.website import slug, url_for, _UNSLUG_RE
-from openerp.http import request
-from openerp.tools import config
-from openerp.tools.safe_eval import safe_eval as eval
+import odoo
+from odoo import api, models
+from odoo.addons.base import ir
+from odoo.addons.base.ir import ir_qweb
+from odoo.addons.website.models.website import slug, url_for, _UNSLUG_RE
+from odoo.http import request
+from odoo.tools import config
+from odoo.tools.safe_eval import safe_eval as eval
 
 logger = logging.getLogger(__name__)
-
 
 class RequestUID(object):
     def __init__(self, **kw):
         self.__dict__.update(kw)
-
 
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
@@ -39,16 +36,11 @@ class IrHttp(models.AbstractModel):
             page=PageConverter,
         )
 
-    #TODO MBA Check later on
-    @api.v7
-    def _auth_method_public(self):
-        new_obj = self.browse(request.cr, request.uid, [])
-        return new_obj._auth_method_public()
-
-    @api.v8
     def _auth_method_public(self):
         if not request.session.uid:
-            website = self.env['website'].sudo().get_current_website()
+            # can't find self.env so create env for public user
+            self.env = api.Environment(request.cr, odoo.SUPERUSER_ID, context=request.context)
+            website = self.env['website'].get_current_website()
             if website:
                 request.uid = website.user_id.id
             else:
@@ -185,7 +177,7 @@ class IrHttp(models.AbstractModel):
             try:
                 r = self.pool.cache[key]
                 if r['time'] + cache_time > time.time():
-                    cache_response = openerp.http.Response(r['content'], mimetype=r['mimetype'])
+                    cache_response = odoo.http.Response(r['content'], mimetype=r['mimetype'])
                 else:
                     del self.pool.cache[key]
             except KeyError:
@@ -255,7 +247,7 @@ class IrHttp(models.AbstractModel):
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
             except Exception, e:
-                if openerp.tools.config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
+                if odoo.tools.config['dev_mode'] and (not isinstance(exception, ir_qweb.QWebException) or not exception.qweb.get('cause')):
                     raise
                 exception = e
 
@@ -272,12 +264,12 @@ class IrHttp(models.AbstractModel):
                 else:
                     code = exception.code
 
-            if isinstance(exception, openerp.exceptions.AccessError):
+            if isinstance(exception, odoo.exceptions.AccessError):
                 code = 403
 
             if isinstance(exception, ir_qweb.QWebException):
                 values.update(qweb_exception=exception)
-                if isinstance(exception.qweb.get('cause'), openerp.exceptions.AccessError):
+                if isinstance(exception.qweb.get('cause'), odoo.exceptions.AccessError):
                     code = 403
 
             if code == 500:
@@ -312,8 +304,8 @@ class IrHttp(models.AbstractModel):
             obj = env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
             if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                env = env(user=openerp.SUPERUSER_ID)
-        return super(ir_http, self).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+                env = env(user=odoo.SUPERUSER_ID)
+        return super(IrHttp, self).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 class ModelConverter(ir.ir_http.ModelConverter):
     def __init__(self, url_map, model=False, domain='[]'):
@@ -324,7 +316,6 @@ class ModelConverter(ir.ir_http.ModelConverter):
     def to_url(self, value):
         return slug(value)
 
-    #TODO MBA Check later on
     def to_python(self, value):
         m = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=m, converter=self)
@@ -337,13 +328,14 @@ class ModelConverter(ir.ir_http.ModelConverter):
             request.cr, _uid, record_id, context=request.context)
 
     def generate(self, query=None, args=None):
-        Obj = request.env[self.model]
-        domain = eval( self.domain, (args or {}).copy())
+        Model = request.env[self.model]
+        domain = eval(self.domain, (args or {}).copy())
         if query:
-            domain.append((Obj._rec_name, 'ilike', '%'+query+'%'))
-        for record in Obj.search_read(domain=domain, fields=['write_date',Obj._rec_name]):
-            if record.get(Obj._rec_name, False):
-                yield {'loc': (record['id'], record[Obj._rec_name])}
+            domain.append((Model._rec_name, 'ilike', '%'+query+'%'))
+        for record in Model.search_read(domain=domain, fields=['write_date',Model._rec_name]):
+            if record.get(Model._rec_name, False):
+                yield {'loc': (record['id'], record[Model._rec_name])}
+
 
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """

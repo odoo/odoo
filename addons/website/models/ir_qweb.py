@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import models
-from openerp.addons.web.http import request
+from odoo import models
+from odoo.addons.web.http import request
 
 
 class QWeb(models.AbstractModel):

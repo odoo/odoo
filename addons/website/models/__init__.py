@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-# flake8:noqa
-
 import ir_actions
 import ir_ui_view
 import website

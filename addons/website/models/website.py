@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import inspect
 import logging
 import math
-import unicodedata
 import re
+import unicodedata
 import urlparse
-import hashlib
-
-from sys import maxint
-
 import werkzeug
+
+from werkzeug.exceptions import NotFound
+
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
     import slugify as slugify_lib
 except ImportError:
     slugify_lib = None
 
-from openerp import api, fields, models, tools, _
-from openerp.tools import html_escape as ustr
-from openerp.addons.web.http import request
-from werkzeug.exceptions import NotFound
+from odoo import api, fields, models, tools, _
+from odoo.addons.web.http import request
+from odoo.tools import ustr
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +140,7 @@ def urlplus(url, params):
 
 class Website(models.Model):
 
-    _name = "website" # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
+    _name = "website"  # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
     _description = "Website"
 
     def _default_language(self):
@@ -163,8 +162,8 @@ class Website(models.Model):
     social_googleplus = fields.Char('Google+ Account')
     google_analytics_key = fields.Char('Google Analytics Key')
     user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
-    compress_html = fields.Boolean('Compress HTML', default=False)
-    cdn_activated = fields.Boolean('Activate CDN for assets', default=False)
+    compress_html = fields.Boolean('Compress HTML')
+    cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='//localhost:8069/')
     cdn_filters = fields.Text('CDN Filters', help="URL matching those filters will be rewritten using the CDN Base URL", default='\n'.join(DEFAULT_CDN_FILTERS))
     partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner')
@@ -174,8 +173,7 @@ class Website(models.Model):
     def _get_menu(self):
         Menu = self.env['website.menu']
         for res in self:
-            menus = Menu.search([('parent_id', '=', False), ('website_id', '=', res.id)], order='id', limit=1)
-            res.menu_id = menus and menus.id or False
+            res.menu_id = Menu.search([('parent_id', '=', False), ('website_id', '=', res.id)], order='id', limit=1).id
 
     # cf. Wizard hack in website_views.xml
     def noop(self, *args, **kwargs):
@@ -205,7 +203,7 @@ class Website(models.Model):
         # new page
         template_id = self.env.ref(template)
         website_id = self.env.context.get('website_id')
-        key = template_module+'.'+page_name
+        key = template_module + '.' + page_name
         page = template_id.with_context(lang=None).copy({'website_id': website_id, 'key': key})
         page.write({
             'arch': page.arch.replace(template, page_xmlid),
@@ -221,13 +219,12 @@ class Website(models.Model):
             "|", ('website_id', '=', self.env.context.get('website_id')), ('website_id', '=', False),
             ('page', '=', True),
             ('type', '=', 'qweb')
-        ])
+        ], limit=1)
 
     @api.model
     def delete_page(self, view_id):
         view_find = self.key_to_view_id(view_id)
-        if view_find:
-            view_find.unlink()
+        view_find.unlink()
 
     @api.model
     def rename_page(self, view_id, new_name):
@@ -313,11 +310,10 @@ class Website(models.Model):
             name = (name or "").replace("/page/website.", "").replace("/page/", "")
             if not name:
                 return False
-            return self.env["ir.model.data"].xmlid_to_res_model_res_id(module+'.'+name)
+            return self.env["ir.model.data"].xmlid_to_res_model_res_id(module + '.' + name)
         except:
             return False
 
-    #TODO MBA check later on
     @api.multi
     @tools.ormcache('self.id')
     def _get_languages(self):
@@ -335,7 +331,6 @@ class Website(models.Model):
                     return urlparse.urljoin(cdn_url, uri)
         return uri
 
-    #TODO MBA check later on
     @api.multi
     def get_languages(self):
         return self._get_languages()
@@ -365,14 +360,13 @@ class Website(models.Model):
                 lang['hreflang'] = lang['short']
         return langs
 
-    #TODO this method can be checked later on can be return object
     @tools.ormcache('domain_name')
-    def _get_current_website_id(self, cr, uid, domain_name, context=None):
-        ids = self.search(cr, uid, [('name', '=', domain_name)], limit=1, context=context)
-        if ids:
-            return ids[0]
+    def _get_current_website_id(self, domain_name):
+        website_id = self.search([('name', '=', domain_name)], limit=1).id
+        if website_id:
+            return website_id
         else:
-            return self.search(cr, uid, [], limit=1)[0]
+            return self.search([], limit=1).id
 
     @api.model
     def get_current_website(self):
@@ -383,8 +377,7 @@ class Website(models.Model):
 
     @api.multi
     def is_publisher(self):
-        is_website_publisher = self.env['ir.model.access'].check('ir.ui.view', 'write', False)
-        return is_website_publisher
+        return self.env['ir.model.access'].check('ir.ui.view', 'write', False)
 
     @api.multi
     def is_user(self):
@@ -400,7 +393,6 @@ class Website(models.Model):
             raise NotFound
         return View.browse(view_id)
 
-    #TODO MBA this two methods are can be removed lets discuss
     def _render(self, cr, uid, ids, template, values=None, context=None):
         # TODO: remove this. (just kept for backward api compatibility for saas-3)
         return self.pool['ir.ui.view'].render(cr, uid, template, values=values, context=context)
@@ -454,7 +446,7 @@ class Website(models.Model):
             },
             "pages": [
                 {'url': get_url(page), 'num': page}
-                for page in xrange(pmin, pmax+1)
+                for page in xrange(pmin, pmax + 1)
             ]
         }
 
@@ -521,7 +513,6 @@ class Website(models.Model):
                 newval = []
                 for val in values:
                     query = i==(len(convitems)-1) and query_string
-                    #TODO MBA lets check later on
                     for v in converter.generate(query=query, args=val):
                         newval.append(val.copy())
                         v[name] = v['loc']
@@ -562,18 +553,19 @@ class Website(models.Model):
         size = '' if size is None else '/%s' % size
         return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
+
 class WebsiteMenu(models.Model):
     _name = "website.menu"
     _description = "Website Menu"
 
     def __defaults_sequence(self):
-        menu = self.search_read([(1, "=", 1)], ["sequence"], limit=1, order="sequence DESC")
-        return menu and menu[0]["sequence"] or 0
+        menu = self.search([], limit=1, order="sequence DESC")
+        return menu.sequence or 0
 
     name = fields.Char('Menu', required=True, translate=True)
-    url = fields.Char('Url', default='')
-    new_window = fields.Boolean('New Window', default=False)
-    sequence = fields.Integer('Sequence', default=__defaults_sequence)
+    url = fields.Char(default='')
+    new_window = fields.Boolean('New Window')
+    sequence = fields.Integer(default=__defaults_sequence)
     # TODO: support multiwebsite once done for ir.ui.views
     website_id = fields.Many2one('website', 'Website')
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
@@ -586,7 +578,6 @@ class WebsiteMenu(models.Model):
     _order = "sequence"
 
     # would be better to take a menu_id as argument
-    #TODO MBA check may be api.one
     @api.model
     def get_tree(self, website_id, menu_id=None):
         def make_tree(node):
@@ -618,7 +609,7 @@ class WebsiteMenu(models.Model):
                     menu['parent_id'] = new_id
         to_delete = data['to_delete']
         if to_delete:
-            self.brwose(to_delete).unlink()
+            self.browse(to_delete).unlink()
         for menu in data['data']:
             mid = menu['id']
             if isinstance(mid, basestring):
@@ -632,41 +623,48 @@ class WebsiteMenu(models.Model):
 class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
-    website_url = fields.Char(related="local_url", string="Attachment URL", deprecated=True) # related for backward compatibility with saas-6
+    website_url = fields.Char(related="local_url", string="Attachment URL", deprecated=True)  # related for backward compatibility with saas-6
+
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    #TODO MBA check real self in multi
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
+        self.ensure_one()
         params = {
             'center': '%s, %s %s, %s' % (self.street or '', self.city or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'size': "%sx%s" % (height, width),
             'zoom': zoom,
             'sensor': 'false',
         }
-        return urlplus('//osvmaps.googleapis.com/maps/api/staticmap' , params)
+        return urlplus('//maps.googleapis.com/maps/api/staticmap', params)
 
     @api.multi
     def google_map_link(self, zoom=10):
+        self.ensure_one()
         params = {
             'q': '%s, %s %s, %s' % (self.street or '', self.city  or '', self.zip or '', self.country_id and self.country_id.display_name or ''),
             'z': zoom
         }
-        return urlplus('https://maps.google.com/maps' , params)
+        return urlplus('https://maps.google.com/maps', params)
+
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
     @api.multi
     def google_map_img(self, zoom=8, width=298, height=298):
+        self.ensure_one()
         partner = self.sudo().partner_id
         return partner and partner.google_map_img(zoom, width, height) or None
+
     @api.multi
     def google_map_link(self, zoom=8):
+        self.ensure_one()
         partner = self.sudo().partner_id
         return partner and partner.google_map_link(zoom) or None
+
 
 class BaseLanguageInstall(models.TransientModel):
     _inherit = "base.language.install"
@@ -699,6 +697,7 @@ class BaseLanguageInstall(models.TransientModel):
             }
         return action
 
+
 class WebsiteSeoMetadata(models.Model):
     _name = 'website.seo.metadata'
     _description = 'SEO metadata'
@@ -711,26 +710,30 @@ class WebsiteSeoMetadata(models.Model):
 class WebsitePublishedMixin(models.AbstractModel):
     _name = "website.published.mixin"
 
-#    _website_url_proxy = lambda self, *a, **kw: self._website_url(*a, **kw)
-
     website_published = fields.Boolean('Visible in Website', copy=False)
-    website_url = fields.Char(compute='_website_url', string='Website URL', help='The full URL to access the document through the website.')
+    website_url = fields.Char(compute='_website_url_wrapper', string='Website URL', help='The full URL to access the document through the website.')
 
     @api.multi
-    def _website_url(self):
-        for res in self:
-            res.website_url = '#'
+    def _website_url_wrapper(self):
+        values = self._website_url(False, False)
+        for website in self:
+            website.website_url = values.get(website.id)
+
+    @api.multi
+    def _website_url(self, field_name, args):
+        return dict.fromkeys(self.ids, '#')
 
     @api.multi
     def website_publish_button(self):
-        for i in self:
-            if self.env['res.users'].has_group('base.group_website_publisher') and i.website_url != '#':
-                return self.open_website_url()
-            i.write({'website_published': not i.website_published})
+        self.ensure_one()
+        if self.env['res.users'].has_group('base.group_website_publisher') and self.website_url != '#':
+            return self.open_website_url()
+        self.write({'website_published': not self.website_published})
         return True
 
     @api.multi
     def open_website_url(self):
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url': self.website_url,

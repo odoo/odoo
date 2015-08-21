@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 import logging
-import urlparse
-import time
-
 import lxml.html
-
-import openerp
 import re
+import time
+import urlparse
+
+import odoo
 
 _logger = logging.getLogger(__name__)
 
-class Crawler(openerp.tests.HttpCase):
-    """ Test suite crawling an openerp CMS instance and checking that all
+class Crawler(odoo.tests.HttpCase):
+    """ Test suite crawling an odoo CMS instance and checking that all
     internal links lead to a 200 response.
 
     If a username and a password are provided, authenticates the user before
