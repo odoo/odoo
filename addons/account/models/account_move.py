@@ -1101,6 +1101,8 @@ class AccountMoveLine(models.Model):
         if context.get('date_from'):
             if not context.get('strict_range'):
                 domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
+            elif context.get('initial_bal'):
+                domain += [(date_field, '<', context['date_from'])]
             else:
                 domain += [(date_field, '>=', context['date_from'])]
 
