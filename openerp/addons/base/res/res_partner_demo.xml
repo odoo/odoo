@@ -126,21 +126,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_4-image.png"/>
         </record>
 
-        <record id="res_partner_9" model="res.partner">
-            <field name="name">Best Designers</field>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="[(6, 0, [ref('base.res_partner_category_6'), ref('res_partner_category_7')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">203, Systems Plaza</field>
-            <field name="city">Mumbai</field>
-            <field name="country_id" ref="base.in"/>
-            <field name="email">bestdesigners@yourcompany.example.com</field>
-            <field name="phone">+91 22 3445 0349</field>
-            <field name="website">http://www.bestdesigners.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_9-image.jpg"/>
-        </record>
-
         <record id="res_partner_10" model="res.partner">
             <field name="name">The Jackson Group</field>
             <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_7')])]" name="category_id"/>
@@ -155,23 +140,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_10-image.jpg"/>
         </record>
   
-        <record id="res_partner_11" model="res.partner">
-            <field name="name">Luminous Technologies</field>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="customer"/>
-            <field eval="[(6, 0, [ref('res_partner_category_0')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">Constitución, 80</field>
-            <field model="res.country" name="country_id" search="[('code','ilike','es')]"/>
-            <field name="country_id" ref="base.es"/>
-            <field name="city">Barcelona</field>
-            <field name="zip">08078</field>
-            <field name="phone">+34 934 340 230</field>
-            <field name="website">http://www.lumitech.com</field>
-            <field name="email">luminous@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_11-image.png"/>
-        </record>
-
         <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
