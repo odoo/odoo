@@ -241,7 +241,7 @@ var Followers = form_common.AbstractField.extend({
         // truncate number of displayed followers
         _(this.followers).each(function (record) {
             $(qweb.render('mail_followers_partner', {
-                'record': _.extend(record, {'avatar_url': mail_utils.get_image(session, record['res_model'], 'image_small', record['id'])}),
+                'record': _.extend(record, {'avatar_url': mail_utils.get_image(session, record['res_model'], 'image_small', record['res_id'])}),
                 'widget': self})
             ).appendTo(node_user_list);
             // On mouse-enter it will show the edit_subtype pencil.
