@@ -173,7 +173,7 @@ class mrp_repair(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
-        'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],
+        'pricelist_id': lambda self, cr, uid, context: self.pool['product.pricelist'].search(cr, uid, [], limit=1)[0],
         'product_qty': 1.0,
         'location_id': _default_stock_location,
     }
@@ -229,7 +229,7 @@ class mrp_repair(osv.osv):
             return {'value': {
                         'address_id': False,
                         'partner_invoice_id': False,
-                        'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
+                        'pricelist_id': pricelist_obj.search(cr, uid, [], limit=1)[0]
                     }
             }
         addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])

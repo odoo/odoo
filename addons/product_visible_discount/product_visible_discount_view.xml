@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
             <field name="arch" type="xml">
                 <field name="currency_id" position="before">
-                    <field name="visible_discount"/>
+                    <field name="discount_policy" groups="sale.group_discount_per_so_line"/>
                 </field>
             </field>
         </record>
@@ -19,8 +19,11 @@
             <field name="model">product.pricelist</field>
             <field name="inherit_id" ref="product.product_pricelist_view"/>
             <field name="arch" type="xml">
-                <field name="currency_id" position="before">
-                    <field name="visible_discount"/>
+                <field name="active" position="after">
+                    <label for="discount_policy" groups="sale.group_discount_per_so_line"/>
+                        <div groups="sale.group_discount_per_so_line">
+                            <field name="discount_policy" class="oe_inline" widget="radio" />
+                        </div>
                 </field>
             </field>
         </record>

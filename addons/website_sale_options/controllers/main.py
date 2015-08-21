@@ -62,7 +62,7 @@ class website_sale_options(website_sale):
 
         website_context = kw.get('kwargs', {}).get('context', {})
         context = dict(context or {}, **website_context)
-        from_currency = pool.get('product.price.type')._get_field_currency(cr, uid, 'list_price', context)
+        from_currency = pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
         product = pool['product.product'].browse(cr, uid, int(product_id), context=context)

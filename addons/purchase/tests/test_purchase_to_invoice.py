@@ -40,8 +40,7 @@ class TestPurchase(common.TransactionCase):
         # In order to test I create purchase order and confirmed it.
         order = self.env['purchase.order'].create({
             'partner_id': partner.id,
-            'location_id': location_id,
-            'pricelist_id': 1})
+            'location_id': location_id, })
         self.env['purchase.order.line'].create({
             'order_id': order.id,
             'product_id': product_id,
