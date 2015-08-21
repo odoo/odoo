@@ -170,22 +170,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
         </record>
 
-        <record id="res_partner_22" model="res.partner">
-            <field name="name">Vicking Direct</field>
-            <field eval="[(6,0,[ref('res_partner_category_12')])]" name="category_id"/>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-            <field name="is_company">1</field>
-            <field name="street">Margaret Alley</field>
-            <field name="city">Leicester</field>
-            <field name="zip">LE4 2BN</field>
-            <field name="phone">+44 20 1294 2193</field>
-            <field name="country_id" ref="base.uk"/>
-            <field name="website">http://www.vicking-direct.com</field>
-            <field name="email">vickingdirect@yourcompany.example.com</field>
-            <field name="image" type="base64" file="base/static/img/res_partner_22-image.jpg"/>
-        </record>
-
         <record id="res_partner_23" model="res.partner">
             <field name="name">Vauxoo</field>
             <field eval="[(6,0,[ref('res_partner_category_5')])]" name="category_id"/>
@@ -311,7 +295,7 @@
         </record>
         <record id="res_partner_address_35" model="res.partner">
             <field name="name">Peter Mitchell</field>
-            <field name="parent_id" eval="ref('res_partner_22')"/>
+            <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Store Manager</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
