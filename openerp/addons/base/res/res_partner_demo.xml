@@ -170,20 +170,6 @@
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
         </record>
 
-        <record id="res_partner_25" model="res.partner">
-            <field name="name">Míng</field>
-            <field name="supplier">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="city">Shanghai</field>
-            <field name="zip">201208</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="country_id" ref="base.cn"/>
-            <field name="street">89 Dong Lu Road</field>
-            <field name="email">ming@yourcompany.example.com</field>
-            <field name="phone">+86 215 069 5177</field>
-            <field name="website">http://www.míng.com</field>
-        </record>
         <record id="res_partner_26" model="res.partner">
             <field name="name">Federal</field>
             <field name="supplier">1</field>
