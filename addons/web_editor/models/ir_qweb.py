@@ -337,7 +337,7 @@ class Image(orm.AbstractModel):
             if max_width or max_height:
                 max_size = '%sx%s' % (max_width, max_height)
 
-        sha = hashlib.sha1(record.write_date).hexdigest()[0:7]
+        sha = hashlib.sha1(getattr(record, '__last_update')).hexdigest()[0:7]
         max_size = '' if max_size is None else '/%s' % max_size
         src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
 

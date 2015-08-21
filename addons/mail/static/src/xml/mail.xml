@@ -191,34 +191,17 @@
     -->
 <t t-name="ThreadMessageAttachments">
     <t t-foreach='widget.format_attachments(record)' t-as='attachment'>
-        <t t-if="attachment.file_type_icon !== 'webimage'">
-            <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon or 'unknown') + '.png'"></img>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
-                </a>
-                <div class='oe_delete oe_e'>
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
+        <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
+            <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                <div class='oe_name'><t t-raw='attachment.name'/></div>
+            </a>
+            <div class='oe_delete oe_e'>
+                <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
             </div>
-        </t>
-        <t t-if="attachment.file_type_icon === 'webimage'">
-            <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-attf-src="/web/image/#{attachment.id}/100x80"></img>
-                    <div class='oe_name'><t t-raw='attachment.name'/></div>
-                </a>
-                <div class='oe_delete oe_e'>
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
+            <div class='oe_progress_bar'>
+                uploading
             </div>
-        </t>
+        </div>
     </t>
 </t>
 

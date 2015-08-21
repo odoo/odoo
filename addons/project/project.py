@@ -439,7 +439,7 @@ class task(osv.osv):
     def _compute_displayed_image(self, cr, uid, ids, prop, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.file_type_icon == 'webimage')[0] or None
+            res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.mimetype.startswith('image'))[0] or None
         return res
 
     _columns = {

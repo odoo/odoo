@@ -1650,14 +1650,29 @@ $sheet-padding: 16px
             border-radius: 2px
             border: solid 1px rgba(124,123,173,0.14)
             .oe_attachment
+                background-repeat: no-repeat
+                word-wrap: break-word
                 padding: 2px
                 padding-left: 4px
                 padding-right: 4px
-                .fa
+                overflow: hidden
+                a
+                    display: block
+                    background-repeat: no-repeat
+                    background-size: contain
+                    word-wrap: break-word
+                    width: 100px
+                    height: 80px
+                > .fa
                     font-size: 23px
-                    margin-top: -5px
-                .fa:hover
+                    position: absolute
+                    top: -5px
+                    right: -8px
+                > .fa:hover
                     text-decoration: none
+                .fa-inverse
+                    font-size: 1.15em
+                    margin-top: 1px
             .oe_attachment:nth-child(odd)
                 background: white
             .oe_attachment:nth-child(even)
