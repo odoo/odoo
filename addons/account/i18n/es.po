@@ -5,13 +5,14 @@
 # Translators:
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-14 22:19+0000\n"
-"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>\n"
+"PO-Revision-Date: 2015-08-21 10:39+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,7 +241,7 @@ msgstr "30% adelando después de 30 días"
 #. module: account
 #: view:website:account.report_generalledger
 msgid ": General ledger"
-msgstr "Libro mayor"
+msgstr ": Libro mayor"
 
 #. module: account
 #: view:website:account.report_trialbalance
@@ -539,7 +540,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\nClick para añadir una cuenta analítica.\n              </p><p>\nLa estructura/árbol de cuentas financieras tiene una estructura definida por los requisitos legales del país. La  estructura/árbol de cuentas analíticas debería reflejar las necesidades de nuestro negocio en términos de informes de ingresos /gastos\nNormalmente esta estructurada por contratos, proyectos, productos o departamentos. La mayoría de las operaciones de Odoo (facturas, imputaciones de tiempos costes, etc) generan apuntes analíticos en la cuenta analítica relacionada.\n</p>\n            "
+msgstr "<p>\nPulse para añadir una cuenta analítica.\n</p><p>\nLa estructura/árbol de cuentas financieras tiene una estructura definida por los requisitos legales del país. La  estructura/árbol de cuentas analíticas debería reflejar las necesidades de nuestro negocio en términos de informes de ingresos /gastos\nNormalmente esta estructurada por contratos, proyectos, productos o departamentos. La mayoría de las operaciones de Odoo (facturas, imputaciones de tiempos costes, etc) generan apuntes analíticos en la cuenta analítica relacionada.\n</p>\n            "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -561,13 +562,13 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr "Un periodo es una plazo de tiempo fiscal durante la cual se deben registrar en asientos las actividades relacionadas con la contabilidad. Lo normal es un periodo mensual pero, dependiendo del país y las necesidades de su compañía, podría usar también periodos trimestrales (por ejemplo en España las PYMES habitualmente usan periodos trimestrales). Cerrar un periodo impide registrar nuevos asientos, cualquier nuevo asiento deberá anotarse en el siguiente periodo abierto. Cierre un periodo cuando no vaya a escribir nuevos asientos y desee bloquear este periodo por motivos relacionados con el cálculo de impuestos."
+msgstr "Un periodo es un plazo de tiempo fiscal durante la cual se deben registrar en asientos las actividades relacionadas con la contabilidad. Lo normal es un periodo mensual pero, dependiendo del país y las necesidades de su compañía, podría usar también periodos trimestrales (por ejemplo en España las PYMES habitualmente usan periodos trimestrales). Cerrar un periodo impide registrar nuevos asientos, cualquier nuevo asiento deberá anotarse en el siguiente periodo abierto. Cierre un periodo cuando no vaya a escribir nuevos asientos y desee bloquear este periodo por motivos relacionados con el cálculo de impuestos."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "Alguna de las líneas a mover ya fue reconciliada."
+msgstr "Alguna de las líneas a mover ya fue conciliada."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -11659,3 +11660,16 @@ msgstr "Utilizado en el dominio de conciliación de extractos, pero no debería 
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "año"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr "Estimado/a señor/señora,\n\nNuestros registros indican que algunos pagos en nuestra cuenta están aún pendientes. Puede encontrar los detalles a continuación.\nSi la cantidad ha sido ya pagada, por favor, descarte esta notificación. En otro caso, por favor remítanos el importe total abajo indicado.\nSi tiene alguna pregunta con respecto a su cuenta, por favor contáctenos.\n\nGracias de antemano por su colaboración.\nSaludos cordiales,"

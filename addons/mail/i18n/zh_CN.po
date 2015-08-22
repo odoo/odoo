@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
 "Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -180,7 +180,7 @@ msgstr "添加关注者"
 #: code:addons/mail/static/src/xml/mail.xml:161
 #, python-format
 msgid "Add an internal note that will not be sent to the followers"
-msgstr ""
+msgstr "添加一个不会发送给关注者的便签"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
@@ -251,14 +251,14 @@ msgstr "别名"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "All Messages"
-msgstr "全部消息"
+msgstr "全部接收"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "All records matching your current search filter will be mailed,\n"
 "                                    not only the ids selected in the list view."
-msgstr ""
+msgstr "不仅仅是列表中选中的记录，所有满足你当前搜索条件的记录都将被发送邮件。"
 
 #. module: mail
 #. openerp-web
@@ -273,7 +273,7 @@ msgstr "与"
 msgid ""
 "Answers do not go in the original document' discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "答案将不包括在原始文档的讨论线程中。这个将对已产生的 message-id发生影响。"
 
 #. module: mail
 #. openerp-web
@@ -626,7 +626,7 @@ msgstr "发送者的Email地址。当收取的email没有对应的合作伙伴�
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr ""
+msgstr "电子邮件地址重定向回复..."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -666,7 +666,7 @@ msgstr "当与保障服务器通信时发生错误。"
 #. module: mail
 #: sql_constraint:mail.followers:0
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
+msgstr "错误，合作伙伴不能遵循相同的对象两次。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -813,7 +813,7 @@ msgstr "隐藏"
 #. module: mail
 #: help:mail.message.subtype,hidden:0
 msgid "Hide the subtype in the follower options"
-msgstr ""
+msgstr "隐藏在跟随选项的子类型"
 
 #. module: mail
 #: help:mail.group,message_summary:0 help:mail.thread,message_summary:0
@@ -837,7 +837,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "父记录ID支持别名(例如:项目支持任务创建别名)"
 
 #. module: mail
 #: help:mail.followers,res_id:0 help:mail.wizard.invite,res_id:0
@@ -862,20 +862,20 @@ msgstr "如果选中该项，业务伙伴们将收到邮件提醒他们已经被
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr ""
+msgstr "如果你设置了电子邮件域名重定向到这个Odoo服务器，请在这里输入域名。"
 
 #. module: mail
 #: view:mail.compose.message:mail.email_compose_message_wizard_form
 msgid ""
 "If you want to work only with selected ids, please uncheck the\n"
 "                                list header checkbox."
-msgstr ""
+msgstr "如果你只想对选定的记录操作，请不要选中列表头的选择框。"
 
 #. module: mail
 #: code:addons/mail/mail_alias.py:144
 #, python-format
 msgid "Inactive Alias"
-msgstr ""
+msgstr "不活动的别名"
 
 #. module: mail
 #: model:ir.actions.client,name:mail.action_mail_inbox_feeds
@@ -964,19 +964,19 @@ msgstr "最后一次更新"
 #: help:mail.wizard.invite,partner_ids:0
 msgid ""
 "List of partners that will be added as follower of the current document."
-msgstr ""
+msgstr "列表中的业务伙伴将添加至当前文档的关注者。"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note for this document. No notification will be sent"
-msgstr ""
+msgstr "为这个文档注册一个便签。将不发送提醒"
 
 #. module: mail
 #: field:mail.compose.message,is_log:0
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "记录内部日志"
 
 #. module: mail
 #. openerp-web
@@ -984,13 +984,13 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log an internal note"
-msgstr ""
+msgstr "记录内部日志"
 
 #. module: mail
 #: code:addons/mail/mail_mail.py:340
 #, python-format
 msgid "Mail Delivery Failed"
-msgstr ""
+msgstr "邮件投递失败 "
 
 #. module: mail
 #: field:ir.ui.menu,mail_group_id:0
@@ -1000,7 +1000,7 @@ msgstr "邮件群组"
 #. module: mail
 #: model:ir.actions.server,name:mail.action_mail_redirect
 msgid "Mail Redirection (Document / Inbox)"
-msgstr ""
+msgstr "邮件重定向(文档/收件箱)"
 
 #. module: mail
 #: help:mail.mail,notification:0
@@ -1184,7 +1184,7 @@ msgstr "获得相关文档的名称"
 #. module: mail
 #: selection:res.partner,notify_email:0
 msgid "Never"
-msgstr "未曾"
+msgstr "不接收"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:172
@@ -1236,12 +1236,12 @@ msgstr "通知合作伙伴"
 #. module: mail
 #: field:mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "通知关注者"
 
 #. module: mail
 #: help:mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "通知此文档的关注者(只用于批量发送)"
 
 #. module: mail
 #. openerp-web
@@ -1255,7 +1255,7 @@ msgstr "一个关注者"
 msgid ""
 "Only the invited followers can read the\n"
 "                                discussions on this group."
-msgstr ""
+msgstr "只有受邀请的关注者可以阅读群内讨论"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_form
@@ -1339,7 +1339,7 @@ msgid ""
 "Parent model holding the alias. The model holding the alias reference\n"
 "is not necessarily the model given by alias_model_id\n"
 "(example: project (parent_model) and task (model))"
-msgstr ""
+msgstr "父模型支持别名。模型支持别名参考不需要给出alias_model_id\n(例如:project(parent_model) 和 task(model))"
 
 #. module: mail
 #: help:mail.message.subtype,parent_id:0
@@ -1402,7 +1402,7 @@ msgid ""
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document\n"
-msgstr ""
+msgstr "文档信息发送使用邮件服务器规则。\n- 所有人：所有人都允许\n- 业务伙伴：仅认证的业务伙伴\n- 关注者：仅关注相关文档者\n"
 
 #. module: mail
 #: help:res.partner,notify_email:0
@@ -1410,7 +1410,7 @@ msgid ""
 "Policy to receive emails for new messages pushed to your personal Inbox:\n"
 "- Never: no emails are sent\n"
 "- All Messages: for every notification you receive in your Inbox"
-msgstr ""
+msgstr "接收被发送到你的电子邮箱的邮件策略:\n- 从不:没有电子邮件发送\n- 所有信息: 你的收件箱收到的所有信息"
 
 #. module: mail
 #: field:mail.group,public:0
@@ -1446,7 +1446,7 @@ msgstr "读取"
 #. module: mail
 #: field:res.partner,notify_email:0
 msgid "Receive Inbox Notifications by Email"
-msgstr ""
+msgstr "接收内部提示消息"
 
 #. module: mail
 #: view:mail.mail:mail.view_mail_search selection:mail.mail,state:0
@@ -1516,7 +1516,7 @@ msgstr "回复"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "邮件回复地址。设置回复到绕过自动创建线索。"
 
 #. module: mail
 #: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
@@ -1583,7 +1583,7 @@ msgstr "发送信息"
 #: code:addons/mail/static/src/xml/mail.xml:54
 #, python-format
 msgid "Send a message to all followers of the document"
-msgstr ""
+msgstr "向此文档的所有关注者发送信息"
 
 #. module: mail
 #: view:mail.group:mail.view_group_form
@@ -1722,14 +1722,14 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr ""
+msgstr "相应于这个别名对应的模型(Odoo的文件种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: mail
 #: help:mail.alias,alias_name:0
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1762,7 +1762,7 @@ msgid ""
 "This group is visible by everyone,\n"
 "                                including your customers if you installed\n"
 "                                the portal module."
-msgstr ""
+msgstr "这个群组对所有人可见，\n如果你安装了“门户”模块，那么对你的客户也可见。"
 
 #. module: mail
 #: help:mail.group,public:0
@@ -1863,12 +1863,12 @@ msgstr "上传错误"
 #. module: mail
 #: field:mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "使用活动域"
 
 #. module: mail
 #: help:mail.message.subtype,sequence:0
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "用于排序子类型。"
 
 #. module: mail
 #: view:mail.alias:mail.view_mail_alias_search
@@ -1912,7 +1912,7 @@ msgstr "警告！"
 msgid ""
 "Warning! \n"
 " %s won't be notified of any email or discussion on this document. Do you really want to remove him from the followers ?"
-msgstr ""
+msgstr "警告！ \n %s 将不被提醒在这个文件上的所有邮件和讨论。你真的要从关注者中把他删除吗？"
 
 #. module: mail
 #. openerp-web
@@ -1926,7 +1926,7 @@ msgstr "警告！\n您将被该单据的邮件或者公告提醒。你确信要�
 #. module: mail
 #: help:mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "该消息是否是一个内部笔记(注释模式)"
 
 #. module: mail
 #: model:mail.group,name:mail.group_all_employees
@@ -1941,7 +1941,7 @@ msgid ""
 "You are currently composing a message, your message will be discarded.\n"
 "\n"
 "Are you sure you want to leave this page ?"
-msgstr ""
+msgstr "你当前正在编辑一条消息，这个消息将被放弃。\n\n你确认要离开这个页面吗？"
 
 #. module: mail
 #: code:addons/mail/res_users.py:74
@@ -1957,7 +1957,7 @@ msgstr "你不能在这里创建一个新的用户。\n 要创建一个新用户
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
-msgstr ""
+msgstr "你不能删除这些群组，因为整个公司群组被其它模块引用。"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:171

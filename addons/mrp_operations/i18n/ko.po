@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-14 05:51+0000\n"
+"PO-Revision-Date: 2015-08-20 08:55+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr ""
+msgstr "* 작업 지시가 작성되면 '기안' 상태입니다.\n* 시작 모드로 작업 지시가 설정되면 '진행 중' 상태로 설정합니다.\n* 사용자가 중지 또는 주문을 변경하고자 '보류' 상태로 설정하려면 작업 지시는 진행모드에 있어야 합니다\n* 사용자가 작업 지시를 취소하면 '취소' 상태로 설정합니다.\n* 주문이 완료된 상태라면 '완료' 상태로 설정합니다."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -46,7 +46,7 @@ msgid ""
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            새로운 작업 지시를 시작합니다.\n           </p><p>\n            제조 또는 제품 조립. 귀하는 제조 작업을 처리해야\n            완제품과 원료를 사용합니다. \n            제조 작업은 종종 작업 지시라고 합니다.\n            다양한 작업은 사용가능한 작업량에 따라\n            제조 및 비용 계획에 서로 다른 영향을 미칠 것입니다.\n           </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -62,7 +62,7 @@ msgid ""
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            새로운 작업 지시를 시작합니다.\n            </p><p>\n            작업 지시는 각 제조 주문에 대해 수행될 작업의 목록입니다.\n             만약 제조 주문의 최초 작업 지시가 시작된다면,\n             그 제조 주문이 자동으로 시작으로 표시됩니다.\n             만약 제조 순서의 마지막 작업이 끝난다면,\n             제조 주문은 자동적으로 수행되며 관련 제품이 생산됩니다.\n           </p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -101,12 +101,12 @@ msgstr "취소됨"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
+msgstr "의존하는 것 없이 독립적으로 모든 제품 주문을 이동할 수 있게 확인합니다."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr ""
+msgstr "하위 이동"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -205,7 +205,7 @@ msgstr "완료됨"
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr ""
+msgstr "자유로운 직렬"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action

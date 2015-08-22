@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-12 18:49+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgid ""
 "                solving a task or an issue.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               单击以在任务计划流水线中添加阶段.\n              </p><p>\n                定义的步骤被用于任务生成项目，这取决于相近的任务和问题\n                在解决任务或问题过程中，可以使用这些阶段去跟踪此过程\n                                              </p>\n            "
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -108,7 +108,7 @@ msgstr "一个任务的看板状态表明，特殊情况下的影响：\n\n*正�
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "接收电子邮件从"
 
 #. module: project
 #: field:project.project,active:0
@@ -194,7 +194,7 @@ msgstr "指定日期"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "分配月份"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -237,7 +237,7 @@ msgstr "受阻"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "按负责人"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
@@ -753,7 +753,7 @@ msgstr "进行中"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Incoming Emails create"
-msgstr ""
+msgstr "收到电子邮件后创建"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -772,7 +772,7 @@ msgstr "与此项目相关的内部电子邮件。传入的电子邮件会自动
 #: code:addons/project/project.py:201
 #, python-format
 msgid "Internal project: all employees can access"
-msgstr ""
+msgstr "内部项目：所有员工可以存取"
 
 #. module: project
 #: code:addons/project/project.py:171
@@ -805,7 +805,7 @@ msgstr "看板状态"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "最后信息"
 
 #. module: project
 #: field:project.project,message_last_post:0
@@ -816,13 +816,13 @@ msgstr "最后信息日期"
 #. module: project
 #: field:project.task,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "最后修改日期"
 
 #. module: project
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "最后阶段更新"
 
 #. module: project
 #: field:project.category,write_uid:0
@@ -845,7 +845,7 @@ msgstr "最后一次更新"
 msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
-msgstr ""
+msgstr "客户化定制公司pad的安装，将被用于新的pad生产线(例如：http://ietherpad.com)。\n这用于安装pad模块"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1090,7 +1090,7 @@ msgstr "隐私/能见度"
 #: code:addons/project/project.py:202
 #, python-format
 msgid "Private project: followers Only"
-msgstr ""
+msgstr "隐私项目：只关注者可以存取"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -1203,20 +1203,20 @@ msgstr "项目"
 msgid ""
 "Provides management of issues/bugs in projects.\n"
 "-This installs the module project_issue."
-msgstr ""
+msgstr "项目提供的问题/错误管理.\n-这将安装项目问题模块。"
 
 #. module: project
 #: help:project.config.settings,module_project_issue_sheet:0
 msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
-msgstr ""
+msgstr "提供对问题/错误管理的项目时间表的支持 \n-这将安装项目问题表模块。"
 
 #. module: project
 #: code:addons/project/project.py:200
 #, python-format
 msgid "Public project"
-msgstr ""
+msgstr "公共项目"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1424,7 +1424,7 @@ msgstr "任务活动"
 #: model:mail.message.subtype,name:project.mt_project_task_assigned
 #: model:mail.message.subtype,name:project.mt_task_assigned
 msgid "Task Assigned"
-msgstr ""
+msgstr "任务分配"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -1451,13 +1451,13 @@ msgstr "任务委派"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr ""
+msgstr "任务通道"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready for Next Stage"
-msgstr ""
+msgstr "任务已为下一阶段准备好了"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1501,7 +1501,7 @@ msgstr "任务已创建"
 #. module: project
 #: view:project.task:project.view_task_form2
 msgid "Task summary..."
-msgstr ""
+msgstr "任务主题 ..."
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1582,14 +1582,14 @@ msgstr "该类型的文件创建电子邮件时，收到该项目的电子邮件
 msgid ""
 "This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
-msgstr ""
+msgstr "这可以允许你将用于项目管理任务下的条目转移到时间表下的条目，特别是时间和用户。无论哪种方式的都将影响生成、编辑、删除\n这会安装项目时间表模块"
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
 "This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
-msgstr ""
+msgstr "此功能自动创建销售订单中服务型产品的项目任务。更确切地说，为产品类型为服务、补货方式为按订单、供应方法为生产的产品创建的任务。 \n-这将安装模块sale_service。"
 
 #. module: project
 #: help:project.task,active:0
@@ -1612,7 +1612,7 @@ msgstr "这个报表用于分析你项目和成员的效率。可以分析任务
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "当在该阶段没有可显示的记录时，此阶段在看板视图中被折叠。"
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1704,7 +1704,7 @@ msgstr "可用性"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Use Tasks"
-msgstr ""
+msgstr "使用任务"
 
 #. module: project
 #: field:project.config.settings,module_pad:0
@@ -1792,7 +1792,7 @@ msgstr "您不能删除一个项目，其中包含任务。您可以删除所有
 #: code:addons/project/project.py:435
 #, python-format
 msgid "You must assign members on the project '%s'!"
-msgstr ""
+msgstr "您必须指定该项目“%s成员！"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
@@ -1819,7 +1819,7 @@ msgstr "或者"
 #: code:addons/project/project.py:878
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "任务"
 
 #. module: project
 #: field:account.analytic.account,company_uom_id:0

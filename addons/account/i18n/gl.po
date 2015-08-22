@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-14 22:23+0000\n"
+"PO-Revision-Date: 2015-08-20 19:01+0000\n"
 "Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>\n"
 "Language-Team: Galician (http://www.transifex.com/odoo/odoo-8/language/gl/)\n"
 "MIME-Version: 1.0\n"
@@ -539,7 +539,7 @@ msgid ""
 "                related account.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nPrema para engadir unha conta analítica.\n</p><p>\nA estructura/árbore de contas financieiras ten unha estructura\ndefinida polos requisitos legais do país. A estructura/árbore\nde contas analíticas debería reflicti-las necesidades do noso\nnegocio en términos de informes de ingresos/gastos.\nNormalmente esta estructurada por contratos, proxectos, produtos\nou departamentos. A maioría das operacións de Odoo (facturas,\nimputacións de tempos, costes, etc) xeran apuntes analíticos na conta analítica relacionada.\n</p> "
 
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form2
@@ -561,7 +561,7 @@ msgid ""
 "accounting entries, all new entries should then be made on the following "
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
-msgstr ""
+msgstr "Un período é un intervalo de tempo fiscal durante o cal débense rexistrar en asentos as actividades relacionadas coa contabilidade. O normal é un período mensual pero, dependendo do país e as necesidades da súa compañía, podería empregar tamén períodos trimestrais (por exemplo en España as PEMES habitualmente empregan períodos trimestrais). Pechar un período impide rexistrar novos asentos. Calquer novo asento deberase anotar no seguinte período aberto. Peche un período cando non desexe introducir novos asentos y desexe bloquear este período por motivos relacionados co cálculo de impostos."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:736
@@ -915,7 +915,7 @@ msgstr ""
 #: field:report.account.receivable,type:0
 #: field:report.account_type.sales,user_type:0
 msgid "Account Type"
-msgstr "Tipo de Conta"
+msgstr "Tipo de conta"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -11659,3 +11659,16 @@ msgstr "Empregado no contexto da reconciliación de extractos bancarios, pero no
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "ano"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""

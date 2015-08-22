@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-12 18:16+0000\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
 "Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -694,7 +694,7 @@ msgid ""
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n               单击新建一个活动\n             </p><p>\n               Odoo能帮你安排日程并有效地组织活动，如跟踪订阅和参与、自动确认邮件、卖票等等。\n             </p>\n           "
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -752,7 +752,7 @@ msgstr "如果联系人是演讲者，选中此项"
 #: code:addons/event/event.py:219
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "结束日期不能在开始日期前。"
 
 #. module: event
 #: field:event.event,company_id:0 field:event.registration,company_id:0
@@ -764,7 +764,7 @@ msgstr "公司"
 #. module: event
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "商务应用会议"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -1037,7 +1037,7 @@ msgstr "关注者"
 #. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
-msgstr ""
+msgstr "泛函网络研讨会"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1078,7 +1078,7 @@ msgid ""
 "particular dates the status is set to 'Confirmed'. If the event is over, the"
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
-msgstr ""
+msgstr "如果活动被创建，则状态变为“草稿”。如果活动日期确定，则状态变为为“已确认”。如果活动结束，则状态变为“完成”。如果活动被取消，则状态变为“已取消”。"
 
 #. module: event
 #: help:event.event,email_confirmation_id:0
@@ -1153,12 +1153,12 @@ msgstr "主管"
 #. module: event
 #: field:report.event.registration,seats_max:0
 msgid "Max Seats"
-msgstr ""
+msgstr "最多席位"
 
 #. module: event
 #: field:event.event,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "最多可用席位"
 
 #. module: event
 #: field:event.event,message_ids:0 field:event.registration,message_ids:0
@@ -1173,7 +1173,7 @@ msgstr "消息和通信历史"
 #. module: event
 #: field:event.event,seats_min:0
 msgid "Minimum Reserved Seats"
-msgstr ""
+msgstr "最低预订席位"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1212,7 +1212,7 @@ msgstr "已确认的登记: %s."
 #: code:addons/event/event.py:213 code:addons/event/event.py:337
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "没有更多可用的席位"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1237,7 +1237,7 @@ msgstr "参与者人数"
 #. module: event
 #: field:report.event.registration,nbregistration:0
 msgid "Number of Registrations"
-msgstr ""
+msgstr "登记数量"
 
 #. module: event
 #: view:event.event:event.view_event_kanban
@@ -1247,7 +1247,7 @@ msgstr "仅"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Open Days in Los Angeles"
-msgstr ""
+msgstr "洛杉矶的开源大会"
 
 #. module: event
 #: model:ir.actions.client,name:event.action_client_event_menu
@@ -1329,7 +1329,7 @@ msgstr "登记日期"
 #. module: event
 #: view:event.registration:event.view_registration_search
 msgid "Registration Month"
-msgstr ""
+msgstr "登记月份"
 
 #. module: event
 #: field:report.event.registration,registration_state:0
@@ -1367,7 +1367,7 @@ msgstr "回复Email"
 #. module: event
 #: field:event.event,seats_reserved:0
 msgid "Reserved Seats"
-msgstr ""
+msgstr "预订席位"
 
 #. module: event
 #: view:event.event:event.view_event_search
@@ -1472,7 +1472,7 @@ msgid ""
 "The maximum registration level is equal to the sum of the maximum "
 "registration of event ticket. If you have too much registrations you are not"
 " able to confirm your event. (0 to ignore this rule )"
-msgstr ""
+msgstr "每个活动定义的最多登记水平等同于活动票证的最多数量。如果你有太多的登记，你不能确认你的活动。（输入0则忽略这个规则）"
 
 #. module: event
 #: help:event.event,email_registration_id:0
@@ -1506,7 +1506,7 @@ msgstr "未确认"
 #. module: event
 #: field:event.event,seats_unconfirmed:0
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "未最后确认的预订席位"
 
 #. module: event
 #: view:event.event:event.view_event_search field:event.event,message_unread:0

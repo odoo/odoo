@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"PO-Revision-Date: 2015-08-20 23:59+0000\n"
 "Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -24,27 +24,27 @@ msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
 "* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
 "* The 'Done' status is used when users timesheet is accepted by his/her senior."
-msgstr ""
+msgstr " *  '기안' 상태는 사용자가 신규나 확정되지 않은 작업표를 작성할 때 사용합니다.                 \n* '확정됨' 상태는 사용자가 작업표를 확인하는 데 사용됩니다.                 \n* '완료' 상태는 당사자가 상사에 의해 승인된 상태입니다."
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,nbr:0
 msgid "# Nbr Timesheet"
-msgstr ""
+msgstr "Nbr 작업표"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_attendance:0
 msgid "# Total Attendance"
-msgstr ""
+msgstr "전체 출석"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_diff:0
 msgid "# Total Diff"
-msgstr ""
+msgstr "전체 차이"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,total_timesheet:0
 msgid "# Total Timesheet"
-msgstr ""
+msgstr "전체 작업표"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -60,7 +60,7 @@ msgid ""
 "                configuration of each project's related contract.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새 작업표를 승인합니다.\n              </p><p>\n                귀하는 매일매일 작업표를 기록해야 합니다. \n                그리고 매주 마지막날에 확인해야 합니다.\n                작업표가 확정되면 관리자에 의해 승인되어야 합니다.\n              </p><p>\n                작업표의 기록은 각 프로젝트와 관련된 계약 조건에 따라 \n                고객에게 청구하는데 사용될 수 있습니다.\n              </p>\n            "
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -79,13 +79,13 @@ msgstr "추가"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
 #, python-format
 msgid "Add a Line"
-msgstr ""
+msgstr "명세 추가"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
-msgstr ""
+msgstr "작업표와 출석 사이의 시간차 허용(시간)"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -93,7 +93,7 @@ msgstr ""
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr ""
+msgstr "로그인/아웃과 단일 표로 계산된 작업표 사이에 시간 차 허용. 어떤 설정도 하지 않으려면 0으로 설정합니다."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_account
@@ -144,7 +144,7 @@ msgstr "취소"
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
+msgstr "프로젝트, 계약, 분석 계정을 추가하십시오."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -172,7 +172,7 @@ msgstr "확정됨"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "확정된 작업표"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.current.open,create_uid:0
@@ -241,7 +241,7 @@ msgstr "차이"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Differences"
-msgstr ""
+msgstr "차이"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -270,7 +270,7 @@ msgstr "임직원"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:100
 #, python-format
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "오류! 로그인(로그아웃)은 로그아웃(로그인)이 있어야 합니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
@@ -290,7 +290,7 @@ msgstr "오류!"
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_external_timesheets
 msgid "External Timesheet"
-msgstr ""
+msgstr "외부 작업표"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
@@ -338,7 +338,7 @@ msgstr "기안 상태"
 msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
-msgstr ""
+msgstr "이 임직원에 대한 작업표를 작성하려면 임직원에게 '작업표' 같은 분석 분개 항목을 할당해야 합니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
@@ -347,7 +347,7 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
 " user."
-msgstr ""
+msgstr "이 임직원에 대한 작업표를 작성하기 위해서는 사용자와 임직원을 연결해야 합니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -355,7 +355,7 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
 " to a product, like 'Consultant'."
-msgstr "이 임직원에 대한 출퇴근부를 작성하기 위해서는 '자문'과 같은 상품과 임직원을 연결해야 합니다."
+msgstr "이 임직원에 대한 작업표를 작성하기 위해서는 '자문'과 같은 상품과 임직원을 연결해야 합니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:89
@@ -363,12 +363,12 @@ msgstr "이 임직원에 대한 출퇴근부를 작성하기 위해서는 '자�
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee"
 " to a product."
-msgstr ""
+msgstr "이 임직원에 대한 작업표를 작성하기 위해서는 상품과 임직원을 연결해야 합니다."
 
 #. module: hr_timesheet_sheet
 #: model:ir.filters,name:hr_timesheet_sheet.filter_hr_timesheet_report_internal_timesheets
 msgid "Internal Timesheet"
-msgstr ""
+msgstr "내부 작업표"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
@@ -390,7 +390,7 @@ msgstr "팔로워?"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "이것은 현재의 작업표를 열게 됩니다."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_last_post:0
@@ -428,14 +428,14 @@ msgstr "월"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr "현재 개인 출퇴근부"
+msgstr "현재 개인 작업표"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr ""
+msgstr "개인 작업표"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -446,7 +446,7 @@ msgid ""
 "the end of the period defined in the company, the timesheet is confirmed by "
 "the user and can be validated by his manager. If required, as defined on the"
 " project, you can generate the invoices based on the timesheet."
-msgstr ""
+msgstr "귀하가 시스템에 귀하의 활동을 예약 할 수 있도록 내 작업표에 귀하의 작업표를 엽니다. 같은 양식에서 당신은 당신의 근태(로그인/로그아웃)를 등록하고 다른 프로젝트에서 만든 작업 시간을 설명할 수 있습니다. 회사에 정의된 마감 기한에 작업표를 사용자가 확인하고 그 관리자에 의해 검증될 수 있습니다. 필요한 경우 프로젝트에 정의된 바와 같이 당신은 작업표에 따라 청구서를 생성할 수 있습니다."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,state:0
@@ -469,7 +469,7 @@ msgstr "열기"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "작업표 열기"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -482,25 +482,25 @@ msgstr "기간"
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "귀하가 귀하의 작업표를 검증하는 주기."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Please create an employee and associate it with this user."
-msgstr ""
+msgstr "직원을 생성하고 이 사용자와 연결하십시오."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:131
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
+msgstr "출퇴근표의 전체 차이가 %.2f 보다 낮은지 확인하십시오."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Present"
-msgstr "출근"
+msgstr "현재"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -515,12 +515,12 @@ msgstr "거부"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_filter
 msgid "Search Account"
-msgstr ""
+msgstr "계정 검색"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Search Timesheet"
-msgstr ""
+msgstr "작업표 검색"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -537,12 +537,12 @@ msgstr "표"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign In"
-msgstr ""
+msgstr "로그인"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Sign Out"
-msgstr ""
+msgstr "로그아웃"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
@@ -553,7 +553,7 @@ msgstr "상태"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Submit to Manager"
-msgstr ""
+msgstr "관리자에게 제출"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -567,62 +567,62 @@ msgstr "요약"
 msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
-msgstr ""
+msgstr "작업표에 로그인 숫자와 로그아웃 숫자가 같은 값이 아니면 유효성을 검사할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_report
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
 msgid "Timesheet"
-msgstr "출퇴근부"
+msgstr "작업표"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 #: field:hr_timesheet_sheet.sheet,timesheet_activity_count:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr "출퇴근부 활동"
+msgstr "작업표 활동"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "출퇴근부 명세"
+msgstr "작업표 명세"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
-msgstr "출퇴근부 기록기간"
+msgstr "작업표 기록기간"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
+msgstr "작업표에 허용된 시간 차이(시간)"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr "계정별 출퇴근부"
+msgstr "계정별 작업표"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_form
 #: view:hr_timesheet_sheet.sheet.account:hr_timesheet_sheet.hr_timesheet_account_tree
 msgid "Timesheet by Accounts"
-msgstr "계정별 출퇴근부"
+msgstr "계정별 작업표"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr "일일 출퇴근부"
+msgstr "일일 작업표"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "출퇴근부 명세"
+msgstr "작업표 명세"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr ""
+msgstr "작업표 범위"
 
 #. module: hr_timesheet_sheet
 #: view:hr.employee:hr_timesheet_sheet.hr_timesheet_sheet_employee_extd_form
@@ -632,19 +632,19 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: view:res.company:hr_timesheet_sheet.hr_timesheet_sheet_company
 msgid "Timesheets"
-msgstr "출퇴근부"
+msgstr "작업표"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr ""
+msgstr "기간별 작업표"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 msgid "Timesheets to Validate"
-msgstr ""
+msgstr "검증된 작업표"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -669,7 +669,7 @@ msgstr "총 출석"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 msgid "Total Attendances"
-msgstr ""
+msgstr "총 출석"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
@@ -686,13 +686,13 @@ msgstr "전체 시간"
 #: view:hr_timesheet_sheet.sheet.day:hr_timesheet_sheet.hr_timesheet_day_tree
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
-msgstr "전체 출퇴근부"
+msgstr "전체 작업표"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:hr_timesheet_sheet.view_timesheet_report_search
 #: field:hr.timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "송장 유형"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
@@ -702,7 +702,7 @@ msgstr "읽지 않은 메시지"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
-msgstr "검증되지 않은 출퇴근부"
+msgstr "검증되지 않은 작업표"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -719,7 +719,7 @@ msgstr "사용자 오류!"
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr ""
+msgstr "매일 작업표 유효성 검사"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -758,14 +758,14 @@ msgstr "주"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:248
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "주"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:496
 #, python-format
 msgid ""
 "You can not enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "귀하는 현재의 작업표에 외부에서 출석 날짜를 입력할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
@@ -773,39 +773,39 @@ msgstr ""
 msgid ""
 "You can not enter an attendance in a submitted timesheet. Ask your manager "
 "to reset it before adding attendance."
-msgstr ""
+msgstr "제출된 작업표에는 출석을 입력할 수 없습니다. 출석을 추가하기 전에 재설정하는 법을 관리자에게 문의하십시오."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:258
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
+msgstr "출석 항목이 있는 작업표는 삭제할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:256
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
+msgstr "이미 확정된 작업표는 삭제할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:66
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr ""
+msgstr "작업표를 복제할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:515
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
-msgstr ""
+msgstr "귀하는 현재의 작업표에 외부에서 출석 날짜를 입력할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
+msgstr "2개의 작업표를 동시에 띄울 수 없습니다!\n이 문제를 방지하려면 '개인 현재 작업표' 메뉴를 사용하십시오."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:87
@@ -813,24 +813,24 @@ msgstr ""
 msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
-msgstr ""
+msgstr "2개의 작업표를 동시에 띄울 수 없습니다!\n이 문제를 방지하려면 '개인 작업표' 메뉴를 사용하십시오."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
+msgstr "확정/완료된 작업표의 항목은 수정할 수 없습니다!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:522
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
+msgstr "확정된 작업표의 항목은 수정할 수 없습니다!"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:381
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr "확정된 출퇴근부의 항목은 수정할 수 없습니다!"
+msgstr "확정된 작업표의 항목은 수정할 수 없습니다!"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -839,7 +839,7 @@ msgstr "확정된 출퇴근부의 항목은 수정할 수 없습니다!"
 msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
-msgstr ""
+msgstr "귀하의 작업 시간과 활동을 등록할 수 있습니다."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:hr_timesheet_sheet.view_hr_timesheet_current_open
