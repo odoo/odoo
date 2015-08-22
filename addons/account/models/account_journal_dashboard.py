@@ -187,7 +187,6 @@ class account_journal(models.Model):
             'sum_waiting': formatLang(self.env, sum_waiting or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
-            'no_statement': bool(self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0),
             'bank_statements_source': self.bank_statements_source,
             'title': title, 
         }
