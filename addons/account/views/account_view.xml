@@ -20,21 +20,21 @@
                              </div>  
                              <field name="code" placeholder="code"/>
                              <field name="user_type_id" widget="selection"/>
+                             <field name="tax_ids" widget="many2many_tags"/>
                              <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}"/>
-                             <field name="deprecated"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1"/>
-                             <field name="tax_ids" widget="many2many_tags"/>
                              <field name="reconcile"/>
+                             <field name="deprecated"/>
                            </group>
                            <group>
                                <div class="row">
-                                   <div class="col-md-8 col-md-offset-2 col-sm-12 no-margin-top">
-                                       <p class="text-center" style="font-weight: bold;">How account type affects your reports</p>
+                                   <div class="col-md-11 col-md-offset-1 col-sm-12 no-margin-top" style="background-color: #eee">
+                                       <p class="text-center" style="font-weight: bold;">How account type affects your reports?</p>
                                        <div class="col-md-6 col-sm-6">
                                            <div class="oe_account_help">
-                                                <p class="oe_account_font_help" style="text-align: center;color: grey;"> Profit &amp; Loss</p>
+                                                <p class="oe_account_font_help text-center">Profit &amp; Loss</p>
                                                 <p class="oe_account_font_help oe_account_font_title">Income</p>
                                                 <p class="oe_account_font_help oe_account_font_title">Less Cost of Sales</p>
                                                 <p class="oe_account_font_help oe_account_font_content">Direct Costs</p>
@@ -61,7 +61,7 @@
                                        </div>
                                        <div class="col-md-6 col-sm-6">
                                            <div class="oe_account_help">
-                                               <p class="oe_account_font_help" style="text-align: center;color: grey;">Balance Sheet</p>
+                                               <p class="oe_account_font_help text-center">Balance Sheet</p>
                                                <p class="oe_account_font_help oe_account_font_title" style="color: grey;">Current Assets</p>
                                                <p class="oe_account_font_help oe_account_font_content">Receivable Accounts</p>
                                                <p class="oe_account_font_help oe_account_font_content">Prepayments</p>
@@ -82,7 +82,7 @@
                                </div>
                            </group>
                        </group>
-                    </sheet>                
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -223,7 +223,6 @@
                     <filter domain="[('type', '=', 'purchase')]" string="Purchase"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
                     <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
-                    <separator/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
                 </search>
             </field>
@@ -237,7 +236,7 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <h1><field name="name" class="oe_inline"/></h1>
                         </div>
                         <group>
                             <group>
@@ -307,7 +306,6 @@
                 <tree string="Account Journal">
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
-                    <field name="display_on_footer"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -464,8 +462,8 @@
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
                     <field name="balance_end" invisible="1"/>
-                    <field name="state" invisible="1"/>
                     <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -615,8 +613,9 @@
             <field name="model">account.bank.statement.line</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements Line">
-                    <field name="statement_id" string="Bank Statement"/>
-                    <field name="name" string="Bank Statement Line"/>
+                    <field name="name"/>
+                    <field name="statement_id"/>
+                    <field name="partner_id"/>
                     <field name="date"/>
                     <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
                 </search>
@@ -709,16 +708,15 @@
                     <sheet>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="e.g. Bank Fees"/></h1>
+                            <h1><field name="name" placeholder="e.g. Bank Fees" class="oe_inline"/></h1>
                         </div>
-                        <field class="oe_right oe_inline" nolabel="1" name="company_id" groups="base.group_multi_company"/>
-                        <br/><br/><br/>
                         <group>
                             <group>
                                 <field name="account_id" domain="[('company_id', '=', company_id)]"/>
                                 <field name="amount_type"/>
                                 <field name="tax_id" domain="[('company_id', '=', company_id)]" widget="selection" />
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', company_id)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
                                 <field name="label"/>
@@ -731,8 +729,8 @@
                             </group>
                         </group>
                         <div class="oe_edit_only">
-                            <label for="has_second_line" string="Second line"/>
                             <field name="has_second_line" />
+                            <label for="has_second_line" string="Add a second line"/>
                         </div>
                         <group attrs="{'invisible':[('has_second_line','!=',True)]}">
                             <group>
@@ -914,7 +912,6 @@
                                         <field name="amount" class="oe_inline" />
                                         <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
                                     </div>
-                                    <field name="tax_group_id"/>
                                 </group>
                                 <group attrs="{'invisible':[('amount_type','=', 'group')]}">
                                     <field name="account_id"/>
@@ -980,8 +977,9 @@
                             <group>
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
+                                    <field name="tax_group_id"/>
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
+                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="active" groups="base.group_no_one"/>
                                 </group>
@@ -1626,14 +1624,15 @@
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
-                                    <br/><br/>
-                                    <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
-                                    <field name="active" groups="base.group_no_one"/>
-                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
                                 <group>
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
+                                </group>
+                                <group>
+                                    <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
+                                    <field name="active" groups="base.group_no_one"/>
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </page>

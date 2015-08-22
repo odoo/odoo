@@ -137,7 +137,7 @@
                                 <div>
                                     <a type="object" name="action_create_new"  context="{'refund':True}">
                                         <span t-if="journal_type == 'sale'">Refund</span>
-                                        <span t-if="journal_type == 'purchase'">Refund Bill</span>
+                                        <span t-if="journal_type == 'purchase'">Bill Refund</span>
                                     </a>
                                 </div>
                             </div>
@@ -205,19 +205,14 @@
                             - If there are statements to reconcile, a link to reconcile them -->
                         <div class="col-xs-6 o_kanban_primary_left">
                             <t t-if="journal_type == 'bank'">
-                                <t t-if="! dashboard.bank_statements_source">
-                                    <div name="bank_journal_default_cta">
-                                        <button type="object" name="create_bank_statement" class="btn btn-primary btn-sm">Create Statement</button>
-                                    </div>
-                                </t>
-                                <t t-if="dashboard.bank_statements_source">
-                                    <div name="bank_journal_cta">
-                                        <button t-if="dashboard.bank_statements_source == 'manual'" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">Create Statement</button>
-                                    </div>
-                                </t>
+                                <div name="bank_journal_default_cta" t-if="! dashboard.bank_statements_source">
+                                    <button type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                </div>
+                                <div name="bank_journal_cta" t-if="dashboard.bank_statements_source">
+                                    <button t-if="dashboard.bank_statements_source == 'manual'" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
+                                </div>
                             </t>
-                            <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary btn-sm">Register Transactions</button>
-                            <br/>
+                            <button t-if="journal_type == 'cash'" type="object" name="create_cash_statement" class="btn btn-primary btn-sm">New Transactions</button>
                             <t t-if="!dashboard.no_statement and dashboard.number_to_reconcile > 0">
                                 <a type="object" name="action_open_reconcile" class="oe_inline"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</a>
                             </t>
@@ -227,7 +222,7 @@
                             <div class="col-xs-6 o_kanban_primary_right">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <span title="Balance in Odoo">Balance in Odoo:</span>
+                                        <span title="Balance in Odoo">Balance in Odoo</span>
                                     </div>
                                     <div class="col-xs-6 text-right">
                                         <span><t t-esc="dashboard.account_balance"/></span>
@@ -235,7 +230,7 @@
                                 </div>
                                 <div class="row" name="latest_statement">
                                     <div class="col-xs-6">
-                                        <span title="Latest Statement">Latest Statement:</span>
+                                        <span title="Latest Statement">Latest Statement</span>
                                     </div>
                                     <div class="col-xs-6 text-right">
                                         <span><t t-esc="dashboard.last_balance"/></span>
@@ -298,9 +293,9 @@
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p>
-                This Dashboard helps you manage your accounting.
-                If you have not yet installed a chart of account, please install one first.
-               <a type="action" name="%(open_account_charts_modules)d">Go to the list</a>
+                This is the accounting dashboard. If you have not yet
+                installed a chart of account, please install one first.
+               <a type="action" name="%(open_account_charts_modules)d">Browse available countries.</a>
             </p>
         </field>
     </record>

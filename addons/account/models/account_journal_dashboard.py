@@ -318,6 +318,7 @@ class account_journal(models.Model):
         if action_rec:
             action = action_rec.read([])[0]
             action['context'] = ctx
+            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
             return action
 
     @api.multi
