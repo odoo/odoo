@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-04 12:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2015-08-20 08:55+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -734,7 +734,7 @@ msgstr ""
 msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
-msgstr ""
+msgstr "보기 유형의 분류는 계층적 구조를 생성하기 위해 다른 분류의 상위 요소로 사용할 수 있는 가상 분류입니다."
 
 #. module: product
 #: help:product.template,description_sale:0
@@ -742,7 +742,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "고객에게 전달하고자 하는 상품 설명. 이 설명은 모든 판매 주문, 배송 주문 및 고객 송장/환불에 복사됩니다"
 
 #. module: product
 #: help:product.template,description_purchase:0
@@ -935,12 +935,12 @@ msgstr "30x40x60 상자"
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr ""
+msgstr "활성 필드를 선택 해제하면 삭제 없이 측정 단위를 사용하지 않도록 설정할 수 있습니다."
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
-msgstr ""
+msgstr "가격표 버전을 기반으로 단위 당 제품 가격을 계산합니다."
 
 #. module: product
 #: field:product.template,rental:0
@@ -962,7 +962,7 @@ msgstr "취소"
 #: code:addons/product/product.py:214
 #, python-format
 msgid "Cannot change the category of existing Unit of Measure '%s'."
-msgstr ""
+msgstr "기존 '%s' 측정 단위의 분류는 변경할 수 없습니다."
 
 #. module: product
 #: model:product.public.category,name:product.case
@@ -994,7 +994,7 @@ msgstr "코드"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale\n"
 " uos = uom * coeff"
-msgstr ""
+msgstr "판매 단위로 기본 측정 단위를 변환하는 계수\n uos = uom * coeff"
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_2
@@ -1071,14 +1071,14 @@ msgstr "소모성 상품"
 msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
-msgstr ""
+msgstr "소모품 : 이 상품에 대해서는 재고 관리를 하지 않습니다. \n축적가능 상품 : 이 상품은 재고 관리를 합니다."
 
 #. module: product
 #: help:product.uom,category_id:0
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr ""
+msgstr "측정 단위 사이의 변환은 동일 분류 항목에서만 가능합니다. 변환은 비율에 따라 이루어집니다."
 
 #. module: product
 #: code:addons/product/product.py:181
@@ -1086,7 +1086,7 @@ msgstr ""
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
-msgstr ""
+msgstr "동일 분류에 속해있지 않기 때문에 제품 UoM %s을(를) 기본 UoM %s으로 변환할 수 없습니다."
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -1100,7 +1100,7 @@ msgid ""
 "Cost price of the product template used for standard stock valuation in "
 "accounting and used as a base price on purchase orders. Expressed in the "
 "default unit of measure of the product."
-msgstr ""
+msgstr "상품 서식의 원가는 구매 주문의 기본 가격으로 사용하거나 회계에 표준 재고 평가에 사용됩니다. 상품의 기본 측정 단위에 표현됩니다."
 
 #. module: product
 #: field:pricelist.partnerinfo,create_uid:0
@@ -1158,7 +1158,7 @@ msgstr "사용자 요구 사항을 만족하는 맞춤형 랩탑"
 #: model:product.template,description:product.product_product_5_product_template
 #: model:product.template,description:product.product_product_5b_product_template
 msgid "Custom computer assembled on order based on customer's requirement."
-msgstr ""
+msgstr "고객의 요구사항을 기본으로하는 맞춤형 컴퓨터 조립."
 
 #. module: product
 #: field:product.product,partner_ref:0
@@ -1201,7 +1201,7 @@ msgstr "모든 재고 운용에 사용되는 기본 측정 단위."
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
+msgstr "구매 주문에 사용되는 기본 측정 단위. 기본 측정 단위와 같은 분류에 있어야 합니다."
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -1285,21 +1285,21 @@ msgstr "오류! 최소 마진은 최대 마진보다 적어야 합니다."
 msgid ""
 "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
-msgstr ""
+msgstr "오류! 가격표 항목에 다른 가격표로 주요 가격표를 할당할 수 없습니다!"
 
 #. module: product
 #: constraint:res.currency:0
 msgid ""
 "Error! You cannot define a rounding factor for the company's main currency "
 "that is smaller than the decimal precision of 'Account'."
-msgstr ""
+msgstr "오류! '계정'의 소수점 정밀도 보다 작게 회사의 주요 통화에 대한 반올림 요소를 정의할 수 없습니다."
 
 #. module: product
 #: constraint:decimal.precision:0
 msgid ""
 "Error! You cannot define the decimal precision of 'Account' as greater than "
 "the rounding factor of the company's main currency"
-msgstr ""
+msgstr "오류! '계정'의 소수점 정밀도를 회사의 주요 통화에 대한 반올림 요소보다 크게 정의할 수 없습니다"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -1311,7 +1311,7 @@ msgstr "에러: 유효하지 않은 EAN 코드"
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
-msgstr ""
+msgstr "오류 : 기본 측정 단위와 구매 측정 단위가 같은 분류여야 합니다."
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -1354,7 +1354,7 @@ msgstr "팔로워"
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default UoM of the product."
-msgstr ""
+msgstr "규칙을 적용하려면 구입/판매 수량이 이 필드에 지정된 최소 수량보다 크거나 같아야 합니다.\n상품의 기본 UoM에 표시합니다."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -1366,12 +1366,12 @@ msgid ""
 "Cable length: 1065 mm\n"
 "Weight: 0.4 ounce\n"
 "            "
-msgstr ""
+msgstr "Frequency: 5Hz to 21kHz\nImpedance: 23 ohms\nSensitivity: 109 dB SPL/mW\nDrivers: two-way balanced armature\nCable length: 1065 mm\nWeight: 0.4 ounce\n            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
 msgid "Full featured image editing software."
-msgstr ""
+msgstr "모든 기능을 담은 이미지 편집 소프트웨어."
 
 #. module: product
 #: help:product.template,packaging_ids:0
@@ -1396,7 +1396,7 @@ msgstr ""
 #. module: product
 #: help:product.category,sequence:0
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "제품 카테고리 목록을 표시할 때, 일련 주문을 줍니다."
 
 #. module: product
 #: model:product.template,name:product.product_product_44_product_template
@@ -1438,7 +1438,7 @@ msgstr "HDD 요청시"
 #: model:product.template,description:product.product_product_32_product_template
 msgid ""
 "Hands free headset for laptop PC with in-line microphone and headphone plug."
-msgstr ""
+msgstr "마이크와 헤드폰 플러그가 포함된 랩탑용 핸즈프리 헤드셋"
 
 #. module: product
 #: model:product.public.category,name:product.HDD
@@ -1458,7 +1458,7 @@ msgstr "USB 헤드셋"
 #. module: product
 #: model:product.template,description:product.product_product_33_product_template
 msgid "Headset for laptop PC with USB connector."
-msgstr ""
+msgstr "USB 커넥터가 포함된 랩탑용 헤드셋"
 
 #. module: product
 #: model:product.template,name:product.product_product_32_product_template
@@ -1478,17 +1478,17 @@ msgid ""
 "Width:  1.56 inches\n"
 "Depth:  0.21 inch\n"
 "Weight: 1.1 ounces"
-msgstr ""
+msgstr "높이 : 3.01 인치\n폭    : 1.56 인치\n깊이 : 0.21 인치\n무게 : 1.1 온스"
 
 #. module: product
 #: field:product.price.history,datetime:0
 msgid "Historization Time"
-msgstr ""
+msgstr "시간 기록"
 
 #. module: product
 #: field:product.price.history,cost:0
 msgid "Historized Cost"
-msgstr ""
+msgstr "비용 기록"
 
 #. module: product
 #: help:product.product,message_summary:0
@@ -1845,7 +1845,7 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "상품을 나타내는 중간 크기 사진입니다. 이미지의 가로 세로 비율을 유지한 채 자동으로 128x128픽셀 이미지로 크기가 조정됩니다. 양식 보기 또는 다른 칸반 보기에 이 필드를 이용합니다."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_1
@@ -1996,7 +1996,7 @@ msgstr "출장 관리"
 #. module: product
 #: model:product.template,description:product.product_product_19_product_template
 msgid "On demand hard-disk having capacity based on requirement."
-msgstr ""
+msgstr "요구 사항에 따라 하드 디스크 용량 추가"
 
 #. module: product
 #: view:product.packaging:product.product_packaging_form_view
@@ -2019,7 +2019,7 @@ msgstr "다른 상품"
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "PC Assemble + Custom (PC on Demand) "
-msgstr ""
+msgstr "PC 조립 + 주문 (주문형 PC) "
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -2235,7 +2235,7 @@ msgstr "가격표"
 #. module: product
 #: view:res.partner:product.view_partner_property_form
 msgid "Pricelists are managed on"
-msgstr ""
+msgstr "가격표 관리"
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
@@ -2639,7 +2639,7 @@ msgid ""
 "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
+msgstr "이 값의 배수가 되도록 가격을 설정합니다.\n반올림은 요금 추가 전과 할인 후에 적용됩니다.\n즉 9.99로 끝나는 가격이 있을 경우, 반올림하면 10, "
 
 #. module: product
 #: field:product.product,image_small:0 field:product.template,image_small:0
@@ -3354,7 +3354,7 @@ msgstr "파운드"
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "마일"
 
 #. module: product
 #: view:product.template:product.product_template_form_view
@@ -3364,7 +3364,7 @@ msgstr "월"
 #. module: product
 #: view:product.template:product.product_template_form_view
 msgid "note to be displayed on quotations..."
-msgstr ""
+msgstr "인용에 표시될 참고..."
 
 #. module: product
 #: view:product.price_list:product.view_product_price_list
@@ -3379,7 +3379,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "개"
 
 #. module: product
 #: view:res.partner:product.view_partner_property_form

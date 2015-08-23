@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-25 16:18+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"POT-Creation-Date: 2015-08-03 15:25+0000\n"
+"PO-Revision-Date: 2015-08-19 09:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,6 +217,18 @@ msgid ""
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">                Stok ihtiyaç planlama kuralı oluşturmak için tıklayın.Minimum stok miktarını belirleyin, böylece Odoo stok durumunu takip eder ve otomatik olarak taslak üretim siparişi veya satınalma talebi oluşturur. Öngörülen Miktar (= eldeki stok miktarı - tüm onaylı satış siparişleri ve stok rezervasyonları) minimum miktarın altına düştüğünde ihtiyaç planlama tetiklenir.Stok ihtiyaç planlama kuralında maksimum stok miktarı belirlediyseniz Odoo stok miktarını maksimum stok miktarına tamamlayacak şekilde ihtiyaç hesaplayacaktır.Ürün kartı üzerinde \"İhale Çağrısı\" seçili ise, Odoo stok ihtiyaç hesaplaması sonucunda satınalma teklif talebi yerine otomatik \"Alım İhale Çağrısı\" oluşturur.İhtiyaç planlamasının hesaplanması sürekli ve anlık olarak otomatik yapılabildiği gibi, \"Planlayıcıları Çalıştır\" butonu tıklanarak manuel olarak da tetiklenebilir."
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a serial number.\n"
+"              </p><p>\n"
+"                This is the list of all the production lots you recorded. When\n"
+"                you select a lot, you can get the traceability of the products contained in lot.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -452,6 +464,13 @@ msgid ""
 "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
 "For instance, you can sell pieces of meat that you invoice based on their weight."
 msgstr "Satılan bir ürünün faturada farklı bir ölçü birimi ile görünmesini sağlar.\nÖrneğin adet olarak satıp, kilogram olarak faturalayabilirsiniz."
+
+#. module: stock
+#: help:stock.config.settings,group_uos:0
+msgid ""
+"Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
+"For instance, you can store pieces of meat that you sell and invoice based on their weight."
+msgstr ""
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -1766,6 +1785,16 @@ msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "İşaretlenmemiş ise, bunu kaldırmadan kuralını gizlemek için izin verecek."
 
 #. module: stock
+#: help:stock.inventory,filter:0
+msgid ""
+"If you do an entire inventory, you can choose 'All Products' and it will "
+"prefill the inventory with the current stock.  If you only do some products"
+"  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
+"the system won't propose anything.  You can also let the system propose for "
+"a single product / lot /... "
+msgstr ""
+
+#. module: stock
 #: selection:stock.inventory,state:0
 msgid "In Progress"
 msgstr "Devam Etmekte"
@@ -2335,7 +2364,8 @@ msgid "Make Procurements"
 msgstr "Tedarik Oluştur"
 
 #. module: stock
-#: code:addons/stock/stock.py:3071
+#: code:addons/stock/stock.py:3217
+#: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
 msgstr "Sipariş Yap"
@@ -2411,6 +2441,12 @@ msgstr "Yönetici"
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Manuel Operasyon"
+
+#. module: stock
+#: code:addons/stock/stock.py:2640
+#, python-format
+msgid "Manual Selection of Products"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -2526,7 +2562,8 @@ msgid "Move which caused (created) the procurement"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,quant_ids:0
+#: view:stock.move:stock.view_move_form
+#: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
 msgstr ""
 
@@ -4435,6 +4472,11 @@ msgid "Storage Location"
 msgstr "Saklama Konumu"
 
 #. module: stock
+#: field:stock.config.settings,group_uos:0
+msgid "Store products in a different unit of measure than the sales order"
+msgstr ""
+
+#. module: stock
 #: field:stock.picking,message_summary:0
 #: field:stock.production.lot,message_summary:0
 msgid "Summary"
@@ -4622,6 +4664,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:1067
+#, python-format
+msgid ""
+"The destination location must be the same for all the moves of the picking."
+msgstr ""
+
+#. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
@@ -4705,6 +4754,17 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
+msgstr ""
+
+#. module: stock
+#: constraint:stock.inventory:0
+msgid "The selected inventory options are not coherent."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1070
+#, python-format
+msgid "The source location must be the same for all the moves of the picking."
 msgstr ""
 
 #. module: stock
@@ -5083,6 +5143,11 @@ msgid "Unreserve"
 msgstr "Rezervsiz"
 
 #. module: stock
+#: view:stock.inventory:stock.view_inventory_form
+msgid "UoM"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid "Update Product Quantity"
@@ -5347,17 +5412,17 @@ msgstr "Bazı ürünleri göz ardı etmek için satırları silebilirsiniz."
 #. module: stock
 #: code:addons/stock/stock.py:368
 #, python-format
-msgid "You can not reserve a negative quantity or a negative quant."
+msgid ""
+"You can not change the unit of measure of a product that has already been "
+"used in a done stock move. If you need to change the unit of measure, you "
+"may deactivate this product."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
-msgid ""
-"You can only change the checked quantity of an existing inventory line. If "
-"you want modify a data, please set the checked quantity to 0 and create a "
-"new inventory line."
-msgstr "Yalnızca varolan bir stok satırı kontrol miktarını değiştirebilirsiniz. Bir veri değiştirmek istiyorsanız, lütfen işaretlenmiş miktar 0 olarak ayarlayın ve yeni stok satırı oluşturun."
+msgid "You can not reserve a negative quantity or a negative quant."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5411,7 +5476,13 @@ msgid ""
 msgstr "Ürünün varsayılan ölçü birimiyle aynı kategoride bir ürün ölçü birimi seçmelisiniz"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:69
+#: code:addons/stock/wizard/stock_return_picking.py:62
+#, python-format
+msgid "You may only return one picking at a time!"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
 msgstr ""
@@ -5482,14 +5553,6 @@ msgid "picking(s)"
 msgstr "toplama (lar)"
 
 #. module: stock
-#: view:product.template:stock.view_stock_product_template_tree
-msgid ""
-"red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', "
-"'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
-"'end', 'obsolete')"
-msgstr "red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', 'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', 'end', 'obsolete')"
-
-#. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
 msgstr "ters"
@@ -5534,21 +5597,6 @@ msgstr ""
 #: field:stock.picking.type,rate_picking_late:0
 msgid "unknown"
 msgstr "bilinmeyen"
-
-#. module: stock
-#: view:product.template:stock.view_template_property_form
-msgid ""
-"{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', "
-"'stock.group_stock_manager']}"
-msgstr ""
-
-#. module: stock
-#: view:product.product:stock.view_stock_product_tree
-msgid ""
-"{'red':virtual_available<0, 'blue':virtual_available>=0 and state in "
-"('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in "
-"('draft', 'end', 'obsolete')}"
-msgstr ""
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form

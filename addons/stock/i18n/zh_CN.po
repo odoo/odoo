@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-14 06:57+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
+"POT-Creation-Date: 2015-08-03 15:25+0000\n"
+"PO-Revision-Date: 2015-08-21 08:43+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,6 +225,18 @@ msgid ""
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
 msgstr "            "
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a serial number.\n"
+"              </p><p>\n"
+"                This is the list of all the production lots you recorded. When\n"
+"                you select a lot, you can get the traceability of the products contained in lot.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击新增序号。\n              </p><p>\n                这是您全部生产记录的列表。当\n                您多选（非单选），您能以此序号来批量追溯产品。\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -460,6 +472,13 @@ msgid ""
 "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
 "For instance, you can sell pieces of meat that you invoice based on their weight."
 msgstr "允许您以一个单位销售产品，但使用另一个单位开发票，例如：按片来销售食物，按重量开发票。"
+
+#. module: stock
+#: help:stock.config.settings,group_uos:0
+msgid ""
+"Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
+"For instance, you can store pieces of meat that you sell and invoice based on their weight."
+msgstr ""
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -1774,6 +1793,16 @@ msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "如果不选中，允许您隐藏规则而无需删除"
 
 #. module: stock
+#: help:stock.inventory,filter:0
+msgid ""
+"If you do an entire inventory, you can choose 'All Products' and it will "
+"prefill the inventory with the current stock.  If you only do some products"
+"  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
+"the system won't propose anything.  You can also let the system propose for "
+"a single product / lot /... "
+msgstr ""
+
+#. module: stock
 #: selection:stock.inventory,state:0
 msgid "In Progress"
 msgstr "进行中"
@@ -1781,7 +1810,7 @@ msgstr "进行中"
 #. module: stock
 #: field:stock.warehouse,in_type_id:0
 msgid "In Type"
-msgstr ""
+msgstr "入库类型"
 
 #. module: stock
 #: help:procurement.order,partner_dest_id:0
@@ -2077,7 +2106,7 @@ msgstr "指定货物是部分发运还是一次性发运所有的"
 #. module: stock
 #: field:stock.transfer_details,item_ids:0
 msgid "Items"
-msgstr ""
+msgstr "翻译项"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
@@ -2343,7 +2372,8 @@ msgid "Make Procurements"
 msgstr "建立补货"
 
 #. module: stock
-#: code:addons/stock/stock.py:3071
+#: code:addons/stock/stock.py:3217
+#: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
 msgstr "按订单生成"
@@ -2419,6 +2449,12 @@ msgstr "经理"
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "手动作业"
+
+#. module: stock
+#: code:addons/stock/stock.py:2640
+#, python-format
+msgid "Manual Selection of Products"
+msgstr "选用产品说明书"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -2534,7 +2570,8 @@ msgid "Move which caused (created) the procurement"
 msgstr "补货引起(创建)的库存移动"
 
 #. module: stock
-#: field:stock.move,quant_ids:0
+#: view:stock.move:stock.view_move_form
+#: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
 msgstr "已移动的份"
 
@@ -4287,7 +4324,7 @@ msgstr "源包裹"
 #. module: stock
 #: help:procurement.rule,location_src_id:0
 msgid "Source location is action=move"
-msgstr ""
+msgstr "只有Action为Move情况下需要源库位"
 
 #. module: stock
 #: field:stock.transfer_details_items,package_id:0
@@ -4443,6 +4480,11 @@ msgid "Storage Location"
 msgstr "存储位置"
 
 #. module: stock
+#: field:stock.config.settings,group_uos:0
+msgid "Store products in a different unit of measure than the sales order"
+msgstr ""
+
+#. module: stock
 #: field:stock.picking,message_summary:0
 #: field:stock.production.lot,message_summary:0
 msgid "Summary"
@@ -4512,54 +4554,54 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "本技术字段包含创建此链接的操作和移库之间的份。被用于stock_move_obj.action_done() time来避免再次寻求一个匹配的份。"
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "本技术字段描述了仓库中下一补货（如果有的话）的路线选择。"
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "本技术字段用于对属于此公司之间的仓库进行再补货的路线。"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
 msgid ""
 "Technical field used to depict a restriction on the lot of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "该技术字段用来描述当多份移动标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.move,restrict_partner_id:0
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "该技术字段用来描述当所有者的份移动标记为’完成‘时的限制"
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
 msgid ""
 "Technical field used to display the correct label on print button in the "
 "picking view"
-msgstr ""
+msgstr "该技术字段用于在移库视图中显示正确的打印按钮标签。"
 
 #. module: stock
 #: help:stock.return.picking,move_dest_exists:0
 msgid "Technical field used to hide help tooltip if not needed"
-msgstr ""
+msgstr "该技术字段用来隐藏不必要的帮助提示信息。"
 
 #. module: stock
 #: help:stock.quant,negative_dest_location_id:0
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "该技术字段是用来记录已创建负数量移动的目标库位"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -4567,14 +4609,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "该技术字段用来记录用户在分拣确认期间的产品成本变化（在使用 '平均价格' 或'实际价格'的成本方法时）。以公司的当前货币及产品的默认计量单位赋值。"
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "技术字段是用来记录在调试模式分批移动的目标库位"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4587,7 +4629,7 @@ msgstr "在客户订单确认和完工产品交付之间的平均的延期日子
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr ""
+msgstr "库位编码必须在公司内唯一！"
 
 #. module: stock
 #: code:addons/stock/stock.py:3874
@@ -4595,19 +4637,19 @@ msgstr ""
 msgid ""
 "The chosen quantity for product %s is not compatible with the UoM rounding. "
 "It will be automatically converted at confirmation"
-msgstr ""
+msgstr "选择的产品数量%s不兼容四舍五入计量单位。确认后它将会自动转换"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The code of the warehouse must be unique per company!"
-msgstr ""
+msgstr "该科目的代码，每家公司必须是唯一的！"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
 msgid ""
 "The combination of serial number, internal reference and product must be "
 "unique !"
-msgstr ""
+msgstr "序列号和内部引用组合必须是唯一的!"
 
 #. module: stock
 #: help:stock.quant,company_id:0
@@ -4619,7 +4661,7 @@ msgstr "份所属于的公司"
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "这个日期将被用于：产品的库存水平和关于盘点的库存移动确认。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3522
@@ -4627,6 +4669,13 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
+msgstr "默认的补给仓库应该和自身仓库不同!"
+
+#. module: stock
+#: code:addons/stock/stock.py:1067
+#, python-format
+msgid ""
+"The destination location must be the same for all the moves of the picking."
 msgstr ""
 
 #. module: stock
@@ -4634,22 +4683,22 @@ msgstr ""
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr ""
+msgstr "考虑到其父分类，下面的路线将应用到这个分类的产品："
 
 #. module: stock
 #: help:stock.quant,reservation_id:0
 msgid "The move the quant is reserved for"
-msgstr ""
+msgstr "此移动此份是保留给"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
-msgstr ""
+msgstr "每个公司的财务期间名称须唯一"
 
 #. module: stock
 #: help:stock.quant,propagated_from_id:0
 msgid "The negative quant this is coming from"
-msgstr ""
+msgstr "这是来自于负库存"
 
 #. module: stock
 #: help:stock.quant.package,parent_id:0
@@ -4689,14 +4738,14 @@ msgstr "库存推式迁移规则"
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "请求的操作无法处理，因为一个程序错误设置`product_qty`字段取代了 `product_uom_qty`。"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:268
 #, python-format
 msgid "The reserved stock changed. You might want to"
-msgstr ""
+msgstr "保留库存改变了。你可能想"
 
 #. module: stock
 #: code:addons/stock/stock.py:2353
@@ -4705,7 +4754,7 @@ msgid ""
 "The roundings of your Unit of Measures %s on the move vs. %s on the product "
 "don't allow to do these operations or you are not transferring the picking "
 "at once. "
-msgstr ""
+msgstr "在此产品上您的计量单位%s的舍入 在此移动vs. %s 上不允许这些操作，或您没一次完成分拣转移。"
 
 #. module: stock
 #: code:addons/stock/stock.py:3867
@@ -4713,6 +4762,17 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
+msgstr "产品%s 的所选计量单位与这个产品的默认计量单位类别不同。\n 请选择一个同类别的计量单位。"
+
+#. module: stock
+#: constraint:stock.inventory:0
+msgid "The selected inventory options are not coherent."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1070
+#, python-format
+msgid "The source location must be the same for all the moves of the picking."
 msgstr ""
 
 #. module: stock
@@ -4720,12 +4780,12 @@ msgstr ""
 msgid ""
 "The source package will be moved entirely.  If you specify a destination "
 "package, the source package will be put in the destination package."
-msgstr ""
+msgstr "源包装将被完全移除。如果你指定一个目标包装，源包装将放入目标包装里。"
 
 #. module: stock
 #: help:stock.pack.operation,picking_id:0
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "打包作业执行的地方"
 
 #. module: stock
 #: help:procurement.rule,warehouse_id:0
@@ -4738,7 +4798,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr ""
+msgstr "仓库在创建移动到传送/采购,这个规则可以是不同的仓库(例如从另一个仓库进行再补给)"
 
 #. module: stock
 #: field:stock.inventory.line,theoretical_qty:0
@@ -4752,7 +4812,7 @@ msgid ""
 "                All procurement orders will be processed immediately, which could in some\n"
 "                cases entail a small performance impact.\n"
 "                This installs the module procurement_jit."
-msgstr ""
+msgstr "这个功能允许补货单的JIT计算。\n 所有补货单会被立即处理，这在某些情况下会对性能有少量影响。\n 这会安装 mrp_jit 模块。"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_lot:0
@@ -4768,31 +4828,31 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr ""
+msgstr "这个允许你给分拣或移动指定一个批次（或序列号）。这个使知道哪个批次的产品被送到了哪个客户是可能的。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.quantsact
 msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their today's inventory value."
-msgstr ""
+msgstr "这个分析提供给你一个当前库存水平的产品-日期库存数量的快速预览。"
 
 #. module: stock
 #: help:stock.quant.package,packaging_id:0
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "只有里面的所有包共享同一个产品时，这个区域才会完成，其他情况下它不起作用"
 
 #. module: stock
 #: help:stock.quant,owner_id:0
 msgid "This is the owner of the quant"
-msgstr ""
+msgstr "这是库存分析所有者"
 
 #. module: stock
 #: help:stock.location.path,picking_type_id:0
 msgid "This is the picking type associated with the different pickings"
-msgstr ""
+msgstr "这是不同与不同分拣相关的分拣类型。"
 
 #. module: stock
 #: help:stock.move,product_uom_qty:0
@@ -4817,14 +4877,14 @@ msgstr "这些规则确定了产品在库位树中的正确移动路径.\n‘自
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "此选项通过路线有效实施推拉式物流来满足仓库请求"
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid ""
 "This picking appears to be chained with another operation. Later, if you "
 "receive the goods you are returning now, make sure to"
-msgstr ""
+msgstr "这个分拣好像与其它操作关联。如果你接收要退回的产品，请确认"
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -4877,7 +4937,7 @@ msgstr "这样你就可以得到一个归属于某个所有者的产品属性。
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "这将告诉你库位并且允许你定义多个分拣类型和仓库"
 
 #. module: stock
 #. openerp-web
@@ -4911,7 +4971,7 @@ msgstr "数量合计"
 #. module: stock
 #: field:product.category,total_route_ids:0
 msgid "Total routes"
-msgstr ""
+msgstr "路线合计"
 
 #. module: stock
 #: code:addons/stock/stock.py:1564
@@ -4958,7 +5018,7 @@ msgstr "转移"
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "Transfer details"
-msgstr ""
+msgstr "转移详情"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -4980,7 +5040,7 @@ msgstr "运输库位"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "如果保留的份变更了，则为True，这意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: field:stock.picking.type,code:0
@@ -5066,7 +5126,7 @@ msgstr "卸货在收货库位然后进入库存（2布）"
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr ""
+msgstr "卸载在输入库位,在通过质量管理之前确认现有存货(3个步骤)"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -5089,6 +5149,11 @@ msgstr "未读消息"
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
 msgstr "不保留"
+
+#. module: stock
+#: view:stock.inventory:stock.view_inventory_form
+msgid "UoM"
+msgstr "计量单位"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -5118,12 +5183,12 @@ msgstr "填充这里来运行该产品的需求申请。根据产品的配置，
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
 msgid "Used to choose the lot/serial number of the product returned"
-msgstr ""
+msgstr "被用来为返回的产品选择批次或序列号"
 
 #. module: stock
 #: help:stock.picking.type,sequence:0
 msgid "Used to order the 'All Operations' kanban view"
-msgstr ""
+msgstr "历史订单的全部操作看板视图"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
@@ -5245,18 +5310,18 @@ msgstr "仓库名称"
 #. module: stock
 #: field:procurement.rule,propagate_warehouse_id:0
 msgid "Warehouse to Propagate"
-msgstr ""
+msgstr "参与移动的仓库"
 
 #. module: stock
 #: help:procurement.order,warehouse_id:0
 msgid "Warehouse to consider for the route selection"
-msgstr ""
+msgstr "仓库为路线选择考虑"
 
 #. module: stock
 #: code:addons/stock/stock.py:3550
 #, python-format
 msgid "Warehouse's Routes"
-msgstr ""
+msgstr "仓库的路线"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -5306,7 +5371,7 @@ msgstr "警告：错误数量！"
 #: help:product.putaway,fixed_location_ids:0
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "当方法被确定后，这个库位将被用于存储产品"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -5314,7 +5379,7 @@ msgid ""
 "When the virtual stock goes below the Min Quantity specified for this field,"
 " Odoo generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
-msgstr ""
+msgstr "当虚拟库存小于指定的最小数量，Odoo生成补货单来预测达到最大数量前的数量。"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -5322,14 +5387,14 @@ msgid ""
 "When the virtual stock goes below the Min Quantity, Odoo generates a "
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
-msgstr ""
+msgstr "当虚拟库存低于最小数量， Odoo生成一个采购订单提供的数量达到规定最大库存的数量。"
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "当你选择了一个序列号（批次），数量将按那个序列号（批次）相关的数量\n                            进行修正，而不是按产品的总数量。"
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -5350,22 +5415,22 @@ msgstr "是"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "本次未盘点的产品行请删除"
 
 #. module: stock
 #: code:addons/stock/stock.py:368
 #, python-format
-msgid "You can not reserve a negative quantity or a negative quant."
+msgid ""
+"You can not change the unit of measure of a product that has already been "
+"used in a done stock move. If you need to change the unit of measure, you "
+"may deactivate this product."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
-msgid ""
-"You can only change the checked quantity of an existing inventory line. If "
-"you want modify a data, please set the checked quantity to 0 and create a "
-"new inventory line."
-msgstr ""
+msgid "You can not reserve a negative quantity or a negative quant."
+msgstr "您无法储存负的数量或负的份。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5377,7 +5442,7 @@ msgstr "您只能删除草稿状态的移动。"
 #: code:addons/stock/stock.py:2244
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "你不能取消一个标记为‘完成’的库存迁移"
 
 #. module: stock
 #: code:addons/stock/stock.py:638
@@ -5391,19 +5456,19 @@ msgstr "您不能移动到视图类型的库位 %s ."
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
-msgstr ""
+msgstr "你不能设置一个负的产品数量：\n\t%s - qty: %s"
 
 #. module: stock
 #: code:addons/stock/stock.py:2465
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
-msgstr ""
+msgstr "不能拆分一个移动草稿。你需要先确认它。"
 
 #. module: stock
 #: code:addons/stock/stock.py:2461
 #, python-format
 msgid "You cannot split a move done"
-msgstr ""
+msgstr "您无法分割一个已完成的移动"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:132
@@ -5419,23 +5484,29 @@ msgid ""
 msgstr "你必须选择产品默认计量单位的类型一样的计量单位。"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:69
+#: code:addons/stock/wizard/stock_return_picking.py:62
+#, python-format
+msgid "You may only return one picking at a time!"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
-msgstr ""
+msgstr "您可能只返回已完成的分拣！"
 
 #. module: stock
 #: code:addons/stock/stock.py:2159
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "您必须为该产品%s指定一个系列号"
 
 #. module: stock
 #: constraint:stock.move:0
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
 " the product moved. Please use an UoM in the same UoM category."
-msgstr ""
+msgstr "你尝试迁移的产品使用的计量单位与已迁移产品的计量单位不兼容。请在相同计量单位类别中使用一个计量单位。"
 
 #. module: stock
 #: view:stock.change.product.qty:stock.view_change_product_quantity
@@ -5469,7 +5540,7 @@ msgstr "例如：PO0032"
 #. module: stock
 #: help:stock.move,origin_returned_move_id:0
 msgid "move that created the return move"
-msgstr ""
+msgstr "迁移已创建的返回迁移"
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -5490,14 +5561,6 @@ msgid "picking(s)"
 msgstr "分拣"
 
 #. module: stock
-#: view:product.template:stock.view_stock_product_template_tree
-msgid ""
-"red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', "
-"'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
-"'end', 'obsolete')"
-msgstr "red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', 'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', 'end', 'obsolete')"
-
-#. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
 msgstr "退回"
@@ -5513,7 +5576,7 @@ msgstr "视图属性的技术字段"
 msgid ""
 "technical field used to know if there is already at least one quant reserved"
 " on moves of a given picking"
-msgstr ""
+msgstr "本技术字段用来表明一个移库表单中明细行是否至少有一份返回记录。"
 
 #. module: stock
 #. openerp-web
@@ -5527,7 +5590,7 @@ msgstr "作业"
 msgid ""
 "the returned picking in order to avoid logistic rules to be applied again "
 "(which would create duplicated operations)"
-msgstr ""
+msgstr "为了避免逻辑规则被重复应用（创建重复操作）而返回的分拣。"
 
 #. module: stock
 #: field:product.product,qty_available_text:0
@@ -5542,21 +5605,6 @@ msgstr ""
 #: field:stock.picking.type,rate_picking_late:0
 msgid "unknown"
 msgstr "未知的"
-
-#. module: stock
-#: view:product.template:stock.view_template_property_form
-msgid ""
-"{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', "
-"'stock.group_stock_manager']}"
-msgstr "{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}"
-
-#. module: stock
-#: view:product.product:stock.view_stock_product_tree
-msgid ""
-"{'red':virtual_available<0, 'blue':virtual_available>=0 and state in "
-"('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in "
-"('draft', 'end', 'obsolete')}"
-msgstr "{'red':virtual_available<0, 'blue':virtual_available>=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in ('draft', 'end', 'obsolete')}"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
