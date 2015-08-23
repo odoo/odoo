@@ -14,7 +14,7 @@
                             <field name="active"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
-                        <group>
+                        <group string="Autocompletion on Sales and Purchase Orders">
                             <field name="auto_apply"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>

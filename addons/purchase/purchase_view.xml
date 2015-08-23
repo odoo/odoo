@@ -317,7 +317,7 @@
                                     <field name="invoice_method"/>
                                     <field name="invoiced" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_open': True, 'no_create': True}"/>
-                                    <field name="fiscal_position_id" attrs="{'readonly': [('invoiced','=', True)]}" />
+                                    <field name="fiscal_position_id" attrs="{'readonly': [('invoiced','=', True)]}" on_change="onchange_fiscal_position(fiscal_position_id, order_line, context)"/>
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
