@@ -1012,6 +1012,13 @@ class sale_order_line(osv.osv):
             values = dict(defaults, **values)
         return super(sale_order_line, self).create(cr, uid, values, context=context)
 
+    def _product_name(self, cr, uid, product_obj, context):
+        Product = self.pool['product.product']
+        name = Product.name_get(cr, uid, [product_obj.id], context=context)[0][1]
+        if product_obj.description_sale:
+            name += '\n'+product_obj.description_sale
+        return name
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position_id=False, flag=False, context=None):
@@ -1068,9 +1075,8 @@ class sale_order_line(osv.osv):
             result['tax_id'] = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, taxes)
 
         if not flag:
-            result['name'] = Product.name_get(cr, uid, [product_obj.id], context=ctx_product)[0][1]
-            if product_obj.description_sale:
-                result['name'] += '\n'+product_obj.description_sale
+            result['name'] = self._product_name(cr, uid, product_obj, context=ctx_product)
+
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
