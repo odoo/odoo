@@ -128,7 +128,6 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         // the view's number of records per page (|| section)
         this._limit = (this.options.limit ||
                        this.defaults.limit ||
-                       parseInt(this.fields_view.arch.attrs.limit, 10) ||
                        (this.getParent().action || {}).limit ||
                        80);
     },
@@ -228,6 +227,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+        this._limit = parseInt(this.fields_view.arch.attrs.limit, 10) || this._limit;
 
         // Retrieve the decoration defined on the model's list view
         this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
