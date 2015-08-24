@@ -3,18 +3,15 @@
     <data>
 
         <record id="view_wizard_valuation_history" model="ir.ui.view">
-            <field name="name">Stock Valuation</field>
+            <field name="name">Inventory at Date</field>
             <field name="model">wizard.valuation.history</field>
             <field name="arch" type="xml">
                 <form string="Choose your date">
                     <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
-                        Choose the date for which you want to get the stock valuation of your products.
-
-                        This will filter the stock operation that weren't done at the selected date, to retrieve the quantity
-                        you had, and gives you the inventory value according to the standard price used at that time.
+                        Choose a date in the past to get the inventory at that date.
                     </p>
                     <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', True)]}">
-                        Retrieve the stock valuation of your products at current day
+                        Retrieve the curent stock valuation.
                     </p>
                     <group>
                         <field name="choose_date"/>
@@ -28,14 +25,14 @@
             </field>
         </record>
         <record id="action_wizard_stock_valuation_history" model="ir.actions.act_window">
-            <field name="name">Stock Valuation</field>
+            <field name="name">Inventory at Date</field>
             <field name="res_model">wizard.valuation.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_wizard_valuation_history"/>
             <field name="target">new</field>
         </record>
-        <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.menu_warehouse_report" sequence="1"/>
+        <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.menu_warehouse_report" sequence="1" groups="base.group_no_one"/>
 
     <record id="view_stock_history_report_tree" model="ir.ui.view">
         <field name="name">Stock Value At Date</field>
