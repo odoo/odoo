@@ -637,42 +637,53 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Consumed Products">
-                            <group>
-                                <group string="Products to Consume">
-                                    <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
-                                        <tree decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('confirmed','waiting')" string="Products to Consume">
-                                            <field name="product_id"/>
-                                            <field name="product_uom_qty"  string="Quantity"/>
-                                            <field name="product_uom" options="{'no_open':True,'no_create':True}" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="state" invisible="1"/>
-                                            <button name="%(mrp.move_consume)d"
-                                                string="Consume Products" type="action"
-                                                icon="gtk-go-forward" context="{'consume': True}"
-                                                states="assigned"
-                                                 />
-                                            <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action"
-                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                                states="draft,waiting,confirmed,assigned"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                                <group string="Consumed Products">
-                                    <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
-                                       <tree decoration-danger="scrapped==True" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Consumed Products" editable="bottom">
-                                           <field name="product_id" readonly="1"/>
-                                           <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
-                                           <field name="product_uom_qty" readonly="1"/>
-                                           <field name="product_uom" options="{'no_open':True,'no_create':True}" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                           <field name="state" invisible="1"/>
-                                           <field name="scrapped" invisible="1"/>
-                                       </tree>
-                                    </field>
+                        <page string="Products">
+                            <group string="Scheduled Products" attrs="{'invisible': [('state','!=','draft')]}">
+                                <div>
+                                    <button name="action_compute" states="draft"
+                                        string="Compute Data" type="object"
+                                        icon="terp-stock_format-scientific"/>
+                                    <field name="product_lines"/>
+                                </div>
+                            </group>
+                            <group attrs="{'invisible': [('state','=','draft')]}">
+                                <group>
+                                    <group string="Products to Consume">
+                                        <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
+                                            <tree decoration-info="state == 'draft'" decoration-muted="state in ('cancel','done')" decoration-danger="state in ('confirmed','waiting')" string="Products to Consume">
+                                                <field name="product_id"/>
+                                                <field name="product_uom_qty"  string="Quantity"/>
+                                                <field name="restrict_lot_id" groups="stock.group_production_lot"/>
+                                                <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                                                <field name="state" invisible="1"/>
+                                                <button name="%(mrp.move_consume)d"
+                                                    string="Consume Products" type="action"
+                                                    icon="gtk-go-forward" context="{'consume': True}"
+                                                    states="assigned"
+                                                     />
+                                                <button name="%(stock.move_scrap)d"
+                                                    string="Scrap Products" type="action"
+                                                    icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                                                    states="draft,waiting,confirmed,assigned"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group string="Consumed Products">
+                                        <field name="move_lines2" nolabel="1" options="{'reload_on_button': true}">
+                                           <tree decoration-danger="scrapped==True" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Consumed Products" editable="bottom">
+                                               <field name="product_id" readonly="1"/>
+                                               <field name="restrict_lot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                               <field name="product_uom_qty" readonly="1"/>
+                                               <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
+                                               <field name="state" invisible="1"/>
+                                               <field name="scrapped" invisible="1"/>
+                                           </tree>
+                                        </field>
+                                    </group>
                                 </group>
                             </group>
                         </page>
-                        <page string="Finished Products">
+                        <page string="Finished Products" attrs="{'invisible': [('state','=','draft')]}">
                             <group>
                                 <group string="Products to Produce">
                                     <field name="move_created_ids" nolabel="1" options="{'reload_on_button': true}">
@@ -724,12 +735,6 @@
                                     <field name="hour" widget="float_time"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page string="Scheduled Products">
-                            <button name="action_compute" states="draft"
-                                string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"/>
-                            <field name="product_lines"/>
                         </page>
                         <page string="Extra Information">
                             <group>
@@ -938,8 +943,9 @@
                 <form string="Scheduled Products">
                     <group col="4">
                         <field name="name"/>
-                        <field name="product_id"/>
+                        <field name="product_id" on_change="onchange_product(product_id)"/>
                         <field name="product_qty"/>
+                        <field name="lot_id" domain="[('product_id','=',product_id)]" context="{'default_product_id':product_id}" groups="stock.group_production_lot"/>
                         <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -954,6 +960,7 @@
                 <tree string="Scheduled Products">
                     <field name="product_id"/>
                     <field name="product_qty"/>
+                    <field name="lot_id" domain="[('product_id','=',product_id)]" groups="stock.group_production_lot"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
                     <field name="product_uos" groups="product.group_uos"/>

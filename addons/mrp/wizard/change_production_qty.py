@@ -51,31 +51,24 @@ class change_production_qty(osv.osv_memory):
         assert record_id, _('Active Id not found')
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
+        production_line_obj = self.pool['mrp.production.product.line']
         move_obj = self.pool.get('stock.move')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
-            prod_obj.action_compute(cr, uid, [prod.id])
 
-            for move in prod.move_lines:
-                bom_point = prod.bom_id
-                bom_id = prod.bom_id.id
-                if not bom_point:
-                    bom_id = bom_obj._bom_find(cr, uid, product_id=prod.product_id.id, context=context)
-                    if not bom_id:
-                        raise UserError(_("Cannot find bill of material for this product."))
-                    prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
-                    bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
+            bom_point = prod.bom_id
 
-                if not bom_id:
-                    raise UserError(_("Cannot find bill of material for this product."))
-
-                factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
-                product_details, workcenter_details = \
+            factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
+            product_details, workcenter_details = \
                     bom_obj._bom_explode(cr, uid, bom_point, prod.product_id, factor / bom_point.product_qty, [], context=context)
-                for r in product_details:
-                    if r['product_id'] == move.product_id.id:
-                        move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
+
+            for move in product_details:
+                product_line = prod.product_lines.filtered(lambda x: x.product_id.id == move['product_id'])
+                move_line = prod.move_lines.filtered(lambda x: x.product_id.id == move['product_id'])
+                production_line_obj.write(cr, uid, product_line.id, {'product_qty': move['product_qty']}, context=context)
+                move_obj.write(cr, uid, move_line.id, {'product_uom_qty': move['product_qty']}, context=context)
+
             if prod.move_prod_id:
                 move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)

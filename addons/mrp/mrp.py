@@ -583,15 +583,14 @@ class mrp_production(osv.osv):
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True, copy=False),
         'move_lines': fields.one2many('stock.move', 'raw_material_production_id', 'Products to Consume',
-            domain=[('state', 'not in', ('done', 'cancel'))], readonly=True, states={'draft': [('readonly', False)]}),
+            domain=[('state', 'not in', ('done', 'cancel'))], readonly=True),
         'move_lines2': fields.one2many('stock.move', 'raw_material_production_id', 'Consumed Products',
             domain=[('state', 'in', ('done', 'cancel'))], readonly=True),
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce',
             domain=[('state', 'not in', ('done', 'cancel'))], readonly=True),
         'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products',
             domain=[('state', 'in', ('done', 'cancel'))], readonly=True),
-        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods',
-            readonly=True),
+        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods', readonly=True, states={'draft': [('readonly', False)]}),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation',
             readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection(
@@ -1033,7 +1032,7 @@ class mrp_production(osv.osv):
                 if not float_is_zero(remaining_qty, precision_digits=precision):
                     #consumed more in wizard than previously planned
                     product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
-                    extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
+                    extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, lot_id=consume['lot_id'], context=context)
                     stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
                                                                     'consumed_for': main_production_move}, context=context)
                     stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
@@ -1205,7 +1204,7 @@ class mrp_production(osv.osv):
         }, context=context)
         return move
 
-    def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, context=None):
+    def _make_consume_line_from_data(self, cr, uid, production, product, uom_id, qty, uos_id, uos_qty, lot_id=False, context=None):
         stock_move = self.pool.get('stock.move')
         loc_obj = self.pool.get('stock.location')
         # Internal shipment is created for Stockable and Consumer Products
@@ -1234,6 +1233,7 @@ class mrp_production(osv.osv):
             'procure_method': prev_move and 'make_to_stock' or self._get_raw_material_procure_method(cr, uid, product, location_id=source_location_id,
                                                                                                      location_dest_id=destination_location_id, context=context), #Make_to_stock avoids creating procurement
             'raw_material_production_id': production.id,
+            'restrict_lot_id': lot_id,
             #this saves us a browse in create()
             'price_unit': product.standard_price,
             'origin': production.name,
@@ -1247,7 +1247,7 @@ class mrp_production(osv.osv):
         return move_id
 
     def _make_production_consume_line(self, cr, uid, line, context=None):
-        return self._make_consume_line_from_data(cr, uid, line.production_id, line.product_id, line.product_uom.id, line.product_qty, line.product_uos.id, line.product_uos_qty, context=context)
+        return self._make_consume_line_from_data(cr, uid, line.production_id, line.product_id, line.product_uom.id, line.product_qty, line.product_uos.id, line.product_uos_qty, line.lot_id.id, context=context)
 
 
     def _make_service_procurement(self, cr, uid, line, context=None):
@@ -1346,8 +1346,25 @@ class mrp_production_product_line(osv.osv):
         'name': fields.char('Name', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot/Serial Number'),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_uos_qty': fields.float('Product UOS Quantity'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
-        'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
+        'production_id': fields.many2one('mrp.production', 'Production Order', ondelete='cascade', select=True),
     }
+    _defaults = {
+        'product_qty': 1.00
+    }
+
+    def onchange_product(self, cr, uid, ids, product_id=False, context=None):
+        """ On change of product id, if finds UoM.
+        @param product_id: Changed Product id
+        """
+        if not product_id:
+            return {}
+        product = self.pool['product.product'].browse(cr, uid, product_id, context=context)
+        result = {
+            'name': product.name,
+            'product_uom': product.uom_id.id,
+        }
+        return {'value': result}
