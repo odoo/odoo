@@ -2,6 +2,7 @@
 
 import time
 import math
+import bisect
 
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
@@ -130,6 +131,56 @@ class AccountAccount(models.Model):
                 domain = ['&'] + domain
         accounts = self.search(domain + args, limit=limit)
         return accounts.name_get()
+
+    @api.onchange('code')
+    def onchange_code(self):
+        best_match = ''
+        best_match_ratio = 0.0
+        company_id = self.company_id.id or self.env.user.company_id.id
+        #get all account codes and sort them in a list
+        all_accounts = self.search([('company_id', '=', company_id)], order='code asc')
+        if all_accounts and self.code:
+            list_code = [a.code for a in all_accounts]
+            #find index where we would insert this code
+            #and get the closest element which are the left and right element
+            insert_index = bisect.bisect_left(list_code, self.code)
+            nearest_code_index = []
+            if insert_index >= len(list_code):
+                nearest_code_index.append(len(list_code)-1)
+            else:
+                nearest_code_index.append(insert_index-1)
+                nearest_code_index.append(insert_index)
+            # Find the best match amongs the code to the left and right, in order to do this
+            # we execute a simple algorithm that compute the percentage of similitude between
+            # two strings by counting the number of character that are the same divided by the
+            # length of the biggest code
+            for index in nearest_code_index:
+                near_code = list_code[index]
+                code_min_length = len(self.code) if len(self.code) <= len(near_code) else len(near_code)
+                code_max_length = len(self.code) if len(self.code) > len(near_code) else len(near_code)
+                code_match = 0.0
+                for i in range(0, code_min_length):
+                    if self.code[i] == near_code[i]:
+                        code_match += 1.0
+                ratio = code_match / code_max_length
+                if ratio > best_match_ratio:
+                    best_match_ratio = ratio
+                    best_match = all_accounts[index]
+        # match ratio must be high enough otherwise don't execute onchange (to prevent executing onchange
+        # in case like given code is '1' and best match is '1100001')
+        if best_match_ratio > 0.6:
+            self.currency_id = best_match.currency_id
+            self.user_type_id = best_match.user_type_id
+            self.reconcile = best_match.reconcile
+            self.tax_ids = best_match.tax_ids
+            self.tag_ids = best_match.tag_ids
+        #if code is empty, empty all other fields
+        if not self.code:
+            self.currency_id = False
+            self.user_type_id = False
+            self.reconcile = False
+            self.tax_ids = False
+            self.tag_ids = False
 
     @api.onchange('internal_type')
     def onchange_internal_type(self):
