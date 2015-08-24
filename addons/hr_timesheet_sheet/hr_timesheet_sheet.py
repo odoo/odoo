@@ -630,11 +630,9 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
-        Sheet = self.pool['hr_timesheet_sheet.sheet']
-        return {
-            employee_id: Sheet.search_count(cr,uid, [('employee_id', '=', employee_id)], context=context)
-            for employee_id in ids
-        }
+        Sheet_data = self.pool['hr_timesheet_sheet.sheet'].read_group(cr, uid, [('employee_id', 'in', ids)], ['employee_id'], ['employee_id'], context=context)
+        mapped_data = dict([(m['employee_id'][0], m['employee_id_count']) for m in Sheet_data])
+        return mapped_data
 
     _columns = {
         'timesheet_count': fields.function(_timesheet_count, type='integer', string='Timesheets'),

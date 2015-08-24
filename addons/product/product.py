@@ -443,10 +443,9 @@ class product_template(osv.osv):
         }, context=context)
 
     def _get_product_variant_count(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            res[product.id] = len(product.product_variant_ids)
-        return res
+        product_data = self.pool['product.product'].read_group(cr, uid, [('product_tmpl_id', 'in', ids)], ['product_tmpl_id'], ['product_tmpl_id'], context=context)
+        mapped_data = dict([(m['product_tmpl_id'][0], m['product_tmpl_id_count']) for m in product_data])
+        return mapped_data
 
     def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
         ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
