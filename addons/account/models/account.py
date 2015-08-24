@@ -381,6 +381,10 @@ class AccountJournal(models.Model):
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
         if vals.get('type') in ('bank', 'cash'):
+            # For convenience, the name can be inferred from account number
+            if not vals.get('name') and 'bank_acc_number' in vals:
+                vals['name'] = _('Bank') + ' ' + vals['bank_acc_number']
+
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
                 for num in xrange(1, 100):
