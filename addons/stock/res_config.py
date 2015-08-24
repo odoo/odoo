@@ -109,13 +109,6 @@ class stock_config_settings(osv.osv_memory):
             ], "Unit of Measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_uos': fields.selection([
-            (0, 'Use the same product unit of measure in the stocks than in the sales order'),
-            (1, 'Store products in a different unit of measure than the sales order')
-            ], "Unit of Sales",
-            implied_group='product.group_uos',
-            help='Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n'
-                 'For instance, you can store pieces of meat that you sell and invoice based on their weight.'),
         'group_stock_packaging': fields.selection([
             (0, 'Do not manage packaging'),
             (1, 'Manage available packaging options per products')

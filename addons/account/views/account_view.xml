@@ -258,7 +258,6 @@
                                     <group>
                                         <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
                                         <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" />
-                                        <field name="analytic_journal_id" groups="analytic.group_analytic_accounting" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -1127,7 +1126,7 @@
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
                     <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="reconciled"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>

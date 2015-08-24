@@ -73,7 +73,7 @@ class StockPicking(models.Model):
         res = {
             'name': carrier.name,
             'invoice_id': invoice.id,
-            'uos_id': carrier.product_id.uos_id.id,
+            'uom_id': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
             'account_id': account_id,
             'price_unit': price,

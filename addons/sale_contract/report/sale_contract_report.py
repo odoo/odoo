@@ -2,8 +2,8 @@ from openerp import tools
 from openerp import fields, models
 
 
-class sale_contract_report(models.Model):
-    _name = "sale.contract.report"
+class sale_subscription_report(models.Model):
+    _name = "sale.subscription.report"
     _description = "Subscription Statistics"
     _auto = False
 
@@ -36,16 +36,15 @@ class sale_contract_report(models.Model):
                     l.uom_id as product_uom,
                     l.analytic_account_id,
                     (l.price_unit * l.quantity) as recurring_price,
-                    a.date_start as date_start,
-                    a.date as date_end,
+                    sub.date_start as date_start,
+                    sub.date as date_end,
                     a.partner_id as partner_id,
-                    a.manager_id as manager_id,
+                    sub.manager_id as manager_id,
                     a.company_id as company_id,
-                    a.state,
-                    a.template_id as template_id,
+                    sub.state,
+                    sub.template_id as template_id,
                     t.categ_id as categ_id,
-                    a.pricelist_id as pricelist_id,
-                    a.parent_id as parent_id,
+                    sub.pricelist_id as pricelist_id,
                     p.product_tmpl_id,
                     partner.country_id as country_id,
                     partner.commercial_partner_id as commercial_partner_id
@@ -54,8 +53,9 @@ class sale_contract_report(models.Model):
 
     def _from(self):
         from_str = """
-                account_analytic_invoice_line l
-                      join account_analytic_account a on (l.analytic_account_id=a.id) and (a.contract_type='subscription') and (a.type!='template')
+                sale_subscription_line l
+                      join sale_subscription sub on (l.analytic_account_id=sub.analytic_account_id) and (sub.type!='template')
+                      join account_analytic_account a on l.analytic_account_id=a.id
                       join res_partner partner on a.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
@@ -69,16 +69,15 @@ class sale_contract_report(models.Model):
                     l.uom_id,
                     t.categ_id,
                     l.analytic_account_id,
-                    a.date_start,
-                    a.date,
+                    sub.date_start,
+                    sub.date,
                     a.partner_id,
-                    a.manager_id,
+                    sub.manager_id,
                     recurring_price,
                     a.company_id,
-                    a.state,
-                    a.template_id,
-                    a.pricelist_id,
-                    a.parent_id,
+                    sub.state,
+                    sub.template_id,
+                    sub.pricelist_id,
                     p.product_tmpl_id,
                     partner.country_id,
                     partner.commercial_partner_id

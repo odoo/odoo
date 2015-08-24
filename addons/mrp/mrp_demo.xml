@@ -12,13 +12,11 @@
         </record>
 
         <record id="account_assembly_hours" model="account.analytic.account">
-            <field name="type">normal</field>
             <field name="code">ASML - HOUR</field>
             <field name="name">Costing Account For Hours of Assembly.</field>
         </record>
 
         <record id="account_assembly_cycle" model="account.analytic.account">
-            <field name="type">normal</field>
             <field name="code">ASML - Cycle</field>
             <field name="name">Costing Account For Cycle of Assembly.</field>
         </record>
@@ -49,7 +47,6 @@
             <field name="costs_hour_account_id" ref="account_assembly_hours"/>
             <field name="costs_cycle">0.05</field>
             <field name="costs_cycle_account_id" ref="account_assembly_cycle"/>
-            <field name="costs_journal_id" ref="account.exp"/>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 

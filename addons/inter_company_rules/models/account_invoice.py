@@ -111,7 +111,7 @@ class account_invoice(models.Model):
             'quantity': line.quantity,
             'discount': line.discount,
             'product_id': line.product_id.id or False,
-            'uos_id': line.uos_id.id or False,
+            'uom_id': line.uom_id.id or False,
             'sequence': line.sequence,
             'account_analytic_id': line.account_analytic_id.id or False,
         }

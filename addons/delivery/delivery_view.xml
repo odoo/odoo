@@ -264,18 +264,6 @@
             </field>
         </record>
 
-        <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Picking to be invoiced</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
-            <field name="filter" eval="True"/>
-            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display': 'partner'}</field>
-            <field name="search_view_id" eval="False"/>
-        </record>
-
         <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
             <field name="name">stock.picking_withweight.internal.move.form.view</field>
             <field name="model">stock.move</field>

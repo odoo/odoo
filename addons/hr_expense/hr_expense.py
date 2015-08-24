@@ -199,7 +199,7 @@ class hr_expense_expense(osv.osv):
             'ref': x.get('ref', False),
             'quantity': x.get('quantity',1.00),
             'product_id': x.get('product_id', False),
-            'product_uom_id': x.get('uos_id', False),
+            'product_uom_id': x.get('uom_id', False),
             'analytic_account_id': x.get('account_analytic_id', False),
         }
 
@@ -342,7 +342,7 @@ class hr_expense_expense(osv.osv):
             'price':line.total_amount,
             'account_id':acc.id,
             'product_id':line.product_id.id,
-            'uos_id':line.uom_id.id,
+            'uom_id':line.uom_id.id,
             'account_analytic_id':line.analytic_account.id,
         }
 
@@ -399,7 +399,7 @@ class hr_expense_line(osv.osv):
         'total_amount': fields.function(_amount, string='Total', digits=0),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
         'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)], required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),

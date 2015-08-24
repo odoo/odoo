@@ -13,13 +13,11 @@
     partner_invoice_id: base.res_partner_18
     partner_shipping_id: base.res_partner_18
     pricelist_id: product.list0
-    order_policy: 'prepaid'
     order_line:
-      - name: 'Ipod'
-        product_id: product.product_product_11
+      - name: 'Ice Cream'
+        product_id: stock.product_icecream
         product_uom_qty: 2
-        product_uos_qty: 2
-        product_uom: product.product_uom_unit
+        product_uom: product.product_uom_kgm
         price_unit: 750.00
     carrier_id: normal_delivery_carrier
 -
@@ -30,7 +28,9 @@
 -
   I confirm the SO.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_prepaid}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_prepaid"), context=context)
+    self.action_invoice_create(cr, uid, [ref("sale_prepaid")], context=context)
 -
   I check that the invoice was created
 -
@@ -57,7 +57,7 @@
 -
   !python {model: sale.order, id: sale_prepaid}: |
      assert self.invoice_count != 0, 'order not invoiced'
-     assert self.invoiced, 'order is not paid'
+     assert self.invoice_status == 'invoiced', 'order is not invoiced'
      assert len(self.picking_ids) == 1, 'pickings not generated'
 -
   check the stock moves
@@ -65,14 +65,9 @@
   !python {model: sale.order, id: sale_prepaid}: |
      move = self.picking_ids.move_lines
      assert move.product_qty == 2, 'wrong product_qty'
-     assert move.weight == 0.5, 'wrong move weight'
+     assert move.weight == 2.0, 'wrong move weight'
 -
   ship
 -
   !python {model: sale.order, id: sale_prepaid}: |
      picking = self.picking_ids.action_done()
--
-  Check the SO after shipping
--
-  !python {model: sale.order, id: sale_prepaid}: |
-     assert self.state == 'done'

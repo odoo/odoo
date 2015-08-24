@@ -8,13 +8,10 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='account_id']" position="after">
-                        <field name="journal_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="general_account_id"/>
                         <field name="ref"/>
-                    </xpath>
-                    <xpath expr="//field[@name='company_id']" position="after">
                         <field name="partner_id"/>
+                        <field name="move_id" readonly="1"/>
                     </xpath>
                     <xpath expr="//field[@name='amount']" position="after">
                         <label for="amount_currency" groups="base.group_multi_currency"/>
@@ -22,19 +19,8 @@
                             <field name="amount_currency" class="oe_inline"/>
                             <field name="currency_id" class="oe_inline"/>
                         </div>
-                        <field invisible="1" name="general_account_id"/>
-                    </xpath>
-                    <xpath expr="//label[@for='unit_amount']" position="before">
                         <field name="product_id"/>
-                    </xpath>
-                    <xpath expr="//field[@name='unit_amount']" position="after">
                         <field name="product_uom_id" class="oe_inline"/>
-                    </xpath>
-                    <xpath expr="//group[@name='product_info']" position="after">
-                        <group string="General Accounting">
-                            <field name="general_account_id"/>
-                            <field name="move_id" readonly="1"/>
-                        </group>
                     </xpath>
                 </data>
             </field>
@@ -59,28 +45,16 @@
                 <data>
                     <xpath expr="//field[@name='date']" position="after">
                         <field name="product_id"/>
-                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" help="Analytic Journal Items related to a sale journal."/>
-                        <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" help="Analytic Journal Items related to a purchase journal."/>
-                        <filter name="others" string="Others" domain="[('journal_id.type','not in',('sale', 'purchase'))]"/>
-                    </xpath>
-                    <xpath expr="//field[@name='account_id']" position="after">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     </xpath>
-                    <xpath expr="//filter[@name='user_id']" position="after">
+                    <xpath expr="//group[@name='groupby']" position="after">
                         <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Journal" context="{'group_by':'journal_id'}" name="group_journal"/>
                         <filter string="Product" context="{'group_by':'product_id'}"/>
                         <filter string="Partner" context="{'group_by':'partner_id'}"/>
                     </xpath>
                 </data>
             </field>
         </record>
-        
-        <menuitem groups="analytic.group_analytic_accounting"
-            action="analytic.action_account_analytic_journal_open_form"
-            id="account_analytic_journal_entries"
-            parent="menu_finance_entries"
-            sequence="40"/>
 
         <record id="view_account_analytic_line_pivot" model="ir.ui.view">
             <field name="name">account.analytic.line.pivot</field>
@@ -103,7 +77,5 @@
         <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
             parent="menu_analytic_accounting"
             groups="analytic.group_analytic_accounting" sequence="0"/>
-            
-        <menuitem groups="analytic.group_analytic_accounting" action="analytic.action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
     </data>
 </openerp>

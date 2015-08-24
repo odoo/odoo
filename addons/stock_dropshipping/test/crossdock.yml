@@ -44,7 +44,8 @@
 -
     Confirm sales order.
 -
-    !workflow {model: sale.order, action: order_confirm, ref: sale_order_crossdock_shpng}
+    !python {model: sale.order}: |
+        self.action_confirm(cr, uid, ref("sale_order_crossdock_shpng"), context=context)
 -
     Run the scheduler.
 -

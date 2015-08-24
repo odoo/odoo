@@ -52,8 +52,6 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             vals['attendances_ids'] = self.sort_attendances(cr, uid, vals['attendances_ids'], context=context)
@@ -68,8 +66,6 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
                 raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances
@@ -587,11 +583,10 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
         'name': fields.many2one('account.analytic.account', 'Project / Analytic Account', readonly=True),
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True),
         'total': fields.float('Total Time', digits=(16,2), readonly=True),
-        'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
         }
 
     _depends = {
-        'account.analytic.line': ['account_id', 'date', 'to_invoice', 'unit_amount', 'user_id'],
+        'account.analytic.line': ['account_id', 'date', 'unit_amount', 'user_id'],
         'hr_timesheet_sheet.sheet': ['date_from', 'date_to', 'user_id'],
     }
 
@@ -601,15 +596,14 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
                 min(l.id) as id,
                 l.account_id as name,
                 s.id as sheet_id,
-                sum(l.unit_amount) as total,
-                l.to_invoice as invoice_rate
+                sum(l.unit_amount) as total
             from
                 account_analytic_line l
                     LEFT JOIN hr_timesheet_sheet_sheet s
                         ON (s.date_to >= l.date
                             AND s.date_from <= l.date
                             AND s.user_id = l.user_id)
-            group by l.account_id, s.id, l.to_invoice
+            group by l.account_id, s.id
         )""")
 
 

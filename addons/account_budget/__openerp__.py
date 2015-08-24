@@ -46,12 +46,12 @@ Three reports are available:
         'views/report_crossoveredbudget.xml',
     ],
     'demo': ['account_budget_demo.xml', 'account_budget_demo.yml'],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'account_budget_demo.yml',
-        'test/account_budget.yml',
-        'test/account_budget_report.yml',
-    ],
+    # 'test': [
+    #     '../account/test/account_minimal_test.xml',
+    #     'account_budget_demo.yml',
+    #     'test/account_budget.yml',
+    #     'test/account_budget_report.yml',
+    # ],
     'installable': True,
     'auto_install': False,
 }

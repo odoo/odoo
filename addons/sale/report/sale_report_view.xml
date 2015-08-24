@@ -58,10 +58,9 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
                 <field name="date"/>
-                <field name="date_confirm"/>
                 <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <filter name="Quotations" domain="[('state','in',('draft'))]"/>
-                <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel'))]"/>
+                <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
                 <field name="partner_id"/>
                 <field name="product_id"/>

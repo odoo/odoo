@@ -18,16 +18,12 @@ class sale_order(osv.Model):
                 domain += [('event_ticket_id', '=', context.get("event_ticket_id"))]
             return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
 
-    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
-        values = super(sale_order, self)._website_product_id_change(cr, uid, ids, order_id, product_id, qty=qty, line_id=line_id, context=None)
+    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, context=None):
+        values = super(sale_order, self)._website_product_id_change(cr, uid, ids, order_id, product_id, qty=qty, context=None)
 
         event_ticket_id = None
         if context.get("event_ticket_id"):
             event_ticket_id = context.get("event_ticket_id")
-        elif line_id:
-            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
-            if line.event_ticket_id:
-                event_ticket_id = line.event_ticket_id.id
         else:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             if product.event_ticket_ids:
@@ -59,6 +55,7 @@ class sale_order(osv.Model):
             line = OrderLine.browse(cr, uid, line_id, context=context)
             ticket = line.event_ticket_id
             old_qty = int(line.product_uom_qty)
+            context = dict(context, event_ticket_id=ticket.id)
         else:
             line, ticket = None, None
             ticket_ids = Ticket.search(cr, uid, [('product_id', '=', product_id)], limit=1, context=context)
