@@ -467,7 +467,7 @@ def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', un
     # check read access
     try:
         last_update = obj['__last_update']
-    except AccesError, e:
+    except AccessError:
         return (403, [], None)
     status = 200
 
