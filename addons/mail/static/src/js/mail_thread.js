@@ -598,20 +598,54 @@ var MailThreadMixin = {
      * Trigger when clicking on selector '.o_mail_thread_message_star'.
      */
     on_message_star: function(event){
+        var self = this;
         var $source = this.$(event.currentTarget);
         var mid = $source.data('message-id');
         var is_starred = !$source.hasClass('o_mail_message_starred');
         return this.MessageDatasetSearch.call('set_message_starred', [[mid], is_starred]).then(function(){
             $source.toggleClass('fa-star-o fa-star o_mail_message_starred');
+            self._message_star([mid], $source.hasClass('o_mail_message_starred'));
             return mid;
         });
     },
+    /**
+     * Star a formatted message in local
+     * @param Int[] message_ids : the identifiers of the message to set as (none-)starred by current user
+     * @param Boolean star : star or not the given messages
+     */
+    _message_star: function(message_ids, star){
+        _.each(this.get('messages'), function(m){
+            if(_.contains(message_ids, m.id)){
+                if(star){
+                    m.is_starred = true;
+                    m.starred_partner_ids.push(session.partner_id);
+                }else{
+                    m.is_starred = false;
+                    m.starred_partner_ids = _.without(m.starred_partner_ids, session.partner_id);
+                }
+            }
+        });
+    },
     on_message_needaction: function(event){
+        var self = this;
         var $source = this.$(event.currentTarget);
         var mid = $source.data('message-id');
         return this.MessageDatasetSearch.call('set_message_done', [[mid]]).then(function(){
             $source.remove();
+            self._message_needaction([mid]);
             return mid;
+        });
+    },
+    /**
+     * Make formatted messages a needaction
+     * @param Int[] message_ids : message ids to mark as needaction treated
+     */
+    _message_needaction: function(message_ids, needaction){
+        _.each(this.get('messages'), function(m){
+            if(_.contains(message_ids, m.id)){
+                m.is_needaction = false;
+                m.needaction_partner_ids = _.without(m.starred_partner_ids, session.partner_id);
+            }
         });
     },
     // Message functions
