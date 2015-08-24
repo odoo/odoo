@@ -80,24 +80,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_template_form_view">
-            <field name="name">Membership Products</field>
-            <field name="model">product.template</field>
-            <field name="priority">6</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <field name="type" position="after">
-                    <field name="membership" readonly="0" attrs="{'invisible': [('type', '!=', 'service')]}"/>
-                </field>
-                <field name="description" position="before">
-                    <group attrs="{'invisible':[('membership','=',False)]}">
-                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
-                    </group>
-                </field>
-            </field>
-        </record>
-
         <record model="ir.actions.act_window" id="action_membership_products">
             <field name="name">Membership Products</field>
             <field name="res_model">product.template</field>

@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
+from lxml import etree
 from openerp.osv import fields, osv, orm
 from openerp.exceptions import UserError
+from openerp.osv.orm import setup_modifiers
 from openerp.tools.translate import _
 
 class make_procurement(osv.osv_memory):
@@ -24,7 +26,7 @@ class make_procurement(osv.osv_memory):
     
     _columns = {
         'qty': fields.float('Quantity', digits=(16,2), required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=1),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'date_planned': fields.date('Planned Date', required=True),
@@ -35,6 +37,30 @@ class make_procurement(osv.osv_memory):
         'date_planned': fields.date.context_today,
         'qty': lambda *args: 1.0,
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(make_procurement, self).fields_view_get(
+            cr, uid, view_id=view_id, view_type=view_type, context=context,
+            toolbar=toolbar, submenu=submenu)
+        invisible = '0'
+        readonly = '0'
+        if context.get('active_model') == 'product.template':
+            domain = "[('product_tmpl_id', '=', %s)]" % context.get('active_id')
+            product = self.pool['product.template'].browse(cr, uid, context.get('active_id'), context=context)
+            if len(product.product_variant_ids) == 1:
+                invisible = '1'
+        if context.get('active_model') == 'product.product':
+            readonly = '1'
+            domain = "[('id', '=', %s)]" % context.get('active_id')
+        doc = etree.XML(res['arch'])
+        if doc.xpath("//field[@name='product_id']"):
+            node = doc.xpath("//field[@name='product_id']")[0]
+            node.set('invisible', invisible)
+            node.set('readonly', readonly)
+            setup_modifiers(node, res['fields']['product_id'])
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
+        return res
 
     def make_procurement(self, cr, uid, ids, context=None):
         """ Creates procurement order for selected product.
@@ -97,10 +123,7 @@ class make_procurement(osv.osv_memory):
 
         if context.get('active_model') == 'product.template':
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', '=', context.get('active_id'))], context=context)
-            if len(product_ids) == 1:
-                record_id = product_ids[0]
-            else:
-                raise UserError(_('Please use the Product Variant view to request a procurement.'))
+            record_id = product_ids[0]
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
 

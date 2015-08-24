@@ -6,6 +6,35 @@ from openerp.exceptions import UserError
 from openerp.osv import fields as old_fields
 
 
+class event_type(models.Model):
+    _inherit = 'event.type'
+    _inherits = {"product.product": "product_id"}
+
+    product_id = fields.Many2one('product.product', 'Product', ondelete='cascade', required=True, domain=[('event_ok', '=', True), ('type' '=' 'service')])
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for event_type in self:
+            if event_type.product_id.event_ok:
+                event_type.name = event_type.product_id.name
+                result.append((event_type.id, event_type.name))
+            else:
+                result.append((event_type.id, event_type.name))
+        return result
+
+    @api.model
+    def create(self, vals):
+        context = {'default_name': vals.get('name'), 'default_event_ok': True, 'default_type': 'service'}
+        return super(event_type, self.with_context(context)).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        eventtype = super(event_type, self).write(vals)
+        if eventtype:
+            self.product_id.write({'name': vals.get('name')})
+        return eventtype
+
 class event_event(models.Model):
     _inherit = 'event.event'
 
@@ -34,7 +63,7 @@ class event_ticket(models.Model):
     event_id = fields.Many2one('event.event', "Event", required=True, ondelete='cascade')
     product_id = fields.Many2one(
         'product.product', 'Product',
-        required=True, domain=[("event_type_id", "!=", False)],
+        required=True, domain=[("event_ok", "=", True)],
         default=lambda self: self._default_product_id())
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', 'Registrations')
     price = fields.Float('Price', digits=dp.get_precision('Product Price'))

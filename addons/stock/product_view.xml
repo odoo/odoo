@@ -82,18 +82,15 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <field name="product_variant_ids" position="before">
+                <field name="pricelist_id" position="after">
+                    <separator/>
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
                     <separator/>
                     <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
-                    <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
                     <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
-                    <filter name="virtual_stock_exhausted" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
                     <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
-                    <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
                 </field>
-                <filter name="consumable" position="before">
-                   <filter string="Products" domain="[('type','=','product')]" help="Stockable products"/>
-                </filter>
             </field>
         </record>
 
@@ -102,51 +99,24 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="sale_condition" position="inside">
-                    <label for="sale_delay"/>
-                    <div>
-                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
-                    </div>
-                </group>
-                <group name="status" position="before">
-                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
-                        <label for="qty_available"/>
-                            <div>
-                                <field name="qty_available" class="oe_inline"/>
-                                <button name="%(action_view_change_product_quantity)d" string="⇒ Update"
-                                    type="action"
-                                    class="oe_link"/>
-                            </div>
-                        <label for="incoming_qty"/>
-                            <div>
-                                <field name="incoming_qty" class="oe_inline"/>
-                                <button string="⇒ Request Procurement" name="%(stock.act_make_procurement)d" type="action" class="oe_link"/>
-                            </div>
-                        <field name="outgoing_qty"/>
-                        <field name="virtual_available"/>
-                    </group>
-                </group>
-                <group name="status" position="before">
-                    <group name="lot" groups="stock.group_production_lot" string="Lots" attrs="{'invisible':[('type','=','service')]}">
-                        <field name="tracking" on_change="onchange_tracking(tracking)" widget="radio"/>
-                    </group>
-                </group>
-                <group name="weight" position="before">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','=','service')]}">
+                <field name="weight" position="after">
+                    <field name="tracking" on_change="onchange_tracking(tracking)" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
+                </field>
+                <field name="company_id" position="after">
+                    <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                    <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                </field>
+                 <group name="lots_and_weight" position="after">
+                    <group name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" domain="[('usage','=','production')]"/>
                         <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
                     </group>
                 </group>
-                <field name="product_manager" position="attributes">
-                    <attribute name="context">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
+                <field name="description_purchase" position="after">
+                    <separator string="Description for Pickings" colspan="4"/>
+                    <field name="description_picking" placeholder="Description for Pickings (Rack, Row and Case Information)" nolabel="1" colspan="4"/>
                 </field>
-                <group name="procurement" position="after" >
-                   <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
-                       <field name="route_ids" widget="many2many_checkboxes"/>
-                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1"/>
-                    </group>
-                </group>
             </field>
         </record>
 
@@ -161,8 +131,8 @@
                     <field name="type"/>
                 </field>
                 <ul position="inside">
-                    <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                    <li t-if="record.type.raw_value != 'service'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value == 'product'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
                 </ul>
             </field>
         </record>
@@ -207,25 +177,49 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_form_view_procurement_button">
+        <record id="product_variant_easy_edit_view" model="ir.ui.view">
+            <field name="name">product.product.view.form.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <sheet position="before">
+                    <header>
+                        <button name="%(action_view_change_product_quantity)d" string="Inventory Adjustement" type="action" groups="product.group_product_variant"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" groups="product.group_product_variant"/>
+                    </header>
+                </sheet>
+            </field>
+        </record>
+
+        <record id="product_form_view_procurement_button" model="ir.ui.view">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                <header position="replace">
+                    <header>
+                        <button name="%(action_view_change_product_quantity)d" string="Inventory Adjustement" type="action" groups="product.group_product_variant"/>
+                        <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" groups="product.group_product_variant"/>
+                    </header>
+                </header>
                 <div name="button_box" position="inside">
-                   <button class="oe_stat_button"
+                    <button class="oe_stat_button"
                            name="%(product_open_quants)d"
                            icon="fa-building-o"
+<<<<<<< HEAD
                            type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+=======
+                           type="action" attrs="{'invisible':[('type', '&lt;&gt;', 'product')]}" groups="stock.group_locations">
+>>>>>>> [Imp] improve product form design
                         <field name="qty_available" widget="statinfo"/>
                     </button>
-                   <button class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
-                   <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action"
-                        attrs="{'invisible':['|',('type', '=', 'service'),('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh">
+                    <button class="oe_stat_button" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_stock_user" icon="fa-arrows-v" string="Traceability"/>
+                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                        attrs="{'invisible':['|',('type', '&lt;&gt;', 'product'), ('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh" >
                         <field name="nbr_reordering_rules" widget="statinfo"/>
                     </button>
-                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action"
-                        attrs="{'invisible':['|',('type', '=', 'service'),('nbr_reordering_rules', '!=', 1)]}" icon="fa-refresh">
+                    <button class="oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                        attrs="{'invisible':[('type', 'in', ['service', 'digital']), ('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh" >
                         <div class="o_form_field o_stat_info mr4">
                             <span class="o_stat_text">Min :</span>
                             <span class="o_stat_text">Max:</span>
@@ -235,30 +229,58 @@
                             <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                         </div>
                     </button>
-                   <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
+                    <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="base.group_no_one" />
                 </div>
             </field>
         </record>
-        
-        <record model="ir.ui.view" id="product_template_form_view_procurement_button">
+
+        <record id="action_stock_level_forecast_report" model="ir.actions.act_window">
+            <field name="name">Stock Level Forecast</field>
+            <field name="res_model">report.stock.forecast</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{'search_default_pivot_by':1}</field>
+            <field name="domain">[('product_tmpl_id', '=', active_id)]</field>
+        </record>
+
+        <record id="product_template_form_view_procurement_button" model="ir.ui.view">
             <field name="name">product.template_procurement</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
+                <header position="inside" >
+                    <button name="%(action_view_change_product_quantity)d" string="Inventory Adjustement" type="action"/>
+                    <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action"/>
+                </header>
                 <div name="button_box" position="inside">
-                   <button class="oe_stat_button"
-                           name="action_open_quants"
+                    <button class="oe_stat_button"
+                           name="%(stock.product_template_open_quants)d"
                            icon="fa-building-o"
+                           type="action" attrs="{'invisible':[('type', '&lt;&gt;', 'product')]}">
+                        <field name="qty_available" widget="statinfo" string="On Hand"/>
+                    </button>
+                    <button class="oe_stat_button"
+                           name="%(stock.action_stock_level_forecast_report)d"
+                           icon="fa-building-o"
+<<<<<<< HEAD
                            type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
                         <field name="qty_available" widget="statinfo"/>
                    </button>
                    <button class="oe_stat_button" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" string="Moves" groups="stock.group_stock_user" icon="fa-arrows-v"/>
                    <button class="oe_stat_button" name="action_view_orderpoints" type="object"
                         attrs="{'invisible':['|',('type', 'in', ('service','consu')),('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh">
+=======
+                           type="action" attrs="{'invisible':[('type', '&lt;&gt;', 'product')]}">
+                        <field name="virtual_available" widget="statinfo" string="Forecasted Qty"/>
+                    </button>
+                    <button class="oe_stat_button" string="Traceability" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                    <button class="oe_stat_button" name="action_view_orderpoints" type="object"
+                        attrs="{'invisible':['|',('type', '&lt;&gt;', 'product'),('nbr_reordering_rules', '==', 1)]}" icon="fa-refresh">
+>>>>>>> [Imp] improve product form design
                         <field name="nbr_reordering_rules" widget="statinfo"/>
                     </button>
                     <button class="oe_stat_button" name="action_view_orderpoints" type="object"
-                        attrs="{'invisible':['|',('type', 'in', ('service','consu')),('nbr_reordering_rules', '!=', 1)]}" icon="fa-refresh">
+                        attrs="{'invisible':['|',('type', 'in', ('service','consu','digital')),('nbr_reordering_rules', '!=', 1)]}" icon="fa-refresh">
                         <div class="o_form_field o_stat_info mr4">
                             <span class="o_stat_text">Min :</span>
                             <span class="o_stat_text">Max:</span>
@@ -268,8 +290,15 @@
                             <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                         </div>
                     </button>
-                    <button class="oe_stat_button" name="action_view_routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_adv_location" string="Routes"/>
+                    <button class="oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="base.group_no_one"/>
                 </div>
+                <group name="sale_condition" position="inside">
+                    <label for="sale_delay"/>
+                    <div>
+                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
+                    </div>
+                </group>
+
             </field>
         </record>
     </data>

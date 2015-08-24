@@ -10,7 +10,7 @@ class account_invoice_line(models.Model):
 
         # Get paid invoices
         purchases = self.sudo().search_read(
-            domain=[('invoice_id.state', '=', 'paid'), ('invoice_id.partner_id', '=', partner.id), ('product_id.product_tmpl_id.digital_content', '=', True)],
+            domain=[('invoice_id.state', '=', 'paid'), ('invoice_id.partner_id', '=', partner.id), ('product_id.product_tmpl_id.type', '=', 'digital')],
             fields=['product_id'],
         )
 

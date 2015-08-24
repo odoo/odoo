@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
 from openerp.osv import fields, osv, orm
+from openerp.osv.orm import setup_modifiers
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp import tools
@@ -11,7 +13,7 @@ class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
     _columns = {
-        'product_id' : fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product'),
         'new_quantity': fields.float('New Quantity on Hand', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, help='This quantity is expressed in the Default Unit of Measure of the product.'),
         'lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
@@ -20,6 +22,30 @@ class stock_change_product_qty(osv.osv_memory):
         'new_quantity': 1,
         'product_id': lambda self, cr, uid, ctx: ctx and ctx.get('active_id', False) or False
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(stock_change_product_qty, self).fields_view_get(
+            cr, uid, view_id=view_id, view_type=view_type, context=context,
+            toolbar=toolbar, submenu=submenu)
+        invisible = '0'
+        readonly = '0'
+        if context.get('active_model') == 'product.template':
+            domain = "[('product_tmpl_id', '=', %s)]" % context.get('active_id')
+            product = self.pool['product.template'].browse(cr, uid, context.get('active_id'), context=context)
+            if len(product.product_variant_ids) == 1:
+                invisible = '1'
+        if context.get('active_model') == 'product.product':
+            readonly = '1'
+            domain = "[('id', '=', %s)]" % context.get('active_id')
+        doc = etree.XML(res['arch'])
+        if doc.xpath("//field[@name='product_id']"):
+            node = doc.xpath("//field[@name='product_id']")[0]
+            node.set('invisible', invisible)
+            node.set('readonly', readonly)
+            setup_modifiers(node, res['fields']['product_id'])
+            node.set('domain', domain)
+        res['arch'] = etree.tostring(doc)
+        return res
 
     def default_get(self, cr, uid, fields, context):
         """ To get default values for the object.
@@ -35,10 +61,7 @@ class stock_change_product_qty(osv.osv_memory):
 
         if context.get('active_model') == 'product.template':
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', '=', context.get('active_id'))], context=context)
-            if len(product_ids) == 1:
-                res['product_id'] = product_ids[0]
-            else:
-                raise UserError(_('Please use the Product Variant view to update the product quantity.'))
+            res['product_id'] = product_ids[0]
 
         if 'location_id' in fields:
             location_id = res.get('location_id', False)

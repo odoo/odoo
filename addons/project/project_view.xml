@@ -592,7 +592,7 @@
                 <xpath expr="//filter[@name='services']" position="replace">
                     <filter string="Services" name="services" domain="[('type','=','service')]" invisible="context.get('consumable_services', False)"/>
                  </xpath>
-                 <xpath expr="//filter[@name='consumable']" position="replace">
+                 <xpath expr="//filter[@name='products']" position="after">
                      <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products" invisible="context.get('consumable_services', False)"/>
                  </xpath>
             </field>

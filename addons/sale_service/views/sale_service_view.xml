@@ -15,12 +15,14 @@
             <field name="name">product.form.view.inherit</field>
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="priority" eval="5"/>
             <field name="arch" type="xml">
-                <group name="procurement" position="after">
-                    <group string="Project Management Information" attrs="{'invisible': [('type', '!=', 'service')]}">
-                        <field name="auto_create_task"/>
-                        <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('auto_create_task', '=', False)]}"/>
-                    </group>
+                <group name="email_template_and_project" position="attributes">
+                    <attribute name="string">Miscellaneous</attribute>
+                </group>
+                <group name="email_template_and_project" position="inside">
+                    <field name="auto_create_task" attrs="{'invisible':[('type', '!=', 'service')]}"/>
+                    <field name="project_id" attrs="{'invisible':['|', ('type', '!=', 'service'), ('auto_create_task', '=', False)]}"/>
                 </group>
             </field>
         </record>

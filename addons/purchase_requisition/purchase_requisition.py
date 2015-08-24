@@ -379,6 +379,9 @@ class product_template(osv.osv):
         'purchase_requisition': 'rfq',
     }
 
+    _defaults = {
+        'purchase_requisition': 'rfq',
+    }
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'

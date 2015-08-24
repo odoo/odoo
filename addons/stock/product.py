@@ -344,7 +344,7 @@ class product_product(osv.osv):
 class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
-    
+
     def _product_available(self, cr, uid, ids, name, arg, context=None):
         prod_available = {}
         product_ids = self.browse(cr, uid, ids, context=context)
@@ -368,7 +368,11 @@ class product_template(osv.osv):
                 "virtual_available": virtual_available,
                 "incoming_qty": incoming_qty,
                 "outgoing_qty": outgoing_qty,
-            }
+                "qty_available": 0,
+                "virtual_available": 0,
+                "incoming_qty": 0,
+                "outgoing_qty": 0
+             }
         return prod_available
 
     def _search_product_quantity(self, cr, uid, obj, name, domain, context):
@@ -477,21 +481,12 @@ class product_template(osv.osv):
         result = act_obj.read(cr, uid, [result], context=context)[0]
         return result
     
-    def action_open_quants(self, cr, uid, ids, context=None):
-        products = self._get_products(cr, uid, ids, context=context)
-        result = self._get_act_window_dict(cr, uid, 'stock.product_open_quants', context=context)
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-        result['context'] = "{'search_default_locationgroup': 1, 'search_default_internal_loc': 1}"
-        return result
-    
     def action_view_orderpoints(self, cr, uid, ids, context=None):
         products = self._get_products(cr, uid, ids, context=context)
         result = self._get_act_window_dict(cr, uid, 'stock.product_open_orderpoint', context=context)
-        if len(ids) == 1 and len(products) == 1:
-            result['context'] = "{'default_product_id': " + str(products[0]) + ", 'search_default_product_id': " + str(products[0]) + "}"
-        else:
-            result['domain'] = "[('product_id','in',[" + ','.join(map(str, products)) + "])]"
-            result['context'] = "{}"
+        if len(products)>0:
+            result['context'] = "{'default_product_id': " + str(products[0]) + "}"
+        result['domain'] = "[('product_id.product_tmpl_id','in',[" + ','.join(map(str,ids)) + "])]"
         return result
 
     def action_view_stock_moves(self, cr, uid, ids, context=None):

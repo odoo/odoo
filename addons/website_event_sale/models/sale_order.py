@@ -45,7 +45,6 @@ class sale_order(osv.Model):
             values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
 
         # avoid writing related values that end up locking the product record
-        values.pop('event_type_id', None)
         values.pop('event_ok', None)
 
         return values

@@ -2,10 +2,38 @@
 <openerp>
     <data>
 
+    <!-- Demo Data for Event Type -->
+    <record id="event_type_0" model="event.type">
+        <field name="name">Seminar</field>
+    </record>
+
+    <record id="event_type_1" model="event.type">
+        <field name="name">Exhibition</field>
+    </record>
+
+    <record id="event_type_2" model="event.type">
+        <field name="name">Conference</field>
+    </record>
+
+    <record id="event_type_3" model="event.type">
+        <field name="name">Show</field>
+    </record>
+
+    <record id="event_type_4" model="event.type">
+        <field name="name">Training</field>
+    </record>
+
+    <record id="event.event_0" model="event.event">
+        <field name="type" ref="event_type_1"/>
+    </record>
+
+     <record id="event.event_2" model="event.event">
+        <field name="type" ref="event_type_2"/>
+    </record>
+
     <record id="event_0_product" model="product.product">
         <field name="name">Open Days in Los Angeles</field>
         <field name="event_ok">True</field>
-        <field name="event_type_id" ref="event.event_type_1"/>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
         <field name="list_price">2500.0</field>
@@ -18,7 +46,6 @@
     <record id="event_1_product" model="product.product">
         <field name="name">Functional Webinar</field>
         <field name="event_ok">True</field>
-        <field name="event_type_id" ref="event.event_type_0"/>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
         <field name="list_price">2500.0</field>
@@ -31,7 +58,6 @@
     <record id="event_2_product" model="product.product">
         <field name="name">Conference on Business Applications</field>
         <field name="event_ok">True</field>
-        <field name="event_type_id" ref="event.event_type_2"/>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
         <field name="list_price">2500.0</field>
@@ -42,13 +68,13 @@
     </record>
 
     <record id="event.event_3" model="event.event">
+        <field name="type" ref="event_type_4"/>
         <field name="organizer_id" ref="base.res_partner_address_4"/>
     </record>
 
     <record id="event_3_product" model="product.product">
         <field name="name">Technical Training</field>
         <field name="event_ok">True</field>
-        <field name="event_type_id" ref="event.event_type_4"/>
         <field name="categ_id" ref="product.product_category_1"/>
         <field name="type">service</field>
         <field name="list_price">2500.0</field>
@@ -125,6 +151,7 @@
 
 
     <record id="event.event_1" model="event.event">
+            <field name="type" ref="event_type_0"/>
             <field name="badge_back"><![CDATA[
             <h2>Program</h2>
             <div><strong>Registrations</strong><small> are from 8:30 am, except on Friday from 9:00 am</small></div>

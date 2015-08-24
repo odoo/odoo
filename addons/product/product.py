@@ -196,7 +196,7 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', required=True, translate=True, select=True),
+        'name': fields.char('Category Name', required=True, translate=True, select=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
@@ -342,9 +342,12 @@ class product_attribute_line(osv.osv):
     _columns = {
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade'),
         'attribute_id': fields.many2one('product.attribute', 'Attribute', required=True, ondelete='restrict'),
-        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Product Attribute Value(s)'),
+        'value_ids': fields.many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Value(s)'),
     }
-
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        return super(product_attribute_line, self).name_search(
+            cr, user, '', args=['|', ('attribute_id', 'ilike', name), ('value_ids', 'ilike', name)],
+            operator='ilike', context=context, limit=limit)
 
 #----------------------------------------------------------
 # Products
@@ -451,7 +454,7 @@ class product_template(osv.osv):
         if template.product_variant_count == 1:
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
-        return {}        
+        return {}    
 
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
@@ -469,6 +472,7 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Internal Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'price': fields.function(_product_template_price, fnct_inv=_set_product_template_price, type='float', string='Price', digits_compute=dp.get_precision('Product Price')),
+        'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
         'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost Price', digits_compute=dp.get_precision('Product Price'), 
@@ -553,7 +557,7 @@ class product_template(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
             # standard_price field can only be seen by users in base.group_user
-            # Thus, in order to compute the sale price from the cost price for users not in this group
+            # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
