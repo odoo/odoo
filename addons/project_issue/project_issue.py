@@ -12,6 +12,7 @@ from openerp import tools
 from openerp.osv import fields, osv, orm
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools import html2plaintext
+from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.exceptions import UserError, AccessError
 
@@ -420,6 +421,24 @@ class project_issue(osv.Model):
         res = super(project_issue, self).message_post(cr, uid, thread_id, subtype=subtype, context=context, **kwargs)
         if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
+        return res
+
+    def message_get_email_values(self, cr, uid, ids, notif_mail=None, context=None):
+        res = super(project_issue, self).message_get_email_values(cr, uid, ids, notif_mail=notif_mail, context=context)
+        current_issue = self.browse(cr, uid, ids[0], context=context)
+        headers = {}
+        if res.get('headers'):
+            try:
+                headers.update(eval(res['headers']))
+            except Exception:
+                pass
+        if current_issue.project_id:
+            current_objects = filter(None, headers.get('X-Odoo-Objects', '').split(','))
+            current_objects.insert(0, 'project.project-%s, ' % current_issue.project_id.id)
+            headers['X-Odoo-Objects'] = ','.join(current_objects)
+        if current_issue.tag_ids:
+            headers['X-Odoo-Tags'] = ','.join([tag.name for tag in current_issue.tag_ids])
+        res['headers'] = repr(headers)
         return res
 
 

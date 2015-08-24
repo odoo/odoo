@@ -730,8 +730,11 @@ class MailThread(models.AbstractModel):
         """ Get specific notification email values to store on the notification
         mail_mail. Void method, inherit it to add custom values. """
         self.ensure_one()
-        res = dict()
-        return res
+        database_uuid = self.env['ir.config_parameter'].get_param('database.uuid')
+        return {'headers': repr({
+            'X-Odoo-Objects': "%s-%s" % (self._model, self.id),
+            'X-Odoo-db-uuid': database_uuid
+        })}
 
     # ------------------------------------------------------
     # Mail gateway

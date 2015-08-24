@@ -166,7 +166,6 @@ class Channel(models.Model):
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
         return result
 
-
     @api.multi
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
