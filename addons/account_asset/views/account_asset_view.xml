@@ -111,7 +111,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" domain="[('type', '=', default_category_id_type)]" context="{'default_type': default_category_id_type}" help="Category of asset"/>
+                            <field name="category_id" domain="[('type', '=', 'purchase')]" context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code"/>
                             <field name="date" help="Date of asset"/>
                             <field name="type" invisible="1"/>
@@ -267,7 +267,6 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_account_asset_asset_purchase_tree"/>
         <field name="domain">[('category_id.type', '=', 'purchase')]</field>
-        <field name="context">{'default_type': 'purchase', 'default_category_id_type': 'purchase'}</field>
     </record>
 
     <menuitem parent="account.menu_finance_entries" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
