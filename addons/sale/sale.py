@@ -852,13 +852,6 @@ class sale_order_line(osv.osv):
                 return True
         return False
 
-    def _map_included_tax(self, cr, uid, prod_taxes, line_taxes):
-        res = []
-        for tax in prod_taxes:
-            if not (tax in line_taxes) and tax.price_include:
-                res.append(tax)
-        return res
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -867,10 +860,6 @@ class sale_order_line(osv.osv):
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            incl_tax = self._map_included_tax(cr, uid, line.product_id.taxes_id, line.tax_id)
-            if incl_tax:
-                r = tax_obj._unit_compute_inv(cr, uid, incl_tax, price)
-                price = r and r[0]['price_unit'] or price
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
@@ -1096,6 +1085,17 @@ class sale_order_line(osv.osv):
             values = dict(defaults, **values)
         return super(sale_order_line, self).create(cr, uid, values, context=context)
 
+    def _map_included_tax(self, cr, uid, price, prod_taxes, line_taxes):
+        tax_obj = self.pool.get('account.tax')
+        incl_tax = []
+        for tax in prod_taxes:
+            if not (tax.id in line_taxes) and tax.price_include:
+                incl_tax.append(tax)
+        if incl_tax:
+            return tax_obj._unit_compute_inv(cr, uid, incl_tax, price)[0]['price_unit']
+        else:
+            return price
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
@@ -1208,6 +1208,8 @@ class sale_order_line(osv.osv):
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
+                if update_tax:
+                    price = self._map_included_tax(cr, uid, price, product_obj.taxes_id, result['tax_id'])
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
                     return {'value': {'price_unit': price}, 'domain': {}, 'warning': False}
