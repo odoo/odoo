@@ -496,8 +496,7 @@ class WebsiteForum(http.Controller):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post):
         post.validate()
-        url = request.httprequest.headers.get('Referer', False) or request.httprequest.base_url
-        return werkzeug.utils.redirect(url)
+        return werkzeug.utils.redirect("/forum/%s/validation_queue" % (slug(forum)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
     def post_refuse(self, forum, post):
