@@ -11,7 +11,7 @@ A module that adds intrastat reports.
 
 This module gives the details of the goods traded between the countries of
 European Union.""",
-    'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
+    'depends': ['base', 'product', 'delivery', 'stock', 'sale', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
         'security/report_intrastat_security.xml',
