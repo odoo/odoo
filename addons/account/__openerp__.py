@@ -60,6 +60,8 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_financial_report_data.xml',
         'wizard/account_financial_report_view.xml',
         'views/report_financial.xml',
+        'wizard/account_report_partner_balance_view.xml',
+        'views/report_partnerbalance.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
