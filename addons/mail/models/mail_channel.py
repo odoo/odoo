@@ -137,11 +137,12 @@ class Channel(models.Model):
 
     @api.multi
     def action_follow(self):
-        return self.write({'channel_partner_ids': [(4, self.env.user.partner_id.id)]})
+        return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
 
     @api.multi
     def action_unfollow(self):
         return self.write({'channel_partner_ids': [(3, self.env.user.partner_id.id)]})
+
 
     @api.multi
     def message_get_email_values(self, notif_mail=None):
@@ -324,7 +325,7 @@ class Channel(models.Model):
             else:
                 # create a new one
                 channel = self.create({
-                    'channel_partner_ids': [(6, 0, partners_to)],
+                    'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to],
                     'public': 'private',
                     'channel_type': 'chat',
                     'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
@@ -390,7 +391,7 @@ class Channel(models.Model):
         # add the partner
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
-            channel.write({'channel_partner_ids': [(4, partner_id) for partner_id in partners_to_add.ids]})
+            channel.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': partner_id}) for partner_id in partners_to_add.ids]})
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
 
