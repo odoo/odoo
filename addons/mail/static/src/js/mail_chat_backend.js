@@ -649,6 +649,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         var options = {
             $buttons: $("<div>"),
             action: this.action,
+            disable_groupby: true,
         };
         var view_id = (this.action && this.action.search_view_id && this.action.search_view_id[0]) || false;
         this.searchview = new SearchView(this, this.MessageDatasetSearch, view_id, {}, options);
@@ -657,8 +658,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         return $.when(this.searchview.appendTo($("<div>"))).done(function() {
             self.control_elements.$searchview = self.searchview.$el;
             self.control_elements.$searchview_buttons = self.searchview.$buttons.contents();
-            // hack to hide 'group by' button, since it is not relevant
-            self.searchview.$buttons.find('.oe-groupby-menu').hide();
         });
     },
     /**
