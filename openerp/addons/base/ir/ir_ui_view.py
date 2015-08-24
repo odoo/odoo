@@ -575,6 +575,9 @@ class view(osv.osv):
         """
         if context is None:
             context = {}
+        if not context.get('uid', False):
+            context = dict(context)
+            context.update(uid=user)
         result = False
         fields = {}
         children = True
