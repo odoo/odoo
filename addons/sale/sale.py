@@ -1199,7 +1199,10 @@ class sale_order_line(osv.osv):
             else:
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
-                    return {'value': {'price_unit': price}, 'domain': {}, 'warning': False}
+                    values = {'price_unit': price}
+                    if result.get('product_uos_qty'):
+                        values['product_uos_qty'] = result['product_uos_qty']
+                    return {'value': values, 'domain': {}, 'warning': False}
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error!'),
