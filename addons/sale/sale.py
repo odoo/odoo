@@ -227,21 +227,6 @@ class sale_order(osv.osv):
             return 'sale.mt_order_sent'
         return super(sale_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
-        context = context or {}
-        if not pricelist_id:
-            return {}
-        value = {
-            'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id
-        }
-        if not order_lines or order_lines == [(6, 0, [])]:
-            return {'value': value}
-        warning = {
-            'title': _('Pricelist Warning!'),
-            'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
-        }
-        return {'warning': warning, 'value': value}
-
     def get_salenote(self, cr, uid, ids, partner_id, context=None):
         context_lang = context.copy()
         if partner_id:
