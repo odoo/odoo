@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="inventory_planner">
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'Welcome'"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <p>This guide will accompany you through the initial configuration of Odoo Inventory.</p>
+                <p>It may take you a few hours, but in the end you will understand:</p>
+                <ul>
+                    <li>The basics of a good inventory management</li>
+                    <li>The best way to make a good and efficient inventory of your stock</li>
+                    <li>How to manage your customers orders, from the initial quotation to the final delivery and invoice</li>
+                    <li>How to request quotations from your suppliers and manage incoming shippments</li>
+                    <li>And many other inventory procedures like stock forecast, automatic procurement and traceability</li>
+                </ul>
+                <p>For help on any subject, dont hesitate to contact our Experts by using the <span class="fa fa-question-circle"/> button on the top bar.</p>
+                <img src="/web_planner/static/src/img/fabien_pinckaers.jpg" class="pull-left mb32"/>
+                <div class="pull-left ml8">
+                    <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                    <address>
+                        For the Odoo Team,<br/>
+                        Fabien Pinckaers, Founder
+                    </address>
+                </div>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Your Situation'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-building-o'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Warehouse'"/>
+                    <p>
+                        Odoo uses the concept of Warehouse as a building where you stock your goods.
+                        Typically, a small business as only one warehouse (or more likely, a
+                        storage room), but as your company grow, you may need to manage several
+                        storage facilities.
+                    </p>
+                    <h4>To configure your Warehouses:</h4>
+                    <p>By default, Odoo has <strong>one warehouse preconfigured:</strong> you can <a t-att-href="prepare_backend_url('stock.action_warehouse_form')">edit its details here.</a></p>
+                    <p>You can <strong>create additional Warehouses</strong> from the <i>Configuration/Warehouses</i> menu: each new warehouse will appear in your Dashboard.</p>
+                    <p>You'll also see a new <i>Internal Transfers</i> thumbnail, which is used to move products from one warehouse to another (or from one location to another, see tip below).</p>
+                    <div class="alert alert-info">
+                        <p><strong>Warehouse Locations</strong></p>
+                        <p>
+                            To better organize your stock, you can create subdivisions of Warehouses
+                            called Locations (ex: Shipping area, Merchandise return, Shelf 34 etc).
+                            Contact your Odoo Project Manager for more information.
+                        </p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Vendors'"/>
+                    <p class="text-muted">
+                        Unless you are starting a new business, you probably already have a list of Vendors (or Suppliers).
+                    </p>
+                    <t t-if="not is_module_installed('account') and not is_module_installed('purchase')">
+                        <div class="alert alert-warning">
+                            <span>You need to install the Accounting or Purchases app to manage Vendors.</span>
+                        </div>
+                    </t>
+                    <h4>To import your Vendors, you can either:</h4>
+                    <ul>
+                        <li><strong>Create each one manually</strong>, the easiest way if you only have a few.</li>
+                        <li><strong>Use the Import function</strong>, available from the <a t-att-href="prepare_backend_url('base.action_partner_supplier_form', 'list', 'purchase')">Vendors list view.</a></li>
+                        <li><strong>Or better yet</strong>, send your Odoo Project Manager the file containing all your data (CSV, XLS, XLSX or ODS) and he will gladly do the importation for you.</li>
+                    </ul>
+                    <div class="alert alert-info">
+                        <span><strong>You can also use our API</strong> to load data automatically through scripts: take a look at our <a href="https://www.odoo.com/documentation/" target="_blank">Technical Documentation</a> for more information.</span>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Your Products'"/>
+                    <p>Before creating your products, here are a few concepts your should understand:</p>
+                    <h4>Product Types</h4>
+                    <ul>
+                        <li><strong>Stockable products</strong> are subject to the full inventory management system: minimum stock, rules, automatic procurement,...</li>
+                        <li><strong>Consumable products</strong> are always assumed to be in sufficient quantity in your stock, therefore are not subject to inventory management.</li>
+                    </ul>
+                    <h4>Supply Chain</h4>
+                    <ul>
+                        <li><strong>Manufacture:</strong> the product is manufactured internally or the service is supplied from internal resources.</li>
+                        <li><strong>Buy:</strong> the product is bought from a vendor, through a Purchase Order.</li>
+                        <li><strong>Make to Stock:</strong> your customers are supplied from available stock. If the quantities in stock are too low to fulfill the order, a Purchase Order (according the minimum stock rules) will be generated in order to get the products required.</li>
+                        <li><strong>Make to Order:</strong> the product is acquired only as demand requires (meaning each time a Sales Order is confirmed). This will not modify stock in the medium term because you restock with the exact amount that was ordered.</li>
+                    </ul>
+                    <h4>On Hand / Available Quantities</h4>
+                    <p>Though both are giving you an indication of your stock, these numbers are calculated differently:</p>
+                    <ul>
+                        <li><strong>On Hand products</strong> are physically located in the warehouse location at the current time. This includes items that are already allocated to fulfilling production needs or sales orders.</li>
+                        <li><strong>Available products</strong> are currently available for use in filling a new order for purposes such as production or distribution. This quantity does not include items already allocated to other orders or items that are in transit from a supplier.</li>
+                    </ul>
+                    <h4>Units of Measure</h4>
+                    <ul>
+                        <li>By default, Odoo measures products by 'units', which are a generic and can represent just about anything.</li>
+                        <li>To use more precise units like pounds or kilograms, activate<i> Some products may be sold/purchased in different unit of measures (advanced)</i> in the <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings.</a></li>
+                        <li>Your can review and edit the pre-defined units via the <a t-attf-href="/web#view_type=list&amp;model=product.uom&amp;menu_id=#{uom_menu_id}">Units of Measures</a> configuration menu.</li>
+                        <li>Of course, feel free to add your own; just remember that Odoo can convert units within the same category (for example, liters to gallons in the volume category).</li>
+                    </ul>
+                    <h4>Reordering Rules</h4>
+                    <ul>
+                        <li>Reordering rules can be used to automatically replenish your products: if the quantity on hand of a product for a given location is lower than the minimum indicated in the rule, Odoo will automatically propose a procurement to increase its quantity to the maximum level given in the rule.</li>
+                        <li>The easiest way to create a reordering rule is through the <strong><span class="fa fa-refresh"/> Reordering</strong> button on a Product; then, simply enter a minimum and maximum quantity.</li>
+                    </ul>
+                    <div class="alert alert-success">
+                        <h4>You can now import your Products, by either:</h4>
+                        <ul>
+                            <li><strong>Creating each one manually</strong>, the easiest way if you only have a few.</li>
+                            <li><strong>Using the Import function,</strong> available from the <a t-att-href="prepare_backend_url('product.product_template_action_product')">Products list view</a>.</li>
+                            <li><strong>Or better yet</strong>, by sending your Odoo Project Manager the file containing all your data (CSV, XLS, XLSX or ODS). He will gladly do the importation for you.</li>
+                        </ul>
+                    </div>
+                    <div class="alert alert-info">
+                        <span><strong>You can also use our API</strong> to load data automatically through scripts: take a look at our <a href="https://www.odoo.com/documentation/" target="_blank">Technical Documentation</a> for more information.</span>
+                    </div>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Deployment'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-rocket'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Make your Inventory'"/>
+                    <p>
+                        Making an inventory is the act of matching the theoretical quantities of
+                        your products encoded in Odoo, to the real, on-hand quantities available in your stock.
+                    </p>
+                    <h4>Before starting, make sure:</h4>
+                    <ul>
+                        <li>That all your Products are created in Odoo, with the correct unit.</li>
+                        <li>That your Warehouses and Locations are properly configured.</li>
+                    </ul>
+                    <h4>To begin your inventory:</h4>
+                    <ul>
+                        <li>Create a new <strong>Inventory Adjustment</strong> (e.g., Starting Inventory) from the <i>Inventory Control</i> menu.</li>
+                        <li><strong>Select the Location</strong> you want to inventory (it's usually more efficient to work location per location).</li>
+                        <li>Select <strong>All products</strong> to automatically create an inventory line for each product.</li>
+                        <li>Click on <strong>Start Inventory</strong>, then for each listed Product, enter their quantity in the <i>Real Quantity</i> column</li>
+                        <li><strong>Validate the inventory</strong> when you're sure everything is properly encoded.</li>
+                    </ul>
+                    <p>You will now see that for each Product, the Quantity on Hand has changed to the value you entered during the inventory.</p>
+                    <div class="alert alert-info">
+                        <strong>Theoretical Quantities</strong>
+                        <p>If you come from another inventory management software, you can enter your previous stock values as Theoretical Quantity in Odoo. If not, it should be left at 0.</p>
+                        <br/>
+                        <strong>Recurrent Inventory</strong>
+                        <p>
+                            You should make your inventory at least once per year, to avoid a too
+                            big discrepancy between the stock in Odoo and what's actually in your
+                            inventory. Simply create a new Inventory Adjustment for each
+                            Warehouse / Location, and follow the same method as for your initial inventory.
+                        </p>
+                    </div>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Daily Operations'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-calendar-o'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Sales Flow'"/>
+                    <p>
+                        In Odoo, inventory management is fully integrated with the sales and
+                        invoicing process. That means you can manage everything from the initial
+                        quotation, to the goods delivery and final invoice.
+                    </p>
+                    <p>To better understand a complete sales flow, try to follow the following exercise.</p>
+                    <h4>From the Sales application:</h4>
+                    <ul>
+                        <li><strong>Create a Quotation</strong> with a customer and some products: for each item, Odoo will check if you have enough stock on hand.</li>
+                        <li><strong>Transform it to a Sales Order</strong> by clicking on <i>Confirm Sale</i>: this will automatically create a corresponding Transfer Order.</li>
+                        <li><strong>Use the <span class="fa fa-truck"/> Transfers button</strong> on the Sales Order form to access it (you can of course also retrieve it from the Inventory Dashboard)</li>
+                    </ul>
+                    <h4>From the Inventory application:</h4>
+                    <ul>
+                        <li>If your products supply chain is properly configured, the transfer should be marked as 'Ready to Transfer'. Otherwise, <strong>Check the availability</strong> manually.</li>
+                        <li><strong>Validate the Delivery</strong> either by processing it one line at a time by clicking on the <span class="fa fa-gears"/> button, or as a whole with the <i>Validate</i> button</li>
+                    </ul>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Purchase Flow'"/>
+                    <p>Now a similar exercise but for a purchase flow:</p>
+                    <h4>From the Purchases application:</h4>
+                    <ul>
+                        <li><strong>Create a Request for Quotation</strong> (or RFQ for short) to your vendor, add the products and their desired quantities, and send it by fax or email.</li>
+                        <li><strong>Transform it to a Purchase Order</strong> by clicking on <i>Confirm Order</i>: this will automatically create a corresponding Transfer Order.</li>
+                    </ul>
+                    <h4>From the Inventory application:</h4>
+                    <ul>
+                        <li>When you receive the ordered products, access the <strong>Incoming Shipments</strong> via the Dashboard.</li>
+                        <li><strong>Process the products</strong> either manually by clicking on the <span class="fa fa-gears"/> button on the product lines, or scan them with the Odoo Barcode app.</li>
+                        <li><strong>Validate the Receipt Order</strong> to mark the products as transferred to your stock location.</li>
+                    </ul>
+                    <h4>Back to the Purchases application:</h4>
+                    <ul>
+                        <li>Find the <strong>original Purchase Order</strong> and print the invoice.</li>
+                    </ul>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Periodical Tasks'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-recycle'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Adapt Reordering Rules'"/>
+                    <p>
+                        A good inventory management aims to optimize stock levels: not too low (or
+                        you may find yourself out of stock) and not too high (your products occupy
+                        space and may loose value).
+                    </p>
+                    <p>Analyze your stock level at least once a month by generating a few reports:</p>
+                    <ul>
+                        <li><strong>Stock Level Forecast</strong> look for rapidly increasing / decreasing stock level compared to last month</li>
+                        <li><strong>Stock Valuation</strong> look for high inventory value combined with a high product quantity</li>
+                    </ul>
+                    <p>Then, <strong>adapt the Reordering Rules</strong> to reduce or increase the stock level (just be careful to only make small changes over time).</p>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Resolve Procurement Exceptions'"/>
+                    <p>
+                        If you configured automatic procurement, Odoo will automatically generate
+                        Procurements Orders. You usually don't need to worry about them, but
+                        sometimes, the system can remain blocked without generating a
+                        corresponding document, usually due to a configuration problem.
+                    </p>
+                    <p>
+                        It is therefore a good idea to check and try to resolve those procurement
+                        exceptions, accessible from the Schedulers menu (you need the Stock
+                        Manager role to see it).
+                    </p>
+                    <h4>Here are some usual problems and their solutions:</h4>
+                    <ul>
+                        <li><strong>No bill of materials defined for production:</strong> you need to create a BoM or indicate that the product can be purchased instead.</li>
+                        <li><strong>No supplier available for a purchase:</strong> you have to define a supplier in the Procurements tab of the product form.</li>
+                        <li><strong>No address defined on the supplier partner:</strong> you have to complete an address for the default supplier for the product concerned.</li>
+                        <li><strong>No quantity available in stock:</strong> you have to create a reordering rule and put it in the order, or manually procure it.</li>
+                    </ul>
+                </t>
+            </t>
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle" t-value="'Advanced'"/>
+                <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Packages'"/>
+                    <p>
+                        Packages allows you to ship products by boxes, pallets, packs or whatever logistic unit you may need.
+                    </p>
+                    <h4>To use Packages:</h4>
+                    <ul>
+                        <li><strong>Activate <i>Record packages used on packing</i></strong> in your <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings</a>.</li>
+                        <li><strong>Activate <i>Technical Features</i></strong> on your user account.</li>
+                        <li><strong>Use the <i>Configuration > Packages</i></strong> menu to edit or create your Packages</li>
+                    </ul>
+                    <p>Once your Packages are defined, you can attribute them to your products via the <i>Inventory</i> tab of the Product form.</p>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Traceability'"/>
+                    <p>
+                        Odoo can run advanced traceability by using Product Lots and Serial
+                        Numbers, usually identified by bar codes stuck on the products.
+                    </p>
+                    <p>
+                        Lots can be encoded on incoming shipments lines, internal moves and
+                        outgoing deliveries, and later can be separated into smaller lots
+                        depending on the quantities ordered, but they will always keep their
+                        initial lot number so you can track them.
+                    </p>
+                    <h4>To use Lot Tracking:</h4>
+                    <ul>
+                        <li><strong>Activate <i>Track lots or serial numbers</i></strong> in your <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings</a>.</li>
+                        <li><strong>When you process a Purchase order</strong>, assign a lot number to a group of products by clicking on the <span class="fa fa-cog"/> icon (e.g. 0001)</li>
+                    </ul>
+                    <p>The lot number you created will be displayed next to the item's location. To track the lot, go into <strong><i>Traceability > Serial Numbers</i></strong>.</p>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Routes Management'"/>
+                    <p>
+                        Odoo can manage <strong>advanced push / pull routes configuration</strong>, for example:
+                    </p>
+                    <ul>
+                        <li>Manage product manufacturing chains.</li>
+                        <li>Manage default locations per product.</li>
+                        <li>Define routes within your warehouse according to business needs, such as Quality Control, After Sales Services or Supplier Returns.</li>
+                        <li>Help rental management, by generating automated return moves for rented products.</li>
+                    </ul>
+                    <p>This is quite complex to set up, so <strong>contact your Projet Manager</strong> and he will take care of this for you.</p>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title" t-value="'Real-Time Inventory Valuation'"/>
+                    <p>
+                        Imagine the following situation: you ask your accountant for an inventory
+                        valuation or the value added by production, he will give you a figure. If
+                        you ask for the same valuation from your inventory manager, he will
+                        probably give you an entirely different figure.
+                    </p>
+                    <p>That's because by default, Odoo is configured to do a periodic inventory valuation.</p>
+                    <p>
+                        The alternative is to use a real-time inventory valuation, which gives a
+                        complete and permanent coherence between accounting and inventory.Indeed,
+                        each stock movement will generate a corresponding accounting entry.
+                    </p>
+                    <t t-if="not is_module_installed('account')">
+                        <div class="alert alert-warning">
+                            <span>You need to install the Accounting app to use real-time inventory valuation.</span>
+                        </div>
+                    </t>
+                    <h4>To activate real-time inventory valuation:</h4>
+                    <ul>
+                        <li><strong>In the Accounting app</strong>, set up a General Account for each location that should be valued in your accounts.</li>
+                        <li><strong>Back in the Inventory app</strong>, select the <i>Perpetual inventory</i> option for Inventory Valuation in the <a t-att-href="prepare_backend_url('stock.action_stock_config_settings')">Inventory Settings.</a></li>
+                        <li><strong>Define the following accounts</strong>, either on the product category (Accounting Stock Properties tab) or on the product itself (Accounting tab):</li>
+                        <ul>
+                            <li>Stock Input Account</li>
+                            <li>Stock Output Account</li>
+                            <li>Stock Valuation Account</li>
+                        </ul>
+                    </ul>
+                </t>
+            </t>
+            <t t-call="web_planner.page">
+                <t t-set="page_title" t-value="'End'"/>
+                <t t-set="hide_title" t-value="True"/>
+                <t t-set="hide_from_menu" t-value="True"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                <div class="text-center">
+                    <h1>Congratulations!</h1>
+                    <h4>We hope this guide helped you implement Odoo Inventory.</h4>
+                    <p>Don't hesitate to send us an email to describe your experience or to suggest improvements!</p>
+                    <p>Once it's fully working, give us some feedback: we love to hear from our customer. It would be great if you can send a photo of your warehouse to <a href="mailto:feedback@mail.odoo.com?subject=Inventory%20Planner" target="_blank">feedback@mail.odoo.com</a></p>
+                    <p><strong>Enjoy your Inventory management with Odoo!</strong></p>
+                    <p>- The Odoo Team</p>
+                    <img src="/web_planner/static/src/img/odoo_logo.png"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="planner_inventory" model="web.planner">
+        <field name="name">Inventory planner</field>
+        <field name="view_id" ref="inventory_planner"/>
+        <field name="menu_id" ref="menu_stock_root"/>
+        <field name="planner_application">planner_inventory</field>
+        <field name="tooltip_planner"><![CDATA[
+            Inventory Configuration: a step-by-step guide.]]>
+        </field>
+    </record>
+
+</odoo>
