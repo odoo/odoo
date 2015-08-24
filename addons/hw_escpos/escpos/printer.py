@@ -10,6 +10,10 @@ from constants import *
 from exceptions import *
 from time import sleep
 
+import logging
+  
+_logger = logging.getLogger(__name__)
+
 class Usb(Escpos):
     """ Define USB printer """
 
@@ -42,6 +46,22 @@ class Usb(Escpos):
                 self.device.detach_kernel_driver(self.interface) 
             self.device.set_configuration()
             usb.util.claim_interface(self.device, self.interface)
+
+            # get an endpoint instance
+            cfg = self.device.get_active_configuration()
+            intf = cfg[(0,0)]
+
+            self.hw_device = self.device
+            self.device = usb.util.find_descriptor(
+		    intf,
+		    # match the first OUT endpoint
+		    custom_match = \
+		    lambda e: \
+			usb.util.endpoint_direction(e.bEndpointAddress) == \
+			usb.util.ENDPOINT_OUT)
+
+            assert self.device is not None
+
         except usb.core.USBError as e:
             raise HandleDeviceError(e)
 
@@ -49,12 +69,12 @@ class Usb(Escpos):
         i = 0
         while True:
             try:
-                if not self.device.is_kernel_driver_active(self.interface):
-                    usb.util.release_interface(self.device, self.interface)
-                    self.device.attach_kernel_driver(self.interface)
-                    usb.util.dispose_resources(self.device)
+                if not self.hw_device.is_kernel_driver_active(self.interface):
+                    usb.util.release_interface(self.hw_device, self.interface)
+                    self.hw_device.attach_kernel_driver(self.interface)
+                    usb.util.dispose_resources(self.hw_device)
                 else:
-                    self.device = None
+                    self.hw_device = None
                     return True
             except usb.core.USBError as e:
                 i += 1
@@ -65,8 +85,8 @@ class Usb(Escpos):
 
     def _raw(self, msg):
         """ Print any command sent in raw format """
-        if len(msg) != self.device.write(self.out_ep, msg, self.interface):
-            self.device.write(self.out_ep, self.errorText, self.interface)
+        if len(msg) != self.device.write(msg, self.interface):
+            self.device.write(self.errorText, self.interface)
             raise TicketNotPrinted()
     
     def __extract_status(self):
@@ -76,7 +96,7 @@ class Usb(Escpos):
             maxiterate += 1
             if maxiterate > 10000:
                 raise NoStatusError()
-            r = self.device.read(self.in_ep, 20, self.interface).tolist()
+            r = self.device.read(20, self.interface).tolist()
             while len(r):
                 rep = r.pop()
         return rep
@@ -89,13 +109,13 @@ class Usb(Escpos):
             'paper'  : {},
         }
 
-        self.device.write(self.out_ep, DLE_EOT_PRINTER, self.interface)
+        self.device.write(DLE_EOT_PRINTER, self.interface)
         printer = self.__extract_status()    
-        self.device.write(self.out_ep, DLE_EOT_OFFLINE, self.interface)
+        self.device.write(DLE_EOT_OFFLINE, self.interface)
         offline = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_ERROR, self.interface)
+        self.device.write(DLE_EOT_ERROR, self.interface)
         error = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_PAPER, self.interface)
+        self.device.write(DLE_EOT_PAPER, self.interface)
         paper = self.__extract_status()
             
         status['printer']['status_code']     = printer
@@ -125,9 +145,9 @@ class Usb(Escpos):
 
     def __del__(self):
         """ Release USB interface """
-        if self.device:
+        if self.hw_device:
             self.close()
-        self.device = None
+        self.hw_device = None
 
 
 
