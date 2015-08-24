@@ -192,11 +192,11 @@
                             </field>
                         </page>
                         <page string="Misc" groups="base.group_no_one">
-                            <label string="Owner"/>
-                            <field name="user_id" />
-                            
+                            <group>
+                                <label for="user_id" string="Owner"/>
+                                <field name="user_id" nolabel="1"/>
+                            </group>
                         </page>
-
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -257,7 +257,7 @@
 
     <!-- CRM Meeting Calendar -->
     <record model="ir.ui.view" id="view_calendar_event_calendar">
-        <field name="name">Meetings Calendar</field>
+        <field name="name">Meeting</field>
         <field name="model">calendar.event</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
