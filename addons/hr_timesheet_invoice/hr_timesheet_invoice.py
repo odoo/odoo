@@ -249,7 +249,7 @@ class account_analytic_line(osv.osv):
             # key_id is either an account.analytic.account, either a res.partner
             # don't really care, what's important is the analytic lines that
             # will be used to create the invoice lines
-            account = analytic_lines[0].account_id
+            account = analytic_line_ids[0].account_id
             partner = account.partner_id  # will be the same for every line
             if (not partner) or not (currency_id):
                 raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
