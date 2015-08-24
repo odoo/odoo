@@ -746,8 +746,12 @@ class purchase_order(osv.osv):
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         res = []
+        if order.location_id.usage == 'customer':
+            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).name
+        else:
+            name = order_line.name or ''
         move_template = {
-            'name': order_line.name or '',
+            'name': name,
             'product_id': order_line.product_id.id,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
@@ -1478,6 +1482,9 @@ class procurement_order(osv.osv):
 
         return qty, price
 
+    def update_origin_po(self, cr, uid, po, proc, context=None):
+        pass
+
     def _get_grouping_dicts(self, cr, uid, ids, context=None):
         """
         It will group the procurements according to the pos they should go into.  That way, lines going to the same
@@ -1609,6 +1616,9 @@ class procurement_order(osv.osv):
                     msg = format_message(_('Purchase order line added'), {'Product': proc.product_id.name, 'Quantity': proc.product_qty, 'Procurement': proc.origin})
                     po_obj.message_post(cr, uid, [add_purchase], body=msg, context=context)
             po_obj.write(cr, uid, [add_purchase], {'order_line': line_values},context=context)
+
+            for procurement in procurements:
+                self.update_origin_po(cr, uid, po, procurement, context=context)
 
 
         # Create new purchase orders

@@ -16,6 +16,7 @@ var dom = $.summernote.core.dom;
 var Dialog = Widget.extend({
     events: {
         'hidden.bs.modal': 'destroy',
+        'keydown.dismiss.bs.modal': 'stop_escape',
         'click button.save': 'save',
         'click button[data-dismiss="modal"]': 'cancel',
     },
@@ -38,6 +39,11 @@ var Dialog = Widget.extend({
     close: function () {
         this.$el.modal('hide');
     },
+    stop_escape: function(event) {
+        if($(".modal.in").length>0 && event.which == 27){
+            event.stopPropagation();
+        }
+    }
 });
 
 /**
@@ -251,6 +257,7 @@ var ImageDialog = Widget.extend({
         //'change select.image-style': 'preview_image',
         'click .existing-attachments [data-src]': 'select_existing',
         'click .existing-attachment-remove': 'try_remove',
+        'keydown.dismiss.bs.modal': function(){},
     }),
     init: function (parent, media, options) {
         this._super();
@@ -339,7 +346,7 @@ var ImageDialog = Widget.extend({
         return this.media;
     },
     clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s)(img(\s|$)|img-[^\s]*)/g, ' ');
+        this.media.className = this.media.className.replace(/(^|\s+)(img(\s|$)|img-(?!circle|rounded|thumbnail)[^\s]*)/g, ' ');
     },
     cancel: function () {
         this.trigger('cancel');
@@ -609,6 +616,7 @@ var fontIconsDialog = Widget.extend({
             $(".font-icons-icon").removeClass("font-icons-selected");
             $(event.target).addClass("font-icons-selected");
         },
+        'keydown.dismiss.bs.modal': function(){},
     }),
 
     // extract list of font (like awsome) from the cheatsheet.
@@ -662,12 +670,14 @@ var fontIconsDialog = Widget.extend({
         var icons = this.icons;
         var style = this.media.attributes.style ? this.media.attributes.style.value : '';
         var classes = (this.media.className||"").split(/\s+/);
+        var custom_classes = /^fa(-[1-5]x|spin|rotate-(9|18|27)0|flip-(horizont|vertic)al|fw|border)?$/;
         var non_fa_classes = _.reject(classes, function (cls) {
-            return self.getFont(cls);
+            return self.getFont(cls) || custom_classes.test(cls);
         });
         var final_classes = non_fa_classes.concat(this.get_fa_classes());
         if (this.media.tagName !== "SPAN") {
             var media = document.createElement('span');
+            $(media).data($(this.media).data());
             $(this.media).replaceWith(media);
             this.media = media;
             style = style.replace(/\s*width:[^;]+/, '');
@@ -828,7 +838,8 @@ var VideoDialog = Widget.extend({
         'change input#urlvideo': 'change_input',
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
-        'keyup input#embedvideo': 'change_input'
+        'keyup input#embedvideo': 'change_input',
+        'keydown.dismiss.bs.modal': function(){},
     }),
     init: function (parent, media) {
         this._super();
@@ -842,7 +853,6 @@ var VideoDialog = Widget.extend({
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
-            this.$("#autoplay").attr("checked", src.indexOf('autoplay=1') != -1);
             this.get_video();
         } else {
             this.add_class = "pull-left";

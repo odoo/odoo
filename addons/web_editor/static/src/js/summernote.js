@@ -26,7 +26,7 @@ dom.hasContentAfter = function (node) {
     var next;
     while (node.nextSibling) {
         next = node.nextSibling;
-        if (next.tagName || next.textContent.match(/\S|\u00A0/) || dom.isBR(next)) return next;
+        if (next.tagName || dom.isVisibleText(next) || dom.isBR(next)) return next;
         node = next;
     }
 };
@@ -34,7 +34,7 @@ dom.hasContentBefore = function (node) {
     var prev;
     while (node.previousSibling) {
         prev = node.previousSibling;
-        if (prev.tagName || prev.textContent.match(/\S|\u00A0/) || dom.isBR(prev)) return prev;
+        if (prev.tagName || dom.isVisibleText(prev) || dom.isBR(prev)) return prev;
         node = prev;
     }
 };
@@ -138,7 +138,7 @@ dom.mergeFilter = function (prev, cur, parent) {
     if (prev && prev.tagName === "P" && dom.isText(cur)) {
         return true;
     }
-    if (prev && dom.isText(cur) && !cur.textContent.match(/\S|\u00A0/) && (dom.isText(prev) || prev.textContent.match(/\S|\u00A0/))) {
+    if (prev && dom.isText(cur) && !dom.isVisibleText(cur) && (dom.isText(prev) || dom.isVisibleText(prev))) {
         return true;
     }
     if (prev && !dom.isBR(prev) && dom.isEqual(prev, cur) &&
@@ -382,7 +382,7 @@ dom.removeSpace = function (node, begin, so, end, eo) {
             if (cur === end) add = false;
 
             // remove begin empty text node
-            if (node.childNodes.length > 1 && dom.isText(cur) && !cur.textContent.match(/\S|\u00A0/)) {
+            if (node.childNodes.length > 1 && dom.isText(cur) && !dom.isVisibleText(cur)) {
                 removed = true;
                 if (cur === begin) {
                     so = 0;
@@ -579,7 +579,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     }
 
     eo = so;
-    if(!dom.isBR(sc) && !sc.textContent.match(/\S|\u00A0/) && !dom.isText(dom.hasContentBefore(sc)) && !dom.isText(dom.hasContentAfter(sc))) {
+    if(!dom.isBR(sc) && !dom.isVisibleText(sc) && !dom.isText(dom.hasContentBefore(sc)) && !dom.isText(dom.hasContentAfter(sc))) {
         ancestor = dom.node(sc);
         var text = document.createTextNode('\u00A0');
         $(sc).before(text);
@@ -699,6 +699,9 @@ dom.isContentEditable = function (node) {
     return $(node).closest('[contenteditable]').is('[contenteditable="true"]');
 };
 
+dom.isPre = function (node) {
+    return node.tagName === "PRE";
+};
 dom.isFont = function (node) {
     var nodeName = node && node.nodeName.toUpperCase();
     return node && (nodeName === "FONT" ||
@@ -1025,6 +1028,8 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
     }
 
     var node = dom.node(r.sc);
+    var exist = r.sc.childNodes[r.so] || r.sc;
+    exist = dom.isVisibleText(exist) || dom.isBR(exist) ? exist : dom.hasContentAfter(exist) || (dom.hasContentBefore(exist) || exist);
     var last = node;
     while (node && dom.isSplitable(node) && !dom.isList(node)) {
         last = node;
@@ -1042,7 +1047,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         } while (node && dom.isBR(node));
 
         // create an other br because the user can't see the new line with only br in a block
-        if (!node) {
+        if (!node && (!br.nextElementSibling || !dom.isBR(br.nextElementSibling))) {
             $(br).before($("<br/>")[0]);
         }
         node = br.nextSibling || br;
@@ -1051,7 +1056,11 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
         node = br;
     } else if (!r.so && r.isOnList() && !r.sc.textContent.length && !dom.ancestor(r.sc, dom.isLi).nextElementSibling) {
         // double enter on the end of a list = new line out of the list
-        node = $('<p></p>').append(br).insertAfter(dom.ancestor(r.sc, dom.isList))[0];
+        $('<p></p>').append(br).insertAfter(dom.ancestor(r.sc, dom.isList));
+        node = br;
+    } else if (dom.isBR(exist) && $(r.sc).closest('blockquote, pre').length && !dom.hasContentAfter($(exist.parentNode).closest('blockquote *, pre *').length ? exist.parentNode : exist)) {
+        // double enter on the end of a blockquote & pre = new line out of the list
+        $('<p></p>').append(br).insertAfter($(r.sc).closest('blockquote, pre'));
         node = br;
     } else if (last === r.sc) {
         if (dom.isBR(last)) {
@@ -1071,7 +1080,7 @@ $.summernote.pluginEvents.enter = function (event, editor, layoutInfo) {
                 $(cur).html(br);
             }
         }
-        if (!node.textContent.match(/\S|\u00A0/)) {
+        if (!dom.isVisibleText(node)) {
             node = dom.firstChild(node);
             $(dom.node( dom.isBR(node) ? node.parentNode : node )).html(br);
             node = br;
@@ -1105,7 +1114,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     while (node.parentNode) {
         if (dom.isForbiddenNode(node)) {
             var text = node.previousSibling;
-            if (text && dom.isText(text) && text.textContent.match(/\S|\u00A0/)) {
+            if (text && dom.isText(text) && dom.isVisibleText(text)) {
                 range.create(text, text.textContent.length, text, text.textContent.length).select();
             } else {
                 text = node.parentNode.insertBefore(document.createTextNode( "." ), node);
@@ -1715,7 +1724,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
     var nodes = dom.listBetween(r.sc, r.ec);
     for (var i=0; i<nodes.length; i++) {
-        if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && nodes[i].textContent.match(/\S|\u00A0/)) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
+        if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
             if (!ancestor) {
                 dom.wrap(nodes[i], sTagName);

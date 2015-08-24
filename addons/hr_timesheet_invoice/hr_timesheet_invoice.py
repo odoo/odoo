@@ -249,8 +249,10 @@ class account_analytic_line(osv.osv):
             # key_id is either an account.analytic.account, either a res.partner
             # don't really care, what's important is the analytic lines that
             # will be used to create the invoice lines
-
-            partner = analytic_line_ids[0].account_id.partner_id  # will be the same for every line
+            account = analytic_lines[0].account_id
+            partner = account.partner_id  # will be the same for every line
+            if (not partner) or not (currency_id):
+                raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
             curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_line_ids, group_by_partner, context=context)
             invoice_context = dict(context,
@@ -265,8 +267,6 @@ class account_analytic_line(osv.osv):
             invoice_lines_grouping = {}
             for analytic_line in analytic_line_ids:
                 account = analytic_line.account_id
-                if (not partner) or not (account.pricelist_id):
-                    raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
                 if not analytic_line.to_invoice:
                     raise UserError(_('Trying to invoice non invoiceable line for %s.') % (analytic_line.product_id.name))

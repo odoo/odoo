@@ -531,7 +531,8 @@ var BuildingBlock = Widget.extend({
                 this.snippets.push($snippet.get(0));
             }
             this.$active_snipped_id = $snippet;
-            this.create_overlay(this.$active_snipped_id);
+            this.create_snippet_editor(this.$active_snipped_id);
+            this.cover_target($snippet.data('overlay'), $snippet);
             this.snippet_focus($snippet);
         }
         this.$snippet.trigger('snippet-activated', $snippet);
@@ -539,13 +540,11 @@ var BuildingBlock = Widget.extend({
             $snippet.trigger('snippet-activated', $snippet);
         }
     },
-    create_overlay: function ($snippet) {
+    create_snippet_editor: function ($snippet) {
         if (typeof $snippet.data("snippet-editor") === 'undefined') {
-            var $targets = this.activate_overlay_zones($snippet);
-            if (!$targets.length) return;
+            if (!this.activate_overlay_zones($snippet).length) return;
             $snippet.data("snippet-editor", new Editor(this, $snippet));
         }
-        this.cover_target($snippet.data('overlay'), $snippet);
     },
 
     // activate drag and drop for the snippets in the snippet toolbar
@@ -657,22 +656,12 @@ var BuildingBlock = Widget.extend({
 
                         animation.start(true, $target);
 
-                        // drop_and_build_snippet
-                        self.create_overlay($target);
-                        if ($target.data("snippet-editor")) {
-                            $target.data("snippet-editor").drop_and_build_snippet();
-                        }
-                        for (var k in self.templateOptions) {
-                            self.templateOptions[k].selector.all($target).each(function () {
-                                var $snippet = $(this);
-                                self.create_overlay($snippet);
-                                if ($snippet.data("snippet-editor")) {
-                                    $snippet.data("snippet-editor").drop_and_build_snippet();
-                                }
-                            });
-                        }
+                        self.call_for_all_snippets($target, function (editor, $snippet) {
+                            editor.drop_and_build_snippet();
+                        });
+                        self.create_snippet_editor($target);
+                        self.cover_target($target.data('overlay'), $target);
                         $target.closest(".o_editable").trigger("content_changed");
-                        // end
 
                         self.make_active($target);
                     },0);
@@ -680,6 +669,20 @@ var BuildingBlock = Widget.extend({
                     $toInsert.remove();
                 }
             },
+        });
+    },
+
+    // call a method on a snippet and all his children
+    call_for_all_snippets: function ($snippet, callback) {
+        var self = this;
+        $snippet.add(globalSelector.all($snippet)).each(function () {
+            var $snippet = $(this);
+            setTimeout(function () {
+                self.create_snippet_editor($snippet);
+                if ($snippet.data("snippet-editor")) {
+                    callback.call(self, $snippet.data("snippet-editor"), $snippet);
+                }
+            });
         });
     },
 
@@ -845,14 +848,12 @@ var BuildingBlock = Widget.extend({
 
                 var timer;
                 $target.closest('.o_editable').on("content_changed", function (event) {
-                    if ($target.data('overlay') && $target.data('overlay').hasClass("oe_active")) {
-                        clearTimeout(timer);
-                        timer = setTimeout(function () {
-                            if ($target.data('overlay')) {
-                                self.cover_target($target.data('overlay'), $target);
-                            }
-                        },50);
-                    }
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        if ($target.data('overlay') && $target.data('overlay').hasClass("oe_active")) {
+                            self.cover_target($target.data('overlay'), $target);
+                        }
+                    },50);
                  });
 
                 var resize = function () {
@@ -985,7 +986,9 @@ var Editor = Class.extend({
         self.buildingBlock.editor_busy = false;
 
         self.get_parent_block();
-        setTimeout(function () {self.buildingBlock.create_overlay(self.$target);},0);
+        setTimeout(function () {
+            self.BuildingBlock.cover_target(self.$target.data('overlay'), self.$target);
+        },0);
     },
 
     load_style_options: function () {
@@ -1022,7 +1025,10 @@ var Editor = Class.extend({
     get_parent_block: function () {
         var self = this;
         var $button = this.$overlay.find('.oe_snippet_parent');
-        var $parent = globalSelector.closest(this.$target.parent());
+        var $parent = this.$target.parents().filter(function () { return $(this).data("snippet-editor"); });
+        if (!$parent.length) {
+            $parent = globalSelector.closest(this.$target.parent());
+        }
         if ($parent.length) {
             $button.removeClass("hidden");
             $button.off("click").on('click', function (event) {
@@ -1056,12 +1062,13 @@ var Editor = Class.extend({
         var $clone = this.$target.clone(false);
 
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
-        
+
         this.$target.after($clone);
-        for (var i in this.styles){
-            this.styles[i].on_clone($clone);
-        }
-        this.buildingBlock.create_overlay(this.$target);
+        this.BuildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
+            for (var i in editor.styles){
+                editor.styles[i].on_clone($snippet);
+            }
+        });
         return false;
     },
 
@@ -1072,9 +1079,11 @@ var Editor = Class.extend({
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
 
         var index = _.indexOf(this.buildingBlock.snippets, this.$target.get(0));
-        for (var i in this.styles){
-            this.styles[i].on_remove();
-        }
+        this.BuildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
+            for (var i in editor.styles){
+                editor.styles[i].on_remove();
+            }
+        });
         delete this.buildingBlock.snippets[index];
 
         var $editable = this.$target.closest(".o_editable");
