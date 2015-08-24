@@ -438,6 +438,24 @@ class product_template(osv.osv):
             res[product.id] = len(product.product_variant_ids)
         return res
 
+    def _compute_product_template_field(self, cr, uid, ids, names, arg, context=None):
+        ''' Compute the field from the product_variant if there is only one variant, otherwise returns 0.0 '''
+        res = {id: {} for id in ids}
+        templates = self.browse(cr, uid, ids, context=context)
+        unique_templates = [template.id for template in templates if template.product_variant_count == 1]
+        for template in templates:
+            for name in names:
+                res[template.id][name] = getattr(template.product_variant_ids[0], name) if template.id in unique_templates else 0.0
+        return res     
+
+    def _set_product_template_field(self, cr, uid, product_tmpl_id, name, value, args, context=None):
+        ''' Set the standard price modification on the variant if there is only one variant '''
+        template = self.pool['product.template'].browse(cr, uid, product_tmpl_id, context=context)
+        if template.product_variant_count == 1:
+            variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
+            return variant.write({name: value})
+        return {}    
+
     _columns = {
         'name': fields.char('Name', required=True, translate=True, select=True),
         'sequence': fields.integer('Sequence', help='Gives the sequence order when displaying a product list'),
