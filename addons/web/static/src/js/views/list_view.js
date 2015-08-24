@@ -299,7 +299,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      **/
     render_sidebar: function($node) {
         if (!this.sidebar && this.options.sidebar) {
-            this.sidebar = new Sidebar(this);
+            this.sidebar = new Sidebar(this, {editable: this.is_action_enabled('edit')});
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
