@@ -160,7 +160,7 @@
                     <separator string="Bank &amp; Cash"/>
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
-                        <div>
+                        <div name="bank_options">
                             <div name='company_footer'>
                                 <label for="company_footer"/>
                                 <button name="open_bank_accounts" type="object"
@@ -176,8 +176,6 @@
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
                             </div>
-                        </div>
-                        <div name="bank_statement_import_options">
                         </div>
                     </group>
                     <!-- Invisible section which is inherited in other modules -->
