@@ -26,6 +26,8 @@
         'data/account.tax.template.csv',
         'data/account_tax_group.xml',
         'data/account_chart_template.yml',
+
+        'views/res_company.xml',
     ],
     'demo': [],
     'installable': True,

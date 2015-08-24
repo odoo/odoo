@@ -9,3 +9,4 @@
 #               Humberto Ochoa (Vauxoo)
 
 import wizard
+import models
