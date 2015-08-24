@@ -1,0 +1,62 @@
+<odoo>
+
+    <!-- Sale -->
+    <record model="ir.ui.view" id="view_account_asset_asset_sale_tree">
+        <field name="name">account.asset.asset.sale.tree</field>
+        <field name="model">account.asset.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
+                <field name="name" string="Revenue Name"/>
+                <field name="category_id"/>
+                <field name="date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="value"/>
+                <field name="value_residual" widget="monetary"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Product Template -->
+    <record id="view_product_template_form_inherit" model="ir.ui.view">
+        <field name="name">Product Template (form)</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='properties']" position="before">
+                <group name="asset types">
+                    <field name="deferred_revenue_category_id" domain="[('type','=','sale')]" context="{'default_type':'sale'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Deferred Revenues Action -->
+
+    <record model="ir.actions.act_window" id="action_account_revenue_form">
+        <field name="name">Deferred Revenues</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_account_asset_asset_sale_tree"/>
+        <field name="domain">[('category_id.type', '=', 'sale')]</field>
+        <field name="context">{'default_type': 'sale', 'default_category_id_type': 'sale'}</field>
+    </record>
+
+    <menuitem parent="account.menu_finance_entries" id="menu_action_account_revenue_recognition" action="action_account_revenue_form" sequence="102" groups="account.group_account_user"/>
+
+
+    <!-- Configuration -->
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_sale">
+        <field name="name">Deferred Revenues Types</field>
+        <field name="res_model">account.asset.category</field>
+        <field name="domain">[('type', '=', 'sale')]</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_type': 'sale'}</field>
+    </record>
+    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_sale" action="action_account_asset_asset_list_normal_sale" sequence="2"/>
+
+</odoo>

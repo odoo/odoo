@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_recognition_depreciation_confirmation_wizard" model="ir.actions.act_window">
+        <field name="name">Post Installment Lines</field>
+        <field name="res_model">asset.depreciation.confirmation.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account_asset.view_asset_depreciation_confirmation_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'asset_type': 'sale'}</field>
+    </record>
+
+    <menuitem name="Generate Deferred Revenue Entries" action="action_recognition_depreciation_confirmation_wizard"
+        id="menu_recognition_depreciation_confirmation_wizard"
+        parent="account.menu_finance_entries" sequence="112" groups="base.group_no_one"/>
+
+</odoo>

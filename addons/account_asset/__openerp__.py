@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Assets & Revenue Recognitions Management',
+    'name': 'Assets Management',
     'version': '1.0',
     'depends': ['account_accountant'],
     'author': 'Odoo S.A.',
@@ -10,11 +10,6 @@ Assets management
 =================
 Manage assets owned by a company or a person.
 Keeps track of depreciations, and creates corresponding journal entries.
-
-Revenue recognition
-===================
-Manage revenue recognition on product sales.
-Keeps track of the revenue recognition installments, and creates corresponding journal entries.
 
     """,
     'website': 'https://www.odoo.com/page/accounting',
