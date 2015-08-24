@@ -166,18 +166,6 @@ class crm_claim(osv.osv):
         defaults.update(custom_values)
         return super(crm_claim, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-    def _claim_count(self, cr, uid, ids, field_name, arg, context=None):
-        Claim = self.pool['crm.claim']
-        return {
-            partner_id: Claim.search_count(cr,uid, [('partner_id', '=', partner_id)], context=context)  
-            for partner_id in ids
-        }
-
-    _columns = {
-        'claim_count': fields.function(_claim_count, string='# Claims', type='integer'),
-    }
 
 class crm_claim_category(osv.Model):
     _name = "crm.claim.category"
