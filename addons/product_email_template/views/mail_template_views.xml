@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="email_template_form_simplified">
-            <field name="name">email.template.form.simplified</field>
+<odoo>
+        <record id="email_template_form_simplified" model="ir.ui.view">
+            <field name="name">mail.template.form.simplified</field>
             <field name="model">mail.template</field>
             <field name="priority">100</field>
             <field name="arch" type="xml">
@@ -19,5 +18,4 @@
                 </form>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>

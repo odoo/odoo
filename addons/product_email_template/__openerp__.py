@@ -17,7 +17,5 @@ For instance when invoicing a training, the training agenda and materials will a
     'data': [
         'views/product_views.xml',
         'views/mail_template_views.xml',
-    ],
-    'installable': True,
-    'auto_install': False,
+    ]
 }
