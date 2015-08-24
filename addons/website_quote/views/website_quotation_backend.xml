@@ -44,7 +44,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='client_order_ref']" position="after">
-                    <field name="require_payment"/>
+                    <field name="require_payment" widget="radio"/>
                     <field name="website_description" invisible="1"/>
                 </xpath>
             </field>
@@ -70,7 +70,7 @@
                                <div id="number_of_days">
                                    <field name="number_of_days" class="oe_inline"/> days
                                </div>
-                               <field name="require_payment"/>
+                               <field name="require_payment" widget="radio"/>
                             </group>
                         </group>
                         <notebook>
