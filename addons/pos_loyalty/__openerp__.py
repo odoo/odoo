@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Loyalty Program',
     'version': '1.0',
@@ -19,14 +18,13 @@ and get rewards.
 """,
     'depends': ['point_of_sale'],
     'data': [
-        'views/views.xml',
+        'views/pos_loyalty_views.xml',
         'security/ir.model.access.csv',
-        'views/templates.xml'
+        'views/pos_loyalty_templates.xml'
     ],
     'qweb': ['static/src/xml/loyalty.xml'],
     'demo': [
-        'loyalty_demo.xml',
+        'data/pos_loyalty_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
 }

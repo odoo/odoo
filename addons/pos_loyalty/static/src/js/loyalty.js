@@ -23,7 +23,7 @@ models.load_models([
     },{
         model: 'loyalty.rule',
         condition: function(self){ return !!self.loyalty; },
-        fields: ['name','type','product_id','category_id','cumulative','pp_product','pp_currency'],
+        fields: ['name','rule_type','product_id','category_id','cumulative','pp_product','pp_currency'],
         domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
         loaded: function(self,rules){ 
 
@@ -33,7 +33,7 @@ models.load_models([
 
             for (var i = 0; i < rules.length; i++){
                 var rule = rules[i];
-                if (rule.type === 'product') {
+                if (rule.rule_type === 'product') {
                     if (!self.loyalty.rules_by_product_id[rule.product_id[0]]) {
                         self.loyalty.rules_by_product_id[rule.product_id[0]] = [rule];
                     } else if (rule.cumulative) {
@@ -41,7 +41,7 @@ models.load_models([
                     } else {
                         self.loyalty.rules_by_product_id[rule.product_id[0]].push(rule);
                     }
-                } else if (rule.type === 'category') {
+                } else if (rule.rule_type === 'category') {
                     var category = self.db.get_category_by_id(rule.category_id[0]);
                     if (!self.loyalty.rules_by_category_id[category.id]) {
                         self.loyalty.rules_by_category_id[category.id] = [rule];
@@ -56,7 +56,7 @@ models.load_models([
     },{
         model: 'loyalty.reward',
         condition: function(self){ return !!self.loyalty; },
-        fields: ['name','type','minimum_points','gift_product_id','point_cost','discount_product_id','discount','point_value','point_product_id'],
+        fields: ['name','reward_type','minimum_points','gift_product_id','point_cost','discount_product_id','discount','point_value','point_product_id'],
         domain: function(self){ return [['loyalty_program_id','=',self.loyalty.id]]; },
         loaded: function(self,rewards){
             self.loyalty.rewards = rewards; 
@@ -173,11 +173,11 @@ models.Order = models.Order.extend({
                 var line = lines[i];
                 var reward = line.get_reward();
                 if (reward) {
-                    if (reward.type === 'gift') {
+                    if (reward.reward_type === 'gift') {
                         points += round_pr(line.get_quantity() * reward.point_cost, rounding);
-                    } else if (reward.type === 'discount') {
+                    } else if (reward.reward_type === 'discount') {
                         points += round_pr(-line.get_display_price() * reward.point_cost, rounding);
-                    } else if (reward.type === 'resale') {
+                    } else if (reward.reward_type === 'resale') {
                         points += (-line.get_quantity());
                     }
                 }
@@ -231,9 +231,9 @@ models.Order = models.Order.extend({
             var reward = this.pos.loyalty.rewards[i];
             if (reward.minimum_points > this.get_spendable_points()) {
                 continue;
-            } else if(reward.type === 'gift' && reward.point_cost > this.get_spendable_points()) {
+            } else if(reward.reward_type === 'gift' && reward.point_cost > this.get_spendable_points()) {
                 continue;
-            } else if(reward.type === 'resale' && this.get_spendable_points() <= 0) {
+            } else if(reward.reward_type === 'resale' && this.get_spendable_points() <= 0) {
                 continue;
             }
             rewards.push(reward);
@@ -248,7 +248,7 @@ models.Order = models.Order.extend({
 
         if (!client) {
             return;
-        } else if (reward.type === 'gift') {
+        } else if (reward.reward_type === 'gift') {
             product = this.pos.db.get_product_by_id(reward.gift_product_id[0]);
             
             if (!product) {
@@ -262,7 +262,7 @@ models.Order = models.Order.extend({
                 extras: { reward_id: reward.id },
             });
 
-        } else if (reward.type === 'discount') {
+        } else if (reward.reward_type === 'discount') {
             
             lrounding = this.pos.loyalty.rounding;
             crounding = this.pos.currency.rounding;
@@ -287,7 +287,7 @@ models.Order = models.Order.extend({
                 extras: { reward_id: reward.id },
             });
 
-        } else if (reward.type === 'resale') {
+        } else if (reward.reward_type === 'resale') {
 
             lrounding = this.pos.loyalty.rounding;
             crounding = this.pos.currency.rounding;
