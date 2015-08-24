@@ -22,7 +22,8 @@
 -
   I confirm the sales order.
 -
-  !workflow {model: sale.order, ref: sale_order_route_dropship01, action: order_confirm}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_route_dropship01"), context=context)
 -
   I check there is a procurement in exception that has the procurement group of the sales order created before.
 -

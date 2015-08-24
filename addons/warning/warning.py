@@ -34,34 +34,29 @@ class res_partner(osv.osv):
 
 
 
-class sale_order(osv.osv):
+class sale_order(osv.Model):
     _inherit = 'sale.order'
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term_id' : False}}
+
+    @api.onchange('partner_id')
+    def onchange_partner_id_warning(self):
+        if not self.partner_id:
+            return
         warning = {}
         title = False
         message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        if partner.sale_warn != 'no-message':
-            title =  _("Warning for %s") % partner.name
-            message = partner.sale_warn_msg
+        if self.partner_id.sale_warn != 'no-message':
+            title =  _("Warning for %s") % self.partner_id.name
+            message = self.partner_id.sale_warn_msg
             warning = {
                     'title': title,
                     'message': message,
             }
-            if partner.sale_warn == 'block':
-                return {'value': {'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id':False, 'pricelist_id' : False}, 'warning': warning}
-
-        result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-
-        if result.get('warning',False):
-            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
-            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+            if self.partner_id.sale_warn == 'block':
+                self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
+                return {'warning': warning}
 
         if warning:
-            result['warning'] = warning
-        return result
+            return {'warning': warning}
 
 
 class purchase_order(osv.osv):
@@ -164,14 +159,14 @@ class product_product(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     def product_id_change_with_wh(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            uom=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
             fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                   'product_uos': []}}
+                'product_uom_qty': qty}, 'domain': {'product_uom': [],
+                   'product_uom': []}}
         product_obj = self.pool.get('product.product')
         product_info = product_obj.browse(cr, uid, product)
         title = False
@@ -186,7 +181,7 @@ class sale_order_line(osv.osv):
                 return {'value': {'product_id': False}, 'warning': warning}
 
         result =  super(sale_order_line, self).product_id_change_with_wh( cr, uid, ids, pricelist, product, qty,
-            uom, qty_uos, uos, name, partner_id,
+            uom, qty_uom, uom, name, partner_id,
             lang, update_tax, date_order, packaging, fiscal_position_id, flag, warehouse_id=warehouse_id, context=context)
 
         if result.get('warning',False):

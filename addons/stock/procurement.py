@@ -279,20 +279,15 @@ class procurement_order(osv.osv):
         #it is possible that we've already got some move done, so check for the done qty and create
         #a new move with the correct qty
         already_done_qty = 0
-        already_done_qty_uos = 0
         for move in procurement.move_ids:
             already_done_qty += move.product_uom_qty if move.state == 'done' else 0
-            already_done_qty_uos += move.product_uos_qty if move.state == 'done' else 0
         qty_left = max(procurement.product_qty - already_done_qty, 0)
-        qty_uos_left = max(procurement.product_uos_qty - already_done_qty_uos, 0)
         vals = {
             'name': procurement.name,
             'company_id': procurement.rule_id.company_id.id or procurement.rule_id.location_src_id.company_id.id or procurement.rule_id.location_id.company_id.id or procurement.company_id.id,
             'product_id': procurement.product_id.id,
             'product_uom': procurement.product_uom.id,
             'product_uom_qty': qty_left,
-            'product_uos_qty': (procurement.product_uos and qty_uos_left) or qty_left,
-            'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.rule_id.partner_address_id.id or (procurement.group_id and procurement.group_id.partner_id.id) or False,
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.location_id.id,

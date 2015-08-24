@@ -223,7 +223,6 @@
             <field name="type">sale</field>
             <field name="default_credit_account_id" ref="a_sale"/>
             <field name="default_debit_account_id" ref="a_sale"/>
-            <field name="analytic_journal_id" ref="analytic.cose_journal_sale"/>
             <field name="refund_sequence" eval="True"/>
         </record>
 
@@ -233,7 +232,6 @@
             <field name="type">purchase</field>
             <field name="default_debit_account_id" ref="a_expense"/>
             <field name="default_credit_account_id" ref="a_expense"/>
-            <field name="analytic_journal_id" ref="account.exp"/>
             <field name="refund_sequence" eval="True"/>
         </record>
 
@@ -249,8 +247,6 @@
             <field name="type">bank</field>
             <field name="default_debit_account_id" ref="bnk"/>
             <field name="default_credit_account_id" ref="bnk"/>
-            <field name="analytic_journal_id" ref="analytic.sit"/>
-            <field name="bank_account_id" ref="bank_account"/>
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash - Test</field>
@@ -260,13 +256,11 @@
             <field name="loss_account_id" ref="rsa" />
             <field name="default_debit_account_id" ref="cash"/>
             <field name="default_credit_account_id" ref="cash"/>
-            <field name="analytic_journal_id" ref="analytic.sit"/>
         </record>
         <record id="miscellaneous_journal" model="account.journal">
             <field name="name">Miscellaneous - Test</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
-            <field name="analytic_journal_id" ref="analytic.sit"/>
             <field name="show_on_dashboard" eval="False"/>
         </record>
         <record id="currency_diff_journal" model="account.journal">

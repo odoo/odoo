@@ -67,28 +67,30 @@
                     </tr>
                </thead>
                <tbody class="sale_tbody">
-                    <tr t-foreach="doc.order_line" t-as="l">
-                        <td>
-                           <span t-field="l.name"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.product_uom_qty"/>
-                            <span groups="product.group_uom" t-field="l.product_uom"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.price_unit"/>
-                        </td>
-                        <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
-                            <span t-field="l.discount"/>
-                        </td>
-                        <td>
-                            <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
-                        </td>
-                        <td class="text-right">
-                            <span t-field="l.price_subtotal"
-                                t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
-                        </td>
-                    </tr>
+                    <t t-foreach="doc.order_line" t-as="l">
+                        <tr t-if="l.product_uom_qty">
+                            <td>
+                               <span t-field="l.name"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="l.product_uom_qty"/>
+                                <span groups="product.group_uom" t-field="l.product_uom"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="l.price_unit"/>
+                            </td>
+                            <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                <span t-field="l.discount"/>
+                            </td>
+                            <td>
+                                <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="l.price_subtotal"
+                                    t-field-options='{"widget": "monetary", "display_currency": "doc.pricelist_id.currency_id"}'/>
+                            </td>
+                        </tr>
+                    </t>
                 </tbody>
             </table>
 

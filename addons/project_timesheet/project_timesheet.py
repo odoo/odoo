@@ -13,111 +13,6 @@ from openerp.exceptions import UserError
 class project_project(osv.osv):
     _inherit = 'project.project'
 
-    def _get_project_and_children(self, cr, uid, ids, context=None):
-        """ retrieve all children projects of project ids;
-            return a dictionary mapping each project to its parent project (or None)
-        """
-        res = dict.fromkeys(ids, None)
-        while ids:
-            cr.execute("""
-                SELECT project.id, parent.id
-                FROM project_project project, project_project parent, account_analytic_account account
-                WHERE project.analytic_account_id = account.id
-                AND parent.analytic_account_id = account.parent_id
-                AND parent.id IN %s
-                """, (tuple(ids),))
-            dic = dict(cr.fetchall())
-            res.update(dic)
-            ids = dic.keys()
-        return res
-
-    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        child_parent = self._get_project_and_children(cr, uid, ids, context)
-        # compute planned_hours, total_hours, effective_hours specific to each project
-        cr.execute("""
-            SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
-                COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task
-            LEFT JOIN project_task_type ON project_task.stage_id = project_task_type.id
-            WHERE project_task.project_id IN %s AND project_task_type.fold = False
-            GROUP BY project_id
-            """, (tuple(child_parent.keys()),))
-        # aggregate results into res
-        res = dict([(id, {'planned_hours': 0.0, 'total_hours': 0.0, 'effective_hours': 0.0}) for id in ids])
-        for id, planned, total, effective in cr.fetchall():
-            # add the values specific to id to all parent projects of id in the result
-            while id:
-                if id in ids:
-                    res[id]['planned_hours'] += planned
-                    res[id]['total_hours'] += total
-                    res[id]['effective_hours'] += effective
-                id = child_parent[id]
-        # compute progress rates
-        for id in ids:
-            if res[id]['total_hours']:
-                res[id]['progress_rate'] = round(100.0 * res[id]['effective_hours'] / res[id]['total_hours'], 2)
-            else:
-                res[id]['progress_rate'] = 0.0
-        return res
-
-    def _get_projects_from_tasks(self, cr, uid, task_ids, context=None):
-        tasks = self.pool.get('project.task').browse(cr, uid, task_ids, context=context)
-        project_ids = [task.project_id.id for task in tasks if task.project_id]
-        return self.pool.get('project.project')._get_project_and_parents(cr, uid, project_ids, context)
-
-    def _get_project_and_parents(self, cr, uid, ids, context=None):
-        """ return the project ids and all their parent projects """
-        res = set(ids)
-        while ids:
-            cr.execute("""
-                SELECT DISTINCT parent.id
-                FROM project_project project, project_project parent, account_analytic_account account
-                WHERE project.analytic_account_id = account.id
-                AND parent.analytic_account_id = account.parent_id
-                AND project.id IN %s
-                """, (tuple(ids),))
-            ids = [t[0] for t in cr.fetchall()]
-            res.update(ids)
-        return list(res)
-
-    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
-        if part and res and ('value' in res):
-            # set Invoice Task Work to 100%
-            data_obj = self.pool.get('ir.model.data')
-            data_id = data_obj._get_id(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
-            if data_id:
-                factor_id = data_obj.browse(cr, uid, data_id).res_id
-                res['value'].update({'to_invoice': factor_id})
-        return res
-
-    _columns = {
-        'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
-            }),
-        'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
-            }),
-        'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
-            }),
-        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo.",
-            store = {
-                'project.project': (_get_project_and_parents, ['tasks', 'parent_id', 'child_ids'], 10),
-                'project.task': (_get_projects_from_tasks, ['planned_hours', 'remaining_hours', 'timesheet_ids', 'stage_id'], 20),
-            }),
-    }
-
-    _defaults = {
-        'invoice_on_timesheets': True,
-    }
-
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """
         mod_obj = self.pool.get('ir.model.data')
@@ -130,12 +25,6 @@ class project_project(osv.osv):
             'default_is_timesheet':True
         }
         help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
-        try:
-            if project.to_invoice and project.partner_id:
-                help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
-        except:
-            # if the user do not have access rights on the partner
-            pass
 
         res = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
         id = res and res[1] or False
@@ -213,7 +102,6 @@ class task(osv.osv):
         'timesheet_ids': fields.one2many('account.analytic.line', 'task_id', 'Timesheets'),
         'analytic_account_id': fields.related('project_id', 'analytic_account_id',
             type='many2one', relation='account.analytic.account', string='Analytic Account', store=True),
-        'contract_state': fields.related('project_id', 'analytic_account_id', 'state', relation="account.analytic.account", string='Contract Status', type='selection', selection=analytic.ANALYTIC_ACCOUNT_STATE),
     }
 
     _defaults = {
@@ -233,7 +121,6 @@ class task(osv.osv):
         if 'value' not in result:
             result['value'] = {}
         project = self.pool['project.project'].browse(cr, uid, project_id, context=context)
-        result['value']['contract_state'] = project.analytic_account_id.state
         return result
 
 

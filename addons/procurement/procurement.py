@@ -109,9 +109,6 @@ class procurement_order(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
 
-        'product_uos_qty': fields.float('UoS Quantity', states={'confirmed': [('readonly', False)]}, readonly=True),
-        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'confirmed': [('readonly', False)]}, readonly=True),
-
         'state': fields.selection([
             ('cancel', 'Cancelled'),
             ('confirmed', 'Confirmed'),
@@ -154,7 +151,7 @@ class procurement_order(osv.osv):
         return result
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
-        """ Finds UoM and UoS of changed product.
+        """ Finds UoM of changed product.
         @param product_id: Changed id of product.
         @return: Dictionary of values.
         """
@@ -162,7 +159,6 @@ class procurement_order(osv.osv):
             w = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {
                 'product_uom': w.uom_id.id,
-                'product_uos': w.uos_id and w.uos_id.id or w.uom_id.id
             }
             return {'value': v}
         return {}

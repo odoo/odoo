@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
@@ -27,14 +28,10 @@ class sale_order(osv.Model):
             help="Complete this field if you plan to invoice the shipping based on picking."),
     }
 
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-        if part:
-            dtype = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_delivery_carrier.id
-            # TDE NOTE: not sure the aded 'if dtype' is valid
-            if dtype:
-                result['value']['carrier_id'] = dtype
-        return result
+    @api.onchange('partner_id')
+    def onchange_partner_id_dtype(self):
+        if self.partner_id:
+            self.carrier_id = self.partner_id.property_delivery_carrier
 
 
     def _delivery_unset(self, cr, uid, ids, context=None):

@@ -82,7 +82,7 @@ Odoo Automatic Email
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
-            <field name="model" eval="'account.analytic.account'"/>
+            <field name="model" eval="'sale.subscription'"/>
             <field name="function" eval="'cron_account_analytic_account'"/>
             <field name="args" eval="'()'" />
         </record>
@@ -92,7 +92,7 @@ Odoo Automatic Email
            <field name="interval_number">1</field>
            <field name="interval_type">days</field>
            <field name="numbercall">-1</field>
-           <field name="model" eval="'account.analytic.account'"/>
+           <field name="model" eval="'sale.subscription'"/>
            <field name="function" eval="'_cron_recurring_create_invoice'"/>
            <field name="args" eval="'()'"/>
         </record>
