@@ -57,7 +57,7 @@
                             <h1>
                                 <field name="name" string="Salesteam"/>
                             </h1>
-                            <div name="options_active"></div>
+                            <div name="options_active"/>
                         </div>
                         <group>
                             <group name="left">
@@ -67,7 +67,7 @@
                             <group name="right">
                             </group>
                         </group>
-                        <notebook colspan="4">
+                        <notebook>
                             <page name="members" string="Team Members">
                                 <field name="member_ids" widget="many2many_kanban">
                                     <kanban quick_create="false" create="true" delete="true">
@@ -88,14 +88,12 @@
                                     </kanban>
                                 </field>
                             </page>
-                            <page string="More Info" groups="base.group_no_one">
+                            <page string="More Info" name="more_info" groups="base.group_no_one">
                                 <group>
                                     <field name="active"/>
-                                    <group string="Company" groups="base.group_multi_company">
-                                        <field name="company_id" options="{'no_create': True}"/>
-                                    </group>
                                 </group>
-                                <group name="sales_team_more_info">
+                                <group string="Company" groups="base.group_multi_company">
+                                    <field name="company_id" options="{'no_create': True}"/>
                                 </group>
                             </page>
                         </notebook>

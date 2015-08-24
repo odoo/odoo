@@ -172,35 +172,35 @@
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
-                    <notebook colspan="4">
-                    <page string="Internal Notes">
-                        <field name="description"/>
-                    </page>
-                    <page name="extra" string="Extra Info">
-                        <group>
+                    <notebook>
+                        <page string="Internal Notes">
+                            <field name="description"/>
+                        </page>
+                        <page name="extra" string="Extra Info">
                             <group>
-                                <field name="opt_out"/>
-                                <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                <group string="Email">
+                                    <field name="opt_out"/>
+                                    <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
+                                </group>
+                                <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                                    <field name="company_id"
+                                        groups="base.group_multi_company"
+                                        options="{'no_create': True}"/>
+                                    <field name="campaign_id" />
+                                    <field name="medium_id"/>
+                                    <field name="source_id"/>
+                                    <field name="referred"/>
+                                </group>
+                                <group string="Opportunity" name="misc">
+                                    <field name="probability" groups="base.group_no_one"/>
+                                    <field name="active"/>
+                                </group>
+                                <group string="Analysis" groups="base.group_no_one">
+                                    <field name="date_open"/>
+                                    <field name="date_closed"/>
+                                </group>
                             </group>
-                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
-                                <field name="company_id"
-                                    groups="base.group_multi_company"
-                                    options="{'no_create': True}"/>
-                                <field name="campaign_id" />
-                                <field name="medium_id"/>
-                                <field name="source_id" />
-                            </group>
-                            <group name="misc">
-                                <field name="probability" groups="base.group_no_one"/>
-                                <field name="active"/>
-                                <field name="referred"/>
-                            </group>
-                            <group>
-                                <field name="date_open" groups="base.group_no_one"/>
-                                <field name="date_closed" groups="base.group_no_one"/>
-                            </group>
-                        </group>
-                    </page>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

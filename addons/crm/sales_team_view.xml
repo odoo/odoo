@@ -87,12 +87,14 @@
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
-                        <div groups="crm.group_use_lead">
-                            <field name="use_leads" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
-                            <label for="use_leads" string="Leads"/>
+                        <div class="o_row">
+                            <span groups="crm.group_use_lead" class="o_row">
+                                <field name="use_leads" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                                <label for="use_leads" string="Leads"/>
+                            </span>
+                            <field name="use_opportunities" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
+                            <label for="use_opportunities"/>
                         </div>
-                        <field name="use_opportunities" class="oe_inline" on_change="onchange_use_leads_opportunities(use_leads, use_opportunities)"/>
-                        <label for="use_opportunities"/>
                     </xpath>
                     <xpath expr="//page[@name='members']" position="after">
                         <page string="Stages" groups="base.group_no_one">
