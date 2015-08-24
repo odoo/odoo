@@ -384,7 +384,7 @@ class BaseModel(object):
                 'help': f.help or None,
                 'ttype': f.type,
                 'relation': f.comodel_name or None,
-                'select_level': tools.ustr(int(f.index)),
+                'index': bool(f.index),
                 'copy': bool(f.copy),
                 'related': f.related and ".".join(f.related),
                 'readonly': bool(f.readonly),
@@ -664,7 +664,7 @@ class BaseModel(object):
             attrs = {
                 'manual': True,
                 'string': field['field_description'],
-                'index': bool(int(field['select_level'])),
+                'index': bool(field['index']),
                 'copy': bool(field['copy']),
                 'related': field['related'],
                 'required': bool(field['required']),

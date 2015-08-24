@@ -225,7 +225,7 @@ class ir_model_fields(osv.osv):
         'related': fields.char('Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names."),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
-        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
+        'index': fields.boolean('Indexed'),
         'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
@@ -253,7 +253,6 @@ class ir_model_fields(osv.osv):
         'name': 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
         'on_delete': 'set null',
-        'select_level': '0',
         'field_description': '',
         'selectable': 1,
     }
@@ -502,7 +501,7 @@ class ir_model_fields(osv.osv):
                         raise UserError(_('New field name must still start with x_ , because it is a custom field!'))
                     if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
                         raise ValueError('Invalid character in column name')
-                    column_rename = (obj._table, item.name, vals['name'], bool(int(item.select_level)))
+                    column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.

@@ -48,7 +48,7 @@
                         <td><strong>Rq</strong></td>
                         <td><strong>Ro</strong></td>
                         <td><strong>Tr</strong></td>
-                        <td><strong>Sel</strong></td>
+                        <td><strong>Idx</strong></td>
                         <td colspan="4"><strong>Modules</strong></td>
                     </tr>
                     <tr t-foreach="o.field_id" t-as="field">
@@ -67,7 +67,7 @@
                         <td><t t-if="field.required">X</t></td>
                         <td><t t-if="field.readonly">X</t></td>
                         <td><t t-if="field.translate">X</t></td>
-                        <td><span t-field="field.select_level"/></td>
+                        <td><t t-if="field.index">X</t></td>
                         <td colspan="4"><span t-field="field.modules"/></td>
                     </tr>
                     <tr>

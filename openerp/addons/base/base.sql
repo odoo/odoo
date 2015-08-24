@@ -34,7 +34,7 @@ CREATE TABLE ir_model_fields (
   ttype varchar,
   relation varchar,
   relation_field varchar,
-  select_level varchar,
+  index boolean,
   copy boolean,
   related varchar,
   readonly boolean default False,
