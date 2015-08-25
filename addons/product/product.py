@@ -545,7 +545,7 @@ class product_template(osv.osv):
             help="This is minimum quantity to purchase from Main Vendor."),
         'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
-        'seller_price': fields.related('seller_ids','price', type='float', string='Supplier Price', help="This is price to purchase from Main Supplier."),
+        'seller_price': fields.related('seller_ids','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
@@ -561,6 +561,7 @@ class product_template(osv.osv):
         'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
 
+    # TODO : Could be removed?
     def _price_get_list_price(self, product):
         return 0.0
 
@@ -1206,6 +1207,7 @@ class product_packaging(osv.osv):
 class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
+
     def _calc_qty(self, cr, uid, ids, fields, arg, context=None):
         result = {}
         for supplier_info in self.browse(cr, uid, ids, context=context):
@@ -1216,27 +1218,27 @@ class product_supplierinfo(osv.osv):
         return result
 
     _columns = {
-        'name' : fields.many2one('res.partner', 'Vendor', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Vendor of this product"),
+        'name': fields.many2one('res.partner', 'Vendor', required=True, domain=[('supplier', '=', True)], ondelete='cascade', help="Vendor of this product"),
         'product_name': fields.char('Vendor Product Name', help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Vendor Product Code', help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
-        'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product vendor."),
+        'sequence': fields.integer('Sequence', help="Assigns the priority to the list of product vendor."),
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Vendor Unit of Measure", readonly="1", help="This comes from the product form."),
-        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this vendor, expressed in the vendor Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
+        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'price': fields.float('Price', required=True, digits_compute=dp.get_precision('Product Price'), help="The price for minimum buy of product"),
+        'price': fields.float('Price', required=True, digits_compute=dp.get_precision('Product Price'), help="The price to purchase a product"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'date_start': fields.date('Start Date', help="Start date for validating supplier price"),
-        'date_end': fields.date('End Date', help="End date for expiring supplier price"),
-        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
-        'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
-        'company_id':fields.many2one('res.company', string='Company',select=1),
+        'date_start': fields.date('Start Date', help="Start date for this vendor price"),
+        'date_end': fields.date('End Date', help="End date for this vendor price"),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
+        'delay': fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
+        'company_id': fields.many2one('res.company', string='Company', select=1),
     }
     _defaults = {
         'min_qty': 0.0,
         'sequence': 1,
         'delay': 1,
         'price': 0.0,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
         'currency_id': lambda self, cr, uid, context: self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
     }
 

@@ -109,31 +109,34 @@
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
                 <form string="Products Price List">
-                    <label for="name" class="oe_edit_only"/>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                    <group col="4">
-                        <group>
-                            <field name="active"/>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <group>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
                         </group>
-                        <group>
-                            <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        </group>
-                    </group>
-                    <div groups="product.group_pricelist_item">
-                        <separator string="Pricelist Items"/>
-                        <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                            <tree string="Pricelist Items">
-                                <field name="name" string="Applicable On"/>
-                                <field name="min_quantity"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="price" string="Price"/>
-                            </tree>
-                        </field>
-                    </div>
+                        <div groups="product.group_pricelist_item">
+                            <separator string="Pricelist Items"/>
+                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                                <tree string="Pricelist Items">
+                                    <field name="name" string="Applicable On"/>
+                                    <field name="min_quantity"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="price" string="Price"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -157,7 +160,7 @@
               </p>
             </field>
         </record>
-        
+
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
             parent="product.menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
