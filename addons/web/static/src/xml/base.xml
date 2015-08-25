@@ -994,13 +994,13 @@
 </t>
 <t t-name="HiddenInputFile">
     <div t-attf-class="oe_hidden_input_file #{fileupload_class or ''}" t-att-style="fileupload_style">
-        <form class="oe_form_binary_form" t-att-target="fileupload_id"
+        <form class="o_form_binary_form" t-att-target="fileupload_id"
             method="post" enctype="multipart/form-data" t-att-action="fileupload_action || '/web/binary/upload'">
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="0"/>
-            <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
-            <input type="file" class="oe_form_binary_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
+            <input type="file" class="o_form_input_file" name="ufile" t-if="widget.widget!='image'"/>
+            <input type="file" class="o_form_input_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>

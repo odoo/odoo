@@ -184,13 +184,13 @@ var Sidebar = Widget.extend({
         });
         this.items.files = attachments;
         this.redraw();
-        this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
+        this.$('.oe_sidebar_add_attachment .o_form_input_file').change(this.on_attachment_changed);
         this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$el.find('form.oe_form_binary_form').submit();
+            this.$el.find('form.o_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment a').text(_t('Uploading...'));
