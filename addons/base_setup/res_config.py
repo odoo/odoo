@@ -41,7 +41,7 @@ class base_config_settings(osv.osv_memory):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Your Company',
+            'name': 'My Company',
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.company',

@@ -71,7 +71,7 @@ class Partner(models.Model):
                     Administrator
                 </p>
                 <div>
-                    <small>Sent from <a ...>Your Company</a> using <a ...>Odoo</a>.</small>
+                    <small>Sent from <a ...>My Company</a> using <a ...>Odoo</a>.</small>
                 </div>
         """
         footer = ""

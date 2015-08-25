@@ -46,7 +46,7 @@ Collaborate securely
 Set the right security policy; public, private or on invitation only --
 according to the information sensitivity.
 
-A Twitter-like Network For Your Company
+A Twitter-like Network For My Company
 ---------------------------------------
 
 Make every employee feel more connected and engaged with twitter-like features

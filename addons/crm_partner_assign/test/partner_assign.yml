@@ -22,7 +22,8 @@
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm.crm_case_21'))
-    assert lead.partner_assigned_id.id == ref('base.res_partner_3') , "Opportuniy is not assigned nearest partner"
+    # import pdb; pdb.set_trace()
+    assert lead.partner_assigned_id.id == ref('base.res_partner_18') , "Opportuniy is not assigned nearest partner"
     assert 50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude
     assert -4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude 
 -

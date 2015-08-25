@@ -21,7 +21,7 @@
         <function name="install_lang" model="res.lang"/>
 
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
             <field name="image" eval="False"/>
             <field name="customer" eval="False"/>
@@ -36,9 +36,9 @@
 
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Your Company Tagline</field>
+            <field name="rml_header1">My Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 

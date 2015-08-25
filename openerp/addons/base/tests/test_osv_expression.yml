@@ -474,10 +474,10 @@
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on an untranslated field.
 -
     !python {model: res.partner }: |
-        all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
-        assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'v%')])
-        assert len(all_ids) >= 1, "Must match one partner (Vicking Direct), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=like', 'A_U_TeK')])
+        assert len(all_ids) == 1, "Must match one partner (ASUSTeK), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'c%')])
+        assert len(all_ids) >= 1, "Must match one partner (China Export), got %r"%all_ids
 -
     Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
 -

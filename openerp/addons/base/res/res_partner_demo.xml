@@ -160,12 +160,11 @@
             <field name="name">Think Big Systems</field>
             <field name="is_company">1</field>
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
-            <field name="city">Boston</field>
-            <field name="zip">02203</field>
+            <field name="city">London</field>
             <field name="email">thinkbig@yourcompany.example.com</field>
             <field name="phone">+1 857 349 3049</field>
-            <field name="country_id" ref="base.us"/>
-            <field name="street">One Lincoln Street</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="street">89 Lingfield Tower</field>
             <field name="website">http://www.think-big.com</field>
             <field name="image" type="base64" file="base/static/img/res_partner_18-image.png"/>
         </record>
@@ -191,22 +190,6 @@
             <field name="parent_id" eval="ref('res_partner_4')"/>
             <field name="function">Production Supervisor</field>
             <field name="email">richard.ellis@deltapc.example.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_8" model="res.partner">
-            <field name="name">Paul Williams</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="function">Line Mechanic</field>
-            <field name="email">paul.williams@deltapc.example.com</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_9" model="res.partner">
-            <field name="name">Brian Williams</field>
-            <field name="parent_id" eval="ref('res_partner_4')"/>
-            <field name="function">Computer Technician</field>
-            <field name="email">brian.williams@deltapc.example.com</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>

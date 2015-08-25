@@ -51,7 +51,7 @@
 <template id="contactus_form_company_name" name="Company Name" inherit_id="website_crm.contactus_form" customize_show="True">
     <xpath expr="//div[@name='email_from_container']" position="after">
         <div t-attf-class="form-group #{error and 'partner_name' in error and 'has-error' or ''}">
-            <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Company</label>
+            <label class="col-md-3 col-sm-4 control-label" for="partner_name">My Company</label>
             <div class="col-md-7 col-sm-8">
                 <input type="text" class="form-control" name="partner_name" required="True" t-attf-value="#{partner_name or ''}"/>
             </div>

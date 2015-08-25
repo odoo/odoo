@@ -88,5 +88,5 @@
     procurement = proc_obj.browse(cr, uid, proc_ids[0])
     assert procurement.product_qty == 17, 'It should have taken the two first pickings into account for the virtual stock for the orderpoint, not the third'
     assert datetime.datetime.strptime(procurement.next_delivery_date, DEFAULT_SERVER_DATETIME_FORMAT).weekday() == 3, 'The next delivery date should be on a Thursday'
-    assert datetime.datetime.strptime(procurement.purchase_line_id.date_planned, DEFAULT_SERVER_DATETIME_FORMAT).weekday() == 3, 'Check it has been put on the purchase line also'
+    assert datetime.datetime.strptime(procurement.purchase_line_id.date_planned, DEFAULT_SERVER_DATETIME_FORMAT).weekday() == 4, 'Check it has been put on the purchase line also'
 
