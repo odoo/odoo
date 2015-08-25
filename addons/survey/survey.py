@@ -1230,7 +1230,7 @@ class survey_user_input_line(osv.Model):
         elif question.matrix_subtype == 'multiple':
             for col in question.labels_ids:
                 for row in question.labels_ids_2:
-                    a_tag = "%s_%s_%s" % (answer_tag, row.id, col.id)
+                    a_tag = "survey_%s_%s_%s" % (answer_tag, row.id, col.id)
                     if a_tag in ca:
                         no_answers = False
                         vals.update({'answer_type': 'suggestion', 'value_suggested': col.id, 'value_suggested_row': row.id})
