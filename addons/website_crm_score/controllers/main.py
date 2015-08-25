@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import simplejson
 from openerp import http, SUPERUSER_ID, fields
 from openerp.http import request
 from openerp.tools import html_escape
 from openerp.addons.website.controllers.main import Website
-from openerp.addons.website_crm.controllers.main import contactus
+from openerp.addons.website_form.controllers.main import WebsiteForm
 
 class PageController(Website):
 
@@ -33,27 +34,31 @@ class PageController(Website):
         return response
 
 
-class ContactController(contactus):
+class ContactController(WebsiteForm):
 
-    @http.route(['/crm/contactus'], type='http', auth="public", website=True)
-    def contactus(self, **kwargs):
-        response = super(ContactController, self).contactus(**kwargs)
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    def website_form(self, model_name, **kwargs):
+        response = super(ContactController, self).website_form(model_name, **kwargs)
+        if model_name != 'crm.lead':
+            return response
+
         # the cookie is written here because the response is not available in the create_lead function
-        if '_values' in response.qcontext:  # contactus error : fields validation not passed
-            # NOTE: this requires for the lead_id to be added to values in the parent controller
-            lead_id = response.qcontext.get('_values').get('lead_id')
-            if lead_id:  # a new lead has been created
-                lead_model = request.registry['crm.lead']
-                # sign the lead_id
-                sign = lead_model.encode(lead_id)
-                response.set_cookie('lead_id', sign, domain=lead_model.get_score_domain_cookies())
+        response_data = simplejson.loads(response.data)  # controller is json now
+        if 'id' in response_data:  # a new lead has been created
+            lead_model = request.registry['crm.lead']
+            # sign the lead_id
+            sign = lead_model.encode(response_data['id'])
+            response.set_cookie('lead_id', sign, domain=lead_model.get_score_domain_cookies())
         return response
 
-    def create_real_lead(self, request, values, kwargs):
-        """ Make this function overridable to create a lead with another function that create_lead from webiste_crm """
-        return super(ContactController, self).create_lead(request, values, kwargs)
+    def create_real_lead(self, request, model, values, custom, meta=None):
+        """ Make this function overridable to create a lead with another function than insert_record from website_form """
+        return super(ContactController, self).insert_record(request, model, values, custom, meta)
 
-    def create_lead(self, request, values, kwargs):
+    def insert_record(self, request, model, values, custom, meta=None):
+        if model.model != 'crm.lead':
+            return super(ContactController, self).insert_record(request, model, values, custom, meta)
+
         cr, context = request.cr, request.context
 
         lead_model = request.registry["crm.lead"]
@@ -91,6 +96,8 @@ class ContactController(contactus):
                     body += '<br/><b>%s</b>: <b>%s</b>' % (fieldname, html_escape(changed_values[fieldname]))
                 request.registry['crm.lead'].message_post(cr, SUPERUSER_ID, [lead_id], body=body, subject="Field value changed", context=context)
 
+            return lead_id
+
         else:
             # either no lead_id cookie OR the lead_id doesn't exist in db OR the current one is closed -> a lead is created
             lang = context.get('lang', False)
@@ -115,7 +122,7 @@ class ContactController(contactus):
                     urls.append('<a href="%s" target="_blank"><b>%s</b></a>' % (url_encoded, url_encoded))
                 body = '<br/>'.join(urls)
 
-            new_lead_id = self.create_real_lead(request, values, kwargs)
+            new_lead_id = self.create_real_lead(request, model, values, custom, meta)
 
             # if pages were seen, a message is posted
             if body:
