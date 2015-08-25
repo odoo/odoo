@@ -63,7 +63,7 @@ class Forum(models.Model):
                                 <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
                             </div>
                             <div class="col-md-12">
-                                <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
+                                <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
                             </div>
                         </div>
                     </section>""")
@@ -126,6 +126,8 @@ class Forum(models.Model):
     karma_editor = fields.Integer(string='Editor Features: image and links',
                                   default=30, oldname='karma_editor_link_files')
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
+    karma_post = fields.Integer(string='Ask questions without validation', default=100)
+    karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
     @api.one
     @api.constrains('allow_question', 'allow_discussion', 'allow_link', 'default_post_type')
@@ -193,7 +195,7 @@ class Post(models.Model):
 
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
-    state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
+    state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
     views = fields.Integer('Number of Views', default=0)
     active = fields.Boolean('Active', default=True)
     post_type = fields.Selection([
@@ -225,6 +227,17 @@ class Post(models.Model):
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
+
+    @api.one
+    @api.depends('flags_uid')
+    def _get_flags_count(self):
+        self.flags_count = len(self.flags_uid)
+
+    # moderation tools
+    validator_id = fields.Many2one('res.users', string='Reviewed by', select=True, readonly=True)
+    flag_moderator_id = fields.Many2one('res.users', string='Marked as offensive by', select=True, readonly=True)
+    flags_uid = fields.Many2many('res.users', relation='forum_post_flags_users_rel', string='Flagged by')
+    flags_count = fields.Integer('Number of flags', compute='_get_flags_count', store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
@@ -306,6 +319,7 @@ class Post(models.Model):
     karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
     karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
     karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
+    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights')
     can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
     can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
     can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
@@ -318,6 +332,9 @@ class Post(models.Model):
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
     can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
+    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
+    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
+    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
 
     @api.multi
     def _get_post_karma_rights(self):
@@ -347,6 +364,9 @@ class Post(models.Model):
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
             post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
+            post.can_post = is_admin or user.karma >= post.forum_id.karma_post
+            post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
+            post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
 
     @api.one
     @api.constrains('post_type', 'forum_id')
@@ -383,6 +403,8 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to create a new question')
         elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
+        if not post.parent_id and not post.can_post:
+            post.state = 'pending'
         # messaging and chatter
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         if post.parent_id:
@@ -397,7 +419,8 @@ class Post(models.Model):
                 (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
             )
             post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
-            self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+            if post.state == 'active':
+                self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
         return post
 
     @api.model
@@ -489,6 +512,70 @@ class Post(models.Model):
             'closed_uid': self._uid,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
             'closed_reason_id': reason_id,
+        })
+        return True
+
+    @api.multi
+    def validate(self):
+        if any(not post.can_moderate for post in self):
+            raise KarmaError('Not enough karma to validate a post')
+
+        # if state == pending, no karma previously added for the new question
+        if self.state == 'pending':
+            self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
+
+        self.validator_id = self.env.user
+
+        self.write({
+            'state': 'active',
+            'active': True,
+            'flags_uid': [(5, 0, 0)],
+        })
+        return True
+
+    @api.multi
+    def refuse(self):
+        if any(not post.can_moderate for post in self):
+            raise KarmaError('Not enough karma to refuse a post')
+
+        self.validator_id = self.env.user
+        return True
+
+    @api.multi
+    def flag(self):
+        if any(not post.can_flag for post in self):
+            raise KarmaError('Not enough karma to flag a post')
+
+        if(self.env.user in self.flags_uid):
+            return {'error': 'post_already_flagged'}
+
+        state = 'flagged'
+        if(self.state in ['pending', 'offensive', 'close']):
+            state = self.state
+
+        self.write({
+            'state': state,
+            'flags_uid': [(4, self.env.user.id, 0)],
+        })
+        return {'flags_count': len(self.flags_uid)}
+
+    @api.multi
+    def mark_as_offensive(self, reason_id):
+        if any(not post.can_moderate for post in self):
+            raise KarmaError('Not enough karma to mark a post as offensive')
+
+        # remove some karma
+        for post in self:
+            # TODO: consider making this a tunable karma parameter
+            _logger.info('Downvoting user <%s> for posting spam/offensive contents', post.create_uid)
+            post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
+
+        self.write({
+            'state': 'offensive',
+            'flag_moderator_id': self._uid,
+            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+            'closed_reason_id': reason_id,
+            'active': False,
         })
         return True
 
@@ -645,6 +732,7 @@ class PostReason(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Closing Reason', required=True, translate=True)
+    reason_type = fields.Char(string='Reason Type')
 
 
 class Vote(models.Model):

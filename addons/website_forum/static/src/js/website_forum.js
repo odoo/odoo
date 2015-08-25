@@ -45,6 +45,40 @@ if(!$('.website_forum').length) {
         }
     );
 
+    $('.flag').not('.karma_required').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        ajax.jsonRpc($link.data('href'), 'call', {})
+            .then(function (data) {
+                if(data.error) {
+                    var $warning;
+                    if(data.error == 'anonymous_user') {
+                        $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            _t('Sorry you must be logged to flag a post') +
+                            '</div>');
+                    } else if(data.error == 'post_already_flagged') {
+                        $warning = $('<div class="alert alert-danger alert-dismissable oe_forum_alert" id="flag_alert">'+
+                            '<button type="button" class="close notification_close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+                            _t('You already flagged this post') +
+                            '</div>');
+                    }
+                    var flag_alert = $link.parent().find("#flag_alert");
+                    if (flag_alert.length === 0) {
+                        $link.parent().append($warning);
+                    }
+                } else {
+                    var elem = $link.parent().find(".vote_count");
+                    if(elem.html().indexOf("(") < 0) {
+                        var c = parseInt($('#count_flagged_posts').html(), 10);
+                        c++;
+                        $('#count_flagged_posts').html(c);
+                    }
+                    elem.html(' (' + data['flags_count'] + ')');
+                }
+            });
+    });
+
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
