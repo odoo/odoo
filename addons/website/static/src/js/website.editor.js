@@ -297,15 +297,19 @@ define(['summernote/summernote'], function () {
     };
 
     $(document).on('click keyup', function () {
-        $('button[data-event="undo"]').attr('disabled', !history.hasUndo());
-        $('button[data-event="redo"]').attr('disabled', !history.hasRedo());
+        var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
+        var popover_history = ($popover.data()||{}).NoteHistory;
+        if(!popover_history || popover_history == history) return;
+        var editor = $popover.parent('.note-editor');
+        $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+        $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
     });
 
     eventHandler.editor.undo = function ($popover) {
-        if(!$popover.attr('disabled')) history.undo();
+        if(!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
     };
     eventHandler.editor.redo = function ($popover) {
-        if(!$popover.attr('disabled')) history.redo();
+        if(!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
     };
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
