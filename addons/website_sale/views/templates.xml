@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_rating.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
@@ -340,7 +341,8 @@
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
                 <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
-            </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
+            </div>
+            <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1" id="product_details">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
@@ -546,8 +548,16 @@
   </xpath>
 </template>
 
+
 <!-- Product options: OpenChatter -->
-<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion">
+<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
+  <xpath expr="//div[@id='product_details']" position="inside">
+      <t t-call="rating.rating_card">
+        <t t-set="rating_stat" t-value="rating_product"/>
+        <t t-set="max_rate" t-value="5"/>
+        <t t-set="min_rate" t-value="1"/>
+      </t>
+    </xpath>
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
         <section class="container">
@@ -563,11 +573,38 @@
                 <t t-call="website_mail.message_thread">
                   <t t-set="object" t-value="product"/>
                   <t t-set="chatter_mode" t-value="'json'"/>
+                  <t t-set="rating_enable" t-value="True"/>
                 </t>
             </div>
         </section>
     </xpath>
 </template>
+
+
+<!-- extend the generic mail thread message template to add rating widget -->
+<template id="message_thread_rating" inherit_id="website_mail.message_thread" name="Chatter with rating">
+  <xpath expr="//section[contains(@class, 'o_website_mail_thread')]" position="attributes">
+    <attribute name="data-rating-enabled">1</attribute>
+  </xpath>
+  <xpath expr="//textarea[@name='message']" position="before">
+    <t t-if="rating_enable">
+      <t t-call="rating.rating_star_card">
+        <t t-set="rating_input_name" t-value="'rating'"/>
+      </t>
+    </t>
+  </xpath>
+  <xpath expr="//ul[contains(@class, 'o_website_comments')]//h5" position="after">
+    <t t-if="rating_enable">
+      <div t-if="rating_message_values.get(message.id)">
+        <t t-call="rating.rating_star_card">
+          <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)"/>
+          <t t-set="rating_disabled" t-value="True"/>
+        </t>
+      </div>
+    </t>
+  </xpath>
+</template>
+
 
 <!-- /shop/cart -->
 

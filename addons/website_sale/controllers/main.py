@@ -280,6 +280,13 @@ class website_sale(http.Controller):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: pool['res.currency']._compute(cr, uid, from_currency, to_currency, price, context=context)
 
+        # get the rating attached to a mail.message, and the rating stats of the product
+        Rating = pool['rating.rating']
+        rating_ids = Rating.search(cr, uid, [('message_id', 'in', product.website_message_ids.ids)], context=context)
+        ratings = Rating.browse(cr, uid, rating_ids, context=context)
+        rating_message_values = dict([(record.message_id.id, record.rating) for record in ratings])
+        rating_product = product.rating_get_stats([('website_published', '=', True)])
+
         if not context.get('pricelist'):
             context['pricelist'] = int(self.get_pricelist())
             product = template_obj.browse(cr, uid, int(product), context=context)
@@ -295,7 +302,9 @@ class website_sale(http.Controller):
             'categories': categs,
             'main_object': product,
             'product': product,
-            'get_attribute_value_ids': self.get_attribute_value_ids
+            'get_attribute_value_ids': self.get_attribute_value_ids,
+            'rating_message_values' : rating_message_values,
+            'rating_product' : rating_product
         }
         return request.website.render("website_sale.product", values)
 
