@@ -270,13 +270,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        applicant = super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
-        if applicant.job_id:
-            name = applicant.partner_name if applicant.partner_name else applicant.name
-            applicant.job_id.message_post(
-                body=_('New application from %s') % name,
-                subtype="hr_recruitment.mt_job_applicant_new")
-        return applicant
+        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
 
     @api.multi
     def write(self, vals):
@@ -292,14 +286,6 @@ class Applicant(models.Model):
                 res = super(Applicant, self).write(vals)
         else:
             res = super(Applicant, self).write(vals)
-
-        # post processing: if job changed, post a message on the job
-        if vals.get('job_id'):
-            for applicant in self:
-                name = applicant.partner_name if applicant.partner_name else applicant.name
-                self.env['hr.job'].browse([vals['job_id']]).message_post(
-                    body=_('New application from %s') % name,
-                    subtype="hr_recruitment.mt_job_applicant_new")
 
         # post processing: if stage changed, post a message in the chatter
         if vals.get('stage_id'):

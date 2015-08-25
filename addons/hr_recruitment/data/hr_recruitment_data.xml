@@ -125,13 +125,6 @@
         <field name="default" eval="False"/>
         <field name="hidden" eval="True"/>
     </record>
-    <record id="mt_job_applicant_new" model="mail.message.subtype">
-        <field name="name">Applicant Created</field>
-        <field name="res_model">hr.job</field>
-        <field name="default" eval="True"/>
-        <field name="parent_id" eval="ref('mt_applicant_new')"/>
-        <field name="relation_field">job_id</field>
-    </record>
     <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
         <field name="name">Applicant Stage Changed</field>
         <field name="res_model">hr.job</field>
