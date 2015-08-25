@@ -824,12 +824,15 @@ class product_template(osv.osv):
 
         product_product = self.pool['product.product']
         results = product_product.name_search(
-            cr, user, name, args, operator=operator, context=context, limit=limit)
+            cr, user, name, args, operator=operator, context=context)
         product_ids = [p[0] for p in results]
-        template_ids = [p.product_tmpl_id.id
-                            for p in product_product.browse(
-                                cr, user, product_ids, context=context)]
-
+        r =set()
+        for p in product_product.browse(cr, user, product_ids, context=context):
+            if len(r)<limit:
+                r.add(p.product_tmpl_id.id)
+            else:
+                break
+        template_ids = list(r)
         # re-apply product.template order + name_get
         return super(product_template, self).name_search(
             cr, user, '', args=[('id', 'in', template_ids)],
