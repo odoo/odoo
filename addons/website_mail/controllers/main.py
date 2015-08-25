@@ -73,6 +73,7 @@ class WebsiteMail(http.Controller):
 
     @http.route(['/website_mail/follow'], type='json', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
+        # TDE FIXME: check this method with new followers
         cr, uid, context = request.cr, request.uid, request.context
 
         partner_obj = request.registry['res.partner']

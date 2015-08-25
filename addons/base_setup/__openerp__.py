@@ -11,8 +11,6 @@ This module helps to configure the system at the installation of a new database.
 Shows you a list of applications features to install from.
 
     """,
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com',
     'depends': ['base', 'web_kanban'],
     'data': [
         'security/ir.model.access.csv',

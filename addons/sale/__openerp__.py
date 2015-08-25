@@ -5,7 +5,7 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    'sequence': 14,
+    'sequence': 15,
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
 Manage sales quotations and orders
@@ -38,7 +38,6 @@ The Dashboard for the Sales Manager will include
 * My Quotations
 * Monthly Turnover (Graph)
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sales_team','account', 'procurement', 'report'],
     'data': [
@@ -60,6 +59,7 @@ The Dashboard for the Sales Manager will include
         'views/report_saleorder.xml',
         'views/sale.xml',
         'sales_team_dashboard.xml',
+        'sale_tip_data.xml',
     ],
     'demo': ['sale_demo.xml'],
     'test': [

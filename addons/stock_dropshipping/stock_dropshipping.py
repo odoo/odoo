@@ -43,3 +43,12 @@ class purchase_order(models.Model):
         if not self.env.context.get('no_invoice_policy_check'):
             self._check_invoice_policy()
         super(purchase_order, self).wkf_confirm_order()
+
+class procurement_order(models.Model):
+    _inherit = 'procurement.order'
+
+    @api.model
+    def update_origin_po(self, po, proc):
+        super(procurement_order, self).update_origin_po(po, proc)
+        if proc.sale_line_id and not (proc.origin in po.origin):
+            po.sudo().write({'origin': po.origin+', '+proc.origin})

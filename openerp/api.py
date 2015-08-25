@@ -652,7 +652,8 @@ class Environment(object):
          - :attr:`uid`, the current user id;
          - :attr:`context`, the current context dictionary.
 
-        It also provides access to the registry, a cache for records, and a data
+        It provides access to the registry by implementing a mapping from model
+        names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
     _local = Local()
@@ -703,9 +704,21 @@ class Environment(object):
         envs.add(self)
         return self
 
+    def __contains__(self, model_name):
+        """ Test whether the given model exists. """
+        return model_name in self.registry
+
     def __getitem__(self, model_name):
-        """ return a given model """
+        """ Return an empty recordset from the given model. """
         return self.registry[model_name]._browse(self, ())
+
+    def __iter__(self):
+        """ Return an iterator on model names. """
+        return iter(self.registry)
+
+    def __len__(self):
+        """ Return the size of the model registry. """
+        return len(self.registry)
 
     def __call__(self, cr=None, user=None, context=None):
         """ Return an environment based on ``self`` with modified parameters.

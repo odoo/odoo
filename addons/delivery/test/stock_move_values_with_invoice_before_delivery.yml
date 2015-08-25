@@ -4,7 +4,7 @@
   set a weight on ipod 16GB
 -
   !python {model: product.product, id: product.product_product_11}: |
-    self.write({'weight': 0.25, 'weight_net': 0.2})
+    self.write({'weight': 0.25})
 -
   create a SO with invoice before delivery
 -
@@ -66,7 +66,6 @@
      move = self.picking_ids.move_lines
      assert move.product_qty == 2, 'wrong product_qty'
      assert move.weight == 0.5, 'wrong move weight'
-     assert move.weight_net == 0.4, 'wrong move weight_net'
 -
   ship
 -

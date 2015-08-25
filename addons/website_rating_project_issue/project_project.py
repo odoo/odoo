@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from openerp import api, models
+from openerp import api, fields, models
 
 
 class Project(models.Model):
 
-    _inherit = 'project.project'
+    _name = "project.project"
+    _inherit = ['project.project', 'website.published.mixin']
 
     @api.multi
     def action_view_all_rating(self):
@@ -16,3 +17,10 @@ class Project(models.Model):
             'target': 'self',
             'url': "/project/rating/%s" % (self.id,)
         }
+
+    @api.multi
+    def _website_url(self, field_name, arg):
+        res = dict()
+        for project in self:
+            res[project.id] = "/project/rating/%s" % project.id
+        return res

@@ -2,29 +2,27 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-from openerp.osv import fields, osv, orm
-from openerp.exceptions import UserError
-from openerp.tools.translate import _
+from openerp.osv import fields, osv
+
 
 class make_procurement(osv.osv_memory):
     _name = 'make.procurement'
     _description = 'Make Procurements'
     
-    def onchange_product_id(self, cr, uid, ids, prod_id):
-        """ On Change of Product ID getting the value of related UoM.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of IDs selected 
-         @param prod_id: Changed ID of Product 
-         @return: A dictionary which gives the UoM of the changed Product 
-        """
-        product = self.pool.get('product.product').browse(cr, uid, prod_id)
-        return {'value': {'uom_id': product.uom_id.id}}
+    def onchange_product_id(self, cr, uid, ids, prod_id, context=None):
+        product = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
+        return {'value': {
+            'uom_id': product.uom_id.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_variant_count': product.product_tmpl_id.product_variant_count
+        }}
     
     _columns = {
         'qty': fields.float('Quantity', digits=(16,2), required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=1),
+        'res_model': fields.char('Res Model'),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Template', required=True),
+        'product_variant_count': fields.related('product_tmpl_id', 'product_variant_count', type='integer', string='Variant Number'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'date_planned': fields.date('Planned Date', required=True),
@@ -37,14 +35,7 @@ class make_procurement(osv.osv_memory):
     }
 
     def make_procurement(self, cr, uid, ids, context=None):
-        """ Creates procurement order for selected product.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
-        @return: A dictionary which loads Procurement form view.
-        """
+        """ Creates procurement order for selected product. """
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context).login
         wh_obj = self.pool.get('stock.warehouse')
         procurement_obj = self.pool.get('procurement.order')
@@ -83,24 +74,14 @@ class make_procurement(osv.osv_memory):
          }
 
     def default_get(self, cr, uid, fields, context=None):
-        """ To get default values for the object.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values
-        @param context: A standard dictionary
-        @return: A dictionary which of fields with values.
-        """
         if context is None:
             context = {}
         record_id = context.get('active_id')
 
         if context.get('active_model') == 'product.template':
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', '=', context.get('active_id'))], context=context)
-            if len(product_ids) == 1:
+            if product_ids:
                 record_id = product_ids[0]
-            else:
-                raise UserError(_('Please use the Product Variant view to request a procurement.'))
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
 
@@ -119,3 +100,8 @@ class make_procurement(osv.osv_memory):
             res['warehouse_id'] = warehouse_id[0] if warehouse_id else False
 
         return res
+
+    def create(self, cr, uid, values, context=None):
+        if values.get('product_id'):
+            values.update(self.onchange_product_id(cr, uid, None, values['product_id'], context=context)['value'])
+        return super(make_procurement, self).create(cr, uid, values, context=context)

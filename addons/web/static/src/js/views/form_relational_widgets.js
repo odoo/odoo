@@ -12,6 +12,7 @@ var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
 var ViewManager = require('web.ViewManager');
+var formats = require('web.formats');
 
 
 var _t = core._t;
@@ -26,30 +27,29 @@ var M2ODialog = Dialog.extend({
         this._super(parent, {
             title: _.str.sprintf(_t("Create a %s"), parent.string),
             size: 'medium',
+            buttons: [
+                {text: _t('Create'), classes: 'btn-primary', click: function() {
+                    if (this.$("input").val() !== ''){
+                        this.getParent()._quick_create(this.$("input").val());
+                        this.close();
+                    } else {
+                        e.preventDefault();
+                        this.$("input").focus();
+                    }
+                }},
+
+                {text: _t('Create and edit'), classes: 'btn-primary', close: true, click: function() {
+                    this.getParent()._search_create_popup("form", undefined, this.getParent()._create_context(this.$("input").val()));
+                }},
+
+                {text: _t('Cancel'), close: true}
+            ]
         });
     },
     start: function() {
-        var self = this;
-        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), self.name);
-        this.$("p").text( text );
-        this.$buttons.html(QWeb.render("M2ODialog.buttons"));
+        var text = _.str.sprintf(_t("You are creating a new %s, are you sure it does not exist yet?"), this.name);
+        this.$("p").text(text);
         this.$("input").val(this.getParent().$input.val());
-        this.$buttons.find(".oe_form_m2o_qc_button").click(function(e){
-            if (self.$("input").val() !== ''){
-                self.getParent()._quick_create(self.$("input").val());
-                self.destroy();
-            } else{
-                e.preventDefault();
-                self.$("input").focus();
-            }
-        });
-        this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
-            self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
-            self.destroy();
-        });
-        this.$buttons.find(".oe_form_m2o_cancel_button").click(function(){
-            self.destroy();
-        });
     },
 });
 
@@ -452,9 +452,11 @@ var AbstractManyField = common.AbstractField.extend({
                 self.trigger("change:commands");
             }
         });
-        this.on("change:commands", this, function () {
+        this.on("change:commands", this, function (options) {
             self.has_not_committed_changes = false;
+            self._inhibit_on_change_flag = !!(options||{})._inhibit_on_change_flag;
             self.set({'value': self.dataset.ids.slice()});
+            self._inhibit_on_change_flag = false;
         });
     },
 
@@ -472,11 +474,10 @@ var AbstractManyField = common.AbstractField.extend({
             throw new Error("set_value of '"+this.name+"' must receive an list of ids without virtual ids.", ids);
         }
         if (_.find(ids, function(id) { return typeof(id) !== "number"; } )) {
-            this.dataset.reset_ids([]);
-            return this.send_commands(ids);
+            return this.send_commands(ids, {'_inhibit_on_change_flag': this._inhibit_on_change_flag});
         }
         this.dataset.reset_ids(ids);
-        this._super(ids);
+        return $.when(this._super(ids));
     },
 
     internal_set_value: function(ids) {
@@ -602,7 +603,7 @@ var AbstractManyField = common.AbstractField.extend({
                         }
                         return;
                     case COMMANDS.DELETE_ALL:
-                        return dataset.reset_ids([]);
+                        return dataset.reset_ids([], {keep_read_data: true});
                     case COMMANDS.REPLACE_WITH:
                         dataset.ids = [];
                         return dataset.alter_ids(command[2], options);
@@ -614,7 +615,7 @@ var AbstractManyField = common.AbstractField.extend({
         });
 
         this.mutex.def.then(function () {
-            self.trigger("change:commands");
+            self.trigger("change:commands", options);
             def.resolve(res);
         });
         return def;
@@ -632,17 +633,27 @@ var AbstractManyField = common.AbstractField.extend({
             command_list = [],
             id, index, alter_order;
         
+        function format_many2one (values) {
+            values = _.clone(values);
+            for (var k in values) {
+                if ((values[k] instanceof Array) && values[k].length === 2 && typeof values[k][0] === "number" && typeof values[k][1] === "string") {
+                    values[k] = values[k][0];
+                }
+            }
+            return values;
+        }
+
         _.each(this.get('value'), function (id) {
             index = starting_ids.indexOf(id);
             if (index !== -1) {
                 starting_ids.splice(index, 1);
             }
             if (alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;})) {
-                command_list.push(COMMANDS.create(alter_order.values));
+                command_list.push(COMMANDS.create(format_many2one(alter_order.values)));
                 return;
             }
             if (alter_order = _.detect(self.dataset.to_write, function(x) {return x.id === id;})) {
-                command_list.push(COMMANDS.update(alter_order.id, alter_order.values));
+                command_list.push(COMMANDS.update(alter_order.id, format_many2one(alter_order.values)));
                 return;
             }
             if (!is_one2many || self.dataset.delete_all) {
@@ -830,10 +841,12 @@ var FieldX2Many = AbstractManyField.extend({
         return (this.viewmanager && this.viewmanager.active_view);
     },
     set_value: function(value_) {
-        this._super(value_);
-        if (this.is_started && !this.no_rerender) {
-            return this.reload_current_view();
-        }
+        var self = this;
+        this._super(value_).then(function () {
+            if (self.is_started && !self.no_rerender) {
+                return self.reload_current_view();
+            }
+        });
     },
     commit_value: function() {
         var view = this.get_active_view();
@@ -923,7 +936,7 @@ var X2ManyViewManager = ViewManager.extend({
                 return self.x2m.data_create(data, options);
             },
             write_function: function(id, data, options) {
-                return self.x2m.data_update(id, data, {}).done(function() {
+                return self.x2m.data_update(id, data, options).done(function() {
                     self.x2m.reload_current_view();
                 });
             },
@@ -1087,8 +1100,8 @@ var One2ManyListView = X2ManyListView.extend({
             res_id: id,
             context: self.x2m.build_context(),
             title: _t("Open: ") + self.x2m.string,
-            write_function: function(id, data) {
-                return self.x2m.data_update(id, data, {}).done(function() {
+            write_function: function(id, data, options) {
+                return self.x2m.data_update(id, data, options).done(function() {
                     self.x2m.reload_current_view();
                 });
             },
@@ -1450,7 +1463,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
     get_file_url: function (attachment) {
-        return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment.id});
+        return '/web/content/' + attachment.id + '?download=true';
     },
     read_name_values : function () {
         var self = this;
@@ -1459,10 +1472,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         var _value = _.filter(ids, function (id) { return typeof self.data[id] == 'undefined'; } );
         // send request for get_name
         if (_value.length) {
-            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname']]).then(function (datas) {
+            return this.ds_file.call('read', [_value, ['id', 'name', 'datas_fname', 'mimetype']]).then(function (datas) {
                 _.each(datas, function (data) {
                     data.no_unlink = true;
-                    data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
+                    data.url = self.get_file_url(data);
                     self.data[data.id] = data;
                 });
                 return ids;
@@ -1483,6 +1496,13 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
             $input.after($input.clone(true)).remove();
             self.$(".oe_fileupload").show();
 
+            // display image thumbnail
+            self.$(".o_image[data-mimetype^='image']").each(function () {
+                var $img = $(this);
+                if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+                    $img.css('background-image', "url('" + $img.data('src') + "')");
+                }
+            });
         });
     },
     on_file_change: function (event) {
@@ -1536,20 +1556,9 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         } else {
             if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
                 delete this.data[0];
-                this.data[result.id] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
-            } else {
-                this.data[result.id] = {
-                    'id': result.id,
-                    'name': result.name,
-                    'filename': result.filename,
-                    'url': this.get_file_url(result)
-                };
             }
+            result.url = this.get_file_url(result);
+            this.data[result.id] = result;
             var values = _.clone(this.get('value'));
             values.push(result.id);
             this.set({'value': values});
@@ -1558,7 +1567,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
     },
     on_file_delete: function (event) {
         event.stopPropagation();
-        var file_id=$(event.target).data("id");
+        var file_id=$(event.target).closest('.oe_delete').data("id");
         if (file_id) {
             var files = _.filter(this.get('value'), function (id) {return id != file_id;});
             if(!this.data[file_id].no_unlink) {

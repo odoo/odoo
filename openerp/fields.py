@@ -42,14 +42,18 @@ def _check_value(value):
     return value.get() if isinstance(value, SpecialValue) else value
 
 
-def resolve_all_mro(model, name, reverse=False):
-    """ Return the (successively overridden) values of attribute ``name`` in the
-        class of ``model`` in mro order (or inverse order if ``reverse``).
+def resolve_mro(model, name, predicate):
+    """ Return the list of successively overridden values of attribute ``name``
+        in mro order on ``model`` that satisfy ``predicate``.
     """
-    klasses = reversed(type(model).__mro__) if reverse else type(model).__mro__
-    for klass in klasses:
-        if name in klass.__dict__:
-            yield klass.__dict__[name]
+    result = []
+    for cls in type(model).__mro__:
+        if name in cls.__dict__:
+            value = cls.__dict__[name]
+            if not predicate(value):
+                break
+            result.append(value)
+    return result
 
 
 def default_new_to_new(field, value):
@@ -392,15 +396,16 @@ class Field(object):
     # Setup field parameter attributes
     #
 
+    def _can_setup_from(self, field):
+        """ Return whether ``self`` can retrieve parameters from ``field``. """
+        return isinstance(field, type(self))
+
     def _setup_attrs(self, model, name):
         """ Determine field parameter attributes. """
         # determine all inherited field attributes
         attrs = {}
-        for field in resolve_all_mro(model, name, reverse=True):
-            if isinstance(field, type(self)):
-                attrs.update(field.args)
-            else:
-                attrs.clear()
+        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+            attrs.update(field.args)
         attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
@@ -489,7 +494,7 @@ class Field(object):
         if isinstance(self.compute, basestring):
             # if the compute method has been overridden, concatenate all their _depends
             self.depends = ()
-            for method in resolve_all_mro(model, self.compute, reverse=True):
+            for method in resolve_mro(model, self.compute, callable):
                 self.depends += make_depends(getattr(method, '_depends', ()))
             self.compute = make_callable(self.compute)
         else:
@@ -756,21 +761,20 @@ class Field(object):
         """
         return False if value is None else value
 
-    def convert_to_write(self, value, target=None, fnames=None):
+    def convert_to_write(self, value):
         """ convert ``value`` from the cache to a valid value for method
             :meth:`BaseModel.write`.
-
-            :param target: optional, the record to be modified with this value
-            :param fnames: for relational fields only, an optional collection of
-                field names to convert
         """
         return self.convert_to_read(value)
 
-    def convert_to_onchange(self, value):
-        """ convert ``value`` from the cache to a valid value for an onchange
-            method v7.
+    def convert_to_onchange(self, value, fnames=None):
+        """ convert ``value`` from the cache to a value as returned by method
+            :meth:`BaseModel.onchange`.
+
+            :param fnames: an optional collection of field names to convert
+                (for relational fields only)
         """
-        return self.convert_to_write(value)
+        return self.convert_to_read(value)
 
     def convert_to_export(self, value, env):
         """ convert ``value`` from the cache to a valid value for export. The
@@ -1110,18 +1114,13 @@ class Monetary(Field):
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        if target is not None:
-            currency = target[self.currency_field]
-            # FIXME @rco-odoo: currency may not be already initialized if it is
-            # a function or related field!
-            if currency:
-                return currency.round(float(value or 0.0))
-            return float(value or 0.0)
-        return value
-
     def convert_to_cache(self, value, record, validate=True):
-        return self.convert_to_write(value, record)
+        currency = record[self.currency_field]
+        # FIXME @rco-odoo: currency may not be already initialized if it is a
+        # function or related field!
+        if currency:
+            return currency.round(float(value or 0.0))
+        return float(value or 0.0)
 
 
 class _String(Field):
@@ -1417,18 +1416,15 @@ class Selection(Field):
     def _setup_attrs(self, model, name):
         super(Selection, self)._setup_attrs(model, name)
         # determine selection (applying 'selection_add' extensions)
-        for field in resolve_all_mro(model, name, reverse=True):
-            if isinstance(field, type(self)):
-                # We cannot use field.selection or field.selection_add here
-                # because those attributes are overridden by ``_setup_attrs``.
-                if 'selection' in field.args:
-                    self.selection = field.args['selection']
-                if 'selection_add' in field.args:
-                    # use an OrderedDict to update existing values
-                    selection_add = field.args['selection_add']
-                    self.selection = OrderedDict(self.selection + selection_add).items()
-            else:
-                self.selection = None
+        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+            # We cannot use field.selection or field.selection_add here
+            # because those attributes are overridden by ``_setup_attrs``.
+            if 'selection' in field.args:
+                self.selection = field.args['selection']
+            if 'selection_add' in field.args:
+                # use an OrderedDict to update existing values
+                selection_add = field.args['selection_add']
+                self.selection = OrderedDict(self.selection + selection_add).items()
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1647,10 +1643,7 @@ class Many2one(_Relational):
         else:
             return value.id
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        return value.id
-
-    def convert_to_onchange(self, value):
+    def convert_to_write(self, value):
         return value.id
 
     def convert_to_export(self, value, env):
@@ -1727,37 +1720,36 @@ class _RelationalMulti(_Relational):
     def convert_to_read(self, value, use_name_get=True):
         return value.ids
 
-    def convert_to_write(self, value, target=None, fnames=None):
-        # remove/delete former records
-        if target is None:
-            set_ids = []
-            result = [(6, 0, set_ids)]
-            add_existing = lambda id: set_ids.append(id)
-        else:
-            tag = 2 if self.type == 'one2many' else 3
-            result = [(tag, record.id) for record in target[self.name] - value]
-            add_existing = lambda id: result.append((4, id))
-
-        if fnames is None:
-            # take all fields in cache, except the inverses of self
-            fnames = set(value._fields) - set(MAGIC_COLUMNS)
-            model = value.env[self.model_name]
-            for invf in model._field_inverses[self]:
-                fnames.discard(invf.name)
-
-        # add new and existing records
+    def convert_to_write(self, value):
+        # make result with new and existing records
+        result = [(5,)]
         for record in value:
             if not record.id:
-                values = {k: v for k, v in record._cache.iteritems() if k in fnames}
+                values = dict(record._cache)
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
-                values = {k: record._cache[k] for k in record._get_dirty() if k in fnames}
+                values = {k: record._cache[k] for k in record._get_dirty()}
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                add_existing(record.id)
+                result.append((4, record.id))
+        return result
 
+    def convert_to_onchange(self, value, fnames=None):
+        # return the recordset value as a list of commands; the commands may
+        # give all fields values, the client is responsible for figuring out
+        # which fields are actually dirty
+        fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
+        result = [(5,)]
+        for record in value:
+            vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
+            if not record.id:
+                result.append((0, 0, vals))
+            elif vals:
+                result.append((1, record.id, vals))
+            else:
+                result.append((4, record.id))
         return result
 
     def convert_to_export(self, value, env):

@@ -5,6 +5,7 @@ import math
 import unicodedata
 import re
 import urlparse
+import hashlib
 
 from sys import maxint
 
@@ -122,8 +123,8 @@ _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
     "^/web/(css|js)/",
-    "^/website/image/",
-    "^/web_editor/image/",
+    "^/web/image",
+    "^/web/content",
 ]
 
 def unslug(s):
@@ -549,80 +550,6 @@ class website(osv.osv):
                     break
         return res
 
-    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
-        step = step and int(step) or 10
-        scope = scope and int(scope) or 5
-        orderby = orderby or "name"
-
-        get_args = dict(request.httprequest.args or {})
-        model_obj = self.pool[model]
-        relation = model_obj._columns.get(column)._obj
-        relation_obj = self.pool[relation]
-
-        get_args.setdefault('kanban', "")
-        kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
-
-        pages = {}
-        for col in kanban.split(","):
-            if col:
-                col = col.split("-")
-                pages[int(col[0])] = int(col[1])
-
-        objects = []
-        for group in model_obj.read_group(cr, uid, domain, ["id", column], groupby=column):
-            obj = {}
-
-            # browse column
-            relation_id = group[column][0]
-            obj['column_id'] = relation_obj.browse(cr, uid, relation_id)
-
-            obj['kanban_url'] = kanban_url
-            for k, v in pages.items():
-                if k != relation_id:
-                    obj['kanban_url'] += "%s-%s" % (k, v)
-
-            # pager
-            number = model_obj.search(cr, uid, group['__domain'], count=True)
-            obj['page_count'] = int(math.ceil(float(number) / step))
-            obj['page'] = pages.get(relation_id) or 1
-            if obj['page'] > obj['page_count']:
-                obj['page'] = obj['page_count']
-            offset = (obj['page']-1) * step
-            obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
-            obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
-
-            # view data
-            obj['domain'] = group['__domain']
-            obj['model'] = model
-            obj['step'] = step
-            obj['orderby'] = orderby
-
-            # browse objects
-            object_ids = model_obj.search(cr, uid, group['__domain'], limit=step, offset=offset, order=orderby)
-            obj['object_ids'] = model_obj.browse(cr, uid, object_ids)
-
-            objects.append(obj)
-
-        values = {
-            'objects': objects,
-            'range': range,
-            'template': template,
-        }
-        return request.website._render("website.kanban_contain", values)
-
-    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
-        html = ""
-        model_obj = self.pool[model]
-        domain = safe_eval(domain)
-        step = int(step)
-        offset = (int(page)-1) * step
-        object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
-        object_ids = model_obj.browse(cr, uid, object_ids)
-        for object_id in object_ids:
-            html += request.website._render(template, {'object_id': object_id})
-        return html
-
     def _image_placeholder(self, response):
         logger.warning("Deprecated _image_placeholder method, please use this method on ir.attachment")
         return self.pool['ir.attachment']._image_placeholder(response)
@@ -632,7 +559,11 @@ class website(osv.osv):
         return self.pool['ir.attachment']._image(cr, uid, model, id, field, response, max_width=max_width, max_height=max_height, cache=cache, context=context)
 
     def image_url(self, cr, uid, record, field, size=None, context=None):
-        return self.pool['ir.attachment'].image_url(cr, uid, record, field, size=size, context=context)
+        """Returns a local url that points to the image field of a given browse record."""
+        sudo_record = record.sudo()
+        sha = hashlib.sha1(getattr(sudo_record, '__last_update')).hexdigest()[0:7]
+        size = '' if size is None else '/%s' % size
+        return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -710,17 +641,6 @@ class ir_attachment(osv.osv):
     _columns = {
         'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
     }
-
-    def _image(self, cr, uid, model, id_or_ids, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
-        Model = self.pool[model]
-        ids = isinstance(id_or_ids, (list, tuple)) and id_or_ids or [int(id_or_ids)]
-        ids = Model.search(cr, uid, [('id', 'in', ids)], context=context)
-
-        if not ids and 'website_published' in Model._fields:
-            ids = Model.search(cr, openerp.SUPERUSER_ID, [('id', 'in', ids), ('website_published', '=', True)], context=context)
-
-        return super(ir_attachment, self)._image(cr, openerp.SUPERUSER_ID, model, id_or_ids, field, response,
-            max_width=max_width, max_height=max_height, cache=cache, context=context)
 
 class res_partner(osv.osv):
     _inherit = "res.partner"

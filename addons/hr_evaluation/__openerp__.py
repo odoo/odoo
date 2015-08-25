@@ -4,9 +4,8 @@
 {
     'name': 'Employee Appraisals',
     'version': '0.1',
-    'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 31,
+    'sequence': 100,
     'website': 'https://www.odoo.com/page/appraisal',
     'summary': 'Periodical Evaluations, Appraisals, Surveys',
     'depends': ['hr', 'calendar', 'survey'],

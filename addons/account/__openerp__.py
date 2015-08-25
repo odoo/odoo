@@ -3,9 +3,8 @@
 {
     'name' : 'Invoicing',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',
-    'sequence': 4,
+    'sequence': 30,
     'description': """
 Invoicing & Payments
 ====================
@@ -16,7 +15,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'category' : 'Accounting & Finance',
     'website': 'https://www.odoo.com/page/billing',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'depends' : ['base_setup', 'product', 'analytic', 'board', 'report', 'web_tip'],
+    'depends' : ['base_setup', 'product', 'analytic', 'report', 'web_tip'],
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -32,7 +31,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_invoice_refund_view.xml',
         'wizard/account_validate_move_view.xml',
         'wizard/account_invoice_state_view.xml',
-        'wizard/account_log_followup_note_view.xml',
         'wizard/pos_box.xml',
         'views/account_end_fy.xml',
         'views/account_invoice_view.xml',
@@ -42,12 +40,12 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/product_view.xml',
         'views/account_analytic_view.xml',
         'views/company_view.xml',
-        'views/account_bank_view.xml',
         'views/res_config_view.xml',
         'views/account_tip_data.xml',
         'views/account.xml',
         'views/report_invoice.xml',
         'report/account_invoice_report_view.xml',
+        'report/inherited_layouts.xml',
         'views/account_journal_dashboard_view.xml',
     ],
     'demo': [

@@ -6,7 +6,7 @@ import math
 from openerp.osv import expression
 from openerp.tools.float_utils import float_round as round
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 from openerp import api, fields, models, _
 
 
@@ -107,7 +107,7 @@ class AccountAccount(models.Model):
     last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
         help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
-    reconcile = fields.Boolean(string='Reconciliation of Entries', default=False,
+    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
@@ -189,7 +189,7 @@ class AccountJournal(models.Model):
         return self.env.ref('account.account_payment_method_manual_out')
 
     name = fields.Char(string='Journal Name', required=True)
-    code = fields.Char(string='Sequence Prefix', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
+    code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     type = fields.Selection([
             ('sale', 'Sale'),
             ('purchase', 'Purchase'),
@@ -225,7 +225,7 @@ class AccountJournal(models.Model):
         help="Company related to this journal")
 
     analytic_journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', help="Journal for analytic entries")
-    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal")
+    refund_sequence = fields.Boolean(string='Dedicated Refund Sequence', help="Check this box if you don't want to share the same sequence for invoices and refunds made from this journal", default=True)
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
         domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
@@ -240,6 +240,13 @@ class AccountJournal(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', domain=[('deprecated', '=', False)], help="Used to register a profit when the ending balance of a cash register differs from what the system computes")
     loss_account_id = fields.Many2one('account.account', string='Loss Account', domain=[('deprecated', '=', False)], help="Used to register a loss when the ending balance of a cash register differs from what the system computes")
 
+    # Bank journals fields
+    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict')
+    display_on_footer = fields.Boolean("Show in Invoices Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
+    bank_statements_source = fields.Selection([('manual', 'Record Manually')], string='Bank Feeds')
+    bank_acc_number = fields.Char(related='bank_account_id.acc_number')
+    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
@@ -252,6 +259,17 @@ class AccountJournal(models.Model):
                 raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default credit account.'))
             if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency_id.id:
                 raise UserError(_('Configuration error!\nThe currency of the journal should be the same than the default debit account.'))
+
+    @api.one
+    @api.constrains('type', 'bank_account_id')
+    def _check_bank_account(self):
+        if self.type == 'bank' and self.bank_account_id:
+            if self.bank_account_id.company_id != self.company_id:
+                raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % self.company_id.name)
+            # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
+            # Or they are part of a bank journal and their partner_id must be the company's partner_id.
+            if self.bank_account_id.partner_id != self.company_id.partner_id:
+                raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
@@ -285,7 +303,19 @@ class AccountJournal(models.Model):
                 if journal.refund_sequence_id:
                     new_prefix = self._get_sequence_prefix(vals['code'], refund=True)
                     journal.refund_sequence_id.write({'prefix': new_prefix})
-        return super(AccountJournal, self).write(vals)
+            if 'currency_id' in vals:
+                if not 'default_debit_account_id' in vals and self.default_debit_account_id:
+                    self.default_debit_account_id.currency_id = vals['currency_id']
+                if not 'default_credit_account_id' in vals and self.default_credit_account_id:
+                    self.default_credit_account_id.currency_id = vals['currency_id']
+        result = super(AccountJournal, self).write(vals)
+
+        # Create the bank_account_id if necessary
+        if 'bank_acc_number' in vals:
+            for journal in self.filtered(lambda r: r.type == 'bank' and not r.bank_account_id):
+                journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+        return result
 
     @api.model
     def _get_sequence_prefix(self, code, refund=False):
@@ -298,8 +328,6 @@ class AccountJournal(models.Model):
     def _create_sequence(self, vals, refund=False):
         """ Create new no_gap entry sequence for every new Journal"""
         prefix = self._get_sequence_prefix(vals['code'], refund)
-        if refund:
-            prefix = 'R' + prefix
         seq = {
             'name': vals['name'],
             'implementation': 'no_gap',
@@ -350,56 +378,58 @@ class AccountJournal(models.Model):
         }
 
     @api.model
-    def _prepare_bank_journal(self, company, line):
-        '''
-        This function prepares the value to use for the creation of a bank journal created through the wizard of
-        generating COA from templates.
-
-        :param company: company for which the wizard is running
-        :param line: dictionary containing the values encoded by the user related to his bank account with keys 
-            - acc_name (char): name of the bank account
-            - account_type (char): kind of liquidity journal to create. Either 'bank' or 'cash'
-            - currency_id (int): id of the currency related to this account if its different than the company currency (False otherwise)
-        :return: mapping of field names and values
-        :rtype: dict
-        '''
-        # we need to loop to find next number for journal code
-        for num in xrange(1, 100):
-            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-            journal_code = line.get('account_type', 'bank') == 'cash' and 'CSH' or 'BNK'
-            journal_code += str(num)
-            journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company.id)], limit=1)
-            if not journal:
-                break
-        else:
-            raise UserError(_('Cannot generate an unused journal code.'))
-
-        return {
-                'name': line['acc_name'],
-                'code': journal_code,
-                'type': line.get('account_type', 'bank'),
-                'company_id': company.id,
-                'analytic_journal_id': False,
-                'currency_id': line.get('currency_id', False),
-                'show_on_dashboard': True,
-        }
-
-    @api.model
     def create(self, vals):
+        company_id = vals.get('company_id', self.env.user.company_id.id)
         if vals.get('type') in ('bank', 'cash'):
+            # For convenience, the name can be inferred from account number
+            if not vals.get('name') and 'bank_acc_number' in vals:
+                vals['name'] = _('Bank') + ' ' + vals['bank_acc_number']
+
+            # If no code provided, loop to find next available journal code
+            if not vals.get('code'):
+                for num in xrange(1, 100):
+                    # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+                    journal_code = (vals['type'] == 'cash' and 'CSH' or 'BNK') + str(num)
+                    journal = self.env['account.journal'].search([('code', '=', journal_code), ('company_id', '=', company_id)], limit=1)
+                    if not journal:
+                        vals['code'] = journal_code
+                        break
+                else:
+                    raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
+
+            # Create a default debit/credit account if not given
             default_account = vals.get('default_debit_account_id') or vals.get('default_credit_account_id')
             if not default_account:
-                company = self.env['res.company'].browse(vals['company_id'])
+                company = self.env['res.company'].browse(company_id)
                 account_vals = self._prepare_liquidity_account(vals.get('name'), company, vals.get('currency_id'), vals.get('type'))
                 default_account = self.env['account.account'].create(account_vals)
                 vals['default_debit_account_id'] = default_account.id
                 vals['default_credit_account_id'] = default_account.id
+
         # We just need to create the relevant sequences according to the chosen options
         if not vals.get('sequence_id'):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
-        if vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
+        if vals.get('type') in ('sale', 'puchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
-        return super(AccountJournal, self).create(vals)
+
+        journal = super(AccountJournal, self).create(vals)
+
+        # Create the bank_account_id if necessary
+        if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
+            journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
+
+        return journal
+
+    def set_bank_account(self, acc_number, bank_id=None):
+        """ Create a res.partner.bank and set it as value of the  field bank_account_id """
+        self.ensure_one()
+        self.bank_account_id = self.env['res.partner.bank'].create({
+            'acc_number': acc_number,
+            'bank_id': bank_id,
+            'company_id': self.company_id.id,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.company_id.partner_id.id,
+        }).id
 
     @api.multi
     @api.depends('name', 'currency_id', 'company_id', 'company_id.currency_id')
@@ -419,6 +449,19 @@ class AccountJournal(models.Model):
             journal.at_least_one_outbound = bool(len(self.outbound_payment_method_ids))
 
 
+class ResPartnerBank(models.Model):
+    _inherit = "res.partner.bank"
+
+    journal_id = fields.One2many('account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
+        help="The accounting journal corresponding to this bank account.")
+
+    @api.one
+    @api.constrains('journal_id')
+    def _check_journal_id(self):
+        if len(self.journal_id) > 1:
+            raise ValidationError(_('A bank account can anly belong to one journal.'))
+
+
 #----------------------------------------------------------
 # Tax
 #----------------------------------------------------------
@@ -428,6 +471,10 @@ class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
     _order = 'sequence'
+
+    @api.model
+    def _default_tax_group(self):
+        return self.env['account.tax.group'].search([], limit=1)
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
     type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
@@ -451,6 +498,7 @@ class AccountTax(models.Model):
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
@@ -649,3 +697,11 @@ class AccountOperationTemplate(models.Model):
     @api.onchange('name')
     def onchange_name(self):
         self.label = self.name
+
+
+class AccountTaxGroup(models.Model):
+    _name = 'account.tax.group'
+    _order = 'sequence asc'
+
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer(default=10)

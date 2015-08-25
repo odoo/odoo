@@ -128,14 +128,9 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
-                        <label for="tag_ids" class="oe_edit_only"/>
-                        <field name="tag_ids" widget="many2many_tags"/>
-                        <div class="mt4">
-                            <span class="label label-danger"
-                                attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                            <span class="label label-success"
-                                attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
-                        </div>
+
+                        <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                        <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                     </div>
                     <group>
                         <group>
@@ -158,7 +153,7 @@
                             <label for="contact_name"/>
                             <div class="o_row">
                                 <field name="contact_name"/>
-                                <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
+                                <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                             </div>
                             <field name="email_from" widget="email"/>
                             <field name="function"/>
@@ -174,6 +169,7 @@
                         </group>
                         <group>
                             <field name="priority" widget="priority"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -244,7 +240,7 @@
             <field name="name">Leads</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" decoration-bf="message_unread==True" decoration-muted="probability == 100">
+                <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Lead"/>
@@ -260,7 +256,7 @@
                     <field name="campaign_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
                     <field name="medium_id" invisible="1"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -293,7 +289,7 @@
                     <field name="user_email"/>
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="partner_id"/>
                     <field name="active"/>
@@ -334,8 +330,8 @@
                                     </div>
                                     <div class="o_kanban_footer">
                                         <field name="priority" widget="priority" groups="base.group_user"/>
-                                        <t t-if="record.message_unread_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
@@ -379,7 +375,7 @@
                             domain="[('user_id','=', False)]"
                             help="No salesperson"/>
                     <separator />
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator />
                     <filter string="Exclude Opt Out"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -442,34 +438,30 @@
                                 </div>
                             </button>
                         </div>
-                        <div>
+                        <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <label for="tag_ids" class="oe_edit_only"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
-                            <div class="mt4">
-                                <span class="label label-danger"
-                                    attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                                <span class="label label-success"
-                                    attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
-                            </div>
-                            <div class="o_row">
-                                <div class="oe_left">
-                                    <label for="planned_revenue" class="oe_edit_only"/>
-                                    <h2 class="o_row">
+
+                            <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
+                            <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
+
+                            <h2 class="o_row">
+                                <div>
+                                    <label for="planned_revenue" class="oe_edit_only" />
+                                    <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
                                         <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey"> at </span>
-                                    </h2>
+                                    </div>
                                 </div>
                                 <div>
                                     <label for="probability" class="oe_edit_only"/>
-                                    <h2 class="o_row">
+                                    <div class="o_row">
                                         <field name="probability" widget="integer"/>
                                         <span>%%</span>
-                                    </h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </h2>
                         </div>
                         <group>
                             <group>
@@ -494,21 +486,17 @@
                                     <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
                                         attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
                                     <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
-                                        <button name="log_next_activity_done" string="Done" type="object" class="oe_link"/>
-                                        <button name="log_next_activity_1" type="object" class="oe_link" attrs="{'invisible': [('next_activity_1','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
+                                        <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
                                             <field name="next_activity_1" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <button name="log_next_activity_2" type="object" class="oe_link" attrs="{'invisible': [('next_activity_2','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_2" type="object" class="btn-link" attrs="{'invisible': [('next_activity_2','=',False)]}">
                                             <field name="next_activity_2" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <button name="log_next_activity_3" type="object" class="oe_link" attrs="{'invisible': [('next_activity_3','=',False)]}">
-                                            <span>&#160;|&#160;</span>
+                                        <button name="log_next_activity_3" type="object" class="btn-link" attrs="{'invisible': [('next_activity_3','=',False)]}">
                                             <field name="next_activity_3" class="oe_inline" readonly="1"/>
                                         </button>
-                                        <span>&#160;|&#160;</span>
-                                        <button name="cancel_next_activity" string="Cancel" type="object" class="oe_link"/>
+                                        <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
                                     </div>
                                 </div>
                                 <field name="date_deadline"/>
@@ -520,6 +508,7 @@
                             </group>
                             <group>
                                 <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
                                 <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
                                 <field name="date_conversion" invisible="1"/>
                             </group>
@@ -548,7 +537,7 @@
                                     <label for="contact_name"/>
                                     <div>
                                         <field name="contact_name"/>
-                                        <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}'/>
+                                        <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                     </div>
                                     <field name="function"/>
                                     <field name="mobile"/>
@@ -584,7 +573,7 @@
             <field name="name">Opportunities Tree</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-bf="message_unread==True" decoration-muted="probability == 100" decoration-danger="date_deadline and (date_deadline &lt; current_date)">
+                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="date_deadline and (date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
@@ -602,7 +591,7 @@
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
                 </tree>
@@ -644,7 +633,7 @@
                             domain="[('date_action', '&lt;=', context_today().strftime('%Y-%m-%d') )]"
                             help="Show all opportunities for which the next action date is today or before"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" context="{'group_by':'team_id'}"/>

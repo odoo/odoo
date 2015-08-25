@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 {
-    'author': 'Odoo SA',
     'name': 'Lunch',
+    'sequence': 120,
     'version': '1.0',
     'depends': ['base', 'web', 'decimal_precision'],
     'category': 'Tools',
@@ -27,6 +27,7 @@ If you want to save your employees' time and avoid them to always have coins in 
         'report/lunch_order_views.xml',
         'report/lunch_order_templates.xml',
         'views/lunch_templates.xml',
+        'wizard/lucky_order_view.xml',
         'views/lunch_views.xml',
         'data/lunch_data.xml',
     ],

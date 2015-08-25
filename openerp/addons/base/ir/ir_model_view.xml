@@ -13,9 +13,8 @@
                         <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
                     </group>
                     <footer>
-                        <button name="menu_create" string="Create _Menu" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="menu_create" string="Create _Menu" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -49,7 +48,7 @@
                                     <field name="ttype"/>
                                     <field name="required"/>
                                     <field name="readonly"/>
-                                    <field name="select_level"/>
+                                    <field name="index"/>
                                     <field name="state"/>
                                 </tree>
                                 <form string="Fields Description">
@@ -65,9 +64,13 @@
                                     </group>
                                     <group string="Properties">
                                         <group>
+                                            <field name="related"/>
                                             <field name="ttype"/>
                                             <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                                            <field name="relation_table" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                                            <field name="column1" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                                            <field name="column2" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
                                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                             <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
@@ -76,7 +79,8 @@
                                         <group>
                                             <field name="required"/>
                                             <field name="readonly"/>
-                                            <field name="select_level"/>
+                                            <field name="index"/>
+                                            <field name="copy"/>
                                             <field name="translate"/>
                                             <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
                                             <field name="modules"/>
@@ -167,10 +171,14 @@
                     </group>
                     <group>
                         <group>
+                            <field name="related"/>
                             <field name="ttype"/>
                             <field name="relation" attrs="{'required': [('ttype','in', ['many2one','one2many','many2many'])],
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
+                            <field name="relation_table" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                            <field name="column1" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
+                            <field name="column2" attrs="{'readonly': ['|', ('ttype', '!=', 'many2many'), ('state', '!=', 'manual')]}"/>
                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                             <field name="size" attrs="{'invisible': [('ttype','not in',['char','text','reference'])]}"/>
                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
@@ -180,7 +188,8 @@
                         <group>
                             <field name="required"/>
                             <field name="readonly"/>
-                            <field name="select_level"/>
+                            <field name="index"/>
+                            <field name="copy"/>
                             <field name="translate"/>
                         </group>
                     </group>

@@ -11,7 +11,6 @@ class analytic_plan_create_model(osv.osv_memory):
 
     def activate(self, cr, uid, ids, context=None):
         plan_obj = self.pool.get('account.analytic.plan.instance')
-        mod_obj = self.pool.get('ir.model.data')
         anlytic_plan_obj = self.pool.get('account.analytic.plan')
         if context is None:
             context = {}
@@ -24,8 +23,9 @@ class analytic_plan_create_model(osv.osv_memory):
                 raise UserError(_('There is no analytic plan defined.'))
             plan_obj.write(cr, uid, [context['active_id']], {'plan_id':pids[0]}, context=context)
 
-            model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'),('name', '=', 'view_analytic_plan_create_model')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+            resource_id = self.pool['ir.model.data'].xmlid_to_res_id(
+                cr, uid, 'account.view_analytic_plan_create_model',
+                context=context, raise_if_not_found=True)
             return {
                 'name': _('Distribution Model Saved'),
                 'view_type': 'form',

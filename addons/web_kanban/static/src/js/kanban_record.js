@@ -56,6 +56,8 @@ var KanbanRecord = Widget.extend({
             record: this.record,
             widget: this,
             read_only_mode: this.read_only_mode,
+            user_context: session.user_context,
+            formats: formats,
         };
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
@@ -126,7 +128,8 @@ var KanbanRecord = Widget.extend({
             id = JSON.stringify(id);
             if (options.preview_image)
                 field = options.preview_image;
-            url = session.url('/web/binary/image', {model: model, field: field, id: id});
+            var unique = this.record.__last_update.value.replace(/[^0-9]/g, '');
+            url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);

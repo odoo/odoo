@@ -4,10 +4,10 @@
 # Copyright (c) 2010 kazacube (http://kazacube.com).
 
 {
-    'name' : 'Maroc - Accounting',
-    'version' : '1.0',
-    'author' : 'kazacube',
-    'category' : 'Localization/Account Charts',
+    'name': 'Maroc - Accounting',
+    'version': '1.0',
+    'author': 'kazacube',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Maroc.
 =================================================================
@@ -18,16 +18,13 @@ produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...
 L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable
 Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
-    'depends' : ['base', 'account'],
-    'data' : [
-        'security/ir.model.access.csv',
-        'account_type.xml',
+    'depends': ['base', 'account'],
+    'data': [
         'account_pcg_morocco.xml',
-        'l10n_ma_wizard.xml',
         'l10n_ma_tax.xml',
-        'l10n_ma_journal.xml',
+        'account_chart_template.yml',
     ],
-    'demo' : [],
+    'demo': [],
     'auto_install': False,
-    'installable': False,
+    'installable': True,
 }

@@ -11,7 +11,6 @@ Online Event's Tickets
 ======================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_event', 'event_sale', 'website_sale'],
     'data': [
         'views/website_event_sale.xml',

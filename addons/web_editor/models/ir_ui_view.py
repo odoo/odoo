@@ -5,6 +5,7 @@ from openerp.exceptions import AccessError
 from openerp.osv import osv
 from lxml import etree, html
 from openerp import api
+from openerp.tools import html_escape
 
 
 class view(osv.osv):
@@ -72,6 +73,14 @@ class view(osv.osv):
         else:
             # ensure there's only one match
             [root] = arch.xpath(section_xpath)
+
+        # html text need to be escaped for xml storage
+        def escape_node(node):
+            node.text = node.text and html_escape(node.text)
+            node.tail = node.tail and html_escape(node.tail)
+        escape_node(replacement)
+        for descendant in replacement.iterdescendants():
+            escape_node(descendant)
 
         root.text = replacement.text
         root.tail = replacement.tail

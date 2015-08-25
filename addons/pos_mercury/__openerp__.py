@@ -21,7 +21,6 @@ following:
 * Cashback
 * Supported cards: Visa, MasterCard, American Express, Discover
     """,
-    'author': 'Odoo SA',
     'depends': ['web', 'barcodes', 'point_of_sale'],
     'website': '',
     'data': [

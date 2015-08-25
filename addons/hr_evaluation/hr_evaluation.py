@@ -240,8 +240,11 @@ class hr_evaluation(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('employee_id'):
             employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
+            # TDE FIXME: use add_command
             if employee_id.parent_id and employee_id.parent_id.user_id:
-                vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
+                message_follower_ids = vals.get('message_follower_ids') or []  # webclient can send None or False
+                message_follower_ids += self.env['mail.followers']._add_follower_command(self._name, ids, {employee_id.parent_id.user_id.partner_id.id: None}, {}, force=True)[0]
+                vals['message_follower_ids'] = message_follower_ids
         if 'date' in vals:
             new_vals = {'deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')

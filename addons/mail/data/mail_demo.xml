@@ -193,7 +193,7 @@
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 

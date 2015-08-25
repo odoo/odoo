@@ -6,4 +6,3 @@
 #                         Prisme Solutions Informatique SA, Quod SA
 # Translation contributors: brain-tec AG, Agile Business Group
 
-from . import account_wizard

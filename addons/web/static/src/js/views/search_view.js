@@ -423,7 +423,7 @@ var SearchView = Widget.extend(/** @lends instance.web.SearchView# */{
         if (this.$buttons) {
 
             var fields_def = new Model(this.dataset.model).call('fields_get', {
-                    context: this.dataset.context
+                    context: this.dataset.get_context()
                 });
 
             this.groupby_menu = new GroupByMenu(this, this.groupbys, fields_def);

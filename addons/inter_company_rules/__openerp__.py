@@ -8,8 +8,6 @@
 
     Supported documents are SO, PO and invoices/refunds.
 ''',
-    'author': 'Odoo SA',
-    'website': 'http://www.odoo.com',
     'depends': [
         'sale',
         'purchase',

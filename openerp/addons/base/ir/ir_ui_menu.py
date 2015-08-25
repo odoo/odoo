@@ -259,7 +259,7 @@ class ir_ui_menu(osv.osv):
     @api.cr_uid_context
     @tools.ormcache_context('uid', keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         return {

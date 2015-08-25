@@ -62,8 +62,8 @@ var Many2ManyKanbanView = X2ManyKanbanView.extend({
             res_id: event.data.id,
             context: this.x2m.build_context(),
             title: _t("Open: ") + this.x2m.string,
-            write_function: function(id, data) {
-                return self.x2m.data_update(id, data, {}).done(function() {
+            write_function: function(id, data, options) {
+                return self.x2m.data_update(id, data, options).done(function() {
                     self.x2m.reload_current_view();
                 });
             },

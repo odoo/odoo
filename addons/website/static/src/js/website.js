@@ -113,8 +113,7 @@ var prompt = function (options, _qweb) {
         field.focus();
         dialog.on('click', '.btn-primary', function () {
             def.resolve(field.val(), field, dialog);
-            dialog.remove();
-            $('.modal-backdrop').remove();
+            dialog.modal('hide').remove();
         });
     });
     dialog.on('hidden.bs.modal', function () {
@@ -158,64 +157,9 @@ var form = function (url, method, params) {
     form.submit();
 };
 
-var init_kanban = function ($kanban) {
-    $('.js_kanban_col', $kanban).each(function () {
-        var $col = $(this);
-        var $pagination = $('.pagination', $col);
-        if(!$pagination.size()) {
-            return;
-        }
-
-        var page_count =  $col.data('page_count');
-        var scope = $pagination.last().find("li").size()-2;
-        var kanban_url_col = $pagination.find("li a:first").attr("href").replace(/[0-9]+$/, '');
-
-        var data = {
-            'domain': $col.data('domain'),
-            'model': $col.data('model'),
-            'template': $col.data('template'),
-            'step': $col.data('step'),
-            'orderby': $col.data('orderby')
-        };
-
-        $pagination.on('click', 'a', function (ev) {
-            ev.preventDefault();
-            var $a = $(ev.target);
-            if($a.parent().hasClass('active')) {
-                return;
-            }
-
-            var page = +$a.attr("href").split(",").pop().split('-')[1];
-            data['page'] = page;
-
-            $.post('/website/kanban', data, function (col) {
-                $col.find("> .thumbnail").remove();
-                $pagination.last().before(col);
-            });
-
-            var page_start = page - parseInt(Math.floor((scope-1)/2), 10);
-            if (page_start < 1 ) page_start = 1;
-            var page_end = page_start + (scope-1);
-            if (page_end > page_count ) page_end = page_count;
-
-            if (page_end - page_start < scope) {
-                page_start = page_end - scope > 0 ? page_end - scope : 1;
-            }
-
-            $pagination.find('li.prev a').attr("href", kanban_url_col+(page-1 > 0 ? page-1 : 1));
-            $pagination.find('li.next a').attr("href", kanban_url_col+(page < page_end ? page+1 : page_end));
-            for(var i=0; i < scope; i++) {
-                $pagination.find('li:not(.prev):not(.next):eq('+i+') a').attr("href", kanban_url_col+(page_start+i)).html(page_start+i);
-            }
-            $pagination.find('li.active').removeClass('active');
-            $pagination.find('li:has(a[href="'+kanban_url_col+page+'"])').addClass('active');
-
-        });
-
-    });
-};
 
 ajax.loadXML('/website/static/src/xml/website.xml', qweb);
+ajax.loadXML('/web/static/src/xml/base_common.xml', qweb);
 
 /**
  * Cancel the auto run of Tour (test) and launch the tour after tob bar all bind events
@@ -263,7 +207,7 @@ base.ready().then(function () {
             var redirect = {
                 lang: self.data('lang'),
                 url: encodeURIComponent(self.attr('href').replace(/[&?]edit_translations[^&?]+/, '')),
-                hash: location.hash
+                hash: encodeURIComponent(location.hash)
             };
             location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
     });
@@ -286,6 +230,13 @@ base.ready().then(function () {
         }
     },0);
 
+// display image thumbnail
+$(".o_image[data-mimetype^='image']").each(function () {
+    var $img = $(this);
+    if (/gif|jpe|jpg|png/.test($img.data('mimetype')) && $img.data('src')) {
+        $img.css('background-image', "url('" + $img.data('src') + "')");
+    }
+});
 
 /**
  * Object who contains all method and bind for the top bar, the template is create server side.

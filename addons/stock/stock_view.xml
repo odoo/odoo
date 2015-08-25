@@ -13,7 +13,7 @@
         <menuitem id="menu_stock_warehouse_mgmt" name="Operations" parent="menu_stock_root" sequence="2" groups="base.group_no_one"/>
         <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
             sequence="100" groups="group_stock_manager,base.group_configuration"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="base.group_configuration" sequence="1"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_config_settings" groups="base.group_configuration" sequence="1"/>
         <menuitem id="menu_routes_config" name="Routes" parent="menu_stock_config_settings" sequence="2" groups="stock.group_adv_location"/>
         <menuitem
             id="menu_product_in_config_stock" name="Products"
@@ -28,12 +28,9 @@
 
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
         <menuitem
-            action="product.product_normal_action" id="menu_product_variant_config_stock" name="Products"
+            action="product.product_template_action_product" id="menu_product_variant_config_stock" name="Products"
             parent="stock.menu_stock_inventory_control" sequence="1"/>
 
-        <menuitem
-            action="product.product_template_action" id="menu_product_template_config_stock"
-            parent="stock.menu_product_in_config_stock" sequence="1"/>
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_stock"
             parent="stock.menu_product_in_config_stock" sequence="2"/>
@@ -43,7 +40,6 @@
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
-
         
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
@@ -474,13 +470,13 @@
             <field name="inherit_id" ref="product.product_category_form_view" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='parent']" position="inside">
-                    <group string="Logistics" colspan="2">
+                    <group string="Logistics">
                         <field name="route_ids" widget="many2many_tags"/>
                         <div class="oe_inline" colspan="2">
                             <p attrs="{'invisible':[('parent_id','=',False)]}">
-                            The following routes will apply to the products in this category taking into account parent categories: 
-                            <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
+                            The following routes will apply to the products in this category taking into account parent categories:
                             </p>
+                            <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
                         </div>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
                     </group>
@@ -680,6 +676,109 @@
             </field>
         </record>
 
+        <record id="view_pack_operation_details_form" model="ir.ui.view">
+            <field name="name">stock.pack.operation.details.form</field>
+            <field name="model">stock.pack.operation</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group string="Products">
+                            <field name="lots_visible" invisible="1"/>
+                            <field name="picking_source_location_id" invisible="1"/>
+                            <field name="picking_destination_location_id" invisible="1"/>
+                            <field name="product_id" attrs="{'required': [('package_id', '=', False)]}"/>
+                        </group>
+                        <group string="From">
+                            <field name="location_id" domain="[('id', 'child_of', picking_source_location_id)]" groups="stock.group_locations"/>
+                            <field name="package_id" attrs="{'required': [('product_id', '=', False)]}" groups="stock.group_tracking_lot" context="{'location_id': location_id}"/>
+                        </group>
+                    </group>
+                    <group name="qty_to">
+                        <group string="Quantities">
+                            <label for="qty_done"/>
+                            <span class="oe_inline">
+                                <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}"/>
+                                /
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
+                            </span>
+                            <!--<button name="split_quantities" class="oe_link" string="Split" type="object"/> TODO-->
+                        </group>
+                        <group string="To">
+                            <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" groups="stock.group_locations"/>
+                            <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pack_operation_details_form_save" model="ir.ui.view">
+            <field name="name">stock.pack.operation.details.form.save</field>
+            <field name="model">stock.pack.operation</field>
+            <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
+            <field eval="15" name="priority"/>
+            <field name="arch" type="xml">
+                <group name="qty_to" position="after">
+                    <footer>
+                        <button name="save" type="object" string="Save" class="oe_highlight"/>
+                    </footer>
+                </group>
+            </field>
+        </record>
+
+        <record id="pack_details" model="ir.actions.act_window">
+            <field name="name">Pack Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.pack.operation</field>
+            <field name="view_id" ref="view_pack_operation_details_form_save"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="view_pack_operation_lot_form" model="ir.ui.view">
+            <field name="name">stock.pack.operation.lots.form</field>
+            <field name="model">stock.pack.operation</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="product_id" readonly="1"/>
+                        <label for="qty_done"/>
+                        <span>
+                            <field name="qty_done" class="oe_inline" readonly="1"/> of
+                            <field name="product_qty" class="oe_inline" readonly="1"/>
+                            <field name="product_uom_id" class="oe_inline" groups="product.group_uom" readonly="1"/>
+                            <field name="state" invisible="1"/>
+                        </span>
+                    </group>
+                    <group>
+                        <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
+                            <tree editable="bottom" decoration-success="qty_todo==qty">
+                                <field name="lot_name" invisible="not context.get('only_create', False)"/>
+                                <field name="lot_id" invisible="context.get('only_create', False)"
+                                       domain="[('product_id','=', parent.product_id)]"
+                                       context="{'product_id': parent.product_id}"/>
+                                <field name="qty" invisible="context.get('serial') and context.get('only_create')"/>
+                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('qty', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved')"/>
+                                <button name="do_plus" type="object" icon="fa-plus-square" invisible="not context.get('show_reserved')"/>
+                                <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial')" readonly="1" string="To Do"/>
+                                <field name="processed" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="save" type="object" string="Save" class="oe_highlight" attrs="{'invisible':[('state','=','done')]}"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
         <record id="view_picking_form" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
@@ -690,7 +789,6 @@
                     <button name="action_confirm" states="draft" string="Mark as Todo" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_new_transfer" states="draft,partially_available,assigned" string="Validate" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="action_assign" states="confirmed,waiting" string="Reserve" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="rereserve_pick" string="Recheck Availability" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|', ('state', 'not in', ('waiting', 'partially_available')), ('pack_operation_exist','=',True)]}"/>
                     <button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="base.group_user"/>
                     <button name="do_print_picking" string="Print Picking List" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', 'not in', ('assigned', 'partially_available'))]}"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
@@ -736,9 +834,6 @@
                                     <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
                                     <field name="fresh_record" invisible="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('fresh_record', '=', False)]}" groups="product.group_uom"/>
-                                    <field name="lot_id" domain="[('product_id','=', product_id)]" context="{'product_id': product_id}" groups="stock.group_production_lot" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
-                                    <button name="split_lot" string="Lot Split" type="object" icon="STOCK_INDENT" groups="stock.group_production_lot"
-                                            attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available'])]}"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="picking_id" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
@@ -748,7 +843,9 @@
                                     <field name="to_loc" groups="stock.group_locations,stock.group_tracking_lot"/>
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="qty_done"/>
+                                    <field name="qty_done" attrs="{'readonly': [('lots_visible', '=', True)]}"/>
+                                    <button name="split_lot" string="Lot Split" type="object" icon="fa-list" groups="stock.group_production_lot"
+                                            attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available','done'])]}"/>
                                     <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available"/>
@@ -766,6 +863,7 @@
                                     <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': location_dest_id}" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="qty_done" invisible="1"/>
+                                    <field name="lots_visible" invisible="1"/>
                                     <field name="processed_boolean"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
@@ -1387,8 +1485,6 @@
             <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_stock_inventory_control" sequence="118" groups="base.group_no_one"/>
-
         <!--
             Receipt Picking (By Stock Move)
             From stock_partial_move_view
@@ -1650,6 +1746,14 @@
         
 
         <!-- Order Point -->
+        <record id="do_view_procurement_op" model="ir.actions.act_window">
+            <field name="name">Procurements</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('orderpoint_id','=',active_id)]</field>
+        </record>
+
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.tree</field>
             <field name="model">stock.warehouse.orderpoint</field>
@@ -1691,7 +1795,7 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>                            
+                            <button name="%(stock.do_view_procurement_op)d" type="action" string="Procurements" class="oe_stat_button" icon="fa-refresh"/>
                         </div>
                         <group>
                             <group>
@@ -1739,6 +1843,10 @@
               </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>
             </field>
         </record>
+        <menuitem
+            id="menu_reordering_rules_config"
+            action="action_orderpoint_form"
+            name="Reordering Rules" parent="menu_stock_inventory_control" sequence="2"/>
 
         <act_window
             context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
@@ -1854,13 +1962,12 @@
                         <filter name="positive" string="Positive" domain="[('qty', '&gt;', 0.0)]"/>
                     </group>
                     <group expand='0' string='Group by...'>
-                       <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
-                       <filter string='Owner' context="{'group_by' : 'owner_id'}" groups="stock.group_tracking_owner"/>
-                       <filter string='Lot' context="{'group_by' : 'lot_id'}" groups="stock.group_production_lot"/>
-                       <filter name="locationgroup" string='Location' domain="[]" context="{'group_by' : 'location_id'}"/>
-                       <filter string='Package' domain="[]" context="{'group_by' : 'package_id'}" groups="stock.group_tracking_lot"/>
-                       <filter string='Packaging' domain="[]" context="{'group_by' : 'packaging_type_id'}" groups="stock.group_tracking_lot"/>
-                       <filter string='Company' domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
+                        <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                        <filter string='Owner' context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                        <filter string='Lot' context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                        <filter string='Package' domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                        <filter string='Company' domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                    </group>
                 </search>
             </field>
@@ -1872,15 +1979,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
-            <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_quantsinv">
-            <field name="name">Current Inventory</field>
-            <field name="res_model">stock.quant</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
-            <field name="context">{'search_default_internal_loc': 1}</field>
             <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
         </record>
 
@@ -1963,14 +2061,13 @@
         <menuitem action="action_procurement_compute" id="menu_procurement_compute" parent="menu_stock_sched" groups="base.group_no_one" sequence="2"/>
         <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="1" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_config_settings" sequence="5"/>
-        <menuitem id="menu_reordering_rules_config" action="action_orderpoint_form" name="Reordering Rules" parent="menu_stock_config_settings" sequence="3"/>
         <menuitem id="stock.menu_warehouse_report" name="Reports" sequence="99" parent="stock.menu_stock_root" groups="group_stock_manager"/>
-        <menuitem action="procurement.procurement_order_action_exceptions" id="menu_stock_procurement_action" parent="stock.menu_warehouse_report" sequence="50" groups="stock.group_stock_manager"/>
-        <menuitem id="menu_quants" name="Quantitative Valuation" parent="menu_stock_inventory_control" sequence="120" action="quantsact" groups="base.group_no_one"/>
+        <menuitem action="procurement.procurement_order_action_exceptions" id="menu_stock_procurement_action" parent="stock.menu_warehouse_report" sequence="150" groups="stock.group_stock_manager"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="stock.menu_warehouse_report" sequence="130"/>
+        <menuitem id="menu_quants" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="120" action="quantsact"/>
         <menuitem id="menu_procurement_rules" name="Global Procurement Rules" parent="stock.menu_routes_config" action="procrules" groups="base.group_no_one" sequence="3"/>
         <menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
         <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="4" groups="stock.group_locations"/>
-        <menuitem action="action_quantsinv" id="menu_action_quants_inv" parent="stock.menu_stock_inventory_control" sequence="20"/>
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
@@ -1978,9 +2075,16 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
         
-        <record model="ir.actions.act_window" id="product_open_quants">
-            <field name="context">{'search_default_internal_loc': 1, 'search_default_product_id': active_id, 'search_default_locationgroup':1}</field>
-            <field name="name">Current Stock</field>
+        <record model="ir.actions.act_window" id="product_template_open_quants">
+            <field name="name">Stock On Hand</field>
+            <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+            <field name="domain">[('product_id.product_tmpl_id', '=', active_id)]</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+         <record model="ir.actions.act_window" id="product_open_quants">
+            <field name="name">Stock On Hand</field>
+            <field name="context">{'search_default_internal_loc': 1, 'search_default_locationgroup':1}</field>
+           <field name="domain">[('product_id', '=', active_id)]</field>
             <field name="res_model">stock.quant</field>
         </record>
         

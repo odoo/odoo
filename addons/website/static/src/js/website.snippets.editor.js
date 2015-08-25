@@ -81,17 +81,24 @@ options.registry.slider = options.Class.extend({
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
 
         // clone the best candidate from template to use new features
-        var $snippets = this.buildingBlock.$snippets.find('.oe_snippet_body.carousel');
-        var point = 0;
-        var selection;
-        var className = _.compact(this.$target.attr("class").split(" "));
-        $snippets.each(function () {
-            var len = _.intersection(_.compact(this.className.split(" ")), className).length;
-            if (len > point) {
-                point = len;
-                selection = this;
-            }
-        });
+        var $snippets = this.buildingBlock.$snippets;
+        //since saas-6, all snippets must start by s_
+        var selection = this.$target.closest('[class*="s_"');
+        if (_.isUndefined(selection)) {
+            var point = 0;
+            var className = _.compact(this.$target.attr("class").split(" "));
+            $snippets.find('.oe_snippet_body').each(function () {
+                var len = _.intersection(_.compact(this.className.split(" ")), className).length;
+                if (len > point) {
+                    point = len;
+                    selection = this;
+                }
+            });
+        }
+        else {
+            var s_class = selection.attr('class').split(' ').filter(function(o) { return _.str.startsWith(o, "s_") })[0]
+            selection = $snippets.find("." + s_class);
+        }
         var $clone = $(selection).find('.item:first').clone();
 
         // insert
@@ -167,7 +174,7 @@ options.registry.carousel = options.registry.slider.extend({
         };
         this.$target.on('slid.bs.carousel', function () {
             if(self.editor && self.editor.styles.background) {
-                self.editor.styles.background.$bg = self.$target.find(".item.active");
+                self.editor.styles.background.$target = self.$target.find(".item.active");
                 self.editor.styles.background.set_active();
             }
             self.$target.carousel("pause");
@@ -257,8 +264,12 @@ options.registry.marginAndResize = options.Class.extend({
             } else {
                 var xy = event['page'+XY];
                 var current = resize[2] || 0;
+                var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
+                var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
                 _.each(resize[0], function (val, key) {
                     if (self.$target.hasClass(val)) {
+                        current = key;
+                    } else if (resize[1][key] === real_margin) {
                         current = key;
                     }
                 });
@@ -355,12 +366,12 @@ options.registry.marginAndResize = options.Class.extend({
         if (offset === 0) overlay_class+= " block-w-left";
 
         var mb = _class.match(/mb([0-9-]+)/i);
-        mb = mb ? +mb[1] : 0;
+        mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
         if (mb >= 128) overlay_class+= " block-s-bottom";
         else if (!mb) overlay_class+= " block-s-top";
 
         var mt = _class.match(/mt([0-9-]+)/i);
-        mt = mt ? +mt[1] : 0;
+        mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
         if (mt >= 128) overlay_class+= " block-n-top";
         else if (!mt) overlay_class+= " block-n-bottom";
 

@@ -132,17 +132,17 @@ Tour.register({
             element:    '.tab-pane:eq(1).active .oe_form_field_x2many_list_row_add a'
         },
         {
-            title:      "select participant 1",
-            element:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(0)'
+            title:      "select Admin",
+            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]'
         },
         {
-            title:      "select participant 2",
-            waitFor:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(0):propChecked',
-            element:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(1)'
+            title:      "select Demo User",
+            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Administrator)) .oe_list_record_selector input[type="checkbox"]:propChecked',
+            element:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Demo User)) .oe_list_record_selector input[type="checkbox"]'
         },
         {
             title:      "save selected participants",
-            waitFor:    '.modal .oe_list_record_selector input[type="checkbox"]:eq(1):propChecked',
+            waitFor:    '.modal .oe_list_content tr:has(td[data-field="name"]:containsExact(Demo User)) .oe_list_record_selector input[type="checkbox"]:propChecked',
             element:    '.o_selectcreatepopup_search_select'
         },
 
@@ -224,7 +224,7 @@ Tour.register({
         // change message a
 
         {
-            title:      "create new message aaa",
+            title:      "edit message a",
             waitNot:    '.modal',
             waitFor:    '.oe_list_field_cell:containsExact(e)',
             element:    '.oe_list_field_cell:containsExact(a)'
@@ -238,6 +238,44 @@ Tour.register({
             title:      "save changes",
             waitFor:    '.modal textarea.field_text:propValue(aaa)',
             element:    '.o_formdialog_save'
+        },
+
+        // change message e
+
+        {
+            title:      "edit message e",
+            waitNot:    '.modal',
+            waitFor:    '.oe_list_field_text:contains(aaa)',
+            element:    '.oe_list_field_cell:containsExact(e)'
+        },
+
+        {
+            title:      "open the many2one to select an other user",
+            element:    '.modal .oe_m2o_drop_down_button',
+        },
+        {
+            title:      "select an other user",
+            element:    '.ui-autocomplete li:contains(Demo User)',
+        },
+        {
+            title:      "test one2many's line onchange after many2one",
+            waitFor:    '.oe_form_char_content:contains([test_trigger] Demo User)',
+        },
+        {
+            title:      "test one2many field not triggered onchange",
+            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Administrator:e)',
+        },
+        {
+            title:      "save changes",
+            element:    '.o_formdialog_save'
+        },
+        {
+            title:      "test one2many triggered the onchange on save for the line",
+            waitFor:    '.oe_list_content td.oe_list_field_cell.oe_readonly:contains([test_trigger] Demo User)',
+        },
+        {
+            title:      "test one2many triggered the onchange on save",
+            waitFor:    'textarea[name="message_concat"]:propValueContains([test_trigger] Demo User:e)',
         },
 
         // remove
@@ -345,7 +383,7 @@ Tour.register({
         {
             title:      "cancel change",
             waitFor:    '.oe_list_field_cell:containsExact(ddd)',
-            element:    'a.oe_form_button_cancel',
+            element:    'button.oe_form_button_cancel',
             onload: function () {
                 // remove the window alert (can't click on it with JavaScript tour)
                 $('.oe_form_dirty').removeClass('oe_form_dirty');

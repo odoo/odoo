@@ -215,8 +215,8 @@ class hr_employee(osv.osv):
         address_id = False
         if company:
             company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
-            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
-            address_id = address and address['default'] or False
+            address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['contact'])
+            address_id = address and address['contact'] or False
         return {'value': {'address_id': address_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id, context=None):

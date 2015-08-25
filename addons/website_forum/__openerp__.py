@@ -4,12 +4,12 @@
 {
     'name': 'Forum',
     'category': 'Website',
+    'sequence': 150,
     'summary': 'Forum, FAQ, Q&A',
     'version': '1.0',
     'description': """
 Ask questions, get answers, no distractions
         """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/community-builder',
     'depends': [
         'auth_signup',

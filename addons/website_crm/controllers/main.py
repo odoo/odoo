@@ -61,7 +61,6 @@ class contactus(http.Controller):
         values = {}
 
         values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_website')
-        values['team_id'] = request.website.salesteam_id.id
 
         for field_name, field_value in kwargs.items():
             if hasattr(field_value, 'filename'):

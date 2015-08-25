@@ -235,7 +235,7 @@ var InstantMessaging = Widget.extend({
             self.widgets = {};
             self.users = [];
             _.each(result, function(user) {
-                user.image_url = session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user.id});
+                user.image_url = session.url('/web/image', {model:'res.users', field: 'image_small', id: user.id});
                 var widget = new UserWidget(self, user);
                 widget.appendTo(self.$(".oe_im_users"));
                 widget.on("user_clicked", self, self.user_clicked);

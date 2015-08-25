@@ -565,7 +565,7 @@ var CalendarView = View.extend({
                         if (attendee_showed<= MAX_ATTENDEES) {
                             if (self.avatar_model !== null) {
                                        the_title_avatar += '<img title="' + _.escape(self.all_attendees[the_attendee_people]) + '" class="o_attendee_head"  \
-                                                        src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
+                                                        src="/web/image/' + self.avatar_model + '/' + the_attendee_people + '/image_small"></img>';
                             }
                             else {
                                 if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {

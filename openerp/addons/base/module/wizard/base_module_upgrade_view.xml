@@ -13,9 +13,8 @@
                     <separator string="Impacted Modules"/>
                     <field name="module_info"/>
                     <footer>
-                        <button name="upgrade_module" string="Confirm" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" name="upgrade_module_cancel" type="object"/>
+                        <button name="upgrade_module" string="Confirm" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" name="upgrade_module_cancel" type="object"/>
                     </footer>
                 </form>
             </field>
@@ -47,9 +46,8 @@
                     <div><label string="The selected modules have been updated / installed !"/></div>
                     <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
                     <footer>
-                        <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button name="config" string="Start configuration" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>

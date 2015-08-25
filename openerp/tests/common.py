@@ -314,7 +314,7 @@ class HttpCase(TransactionCase):
                         _logger.error("phantomjs: %s", line_[0])
                         # The second part of the log is for debugging
                         if len(line_) > 1:
-                            _logger.info("phantomjs: \n%s", line.split('\n\n')[1])
+                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
                         pass
                     break
                 elif line.startswith("warning"):
@@ -344,6 +344,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
                 phantom.wait()
             self._wait_remaining_requests()
+            # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):

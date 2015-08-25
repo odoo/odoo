@@ -47,8 +47,8 @@
         </div>
         <div class="o_kanban_quick_create">
             <input type="text" placeholder="Add"/>
-            <button class="btn btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-default o_kanban_cancel">Discard</button>
+            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
         </div>
     </div>
 </t>
@@ -60,8 +60,8 @@
 <t t-name="KanbanView.QuickCreate">
     <div class="o_kanban_quick_create">
         <input type="text" placeholder="Add"/>
-        <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-default o_kanban_cancel">Discard</button>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
     </div>
 </t>
 
@@ -73,11 +73,6 @@
 <t t-name="KanbanView.nocontent">
     <div class="oe_view_nocontent">
         <t t-raw="content"/>
-    </div>
-</t>
-<t t-name="KanbanAttachmentImage">
-    <div class="o_kanban_attachment_image">
-        <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + widget.field.raw_value[0]"/>
     </div>
 </t>
 </template>

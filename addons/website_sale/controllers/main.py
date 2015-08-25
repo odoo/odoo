@@ -554,7 +554,7 @@ class website_sale(http.Controller):
 
         partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
 
-        billing_info = {}
+        billing_info = {'customer': True}
         if partner_lang:
             billing_info['lang'] = partner_lang
         billing_info.update(self.checkout_parse('billing', checkout, True))
@@ -589,7 +589,7 @@ class website_sale(http.Controller):
 
         order_info = {
             'partner_id': partner_id,
-            'message_follower_ids': [(4, partner_id), (3, request.website.partner_id.id)],
+            'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
             'partner_invoice_id': partner_id,
         }
         order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])

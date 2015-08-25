@@ -46,9 +46,8 @@ class config(osv.Model):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
-        user_is_admin = self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
         if not google_drive_refresh_token:
-            if user_is_admin:
+            if self.pool['res.users']._is_admin(cr, uid, [uid]):
                 model, action_id = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base_setup', 'action_general_configuration')
                 msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
                 raise openerp.exceptions.RedirectWarning(msg, action_id, _('Go to the configuration panel'))

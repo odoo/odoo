@@ -435,7 +435,7 @@ class sale_order(osv.osv):
         for line in order.order_line:
             if line.state == 'cancel':
                 continue
-            if line.product_id and (line.product_id.type != 'service'):
+            if line.product_id and (line.product_id.type in ['consu', 'product']):
                 return False
         return True
 

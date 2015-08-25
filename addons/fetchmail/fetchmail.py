@@ -13,12 +13,8 @@ try:
 except ImportError:
     import StringIO
 
-import zipfile
-import base64
-from openerp import addons
-
 from openerp.osv import fields, osv
-from openerp import tools, api
+from openerp import tools, api, SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -252,7 +248,7 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
 
         try:
             cron = self.pool['ir.model.data'].get_object(
-                cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
+                cr, SUPERUSER_ID, 'fetchmail', 'ir_cron_mail_gateway_action', context=context)
         except ValueError:
             # Nevermind if default cron cannot be found
             return

@@ -214,7 +214,7 @@ class stock_picking(osv.osv):
             @return: object of the partner to invoice
         """
         return picking.partner_id and picking.partner_id.id
-        
+
     def action_invoice_create(self, cr, uid, ids, journal_id, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
@@ -248,7 +248,7 @@ class stock_picking(osv.osv):
             if type in ('in_invoice', 'in_refund'):
                 for inv in self.pool.get('account.invoice').browse(cr, uid, invoices, context=context):
                     for ol in inv.invoice_line_ids:
-                        if ol.product_id.type != 'service':
+                        if ol.product_id.type == 'product':
                             oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
                             if not oa:
                                 oa = ol.product_id.categ_id.property_stock_account_input_categ_id and ol.product_id.categ_id.property_stock_account_input_categ_id.id        

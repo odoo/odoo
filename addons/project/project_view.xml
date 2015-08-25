@@ -34,7 +34,7 @@
                     <separator/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -173,7 +173,7 @@
                     <filter string="Manager" domain="[('user_id','=',uid)]"/>
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
@@ -190,9 +190,9 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
                     <field name="sequence" widget="handle"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
@@ -250,8 +250,6 @@
                                 "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </h1>
                     </div>
-                    <label for="tag_ids" class="oe_edit_only"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
                     <group>
                         <group>
                             <field name="project_id" domain="[('state','not in', ('close', 'cancelled'))]" on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
@@ -264,6 +262,7 @@
                         </group>
                         <group>
                             <field name="date_deadline"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                     </group>
                     <notebook>
@@ -318,9 +317,8 @@
                     <field name="sequence"/>
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
-                    <field name="message_unread_counter"/>
+                    <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
-                    <field name="displayed_image_id"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -349,8 +347,8 @@
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
-                                    <t t-if="record.message_unread_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_unread_counter.raw_value"/></span>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -360,9 +358,6 @@
                                             options='{"states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                                     </div>
                                 </div>
-                            </div>
-                            <div t-if="record.displayed_image_id.value">
-                                <field name="displayed_image_id" widget="attachment_image"/>
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -377,8 +372,8 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
                     <field name="project_id" invisible="context.get('user_invisible', False)"/>
@@ -589,21 +584,7 @@
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
 
-         <record id="product_search_form_view_procurment_consume" model="ir.ui.view">
-            <field name="name">product.product.service.search</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_search_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//filter[@name='services']" position="replace">
-                    <filter string="Services" name="services" domain="[('type','=','service')]" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-                 <xpath expr="//filter[@name='consumable']" position="replace">
-                     <filter string="Consumable" name="consumable" domain="[('type','=','consu')]" help="Consumable products" invisible="context.get('consumable_services', False)"/>
-                 </xpath>
-            </field>
-        </record>
-
-         <record id="task_company" model="ir.ui.view">
+        <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
@@ -653,6 +634,10 @@
             </field>
         </record>
         <menuitem action="project_tags_action" id="menu_project_tags_act" parent="menu_project_config" groups="base.group_no_one"/>
+
+        <!-- Portal menuitems -->
+        <menuitem name="Projects" id="portal_services_projects" parent="portal.portal_projects"     
+                  action="open_view_project_all" sequence="10"/>
 
     </data>
 </openerp>

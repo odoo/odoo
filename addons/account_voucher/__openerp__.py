@@ -4,7 +4,6 @@
 {
     'name' : 'Sale & Purchase Vouchers',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
     'summary': 'Manage your debts and credits thanks to simple sale/purchase receipts',
     'description': """
 TODO

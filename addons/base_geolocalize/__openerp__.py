@@ -10,7 +10,6 @@
 Partners geolocalization
 ========================
     """,
-    'author': 'OpenERP SA',
     'depends': ['crm'],
     'demo': [
     ],

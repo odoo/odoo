@@ -34,6 +34,8 @@ class ResCompany(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account', oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account', oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account')
+    bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
+
 
     @api.multi
     def compute_fiscalyear_dates(self, date):

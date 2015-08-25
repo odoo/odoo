@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp import api, fields, models, _
 from openerp.tools import float_is_zero
+from openerp.tools.misc import formatLang
 
 from openerp.exceptions import UserError, RedirectWarning
 
@@ -43,13 +44,14 @@ class AccountInvoice(models.Model):
         self.amount_untaxed = sum(line.price_subtotal for line in self.invoice_line_ids)
         self.amount_tax = sum(line.amount for line in self.tax_line_ids)
         self.amount_total = self.amount_untaxed + self.amount_tax
-        amount_total_signed = self.amount_total
+        amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
         if self.currency_id and self.currency_id != self.company_id.currency_id:
-            amount_total_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
+            amount_total_company_signed = self.currency_id.compute(self.amount_total, self.company_id.currency_id)
             amount_untaxed_signed = self.currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
-        self.amount_total_signed = amount_total_signed * sign
+        self.amount_total_company_signed = amount_total_company_signed * sign
+        self.amount_total_signed = self.amount_total * sign
         self.amount_untaxed_signed = amount_untaxed_signed * sign
 
     @api.model
@@ -90,16 +92,18 @@ class AccountInvoice(models.Model):
     def _compute_residual(self):
         residual = 0.0
         residual_signed = 0.0
+        residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'in_invoice'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
             if line.account_id.internal_type in ('receivable', 'payable'):
-                residual_signed += line.amount_residual * sign
+                residual_company_signed += line.amount_residual * sign
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
                 else:
                     from_currency = (line.currency_id and line.currency_id.with_context(date=line.date)) or line.company_id.currency_id.with_context(date=line.date)
                     residual += from_currency.compute(line.amount_residual, self.currency_id)
-        self.residual_signed = residual_signed
+        self.residual_company_signed = residual_company_signed
+        self.residual_signed = abs(residual) * sign
         self.residual = abs(residual)
         digits_rounding_precision = self.currency_id.rounding
         if float_is_zero(self.residual, digits_rounding_precision):
@@ -126,7 +130,7 @@ class AccountInvoice(models.Model):
                     else:
                         amount_to_show = line.company_id.currency_id.compute(abs(line.amount_residual), self.currency_id)
                     info['content'].append({
-                        'ref': line.ref or line.move_id.name,
+                        'journal_name': line.ref or line.move_id.name,
                         'amount': amount_to_show,
                         'currency': self.currency_id.symbol,
                         'id': line.id,
@@ -160,12 +164,15 @@ class AccountInvoice(models.Model):
                     amount_to_show = payment.company_id.currency_id.compute(-amount, self.currency_id)
                 info['content'].append({
                     'name': payment.name,
-                    'ref': payment.journal_id.name,
+                    'journal_name': payment.journal_id.name,
                     'amount': amount_to_show,
                     'currency': self.currency_id.symbol,
                     'digits': [69, self.currency_id.decimal_places],
                     'position': self.currency_id.position,
                     'date': payment.date,
+                    'payment_id': payment.id,
+                    'move_id': payment.move_id.id,
+                    'ref': payment.move_id.ref,
                 })
             self.payments_widget = json.dumps(info)
 
@@ -261,7 +268,10 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total = fields.Monetary(string='Total',
         store=True, readonly=True, compute='_compute_amount')
-    amount_total_signed = fields.Monetary(string='Total', currency_field='company_currency_id',
+    amount_total_signed = fields.Monetary(string='Total', currency_field='currency_id',
+        store=True, readonly=True, compute='_compute_amount',
+        help="Total amount in the currency of the invoice, negative for credit notes.")
+    amount_total_company_signed = fields.Monetary(string='Total', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount',
         help="Total amount in the currency of the company, negative for credit notes.")
     currency_id = fields.Many2one('res.currency', string='Currency',
@@ -284,7 +294,9 @@ class AccountInvoice(models.Model):
 
     residual = fields.Monetary(string='Amount Due',
         compute='_compute_residual', store=True, help="Remaining amount due.")
-    residual_signed = fields.Monetary(string='Amount Due', currency_field='company_currency_id',
+    residual_signed = fields.Monetary(string='Amount Due', currency_field='currency_id',
+        compute='_compute_residual', store=True, help="Remaining amount due in the currency of the invoice.")
+    residual_company_signed = fields.Monetary(string='Amount Due', currency_field='company_currency_id',
         compute='_compute_residual', store=True, help="Remaining amount due in the currency of the company.")
     payment_ids = fields.Many2many('account.payment', 'account_invoice_payment_rel', 'invoice_id', 'payment_id', string="Payments", copy=False, readonly=True)
     payment_move_line_ids = fields.Many2many('account.move.line', string='Payments', compute='_compute_payments', store=True)
@@ -315,7 +327,7 @@ class AccountInvoice(models.Model):
     def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
         def get_view_id(xid, name):
             try:
-                return self.env['ir.model.data'].xmlid_to_res_id('account.' + xid, raise_if_not_found=True)
+                return self.env.ref('account.' + xid)
             except ValueError:
                 view = self.env['ir.ui.view'].search([('name', '=', name)], limit=1)
                 if not view:
@@ -562,6 +574,7 @@ class AccountInvoice(models.Model):
             else:
                 line['currency_id'] = False
                 line['amount_currency'] = False
+                line['price'] = self.currency_id.round(line['price'])
             if self.type in ('out_invoice', 'in_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
@@ -730,7 +743,7 @@ class AccountInvoice(models.Model):
             }
             ctx['company_id'] = inv.company_id.id
             ctx['dont_create_taxes'] = True
-            ctx['invoice_id'] = inv.move_name and inv or False
+            ctx['invoice'] = inv
             ctx_nolang = ctx.copy()
             ctx_nolang.pop('lang', None)
             move = account_move.with_context(ctx_nolang).create(move_vals)
@@ -948,6 +961,18 @@ class AccountInvoice(models.Model):
         elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
             return 'account.mt_invoice_created'
         return super(AccountInvoice, self)._track_subtype(init_values)
+
+    @api.multi
+    def _get_tax_amount_by_group(self):
+        self.ensure_one()
+        res = {}
+        currency = self.currency_id or self.company_id.currency_id
+        for line in self.tax_line_ids:
+            res.setdefault(line.tax_id.tax_group_id, 0.0)
+            res[line.tax_id.tax_group_id] += line.amount
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
+        res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
+        return res
 
 
 class AccountInvoiceLine(models.Model):

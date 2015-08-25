@@ -3,7 +3,6 @@
 {
     'name': 'Belgium - Payroll',
     'category': 'Localization',
-    'author': 'OpenERP SA',
     'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """

@@ -1,6 +1,7 @@
 {
     'name': 'eCommerce',
     'category': 'Website',
+    'sequence': 55,
     'summary': 'Sell Your Products Online',
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
@@ -9,7 +10,6 @@ OpenERP E-Commerce
 ==================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['sale', 'website_payment', 'website_mail', 'website_portal_sale'],
     'data': [
         'data/data.xml',

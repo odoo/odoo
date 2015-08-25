@@ -106,6 +106,8 @@ var Tips = Class.extend({
         filter.mode = mode;
         filter.is_consumed = false;
         tips = _.where(self.tips, filter);
+        // To take into account a tip without fixed model : e.g. a generic tip on the breadcrumb
+        tips = tips.concat(_.where(self.tips, {mode: mode, is_consumed: false, model:false}))
 
         if (type) {
             tips = _.filter(tips, function(tip) {

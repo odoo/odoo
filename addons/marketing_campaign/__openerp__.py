@@ -10,7 +10,6 @@
                  'mail',
                  'decimal_precision'
     ],
-    'author': 'OpenERP SA',
     'category': 'Marketing',
     'description': """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).

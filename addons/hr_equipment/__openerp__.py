@@ -3,6 +3,7 @@
 {
     'name': 'Track Employees Equipment',
     'version': '1.0',
+    'sequence': 125,
     'description': """
         Track employees' equipment and manage its allocation """,
     'author': 'Odoo S.A.',

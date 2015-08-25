@@ -63,7 +63,7 @@ class RecruitmentStage(models.Model):
         'mail.template', "Use template",
         help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.")
     fold = fields.Boolean(
-        "Folded in Kanban View",
+        "Folded in Recruitment Pipe",
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
 
 
@@ -481,6 +481,18 @@ class Applicant(models.Model):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
+    @api.multi
+    def archive_applicant(self):
+        """ Archive an hr.applicant as it was refused """
+        for applicant in self:
+            applicant.write({'active': False})
+
+    @api.multi
+    def reset_applicant(self):
+        """ Reinsert the applicant into the recruitment pipe"""
+        for applicant in self:
+            first_stage_obj = self.env['hr.recruitment.stage'].search([('job_ids', 'in', applicant.job_id.id)], order="sequence asc", limit=1)
+            applicant.write({'active': True, 'stage_id': first_stage_obj.id})
 
 class applicant_category(models.Model):
     _name = "hr.applicant.category"

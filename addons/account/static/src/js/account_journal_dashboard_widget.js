@@ -88,7 +88,8 @@ var JournalDashboardGraph = kanban_widgets.AbstractField.extend({
             var bar_classes = _.map(this.data[0].values, function (v, k) {return v.type});
 
             _.each(this.$('.nv-bar'), function(v, k){
-                $(v).addClass(bar_classes[k]);
+                // classList doesn't work with phantomJS & addClass doesn't work with a SVG element
+                $(v).attr('class', $(v).attr('class') + ' ' + bar_classes[k]);
             });
         }
     },

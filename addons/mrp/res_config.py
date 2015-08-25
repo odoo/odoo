@@ -15,18 +15,6 @@ class mrp_config_settings(osv.osv_memory):
             ], "Product Variants",
             help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
             implied_group='product.group_product_variant'),
-        'module_mrp_repair': fields.selection([
-            (0, "Do not manage product repairs"),
-            (1, "Manage product repairs")
-            ], "Repairs",
-            help='Allows to manage all product repairs.\n'
-                 '* Add/remove products in the reparation\n'
-                 '* Impact for stocks\n'
-                 '* Invoicing (products and/or services)\n'
-                 '* Warranty concept\n'
-                 '* Repair quotation report\n'
-                 '* Notes for the technician and for the final customer.\n'
-                 '-This installs the module mrp_repair.'),
         'module_mrp_operations': fields.selection([
             (0, "Do not use a planning for the work orders "),
             (1, "Allow detailed planning of work orders")

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import cStringIO
 import datetime
 import functools
 import itertools
@@ -11,13 +10,13 @@ import pytz
 from openerp import models, api, _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, ustr
 
-REFERENCING_FIELDS = set([None, 'id', '.id'])
+REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
-    return dict((k, v) for k, v in record.iteritems()
-                if k in REFERENCING_FIELDS)
+    return {k: v for k, v in record.iteritems()
+            if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
-    return dict((k, v) for k, v in record.iteritems()
-                if k not in REFERENCING_FIELDS)
+    return {k: v for k, v in record.iteritems()
+            if k not in REFERENCING_FIELDS}
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -34,7 +33,7 @@ class ImportWarning(Warning):
 class ConversionNotFound(ValueError): pass
 
 
-class ir_fields_converter(models.Model):
+class ir_fields_converter(models.AbstractModel):
     _name = 'ir.fields.converter'
 
     @api.model
@@ -45,7 +44,7 @@ class ir_fields_converter(models.Model):
             if isinstance(error_params, basestring):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
-                error_params = dict((k, sanitize(v)) for k, v in error_params.iteritems())
+                error_params = {k: sanitize(v) for k, v in error_params.iteritems()}
             elif isinstance(error_params, tuple):
                 error_params = tuple(map(sanitize, error_params))
         return error_type(error_msg % error_params, error_args)
@@ -72,7 +71,7 @@ class ir_fields_converter(models.Model):
         def fn(record, log):
             converted = {}
             for field, value in record.iteritems():
-                if field in (None, 'id', '.id'):
+                if field in REFERENCING_FIELDS:
                     continue
                 if not value:
                     converted[field] = False

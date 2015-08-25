@@ -25,3 +25,4 @@ import test_translate
 import test_view_validation
 import test_views
 import test_xmlrpc
+import test_res_partner_bank

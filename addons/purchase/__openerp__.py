@@ -6,7 +6,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchase Management',
-    'sequence': 19,
+    'sequence': 60,
     'summary': 'Purchase Orders, Receipts, Vendor Bills',
     'description': """
 Manage goods requirement by Purchase Orders easily
@@ -25,7 +25,6 @@ Dashboard / Reports for Purchase Management will include:
 * Receipt Analysis
 * Purchase Analysis
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/purchase',
     'depends': ['stock_account', 'report', 'web_tip'],
     'data': [

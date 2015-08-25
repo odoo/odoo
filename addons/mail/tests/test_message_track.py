@@ -8,15 +8,13 @@ class TestTracking(TestMail):
     def test_message_track(self):
         """ Testing auto tracking of fields. Warning, it has not be cleaned and
         should probably be. """
-        def _strip_string_spaces(body):
-            return body.replace(' ', '').replace('\n', '')
         Subtype = self.env['mail.message.subtype']
         Data = self.env['ir.model.data']
         note_subtype = self.env.ref('mail.mt_note')
 
         group_system = self.env.ref('base.group_system')
         group_user = self.env.ref('base.group_user')
-        self.group_pigs.message_subscribe_users(user_ids=[self.user_employee.id])
+        self.group_pigs.write({'channel_partner_ids': [(4, self.user_employee.partner_id.id)]})
 
         # mt_private: public field (tracked as onchange) set to 'private' (selection)
         mt_private = Subtype.create({

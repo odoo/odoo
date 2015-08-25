@@ -215,10 +215,11 @@ var KanbanView = View.extend({
             } else {
                 _.each(groups, function (group) {
                     var value = group.attributes.value;
+                    group.id = value instanceof Array ? value[0] : value;
                     var field = self.fields_view.fields[self.group_by_field];
                     if (field && field.type === "selection") {
                         value= _.find(field.selection, function (s) { return s[0] === group.attributes.value; });
-                    } 
+                    }
                     group.title = (value instanceof Array ? value[1] : value) || _t("Undefined");
                     group.values = {};
                 });
@@ -261,7 +262,6 @@ var KanbanView = View.extend({
                     grouped: true,
                 };
             });
-            return def;
         });
     },
 
@@ -425,13 +425,13 @@ var KanbanView = View.extend({
             forcePlaceholderSize: true,
             stop: function () {
                 var ids = [];
-                self.$('.o_kanban_group').each(function (index, u) { 
+                self.$('.o_kanban_group').each(function (index, u) {
                     ids.push($(u).data('id'));
                 });
                 self.resequence(ids);
             },
         });
-        if (this.is_action_enabled('group_create')) {
+        if (this.is_action_enabled('group_create') && this.grouped_by_m2o) {
             this.column_quick_create = new ColumnQuickCreate(this);
             this.column_quick_create.appendTo(fragment);
         }
@@ -615,7 +615,7 @@ var KanbanView = View.extend({
         var self = this;
         var column = event.target;
         var context = {};
-        context['default_' + this.group_by_field] = column.values.id;
+        context['default_' + this.group_by_field] = column.id;
         var name = event.data.value;
         this.dataset.name_create(name, context).then(function on_success (data) {
             add_record(data[0]);
@@ -780,4 +780,3 @@ core.one2many_view_registry.add('kanban', One2ManyKanbanView);
 return KanbanView;
 
 });
-

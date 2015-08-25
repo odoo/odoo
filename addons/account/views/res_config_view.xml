@@ -78,13 +78,12 @@
                         </div>
                     </group>
                     <group string="Fiscal Year">
-                        <label for="id" string="Financial Year End"/>
+                        <label for="id" string="Fiscal Year Last Day"/>
                         <div>
-                            <label for="fiscalyear_last_day" string="Last Day"/>
                             <field name="fiscalyear_last_day" class="oe_inline"/>
                             <field name="fiscalyear_last_month" class="oe_inline"/>
                         </div>
-                        <label for="id" string="Lock Dates"/>
+                        <label for="id" string="Lock Entries"/>
                         <div>
                             <div>
                                 <label for="period_lock_date"/>
@@ -161,10 +160,10 @@
                     <separator string="Bank &amp; Cash"/>
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
-                        <div>
+                        <div name="bank_options">
                             <div name='company_footer'>
                                 <label for="company_footer"/>
-                                <button name="open_company_form" type="object"
+                                <button name="open_bank_accounts" type="object"
                                     string="Configure your company bank accounts" icon="gtk-go-forward"
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
@@ -176,17 +175,6 @@
                             <div name='payment_acquirer'>
                                 <label for="paypal_account"/>
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
-                            </div>
-                        </div>
-                        <label for="id" string="Bank Statements"/>
-                        <div name="bank_statement_import_options">
-                            <div>
-                                <field name="module_account_bank_statement_import_ofx" class="oe_inline"/>
-                                <label for="module_account_bank_statement_import_ofx"/>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_qif" class="oe_inline"/>
-                                <label for="module_account_bank_statement_import_qif"/>
                             </div>
                         </div>
                     </group>

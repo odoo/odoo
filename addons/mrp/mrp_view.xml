@@ -757,8 +757,8 @@
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-info="state in ('draft','confirmed')" decoration-danger="date_planned&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-info="state in ('draft','confirmed')" decoration-danger="date_planned&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name"/>
                     <field name="date_planned"/>
                     <field name="product_id"/>
@@ -1032,11 +1032,11 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
                 </div>
@@ -1065,11 +1065,11 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-flask">
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="%(act_product_mrp_production)d" type="action"
-                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-list-alt">
+                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
                 </div>

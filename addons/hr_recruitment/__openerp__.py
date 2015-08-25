@@ -5,7 +5,7 @@
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 25,
+    'sequence': 90,
     'summary': 'Jobs, Recruitment, Applications, Job Interviews, Surveys',
     'description': """
 Manage job positions and the recruitment process
@@ -16,7 +16,6 @@ This application allows you to easily keep track of jobs, vacancies, application
 It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it is integrated with the survey module to allow you to define interviews for different jobs.
 You can define the different phases of interviews and easily rate the applicant from the kanban view.
 """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/recruitment',
     'depends': [
         'decimal_precision',

@@ -205,8 +205,7 @@
             sequence='20' />
 
         <!-- Methods -->
-
-        <record model='ir.ui.view' id='payment_method_tree_view'>
+        <record id='payment_method_view_tree' model='ir.ui.view'>
             <field name='name'>payment.method.tree</field>
             <field name='model'>payment.method</field>
             <field name='arch' type='xml'>
@@ -220,7 +219,17 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='payment_method_act'>
+        <record id='payment_method_view_search' model='ir.ui.view'>
+            <field name='name'>payment.method.search</field>
+            <field name='model'>payment.method</field>
+            <field name='arch' type='xml'>
+                <search string='Payment Methods'>
+                    <field name='partner_id'/>
+                </search>
+            </field>
+        </record>
+
+        <record id='payment_method_action' model='ir.actions.act_window'>
             <field name='name'>Saved Payment Data</field>
             <field name='res_model'>payment.method</field>
             <field name='view_type'>form</field>
@@ -228,9 +237,9 @@
         </record>
 
         <menuitem
-            action='payment_method_act'
+            action='payment_method_action'
             id='payment_method_menu'
-            parent='root_payment_menu' />
+            parent='root_payment_menu'/>
 
     </data>
 </openerp>

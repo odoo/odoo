@@ -150,48 +150,48 @@ class TestMailFeatures(TestMail):
         self.assertEqual(na_emp1_new, na_emp1_base + 1)
         self.assertEqual(na_emp2_new, na_emp2_base)
 
-        no_notify = self.env['mail.notification'].search_count([
-            ('partner_id', '=', self.user_employee.partner_id.id),
-            ('is_read', '=', False)])
-        self.assertEqual(no_notify, na_emp1_new)
-
 
 class TestMessagePost(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_no_subscribe_author(self):
-        original_followers = self.group_pigs.message_follower_ids
+        original = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment')
-        self.assertEqual(self.group_pigs.message_follower_ids, original_followers)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_author(self):
-        original_followers = self.group_pigs.message_follower_ids
+        original = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment')
-        self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.user_employee.partner_id)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.user_employee.partner_id)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_no_subscribe_recipients(self):
-        original_followers = self.group_pigs.message_follower_ids
+        original = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
-        self.assertEqual(self.group_pigs.message_follower_ids, original_followers)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('partner_id'), original.mapped('partner_id'))
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients(self):
-        original_followers = self.group_pigs.message_follower_ids
+        original = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
-        self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.partner_1 | self.partner_2)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_subscribe_recipients_partial(self):
-        original_followers = self.group_pigs.message_follower_ids
+        original = self.group_pigs.message_follower_ids
         self.group_pigs.sudo(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True, 'mail_post_autofollow_partner_ids': [self.partner_2.id]}).message_post(
             body='Test Body', message_type='comment', subtype='mt_comment', partner_ids=[(4, self.partner_1.id), (4, self.partner_2.id)])
-        self.assertEqual(self.group_pigs.message_follower_ids, original_followers | self.partner_2)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_2)
+        self.assertEqual(self.group_pigs.message_follower_ids.mapped('channel_id'), original.mapped('channel_id'))
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_post_notifications(self):
@@ -230,7 +230,9 @@ class TestMessagePost(TestMail):
         self.assertEqual(msg.subject, _subject)
         self.assertEqual(msg.body, _body)
         self.assertEqual(msg.partner_ids, self.partner_1 | self.partner_2)
-        self.assertEqual(msg.notified_partner_ids, self.partner_1 | self.partner_2 | self.env.user.partner_id)
+        self.assertEqual(msg.needaction_partner_ids, self.env.user.partner_id | self.partner_1 | self.partner_2)
+        self.assertEqual(msg.channel_ids, self.env['mail.channel'])
+
         # attachments
         self.assertEqual(set(msg.attachment_ids.mapped('res_model')), set(['mail.channel']),
                          'message_post: all atttachments should be linked to the mail.channel model')
@@ -276,22 +278,22 @@ class TestMessagePost(TestMail):
             body=_body, subject=_subject,
             message_type='comment', subtype='mt_comment')
 
-        self.assertEqual(parent_msg.notified_partner_ids, self.env['res.partner'])
+        self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
 
         msg = self.group_pigs.sudo(self.user_employee).message_post(
             body=_body, subject=_subject, partner_ids=[self.partner_1.id],
             message_type='comment', subtype='mt_comment', parent_id=parent_msg.id)
 
         self.assertEqual(msg.parent_id.id, parent_msg.id)
-        self.assertEqual(msg.notified_partner_ids, self.partner_1)
-        self.assertEqual(parent_msg.notified_partner_ids, self.partner_1)
+        self.assertEqual(msg.partner_ids, self.partner_1)
+        # self.assertEqual(parent_msg.partner_ids, self.partner_1)  # TDE FIXME: to check
         self.assertTrue(all('openerp-%d-mail.channel' % self.group_pigs.id in m['references'] for m in self._mails))
         new_msg = self.group_pigs.sudo(self.user_employee).message_post(
             body=_body, subject=_subject,
             message_type='comment', subtype='mt_comment', parent_id=msg.id)
 
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
-        self.assertFalse(new_msg.notified_partner_ids)
+        self.assertFalse(new_msg.partner_ids)
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_message_compose(self):
@@ -380,7 +382,7 @@ class TestMessagePost(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_message_compose_mass_mail_active_domain(self):
-        composer = self.env['mail.compose.message'].with_context({
+        self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': 'mail.channel',
             'active_ids': [self.group_pigs.id],

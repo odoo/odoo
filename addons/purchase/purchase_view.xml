@@ -255,6 +255,41 @@
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="state" invisible="1"/>
                                 </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id"
+                                               on_change="onchange_product_id(parent.pricelist_id, product_id, 0, False,
+                                                parent.partner_id, parent.date_order, parent.fiscal_position_id, date_planned,
+                                                name, False, parent.state, True, context)"
+                                               context="{'partner_id': parent.partner_id}"/>
+                                            <label for="product_qty"/>
+                                            <div>
+                                                <field name="product_qty" class="oe_inline"
+                                                    on_change="onchange_product_id(parent.pricelist_id, product_id, product_qty,
+                                                    product_uom, parent.partner_id, parent.date_order, parent.fiscal_position_id,
+                                                    date_planned, name, False, parent.state, False, context)"/>
+                                                <field name="product_uom" groups="product.group_uom" class="oe_inline"
+                                                    on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position_id,date_planned,name,False,parent.state,context)"/>
+                                            </div>
+                                            <field name="price_unit"/>
+                                        </group>
+                                        <group>
+                                            <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                            <field name="date_planned" widget="date"/>
+                                            <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
+                                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                        </group>
+                                    </group>
+                                    <notebook>
+                                    <page string="Notes">
+                                        <field name="name"/>
+                                    </page><page string="Invoices and Incoming Shipments">
+                                        <field name="invoice_lines"/>
+                                        <field name="move_ids"/>
+                                    </page>
+                                    </notebook>
+                                </form>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -338,7 +373,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
@@ -389,8 +424,8 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" decoration-danger="state in ('except_invoice','except_picking')" string="Purchase Order">
-                    <field name="message_unread" invisible="1"/>
+                <tree decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" decoration-danger="state in ('except_invoice','except_picking')" string="Purchase Order">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
                     <field name="partner_id"/>
@@ -686,7 +721,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                    <button class="oe_stat_button" name="action_view_purchases" type="object" 
-                       icon="fa-shopping-cart">
+                        icon="fa-shopping-cart"
+                        groups="base.group_no_one">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </div>
@@ -701,7 +737,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                    <button class="oe_stat_button" name="action_view_purchases" type="object"
-                       icon="fa-shopping-cart">
+                        icon="fa-shopping-cart"
+                         groups="base.group_no_one">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </div>
@@ -713,10 +750,9 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="property_account_expense_id" position="after">
+                <field name="supplier_taxes_id" position="after">
                     <label string="" colspan="2"/>
                     <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" />
-                    <newline/>
                 </field>
             </field>
         </record>

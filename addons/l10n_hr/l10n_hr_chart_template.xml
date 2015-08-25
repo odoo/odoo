@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="action_client_l10n_hr_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+
 
 		<record id="l10n_hr_chart_template_rrif" model="account.chart.template">
 			<field name="name">RRIF-ov računski plan za poduzetnike</field>

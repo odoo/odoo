@@ -61,13 +61,12 @@ snippet_editor.Class.include({
 
 translator.Class.include({
     start: function () {
-        var self = this;
-        return this._super().then(function () {
-            $('button[data-action=save]').hide();
-            if (window.top.odoo[callback+"_editor"]) {
-                window.top.odoo[callback+"_editor"](self);
-            }
-        });
+        var res = this._super();
+        $('button[data-action=save]').hide();
+        if (window.top.odoo[callback+"_editor"]) {
+            window.top.odoo[callback+"_editor"](this);
+        }
+        return res;
     }
 });
 

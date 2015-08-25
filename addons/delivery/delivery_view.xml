@@ -248,7 +248,6 @@
                             <field name="weight" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                         </div>
-                        <field name="weight_net" groups="base.group_no_one"/>
                         <field name="number_of_packages"/>
                     </group>
                 </group>
@@ -284,7 +283,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_expected']" position="after">
                     <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
@@ -301,7 +299,6 @@
                             <field name="weight" nolabel="1" class="oe_inline"/>
                             <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
                         </div>
-                        <field name="weight_net" groups="base.group_no_one"/>
                     </group>
                 </xpath>
             </field>

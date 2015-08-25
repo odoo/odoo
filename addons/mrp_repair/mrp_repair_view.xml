@@ -44,7 +44,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type', 'in', ['product', 'consu'])]"/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/> 
@@ -250,7 +250,7 @@
             </field>
         </record>
 
-        <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_manufacturing" groups="mrp.group_mrp_user" name="Repair Orders" sequence="50"/>
+        <menuitem action="action_repair_order_tree" id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="36"/>
 
     </data>
 </openerp>

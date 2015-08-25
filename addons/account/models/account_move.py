@@ -118,7 +118,7 @@ class AccountMove(models.Model):
                 new_name = False
                 journal = move.journal_id
 
-                if invoice and invoice.move_name:
+                if invoice and invoice.move_name != '/':
                     new_name = invoice.move_name
                 else:
                     if journal.sequence_id:

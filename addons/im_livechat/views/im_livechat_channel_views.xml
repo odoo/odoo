@@ -32,7 +32,7 @@
                     <field name="nbr_session"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="o_kanban_two_column oe_kanban_global_click">
+                            <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
                                     <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
                                 </div>
@@ -73,7 +73,7 @@
                             <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
                         </button>
                     </div>
-                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>

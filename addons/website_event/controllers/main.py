@@ -72,7 +72,7 @@ class website_event(http.Controller):
                     current_date = date[1]
         if searches["type"] != 'all':
             current_type = type_obj.browse(cr, uid, int(searches['type']), context=context)
-            domain_search["type"] = [("type", "=", int(searches["type"]))]
+            domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
         if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = country_obj.browse(cr, uid, int(searches['country']), context=context)
@@ -96,8 +96,8 @@ class website_event(http.Controller):
 
         domain = dom_without('type')
         types = event_obj.read_group(
-            request.cr, request.uid, domain, ["id", "type"], groupby="type",
-            orderby="type", context=request.context)
+            request.cr, request.uid, domain, ["id", "event_type_id"], groupby="event_type_id",
+            orderby="event_type_id", context=request.context)
         type_count = event_obj.search(request.cr, request.uid, domain,
                                       count=True, context=request.context)
         types.insert(0, {

@@ -921,7 +921,7 @@ class google_calendar(osv.AbstractModel):
         return url
 
     def can_authorize_google(self, cr, uid, context=None):
-        return self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager')
+        return self.pool['res.users']._is_admin(cr, uid, [uid])
 
     def set_all_tokens(self, cr, uid, authorization_code, context=None):
         gs_pool = self.pool['google.service']

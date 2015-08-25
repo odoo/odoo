@@ -316,32 +316,6 @@ ul.oe_menu_editor
     .font-icons-selected
         background-color: #ddd
 
-$attachment-border-color: #848490
-.existing-attachments
-    .pager .disabled
-        display: none
-
-    .existing-attachment-cell
-        position: relative
-        .img
-            border: 1px solid $attachment-border-color
-        .existing-attachment-remove
-            position: absolute
-            top: 0
-            left: 15px // padding-left on col-*
-
-            cursor: pointer
-            background: white
-            padding: 2px
-            border: 1px solid $attachment-border-color
-            border-top: none
-            border-left: none
-            +border-bottom-right-radius(8px)
-        &.media_selected
-            > i, > img 
-                border-width: 5px
-                border-color: rgb(0, 248, 248)
-
 .oe_carlos_danger
     outline: 1px solid red !important
     background-color: #ffd9dd !important

@@ -21,7 +21,7 @@ class TestPurchase(common.TransactionCase):
         self.env['product.product'].browse(product_id).product_tmpl_id.write({'property_account_expense_id': account_exp_id})
 
         # Create Purchase Journal
-        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'PTPJ', 'type': 'purchase', 'company_id': company_id})
+        self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'PTPJ', 'type': 'purchase'})
 
         # In order to test, I create new user and applied Invoicing & Payments group.
         user = self.env['res.users'].with_context({'no_reset_password': True}).create({

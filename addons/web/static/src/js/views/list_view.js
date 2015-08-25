@@ -227,6 +227,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+        this._limit = parseInt(this.fields_view.arch.attrs.limit, 10) || this._limit;
 
         // Retrieve the decoration defined on the model's list view
         this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
@@ -1144,7 +1145,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     },
     render: function () {
         var self = this;
-        this.$current.empty().append(
+        this.$current.html(
             QWeb.render('ListView.rows', _.extend({
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
@@ -1910,7 +1911,7 @@ var ColumnBinary = Column.extend({
         if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = session.url('/web/content', {model: options.model, field: this.id, id: options.id, download: true});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }

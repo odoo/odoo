@@ -47,7 +47,7 @@ class sale_configuration(osv.osv_memory):
         }
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
-        if uid != SUPERUSER_ID and not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             raise openerp.exceptions.AccessError(_("Only administrators can change the settings"))
         ir_values = self.pool.get('ir.values')
         wizard = self.browse(cr, uid, ids)[0]

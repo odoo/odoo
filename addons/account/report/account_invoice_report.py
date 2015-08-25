@@ -73,7 +73,7 @@ class AccountInvoiceReport(models.Model):
 
     _depends = {
         'account.invoice': [
-            'account_id', 'amount_total_signed', 'commercial_partner_id', 'company_id',
+            'account_id', 'amount_total_company_signed', 'commercial_partner_id', 'company_id',
             'currency_id', 'date_due', 'date_invoice', 'fiscal_position_id',
             'journal_id', 'partner_bank_id', 'partner_id', 'payment_term_id',
             'residual', 'state', 'type', 'user_id',
@@ -125,7 +125,7 @@ class AccountInvoiceReport(models.Model):
                                     END
                                ELSE 1::numeric
                           END AS price_average,
-                    ai.residual_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
+                    ai.residual_company_signed / (SELECT count(*) FROM account_invoice_line l where invoice_id = ai.id) *
                     count(*) AS residual,
                     ai.commercial_partner_id as commercial_partner_id,
                     partner.country_id
@@ -149,8 +149,8 @@ class AccountInvoiceReport(models.Model):
                 GROUP BY ail.product_id, ail.account_analytic_id, ai.date_invoice, ai.id,
                     ai.partner_id, ai.payment_term_id, u2.name, u2.id, ai.currency_id, ai.journal_id,
                     ai.fiscal_position_id, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
-                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_signed,
-                    ai.amount_total_signed, ai.commercial_partner_id, partner.country_id
+                    ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual_company_signed,
+                    ai.amount_total_company_signed, ai.commercial_partner_id, partner.country_id
         """
         return group_by_str
 

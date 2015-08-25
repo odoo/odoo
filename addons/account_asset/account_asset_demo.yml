@@ -60,18 +60,3 @@
                 'category_id': ref('account_asset_category_fixedassets0'),
             }
             self._update(cr, uid, 'account.asset.asset', 'account_asset', vals, 'account_asset_asset_office0')
-        sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue')), ('tag_ids', 'in', [ref('account.account_tag_operating')])])
-        if not sale_account_id:
-            sale_account_id = self.pool.get('account.account').search(cr, uid, [('user_type_id', '=', ref('account.data_account_type_revenue'))])
-        if xfa_account_id and sale_account_id:
-            vals = {
-                'journal_id': journal_id[0],
-                'name': 'Revenue Recognition Maintenance Contract - 1 Years',
-                'method_number': 12,
-                'method_period': 1,
-                'account_asset_id': xfa_account_id[0],
-                'account_depreciation_id': xfa_account_id[0],
-                'account_income_recognition_id': sale_account_id[0],
-                'type': 'sale',
-            }
-            self._update(cr, uid, 'account.asset.category', 'account_asset', vals, 'account_asset_category_sale')

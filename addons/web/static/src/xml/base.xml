@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="EmptyComponent">
-    <div></div>
-</t>
-<t t-name="Loading">
-    <div class="oe_loading">
-        Loading...
-    </div>
-</t>
+
+<div t-name="EmptyComponent"/>
+<div t-name="Loading" class="oe_loading">Loading...</div>
 <t t-name="Notification">
     <div class="o_notification" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
@@ -23,20 +18,6 @@
     <t t-jquery=".o_icon" t-operation="replace">
         <span class="o_icon fa fa-3x fa-exclamation"/>
     </t>
-</t>
-<t t-name="Dialog">
-    <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content openerp">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted"><t t-esc="subtitle"/></span></h4>
-                </div>
-                <div class="modal-body"/>
-                <div class="modal-footer"/>
-            </div>
-        </div>
-    </div>
 </t>
 <t t-name="CrashManager.warning">
     <div class="o_dialog_warning">
@@ -484,8 +465,7 @@
         </div>
         <span class="o_form_buttons_edit">
             <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
-            <span class="oe_fade">or</span>
-            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
+            <button type="button" class="oe_form_button_cancel btn btn-sm btn-default" accesskey="D">Discard</button>
         </span>
     </t>
 </div>
@@ -682,68 +662,6 @@
     Unhandled widget
     <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
 </t>
-<t t-name="WidgetLabel.tooltip">
-    <div class="oe_tooltip_string" t-if="widget.string">
-        <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
-    </div>
-    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
-    <ul t-if="debug" class="oe_tooltip_technical">
-        <li data-item="field" t-if="widget.name">
-            <span class="oe_tooltip_technical_title">Field:</span>
-            <t t-esc="widget.name"/>
-        </li>
-        <li data-item="object" t-if="widget.view and widget.view.fields_view">
-            <span class="oe_tooltip_technical_title">Object:</span>
-            <t t-esc="widget.view.fields_view.model"/>
-        </li>
-        <li data-item="type" t-if="widget.field">
-            <span class="oe_tooltip_technical_title">Type:</span>
-            <t t-esc="widget.field.type"/>
-        </li>
-        <li t-if="widget.node.attrs.widget" data-item="widget">
-            <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.node.attrs.widget"/>
-        </li>
-        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
-            <span class="oe_tooltip_technical_title">Size:</span>
-            <t t-esc="widget.node.attrs.size || widget.field.size"/>
-        </li>
-        <li t-if="widget.node.attrs.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.node.attrs.context"/>
-        </li>
-        <li t-if="widget.node.attrs.domain" data-item="domain">
-            <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.node.attrs.domain"/>
-        </li>
-        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.node.attrs.modifiers"/>
-        </li>
-        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span class="oe_tooltip_technical_title">Change default:</span>
-            Yes
-        </li>
-        <li t-if="widget.node.attrs.on_change" data-item="on_change">
-            <span class="oe_tooltip_technical_title">On change:</span>
-            <t t-esc="widget.node.attrs.on_change"/>
-        </li>
-        <li t-if="widget.field and widget.field.relation" data-item="relation">
-            <span class="oe_tooltip_technical_title">Relation:</span>
-            <t t-esc="widget.field.relation"/>
-        </li>
-        <li t-if="widget.field and widget.field.selection" data-item="selection">
-            <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul class="oe_tooltip_technical">
-                <li t-foreach="widget.field.selection" t-as="option">
-                    [<t t-esc="option[0]"/>]
-                    <t t-if="option[1]"> - </t>
-                    <t t-esc="option[1]"/>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</t>
 <t t-name="FieldChar">
     <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <t t-if="!widget.get('effective_readonly')">
@@ -881,29 +799,13 @@
 <t t-name="FieldRadio">
     <span t-attf-class="oe_form_field oe_form_field_radio #{widget.options.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
         <span t-if="!widget.get('effective_readonly')">
-            <t t-if="widget.options.horizontal">
-                <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>
-                <t t-if="!widget.options.no_radiolabel">
-                    <t t-foreach="widget.selection" t-as="selection">
-                        <label t-att-for="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></label>
-                    </t>
-                    <br/>
-                </t>
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div t-att-style="'width: ' + width + '%;'">
-                        <span class="oe_radio_input"><input type="radio" t-att-name="widget.uniqueId" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-value="selection[0]"/></span>
-                    </div>
-                </t>
-            </t>
-            <t t-if="!widget.options.horizontal">
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div>
-                        <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
-                    </div>
-                </t>
+            <t t-foreach="widget.selection" t-as="selection">
+                <div>
+                    <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
+                </div>
             </t>
         </span>
-        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"><t t-esc="widget.get('value')[1]"/></span>
+        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"/>
     </span>
 </t>
 <t t-name="FieldMany2One">
@@ -1111,11 +1013,14 @@
                         <span class="oe_fileuploader_in_process">...Upload in progress...</span>
                         <t t-raw="file.name || file.filename"/>
                     </span>
-                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                        <t t-raw="file.name || file.filename"/>
-                    </a>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <i class="oe_right oe_delete fa fa-times-circle" title="Delete this file" t-attf-data-id="#{file.id}"/>
+                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                            <t t-raw="file.name || file.filename"/>
+                        </a>
+                        <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
+                            <i class="fa fa-circle fa-stack-1x fa-inverse"></i>
+                            <i class="fa fa-times-circle fa-stack-1x"></i>
+                        </span>
                     </t>
                 </div>
             </t>
@@ -1149,51 +1054,6 @@
         </div>
     </div>
 </t>
-<t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm oe_button #{widget.node.attrs.class or ''}"
-        t-att-style="widget.node.attrs.style"
-        t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-accesskey="widget.node.attrs.accesskey">
-        <t t-if="widget.node.attrs.icon">
-            <img t-if="!widget.fa_icon" t-att-src="widget.node.attrs.icon"/>
-            <div t-if="widget.fa_icon" t-attf-class="fa fa-fw #{widget.node.attrs.icon} o_button_icon"/>
-        </t>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
-    </button>
-</t>
-<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
-    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
-        <div class="oe_tooltip_string" t-if="debug || widget.string">
-            <t t-if="debug">
-                Button
-                <t t-if="widget.string">: </t>
-                <t t-if="!widget.string"> (no string)</t>
-            </t>
-            <t t-esc="widget.string"/>
-        </div>
-    </t>
-    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
-        <li t-if="widget.node.attrs.special" data-item="special">
-            <span class="oe_tooltip_technical_title">Special:</span>
-            <t t-esc="widget.node.attrs.special"/>
-        </li>
-        <t t-set="button_type" t-value="widget.node.attrs.type"/>
-        <li t-if="button_type" data-item="button_type">
-            <span class="oe_tooltip_technical_title">Button Type:</span>
-            <t t-esc="button_type"/>
-        </li>
-        <li t-if="button_type === 'object'" data-item="button_method">
-            <span class="oe_tooltip_technical_title">Method:</span>
-            <t t-esc="widget.node.attrs.name"/>
-        </li>
-        <li t-if="button_type === 'action'" data-item="button_action">
-            <span class="oe_tooltip_technical_title">Action ID:</span>
-            <t t-esc="widget.node.attrs.name"/>
-        </li>
-    </t>
-</t>
-
 
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
@@ -1328,7 +1188,7 @@
 <t t-name="GroupByMenuSelector">
     <li><select class="form-control oe-add-group oe-group-selector">
         <t t-foreach="groupable_fields" t-as="field">
-            <option t-att-data-name="field"><t t-esc="groupable_fields[field].string"/></option>
+            <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>
     </select></li>
     <li><button type="button" class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
@@ -1522,11 +1382,6 @@
         <p class="oe_grey"/>
         Name: <input class="oe_form_m2o_input_name" type="text"/>
     </div>
-</t>
-<t t-name="M2ODialog.buttons">
-    <button class="oe_form_m2o_qc_button oe_button oe_highlight">Create</button>
-    <button class="oe_form_m2o_sc_button oe_button">Create and edit</button> or
-    <button class="oe_form_m2o_cancel_button oe_button oe_link"><span>Cancel</span></button>
 </t>
 <t t-name="FieldMonetary" t-extend="FieldChar">
     <t t-jquery="t:first" t-operation="before">

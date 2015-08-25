@@ -13,22 +13,6 @@ import mimetypes
 class MailController(http.Controller):
     _cp_path = '/mail'
 
-    @http.route('/mail/download_attachment', type='http', auth='user')
-    def download_attachment(self, model, id, method, attachment_id, **kw):
-        # FIXME use /web/binary/saveas directly
-        Model = request.registry.get(model)
-        res = getattr(Model, method)(request.cr, request.uid, int(id), int(attachment_id))
-        if res:
-            filecontent = base64.b64decode(res.get('base64'))
-            filename = res.get('filename')
-            content_type = mimetypes.guess_type(filename)
-            if filecontent and filename:
-                return request.make_response(
-                    filecontent,
-                    headers=[('Content-Type', content_type[0] or 'application/octet-stream'),
-                             ('Content-Disposition', content_disposition(filename))])
-        return request.not_found()
-
     @http.route('/mail/receive', type='json', auth='none')
     def receive(self, req):
         """ End-point to receive mail from an external SMTP server. """
@@ -48,12 +32,14 @@ class MailController(http.Controller):
     def read_followers(self, follower_ids):
         result = []
         is_editable = request.env.user.has_group('base.group_no_one')
-        for follower in request.env['res.partner'].browse(follower_ids):
+        for follower in request.env['mail.followers'].browse(follower_ids):
             result.append({
                 'id': follower.id,
-                'name': follower.name,
+                'name': follower.partner_id.name or follower.channel_id.name,
+                'res_model': 'res.partner' if follower.partner_id else 'mail.channel',
+                'res_id': follower.partner_id.id or follower.channel_id.id,
                 'is_editable': is_editable,
-                'is_uid': request.env.user.partner_id == follower,
+                'is_uid': request.env.user.partner_id == follower.partner_id,
             })
         return result
 

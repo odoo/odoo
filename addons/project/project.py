@@ -34,7 +34,7 @@ class project_task_type(osv.osv):
         'legend_normal': fields.char(
             'Kanban Ongoing Explanation', translate=True,
             help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.'),
-        'fold': fields.boolean('Folded in Kanban View',
+        'fold': fields.boolean('Folded in Tasks Pipeline',
                                help='This stage is folded in the kanban view when '
                                'there are no records in that stage to display.'),
     }
@@ -115,9 +115,9 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('public', _('Public project')),
-                ('employees', _('Internal project: all employees can access')),
-                ('followers', _('Private project: followers Only'))]
+        return [('portal', _('Customer Project: visible in portal if the customer is a follower')),
+                ('employees', _('All Employees Project: all employees can access')),
+                ('followers', _('Private Project: followers only'))]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -170,10 +170,7 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
             help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                    "- Public: everybody sees everything; if portal is activated, portal users\n"
-                    "   see all tasks or issues; if anonymous portal is activated, visitors\n"
-                    "   see all tasks or issues\n"
-                    "- Portal (only available if Portal is installed): employees see everything;\n"
+                    "- Portal : employees see everything;\n"
                     "   if portal is activated, portal users see the tasks or issues followed by\n"
                     "   them or by someone of their company\n"
                     "- Employees Only: employees see all tasks or issues\n"
@@ -439,12 +436,6 @@ class task(osv.osv):
                     res[task.id] = False
         return res
 
-    def _compute_displayed_image(self, cr, uid, ids, prop, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.file_type_icon == 'webimage')[0] or None
-        return res
-
     _columns = {
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
@@ -482,7 +473,6 @@ class task(osv.osv):
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
-        'displayed_image_id': fields.function(_compute_displayed_image, relation='ir.attachment', type="many2one", string='Attachment'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,

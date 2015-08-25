@@ -1868,7 +1868,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
                 if (self.st_line.has_no_partner) {
                     createOpenBalance(_t("Choose counterpart"));
                 } else {
-                    displayValidState(false, _t("Register Payment"));
+                    displayValidState(false, _t("Validate"));
                     createOpenBalance(_t("Open balance"));
                 }
             }

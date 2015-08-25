@@ -18,7 +18,6 @@ e.g. To have an invoice generated automatically periodically:
     * Define a subscription whose source document is the document defined as
       above. Specify the interval information and partner to be invoice.
     """,
-    'author': 'OpenERP SA',
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',

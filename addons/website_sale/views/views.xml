@@ -19,14 +19,13 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <!-- add state field in header -->
-            <group name="website_and_pos" position="inside">
-                <group name="website" string="Website">
+            <group name="email_template_and_project"  position="before">
+                <group name="website" string="Website" >
                     <field name="website_url" invisible="1"/>
-                    <field name="public_categ_ids" widget="many2many_tags"/>
+                    <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
-                    <field name="website_style_ids" widget="many2many_tags"/>
-                    <field name="website_sequence"/>
+                    <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
             <div name="button_box" position="inside">
@@ -40,10 +39,10 @@
 
     <!-- Product attribute -->
 
-    <record id="variants_template_tree_view" model="ir.ui.view">
-        <field name="name">variants.template.tree</field>
+    <record id="product_attribute_value_view_tree_inherit_website_sale" model="ir.ui.view">
+        <field name="name">product.attribute.value.view.tree.inherit.website.sale</field>
         <field name="model">product.attribute.value</field>
-        <field name="inherit_id" ref="product.variants_template_tree_view"/>
+        <field name="inherit_id" ref="product.product_attribute_value_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="color"/>

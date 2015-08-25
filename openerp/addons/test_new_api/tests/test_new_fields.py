@@ -85,27 +85,50 @@ class TestNewFields(common.TransactionCase):
 
     def test_11_stored(self):
         """ test stored fields """
-        # find the demo discussion
-        discussion = self.env.ref('test_new_api.discussion_0')
-        self.assertTrue(len(discussion.messages) > 0)
+        def check_stored(disc):
+            """ Check the stored computed field on disc.messages """
+            for msg in disc.messages:
+                self.assertEqual(msg.name, "[%s] %s" % (disc.name, msg.author.name))
 
-        # check messages
-        name0 = discussion.name or ""
-        for message in discussion.messages:
-            self.assertEqual(message.name, "[%s] %s" % (name0, message.author.name))
+        # find the demo discussion, and check messages
+        discussion1 = self.env.ref('test_new_api.discussion_0')
+        self.assertTrue(discussion1.messages)
+        check_stored(discussion1)
 
         # modify discussion name, and check again messages
-        discussion.name = name1 = 'Talking about stuff...'
-        for message in discussion.messages:
-            self.assertEqual(message.name, "[%s] %s" % (name1, message.author.name))
+        discussion1.name = 'Talking about stuff...'
+        check_stored(discussion1)
 
         # switch message from discussion, and check again
-        name2 = 'Another discussion'
-        discussion2 = discussion.copy({'name': name2})
-        message2 = discussion.messages[0]
+        discussion2 = discussion1.copy({'name': 'Another discussion'})
+        message2 = discussion1.messages[0]
         message2.discussion = discussion2
-        for message in discussion2.messages:
-            self.assertEqual(message.name, "[%s] %s" % (name2, message.author.name))
+        check_stored(discussion2)
+
+        # create a new discussion with messages, and check their name
+        user_root = self.env.ref('base.user_root')
+        user_demo = self.env.ref('base.user_demo')
+        discussion3 = self.env['test_new_api.discussion'].create({
+            'name': 'Stuff',
+            'participants': [(4, user_root.id), (4, user_demo.id)],
+            'messages': [
+                (0, 0, {'author': user_root.id, 'body': 'one'}),
+                (0, 0, {'author': user_demo.id, 'body': 'two'}),
+                (0, 0, {'author': user_root.id, 'body': 'three'}),
+            ],
+        })
+        check_stored(discussion3)
+
+        # modify the discussion messages: edit the 2nd one, remove the last one
+        # (keep modifications in that order, as they reproduce a former bug!)
+        discussion3.write({
+            'messages': [
+                (4, discussion3.messages[0].id),
+                (1, discussion3.messages[1].id, {'author': user_root.id}),
+                (2, discussion3.messages[2].id),
+            ],
+        })
+        check_stored(discussion3)
 
     def test_12_recursive(self):
         """ test recursively dependent fields """

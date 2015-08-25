@@ -8,7 +8,6 @@ OpenERP Website CMS
 ===================
 
         """,
-    'author': 'OpenERP SA',
     'depends': ['website','marketing','google_account'],
     'installable': True,
     'data': [
@@ -23,5 +22,5 @@ OpenERP Website CMS
         'data/demo.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'application': True,
+    'application': False,
 }

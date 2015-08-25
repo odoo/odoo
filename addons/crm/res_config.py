@@ -15,8 +15,10 @@ class crm_configuration(osv.TransientModel):
             help="Odoo will generate an email alias based on the sales team name"),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
         'alias_domain' : fields.char('Alias Domain'),
-        'group_use_lead': fields.boolean(
-            "Use leads if you need a qualification step before creating an opportunity or a customer",
+        'group_use_lead': fields.selection([
+            (0, "Each mail sent to the alias creates a new opportunity"),
+            (1, "Use leads if you need a qualification step before creating an opportunity or a customer")
+            ], "Leads", 
             implied_group='crm.group_use_lead')
     }
 

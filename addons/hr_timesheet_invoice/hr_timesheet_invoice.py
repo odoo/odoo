@@ -210,6 +210,7 @@ class account_analytic_line(osv.osv):
     def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        analytic_line_obj = self.pool.get('account.analytic.line')
         invoices = []
         if context is None:
             context = {}
@@ -248,8 +249,10 @@ class account_analytic_line(osv.osv):
             # key_id is either an account.analytic.account, either a res.partner
             # don't really care, what's important is the analytic lines that
             # will be used to create the invoice lines
-
-            partner = analytic_line_ids[0].account_id.partner_id  # will be the same for every line
+            account = analytic_line_ids[0].account_id
+            partner = account.partner_id  # will be the same for every line
+            if (not partner) or not (currency_id):
+                raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
             curr_invoice = self._prepare_cost_invoice(cr, uid, partner, company_id, currency_id, analytic_line_ids, group_by_partner, context=context)
             invoice_context = dict(context,
@@ -264,8 +267,6 @@ class account_analytic_line(osv.osv):
             invoice_lines_grouping = {}
             for analytic_line in analytic_line_ids:
                 account = analytic_line.account_id
-                if (not partner) or not (account.pricelist_id):
-                    raise UserError(_('Contract incomplete. Please fill in the Customer and Pricelist fields for %s.') % (account.name))
 
                 if not analytic_line.to_invoice:
                     raise UserError(_('Trying to invoice non invoiceable line for %s.') % (analytic_line.product_id.name))
@@ -279,13 +280,15 @@ class account_analytic_line(osv.osv):
                     analytic_line.to_invoice.id,
                     analytic_line.account_id,
                     analytic_line.journal_id.type)
+                # We want to retrieve the data in the partner language for the invoice creation
+                analytic_line = analytic_line_obj.browse(cr, uid , [line.id for line in analytic_line], context=invoice_context)
                 invoice_lines_grouping.setdefault(key, []).append(analytic_line)
 
             # finally creates the invoice line
             for (product_id, uom, user_id, factor_id, account, journal_type), lines_to_invoice in invoice_lines_grouping.items():
                 curr_invoice_line = self._prepare_cost_invoice_line(cr, uid, last_invoice,
                     product_id, uom, user_id, factor_id, account, lines_to_invoice,
-                    journal_type, data, context=context)
+                    journal_type, data, context=invoice_context)
 
                 invoice_line_obj.create(cr, uid, curr_invoice_line, context=context)
             self.write(cr, uid, [l.id for l in analytic_line_ids], {'invoice_id': last_invoice}, context=context)

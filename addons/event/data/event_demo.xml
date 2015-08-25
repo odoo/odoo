@@ -34,7 +34,7 @@
         <field name="seats_availability">limited</field>
         <field name="seats_max">500</field>
         <field name="address_id" ref="base.res_partner_6"/>
-        <field name="type" ref="event_type_1"/>
+        <field name="event_type_id" ref="event_type_1"/>
         <field name="description"><![CDATA[
 <div class="oe_structure">
     <center><strong>Join us to our main event of the year: the Open Days</strong></center>
@@ -76,7 +76,7 @@
         <field name="name">Functional Webinar</field>
         <field eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d 11:00:00')" name="date_end"/>
-        <field name="type" ref="event_type_0"/>
+        <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="base.res_partner_5"/>
         <field name="seats_availability">limited</field>
         <field name="seats_max">350</field>
@@ -112,7 +112,7 @@
         <field name="name">Conference on Business Apps</field>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
-        <field name="type" ref="event_type_2"/>
+        <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="base.res_partner_14"/>
         <field name="seats_availability">limited</field>
         <field name="seats_max">200</field>
@@ -154,7 +154,7 @@
         <field name="name">Technical Training</field>
         <field eval="(DateTime.now() + timedelta(15)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(20)).strftime('%Y-%m-%d 16:00:00')" name="date_end"/>
-        <field name="type" ref="event_type_4"/>
+        <field name="event_type_id" ref="event_type_4"/>
         <field name="user_id" ref="base.user_root"/>
         <field name="address_id" ref="base.res_partner_2"/>
         <field name="seats_availability">unlimited</field>

@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 from openerp import SUPERUSER_ID, workflow
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
-from openerp.tools.safe_eval import safe_eval as eval
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record_list, browse_record, browse_null
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.float_utils import float_compare
 from openerp.exceptions import UserError
 
@@ -397,7 +395,6 @@ class purchase_order(osv.osv):
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         fp = self.pool['account.fiscal.position'].get_fiscal_position(cr, uid, company_id, partner_id, context=context)
-        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'], context=context)
         supplier = partner.browse(cr, uid, partner_id, context=context)
         return {'value': {
             'pricelist_id': supplier.property_product_pricelist_purchase.id,
@@ -569,7 +566,7 @@ class purchase_order(osv.osv):
         fpos = po_line.order_id.fiscal_position_id or False
         #For anglo-saxon accounting
         account_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
-        if po_line.company_id.anglo_saxon_accounting and po_line.product_id and not po_line.product_id.type == 'service':
+        if po_line.company_id.anglo_saxon_accounting and po_line.product_id and po_line.product_id.type == 'product':
             acc_id = po_line.product_id.property_stock_account_input and po_line.product_id.property_stock_account_input.id
             if not acc_id:
                 acc_id = po_line.product_id.categ_id.property_stock_account_input_categ_id and po_line.product_id.categ_id.property_stock_account_input_categ_id.id
@@ -749,8 +746,12 @@ class purchase_order(osv.osv):
             #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
             price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
         res = []
+        if order.location_id.usage == 'customer':
+            name = order_line.product_id.with_context(dict(context or {}, lang=order.dest_address_id.lang)).name
+        else:
+            name = order_line.name or ''
         move_template = {
-            'name': order_line.name or '',
+            'name': name,
             'product_id': order_line.product_id.id,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
@@ -1399,13 +1400,15 @@ class procurement_order(osv.osv):
 
         pricelist_id = partner.property_product_pricelist_purchase.id
         prices_qty = []
+        qty = {}
+
         for procurement in procurements:
             seller_qty = procurement.product_id.seller_qty if procurement.location_id.usage != 'customer' else 0.0
             uom_id = procurement.product_id.uom_po_id.id
-            qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
+            qty[procurement.product_id.id] = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if seller_qty:
-                qty = max(qty, seller_qty)
-            prices_qty += [(procurement.product_id, qty, partner)]
+                qty[procurement.product_id.id] = max(qty[procurement.product_id.id], seller_qty)
+            prices_qty += [(procurement.product_id, qty[procurement.product_id.id], partner)]
         prices = pricelist_obj.price_get_multi(cr, uid, [pricelist_id], prices_qty)
 
         #Passing partner_id to context for purchase order line integrity of Line name
@@ -1430,7 +1433,7 @@ class procurement_order(osv.osv):
 
             values = {
                 'name': name,
-                'product_qty': qty,
+                'product_qty': qty[procurement.product_id.id],
                 'product_id': procurement.product_id.id,
                 'product_uom': procurement.product_id.uom_po_id.id,
                 'price_unit': price or 0.0,
@@ -1478,6 +1481,9 @@ class procurement_order(osv.osv):
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, po_line.order_id.partner_id.id, {'uom': procurement.product_uom.id})[pricelist_id]
 
         return qty, price
+
+    def update_origin_po(self, cr, uid, po, proc, context=None):
+        pass
 
     def _get_grouping_dicts(self, cr, uid, ids, context=None):
         """
@@ -1610,6 +1616,9 @@ class procurement_order(osv.osv):
                     msg = format_message(_('Purchase order line added'), {'Product': proc.product_id.name, 'Quantity': proc.product_qty, 'Procurement': proc.origin})
                     po_obj.message_post(cr, uid, [add_purchase], body=msg, context=context)
             po_obj.write(cr, uid, [add_purchase], {'order_line': line_values},context=context)
+
+            for procurement in procurements:
+                self.update_origin_po(cr, uid, po, procurement, context=context)
 
 
         # Create new purchase orders
@@ -1797,6 +1806,7 @@ class account_invoice_line(osv.Model):
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context=context)
         if self.company_id.anglo_saxon_accounting:
+            # TDE FIXME: undefined variable
             if inv.type in ('in_invoice','in_refund'):
                 for i_line in inv.invoice_line_ids:
                     res.extend(self._anglo_saxon_purchase_move_lines(cr, uid, i_line, res, context=context))
@@ -1811,7 +1821,7 @@ class account_invoice_line(osv.Model):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
         if i_line.product_id and i_line.product_id.valuation == 'real_time':
-            if i_line.product_id.type != 'service':
+            if i_line.product_id.type == 'product':
                 # get the price difference account at the product
                 acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
                 if not acc:

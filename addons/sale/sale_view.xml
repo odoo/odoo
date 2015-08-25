@@ -92,8 +92,8 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
-                    <field name="message_unread" invisible="1"/>
+                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
@@ -109,8 +109,8 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" decoration-bf="message_unread==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
-                    <field name="message_unread" invisible="1"/>
+                <tree string="Quotation" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'" decoration-info="state in ('waiting_date','manual')" decoration-danger="state in ('invoice_except','shipping_except')">
+                    <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
@@ -351,7 +351,7 @@
                     <filter string="To Invoice" domain="[('state','=','manual')]" help="Sales Order ready to be invoiced"/>
                     <filter string="Done" domain="[('state','=','done')]" help="Sales Order done"/>
                     <separator/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter name="customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -372,11 +372,11 @@
             <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a quotation that can be converted into a sales
-                    order.
+                    Create a Quotation, the first step of a new sale.
                 </p><p>
-                    Odoo will help you efficiently handle the complete sales flow:
-                    quotation, sales order, delivery, invoicing and payment.
+                    Your next actions should flow efficiently: confirm the Quotation to a Sale Order, then create the Invoice and collect the Payment.
+                </p><p>
+                    Note that once a Quotation becomes a Sale Order, it will be moved from the Quotations list to the Sales Order list.
                 </p>
             </field>
         </record>
@@ -595,7 +595,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd"
+                        groups="base.group_no_one">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </div>
@@ -610,7 +611,8 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_sales" 
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd"
+                        groups="base.group_no_one">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </div>
@@ -676,11 +678,11 @@
             </field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a quotation that can be converted into a sales
-                order.
+                Create a Quotation, the first step of a new sale.
               </p><p>
-                Odoo will help you efficiently handle the complete sales flow:
-                quotation, sales order, delivery, invoicing and payment.
+                Your next actions should flow efficiently: confirm the Quotation to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved from the Quotations list to the Sales Order list.
               </p>
             </field>
         </record>

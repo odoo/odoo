@@ -29,7 +29,7 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
-                <div class="row">
+                <div class="row" t-if="record.use_invoices.raw_value">
                     <div class="col-xs-9">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
                             Sales to Invoice
@@ -40,6 +40,10 @@
                         <t t-esc="record.sales_to_invoice_amount.raw_value or 0"/>
                     </div>
                 </div>
+            </xpath>
+
+            <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
+                <button class="btn btn-primary" name="%(sale.action_quotations_salesteams)d" type="action">Quotations</button>
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">

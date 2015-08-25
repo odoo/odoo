@@ -8,7 +8,6 @@
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
-                    <field name="reference"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="voucher_type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>

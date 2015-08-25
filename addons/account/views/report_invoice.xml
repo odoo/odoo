@@ -79,7 +79,7 @@
                             <span t-field="l.discount"/>
                         </td>
                         <td>
-                            <span t-esc="', '.join(map(lambda x: x.description, l.invoice_line_tax_ids))"/>
+                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
                         </td>
                         <td class="text-right">
                             <span t-field="l.price_subtotal" 
@@ -98,40 +98,20 @@
                                 <span t-field="o.amount_untaxed" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                             </td>
                         </tr>
-                        <tr>
-                            <td>Taxes</td>
-                            <td class="text-right">
-                                <span t-field="o.amount_tax" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                            </td>
-                        </tr>
+                        <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
+                            <tr>
+                                <td><span t-esc="amount_by_group[0]"/></td>
+                                <td class="text-right">
+                                    <span t-esc="amount_by_group[1]"/>
+                                </td>
+                            </tr>
+                        </t>
                         <tr class="border-black">
                             <td><strong>Total</strong></td>
                             <td class="text-right">
                                  <span t-field="o.amount_total" t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
                             </td>
                         </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row" t-if="o.tax_line_ids">
-                <div class="col-xs-6">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Tax</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="o.tax_line_ids" t-as="t">
-                                <td><span t-field="t.tax_id.description"/></td>
-                                <td class="text-right">
-                                    <span t-field="t.amount"
-                                        t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
-                                </td>
-                            </tr>
-                        </tbody>
                     </table>
                 </div>
             </div>

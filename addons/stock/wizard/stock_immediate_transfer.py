@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import models, fields, api
+from openerp.tools import float_compare
 
 class stock_immediate_transfer(models.TransientModel):
     _name = 'stock.immediate.transfer'

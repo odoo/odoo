@@ -60,7 +60,7 @@
             <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'done'" decoration-bf="message_unread == True" string="Timesheets">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'done'" decoration-bf="message_needaction == True" string="Timesheets">
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -69,7 +69,7 @@
                     <field name="total_timesheet" widget="float_time"/>
                     <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -203,7 +203,7 @@
                     <field name="date_from"/>
                     <filter name="new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                     <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By">

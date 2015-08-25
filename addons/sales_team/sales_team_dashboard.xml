@@ -4,7 +4,7 @@
         <field name="name">crm.team.kanban</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban">
+            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="member_ids"/>
@@ -22,7 +22,7 @@
                             </div>
                             <div class="container o_kanban_card_content o_visible">
                                 <div class="row">
-                                    <div class="col-xs-6 o_kanban_primary_left">
+                                    <div class="col-xs-6 o_kanban_primary_left" name="to_replace_in_sale_crm">
                                     </div>
                                     <div class="col-xs-6 o_kanban_primary_right">
                                     </div>

@@ -63,12 +63,11 @@
                         </group>
                     </group>
                     <footer attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}">
-                        <button string="Close" class="oe_link" special="cancel" />
+                        <button string="Close" class="btn-primary" special="cancel" />
                     </footer>
                     <footer attrs="{'invisible':['|',('public','=',False),('public','in',['public_link'])]}">
-                        <button string="Send" name="send_mail" type="object" class="oe_highlight" />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button string="Send" name="send_mail" type="object" class="btn-primary" />
+                        <button string="Cancel" class="btn-default" special="cancel" />
                         <group class="oe_right" col="1">
                             <div>
                                 Use template

@@ -57,8 +57,30 @@
     background-color: white !important;
 }
 
+// Buttons and links
+@link-hover-decoration: none;
+.btn, .btn-group > .btn {
+    &:hover, &:active, &:focus, &:active:focus {
+        outline: none;
+    }
+}
 .btn-icon {
     .btn-default;
+}
+.oe_button {
+    .btn-default;
+    &.oe_highlight, &.btn-primary {
+        .btn-primary;
+    }
+    &.oe_link, &.btn-link {
+        .btn-link;
+    }
+}
+.oe_highlight {
+    .btn-primary;
+}
+.oe_link {
+    .btn-link;
 }
 
 .openerp .oe_avatar {
@@ -69,12 +91,6 @@
     float: right;
 }
 
-@grid-gutter-width: 0;
-
-.oe-control-panel .row {
-    margin-left: 15px;
-    margin-right: 15px;
-}
 
 // Pager input (to edit pager values)
 .o_pager_value > input {
@@ -201,25 +217,34 @@ div.o_checkbox {
             }
         }
 
-        + .oe_title {
-            width: 400px;
-        }
-
-        + .oe_avatar {
-            > img {
-                max-width: 90px;
-                max-height: 90px;
-            }
-
+        &, & + .oe_avatar {
             + .oe_title {
                 width: 400px;
-                padding-left: 95px;
             }
         }
     }
 
-    .o_row > * {
-        width: auto!important; // oe_inline
+    .oe_avatar {
+        > img {
+            max-width: 90px;
+            max-height: 90px;
+        }
+
+        + .oe_title {
+            padding-left: 95px;
+        }
+    }
+
+    .o_row {
+        > * {
+            width: auto!important; // oe_inline
+        }
+        > div {
+            display: inline-block;
+            + div  {
+                margin-left: 5px;
+            }
+        }
     }
 
     .oe_form label {
@@ -343,5 +368,6 @@ div.o_checkbox {
     top: 35px;
     -webkit-box-shadow: 0 3px 9px #666666;
     box-shadow: 0 3px 9px #666666;
+    padding-bottom: 44px;
 }
 
