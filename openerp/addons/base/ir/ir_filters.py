@@ -152,7 +152,6 @@ class ir_filters(osv.osv):
         'domain': '[]',
         'context':'{}',
         'sort': '[]',
-        'user_id': lambda self,cr,uid,context=None: uid,
         'is_default': False,
         'active': True
     }
