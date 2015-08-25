@@ -150,6 +150,10 @@ var KanbanSelection = AbstractField.extend({
     },
 });
 
+var KanbanAttachmentImage =  AbstractField.extend({
+    template: 'KanbanAttachmentImage',
+});
+
 
 /**
  * Kanban widgets: ProgressBar
@@ -228,6 +232,7 @@ var fields_registry = new Registry();
 fields_registry
     .add('priority', KanbanPriority)
     .add('kanban_state_selection', KanbanSelection)
+    .add("attachment_image", KanbanAttachmentImage)
     .add('progress', KanbanProgressBar);
 
 return {

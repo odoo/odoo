@@ -75,4 +75,9 @@
         <t t-raw="content"/>
     </div>
 </t>
+<t t-name="KanbanAttachmentImage">
+    <div class="o_kanban_attachment_image">
+        <img t-att-src="'/web/image/' + widget.field.raw_value[0] + '?unique=1'"/>
+    </div>
+</t>
 </template>
