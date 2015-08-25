@@ -125,7 +125,8 @@ var KanbanRecord = Widget.extend({
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
-            id = JSON.stringify(id);
+            if (_.isArray(id)) { id = id[0]; }
+            if (!id) { id = undefined; }
             if (options.preview_image)
                 field = options.preview_image;
             var unique = this.record.__last_update.value.replace(/[^0-9]/g, '');
