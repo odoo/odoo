@@ -138,7 +138,7 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-            <xpath expr="//group[@name='active_group']" position="before">
+            <xpath expr="//group[@name='active_group']" position="after">
                 <group string="Appraisals">
                     <field name="evaluation_plan_id"/>
                     <field name="evaluation_date"/>

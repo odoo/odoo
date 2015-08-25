@@ -85,10 +85,8 @@
                             </page>
                             <page string="HR Settings" groups="base.group_hr_user">
                                 <group>
-                                    <group string="Active" name="active_group">
+                                    <group string='Status' name="active_group">
                                         <field name="active"/>
-                                    </group>
-                                    <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(name, image, user_id)" string="Related User"
                                             context="{'default_groups_ref': ['base.group_user']}"/>
