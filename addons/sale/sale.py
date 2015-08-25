@@ -419,7 +419,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.depends('order_id.fiscal_position_id', 'product_id')
+    @api.onchange('order_id.fiscal_position_id', 'product_id')
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -503,7 +503,7 @@ class SaleOrderLine(models.Model):
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
     price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
-    tax_id = fields.Many2many('account.tax', string='Taxes', compute='_compute_tax_id', readonly=True)
+    tax_id = fields.Many2many('account.tax', string='Taxes', readonly=True, states={'draft': [('readonly', False)]})
 
     discount = fields.Float(string='Discount (%)', digits_compute=dp.get_precision('Discount'), default=0.0)
 
