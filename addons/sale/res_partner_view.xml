@@ -6,7 +6,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{'search_default_partner_id': active_id}</field>
+            <field name="context">{'search_default_partner_id': active_id, 'show_sale': True}</field>
             <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

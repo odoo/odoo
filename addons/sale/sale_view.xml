@@ -227,10 +227,10 @@
                                     <field name="product_uom_qty"
                                         string="Ordered Qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"/>
-                                    <field name="qty_delivered" invisible="not context.get('show_sale', False)"
+                                    <field name="qty_delivered" invisible="not context.get('show_sale')"
                                         attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                     <field name="qty_invoiced"
-                                        invisible="not context.get('show_sale', False)"/>
+                                        invisible="not context.get('show_sale')"/>
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
