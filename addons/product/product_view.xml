@@ -144,10 +144,6 @@
                                     </group>
                                     <group name="email_template_and_project"
                                         attrs="{'invisible':[('type', '!=', 'service')]}"/>
-                                    <group groups="product.group_uos" string="Unit of Measure">
-                                        <field name="uos_id" options="{'no_open':True,'no_create':True}"/>
-                                        <field name="uos_coeff" groups="base.group_no_one"/>
-                                    </group>
                                 </group>
                             </page>
                             <page string="Notes" name="notes">
