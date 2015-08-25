@@ -37,23 +37,24 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = set()
         status = 'invoiced'
-        for line in self.order_line:
-            if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                status = 'to invoice'
-            elif status != 'to invoice':
-                if float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1 and (self.state == 'sale'):
-                    status = 'upselling'
-                elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == -1 and (status != 'upselling'):
-                    status = 'no'
-            for il in line.invoice_lines:
-                invoices.add(il.invoice_id)
-        if self.state not in ('sale', 'done'):
-            status = 'no'
-        self.update({
-            'invoice_count': len(invoices),
-            'invoice_ids': [inv.id for inv in invoices],
-            'invoice_status': status
-        })
+        for order in self:
+            for line in order.order_line:
+                if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                    status = 'to invoice'
+                elif status != 'to invoice':
+                    if float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1 and (order.state == 'sale'):
+                        status = 'upselling'
+                    elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) == -1 and (status != 'upselling'):
+                        status = 'no'
+                for il in line.invoice_lines:
+                    invoices.add(il.invoice_id)
+            if order.state not in ('sale', 'done'):
+                status = 'no'
+            order.update({
+                'invoice_count': len(invoices),
+                'invoice_ids': [inv.id for inv in invoices],
+                'invoice_status': status
+            })
 
     @api.model
     def _default_note(self):
