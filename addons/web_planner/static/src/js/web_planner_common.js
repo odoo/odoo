@@ -46,6 +46,7 @@ var PlannerDialog = Widget.extend({
         'click li a[href^="#"]:not([data-toggle="collapse"])': 'change_page',
         'click button.mark_as_done': 'click_on_done',
         'click a.btn-next': 'change_to_next_page',
+        'click .o_planner_close_block span': 'close_modal',
     },
     init: function(parent, planner) {
         this._super(parent);
@@ -70,8 +71,6 @@ var PlannerDialog = Widget.extend({
     start: function() {
         var self = this;
         return this._super.apply(this, arguments).then(function() {
-            self.do_hide();
-
             self.$el.on('keyup', "textarea", function() {
                 if (this.scrollHeight != this.clientHeight) {
                     this.style.height = this.scrollHeight + "px";
@@ -157,6 +156,7 @@ var PlannerDialog = Widget.extend({
     },
     update_ui_progress_bar: function(percent) {
         this.$(".progress-bar").css('width', percent+"%");
+        this.$(".o_progress_text").text(percent+"%");
     },
     _create_menu_item: function(page, menu_items, menu_item_page_map) {
         var $page = $(page.dom);
@@ -292,8 +292,10 @@ var PlannerDialog = Widget.extend({
 
         this.planner.data.last_open_page = page_id;
         utils.set_cookie(this.cookie_name, page_id, 8*60*60); // create cookie for 8h
-        this.$(".o_planner_page").scrollTop("0");
+        this.$(".modal-body").scrollTop("0");
         autosize(this.$("textarea"));
+
+        this.$('.o_currently_shown_page').text(this.currently_shown_page.title);
     },
     // planner data functions
     _get_values: function(page){
@@ -391,6 +393,10 @@ var PlannerDialog = Widget.extend({
         this._render_done_page(this.currently_shown_page);
         this.update_planner();
     },
+    close_modal: function(ev) {
+        ev.preventDefault();
+        this.$el.modal('hide');
+    }
 });
 
 return {
