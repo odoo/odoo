@@ -15,7 +15,7 @@
                         <field name="advance_payment_method" class="oe_inline" widget="radio"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
                         <field name="product_id"
-                            context="{'search_default_services': 1}" class="oe_inline"
+                            context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                             attrs="{'invisible': [('advance_payment_method','not in', ('fixed','percentage'))]}"/>
                         <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
                         <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
