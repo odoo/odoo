@@ -106,32 +106,20 @@
                                 <li class="o_planner_notebook_header">
                                     <h5><strong>Find 3 websites that you like</strong> and write down what you like about them.</h5>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#1</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_stage_0" type="text" value="http://www.odoo.com/"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_7" type="text" placeholder="ex: interesting contents, texts and articles"/>
-                                    </div>
+                                    <input class="mb4" id="input_element_stage_0" type="text" value="http://www.odoo.com/"/>
+                                    <textarea id="input_element_stage_7" type="text" placeholder="ex: interesting contents, texts and articles"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#2</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_stage_1" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_8" type="text"/>
-                                    </div>
+                                    <input class="mb4" id="input_element_stage_1" type="text"/>
+                                    <textarea id="input_element_stage_8" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#3</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_stage_2" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_9" type="text"/>
-                                    </div>
+                                    <input class="mb4" id="input_element_stage_2" type="text"/>
+                                    <textarea id="input_element_stage_9" type="text"/>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
@@ -153,7 +141,7 @@
                     <t t-set="page_title" t-value="'Theme Selection'"/>
                     <p class="text-muted">The theme you choose sets the tone for the overall look and feel of your site design.</p>
                     <div class="row">
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title"><span class="fa fa-magic"/><strong> 1. Choose your theme</strong></span>
@@ -168,7 +156,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title"><span class="fa fa-code"/><strong> 2. Customize its appearance</strong></span>
@@ -191,13 +179,13 @@
                             <span class="fa fa-lightbulb-o fa-2x"></span><p>You can also use the <span id="html_editor"><u><a href="#advanced-view-editor" class="hide_planner" data-action='ace'>integrated HTML Editor</a></u></span> to modify the code directly.</p>
                         </div>
                         <div class="row">
-                            <div class="col-md-7 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <strong>Contact us for a custom-made theme:</strong>
                                     <p>We can create a customized theme for you with your company colors, logo and images from your library.</p>
                                 </div>
                             </div>
-                            <div class="col-md-5 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="#" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
@@ -218,53 +206,46 @@
                     </h4>
                     <section>
                         <div class="row o_planner_row_apps">
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-credit-card fa-4x"></span>
-                                <h3><strong>e-Commerce</strong></h3>
+                            <div class="col-sm-1 col-md-2"><span class="fa fa-credit-card fa-4x"/></div>
+                            <div class="col-sm-11 col-md-10 mb16">
+                                <h4><strong>e-Commerce</strong></h4>
                                 <p>Boost your online sales with sleek product pages.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_sale')" class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
-
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-users fa-4x"></span>
-                                <h3><strong>Community builder</strong></h3>
+                            <div class="col-sm-1 col-md-2"><span class="fa fa-users fa-4x"/></div>
+                            <div class="col-sm-11 col-md-10 mb16">
+                                <h4><strong>Community builder</strong></h4>
                                 <p>Build and engage with communities with forums, Q&amp;A, mailing lists.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_forum')"
                                    class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install now</a>
                             </div>
-
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-rss fa-4x"></span>
-                                <h3><strong>Blogs</strong></h3>
+                            <div class="col-sm-1 col-md-2"><span class="fa fa-rss fa-4x"/></div>
+                            <div class="col-sm-11 col-md-10 mb16">
+                                <h4><strong>Blogs</strong></h4>
                                 <p>Attract more leads with a winning content marketing strategy.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_blog')" class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
-
-                            <div class="clearfix hidden-xs mb16"></div>
-
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-file-text-o fa-4x"></span>
-                                <h3><strong>Contact form</strong></h3>
+                            <div class="col-sm-1 col-md-2"><span class="fa fa-file-text-o fa-4x"/></div>
+                            <div class="col-sm-11 col-md-10 mb16">
+                                <h4><strong>Contact form</strong></h4>
                                 <p>Integrate a contact form that automatically creates leads.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_crm')" class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
-
-                            <div class="text-center col-md-4 col-xs-6">
-                                <span class="fa fa-male fa-4x"></span>
-                                <h3><strong>Jobs</strong></h3>
+                            <div class="col-sm-1 col-md-2"><span class="fa fa-male fa-4x"/></div>
+                            <div class="col-sm-11 col-md-10 mb16">
+                                <h4><strong>Jobs</strong></h4>
                                 <p>Organize your job board and promote your job announces easily.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_hr_recruitment')" class="btn odoo_purple">
                                     <span class="fa fa-arrow-circle-o-down"/> Install now
                                 </a>
                             </div>
-                            <div class="clearfix hidden-xs mb16"></div>
                         </div>
                     </section>
                 </t>
@@ -359,8 +340,8 @@
                         </p>
                     </div>
                     <p><h4>Example of Good Menu <a data-toggle="collapse" href="#menu"><i class="fa fa-question-circle"></i></a></h4></p>
-                    <p id ="menu" class="col-md-12 collapse">
-                        <img src="/website/static/src/img/website_planner_menu.png"></img>
+                    <p id="menu" class="col-md-12 collapse">
+                        <img width="100%" src="/website/static/src/img/website_planner_menu.png"></img>
                     </p>
                     <div class="row">
                         <div class="col-md-12">
@@ -369,61 +350,37 @@
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
                                 <li class="o_planner_notebook_header">
-                                    <h5><strong>1. Your main menu items</strong> and 2. Your secondary menu items (optional):</h5>
+                                    <h5><strong>1. Your main menu items</strong><br/>2. Your secondary menu items (optional):</h5>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#1</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_0" type="text" placeholder="ex: About us"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_7" type="text" placeholder="ex: Blog, Success stories, References, Events, Jobs"/>
-                                    </div>
+                                    <input id="input_element_menu_0" class="mb4" type="text" placeholder="ex: About us"/>
+                                    <textarea id="input_element_stage_7" type="text" placeholder="ex: Blog, Success stories, References, Events, Jobs"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#2</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_1" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element__menu_4" type="text"/>
-                                    </div>
+                                    <input id="input_element_menu_1" class="mb4" type="text"/>
+                                    <textarea id="input_element__menu_4" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#3</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_2" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_menu_5" type="text"/>
-                                    </div>
+                                    <input id="input_element_menu_2" class="mb4" type="text"/>
+                                    <textarea id="input_element_menu_5" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#4</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_3" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_menu_6" type="text"/>
-                                    </div>
+                                    <input id="input_element_menu_3" class="mb4" type="text"/>
+                                    <textarea id="input_element_menu_6" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#5</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_7" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_menu_8" type="text"/>
-                                    </div>
+                                    <input id="input_element_menu_7" class="mb4" type="text"/>
+                                    <textarea id="input_element_menu_8" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#6</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_menu_9" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_menu_10" type="text"/>
-                                    </div>
+                                    <input id="input_element_menu_9" class="mb4" type="text"/>
+                                    <textarea id="input_element_menu_10" type="text"/>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
@@ -448,7 +405,7 @@
                     </div>
                     <p><h4>Example of Good Footer <a data-toggle="collapse"  href="#o_planner_footer"><i class="fa fa-question-circle"></i></a></h4></p>
                     <p id ="o_planner_footer" class="col-md-12 collapse">
-                        <img src="/website/static/src/img/website_planner_footer.png"></img>
+                        <img width="100%" height="150" src="/website/static/src/img/website_planner_footer.png"></img>
                     </p>
                     <div class="row">
                         <div class="col-md-12">
@@ -457,60 +414,37 @@
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
                                 <li class="o_planner_notebook_header">
-                                    <h5><strong>3. Your footer titles</strong> and 4. Your footer links:</h5>
+                                    <h5><strong>3. Your footer titles</strong><br/>4. Your footer links:</h5>
                                 </li>
-                                <li class="row"><span>#1</span>
-                                <div class="col-md-6">
-                                    <input id="input_element_footer_0" type="text" placeholder="ex: About us"/>
-                                </div>
-                                <div class="col-md-6">
+                                <li>
+                                    <span>#1</span>
+                                    <input id="input_element_footer_0" class="mb4" type="text" placeholder="ex: About us"/>
                                     <textarea id="input_element_footer_7" type="text" placeholder="ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"/>
-                                </div>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#2</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_1" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_8" type="text"/>
-                                    </div>
+                                    <input id="input_element_footer_1" class="mb4" type="text"/>
+                                    <textarea id="input_element_footer_8" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#3</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_3" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_9" type="text"/>
-                                    </div>
+                                    <input id="input_element_footer_3" class="mb4" type="text"/>
+                                    <textarea id="input_element_footer_9" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#4</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_4" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_10" type="text"/>
-                                    </div>
+                                    <input id="input_element_footer_4" class="mb4" type="text"/>
+                                    <textarea id="input_element_footer_10" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#5</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_5" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_11" type="text"/>
-                                    </div>
+                                    <input id="input_element_footer_5" class="mb4" type="text"/>
+                                    <textarea id="input_element_footer_11" type="text"/>
                                 </li>
-                                <li class="row">
+                                <li>
                                     <span>#6</span>
-                                    <div class="col-md-6">
-                                        <input id="input_element_footer_6" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_footer_12" type="text"/>
-                                    </div>
+                                    <input id="input_element_footer_6" class="mb4" type="text"/>
+                                    <textarea id="input_element_footer_12" type="text"/>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
@@ -530,7 +464,7 @@
                         for a proper domain, or change it to one you already own.
                     </p>
                     <div class="row">
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-md-12">
                             <div class="well well-lg">
                                 <strong>How to get a custom domain name ?</strong><br/>
                                 <li>Find a good domain name (see tips on the right)</li>
@@ -538,7 +472,7 @@
                                 <li>Contact a Domain Manager in your country to buy it</li>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-md-12">
                             <div class="alert alert-info info_icon" role="alert">
                                 <span class="fa fa-lightbulb-o fa-2x"></span>
                                 <strong>Tips for a good domain:</strong>
@@ -819,8 +753,8 @@
                     </div>
                     <table class="table">
                         <thead>
-                            <th><h3><span class="fa fa-thumbs-o-up"/> <strong> Good practices</strong></h3></th>
-                            <th><h3><span class="fa fa-thumbs-o-down"/> <strong> Bad practices</strong></h3></th>
+                            <th width="50%"><h4><span class="fa fa-thumbs-o-up"/> <strong> Good practices</strong></h4></th>
+                            <th><h4><span class="fa fa-thumbs-o-down"/> <strong> Bad practices</strong></h4></th>
                         </thead>
                         <tbody>
                             <tr>
@@ -887,7 +821,7 @@
                     </div>
                     <span>3. Select a <strong>translation method</strong></span>
                     <div class="row">
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-md-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
@@ -900,7 +834,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-xs-12">
+                        <div class="col-md-12">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">

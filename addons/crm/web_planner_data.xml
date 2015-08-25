@@ -69,14 +69,12 @@
                                         </ul>
                                     </div>
                                 </li>
-
                                 <li><span>#1</span><textarea id="input_element_exp1" value="" line="1" type="text"/></li>
                                 <li><span>#2</span><textarea id="input_element_exp2" value="" line="1" type="text"/></li>
                                 <li><span>#3</span><textarea id="input_element_exp3" value="" line="1" type="text"/></li>
                                 <li><span>#4</span><textarea id="input_element_exp4" value="" line="1" type="text"/></li>
                             </ul>
                         </div>
-
                     </div>
                     <div class="alert alert-info info_icon" role="alert">
                         <span class="fa fa-lightbulb-o fa-lg"/>
@@ -85,7 +83,6 @@
                     </div>
                 </t>
 
-
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Your KPIs'"/>
                     <p class="text-muted">
@@ -93,7 +90,6 @@
                         actities? You may take a look at the examples using the
                         right icon.
                     </p>
-
                     <div class="row">
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
@@ -143,7 +139,8 @@
                         <div class="o_planner_notebook_container col-md-12">
                             <ul class="o_planner_notebook">
                                 <li class="row o_planner_notebook_header">
-                                    <div class="col-xs-12 col-md-4 col-md-push-8 fa fa-lightbulb-o">
+                                    <h5 class="col-md-12"><strong>Stages</strong> from the initial contact to won deals:</h5>
+                                    <div class="col-md-12">
                                         <select id="input_element_pipeline">
                                             <option value="odoo_default">Odoo Default</option>
                                             <option value="solution_selling">Solution Selling</option>
@@ -151,70 +148,41 @@
                                             <option value="b2b">B2B</option>
                                         </select>
                                     </div>
-                                    <h5 class="col-xs-12 col-md-8 col-md-pull-4"><strong>Stages</strong> from the initial contact to won deals:</h5>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#1</span>
-                                        <input id="input_element_stage_0" type="text" value="New"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_7" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#1</span>
+                                    <input id="input_element_stage_0" class="mb4" type="text" value="New"/>
+                                    <textarea id="input_element_stage_7" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#2</span>
-                                        <input id="input_element_stage_1" type="text" value="Qualified"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_8" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#2</span>
+                                    <input id="input_element_stage_1" class="mb4" type="text" value="Qualified"/>
+                                    <textarea id="input_element_stage_8" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#3</span>
-                                        <input id="input_element_stage_2" type="text" value="Proposition"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_9" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#3</span>
+                                    <input id="input_element_stage_2" class="mb4" type="text" value="Proposition"/>
+                                    <textarea id="input_element_stage_9" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#4</span>
-                                        <input id="input_element_stage_3" type="text" value="Negotiation"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_10" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#4</span>
+                                    <input id="input_element_stage_3" class="mb4" type="text" value="Negotiation"/>
+                                    <textarea id="input_element_stage_10" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#5</span>
-                                        <input id="input_element_stage_4" type="text" value="Won"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_11" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#5</span>
+                                    <input id="input_element_stage_4" class="mb4" type="text" value="Won"/>
+                                    <textarea id="input_element_stage_11" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#6</span>
-                                        <input id="input_element_stage_5" type="text" value="Lost"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_12" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#6</span>
+                                    <input id="input_element_stage_5" class="mb4" type="text" value="Lost"/>
+                                    <textarea id="input_element_stage_12" type="text"/>
                                 </li>
-                                <li class="row">
-                                    <div class="col-md-6">
-                                        <span>#7</span>
-                                        <input id="input_element_stage_6" type="text"/>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <textarea id="input_element_stage_13" type="text"/>
-                                    </div>
+                                <li>
+                                    <span>#7</span>
+                                    <input id="input_element_stage_6" class="mb4" type="text"/>
+                                    <textarea id="input_element_stage_13" type="text"/>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
                             </ul>
@@ -372,8 +340,8 @@
                 <h4>What <strong>kind of proposals</strong> do you usually send to your customers ?</h4>
                 <section>
                     <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="text-center"><b>Fixed price offers</b></h4>
+                        <div class="col-md-12">
+                            <h4><b>Fixed price offers</b></h4>
                             <div class="well well-sm">
                                 <h4><b>Standard quotation</b> <span class="small">(products or services)</span></h4>
                                 <span>
@@ -389,8 +357,8 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <h4 class="text-center"><b>Contracts</b></h4>
+                        <div class="col-md-12">
+                            <h4><b>Contracts</b></h4>
                             <div class="well well-sm">
                                 <t t-if="not is_module_installed('account_analytic_analysis')"><span class="text-muted">To activate the Contracts, check 'Use contracts management' <a t-att-href="prepare_backend_url(
                                 'base_setup.action_sale_config')">in the Sales Settings.</a> </span></t>
@@ -424,77 +392,77 @@
                     <span class="text-muted">Note: To use these features, you need to install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale')">Sales Management.</a></span>
                 </t>
                 <p>How do you want to <strong>import your products?</strong></p>
-                    <div class="row">
-                        <div class="col-md-4 col-xs-12">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <span class="fa" data-icon="&#xe060;"/>
-                                        <strong> Create manually</strong><br/>
-                                        <span class="small">Best for less than 100 products</span>
-                                    </span>
-                                    <br/>
-                                    <h4><b>Time &amp; material</b> <span class="small">(ex: consulting mission)</span></h4>
-                                    <span>
-                                        <li><a t-att-href="prepare_backend_url('sale_contract.action_account_analytic_overdue_all', 'list', 'sale')">Create your contracts</a> and configure your prices</li>
-                                    </span>
-                                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <span class="panel-title">
+                                    <span class="fa" data-icon="&#xe060;"/>
+                                    <strong> Create manually</strong><br/>
+                                    <span class="small">Best for less than 100 products</span>
+                                </span>
                             </div>
-                        </div>
-                        <div class="col-md-4 col-xs-12">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <span class="fa" data-icon="&#xe040;"/>
-                                        <strong> Importation</strong><br/>
-                                        <span class="small">By using CSV file</span>
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <p>
-                                        <a t-att-href="prepare_backend_url(
-                                                       'product.product_template_action', 'list', 'sale')">Create 3 products</a> manually
-                                    </p>
-                                    <p>Export these 3 products by selecting them and chosing 'Export' from the 'More' menu</p>
-                                    <p>Add your existing products to this CSV file</p>
-                                    <p>Import the file</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-xs-12">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <span class="fa flip" data-icon="&#xe017;" />
-                                        <strong> Web Services</strong><br/>
-                                        <span class="small">Developments of scripts</span>
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <p>Odoo's web-services allows developers to create scripts that load data automatically into the system.</p>
-                                    <p>Read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">technical documentation</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-8 col-xs-12">
-                            <div class="well well-lg">
-                                <span><strong>Need help to import your data ?</strong><br/>
-                                Odoo's importation service can handle the whole process for you.
+                            <div class="panel-body">
+                                <h4><b>Time &amp; material</b> <span class="small">(ex: consulting mission)</span></h4>
+                                <span>
+                                    <li><a t-att-href="prepare_backend_url('sale_contract.action_account_analytic_overdue_all', 'list', 'sale')">Create your contracts</a> and configure your prices</li>
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-4 col-xs-12">
-                            <div class="well well-lg">
-                                <strong>Contact us now:</strong><br/>
-                                <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px">
-                                    <span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">
-                                    <span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <span class="panel-title">
+                                    <span class="fa" data-icon="&#xe040;"/>
+                                    <strong> Importation</strong><br/>
+                                    <span class="small">By using CSV file</span>
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    <a t-att-href="prepare_backend_url('product.product_template_action', 'list', 'sale')">Create 3 products</a> manually
+                                </p>
+                                <p>Export these 3 products by selecting them and chosing 'Export' from the 'More' menu</p>
+                                <p>Add your existing products to this CSV file</p>
+                                <p>Import the file</p>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <span class="panel-title">
+                                    <span class="fa flip" data-icon="&#xe017;" />
+                                    <strong> Web Services</strong><br/>
+                                    <span class="small">Developments of scripts</span>
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <p>Odoo's web-services allows developers to create scripts that load data automatically into the system.</p>
+                                <p>Read the <a href="https://www.odoo.com/documentation/8.0/" target="_blank">technical documentation</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-lg">
+                            <span><strong>Need help to import your data ?</strong><br/>
+                            Odoo's importation service can handle the whole process for you.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="well well-lg">
+                            <strong>Contact us now:</strong><br/>
+                            <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px">
+                                <span class="fa fa-comment-o"/> Live Chat on</a><br/>
+                            <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">
+                            <span class="fa fa-envelope-o"/> Email Our CRM Expert</a>
+                        </div>
+                    </div>
+                </div>
             </t>
         </t>
 
@@ -508,50 +476,48 @@
                         That's the easiest way to integrate Odoo with third party apps.
                     </p>
                     <h4>The point of contact <strong>for all your prospects</strong></h4>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-6  col-xs-12 text-center">
-                                <div class="well well-lg">
-                                    <h4><span class="label label-default text-center odoo_purple">Incoming email</span></h4>
-                                    <span class="fa fa-angle-down fa-2x"></span>
-                                    <h4><span class="label label-default text-center odoo_purple">Lead</span></h4>
-                                    <span class="fa fa-angle-down fa-2x"></span>
-                                    <h4><span class="label label-default text-center odoo_purple">Opportunity</span></h4>
-                                    <span class="fa fa-angle-down fa-2x"></span>
-                                    <h4><span class="label label-default text-center odoo_purple">Quotation</span></h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="well well-lg">
+                                <div class="mt16">
+                                    <center>
+                                        <span class="label label-default odoo_purple">Incoming email</span>
+                                        <span class="fa fa-arrow-right"> </span>
+                                        <span class="label label-default odoo_purple">Lead</span>
+                                        <span class="fa fa-arrow-right"> </span>
+                                        <span class="label label-default odoo_purple">Opportunity</span>
+                                        <span class="fa fa-arrow-right"> </span>
+                                        <span class="label label-default odoo_purple">Quotation</span>
+                                    </center>
                                 </div>
-                            </div>
-                            <div class="col-md-5 col-sm-6 col-xs-12">
-                                <div class="well well-sm text-center">
+                                <div class="text-center mt32">
                                     <h4><span class="fa" data-icon="&#xe01e;"/><t t-if="alias_name and alias_domain"> <t t-esc="alias_name"/>@<t t-esc="alias_domain"/></t></h4>
                                 </div>
-                                <div class="well well-sm text-center relative">
-                                    <p>
-                                        This email address has been preconfigured as the default
-                                        for your sales department.<br/>
-                                        <a t-att-href="prepare_backend_url(
-                                                       'base_setup.action_sale_config')">(you can change it here)</a>
-                                    </p>
-                                    <span class="arrow-down"></span>
-                                </div>
-                                <div>
-                                    <div class="alert alert-info" role="alert">
-                                        <strong>Don't forget to change this address on:</strong><br/>
-                                        <li>Your business cards</li>
-                                        <li>Your document templates</li>
-                                        <li>Your LinkedIn or social media pages</li>
-                                        <li>Your website</li>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-xs-12">
-                                <div class="well well-lg">
-                                    <h4><b>Do you want to setup your own domain name ?</b></h4>
-                                    <t t-if="alias_name and alias_domain">(<t t-esc="alias_name"/>@<t t-esc="alias_domain"/>)</t><br/>
-                                    <a href="https://www.odoo.com/page/live-chat" target="_blank"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
-                                    <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-phone"/> Email Our CRM Expert</a>
-                                </div>
+                                <p class="mt32">
+                                    This email address has been preconfigured as the default
+                                    for your sales department.<br/>
+                                    <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">(you can change it here)</a>
+                                </p>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Don't forget to change this address on:</strong><br/>
+                                <li>Your business cards</li>
+                                <li>Your document templates</li>
+                                <li>Your LinkedIn or social media pages</li>
+                                <li>Your website</li>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="well well-lg">
+                                <h4><b>Do you want to setup your own domain name ?</b></h4>
+                                <t t-if="alias_name and alias_domain">(<t t-esc="alias_name"/>@<t t-esc="alias_domain"/>)</t><br/>
+                                <a href="https://www.odoo.com/page/live-chat" target="_blank"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
+                                <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank"><span class="fa fa-phone"/> Email Our CRM Expert</a>
+                            </div>
+                        </div>
+                    </div>
                 </t>
             </t>
 
@@ -562,7 +528,7 @@
                     <t t-set="page_title" t-value="'Reporting'"/>
                     <h4><strong>Click on 'Reporting' in the main menu </strong>and generate statistics relevent to each profiles:</h4>
                         <div class="row">
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title"><span data-icon="&#xe016;"/><strong> Exercise 1</strong></span>
@@ -579,7 +545,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title"><span data-icon="&#xe077;"/><strong> Exercise 2</strong></span>
@@ -606,7 +572,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title"><span data-icon="&#xe05e;"/><strong> Exercise 3</strong></span>
@@ -630,7 +596,7 @@
                             <li>From the <i>Favorites</i> menu, you can save filters or add any report to your dashboard</li>
                         </div>
                         <div class="row">
-                            <div class="col-md-8 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <span><strong>We are here to help you:</strong>
                                     if you don't succeed in getting your favorite KPIs,
@@ -638,7 +604,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-xs-12">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <span><strong>Contact us now:</strong></span><br/>
                                     <a href="#" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
@@ -652,14 +618,14 @@
                     <t t-set="page_title" t-value="'Your users'"/>
                     <h4 class="text-muted text-center">You're almost finished !</h4>
                     <div class="row">
-                        <div class="col-md-4 col-md-offset-2 col-xs-12 text-center o_planner_white_box">
+                        <div class="col-md-6 col-xs-12 text-center o_planner_white_box">
                             <div class="panel">
                                 <a t-att-href="prepare_backend_url('base.action_res_users')">
                                     <i class="fa-2x" data-icon="&#xe001;"></i><br/>Create your users here
                                 </a>
                             </div>
                         </div>
-                        <div class="col-md-4 col-xs-12 text-center o_planner_white_box">
+                        <div class="col-md-6 col-xs-12 text-center o_planner_white_box">
                             <div class="panel">
                                 <a t-att-href="prepare_backend_url('mail.mail_message_action_inbox')"><i class="fa-2x" data-icon="&#xe090;">
                                     </i><br/> Follow the day-to-day activites to be sure that everyone is using it
@@ -773,28 +739,25 @@
                                     <strong>Qualified:</strong>
                                     <li>List of possible pain points by segment/profile</li>
                                     <li>VIP letter to potential sponsors</li>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="well well-lg">
-                                    <strong>Propositions:</strong><br/>
-                                    <li>Templates of quotations</li>
-                                    <li>Competition Matrix comparing prices</li>
-                                    <br/>
-                                    <strong>Negotiation:</strong><br/>
-                                    <li>Motivation letter from the management</li>
+                                    <div class="mt16">
+                                        <strong>Propositions:</strong><br/>
+                                        <li>Templates of quotations</li>
+                                        <li>Competition Matrix comparing prices</li>
+                                        <br/>
+                                        <strong>Negotiation:</strong><br/>
+                                        <li>Motivation letter from the management</li>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <p>
-                                    You don't need to review lost opportunities at every sales meeting, but it's good
-                                    practice to do it at least once a month. Ask your team to set tags on opportunities to
-                                    identify why they were lost and use this information to generate statistics. Here are
-                                    some examples of tags to create: no budget, competition, no pain found, etc.
-                                </p>
-                            </div>
+                        <div class="alert alert-info info_icon" role="alert">
+                            <span class="fa fa-lightbulb-o fa-2x"></span>
+                             <p>
+                                You don't need to review lost opportunities at every sales meeting, but it's good
+                                practice to do it at least once a month. Ask your team to set tags on opportunities to
+                                identify why they were lost and use this information to generate statistics. Here are
+                                some examples of tags to create: no budget, competition, no pain found, etc.
+                            </p>
                         </div>
                     </section>
                 </t>
@@ -810,54 +773,52 @@
                     </h4>
                     <section>
                         <div class="row o_planner_row_apps">
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-envelope fa-4x"></span>
-                                <h3><strong>Mass mailing</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-envelope fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Mass mailing</strong></h4>
                                 <p>Design efficient email campaigns. Send, convert and track your success</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'mass_mailing')" class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Mailing</a>
                             </div>
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-comments-o fa-4x"></span>
-                                <h3><strong>Live Chat</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-comments-o fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Live Chat</strong></h4>
                                 <p>Engage directly with your website visitors to attract leads and boost online sales.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'im_livechat')"
                                    class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Live Chat</a>
                             </div>
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-check-square-o fa-4x"></span>
-                                <h3><strong>Survey</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-check-square-o fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Survey</strong></h4>
                                 <p>Gain high quality insight from surveys, a great way to engage with prospects</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'survey')"
                                    class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Surveys</a>
                             </div>
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-home fa-4x"></span>
-                                <h3><strong>Website Builder</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-home fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                               <h4><strong>Website Builder</strong></h4>
                                 <p>Get an awesome website for your business. Fully customizable and SEO friendly.</p>
-                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website')"
-                                   class="btn odoo_purple">
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website')" class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Website Builder</a>
                             </div>
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-calendar-o fa-4x"></span>
-                                <h3><strong>Events</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-calendar-o fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8 mb16">
+                                <h4><strong>Events</strong></h4>
                                 <p>Create sleek and attractive event pages. Sell online and organize on site.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'event')"
                                    class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install Events</a>
                             </div>
-                            <div class="text-center col-md-6">
-                                <span class="fa fa-credit-card fa-4x"></span>
-                                <h3><strong>e-Commerce</strong></h3>
+                            <div class="col-md-2 col-xs-4"><span class="fa fa-credit-card fa-4x"/></div>
+                            <div class="col-md-10 col-xs-8">
+                                <h4><strong>e-Commerce</strong></h4>
                                 <p>Boost your online sales with sleek product pages.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_sale')"
                                    class="btn odoo_purple">
                                 <span class="fa fa-arrow-circle-o-down"/> Install e-Commerce</a>
                             </div>
-
                         </div>
                     </section>
                 </t>
