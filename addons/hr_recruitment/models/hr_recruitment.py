@@ -307,21 +307,6 @@ class Applicant(models.Model):
         return res
 
     @api.model
-    def _broadcast_welcome(self):
-        """ Broadcast the welcome message to all users in the employee company. """
-        IrModelData = self.env['ir.model.data']
-        channel_all_employees = IrModelData.xmlid_to_object('mail.channel_all_employees')
-        template_new_employee = IrModelData.xmlid_to_object('hr_recruitment.hr_welcome_new_employee')
-        if template_new_employee:
-            MailTemplate = self.env['mail.template']
-            body_html = MailTemplate.render_template(template_new_employee.body_html, 'hr.employee', self.id)
-            subject = MailTemplate.render_template(template_new_employee.subject, 'hr.employee', self.id)
-            channel_all_employees.message_post(
-                body=body_html, subject=subject,
-                subtype='mail.mt_comment')
-        return True
-
-    @api.model
     def get_empty_list_help(self, help):
         return super(Applicant, self.with_context(empty_list_help_model='hr.job',
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
