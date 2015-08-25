@@ -4547,6 +4547,11 @@ class stock_warehouse_orderpoint(osv.osv):
         result['domain'] = "[('id', 'in', [" + ','.join(map(str, proc_ids)) + "])]"
         return result
 
+    def _compute_procurement_count(self, cr, uid, ids, field_name, arg, context=None):
+        proc_data = self.pool.get('procurement.order').read_group(cr, uid, [('orderpoint_id', 'in', ids), ('state', 'not in', ('done', 'cancel'))], ['orderpoint_id'], ['orderpoint_id'], context=context)
+        mapped_data = dict([(m['orderpoint_id'][0], m['orderpoint_id_count']) for m in proc_data])
+        return mapped_data
+
     _columns = {
         'name': fields.char('Name', required=True, copy=False),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
@@ -4572,7 +4577,8 @@ class stock_warehouse_orderpoint(osv.osv):
         'lead_type': fields.selection([
             ('net', 'Day(s) to get the products'),
             ('supplier', 'Day(s) to purchase')
-         ], 'Lead Type', required=True)
+         ], 'Lead Type', required=True),
+        'procurement_count': fields.function(_compute_procurement_count, string="Procurement Orders to Process", type="integer"),
     }
     _defaults = {
         'active': lambda *a: 1,

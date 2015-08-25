@@ -35,6 +35,12 @@ class res_partner_activation(osv.osv):
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
+
+    def _assigned_opp_count(self, cr, uid, ids, field_name, arg, context=None):
+        opp_data = self.pool['crm.lead'].read_group(cr, uid, [('partner_id', 'in', ids), ('type','=','opportunity')], ['partner_id'], ['partner_id'], context=context)
+        mapped_data = dict([(m['partner_id'][0], m['partner_id_count']) for m in opp_data])
+        return mapped_data
+
     _columns = {
         'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
@@ -51,6 +57,7 @@ class res_partner(osv.osv):
             'res.partner', 'assigned_partner_id',
             string='Implementation References',
         ),
+        'assinged_opp_count': fields.function(_assigned_opp_count, string="Assigned Opportunities", type="integer"),
     }
     _defaults = {
         'partner_weight': lambda *args: 0

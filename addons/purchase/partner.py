@@ -8,15 +8,16 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _purchase_invoice_count(self, cr, uid, ids, field_name, arg, context=None):
-        PurchaseOrder = self.pool['purchase.order']
-        Invoice = self.pool['account.invoice']
-        return {
-            partner_id: {
-                'purchase_order_count': PurchaseOrder.search_count(cr,uid, [('partner_id', 'child_of', partner_id)], context=context),
-                'supplier_invoice_count': Invoice.search_count(cr,uid, [('partner_id', 'child_of', partner_id), ('type','=','in_invoice')], context=context)
-            }
-            for partner_id in ids
-        }
+        res = dict([(id, {'purchase_order_count': 0, 'supplier_invoice_count': 0}) for id in ids])
+        purchase_data = self.pool['purchase.order'].read_group(cr, uid, [('partner_id', 'child_of', ids)], ['partner_id'], ['partner_id'], context=context)
+        for purchase in purchase_data:
+            partner_id = purchase['partner_id'][0]
+            res[partner_id]['purchase_order_count'] = purchase['partner_id_count']
+        invoice_data = self.pool['account.invoice'].read_group(cr, uid, [('partner_id', 'child_of', ids), ('type','=','in_invoice')], ['partner_id'], ['partner_id'], context=context)
+        for invoice in invoice_data:
+            partner_id = invoice['partner_id'][0]
+            res[partner_id]['supplier_invoice_count'] = invoice['partner_id_count']
+        return res
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist_purchase']

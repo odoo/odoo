@@ -121,6 +121,14 @@ class account_analytic_account(models.Model):
 
     use_timesheets = fields.Boolean('Timesheets', help="Check this field if this project manages timesheets", deprecated=True)
     invoice_on_timesheets = fields.Boolean('Timesheets', help="Check this field if this project manages timesheets")
+    total_cost_revenue = fields.Float(compute='_compute_total_cost_revenue', string="Cost/Revenue")
+
+    @api.multi
+    def _compute_total_cost_revenue(self):
+        line_data = self.env['account.analytic.line'].read_group([('account_id', 'in', self.ids)], ['amount', 'account_id'], ['account_id'])
+        mapped_data = dict([(m['account_id'][0], m['amount']) for m in line_data])
+        for analytic_account in self:
+            analytic_account.total_cost_revenue = mapped_data.get(analytic_account.id, 0.0)
 
     @api.onchange('invoice_on_timesheets')
     def onchange_invoice_on_timesheets(self):

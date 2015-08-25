@@ -1793,7 +1793,17 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>                            
+                            <button name="action_view_proc_to_process" type="object" 
+                                icon="fa-truck" 
+                                class="oe_stat_button pull-right" help="Procurement Orders To Process">
+                                <div class="o_form_field o_stat_info mr4">
+                                    <span class="o_stat_value"><field name="procurement_count"/></span>
+                                </div>
+                                <div class="o_form_field o_stat_info">
+                                    <span class="o_stat_text">Procurements</span>
+                                    <span class="o_stat_text">To Process</span>
+                                </div>
+                            </button>
                         </div>
                         <group>
                             <group>
