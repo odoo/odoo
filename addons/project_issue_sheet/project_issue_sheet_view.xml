@@ -14,7 +14,7 @@
                 </field>
                 <field name="active" position="after">
                     <field name="analytic_account_id"
-                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
+                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id)]"
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
