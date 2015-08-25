@@ -1,77 +1,83 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-class stock_picking_wave(osv.osv):
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+
+class StockPickingWave(models.Model):
     _inherit = "mail.thread"
     _name = "stock.picking.wave"
     _description = "Picking Wave"
     _order = "name desc"
-    _columns = {
-        'name': fields.char('Picking Wave Name', required=True, help='Name of the picking wave', copy=False),
-        'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange', help='Person responsible for this wave'),
-        'picking_ids': fields.one2many('stock.picking', 'wave_id', 'Pickings', help='List of picking associated to this wave'),
-        'state': fields.selection([('draft', 'Draft'), ('in_progress', 'Running'), ('done', 'Done'), ('cancel', 'Cancelled')], string="State", track_visibility='onchange', required=True, copy=False),
-    }
 
-    _defaults = {
-        'name': '/',
-        'state': 'draft',
-        }
+    name = fields.Char(
+        string='Picking Wave Name', default='/',
+        copy=False, required=True,
+        help='Name of the picking wave')
+    user_id = fields.Many2one(
+        'res.users', string='Responsible', track_visibility='onchange',
+        help='Person responsible for this wave')
+    picking_ids = fields.One2many(
+        'stock.picking', 'wave_id', string='Pickings',
+        help='List of picking associated to this wave')
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'Running'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled')], default='draft',
+        copy=False, track_visibility='onchange', required=True)
 
-    def confirm_picking(self, cr, uid, ids, context=None):
-        picking_todo = self.pool.get('stock.picking').search(cr, uid, [('wave_id', 'in', ids)], context=context)
-        self.write(cr, uid, ids, {'state': 'in_progress'}, context=context)
-        return self.pool.get('stock.picking').action_assign(cr, uid, picking_todo, context=context)
+    @api.multi
+    def confirm_picking(self):
+        pickings_todo = self.mapped('picking_ids')
+        self.write({'state': 'in_progress'})
+        return pickings_todo.action_assign()
 
-    def cancel_picking(self, cr, uid, ids, context=None):
-        picking_todo = self.pool.get('stock.picking').search(cr, uid, [('wave_id', 'in', ids)], context=context)
-        self.pool.get('stock.picking').action_cancel(cr, uid, picking_todo, context=context)
-        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
+    @api.multi
+    def cancel_picking(self):
+        self.mapped('picking_ids').action_cancel()
+        return self.write({'state': 'cancel'})
 
-    def print_picking(self, cr, uid, ids, context=None):
-        '''
-        This function print the report for all picking_ids associated to the picking wave
-        '''
-        context = dict(context or {})
-        picking_ids = []
-        for wave in self.browse(cr, uid, ids, context=context):
-            picking_ids += [picking.id for picking in wave.picking_ids]
-        if not picking_ids:
+    @api.multi
+    def print_picking(self):
+        pickings = self.mapped('picking_ids')
+        if not pickings:
             raise UserError(_('Nothing to print.'))
-        context['active_ids'] = picking_ids
-        context['active_model'] = 'stock.picking'
-        return self.pool.get("report").get_action(cr, uid, [], 'stock.report_picking', context=context)
+        return self.env["report"].with_context(active_ids=pickings.ids, active_model='stock.picking').get_action(pickings, 'stock.report_picking')
 
-    def create(self, cr, uid, vals, context=None):
+    @api.model
+    def create(self, vals):
         if vals.get('name', '/') == '/':
-            vals['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'picking.wave') or '/'
-        return super(stock_picking_wave, self).create(cr, uid, vals, context=context)
+            vals['name'] = self.env['ir.sequence'].next_by_code('picking.wave') or '/'
+        return super(StockPickingWave, self).create(vals)
 
-    def done(self, cr, uid, ids, context=None):
-        picking_todo = set()
-        for wave in self.browse(cr, uid, ids, context=context):
-            for picking in wave.picking_ids:
-                if picking.state in ('cancel', 'done'):
-                    continue
-                if picking.state != 'assigned':
-                    raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
-                message_body = "<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.wave>%s</a>" % (_("Transferred by"), _("Picking Wave"), wave.id, wave.name)
-                picking.message_post(body=message_body)
-                picking_todo.add(picking.id)
-        if picking_todo:
-            self.pool.get('stock.picking').action_done(cr, uid, list(picking_todo), context=context)
-        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
+    @api.multi
+    def done(self):
+        pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
+        if any(picking.state != 'assigned' for picking in pickings):
+            raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
+        for picking in pickings:
+            picking.message_post(
+                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.wave>%s</a>" % (
+                    _("Transferred by"),
+                    _("Picking Wave"),
+                    picking.wave_id.id,
+                    picking.wave_id.name))
+        if pickings:
+            pickings.action_done()
+        return self.write({'state': 'done'})
 
-    def _track_subtype(self, cr, uid, ids, init_values, context=None):
+    def _track_subtype(self, init_values):
         if 'state' in init_values:
             return 'stock_picking_wave.mt_wave_state'
-        return super(stock_picking_wave, self)._track_subtype(cr, uid, ids, init_values, context=context)
+        return super(StockPickingWave, self)._track_subtype(init_values)
 
 
-class stock_picking(osv.osv):
+class StockPicking(models.Model):
     _inherit = "stock.picking"
-    _columns = {
-        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help='Picking wave associated to this picking'),
-    }
+
+    wave_id = fields.Many2one(
+        'stock.picking.wave', string='Picking Wave',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        help='Picking wave associated to this picking')
