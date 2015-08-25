@@ -495,8 +495,13 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post):
+        url = "/forum/%s/validation_queue" % (slug(forum))
+        if post.state == 'flagged':
+            url = "/forum/%s/flagged_queue" % (slug(forum))
+        elif post.state == 'offensive':
+            url = "/forum/%s/offensive_posts" % (slug(forum))
         post.validate()
-        return werkzeug.utils.redirect("/forum/%s/validation_queue" % (slug(forum)))
+        return werkzeug.utils.redirect(url)
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/refuse', type='http', auth="user", website=True)
     def post_refuse(self, forum, post):
