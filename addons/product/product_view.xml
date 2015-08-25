@@ -593,18 +593,14 @@
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
             <field name="arch" type="xml">
-                <form string="Product Categories">
+                <form class="oe_form_configuration">
                     <div class="oe_title">
-                        <label for="name" string="Category Name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Lamps"/>
-                        </h1>
+                        <label for="name" string="Category name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                     </div>
-                    <group name="parent">
-                        <group string="Category Type">
-                            <field name="parent_id"/>
-                            <field name="type"/>
-                        </group>
+                    <group name="first" col="4" string="Category Type">
+                        <field name="parent_id"/>
+                        <field name="type"/>
                     </group>
                 </form>
             </field>
