@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="s_website_form" name="Form Builder">
+            <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                        <button class="btn btn-primary btn-lg o_website_form_send">Send</button>
+                        <span id="o_website_form_result"/>
+                    </div>
+                </div>
+            </form>
+        </template>
+
+        <template id="register_s_website_form" inherit_id="website.snippets" name="Snippet Form Builder">
+            <xpath expr="//div[@id='snippet_feature']/div[contains(@class, 'o_panel_body')]" position="inside">
+                <t t-snippet="website_form_editor.s_website_form" t-thumbnail="/website_form_editor/static/src/img/s_website_form.png"/>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>
