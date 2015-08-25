@@ -2225,7 +2225,7 @@ define(['summernote/summernote'], function () {
         }
         return cacheCssSelectors[filter] = css;
     };
-    function computeFonts() {
+    var computeFonts = _.once(function() {
         _.each(website.editor.fontIcons, function (data) {
             data.cssData = website.editor.getCssSelectors(data.parser);
             data.alias = [];
@@ -2234,7 +2234,7 @@ define(['summernote/summernote'], function () {
                 return css[2];
             });
         });
-    }
+    });
 
     /* list of font icons to load by editor. The icons are displayed in the media editor and
      * identified like font and image (can be colored, spinned, resized with fa classes).
@@ -2276,6 +2276,7 @@ define(['summernote/summernote'], function () {
             this._super();
             this.parent = parent;
             this.media = media;
+            computeFonts();
         },
         start: function () {
             return this._super().then(this.proxy('load_data'));
@@ -2542,7 +2543,7 @@ define(['summernote/summernote'], function () {
             this.media = $iframe[0];
         },
         clear: function () {
-            delete this.media.dataset.src;
+            if(this.media.dataset.src) delete this.media.dataset.src;
             this.media.className = this.media.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
         },
     });
