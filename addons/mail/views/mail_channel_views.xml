@@ -184,7 +184,7 @@
 
 
 
-    <record id="mail_channel_action_client_slack" model="ir.actions.client">
+    <record id="mail_channel_action_client_chat" model="ir.actions.client">
             <field name="name">Chat</field>
             <field name="tag">mail.chat.instant_messaging</field>
             <field name="res_model">mail.channel</field>
@@ -206,10 +206,11 @@
         </record>
 
     <menuitem
-        id="mail.mail_channel_menu_root_slack"
-        name="Slack"
-        action="mail_channel_action_client_slack"
+        id="mail.mail_channel_menu_root_chat"
+        name="Chat"
+        action="mail_channel_action_client_chat"
         icon="fa-envelope"
+        web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>
 
