@@ -65,6 +65,11 @@ class SaleOrder(models.Model):
         default_team_id = self.env['crm.team']._get_default_team_id()
         return self.env['crm.team'].browse(default_team_id)
 
+    @api.onchange('fiscal_position_id')
+    def _compute_tax_id(self):
+        for order in self:
+            order.order_line._compute_tax_id()
+
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, index=True, default='New')
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
@@ -419,7 +424,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.price_reduce = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
-    @api.onchange('order_id.fiscal_position_id', 'product_id')
+    @api.onchange('order_id', 'product_id')
     def _compute_tax_id(self):
         for line in self:
             fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
@@ -642,6 +647,7 @@ class SaleOrderLine(models.Model):
         :rtype: float
         '''
         return 0.0
+
 
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
