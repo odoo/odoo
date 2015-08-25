@@ -993,7 +993,7 @@ var Editor = Class.extend({
 
         self.get_parent_block();
         setTimeout(function () {
-            self.BuildingBlock.cover_target(self.$target.data('overlay'), self.$target);
+            self.buildingBlock.cover_target(self.$target.data('overlay'), self.$target);
         },0);
     },
 
@@ -1070,7 +1070,7 @@ var Editor = Class.extend({
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
 
         this.$target.after($clone);
-        this.BuildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
+        this.buildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
             for (var i in editor.styles){
                 editor.styles[i].on_clone($snippet);
             }
@@ -1085,7 +1085,7 @@ var Editor = Class.extend({
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
 
         var index = _.indexOf(this.buildingBlock.snippets, this.$target.get(0));
-        this.BuildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
+        this.buildingBlock.call_for_all_snippets(this.$target, function (editor, $snippet) {
             for (var i in editor.styles){
                 editor.styles[i].on_remove();
             }
