@@ -2,6 +2,7 @@
 <openerp>
     <data>
 
+        <!-- Generic tip on breadcrumbs -->
         <record model="web.tip" id="web_tip_1">
             <field name="title"></field>
             <field name="description">Use the breadcrumb to go back to preceeding screens. This is super useful to navigate between documents.</field>
@@ -9,6 +10,18 @@
             <field name="mode">form</field>
             <field name="trigger_selector">.o_form_buttons_view:visible,ol.breadcrumb a</field>
             <field name="highlight_selector">ol.breadcrumb:visible a:last</field>
+            <field name="placement">bottom</field>
+        </record>
+
+        <!-- Generic tip on status bars -->
+        <record model="web.tip" id="web_tip_2">
+            <field name="title"></field>
+            <field name="description"><![CDATA[Gain some time and change the stage right here, no need to go back to your pipeline.]]></field>
+            <field name="model"></field>
+            <field name="mode">form</field>
+            <field name="trigger_selector">.o_statusbar_status.o_form_field:visible > button:not(.disabled)</field>
+            <field name="highlight_selector">.o_statusbar_status.o_form_field</field>
+            <field name="end_event">mousedown</field>
             <field name="placement">bottom</field>
         </record>
 
