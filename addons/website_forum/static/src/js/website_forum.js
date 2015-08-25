@@ -218,7 +218,8 @@
                     ['style', ['style']],
                     ['font', ['bold', 'italic', 'underline', 'clear']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']]
+                    ['table', ['table']],
+                    ['history', ['undo', 'redo']],
                 ];
             if (parseInt($("#karma").val()) > 30) {
                 toolbar.push(['insert', ['link', 'picture']]);
