@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record model="ir.ui.view" id="product_pricelist_view">
         <field name="name">product.pricelist.website.form</field>
         <field name="model">product.pricelist</field>
@@ -165,12 +163,9 @@
         <field name="model">res.country.group</field>
         <field name="inherit_id" ref="base.view_country_group_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='country_ids']" position="after">
+            <group name="country_group" position="after">
                 <field name="website_pricelist_ids"/>
-            </xpath>
+            </group>
         </field>
     </record>
-
- </data>
-
-</openerp>
+</odoo>
