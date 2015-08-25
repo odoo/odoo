@@ -39,18 +39,6 @@
 
         .o_mail_chat_composer_wrapper {
             .o-flex(0, 0, auto);
-            .o-flex-display();
-            /*
-            > img {
-                .o-flex(0, 0, auto);
-                width: 64px;
-                height: 64px;
-            }
-
-            > input {
-                .o-flex(1, 0, auto);
-            }
-            */
         }
     }
 }
@@ -129,32 +117,34 @@
     .o_mail_chat_content {
         background-color: white;
 
-        .o_mail_chat_help_message{
-            padding: 25px;
-            color: @gray-light;
-        }
+        .o_mail_chat_messages {
+            .o_mail_chat_help_message{
+                padding: 25px 0;
+                text-align: justify;
+            }
 
-        .o_mail_thread_date_separator{
-            margin: auto;
-            width: 90%;
-            .o_mail_thread_date_wrapper {
-                position: relative;
-                height: 20px;
-                border-bottom: solid WhiteSmoke 2px;
-                margin-bottom: 15px;
-                .o_mail_thread_date_separator_title {
-                    display: table;
-                    position: relative;
-                    top: 10px;
-                    left: 0;
-                    right: 0;
-                    margin: 0 auto;
-                    padding: 0 10px 0 10px;
-                    font-weight: bold;
-                    background: white;
+            .o_mail_thread_date_separator, .o_mail_thread_message {
+                margin: auto; // override the margin-{left,right}: -15px defined on .row
+            }
+
+            .o_mail_thread_date_separator{
+                .o_mail_thread_date_wrapper {
+                    border-bottom: solid @gray-lighter 2px;
+                    margin-bottom: 15px;
+                    .o_mail_thread_date_separator_title {
+                        display: table;
+                        position: relative;
+                        top: 10px;
+                        margin: 0 auto;
+                        padding: 0 10px 0 10px;
+                        font-weight: bold;
+                        background: white;
+                    }
                 }
             }
         }
+
+
 
         .o_mail_thread_message{
             //border-bottom: solid WhiteSmoke 1px;
@@ -184,10 +174,7 @@
         .o_mail_chat_composer_wrapper {
             border-top: 1px solid @gray-lighter;
             background-color: @gray-lighter;
-            padding: 10px;
-            .o_mail_compose_message{
-                margin-bottom: 0px;
-            }
+            .o-webclient-padding(@top: 10px, @bottom: 5px);
             /*
             > img {
                 background-image: url(/web/static/src/img/placeholder.png);

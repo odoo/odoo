@@ -192,6 +192,8 @@ var AbstractAddMoreSearch = Widget.extend({
     start: function(){
         this.last_search_val = false;
         this.$input = this.$('.o_mail_chat_search_input');
+        this.$add_more_text = this.$('.o_mail_chat_add_more_text');
+        this.$add_more_search_bar = this.$('.o_mail_chat_add_more_search_bar');
         this._bind_events();
         return this._super();
     },
@@ -222,8 +224,8 @@ var AbstractAddMoreSearch = Widget.extend({
     },
     // ui
     _toggle_elements: function(){
-        this.$('.o_mail_chat_add_more_text').toggle();
-        this.$('.o_mail_chat_add_more_search_bar').toggle();
+        this.$add_more_text.toggle();
+        this.$add_more_search_bar.toggle();
         this.$input.val('');
         this.$input.focus();
     },
@@ -327,7 +329,8 @@ var PartnerInviteDialog = Dialog.extend({
     },
     start: function(){
         var self = this;
-        this.$('.o_mail_chat_partner_invite_input').select2({
+        this.$partner_invite_input = this.$('.o_mail_chat_partner_invite_input');
+        this.$partner_invite_input.select2({
             width: '100%',
             allowClear: true,
             multiple: true,
@@ -352,7 +355,7 @@ var PartnerInviteDialog = Dialog.extend({
     },
     on_click_add: function(){
         var self = this;
-        var data = this.$('.o_mail_chat_partner_invite_input').select2('data');
+        var data = this.$partner_invite_input.select2('data');
         if(data.length >= 1){
             this.ChannelModel.call('channel_invite', [], {"ids" : [this.channel.id], 'partner_ids': _.pluck(data, 'id')}).then(function(){
                 var names = _.pluck(data, 'text').join(', ');
@@ -437,6 +440,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     start: function(){
         var self = this;
         this._super.apply(this, arguments);
+
         mail_thread.MailThreadMixin.start.call(this);
         // channel business events
         this.on("change:current_channel_id", this, this.channel_change);
@@ -471,7 +475,8 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         });
 
         // bind event to load history when scrolling near top
-        this.$('.o_mail_chat_messages').scroll(function() {
+        this.$messages = this.$('.o_mail_chat_messages');
+        this.$messages.scroll(function() {
             if ($(this).scrollTop() <= 50 && self.loading_history) { // at 50px of the top, load history
                 self.message_load_history().then(function(messages){
                     if(messages.length < mail_thread.LIMIT_MESSAGE){
@@ -987,19 +992,21 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     _scroll: function(){
         var current_channel_id = this.get('current_channel_id');
         var current_channel = this.channels[current_channel_id];
+        var last_seen_message;
         if(_.isNumber(current_channel_id)){
             if(current_channel.seen_message_id){
-                if(this.$(".o_mail_thread_message[data-message-id="+current_channel.seen_message_id+"]")){
-                    this.$('.o_mail_chat_messages').scrollTop(this.$(".o_mail_thread_message[data-message-id="+current_channel.seen_message_id+"]").offset().top);
+                last_seen_message = this.$(".o_mail_thread_message[data-message-id="+current_channel.seen_message_id+"]");
+                if(last_seen_message.length){
+                    this.$messages.scrollTop(last_seen_message.offset().top);
                 }else{
-                    this.$('.o_mail_chat_messages').scrollTop(0);
+                    this.$messages.scrollTop(0);
                 }
             }else{
-                this.$('.o_mail_chat_messages').scrollTop(this.$('.o_mail_chat_messages')[0].scrollHeight);
+                this.$messages.scrollTop(this.$messages[0].scrollHeight);
             }
             current_channel.seen_message_id = false;
         }else{
-            this.$('.o_mail_chat_messages').scrollTop(this.$('.o_mail_chat_messages')[0].scrollHeight);
+            this.$messages.scrollTop(this.$messages[0].scrollHeight);
         }
     },
     /**
@@ -1007,7 +1014,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
      * @override
      */
     message_render: function(){
-        this.$('.o_mail_chat_messages_content').html(QWeb.render('mail.chat.ChatMailThread.content', {'widget': this}));
+        this.$messages.html(QWeb.render('mail.chat.ChatMailThread.content', {'widget': this}));
     },
     /**
      * Return the message domain for the current channel

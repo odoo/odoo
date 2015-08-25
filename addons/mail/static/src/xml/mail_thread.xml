@@ -1,103 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <!--
-        Mail Composer Message : input with 2 buttons (emoji and attachment)
-    -->
     <t t-name="mail.ComposeMessage">
-        <div class="form-group col-md-12 o_mail_compose_message">
-            <div t-if="widget.options.mention_menu_orientation === 'top'" class="o_mail_mention_dropdown">
-                <t t-call="mail.ComposeMessage.mention_menu"/>
+        <div class="o_mail_compose_message">
+            <div class="dropup o_mail_mention_dropdown"/>
+            <!-- composer is an input text if display mode is 'chat' and a textarea if it is 'mail' -->
+            <t t-if="widget.options.display_mode === 'chat'">
+                <input type="text" class="o_mail_compose_message_input" placeholder="Write something" name="message" id="send_message"/>
+            </t>
+            <t t-if="widget.options.display_mode === 'mail'">
+                <textarea class="o_mail_compose_message_input" placeholder="Write something" name="message" id="send_message"/>
+            </t>
+            <div class="btn-group o_mail_compose_message_buttons">
+                <button t-if="widget.options.display_mode === 'mail'" class="btn btn-primary o_mail_compose_message_button_send" type="button">
+                    Send
+                </button>
+                <button class="btn btn-icon fa fa-smile-o o_mail_compose_message_button_emoji" type="button" data-toggle="popover"/>
+                <button class="btn btn-icon fa fa-paperclip o_mail_compose_message_button_attachment" type="button" data-toggle="popover"/>
+                <button t-if="widget.options.display_mode === 'mail'" class="btn btn-icon fa fa-pencil-square-o o_mail_compose_message_button_full_message" type="button" data-toggle="popover"/>
             </div>
-            <!-- input text : depending on the display_mode option -->
-            <div t-att-class="widget.options.display_mode === 'chat' ? 'input-group o_mail_compose_message_mode_chat' : 'o_mail_compose_message_mode_mail'">
-                <t t-if="widget.options.display_mode === 'chat'">
-                    <input type="text" class="form-control o_mail_compose_message_input" placeholder="Write something" name="message" id="send_message"/>
-                </t>
-                <t t-if="widget.options.display_mode === 'mail'">
-                    <textarea class="form-control o_mail_compose_message_input" placeholder="Write something" name="message" id="send_message"/>
-                </t>
-                <span class="input-group-btn o_mail_compose_message_button_group">
-                    <button t-if="widget.options.display_mode === 'mail'" class="btn btn-primary o_mail_compose_message_button_send" type="button">
-                        Send
-                    </button>
-                    <button class="btn btn-default o_mail_compose_message_button_emoji" type="button" data-toggle="popover">
-                        <i class="fa fa-smile-o"/>
-                    </button>
-                    <button class="btn btn-default o_mail_compose_message_button_attachment" type="button" data-toggle="popover">
-                        <i class="fa fa-paperclip"/>
-                    </button>
-                </span>
-            </div>
-            <div t-if="widget.options.mention_menu_orientation === 'bottom'" class="o_mail_mention_dropdown">
-                <t t-call="mail.ComposeMessage.mention_menu"/>
-            </div>
-            <div class="o_mail_mention_partner_tags">
-                <t t-call="mail.ComposeMessage.mention_tags"/>
-            </div>
-
-            <span class="o_mail_attachment_file hide">
-                <t t-call="HiddenInputFile">
-                    <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                    <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
-                    <input type="hidden" name="model" value="mail.compose.message"/>
-                    <input type="hidden" name="id" value="0"/>
-                    <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
-                </t>
-            </span>
-            <span class="o_mail_compose_message_emoji"></span>
-
-            <div class="o_mail_compose_message_attachment_list"></div>
         </div>
+        <div class="o_mail_mention_partner_tags"/>
+        <div class="o_mail_attachments_list"/>
+
+        <span class="o_mail_attachment_file hide">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <input type="hidden" name="model" value="mail.compose.message"/>
+                <input type="hidden" name="id" value="0"/>
+                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+            </t>
+        </span>
+        <span class="o_mail_compose_message_emoji"></span>
+
     </t>
 
     <t t-name="mail.ComposeMessage.emoji">
-        <div class="o_mail_compose_message_emoji_content">
-            <t t-foreach="widget.options.emoji_list" t-as="emoji">
-                <span t-att-data-emoji="emoji.source" class="o_mail_compose_message_emoji_img" t-att-title="emoji.description">
-                    <t t-raw="emoji.substitution"/>
-                </span>
-            </t>
-        </div>
+        <t t-foreach="widget.options.emoji_list" t-as="emoji">
+            <span t-att-data-emoji="emoji.source" class="o_mail_compose_message_emoji_img" t-att-title="emoji.description">
+                <t t-raw="emoji.substitution"/>
+            </span>
+        </t>
     </t>
 
     <t t-name="mail.ComposeMessage.attachments">
         <div class="o_mail_chat_im_attachment_files">
             <t t-foreach="widget.get('attachment_ids')" t-as='attachment'>
-                <t t-if="attachment.file_type_icon !== 'webimage'">
-                    <div t-attf-class="o_mail_attachment #{attachment.upload ? 'o_mail_uploading' : ''}">
-                        <a t-att-href='attachment.url' target="_blank">
-                            <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
-                            <div class='o_mail_attachment_name'><t t-raw="attachment.name"/></div>
-                        </a>
-                        <div class="o_mail_attachment_delete">
-                            <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                        </div>
-                        <div class="o_mail_attachment_progress_bar">
-                            Uploading
-                        </div>
+                <div t-attf-class="o_mail_attachment #{attachment.upload ? 'o_mail_uploading' : ''}">
+                    <a t-att-href='attachment.url' target="_blank">
+                        <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
+                        <div class='o_mail_attachment_name'><t t-raw="attachment.name"/></div>
+                    </a>
+                    <div class="o_mail_attachment_delete">
+                        <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
                     </div>
-                </t>
-                <t t-if="attachment.file_type_icon === 'webimage'">
-                    <div t-attf-class="o_mail_attachment o_mail_attachment_preview #{attachment.upload ? 'o_mail_uploading' : ''}">
-                        <a t-att-href='attachment.url' target="_blank">
-                            <img t-att-src="_.str.sprintf('/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=%s', attachment.id)"/>
-                            <div class='o_mail_attachment_name'><t t-raw='attachment.name'/></div>
-                        </a>
-                        <div class="o_mail_attachment_delete">
-                            <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                        </div>
-                        <div class="o_mail_attachment_progress_bar">
-                            Uploading
-                        </div>
+                    <div class="o_mail_attachment_progress_bar">
+                        Uploading
                     </div>
-                </t>
+                </div>
             </t>
         </div>
     </t>
 
     <t t-name="mail.ComposeMessage.mention_menu">
-        <ul class="dropdown-menu o_mail_mention_dropdown_menu" aria-labelledby="dropdownMailMentionMenu">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMailMentionMenu">
             <t t-foreach="widget.get('mention_partners')" t-as="partner">
                 <li t-att-data-partner-id="partner.id" t-att-class="'o_mail_mention_proposition ' + (partner_index === 0 ? 'active' : '')">
                     <a href="#">
@@ -108,7 +75,7 @@
     </t>
 
     <t t-name="mail.ComposeMessage.mention_tags">
-        <t t-if="widget.get('mention_selected_partners').length">Mention(s) :</t>
+        <t t-if="widget.get('mention_selected_partners').length">Mention(s):</t>
         <t t-foreach="widget.get('mention_selected_partners')" t-as="partner">
             <span class="badge"><t t-esc="partner.name"/></span>
         </t>
@@ -141,14 +108,14 @@
                         <img t-if="message.message_type !== 'email' &amp;&amp; (!message.author_id || !message.author_id[0])" src="/mail/static/src/img/smiley/avatar.jpg" class="o_mail_thread_avatar img-rounded"/>
                     </t>
                 </div>
-                <div t-att-class="'col-md-10 col-sm-10 o_mail_thread_message_core ' + 'o_mail_thread_message_type_' + message.message_type + ' ' + (message.is_note ? 'o_mail_thread_message_subtype_note' : '')">
+                <div t-att-class="'col-md-11 col-sm-11 o_mail_thread_message_core ' + 'o_mail_thread_message_type_' + message.message_type + ' ' + (message.is_note ? 'o_mail_thread_message_subtype_note' : '')">
                     <!-- actions -->
-                    <span class="pull-right o_mail_thread_message_actions">
+                    <span class="pull-right">
                         <i t-if="message.is_needaction &amp;&amp; widget.options.display_needaction_button" class="fa fa-check o_mail_thread_message_needaction" t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
-                        <i t-att-class="'fa fa-star-o fa-lg o_mail_thread_message_star ' + (message.is_starred ? 'o_mail_message_starred' : '')" t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
+                        <i t-att-class="'fa fa-lg o_mail_thread_message_star ' + (message.is_starred ? 'o_mail_message_starred fa-star' : 'fa-star-o')" t-att-data-message-id="message.id" t-att-title="_t('Mark as Todo')"/>
                     </span>
 
-                    <p class="text-muted o_mail_thread_message_info">
+                    <p class="text-muted">
                         <t t-if="message.is_note">
                             Note by
                         </t>
@@ -189,9 +156,6 @@
                             </a>
                         </div>
                     </t>
-                </div>
-
-                <div class="col-md-1">
                 </div>
             </div>
         </t>

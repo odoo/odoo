@@ -23,11 +23,13 @@ var internal_bus = core.bus;
  **/
 var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
     template: 'mail.chatter.ComposeMessage',
+    events: {
+        'click .o_mail_compose_message_button_full_message': 'on_compose_message',
+    },
     init: function(parent, dataset, options){
         this._super.apply(this, arguments);
         this.suggested_partners = [];
         this.context = options.context || {};
-        // options
         this.options = _.defaults(options, {
             'record_name': false,
             'is_log': false,
@@ -43,9 +45,6 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
     start: function(){
         this.$input = this.$('.o_mail_compose_message_input');
         this.$input.focus();
-        // add mail compose message full button
-        this.$('.o_mail_compose_message_button_group').append('<button class="btn btn-default o_mail_compose_message_button_full_message" type="button" data-toggle="popover"><i class="fa fa-pencil-square-o"/></button>');
-        this.$('.o_mail_compose_message_button_full_message').on('click', this, this.on_compose_message);
         return this._super.apply(this, arguments);
     },
     message_get_suggested_recipients: function(){

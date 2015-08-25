@@ -30,8 +30,8 @@ var MailComposeMessage = Widget.extend({
     events: {
         "keydown .o_mail_compose_message_input": "on_keydown",
         "keyup .o_mail_compose_message_input": "on_keyup",
-        "change input.oe_form_binary_file": "on_attachment_change",
-        "click .o_mail_compose_message_attachment_list .o_mail_attachment_delete": "on_attachment_delete",
+        "change input.o_form_input_file": "on_attachment_change",
+        "click .o_mail_attachment_delete": "on_attachment_delete",
         "click .o_mail_compose_message_button_attachment": 'on_click_attachment',
         "click .o_mail_compose_message_button_send": 'message_send',
         "click .o_mail_mention_proposition": "on_click_mention_item",
@@ -47,7 +47,6 @@ var MailComposeMessage = Widget.extend({
      * @param {Integer} [options.mention_min_length] : min length of the mention word required to start a search on partner
      * @param {Integer} [options.mention_typing_speed] : delay before starting a search with the mention word
      * @param {Integer} [options.mention_fetch_limit] : limit of partner fetch
-     * @param {top|bottom} [options.mention_menu_orientation] : orientation of the dropdown menu regarding the input text
      */
     init: function(parent, dataset, options){
         this._super.apply(this, arguments);
@@ -60,7 +59,6 @@ var MailComposeMessage = Widget.extend({
             'mention_min_length': 2,
             'mention_typing_speed': 400,
             'mention_fetch_limit': 8,
-            'mention_menu_orientation': 'top',
         });
         this.emoji_list = this.options.emoji_list;
         this.context = this.options.context;
@@ -77,19 +75,24 @@ var MailComposeMessage = Widget.extend({
     },
     start: function(){
         var self = this;
+        this.$attachment_button = this.$(".o_mail_compose_message_button_attachment");
+        this.$attachments_list = this.$el.filter('.o_mail_attachments_list');
+        this.$mention_partner_tags = this.$el.filter('.o_mail_mention_partner_tags');
+        this.$mention_dropdown = this.$('.o_mail_mention_dropdown');
         this.$input = this.$('.o_mail_compose_message_input');
         this.$input.focus();
-        this.$attachment_button = this.$(".o_mail_compose_message_button_attachment");
+
         // attachments
         $(window).on(this.fileupload_id, this.on_attachment_loaded);
         this.on("change:attachment_ids", this, this.attachment_render);
+
         // emoji
         self.$('.o_mail_compose_message_button_emoji').popover({
             placement: 'top',
             content: function(){
                 if(!self.$emoji){ // lazy rendering
                     self.$emoji = $(QWeb.render('mail.ComposeMessage.emoji', {'widget': self}));
-                    self.$emoji.find('.o_mail_compose_message_emoji_img').on('click', self, self.on_click_emoji_img);
+                    self.$emoji.filter('.o_mail_compose_message_emoji_img').on('click', self, self.on_click_emoji_img);
                 }
                 return self.$emoji;
             },
@@ -97,6 +100,7 @@ var MailComposeMessage = Widget.extend({
             container: '.o_mail_compose_message_emoji',
             trigger: 'focus',
         });
+
         // mention
         this.on('change:mention_word', this, this.mention_word_change);
         this.on('change:mention_partners', this, this.mention_render_partner);
@@ -106,15 +110,14 @@ var MailComposeMessage = Widget.extend({
     // events
     on_click_attachment: function(event){
         event.preventDefault();
-        this.$('input.oe_form_binary_file').click();
+        this.$('input.o_form_input_file').click();
     },
     on_click_emoji_img: function(event){
         this.$input.val(this.$input.val() + " " + $(event.currentTarget).data('emoji')+ " ");
         this.$input.focus();
     },
     on_keydown: function(event){
-
-                // Save the old input
+        // Save the old input
         this.input_buffer = this.$input.val();
         // Key Down displatching
         switch(event.which) {
@@ -131,12 +134,11 @@ var MailComposeMessage = Widget.extend({
         }
     },
     message_send: function(){
-        var $input = this.$('.o_mail_compose_message_input');
         var mes = mail_utils.get_text2html(this.$input.val());
         if (! mes.trim() && this.do_check_attachment_upload()) {
             return;
         }
-        $input.val("");
+        this.$input.val("");
         this.message_post(mes, _.pluck(this.get('attachment_ids'), 'id'));
     },
     on_keyup: function(event){
@@ -212,7 +214,7 @@ var MailComposeMessage = Widget.extend({
                 }
             }
             // submit filename
-            this.$('form.oe_form_binary_form').submit();
+            this.$('form.o_form_binary_form').submit();
             this.$attachment_button.prop('disabled', true);
 
             attachments.push({
@@ -247,7 +249,7 @@ var MailComposeMessage = Widget.extend({
         this.set('attachment_ids', attachment_ids);
 
         // TODO JEM : understand the 2 lines below ....
-        var $input = this.$('input.oe_form_binary_file');
+        var $input = this.$('input.o_form_input_file');
         $input.after($input.clone(true)).remove();
 
         this.$attachment_button.prop('disabled', false);
@@ -276,7 +278,7 @@ var MailComposeMessage = Widget.extend({
         return true;
     },
     attachment_render: function(){
-        this.$('.o_mail_compose_message_attachment_list').html(QWeb.render('mail.ComposeMessage.attachments', {'widget': this}));
+        this.$attachments_list.html(QWeb.render('mail.ComposeMessage.attachments', {'widget': this}));
     },
     // Mention
     on_click_mention_item: function(event){
@@ -443,15 +445,15 @@ var MailComposeMessage = Widget.extend({
         return body;
     },
     mention_render_partner: function(){
-        this.$('.o_mail_mention_dropdown').html(QWeb.render('mail.ComposeMessage.mention_menu', {'widget': this}));
+        this.$mention_dropdown.html(QWeb.render('mail.ComposeMessage.mention_menu', {'widget': this}));
         if(this.get('mention_partners').length){
-            this.$('.o_mail_mention_dropdown').addClass('open');
+            this.$mention_dropdown.addClass('open');
         }else{
-            this.$('.o_mail_mention_dropdown').removeClass('open');
+            this.$mention_dropdown.removeClass('open');
         }
     },
     mention_render_selected_partners: function(){
-        this.$('.o_mail_mention_partner_tags').html(QWeb.render('mail.ComposeMessage.mention_tags', {'widget': this}));
+        this.$mention_partner_tags.html(QWeb.render('mail.ComposeMessage.mention_tags', {'widget': this}));
     },
     /**
      * Return the matches (as RexExp.exec do) for the partner mention in the input text
@@ -600,7 +602,7 @@ var MailThreadMixin = {
         var mid = $source.data('message-id');
         var is_starred = !$source.hasClass('o_mail_message_starred');
         return this.MessageDatasetSearch.call('set_message_starred', [[mid], is_starred]).then(function(){
-            $source.toggleClass('o_mail_message_starred');
+            $source.toggleClass('fa-star-o fa-star o_mail_message_starred');
             return mid;
         });
     },
