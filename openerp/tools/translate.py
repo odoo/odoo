@@ -767,7 +767,18 @@ def trans_generate(lang, modules, cr):
     def push_translation(module, type, name, id, source, comments=None):
         # empty and one-letter terms are ignored, they probably are not meant to be
         # translated, and would be very hard to translate anyway.
-        if not source or len(source.strip()) <= 1:
+        sanitized_term = (source or '').strip()
+        try:
+            # verify the minimal size without eventual xml tags
+            # wrap to make sure html content like '<a>b</a><c>d</c>' is accepted by lxml
+            wrapped = "<div>%s</div>" % sanitized_term
+            node = etree.fromstring(wrapped)
+            sanitized_term = etree.tostring(node, encoding='UTF-8', method='text')
+        except etree.ParseError:
+            pass
+        # remove non-alphanumeric chars
+        sanitized_term = re.sub(r'\W+', '', sanitized_term)
+        if not sanitized_term or len(sanitized_term) <= 1:
             return
 
         tnx = (module, source, name, id, type, tuple(comments or ()))
