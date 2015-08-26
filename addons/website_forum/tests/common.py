@@ -10,7 +10,7 @@ KARMA = {
     'edit_own': 10, 'edit_all': 20,
     'close_own': 10, 'close_all': 20,
     'unlink_own': 10, 'unlink_all': 20,
-    'post': 100,
+    'post': 100, 'flag': 500, 'moderate': 1000,
     'gen_que_new': 1, 'gen_que_upv': 5, 'gen_que_dwv': -10,
     'gen_ans_upv': 10, 'gen_ans_dwv': -20,
 }
