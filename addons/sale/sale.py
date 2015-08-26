@@ -1078,7 +1078,7 @@ class sale_order_line(osv.osv):
                 date_order=order['date_order'],
                 fiscal_position=order['fiscal_position'][0] if order['fiscal_position'] else False,
                 flag=False,  # Force name update
-                context=dict(context, company_id=values.get('company_id'))
+                context=dict(context or {}, company_id=values.get('company_id'))
             )['value']
             if defaults.get('tax_id'):
                 defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
