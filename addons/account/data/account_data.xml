@@ -37,24 +37,10 @@
             <field name="note">Payment term: Immediate Payment</field>
         </record>
 
-        <record id="account_payment_term_line_immediate" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="0" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_immediate" name="payment_id"/>
-        </record>
-
-
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
             <field name="note">Payment term: 15 Days</field>
-        </record>
-
-        <record id="account_payment_term_line_15days" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="15" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_15days" name="payment_id"/>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
@@ -65,13 +51,7 @@
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
             <field name="note">Payment term: 30 Net Days</field>
-        </record>
-
-        <record id="account_payment_term_line_net" model="account.payment.term.line">
-            <field name="value">balance</field>
-            <field eval="30" name="days"/>
-            <field eval="0" name="days2"/>
-            <field eval="account_payment_term_net" name="payment_id"/>
+            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--

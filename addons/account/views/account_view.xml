@@ -1382,10 +1382,11 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <tree string="Payment Term">
-                    <field name="value"/>
+                    <field name="sequence" widget="handle"/>
+                    <field name="value" string="Due Type"/>
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
-                    <field name="days2"/>
+                    <field name="option" string=""/>
                 </tree>
             </field>
         </record>
@@ -1395,17 +1396,23 @@
             <field name="arch" type="xml">
                 <form string="Payment Term">
                     <group>
-                        <group string="Amount Computation">
+                        <group string="Term Type">
                             <field name="value" widget="radio"/>
                             <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
                             <div attrs="{'invisible':[('value','=', 'balance')]}">
                                 <field name="value_amount" class="oe_inline"/>
                                 <label string="%" class="oe_inline" attrs="{'invisible':[('value','!=','percent')]}"/>
                             </div>
+                            <field name="sequence" invisible="1"/>
                         </group>
                         <group string="Due Date Computation">
-                            <field name="days"/>
-                            <field name="days2"/>
+                            <label for="days"/>
+                            <div class="o_row">
+                                <div>
+                                    <field name="days" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}"/>
+                                    <field name="option" widget="radio"/>
+                                </div>
+                            </div>
                         </group>
                     </group>
                 </form>
@@ -1433,7 +1440,7 @@
                     </group>
                     <label for="note"/>
                     <field name="note" placeholder="Payment term explanation for the customer..."/>
-                    <separator string="Computation"/>
+                    <separator string="Terms"/>
                     <p class="text-muted">
                         The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
                     </p>
