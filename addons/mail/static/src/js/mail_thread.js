@@ -239,7 +239,7 @@ var MailComposeMessage = Widget.extend({
                         'id': result.id,
                         'name': result.name || result.filename,
                         'filename': result.filename,
-                        'url': session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name', 'id': result.id}),
+                        'url': session.url('/web/content', {'id': result.id, download: true}),
                     });
                 }else{
                     attachment_ids.push(a);
@@ -309,7 +309,6 @@ var MailComposeMessage = Widget.extend({
         var text_left = text_input.substring(0, cursor_position-(mention_word.length+1));
         var text_right = text_input.substring(cursor_position, text_input.length);
         var text_input_new = text_left + this.options.mention_delimiter + selected_partner.name + ' ' + text_right;
-
         this.$input.val(text_input_new);
         this.set_cursor_position(text_left.length+selected_partner.name.length+2);
         this.set('mention_partners', []);
@@ -729,7 +728,7 @@ var MailThreadMixin = {
                 m.body = self._message_preprocess_mention(m.body);
             }
             _.each(m.attachment_ids, function(a){
-                a.url = mail_utils.get_attachment_url(session, m.id, a.id);
+                a.url = '/web/content/' + a.id + '?download=true';
             });
         });
         return _.sortBy(messages, 'date');

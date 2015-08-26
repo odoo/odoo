@@ -333,7 +333,7 @@ var Conversation = Widget.extend({
                 m.body = mail_utils.shortcode_apply(m.body, self.options.emoji);
             }
             _.each(m.attachment_ids, function(a){
-                a.url = mail_utils.get_attachment_url(session, m.id, a.id);
+                a.url = '/web/content/' + a.id + '?download=true';
                 a.fa_class = mail_utils.attachment_filetype_to_fa_class(a.file_type_icon);
             });
         });

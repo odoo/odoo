@@ -49,7 +49,7 @@
             <t t-foreach="widget.get('attachment_ids')" t-as='attachment'>
                 <div t-attf-class="o_mail_attachment #{attachment.upload ? 'o_mail_uploading' : ''}">
                     <a t-att-href='attachment.url' target="_blank">
-                        <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
+                        <img t-att-src="'/web/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
                         <div class='o_mail_attachment_name'><t t-raw="attachment.name"/></div>
                     </a>
                     <div class="o_mail_attachment_delete">
@@ -151,7 +151,7 @@
                     <t t-foreach="message.attachment_ids" t-as="attachment">
                         <div t-attf-class="o_mail_attachment">
                             <a t-att-href='attachment.url' target="_blank">
-                                 <img t-att-src="'/mail/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
+                                 <img t-att-src="'/web/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
                                 <div class='o_mail_attachment_name'><t t-raw='attachment.name'/></div>
                             </a>
                         </div>
