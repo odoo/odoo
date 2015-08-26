@@ -154,6 +154,38 @@ class hr_expense_expense(osv.osv):
             return 'hr_expense.mt_expense_refused'
         return super(hr_expense_expense, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override because HR users / officers can approve / refuse expenses
+        directly form their notification email. """
+        group_hr_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_hr_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_hr_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_hr_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(hr_expense_expense, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        """ Override because HR users / officers can approve / refuse expenses
+        directly form their notification email. """
+        res = super(hr_expense_expense, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        app_action = self._notification_link_helper(cr, uid, ids, 'workflow', context=context, signal='validate')
+        ref_action = self._notification_link_helper(cr, uid, ids, 'workflow', context=context, signal='refuse')
+
+        expense = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if expense.state == 'confirm':
+            actions.append({'url': app_action, 'title': _('Approve')})
+        if expense.state in ['confirm', 'accepted']:
+            actions.append({'url': ref_action, 'title': _('Refuse')})
+
+        res['group_hr_user'] = {
+            'actions': actions
+        }
+        return res
+
     def account_move_get(self, cr, uid, expense_id, context=None):
         '''
         This method prepare the creation of the account move related to the given expense.

@@ -5,8 +5,8 @@ from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
+from werkzeug import url_encode
 
-import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
@@ -934,6 +934,38 @@ Update your business card, phone book, social media,... Send an email right now 
         elif 'stage_id' in init_values:
             return 'crm.mt_lead_stage'
         return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle salesman recipients.
+        Indeed those will have specific action in their notification emails. """
+        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_sale_salesman')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_sale_salesman in recipient.user_ids[0].groups_id.ids:
+                group_data['group_sale_salesman'] |= recipient
+                done_ids.add(recipient.id)
+        return super(crm_lead, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
+        lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
+        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
+
+        lead = self.browse(cr, uid, ids[0], context=context)
+        if lead.type == 'lead':
+            res['group_sale_salesman'] = {
+                'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
+            }
+        else:
+            res['group_sale_salesman'] = {
+                'actions': [
+                    {'url': won_action, 'title': 'Won'},
+                    {'url': lost_action, 'title': 'Lost'}]
+            }
+        return res
 
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
