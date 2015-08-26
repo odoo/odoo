@@ -1077,7 +1077,7 @@ class sale_order_line(osv.osv):
                 date_order=order['date_order'],
                 fiscal_position=order['fiscal_position'][0] if order['fiscal_position'] else False,
                 flag=False,  # Force name update
-                context=dict(context, company_id=values.get('company_id'))
+                context=dict(context or {}, company_id=values.get('company_id'))
             )['value']
             if defaults.get('tax_id'):
                 defaults['tax_id'] = [[6, 0, defaults['tax_id']]]
@@ -1134,7 +1134,6 @@ class sale_order_line(osv.osv):
             # sure we only select the taxes related to the company of the partner. This should only
             # apply if the partner is linked to a company.
             if uid == SUPERUSER_ID and context.get('company_id'):
-                print 'company_id found', context['company_id']
                 taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
             else:
                 taxes = product_obj.taxes_id
@@ -1197,6 +1196,8 @@ class sale_order_line(osv.osv):
 
                 warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
             else:
+                if update_tax:
+                    price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product_obj.taxes_id, result['tax_id'])
                 result.update({'price_unit': price})
                 if context.get('uom_qty_change', False):
                     values = {'price_unit': price}
