@@ -18,7 +18,7 @@ class base_config_settings(osv.osv_memory):
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with Google...'),
-        'module_base_import': fields.boolean("Allow users to import data from CSV files"),
+        'module_base_import': fields.boolean("Allow users to import data from CSV/XLS/XLSX/ODS files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
         'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
