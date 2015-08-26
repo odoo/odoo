@@ -1,18 +1,15 @@
 .o_kanban_view.o_kanban_dashboard.o_project_kanban {
 
-    .o_kanban_flexbox {
+    .o_kanban_record {
         .o-flex-display();
         position: relative;
     }
 
-    .o_kanban_record {
-        min-width: 300px;
-    }
-
     .o_project_kanban_main {
+        .o-flex(1, 0, 0);
+
         // give space for manage section at the bottom
         margin-bottom: 40px;
-        width: 70%;
 
         .o_kanban_card_content {
             font-size: 12px;
@@ -40,12 +37,10 @@
     }
 
     .o_project_kanban_boxes {
+        .o-flex(0, 0, 30%);
+
         .o-flex-display();
         .o-flex-flow(column, nowrap);
-        .o-justify-content(flex-end);
-        .o-align-content(stretch);
-
-        width: 30%;
 
         > a:hover {
             text-decoration: none;

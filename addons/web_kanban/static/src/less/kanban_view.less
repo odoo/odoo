@@ -33,6 +33,11 @@
 
     .o_kanban_record {
         .clearfix();
+        &:after, &:before {
+            width: 0;
+            height: 0;
+        }
+
         position: relative;
         min-width: 150px;
         margin: 4px;
