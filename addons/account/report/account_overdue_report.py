@@ -36,10 +36,11 @@ class ReportOverdue(models.AbstractModel):
         for partner_id in self.ids:
             totals[partner_id] = dict((fn, 0.0) for fn in ['due', 'paid', 'mat', 'total'])
             for line in lines[partner_id]:
-                totals[partner_id]['due'] += line['debit']
-                totals[partner_id]['paid'] += line['credit']
-                totals[partner_id]['mat'] += line['mat']
-                totals[partner_id]['total'] += line['debit'] - line['credit']
+                if not line['blocked']:
+                    totals[partner_id]['due'] += line['debit']
+                    totals[partner_id]['paid'] += line['credit']
+                    totals[partner_id]['mat'] += line['mat']
+                    totals[partner_id]['total'] += line['debit'] - line['credit']
         docargs = {
             'doc_ids': self.ids,
             'doc_model': 'res.partner',

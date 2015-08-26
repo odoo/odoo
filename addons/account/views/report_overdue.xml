@@ -29,7 +29,7 @@
                             <th class="text-right">Due</th>
                             <th class="text-right">Paid</th>
                             <th class="text-right">Maturity</th>
-                            <th class="text-center">Li.</th>
+                            <th class="text-center">Excl.</th>
                         </tr>
                     </thead>
                     <tr t-foreach="Lines[o.id]" t-as="line">
@@ -46,24 +46,24 @@
                             <span t-esc="line['date_maturity']"/>
                         </td>
                         <td class="text-right">
-                            <span t-esc="line['debit']"/>
+                            <span t-esc="line['debit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                         <td class="text-right">
-                            <span t-esc="line['credit']"/>
+                            <span t-esc="line['credit']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
                         <td class="text-right">
                             <span t-esc="line['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
                         </td>
-                        <td>
+                        <td class="text-center">
                             <span t-if="line['blocked']">x</span>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="3"></td>
                         <td><strong>Sub-Total :</strong></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['due']"/></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['paid']"/></td>
-                        <td class="text-right"><span t-esc="Totals[o.id]['mat']"/></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['due']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['paid']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        <td class="text-right"><span t-esc="Totals[o.id]['mat']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
                         <td></td>
                     </tr>
                     <tr>
