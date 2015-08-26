@@ -232,9 +232,10 @@ class res_company(osv.osv):
         args = [
             ('object_id.model', '=', object),
             ('field_id', '=', field),
+            ('company_id', '=', self.pool['res.users']._get_company(cr, uid, context=context)),
         ]
 
-        ids = proxy.search(cr, uid, args, context=context)
+        ids = proxy.search(cr, uid, args, context=context, order='sequence')
         user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             if eval(rule.expression, {'context': context, 'user': user}):

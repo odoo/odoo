@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
 
 class res_partner(osv.Model):
@@ -49,6 +50,8 @@ class Category(models.Model):
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.category')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
+    discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
+                                   'category', 'discussion')
 
     @api.one
     @api.depends('name', 'parent.display_name')     # this definition is recursive
@@ -74,6 +77,10 @@ class Category(models.Model):
         # assign name of last category, and reassign display_name (to normalize it)
         self.name = names[-1].strip()
 
+    def read(self, fields=None, load='_classic_read'):
+        if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
+            raise AccessError('Sorry')
+        return super(Category, self).read(fields, load)
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'

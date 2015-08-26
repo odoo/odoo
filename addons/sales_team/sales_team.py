@@ -68,7 +68,7 @@ class crm_case_section(osv.osv):
         'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
-                        "true, it will allow you to hide the sales team without removing it."),
+                        "false, it will allow you to hide the sales team without removing it."),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids': fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),

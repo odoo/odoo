@@ -3,15 +3,17 @@
 # * delivery
 # 
 # Translators:
+# Ciobanu Catalin <passaris212004@yahoo.com>, 2015
+# Dorin Hongu <dhongu@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 12:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/projects/p/odoo-8/language/ro/)\n"
+"PO-Revision-Date: 2015-08-21 12:03+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -53,7 +55,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "Faceti click pentru a defini o metoda noua de livrare.\nFiecare companie de transport (de exemplu UPS) poate avea mai multe metode de livrare (de exemplu UPS Expres, UPS Standard) cu un set de norme de stabilire a pretului atasate fiecarei metode.\n Aceste metode permit calcularea automata a pretului de livrare in functie de setarile dumneavoastra; in comanda de vanzare (bazata pe cotatie) sau factura (bazata pe ordinele de livrare)"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -248,7 +250,7 @@ msgstr "Informații generale"
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
 msgid "Gives the sequence order when calculating delivery grid."
-msgstr ""
+msgstr "Dă ordinea secvenței atunci cand calculează grila de livrare"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -324,7 +326,7 @@ msgstr "Este o livrare"
 #. module: delivery
 #: help:delivery.carrier,available:0
 msgid "Is the carrier method possible with the current order."
-msgstr ""
+msgstr "Este metoda de transport posibilă cu aceasta comandă curentă."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
@@ -374,7 +376,7 @@ msgstr "Gilă indisponibilă"
 #: code:addons/delivery/sale.py:71
 #, python-format
 msgid "No grid matching for this carrier!"
-msgstr ""
+msgstr "Nicio grilă nu se potrivește pentru acest transportator!"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -395,7 +397,7 @@ msgstr "Operator"
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "Order not in Draft State!"
-msgstr ""
+msgstr "Comanda nu este în Stare Ciornă!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -455,7 +457,7 @@ msgstr "Linie comandă de vânzare"
 msgid ""
 "Selected product in the delivery method doesn't fulfill any of the delivery "
 "grid(s) criteria."
-msgstr ""
+msgstr "Produsul selectat în metoda de livrare nu satisface criteriul(le)."
 
 #. module: delivery
 #: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
@@ -514,7 +516,7 @@ msgstr "Compania de transport"
 #: code:addons/delivery/delivery.py:237
 #, python-format
 msgid "Unable to fetch delivery method!"
-msgstr ""
+msgstr "Nu se poate prelua metoda de livrare"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
@@ -581,4 +583,4 @@ msgstr "Cod postal"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr ""
+msgstr "în Funcție de"

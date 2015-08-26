@@ -5,14 +5,15 @@
 # Translators:
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-26 09:41+0000\n"
+"PO-Revision-Date: 2015-08-20 09:19+0000\n"
 "Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/projects/p/odoo-8/language/pl/)\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -88,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Witaj ${object.partner_id.name},</p>\n\n    <p>Informujemy, że nowa faktura jest dla Ciebie dostępna:</p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>ODNIESIENIE</strong><br />\n       &nbsp;&nbsp;Numer faktury: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Kwota faktury: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;data faktury: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Zamówienie: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Kontakt: <a href=\"mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Możesz ją zapłacić bezpośrednio za pomocą płatności Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Jeśli masz jakiekolwiek pytania nie obawiaj się z nami skontaktować.</p>\n    <p>Dziękujemy Ci za współpracę z ${object.company_id.name or 'nami'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: account
 #: help:account.invoice,state:0
@@ -98,7 +99,7 @@ msgid ""
 " * The 'Open' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
-msgstr ""
+msgstr "* Stan 'Projekt' jest ustawiany w po utworzeniu faktury i w trakcie jej wprowadzania.\n* Stan 'Pro-forma' jest ustawiany, kiedy użytkownik chce wysłać fakturę bez numeru.\n* Stan 'Otwarte' jest ustawiany po zatwierdzeniu faktury i nadaniu jej numeru.\nStan ten wskazuje jednocześnie oczekiwanie na zapłatę.\n* Stan 'Zapłacone' jest ustawiany automatycznie kiedy nadejdzie płatność. Następuje to po uzgodnieniu pozycji zapisów faktury z pozycjami zapisów płatności.\n* Stan 'Anulowano' jest nadawany po rezygnacji użytkownika z wprowadzania faktury."
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -464,7 +465,7 @@ msgid ""
 "                refunds and reconcile them directly from the related supplier invoice.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Kliknij, aby zarejestrować korektę od dostawcy.\n              </p><p>\n                Zamiast wprowadzać ją ręcznie, możesz ją utworzyć od razu\n                w oryginalnej fakturze.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknij, aby zarejestrować korektę od dostawcy.\n</p><p>\nZamiast wprowadzać ją ręcznie, możesz ją utworzyć od razu\nw oryginalnej fakturze.\n</p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear
@@ -1295,7 +1296,7 @@ msgstr "Wszystkie zapisy zostaną zatwierdzone i zaksięgowane. Oznacza to, że 
 msgid ""
 "All the account entries lines must be processed in order to close the "
 "statement."
-msgstr ""
+msgstr "Wszystkie pozycje zapisów księgowych muszą być przetworzone przed zamknięciem wyciągu."
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -2184,7 +2185,7 @@ msgstr "Nie można tworzyć pozycji z różnych firm."
 msgid ""
 "Cannot create the invoice.\n"
 "The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
-msgstr "Nie można utworzyć faktury.\nWybrane warunki płatności sa prawdopodobnie źle skonfigurowane i dają niepoprawne wartości (większe niż wartość faktury). Aby zapobiec problemom zaokrągleń ostatnia pozycja warunków powinna być typu 'saldo'."
+msgstr "Nie można utworzyć faktury.\nWybrane warunki płatności są prawdopodobnie źle skonfigurowane i dają niepoprawne wartości (większe niż wartość faktury). Aby zapobiec problemom zaokrągleń ostatnia pozycja warunków powinna być typu 'saldo'."
 
 #. module: account
 #: code:addons/account/account_invoice.py:453
@@ -2871,7 +2872,7 @@ msgstr ""
 msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
-msgstr ""
+msgstr "Błąd konfiguracji! \nWybrana waluta powinna być współdzielona również przez konta domyślne."
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
@@ -3548,7 +3549,7 @@ msgid ""
 "Day of the month, set -1 for the last day of the current month. If it's "
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
-msgstr "Dzień miesiąca. Ustaw -1 dla ostatniego dnia bieżącego miesiąca. Jeśli dodatnie, to oznacza dzień w następnym miesiącu. Ustaw 0 dla dni od dzisiaj (Inaczej data będzie liczona od początku bieżąceho miesiąca)."
+msgstr "Dzień miesiąca. Ustaw -1 dla ostatniego dnia bieżącego miesiąca. Jeśli dodatnie, to oznacza dzień w następnym miesiącu. Ustaw 0 dla dni od dzisiaj (Inaczej data będzie liczona od początku bieżącego miesiąca)."
 
 #. module: account
 #: field:account.account,debit:0 field:account.entries.report,debit:0
@@ -4981,7 +4982,7 @@ msgstr "Ikona"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "Jeśli podano \"Walutę\", to \"Wartość\" również musi być podana."
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5176,7 +5177,7 @@ msgstr "Sporne"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr ""
+msgstr "Przed zamknięciem roku podatkowego musisz zaksięgować wszystkie zapisy."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -5477,7 +5478,7 @@ msgstr "Pozycje faktury"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "Faktua zapłacona"
+msgstr "Faktura zapłacona"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1195
@@ -5499,7 +5500,7 @@ msgstr "Numeracja faktur"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Faktua zatwierdzona"
+msgstr "Faktura zatwierdzona"
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -6784,7 +6785,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr "Kiedy projekt faktury zostanie zatwierdzony, to nie\n                        będziesz mógł go modyfikować. Faktura otrzyma\n                        unikalny numer i zostanie utworzony zapis\n                        księgowy."
+msgstr "Kiedy projekt faktury zostanie zatwierdzony, to nie\nbędziesz mógł go modyfikować. Faktura otrzyma\nunikalny numer i zostanie utworzony zapis księgowy."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -9146,6 +9147,11 @@ msgid "Suppliers"
 msgstr "Dostawcy"
 
 #. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr ""
+
+#. module: account
 #: view:cash.box.out:account.cash_box_out_form
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
@@ -10261,7 +10267,7 @@ msgid ""
 "software systems are able to manage this. So if you import from another "
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
-msgstr "To pozwala wybrać sposób wyliczania kursu waluty dla transakcji wyjściowych. W wielu krajach dozwolona jest metoda \"średnia\", ale niewiele programów potrafi ją obsługiwać. Jesli importujesz z innego oprogramowania, to możliwe, że będziesz musiał(a) stosować kurs dnia. Transakcje wchodzące zawsze stosują kurs dnia."
+msgstr "To pozwala wybrać sposób wyliczania kursu waluty dla transakcji wyjściowych. W wielu krajach dozwolona jest metoda \"średnia\", ale niewiele programów potrafi ją obsługiwać. Jeśli importujesz z innego oprogramowania, to możliwe, że będziesz musiał(a) stosować kurs dnia. Transakcje wchodzące zawsze stosują kurs dnia."
 
 #. module: account
 #: view:account.change.currency:account.view_account_change_currency
@@ -10575,7 +10581,7 @@ msgstr "Unikalny numer faktury, nadawany automatycznie przy jej tworzeniu."
 #. module: account
 #: field:analytic.entries.report,unit_amount:0
 msgid "Unit Amount"
-msgstr ""
+msgstr "Wartość jednostkowa"
 
 #. module: account
 #: view:account.journal:account.view_account_journal_form
@@ -10743,7 +10749,7 @@ msgid ""
 "                                    one. The credit note will be created, validated and reconciled\n"
 "                                    with the current invoice. A new, draft, invoice will be created \n"
 "                                    so that you can edit it."
-msgstr "Stosuj tę opcję, aby anulować należności i utworzyć nową\n                                    fakturę. Korekta do zera zostanie utworzona i zatwierdzona.\n                                    oraz uzgodniona z pierwotnymi należnościami. Poz czym \n                                    zostanie utworzony projekt nowej faktury na podstawie\n                                    pierwotnej."
+msgstr "Stosuj tę opcję, aby anulować należności i utworzyć nową\nfakturę. Korekta do zera zostanie utworzona i zatwierdzona\noraz uzgodniona z pierwotnymi należnościami. Po czym \nzostanie utworzony projekt nowej faktury na podstawie\npierwotnej."
 
 #. module: account
 #: view:account.invoice.refund:account.view_account_invoice_refund
@@ -10751,7 +10757,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                    have issued. The credit note will be created, validated and reconciled\n"
 "                                    with the invoice. You will not be able to modify the credit note."
-msgstr "Stosuj tę opcję, jeśli chcesz anulować obciążenie siebie lub klienta.\n                                    Zostanie utworzona faktura korygująca, która będzie uzgodniona\n                                    z faktura pierwotną. Nie będzie można modyfikować korekty."
+msgstr "Stosuj tę opcję, jeśli chcesz anulować obciążenie siebie lub klienta.\nZostanie utworzona faktura korygująca, która będzie uzgodniona\nz faktura pierwotną. Nie będzie można modyfikować korekty."
 
 #. module: account
 #: view:account.analytic.line:account.view_account_analytic_line_filter
@@ -11483,7 +11489,7 @@ msgid ""
 "                                    credit note directly or keep it draft,\n"
 "                                    waiting for the document to be issued by\n"
 "                                    your supplier/customer."
-msgstr "Będziesz mógł edytować i zatwierdzić\n                                    tę korektę od razu lub trzymac ją w \n                                    stanie Projekt do czasu otrzymania\n                                    dokumentu od partnera."
+msgstr "Będziesz mógł edytować i zatwierdzić\ntę korektę od razu lub trzymać ją w stanie \nProjekt do czasu otrzymania dokumentu \nod partnera."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -11654,3 +11660,16 @@ msgstr "stosowane w uzgadnianiu wyciągów, ale nie powinno być stosowane poza 
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "rok"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""

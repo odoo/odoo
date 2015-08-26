@@ -5,14 +5,15 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-30 01:08+0000\n"
-"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-08-17 13:50+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,12 +38,12 @@ msgstr "客户要求的发运日期。\n当这个订单被确认后，发货的�
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "确认的产品发货的日期。该日期是基于产品的各种提前期计算出来的承诺给客户的提货日期。"
 
 #. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which the first Delivery Order was created."
-msgstr "首个发货单创建的日期"
+msgstr "首个交货单的创建日期"
 
 #. module: sale_order_dates
 #: view:sale.order:sale_order_dates.view_sale_orderfor
@@ -63,7 +64,7 @@ msgstr "要求日期"
 #: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "要求日期太早！"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -76,4 +77,4 @@ msgstr "销售订单"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "客户要求的日期早于承诺日期。你可能不能满足客户要求。"

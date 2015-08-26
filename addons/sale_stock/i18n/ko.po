@@ -3,15 +3,17 @@
 # * sale_stock
 # 
 # Translators:
+# choijaeho <hwangtog@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goh Gangtai <gangtai.goh@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-04 18:36+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-08-18 08:38+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,12 +24,12 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:266
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "(n/a)"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr "배송비를 추가할 수 있도록 허용"
+msgstr "배송비 추가 허용"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -35,17 +37,17 @@ msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
-msgstr ""
+msgstr "판매 주문이나 납품 주문에 납품 방법을 추가할 수 있습니다.\n가격에 대해 전용 운반원이나 납품망을 정의할 수 있습니다.\n- 이것은 delivery 모듈을 설치합니다."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
+msgstr "판매 주문 명세에서 납품 경로를 선택할 수 있도록 합니다."
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr "판매 주문 입력줄을 속성과 함께 태그할 수 있도록 허용함."
+msgstr "판매 주문 명세에 속성과 함께 태그 허용."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -56,24 +58,24 @@ msgstr "주문 취소"
 #: code:addons/sale_stock/sale_stock.py:160
 #, python-format
 msgid "Cannot cancel sales order!"
-msgstr "판매 주문을 취소할 수 없음!"
+msgstr "판매 주문을 취소할 수 없습니다!"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
 msgid "Choose MTO, drop shipping,... on sales order lines"
-msgstr ""
+msgstr "MTO 선택, 판매 주문 명세 상차 중지"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "업체"
+msgstr "회사"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:277
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr "설정 오류!"
+msgstr "환경 설정 오류!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -88,43 +90,43 @@ msgstr "기본 옵션"
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr ""
+msgstr "모든 상품을 사용할 수 있도록 한꺼번에 납품합니다."
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "한 번에 모든 상품 납품"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "개별 상품이 가용할 때마다 납품"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
-msgstr "배송됨"
+msgstr "납품됨"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "송장 발행 대상 배송"
+msgstr "납품 송장"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "배송 주문에 대한 송장 발행을 활성화"
+msgstr "납품 주문에 대한 송장 발행 활성화"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "판매 주문 명세에서 경로 가능"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "배송 주문 이후 또는 기준으로 송장 생성"
+msgstr "납품 주문 이후 또는 기준으로 송장 생성"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -141,17 +143,17 @@ msgstr "인코텀"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Incoterm(국제 상업 약관)은 국제 거래에서 사용되는 미리 정의된 상업 용어의 시리즈입니다."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "재고 경로"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "배송 기준으로 발행된 송장"
+msgstr "납품 기준으로 발행된 송장"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -163,7 +165,7 @@ msgstr "판매 주문 기준으로 발행된 송장"
 msgid ""
 "Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
-msgstr ""
+msgstr "편집과 삭제 중 하나와 작성 효과를 포함하는 특정 사용자 및 특정 날짜의 작업표 명세 항목에 대한 프로젝트 관리에 대해 정의된 작업에서 항목을 전송할 수 있고 조달 명세에서 자동으로 프로젝트 업무를 작성합니다.\n- 이것은 project_timesheet 및 sale_service 모듈을 설치합니다."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -171,13 +173,13 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr ""
+msgstr "고객에게 약속한 날짜에 대한 오류 여유. 상품은 공급망의 예기치 않은 지연 사태나 실제 약속 날짜보다 훨씬 빠른 날들로 인해 조달 및 납품을 예약해야 합니다."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:347
 #, python-format
 msgid "Not enough stock ! : "
-msgstr "재고가 부족함 ! : "
+msgstr "재고 부족! : "
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -188,7 +190,7 @@ msgstr "포장 번호 부여"
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "관리자만 설정을 변경할 수 있습니다"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
@@ -199,28 +201,28 @@ msgstr "포장"
 #: help:sale.order,picking_policy:0
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
-msgstr "일부 배송을 허용할 경우, '가용여부에 따라 각각의 상품을 배송'을 선택하십시오."
+msgstr "일부 납품을 허용할 경우, '개별 상품이 가용할 때마다 납품'을 선택하십시오."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
-msgstr "피킹 정보 ! : "
+msgstr "출고품 정보! : "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "피킹 리스트"
+msgstr "출고 목록"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "이 판매와 관련된 것을 고르세요"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "업무 활동에 따라 송장을 준비합니다"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
@@ -230,27 +232,27 @@ msgstr "상품"
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "상품 서식"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
-msgstr "주문 입력줄의 상품 속성"
+msgstr "주문 명세 상의 상품 속성"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr "프로젝트 타임시트"
+msgstr "프로젝트 작업표"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "납품 주문을 다시 생성합니다."
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "경로"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -260,12 +262,12 @@ msgstr "판매 주문"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "판매 주문 명세"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "판매 서비스"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -275,7 +277,7 @@ msgstr "판매 주문"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "판매 주문 입력줄"
+msgstr "판매 주문 명세"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -288,27 +290,27 @@ msgid ""
 "Sales order by default will be configured to deliver all products at once "
 "instead of delivering each product when it is available. This may have an "
 "impact on the shipping price."
-msgstr ""
+msgstr "기본적으로 판매 주문은 상품이 가용할 때 배송하는 대신 한번에 모든 제품을 배송 하도록 구성합니다. 이것은 배송 비용에 영향을 줍니다."
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr ""
+msgstr "보안 소요 일수"
 
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "선택 가능한 판매 주문 명세"
 
 #. module: sale_stock
 #: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr "배송됨"
+msgstr "상차(선적)됨"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr "배송 정책"
+msgstr "선적 정책"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -318,7 +320,7 @@ msgstr "재고 이동"
 #. module: sale_stock
 #: field:sale.config.settings,default_order_policy:0
 msgid "The default invoicing method is"
-msgstr "기본 송장의  발행 방식:"
+msgstr "기본 송장의  발행 방식 :"
 
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
@@ -330,12 +332,12 @@ msgstr "송장 발행 대상"
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr ""
+msgstr "영업사원이 '납품 송장' 메뉴를 이용해서 납품 주문에 대한 송장을 작성할 수 있도록 허용합니다."
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "배송 주문 보기"
+msgstr "납품 주문 보기"
 
 #. module: sale_stock
 #: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
@@ -345,14 +347,14 @@ msgstr "창고"
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
 msgid "You can generate invoices based on sales orders or based on shippings."
-msgstr "판매 주문 또는 배송 기준으로 송장을 생성할 수 있습니다."
+msgstr "판매 주문 또는 선적 기준으로 송장을 생성할 수 있습니다."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr "먼저 이 판매 주문에 첨부된 모든 배송 주문을 취소해야 합니다."
+msgstr "먼저 이 판매 주문에 첨부된 모든 납품 주문을 취소해야 합니다."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
@@ -360,7 +362,7 @@ msgstr "먼저 이 판매 주문에 첨부된 모든 배송 주문을 취소해�
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
+msgstr "판매 계획은 %.2f %s이지만 실적은 %.2f %s입니다!\n실 재고는 %.2f %s입니다. (예약 제외)"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -370,14 +372,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
+msgstr "%d 개를 선택했습니다.\n그렇지만 선택한 묶음과 맞지 않습니다.\n묶음에 따라 수량은 다음과 같습니다:\nEAN(유럽상품코드) : %s 수량 : %s ul 유형 : %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "일"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid "{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"blue\"}"
-msgstr ""

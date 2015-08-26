@@ -436,7 +436,7 @@ openerp.mail = function (session) {
         */
         on_attachment_loaded: function (event, result) {
 
-            if (result.erorr || !result.id ) {
+            if (result.error || !result.id ) {
                 this.do_warn( session.web.qweb.render('mail.error_upload'), result.error);
                 this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
             } else {
@@ -541,7 +541,9 @@ openerp.mail = function (session) {
                     context: context,
                 };
 
-                self.do_action(action);
+                self.do_action(action, {
+                    'on_close': function(){ self.is_log && self.parent_thread.message_fetch() }
+                });
                 self.on_cancel();
             });
 
