@@ -315,6 +315,7 @@ class website(orm.Model):
             # update the pricelist
             if update_pricelist:
                 values = {'pricelist_id': pricelist_id}
+                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
                     if line.exists():

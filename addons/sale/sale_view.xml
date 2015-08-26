@@ -170,7 +170,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="currency_id" invisible="1"/>
                             <field name="validity_date"/>
                             <field name="payment_term_id" options="{'no_create': True}"/>

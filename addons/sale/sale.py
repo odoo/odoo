@@ -227,6 +227,12 @@ class sale_order(osv.osv):
             return 'sale.mt_order_sent'
         return super(sale_order, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
+        if not pricelist_id:
+            return {}
+        pricelist = self.pool['product.pricelist'].browse(cr, uid, pricelist_id, context=context)
+        return {'value': {'currency_id': pricelist.currency_id.id}}
+
     def get_salenote(self, cr, uid, ids, partner_id, context=None):
         context_lang = context.copy()
         if partner_id:
