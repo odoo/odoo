@@ -302,7 +302,6 @@ class website(orm.Model):
             if update_pricelist:
                 values = {'pricelist_id': pricelist_id}
                 sale_order.write(values)
-                sale_order.onchange_pricelist_id()
                 for line in sale_order.order_line:
                     if line.exists():
                         sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)

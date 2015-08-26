@@ -4,6 +4,7 @@
 import time
 from psycopg2 import OperationalError
 
+from openerp import api
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
@@ -175,6 +176,11 @@ class procurement_order(osv.osv):
     def reset_to_confirmed(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
 
+    @api.v8
+    def run(self, autocommit=False):
+        return self._model.run(self._cr, self._uid, self.ids, autocommit=False, context=self._context)
+
+    @api.v7
     def run(self, cr, uid, ids, autocommit=False, context=None):
         for procurement_id in ids:
             #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
