@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import logging
+import pytz
 import time
 
 from datetime import datetime, timedelta
@@ -212,22 +213,14 @@ class ir_sequence(models.Model):
 
         def _interpolation_dict():
             if self.env.context.get('ir_sequence_date'):
-                t = time.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
+                t = datetime.strptime(self.env.context.get('ir_sequence_date'), '%Y-%m-%d')
             else:
-                t = time.localtime()  # Actually, the server is always in UTC.
-            return {
-                'year': time.strftime('%Y', t),
-                'month': time.strftime('%m', t),
-                'day': time.strftime('%d', t),
-                'y': time.strftime('%y', t),
-                'doy': time.strftime('%j', t),
-                'woy': time.strftime('%W', t),
-                'weekday': time.strftime('%w', t),
-                'h24': time.strftime('%H', t),
-                'h12': time.strftime('%I', t),
-                'min': time.strftime('%M', t),
-                'sec': time.strftime('%S', t),
+                t = datetime.now(pytz.timezone(self.env.context.get('tz') or 'UTC'))
+            sequences = {
+                'year': '%Y', 'month': '%m', 'day': '%d', 'y': '%y', 'doy': '%j', 'woy': '%W',
+                'weekday': '%w', 'h24': '%H', 'h12': '%I', 'min': '%M', 'sec': '%S'
             }
+            return {key: t.strftime(sequence) for key, sequence in sequences.iteritems()}
 
         d = _interpolation_dict()
         try:

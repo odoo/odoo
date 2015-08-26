@@ -23,11 +23,11 @@
                     <field name="tax_ids" widget="one2many_list">
                         <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
-                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False), ('price_include', '=', False)]"/>
                         </tree>
                         <form string="Tax Mapping">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
-                            <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False), ('price_include', '=', False)]"/>
                         </form>
                     </field>
                     <separator string="Accounts Mapping"/>

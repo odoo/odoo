@@ -20,3 +20,4 @@
 ##############################################################################
 
 from . import test_purchase_to_invoice
+from . import test_onchange_product_id

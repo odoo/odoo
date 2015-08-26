@@ -47,7 +47,7 @@ class pos_details(report_sxw.rml_parse):
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
         pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('state','in',['done','paid','invoiced']),('company_id','=',company_id)])
-        for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
+        for pos in pos_obj.browse(self.cr, self.uid, pos_ids, context=self.localcontext):
             for pol in pos.lines:
                 result = {
                     'code': pol.product_id.default_code,
