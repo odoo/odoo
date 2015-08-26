@@ -32,7 +32,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     advance_payment_method = fields.Selection([
         ('delivered', 'Ready to invoice'),
-        ('all', 'Whole order'),
+        ('all', 'Ready to invoice (with refunds)'),
         ('percentage', 'Deposit (percentage)'),
         ('fixed', 'Deposit (fixed amount)')
         ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)

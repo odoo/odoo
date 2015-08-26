@@ -253,15 +253,17 @@ class SaleOrder(models.Model):
 
         for order in self:
             group_key = order.id if grouped else (order.partner_id.id, order.currency_id.id)
-            for line in order.order_line:
-                qty = (line.product_uom_qty - line.qty_invoiced) if final else line.qty_to_invoice
-                if float_is_zero(qty, precision_digits=precision):
+            for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
+                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
                     invoice = inv_obj.create(inv_data)
                     invoices[group_key] = invoice
-                line.invoice_line_create(invoices[group_key].id, qty)
+                if line.qty_to_invoice > 0:
+                    line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                elif line.qty_to_invoice < 0 and (final or invoices[group_key].amount_untaxed > abs(line.qty_to_invoice * line.price_unit)):
+                    line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
 
         for invoice in invoices.values():
             # If invoice is negative, do a refund invoice instead
