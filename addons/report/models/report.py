@@ -269,7 +269,8 @@ class Report(osv.Model):
         # Run wkhtmltopdf process
         return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
-            paperformat, specific_paperformat_args, save_in_attachment
+            paperformat, specific_paperformat_args, save_in_attachment,
+            context.get('set_viewport_size')
         )
 
     @api.v8
@@ -361,7 +362,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -375,7 +376,7 @@ class Report(osv.Model):
         :returns: Content of the pdf as a string
         """
         command_args = []
-        if wkhtmltopdf_state == "ok":
+        if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
 
         # Passing the cookie to wkhtmltopdf in order to resolve internal links.
