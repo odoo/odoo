@@ -1,93 +1,86 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
+from openerp import api, fields, models
+from openerp.tools import float_compare
 
-class mrp_production(osv.osv):
+
+class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        """ Finds reference of sales order for production order.
-        @param field_names: Names of fields.
-        @param arg: User defined arguments
-        @return: Dictionary of values.
-        """
-        res = {}
-        if not field_names:
-            field_names = []
-        for id in ids:
-            res[id] = {}.fromkeys(field_names, False)
-        for f in field_names:
-            field_name = False
-            if f == 'sale_name':
-                field_name = 'name'
-            if f == 'sale_ref':
-                field_name = 'client_order_ref'
-            for key, value in self._get_sale_ref(cr, uid, ids, field_name).items():
-                res[key][f] = value
-        return res
+    sale_name = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Name', help='Indicate the name of sales order.')
+    sale_ref = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Reference', help='Indicate the Customer Reference from sales order.')
 
-    def _get_sale_ref(self, cr, uid, ids, field_name=False):
-        move_obj = self.pool.get('stock.move')
-
-        def get_parent_move(move_id):
-            move = move_obj.browse(cr, uid, move_id)
+    @api.multi
+    def _compute_sale_name_sale_ref(self):
+        def get_parent_move(move):
             if move.move_dest_id:
                 return get_parent_move(move.move_dest_id.id)
-            return move_id
-
-        res = {}
-        productions = self.browse(cr, uid, ids)
-        for production in productions:
-            res[production.id] = False
+            return move
+        for production in self:
             if production.move_prod_id:
-                parent_move_line = get_parent_move(production.move_prod_id.id)
-                if parent_move_line:
-                    move = move_obj.browse(cr, uid, parent_move_line)
-                    if field_name == 'name':
-                        res[production.id] = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
-                    if field_name == 'client_order_ref':
-                        res[production.id] = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
-        return res
-
-    _columns = {
-        'sale_name': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sales order.'),
-        'sale_ref': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sales order.'),
-    }
+                move = get_parent_move(production.move_prod_id)
+            production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
+            production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
 
 
-class sale_order(osv.Model):
-    _inherit = 'sale.order'
-
-    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id=False, context=None):
-        result = super(sale_order, self)._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context)
-        result['property_ids'] = [(6, 0, [x.id for x in line.property_ids])]
-        return result
-
-
-class sale_order_line(osv.osv):
-
+class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
-    _columns = {
-        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
-    }
-    
 
-class stock_move(osv.osv):
+    property_ids = fields.Many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]})
+
+    @api.multi
+    def _get_delivered_qty(self):
+        self.ensure_one()
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        # In the case of a kit, we need to check if all components are shipped. We use a all or
+        # nothing policy. A product can have several BoMs, we don't know which one was used when the
+        # delivery was created.
+        bom_delivered = {}
+        for bom in self.product_id.product_tmpl_id.bom_ids:
+            if bom.type != 'phantom':
+                continue
+            bom_delivered[bom.id] = False
+            bom_exploded = self.env['mrp.bom']._bom_explode(bom, self.product_id.product_tmpl_id, self.product_uom_qty)[0]
+            for bom_line in bom_exploded:
+                qty = 0.0
+                for move in self.procurement_ids.mapped('move_ids'):
+                    if move.state == 'done' and move.product_id.id == bom_line.get('product_id', False):
+                        qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                if float_compare(qty, bom_line['product_qty'], precision_digits=precision) < 0:
+                    bom_delivered[bom.id] = False
+                    break
+                else:
+                    bom_delivered[bom.id] = True
+        if bom_delivered and any(bom_delivered.values()):
+            return self.product_uom_qty
+        elif bom_delivered:
+            return 0.0
+        return super(SaleOrderLine, self)._get_delivered_qty()
+
+    @api.multi
+    def _prepare_order_line_procurement(self, group_id=False):
+        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+        vals['property_ids'] = [(6, 0, self.property_ids.ids)]
+        return vals
+
+
+class StockMove(models.Model):
     _inherit = 'stock.move'
-    
-    def _prepare_procurement_from_move(self, cr, uid, move, context=None):
-        res = super(stock_move, self)._prepare_procurement_from_move(cr, uid, move, context=context)
+
+    @api.model
+    def _prepare_procurement_from_move(self, move):
+        res = super(StockMove, self)._prepare_procurement_from_move(move)
         if res and move.procurement_id and move.procurement_id.property_ids:
-            res['property_ids'] = [(6, 0, [x.id for x in move.procurement_id.property_ids])]
+            res['property_ids'] = [(6, 0, self.property_ids.ids)]
         return res
 
-    def _action_explode(self, cr, uid, move, context=None):
+    @api.model
+    def _action_explode(self, move):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
         """
-        if context is None:
-            context = {}
-        property_ids = map(int, move.procurement_id.sale_line_id.property_ids or [])
-        return super(stock_move, self)._action_explode(cr, uid, move, context=dict(context, property_ids=property_ids))
+        property_ids = move.procurement_id.sale_line_id.property_ids.ids
+        return super(StockMove, self.with_context(property_ids=property_ids))._action_explode(move)

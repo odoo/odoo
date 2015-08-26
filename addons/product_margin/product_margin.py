@@ -73,16 +73,14 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity * pu.factor / pu2.factor,0)) as avg_unit_price,
-                    sum(l.quantity * pu.factor / pu2.factor) as num_qty,
+                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
+                    sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
-                    sum(l.quantity * pu.factor * pt.list_price / pu2.factor) as sale_expected
+                    sum(l.quantity * pt.list_price) as sale_expected
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_product product on (product.id=l.product_id)
                 left join product_template pt on (pt.id = product.product_tmpl_id)
-                    left join product_uom pu on (pt.uom_id = pu.id)
-                    left join product_uom pu2 on (l.uos_id = pu2.id)
                 where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s and i.company_id=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')

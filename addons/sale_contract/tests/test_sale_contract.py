@@ -8,12 +8,11 @@ class TestContract(TestContractCommon):
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_template(self):
         """ Test behaviour of on_change_template """
-        Contract = self.env['account.analytic.account']
+        Contract = self.env['sale.subscription']
 
         # on_change_template on existing record (present in the db)
         self.contract.write(self.contract.on_change_template(template_id=self.contract_tmpl.id)['value'])
-        self.assertEqual(self.contract_tmpl.contract_type, self.contract.contract_type, 'sale_contract: contract_type not copied when changing template')
-        self.assertTrue(len(self.contract.recurring_invoice_line_ids.ids) == 0, 'sale_contract: recurring_invoice_line_ids copied on existing account.analytic.account record')
+        self.assertTrue(len(self.contract.recurring_invoice_line_ids.ids) == 0, 'sale_contract: recurring_invoice_line_ids copied on existing sale.subscription record')
 
         # on_change_template on cached record (NOT present in the db)
         temp = Contract.new({'name': 'CachedContract',
@@ -22,14 +21,14 @@ class TestContract(TestContractCommon):
                              'partner_id': self.user_portal.partner_id.id
                              })
         temp.update(temp.on_change_template(template_id=self.contract_tmpl.id)['value'])
-        self.assertEqual(self.contract_tmpl.contract_type, temp.contract_type, 'sale_contract: contract_type not copied when changing template')
-        self.assertTrue(temp.recurring_invoice_line_ids.name, 'sale_contract: recurring_invoice_line_ids not copied on new cached account.analytic.account record')
+        self.assertTrue(temp.recurring_invoice_line_ids.name, 'sale_contract: recurring_invoice_line_ids not copied on new cached sale.subscription record')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_sale_order(self):
         """ Test sale order line copying for recurring products on confirm"""
-        self.sale_order.action_button_confirm()
+        self.sale_order.action_confirm()
         self.assertTrue(len(self.contract.recurring_invoice_line_ids.ids) == 1, 'sale_contract: recurring_invoice_line_ids not created when confirming sale_order with recurring_product')
+        self.assertEqual(self.sale_order.state, 'done', 'sale_contract: so state should be after confirmation done when there is a subscription')
 
     @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
     def test_invoice(self):
@@ -47,8 +46,9 @@ class TestContract(TestContractCommon):
         renewal_so = self.env['sale.order'].browse(renewal_so_id)
         self.assertTrue(renewal_so.update_contract, 'sale_contract: renewal quotation generation is wrong')
         self.contract.write({'recurring_invoice_line_ids': [(0, 0, {'product_id': self.product.id, 'name': 'TestRecurringLine', 'price_unit': 50, 'uom_id': self.product.uom_id.id})]})
-        renewal_so.write({'order_line': [(0, 0, {'product_id': self.product.id, 'name': 'TestRenewalLine'})]})
-        renewal_so.action_button_confirm()
+        renewal_so.write({'order_line': [(0, 0, {'product_id': self.product.id, 'name': 'TestRenewalLine', 'product_uom': self.product.uom_id.id})]})
+        renewal_so.action_confirm()
         lines = [line.name for line in self.contract.recurring_invoice_line_ids]
         self.assertTrue('TestRecurringLine' not in lines, 'sale_contract: old line still present after renewal quotation confirmation')
         self.assertTrue('TestRenewalLine' in lines, 'sale_contract: new line not present after renewal quotation confirmation')
+        self.assertEqual(renewal_so.state, 'done', 'sale_contract: so state should be after confirmation done when there is a subscription')

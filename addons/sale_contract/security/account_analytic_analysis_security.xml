@@ -36,23 +36,23 @@
     </record>
 
     <!-- Reporting -->
-    <record model="ir.rule" id="sale_contract_report_comp_rule">
+    <record model="ir.rule" id="sale_subscription_report_comp_rule">
         <field name="name">Subscription Analysis multi-company</field>
-        <field name="model_id" ref="model_sale_contract_report"/>
+        <field name="model_id" ref="model_sale_subscription_report"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
     <record id="sale_contract_report_personal_rule" model="ir.rule">
         <field name="name">Personal Subscription Analysis</field>
-        <field ref="model_sale_contract_report" name="model_id"/>
+        <field ref="model_sale_subscription_report" name="model_id"/>
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
 
     <record id="sale_order_report_see_all" model="ir.rule">
         <field name="name">All Orders Analysis</field>
-        <field ref="model_sale_contract_report" name="model_id"/>
+        <field ref="model_sale_subscription_report" name="model_id"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>

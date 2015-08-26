@@ -7,10 +7,8 @@
 -
   I confirm the Sale Order.
 -
-  !workflow {
-    model: sale.order, action: order_confirm,
-    ref: sale.sale_order_6
-  }
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale.sale_order_6"), context=context)
 -
   I verify that the Procurements and Stock Moves have been generated with the
   correct date

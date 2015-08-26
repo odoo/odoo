@@ -7,7 +7,6 @@ from openerp.osv import fields,osv
 class hr_timesheet_report(osv.osv):
     _inherit = "hr.timesheet.report"
     _columns = {
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
         'nbr': fields.integer('# Nbr Timesheet',readonly=True),
         'total_diff': fields.float('# Total Diff',readonly=True),
         'total_timesheet': fields.float('# Total Timesheet',readonly=True),
@@ -50,7 +49,6 @@ class hr_timesheet_report(osv.osv):
                         sum(t.total_diff) as total_diff,
                         sum(t.total_timesheet) as total_timesheet,
                         sum(t.total_attendance) as total_attendance,
-                        aal.to_invoice,
                         htss.department_id,
                         htss.state"""
 
@@ -63,7 +61,6 @@ class hr_timesheet_report(osv.osv):
                         htss.date_to,
                         aal.unit_amount,
                         aal.amount,
-                        aal.to_invoice,
                         htss.name,
                         htss.state,
                         htss.id,

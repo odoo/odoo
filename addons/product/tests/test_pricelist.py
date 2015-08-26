@@ -85,9 +85,9 @@ class TestPricelist(TransactionCase):
         spam_id = self.product_product.copy(cr, uid, self.usb_adapter_id,
                                             { 'name': '1 tonne of spam',
                                               'uom_id': self.tonne_id,
-                                              'uos_id': self.tonne_id,
                                               'uom_po_id': self.tonne_id,
                                               'list_price': tonne_price,
+                                              'type': 'consu',
                                             })
         pricelist_version_id = self.ir_model_data.xmlid_to_res_id(cr, uid, 'product.ver0')
         self.registry('product.pricelist.item').create(cr, uid,

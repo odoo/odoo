@@ -11,7 +11,6 @@
                         <field name="sheet_id"/>
                         <field name="name" groups="analytic.group_analytic_accounting"/>
                         <field name="total" sum="Total"/>
-                        <field name="invoice_rate"/>
                     </group>
                 </form>
             </field>
@@ -22,7 +21,6 @@
             <field name="arch" type="xml">
                 <search string="Search Account">
                     <field name="name" groups="analytic.group_analytic_accounting"/>
-                    <field name="invoice_rate"/>
                     <field name="sheet_id" />
                 </search>
             </field>
@@ -35,7 +33,6 @@
                     <field name="sheet_id"/>
                     <field name="name" groups="analytic.group_analytic_accounting"/>
                     <field name="total" sum="Total"/>
-                    <field name="invoice_rate"/>
                 </tree>
             </field>
         </record>
@@ -130,27 +127,17 @@
                             <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to, 'default_is_timesheet' : 1}" name="timesheet_ids" nolabel="1">
                                 <tree editable="bottom" string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field domain="[('type','in',['normal', 'contract']), ('state', '!=', 'close'),('invoice_on_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" context="{'default_use_timesheets': 1}"/>
+                                    <field domain="[('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time" string="Hours" sum="Hours"/>
-                                    <field name="to_invoice" widget="selection"/>
-                                    <field invisible="1" name="journal_id"/>
-                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field invisible="1" name="amount"/>
-                                    <field invisible="1" name="general_account_id"/>
+                                    <field name="unit_amount" widget="float_time" string="Hours" sum="Hours"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                     <field name="is_timesheet" invisible="1"/>
                                 </tree>
                                 <form string="Timesheet Activities">
                                     <field name="date"/>
-                                    <field domain="[('type','=','normal'), ('state', '!=', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)"/>
+                                    <field domain="[('use_timesheets','=',1)]" name="account_id"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                    <field name="to_invoice"/>
-                                    <field name="journal_id"/>
-                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field name="unit_amount" widget="float_time"/>
                                     <field name="amount"/>
                                     <field name="general_account_id"/>
                                     <field name="user_id" required="1"/>
@@ -387,7 +374,7 @@
       <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.employee.extd_form</field>
             <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_employee_extd_form"/>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button name="%(act_hr_employee_2_hr_timesheet)d"

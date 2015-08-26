@@ -77,7 +77,7 @@
                 <form string="Project">
                 <header>
                     <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" class="oe_highlight" groups="base.group_user"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
                     <field name="state" widget="statusbar" clickable="True"/>
                 </header>
@@ -116,21 +116,12 @@
                             </group>
                             <group name="misc">
                                 <group string="Time Scheduling" groups="project.group_time_work_estimation_tasks">
-                                    <field name="date_start" string="Start Date"
-                                        readonly="1"/>
-                                    <field name="date" string="End Date"
-                                        readonly="1"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
-                                    <field name="parent_id" string="Parent"
-                                        help="Append this project to another one using analytic accounts hierarchy"
-                                        domain="[('id','!=',analytic_account_id)]"
-                                        context="{'current_model': 'project.project'}"
-                                        groups="project.group_time_work_estimation_tasks"/>
                                 </group>
                             </group>
                         </page>
@@ -179,7 +170,6 @@
                     <group expand="0" string="Group By">
                         <filter string="Manager" name="Manager" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="Partner" context="{'group_by':'partner_id'}"/>
-                        <filter string="Parent" name="Parent" help="Parent" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
             </field>
@@ -190,14 +180,12 @@
             <field name="model">project.project</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-danger="date and (date&lt;current_date) and (state == 'open')" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-info="state in ('draft','pending')" decoration-muted="state in ('close','cancelled')" string="Projects">
                     <field name="sequence" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
-                    <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
-                    <field name="parent_id" string="Parent" invisible="1"/>
                     <field name="state"/>
                 </tree>
             </field>

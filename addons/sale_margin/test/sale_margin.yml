@@ -14,9 +14,6 @@
         product_uom_qty: 100.0
         state: draft
         product_id: product.product_product_24
-        product_uos_qty: 100.0
-        th_weight: 0.0
-    order_policy: manual
     partner_id: base.res_partner_4
     partner_invoice_id: base.res_partner_address_7
     partner_shipping_id: base.res_partner_address_7
@@ -24,7 +21,8 @@
 -
   I confirm the sale order
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so11}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_so11"), context=context)
 -
   I verify that margin field gets bind with the value
 -

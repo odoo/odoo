@@ -204,7 +204,6 @@
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
                                     <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
@@ -518,8 +517,6 @@
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="routing_id"/>
@@ -610,11 +607,6 @@
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed" class="oe_edit_only oe_link"/>
-                            </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos" class="o_row">
-                                <field name="product_uos_qty"/>
-                                <field name="product_uos"/>
                             </div>
                             <field name="date_planned"/>
                         </group>
@@ -941,8 +933,6 @@
                         <field name="product_id"/>
                         <field name="product_qty"/>
                         <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
                     </group>
                 </form>
             </field>
@@ -955,8 +945,6 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>

@@ -18,14 +18,6 @@
             <field name="object">project.task</field>
         </record>
 
-        <!-- Resource: project.project -->
-        <record id="all_projects_account" model="account.analytic.account">
-            <field name="name">Projects</field>
-            <field name="code">PP001</field>
-            <field name="type">view</field>
-        </record>
-        <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
-        
         <!-- alias domain: project.config.settings -->
         <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', 1)"/>
 
@@ -109,7 +101,6 @@
     <data noupdate="1">
         <record id="project_project_data" model="project.project">
             <field name="name">Discover Odoo</field>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="alias_model">project.task</field>

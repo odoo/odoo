@@ -20,7 +20,7 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool['payment.acquirer']
         for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if this.state not in ('draft', 'cancel') and not this.invoiced:
+            if this.state not in ('draft', 'cancel', 'done'):
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
                     partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)

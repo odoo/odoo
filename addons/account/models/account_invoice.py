@@ -71,16 +71,6 @@ class AccountInvoice(models.Model):
         return journal.currency_id or journal.company_id.currency_id
 
     @api.model
-    @api.returns('account.analytic.journal', lambda r: r.id)
-    def _get_journal_analytic(self, inv_type):
-        """ Return the analytic journal corresponding to the given invoice type. """
-        journal_type = TYPE2JOURNAL.get(inv_type, 'sale')
-        journal = self.env['account.analytic.journal'].search([('type', '=', journal_type)], limit=1)
-        if not journal:
-            raise UserError(_("You must define an analytic journal of type '%s'!") % (journal_type,))
-        return journal
-
-    @api.model
     def _get_reference_type(self):
         return [('none', _('Free Reference'))]
 
@@ -604,7 +594,7 @@ class AccountInvoice(models.Model):
                 'price': line.price_subtotal,
                 'account_id': line.account_id.id,
                 'product_id': line.product_id.id,
-                'uos_id': line.uos_id.id,
+                'uom_id': line.uom_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
                 'tax_ids': tax_ids,
                 'invoice_id': self.id,
@@ -777,7 +767,7 @@ class AccountInvoice(models.Model):
             'currency_id': line.get('currency_id', False),
             'quantity': line.get('quantity', 1.00),
             'product_id': line.get('product_id', False),
-            'product_uom_id': line.get('uos_id', False),
+            'product_uom_id': line.get('uom_id', False),
             'analytic_account_id': line.get('account_analytic_id', False),
             'invoice_id': line.get('invoice_id', False),
             'tax_ids': line.get('tax_ids', False),
@@ -983,8 +973,6 @@ class AccountInvoiceLine(models.Model):
     @api.multi
     def _get_analytic_line(self):
         ref = self.invoice_id.number
-        if not self.invoice_id.journal_id.analytic_journal_id:
-            raise UserError(_("No Analytic Journal! You have to define an analytic journal on the '%s' journal!") % (self.invoice_id.journal_id.name,))
         return {
             'name': self.name,
             'date': self.invoice_id.date_invoice,
@@ -992,9 +980,8 @@ class AccountInvoiceLine(models.Model):
             'unit_amount': self.quantity,
             'amount': self.price_subtotal_signed,
             'product_id': self.product_id.id,
-            'product_uom_id': self.uos_id.id,
+            'product_uom_id': self.uom_id.id,
             'general_account_id': self.account_id.id,
-            'journal_id': self.invoice_id.journal_id.analytic_journal_id.id,
             'ref': ref,
         }
 
@@ -1028,7 +1015,7 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
-    uos_id = fields.Many2one('product.uom', string='Unit of Measure',
+    uom_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True)
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
@@ -1109,7 +1096,7 @@ class AccountInvoiceLine(models.Model):
         if not self.product_id:
             if type not in ('in_invoice', 'in_refund'):
                 self.price_unit = 0.0
-            domain['uos_id'] = []
+            domain['uom_id'] = []
         else:
             if part.lang:
                 product = self.product_id.with_context(lang=part.lang)
@@ -1130,9 +1117,9 @@ class AccountInvoiceLine(models.Model):
                 if product.description_sale:
                     self.name += '\n' + product.description_sale
 
-            if not self.uos_id or product.uom_id.category_id.id != self.uos_id.category_id.id:
-                self.uos_id = product.uom_id.id
-            domain['uos_id'] = [('category_id', '=', product.uom_id.category_id.id)]
+            if not self.uom_id or product.uom_id.category_id.id != self.uom_id.category_id.id:
+                self.uom_id = product.uom_id.id
+            domain['uom_id'] = [('category_id', '=', product.uom_id.category_id.id)]
 
             if company and currency:
                 if company.currency_id != currency:
@@ -1140,9 +1127,9 @@ class AccountInvoiceLine(models.Model):
                         self.price_unit = product.standard_price
                     self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.date_invoice)).rate
 
-                if self.uos_id and self.uos_id.id != product.uom_id.id:
+                if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = self.env['product.uom']._compute_price(
-                        product.uom_id.id, self.price_unit, self.uos_id.id)
+                        product.uom_id.id, self.price_unit, self.uom_id.id)
         return {'domain': domain}
 
     @api.onchange('account_id')
@@ -1155,20 +1142,20 @@ class AccountInvoiceLine(models.Model):
         else:
             self._set_taxes()
 
-    @api.onchange('uos_id')
-    def _onchange_uos_id(self):
+    @api.onchange('uom_id')
+    def _onchange_uom_id(self):
         warning = {}
         result = {}
         self._onchange_product_id()
-        if not self.uos_id:
+        if not self.uom_id:
             self.price_unit = 0.0
-        if self.product_id and self.uos_id:
-            if self.product_id.uom_id.category_id.id != self.uos_id.category_id.id:
+        if self.product_id and self.uom_id:
+            if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
                     'title': _('Warning!'),
                     'message': _('The selected unit of measure is not compatible with the unit of measure of the product.'),
                 }
-                self.uos_id = self.product_id.uom_id.id
+                self.uom_id = self.product_id.uom_id.id
         if warning:
             result['warning'] = warning
         return result

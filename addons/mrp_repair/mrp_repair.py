@@ -356,7 +356,7 @@ class mrp_repair(osv.osv):
                             'account_id': account_id,
                             'quantity': operation.product_uom_qty,
                             'invoice_line_tax_ids': [(6, 0, [x.id for x in operation.tax_id])],
-                            'uos_id': operation.product_uom.id,
+                            'uom_id': operation.product_uom.id,
                             'price_unit': operation.price_unit,
                             'price_subtotal': operation.product_uom_qty * operation.price_unit,
                             'product_id': operation.product_id and operation.product_id.id or False
@@ -385,7 +385,7 @@ class mrp_repair(osv.osv):
                             'account_id': account_id,
                             'quantity': fee.product_uom_qty,
                             'invoice_line_tax_ids': [(6, 0, [x.id for x in fee.tax_id])],
-                            'uos_id': fee.product_uom.id,
+                            'uom_id': fee.product_uom.id,
                             'product_id': fee.product_id and fee.product_id.id or False,
                             'price_unit': fee.price_unit,
                             'price_subtotal': fee.product_uom_qty * fee.price_unit

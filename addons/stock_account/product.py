@@ -75,12 +75,11 @@ class product_template(osv.osv):
             vals['property_valuation'] = vals.pop('valuation')
         return super(product_template, self).create(cr, uid, vals, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, context=None):
-        res = super(product_template, self).onchange_type(cr, uid, ids, type, context=context)
-        if type != 'product':
-            value = res.setdefault('value', dict())
-            value['property_valuation'] = 'manual_periodic'
-        return res
+    @api.onchange('type')
+    def onchange_type_valuation(self):
+        if self.type != 'product':
+            self.valuation = 'manual_periodic'
+        return {}
 
     @api.multi
     def _get_product_accounts(self):
@@ -164,13 +163,11 @@ class product_template(osv.osv):
 class product_product(osv.osv):
     _inherit = 'product.product'
 
-    def onchange_type(self, cr, uid, ids, type, context=None):
-        res = super(product_product, self).onchange_type(cr, uid, ids, type, context=context)
-        if type != 'product':
-            value = res.setdefault('value', dict())
-            value['property_valuation'] = 'manual_periodic'
-        return res
-
+    @api.onchange('type')
+    def onchange_type_valuation(self):
+        if self.type != 'product':
+            self.valuation = 'manual_periodic'
+        return {}
 
 class product_category(osv.osv):
     _inherit = 'product.category'
