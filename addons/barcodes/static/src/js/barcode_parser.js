@@ -26,7 +26,7 @@ var BarcodeParser = Class.extend({
                 self.nomenclature = nomenclature;
 
                 return new Model('barcode.rule')
-                    .query(['name','sequence','type','encoding','pattern','alias'])
+                    .query(['name','sequence','types','encoding','pattern','alias'])
                     .filter([['barcode_nomenclature_id','=',self.nomenclature.id ]])
                     .all();
             }).then(function(rules){
@@ -180,7 +180,7 @@ var BarcodeParser = Class.extend({
     // it will return an object containing various information about the barcode.
     // most importantly : 
     // - code    : the barcode
-    // - type   : the type of the barcode (e.g. alias, unit product, weighted product...)
+    // - types   : the type of the barcode (e.g. alias, unit product, weighted product...)
     //
     // - value  : if the barcode encodes a numerical value, it will be put there
     // - base_code : the barcode with all the encoding parts set to zero; the one put on
@@ -188,7 +188,7 @@ var BarcodeParser = Class.extend({
     parse_barcode: function(barcode){
         var parsed_result = {
             encoding: '',
-            type:'error',  
+            types:'error',  
             code:barcode,
             base_code: barcode,
             value: 0,
@@ -220,14 +220,14 @@ var BarcodeParser = Class.extend({
 
             var match = this.match_pattern(cur_barcode, rules[i].pattern, rule.encoding);
             if (match.match) {
-                if(rules[i].type === 'alias') {
+                if(rules[i].types === 'alias') {
                     barcode = rules[i].alias;
                     parsed_result.code = barcode;
-                    parsed_result.type = 'alias';
+                    parsed_result.types = 'alias';
                 }
                 else {
                     parsed_result.encoding  = rules[i].encoding;
-                    parsed_result.type      = rules[i].type;
+                    parsed_result.types      = rules[i].types;
                     parsed_result.value     = match.value;
                     parsed_result.code      = cur_barcode;
                     if (rules[i].encoding === "ean13"){

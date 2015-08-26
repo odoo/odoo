@@ -1,11 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import logging
 import re
 
-import openerp
-from openerp import tools, models, fields, api
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.exceptions import ValidationError
+from openerp import models, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -17,18 +16,13 @@ UPC_EAN_CONVERSIONS = [
     ('always','Always'),
 ]
 
-class barcode_nomenclature(osv.osv):
+class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
-    _columns = {
-        'name': fields.char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature'),
-        'rule_ids': fields.one2many('barcode.rule','barcode_nomenclature_id','Rules', help='The list of barcode rules'),
-        'upc_ean_conv': fields.selection(UPC_EAN_CONVERSIONS, 'UPC/EAN Conversion', required=True,
-            help='UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.'),
-    }
 
-    _defaults = {
-        'upc_ean_conv': 'always',
-    }
+    name = fields.Char('Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature')
+    rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', 'Rules', help='The list of barcode rules')
+    upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, 'UPC/EAN Conversion', required=True, default='always',
+        help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
 
     # returns the checksum of the ean13, or -1 if the ean has not the correct length, ean must be a string
     def ean_checksum(self, ean):
@@ -126,14 +120,14 @@ class barcode_nomenclature(osv.osv):
     # It will return an object containing various information about the barcode.
     # most importantly : 
     #  - code    : the barcode
-    #  - type   : the type of the barcode: 
+    #  - types   : the types of the barcode: 
     #  - value  : if the id encodes a numerical value, it will be put there
     #  - base_code : the barcode code with all the encoding parts set to zero; the one put on
     #                the product in the backend
     def parse_barcode(self, barcode):
         parsed_result = {
             'encoding': '', 
-            'type': 'error', 
+            'types': 'error', 
             'code': barcode, 
             'base_code': barcode, 
             'value': 0,
@@ -141,7 +135,7 @@ class barcode_nomenclature(osv.osv):
 
         rules = []
         for rule in self.rule_ids:
-            rules.append({'type': rule.type, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
+            rules.append({'types': rule.types, 'encoding': rule.encoding, 'sequence': rule.sequence, 'pattern': rule.pattern, 'alias': rule.alias})
 
         for rule in rules:
             cur_barcode = barcode
@@ -155,12 +149,12 @@ class barcode_nomenclature(osv.osv):
 
             match = self.match_pattern(cur_barcode, rule['pattern'])
             if match['match']:
-                if rule['type'] == 'alias':
+                if rule['types'] == 'alias':
                     barcode = rule['alias']
                     parsed_result['code'] = barcode
                 else:
                     parsed_result['encoding'] = rule['encoding']
-                    parsed_result['type'] = rule['type']
+                    parsed_result['types'] = rule['types']
                     parsed_result['value'] = match['value']
                     parsed_result['code'] = cur_barcode
                     if rule['encoding'] == "ean13":
@@ -172,54 +166,3 @@ class barcode_nomenclature(osv.osv):
                     return parsed_result
 
         return parsed_result
-
-class barcode_rule(models.Model):
-    _name = 'barcode.rule'
-    _order = 'sequence asc'
-
-    @api.model
-    def _encoding_selection_list(self):
-        return [
-                ('any', 'Any'),
-                ('ean13', 'EAN-13'),
-                ('ean8', 'EAN-8'),
-                ('upca', 'UPC-A'),
-        ]
-
-    @api.model
-    def _get_type_selection(self):
-        return [('alias','Alias'),('product','Unit Product')]
-
-    _columns = {
-        'name':     fields.char('Rule Name', size=32, required=True, help='An internal identification for this barcode nomenclature rule'),
-        'barcode_nomenclature_id':     fields.many2one('barcode.nomenclature','Barcode Nomenclature'),
-        'sequence': fields.integer('Sequence', help='Used to order rules such that rules with a smaller sequence match first'),
-        'encoding': fields.selection('_encoding_selection_list','Encoding',required=True,help='This rule will apply only if the barcode is encoded with the specified encoding'),
-        'type':     fields.selection('_get_type_selection','Type', required=True),
-        'pattern':  fields.char('Barcode Pattern', size=32, help="The barcode matching pattern", required=True),
-        'alias':    fields.char('Alias',size=32,help='The matched pattern will alias to this barcode', required=True),      
-    }
-
-    _defaults = {
-        'type': 'product',
-        'pattern': '.*',
-        'encoding': 'any',
-        'alias': "0",
-    }
-
-    @api.one
-    @api.constrains('pattern')
-    def _check_pattern(self):
-        p = self.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
-        findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
-        if len(findall) == 2: 
-            if not re.search("[{][N]*[D]*[}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": braces can only contain N's followed by D's."))
-            elif re.search("[{][}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": empty braces."))
-        elif len(findall) != 0:
-            raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": a rule can only contain one pair of braces."))
-        elif p == '*':
-            raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))
-
-        

@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<openerp>
-    <data>
+<odoo>
         <!--     BARCODE NOMENCLATURES     -->
         <record model="ir.ui.view" id="view_barcode_nomenclature_form">
             <field name="name">Barcode Nomenclatures</field>
@@ -30,7 +29,7 @@
                         <field name="rule_ids">
                             <tree string='Tables'>
                                 <field name="name" />
-                                <field name="type" />
+                                <field name="types" />
                                 <field name="encoding" />
                                 <field name="pattern" />
                                 <field name="sequence" />
@@ -74,13 +73,12 @@
                     <group col="4">
                         <field name="name" />
                         <field name="sequence" />
-                        <field name="type"/>  
-                        <field name="encoding" attrs="{'invisible': [('type','=', 'alias')]}"/> 
+                        <field name="types"/>  
+                        <field name="encoding" attrs="{'invisible': [('types','=', 'alias')]}"/> 
                         <field name="pattern" />
-                        <field name="alias" attrs="{'invisible': [('type','!=', 'alias')]}"/>   
+                        <field name="alias" attrs="{'invisible': [('types','!=', 'alias')]}"/>   
                     </group>
                 </form>
             </field>
         </record>
-    </data>
-</openerp>
+</odoo>
