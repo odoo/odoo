@@ -9,7 +9,7 @@ from openerp import api, fields, models, _
 from openerp.tools import float_is_zero
 from openerp.tools.misc import formatLang
 
-from openerp.exceptions import UserError, RedirectWarning
+from openerp.exceptions import UserError, RedirectWarning, ValidationError
 
 import openerp.addons.decimal_precision as dp
 
@@ -1196,21 +1196,28 @@ class AccountPaymentTerm(models.Model):
     _description = "Payment Term"
     _order = "name"
 
+    def _default_line_ids(self):
+        return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 0, 'option': 'day_after_invoice_date'})]
+
     name = fields.Char(string='Payment Term', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
-    line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True)
+    line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
 
     @api.constrains('line_ids')
     @api.one
     def _check_lines(self):
-        if self.line_ids and self.line_ids[-1].value != 'balance':
-            raise UserError("A Payment Term should have its last line of type Balance")
+        payment_term_lines = self.line_ids.sorted()
+        if payment_term_lines and payment_term_lines[-1].value != 'balance':
+            raise ValidationError(_('A Payment Term should have its last line of type Balance.'))
+        lines = self.line_ids.filtered(lambda r: r.value == 'balance')
+        if len(lines) > 1:
+            raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
 
     @api.one
     def compute(self, value, date_ref=False):
-        date_ref = date_ref or datetime.now().strftime('%Y-%m-%d')
+        date_ref = date_ref or fields.Date.today()
         amount = value
         result = []
         prec = self.company_id.currency_id.decimal_places
@@ -1222,15 +1229,18 @@ class AccountPaymentTerm(models.Model):
             elif line.value == 'balance':
                 amt = round(amount, prec)
             if amt:
-                next_date = (datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days))
-                if line.days2 < 0:
+                next_date = fields.Date.from_string(date_ref)
+                if line.option == 'day_after_invoice_date':
+                    next_date += relativedelta(days=line.days)
+                elif line.option == 'fix_day_following_month':
                     next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
-                    next_date = next_first_date + relativedelta(days=line.days2)
-                if line.days2 > 0:
-                    next_date += relativedelta(day=line.days2, months=1)
-                result.append((next_date.strftime('%Y-%m-%d'), amt))
+                    next_date = next_first_date + relativedelta(days=line.days - 1)
+                elif line.option == 'last_day_following_month':
+                    next_date += relativedelta(day=31, months=1)  # Getting last day of next month
+                elif line.option == 'last_day_current_month':
+                    next_date += relativedelta(day=31, months=0)  # Getting last day of next month
+                result.append((fields.Date.to_string(next_date), amt))
                 amount -= amt
-
         amount = reduce(lambda x, y: x + y[1], result, 0.0)
         dist = round(value - amount, prec)
         if dist:
@@ -1242,7 +1252,7 @@ class AccountPaymentTerm(models.Model):
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
-    _order = "days"
+    _order = "sequence"
 
     value = fields.Selection([
             ('balance', 'Balance'),
@@ -1251,10 +1261,17 @@ class AccountPaymentTermLine(models.Model):
         ], string='Type', required=True, default='balance',
         help="Select here the kind of valuation related to this payment term line.")
     value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-100.")
-    days = fields.Integer(string='Number of Days', required=True, default=30, help="Number of days to add before computing the day of the month.")
-    days2 = fields.Integer(string='Day of the Month', required=True, default='0',
-        help="Day of the month \n\n Set : \n1)-1 for the last day of the current month. \n2) 0 for net days\n3) A positive number for the specific day of the next month.\n\nExample : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02.")
+    days = fields.Integer(string='Number of Days', required=True, default=0)
+    option = fields.Selection([
+            ('day_after_invoice_date', 'Day(s) after the invoice date'),
+            ('fix_day_following_month', 'Fixed day of the following month'),
+            ('last_day_following_month', 'Last day of following month'),
+            ('last_day_current_month', 'Last day of current month'),
+        ],
+        default='day_after_invoice_date', required=True, string='Options'
+        )
     payment_id = fields.Many2one('account.payment.term', string='Payment Term', required=True, index=True, ondelete='cascade')
+    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment term lines.")
 
     @api.one
     @api.constrains('value', 'value_amount')
@@ -1262,6 +1279,10 @@ class AccountPaymentTermLine(models.Model):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
             raise UserError(_('Percentages for Payment Term Line must be between 0 and 100.'))
 
+    @api.onchange('option')
+    def _onchange_option(self):
+        if self.option in ('last_day_current_month', 'last_day_following_month'):
+            self.days = 0
 
 class MailComposeMessage(models.Model):
     _inherit = 'mail.compose.message'
