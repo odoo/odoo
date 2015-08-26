@@ -319,7 +319,8 @@ class project(osv.osv):
         # Prevent double project creation when 'use_tasks' is checked + alias management
         create_context = dict(context, project_creation_in_progress=True,
                               alias_model_name=vals.get('alias_model', 'project.task'),
-                              alias_parent_model_name=self._name)
+                              alias_parent_model_name=self._name,
+                              mail_create_nosubscribe=True)
 
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
