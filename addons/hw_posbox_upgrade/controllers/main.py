@@ -104,7 +104,7 @@ class PosboxUpgrader(hw_proxy.Proxy):
     def perform_upgrade(self):
         self.upgrading.acquire()
 
-        os.system('/home/pi/posbox_update.sh')
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
         
         self.upgrading.release()
         return 'SUCCESS'
