@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import errno
 import glob
+import importlib
 import json
 import logging
 import os
@@ -392,3 +393,18 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+def can_import(module):
+    """ Checks if <module> can be imported, returns ``True`` if it can be,
+    ``False`` otherwise.
+
+    To use with ``unittest.skipUnless`` for tests conditional on *optional*
+    dependencies, which may or may be present but must still be tested if
+    possible.
+    """
+    try:
+        importlib.import_module(module)
+    except ImportError:
+        return False
+    else:
+        return True

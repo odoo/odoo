@@ -7,7 +7,7 @@ import time
 import psycopg2
 import pytz
 
-from openerp import models, api, _
+from openerp import models, fields, api, _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
@@ -189,6 +189,8 @@ class ir_fields_converter(models.AbstractModel):
                 value
             )
 
+    _str_to_monetary = _str_to_float
+
     @api.model
     def _str_id(self, model, field, value):
         return value, []
@@ -231,8 +233,7 @@ class ir_fields_converter(models.AbstractModel):
     @api.model
     def _str_to_datetime(self, model, field, value):
         try:
-            parsed_value = datetime.datetime.strptime(
-                value, DEFAULT_SERVER_DATETIME_FORMAT)
+            parsed_value = fields.Datetime.from_string(value)
         except ValueError:
             raise self._format_import_error(
                 ValueError,

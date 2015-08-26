@@ -144,7 +144,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.id = null;
         this.Import = new Model('base_import.import');
         this.session = session;
-        action.display_name = _t('Import a CSV File'); // Displayed in the breadcrumbs
+        action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
     },
     start: function () {
         var self = this;
@@ -237,6 +237,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         if (!this.$('input.oe_import_file').val()) { return; }
 
         this.$el.removeClass('oe_import_preview oe_import_error');
+        this.$el.find('.oe_import_toggle').toggle((this.$('input.oe_import_file')[0].files[0].type == "text/csv"));
         jsonp(this.$el, {
             url: '/base_import/set_file'
         }, this.proxy('settings_changed'));
