@@ -1135,7 +1135,6 @@ class sale_order_line(osv.osv):
             # sure we only select the taxes related to the company of the partner. This should only
             # apply if the partner is linked to a company.
             if uid == SUPERUSER_ID and context.get('company_id'):
-                print 'company_id found', context['company_id']
                 taxes = product_obj.taxes_id.filtered(lambda r: r.company_id.id == context['company_id'])
             else:
                 taxes = product_obj.taxes_id
