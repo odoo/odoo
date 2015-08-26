@@ -187,13 +187,25 @@
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
                                                 attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                                />
-                                            <label for="product_uom_qty"/>
+                                            <field name="qty_to_invoice" invisible="1"/>
+                                            <field name="qty_delivered_updateable" invisible="1"/>
+                                            <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True}"
                                                     name="product_uom_qty" class="oe_inline"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
+                                            </div>
+                                            <label for="qty_delivered" string="Delivered Quantity"
+                                                invisible="not context.get('show_sale')"/>
+                                            <div>
+                                                <field name="qty_delivered" invisible="not context.get('show_sale')"
+                                                    attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                            </div>
+                                            <label for="qty_invoiced" string="Invoiced Quantity" invisible="not context.get('show_sale')"/>
+                                            <div>
+                                                <field name="qty_invoiced" invisible="not context.get('show_sale')"/>
                                             </div>
                                             <field name="price_unit"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
