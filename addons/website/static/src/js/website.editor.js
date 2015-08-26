@@ -1801,10 +1801,12 @@ define(['summernote/summernote'], function () {
 
             this.imageDialog = new website.editor.ImageDialog(this, this.media, this.options);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
-            this.iconDialog = new website.editor.FontIconsDialog(this, this.media, this.options);
-            this.iconDialog.appendTo(this.$("#editor-media-icon"));
-            this.videoDialog = new website.editor.VideoDialog(this, this.media, this.options);
-            this.videoDialog.appendTo(this.$("#editor-media-video"));
+            if (!this.only_images) {
+                this.iconDialog = new website.editor.FontIconsDialog(this, this.media, this.options);
+                this.iconDialog.appendTo(this.$("#editor-media-icon"));
+                this.videoDialog = new website.editor.VideoDialog(this, this.media, this.options);
+                this.videoDialog.appendTo(this.$("#editor-media-video"));
+            }
 
             this.active = this.imageDialog;
 
@@ -1841,10 +1843,11 @@ define(['summernote/summernote'], function () {
                 if (this.active !== this.imageDialog) {
                     this.imageDialog.clear();
                 }
-                if (this.active !== this.iconDialog) {
+                // if not mode only_images
+                if (this.iconDialog && this.active !== this.iconDialog) {
                     this.iconDialog.clear();
                 }
-                if (this.active !== this.videoDialog) {
+                if (this.videoDialog && this.active !== this.videoDialog) {
                     this.videoDialog.clear();
                 }
             } else {
@@ -2291,8 +2294,7 @@ define(['summernote/summernote'], function () {
                     }
                 });
             }
-            this.$('div.font-icons-icons').html(
-                openerp.qweb.render('website.editor.dialog.font-icons.icons', {'iconsParser': iconsParser}));
+            this.$('div.font-icons-icons').html(openerp.qweb.render('website.editor.dialog.font-icons.icons', {'iconsParser': iconsParser}));
         },
         /**
          * Removes existing FontAwesome classes on the bound element, and sets
