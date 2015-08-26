@@ -286,7 +286,7 @@
                     </p>
                     <section  data-snippet-id="pricing">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -305,7 +305,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -322,7 +322,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="panel panel-success">
                                     <div class="panel-heading">
                                         <span class="panel-title">
@@ -341,14 +341,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-8">
                                 <div class="well well-lg">
                                     <span><strong>Contact us to customize your application:</strong><br/>
                                     We have special options for unlimited number of customizations !
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="well well-lg">
                                     <strong>Contact us now:</strong><br/>
                                     <a href="https://www.odoo.com/page/live-chat" target="_blank" style="margin-right:10px"><span class="fa fa-comment-o"/> Live Chat on</a><br/>
@@ -433,11 +433,12 @@
                                         <strong> Create manually</strong><br/>
                                         <span class="small">Best for less than 100 products</span>
                                     </span>
-                                    <br/>
-                                    <h4><b>Time &amp; material</b> <span class="small">(ex: consulting mission)</span></h4>
-                                    <span>
-                                        <li><a t-att-href="prepare_backend_url('sale_contract.action_account_analytic_overdue_all', 'list', 'sale')">Create your contracts</a> and configure your prices</li>
-                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Each product, one by one<br/>
+                                         <a t-att-href="prepare_backend_url('product.product_template_action', 'list', 'sale')">Create a product</a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
