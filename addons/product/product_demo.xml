@@ -55,6 +55,17 @@
             <field name="description">Example of products to invoice based on delivery.</field>
         </record>
 
+        <record id="product_product_1b" model="product.product">
+            <field name="name">External Audit</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">160</field>
+            <field name="list_price">180</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Example of products to invoice based on cost.</field>
+        </record>
+
 
         <record id="product_product_2" model="product.product">
             <field name="name">Support Services</field>

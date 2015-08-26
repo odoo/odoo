@@ -89,3 +89,36 @@ class TestSaleOrder(TestSale):
             so.sudo(self.manager).unlink()
         so.action_done()
         self.assertTrue(so.state == 'done', 'Sale: SO not done')
+
+    def test_cost_invoicing(self):
+        """ Test confirming a vendor invoice to reinvoice cost on the so """
+        serv_cost = self.env.ref('product.product_product_1b')
+        prod_gap = self.env.ref('product.product_product_1')
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {'name': prod_gap.name, 'product_id': prod_gap.id, 'product_uom_qty': 2, 'product_uom': prod_gap.uom_id.id, 'price_unit': prod_gap.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        })
+        so.action_confirm()
+        so._create_analytic_account()
+        inv_partner = self.env.ref('base.res_partner_2')
+        company = self.env.ref('base.main_company')
+        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
+        account_payable = self.env['account.account'].create({'code': 'X1111', 'name': 'Sale - Test Payable Account', 'user_type_id': self.env.ref('account.data_account_type_payable').id, 'reconcile': True})
+        account_income = self.env['account.account'].create({'code': 'X1112', 'name': 'Sale - Test Account', 'user_type_id': self.env.ref('account.data_account_type_direct_costs').id})
+        invoice_vals = {
+            'name': '',
+            'type': 'in_invoice',
+            'partner_id': inv_partner.id,
+            'invoice_line_ids': [(0, 0, {'name': serv_cost.name, 'product_id': serv_cost.id, 'quantity': 2, 'uom_id': serv_cost.uom_id.id, 'price_unit': serv_cost.standard_price, 'account_analytic_id': so.project_id.id, 'account_id': account_income.id})],
+            'account_id': account_payable.id,
+            'journal_id': journal.id,
+            'currency_id': company.currency_id.id,
+        }
+        inv = self.env['account.invoice'].create(invoice_vals)
+        inv.signal_workflow('invoice_open')
+        sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
+        self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
+        self.assertTrue(sol.price_unit == 160 and sol.qty_delivered == 2 and sol.product_uom_qty == sol.qty_invoiced == 0, 'Sale: line is wrong after confirming vendor invoice')
