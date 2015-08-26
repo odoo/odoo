@@ -23,9 +23,6 @@ var internal_bus = core.bus;
  **/
 var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
     template: 'mail.chatter.ComposeMessage',
-    events: {
-        'click .o_mail_compose_message_button_full_message': 'on_compose_message',
-    },
     init: function(parent, dataset, options){
         this._super.apply(this, arguments);
         this.suggested_partners = [];
@@ -34,6 +31,9 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
             'record_name': false,
             'is_log': false,
             'internal_subtypes': [],
+        });
+        this.events = _.extend(this.events, {
+            'click .o_mail_compose_message_button_full_message': 'on_compose_message',
         });
     },
     willStart: function(){
