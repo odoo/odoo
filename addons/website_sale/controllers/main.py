@@ -241,6 +241,7 @@ class website_sale(http.Controller):
 
         if category:
             category = category_obj.browse(cr, uid, int(category), context=context)
+            category = category if category.exists() else False
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
