@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+        <record id="view_account_analytic_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Entries">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="unit_amount" sum="Quantity"/>
+                    <field name="amount" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="account_analytic_line_action">
             <field name="context">{'search_default_group_date': 1, 'search_default_group_journal': 1, 'default_account_id': active_id}</field>
             <field name="domain">[('account_id','=', active_id)]</field>
             <field name="name">Costs &amp; Revenues</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_id" ref="view_account_analytic_line_tree"/>
             <field name="view_type">form</field>
             <field name="help" type="html">
               <p>
@@ -145,21 +161,6 @@
                         </group>
                     </sheet>
                 </form>
-            </field>
-        </record>
-        <record id="view_account_analytic_line_tree" model="ir.ui.view">
-            <field name="name">account.analytic.line.tree</field>
-            <field name="model">account.analytic.line</field>
-            <field name="arch" type="xml">
-                <tree string="Analytic Entries">
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="account_id"/>
-                    <field name="currency_id" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="unit_amount" sum="Quantity"/>
-                    <field name="amount" sum="Total"/>
-                </tree>
             </field>
         </record>
         <record id="view_account_analytic_line_filter" model="ir.ui.view">

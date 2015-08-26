@@ -4,13 +4,14 @@
 from openerp import api, fields, models
 
 
-class SaleOrder(models.Model):
+class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     @api.multi
-    def _compute_analytic(self):
+    def _compute_analytic(self, domain=None):
         lines = {}
-        domain = [('so_line', 'in', self.mapped('id'))]
+        if not domain:
+            domain = [('so_line', 'in', self.ids), ('amount', '<', 0.0)]
         data = self.env['account.analytic.line'].read_group(
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
@@ -35,7 +36,7 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
 
     def _get_invoice_price(self, order):
-        return -self.amount/self.unit_amount
+        return abs(self.amount / self.unit_amount)
 
     def _get_sale_order_line_vals(self):
         order = self.env['sale.order'].search([('project_id', '=', self.account_id.id), ('state', '=', 'sale')], limit=1)
@@ -74,6 +75,7 @@ class AccountAnalyticLine(models.Model):
         if not sol and self.account_id and self.product_id and self.product_id.invoice_policy == 'cost':
             order_line_vals = self._get_sale_order_line_vals()
             sol = self.env['sale.order.line'].create(order_line_vals)
+            sol._compute_tax_id()
             result.update({'so_line': sol.id})
 
         return result

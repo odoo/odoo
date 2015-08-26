@@ -96,3 +96,13 @@ class SaleOrder(models.Model):
                     self._create_analytic_account(prefix=self.product_id.default_code or None)
                     break
         return result
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    @api.multi
+    def _compute_analytic(self, domain=None):
+        if not domain:
+            domain = [('so_line', 'in', self.ids), '|', ('amount', '<', 0.0), ('is_timesheet', '=', True)]
+        return super(SaleOrderLine, self)._compute_analytic(domain=domain)
