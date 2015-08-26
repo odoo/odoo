@@ -706,13 +706,13 @@
                     <group name="qty_to">
                         <group string="Quantities">
                             <label for="qty_done"/>
-                            <span class="oe_inline">
-                                <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}"/>
+                            <div>
+                                <field name="qty_done" nolabel="1" attrs="{'readonly': [('lots_visible','=',True)]}" class="oe_inline"/>
                                 /
-                                <field name="product_qty"/>
-                                <field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
-                            </span>
-                            <!--<button name="split_quantities" class="oe_link" string="Split" type="object"/> TODO-->
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="product.group_uom" class="oe_inline"/>
+                            </div>
+
                         </group>
                         <group string="To">
                             <field name="location_dest_id" domain="[('id', 'child_of', picking_destination_location_id)]" groups="stock.group_locations"/>
@@ -726,14 +726,19 @@
         <record id="view_pack_operation_details_form_save" model="ir.ui.view">
             <field name="name">stock.pack.operation.details.form.save</field>
             <field name="model">stock.pack.operation</field>
+            <field name="mode">primary</field>
             <field name="inherit_id" ref="stock.view_pack_operation_details_form"/>
             <field eval="15" name="priority"/>
             <field name="arch" type="xml">
                 <group name="qty_to" position="after">
                     <footer>
                         <button name="save" type="object" string="Save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
                     </footer>
                 </group>
+                <field name="product_uom_id" position="after">
+                    <button name="split_quantities" attrs="{'invisible': ['|', ('qty_done', '&lt;=', 0.0), ('product_qty', '&lt;=', 0.0)]}" class="oe_link" string="Split" type="object"/>
+                </field>
             </field>
         </record>
 
@@ -781,6 +786,7 @@
                     </group>
                     <footer>
                         <button name="save" type="object" string="Save" class="oe_highlight" attrs="{'invisible':[('state','=','done')]}"/>
+                        <button string="Discard" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -838,7 +844,7 @@
                             <field name="recompute_pack_op" invisible="1"/>
                             <field name="pack_operation_ids" invisible="1"/>
                             <field name="pack_operation_product_ids" options="{'reload_on_button': True}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_qty" decoration-success="qty_done==product_qty and state!='done'">
+                                <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_qty" decoration-success="qty_done==product_qty and state!='done' and not result_package_id">
                                     <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
                                     <field name="product_id" on_change="product_id_change(product_id, product_uom_id, product_qty)" required="1" attrs="{'readonly': [('fresh_record', '=', False)]}"/>
                                     <field name="fresh_record" invisible="1"/>
@@ -855,7 +861,7 @@
                                     <button name="split_lot" string="Lot Split" type="object" icon="fa-list" groups="stock.group_production_lot"
                                             attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available','done'])]}"/>
                                     <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
-                                    <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
+                                    <button name="show_details" string="Modify" type="object" icon="fa-pencil"
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
                             </field>
@@ -872,7 +878,7 @@
                                     <field name="qty_done" invisible="1"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="processed_boolean"/>
-                                    <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
+                                    <button name="show_details" string="Modify" type="object" icon="fa-pencil"
                                             states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
                                 </tree>
                             </field>
@@ -1625,7 +1631,7 @@
                             <group>
                                 <field name="code" on_change="onchange_picking_code(code)"/>
                                 <field name="return_picking_type_id"/>
-                                <field name="barcode_nomenclature_id"/>
+                                <field name="barcode_nomenclature_id" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <group>
@@ -2087,7 +2093,7 @@
                 <form string="Package">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="unpack" string="Unpack" type="object"/>
+                            <button name="unpack" string="Unpack" type="object" groups="base.group_no_one"/>
                             <button class="oe_stat_button" name="%(action_picking_tree_all)d"
                             string="Package Transfers" type="action" 
                             widget="statinfo" icon="fa-dropbox"/>

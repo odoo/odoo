@@ -4323,6 +4323,15 @@ class stock_pack_operation(osv.osv):
         'to_loc': _get_default_to_loc,
     }
 
+    def split_quantities(self, cr, uid, ids, context=None):
+        for pack in self.browse(cr, uid, ids, context=context):
+            if pack.product_qty - pack.qty_done > 0.0 and pack.qty_done < pack.product_qty:
+                pack2 = self.copy(cr, uid, pack.id, default={'qty_done': 0.0, 'product_qty': pack.product_qty - pack.qty_done}, context=context)
+                self.write(cr, uid, [pack.id], {'product_qty': pack.qty_done}, context=context)
+            else:
+                raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
+        return True
+
     def write(self, cr, uid, ids, vals, context=None):
         vals['fresh_record'] = False
         context = context or {}
@@ -4346,7 +4355,7 @@ class stock_pack_operation(osv.osv):
                 if ops.product_id.tracking == 'serial':
                     for opslot in ops.pack_lot_ids:
                         if opslot.qty not in (1.0, 0.0):
-                            raise UserError(_('You should provide a different Lot for each piece'))
+                            raise UserError(_('You should provide a different serial number for each piece'))
 
     def save(self, cr, uid, ids, context=None):
         for pack in self.browse(cr, uid, ids, context=context):
@@ -4371,7 +4380,7 @@ class stock_pack_operation(osv.osv):
                     'only_create': only_create,
                     'show_reserved': show_reserved})
         return {
-             'name': _('Split Lot'),
+             'name': _('Lot Details'),
              'type': 'ir.actions.act_window',
              'view_type': 'form',
              'view_mode': 'form',
@@ -4381,6 +4390,23 @@ class stock_pack_operation(osv.osv):
              'target': 'new',
              'res_id': pack.id,
              'context': ctx,
+        }
+
+    def show_details(self, cr, uid, ids, context=None):
+        data_obj = self.pool['ir.model.data']
+        view = data_obj.xmlid_to_res_id(cr, uid, 'stock.view_pack_operation_details_form_save')
+        pack = self.browse(cr, uid, ids[0], context=context)
+        return {
+             'name': _('Operation Details'),
+             'type': 'ir.actions.act_window',
+             'view_type': 'form',
+             'view_mode': 'form',
+             'res_model': 'stock.pack.operation',
+             'views': [(view, 'form')],
+             'view_id': view,
+             'target': 'new',
+             'res_id': pack.id,
+             'context': context,
         }
 
 
