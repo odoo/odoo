@@ -74,27 +74,37 @@ function shortcode_substitution(emoji_list){
 
 /**
  * Associate a font awesome class to a attachment file type
- * @param {string} file_type : file type to analyse
+ * @param {string} mimetype : mimetype to analyse
  * @returns {string} the fa class associated
  */
-function attachment_filetype_to_fa_class(file_type){
+function attachment_mimetype_icon(mimetype){
     var mapping = {
-        'text': 'fa fa-file-text-o',
-        'document': 'fa fa-file-word-o',
-        'audio': 'fa fa-file-audio-o',
-        'archive': 'fa fa-file-archive-o',
-        'disk': 'fa fa-file-archive-o',
-        'image': 'fa fa-file-photo-o',
-        'webimage': 'fa fa-file-photo-o',
-        'script': 'fa fa-file-code-o',
-        'html': 'fa fa-file-code-o',
-        'video': 'fa fa-file-movie-o',
-        'spreadsheet': 'fa fa-file-excel-o',
-        'print': 'fa fa-file-pdf-o',
-        'presentation': 'fa fa-file-powerpoint-o',
+        'text/plain': 'fa fa-file-text-o',
+        'text/css': 'fa fa-file-code-o',
+        'text/javascript': 'fa fa-file-code-o',
+        'text/html': 'fa fa-file-code-o',
+        'image/jpeg': 'fa fa-file-photo-o',
+        'image/png': 'fa fa-file-photo-o',
+        'image/gif': 'fa fa-file-photo-o',
+        'application/octet-stream': 'fa fa-file-code-o',
+        'application/pdf': 'fa fa-file-pdf-o',
+        'application/zip': 'fa fa-file-archive-o',
+        'application/x-compressed': 'fa fa-file-archive-o',
+        'application/msword': 'fa fa-file-word-o',
+        'application/vnd.ms-excel': 'fa fa-file-excel-o',
+        'application/mspowerpoint': 'fa fa-file-powerpoint-o',
+        'application/powerpoint': 'fa fa-file-powerpoint-o',
+        'application/vnd.ms-powerpoint': 'fa fa-file-powerpoint-o',
+        'audio/mpeg3': 'fa fa-file-audio-o',
+        'audio/x-mpeg-3': 'fa fa-file-audio-o',
+        'audio/mpeg': 'fa fa-file-audio-o',
+        'audio/midi': 'fa fa-file-audio-o',
+        'video/msvideo': 'fa fa-file-movie-o',
+        'video/mpeg': 'fa fa-file-movie-o',
+        'video/quicktime': 'fa fa-file-movie-o',
     };
-    if(_.contains(_.keys(mapping), file_type)){
-        return mapping[file_type];
+    if(_.contains(_.keys(mapping), mimetype)){
+        return mapping[mimetype];
     }
     return 'fa fa-file-o';
 }
@@ -117,7 +127,7 @@ return {
     get_text2html: get_text2html,
     shortcode_apply: shortcode_apply,
     shortcode_substitution: shortcode_substitution,
-    attachment_filetype_to_fa_class: attachment_filetype_to_fa_class,
+    attachment_mimetype_icon: attachment_mimetype_icon,
     beep: beep,
 };
 

@@ -464,7 +464,6 @@ class Message(models.Model):
                         }
                     ],
                     'author_id': (3, u'Administrator'),
-                    'author_avatar': .... # base64 of the author avatar
                     'email_from': 'sacha@pokemon.com' # email address or False
                     'subtype_id': (1, u'Discussions'),
                     'channel_ids': [], # list of channel ids
@@ -477,7 +476,7 @@ class Message(models.Model):
                 }
         """
         message_values = self.read([
-            'id', 'body', 'date', 'author_id', 'author_avatar', 'email_from',  # base message fields
+            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'channel_ids', 'partner_ids',  # recipients

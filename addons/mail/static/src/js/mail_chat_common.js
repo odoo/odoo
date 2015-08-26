@@ -334,7 +334,7 @@ var Conversation = Widget.extend({
             }
             _.each(m.attachment_ids, function(a){
                 a.url = '/web/content/' + a.id + '?download=true';
-                a.fa_class = mail_utils.attachment_filetype_to_fa_class(a.file_type_icon);
+                a.fa_class = mail_utils.attachment_mimetype_icon(a.mimetype);
             });
         });
         return raw_messages;

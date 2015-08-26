@@ -47,10 +47,11 @@
     <t t-name="mail.ComposeMessage.attachments">
         <div class="o_mail_chat_im_attachment_files">
             <t t-foreach="widget.get('attachment_ids')" t-as='attachment'>
-                <div t-attf-class="o_mail_attachment #{attachment.upload ? 'o_mail_uploading' : ''}">
-                    <a t-att-href='attachment.url' target="_blank">
-                        <img t-att-src="'/web/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
-                        <div class='o_mail_attachment_name'><t t-raw="attachment.name"/></div>
+                <div t-attf-class="o_mail_attachment #{attachment.upload ? 'o_mail_uploading' : ''}" t-att-title="attachment.name">
+                    <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                        <div class='o_mail_attachment_name'>
+                            <t t-raw='attachment.name'/>
+                        </div>
                     </a>
                     <div class="o_mail_attachment_delete">
                         <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
@@ -98,15 +99,10 @@
             </div>
             <div class="row o_mail_thread_message" t-att-data-message-id="message.id">
                 <div class="col-md-1 col-sm-1 o_mail_thread_message_avatar">
-                    <t t-if="message.author_avatar">
-                        <img t-att-src="'data:image/png;base64,' + message.author_avatar" alt="avatar" class="o_mail_thread_avatar img-rounded"/>
-                    </t>
-                    <t t-if="!message.author_avatar">
-                        <img t-if="message.message_type == 'email' &amp;&amp; (!message.author_id || !message.author_id[0]) &amp;&amp; message.email_from" src="/mail/static/src/img/email_icon.png" alt="avatar" class="o_mail_thread_avatar img-rounded"/>
-                        <img t-if="message.message_type == 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0]) &amp;&amp; !message.email_from" t-att-src="'/web/binary/image?model=res.partner&amp;field=image_small&amp;id=' + message.author_id[0]" class="o_mail_thread_avatar img-rounded"/>
-                        <img t-if="message.message_type !== 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0])" t-att-src="'/web/binary/image?model=res.partner&amp;field=image_small&amp;id=' + message.author_id[0]" class="o_mail_thread_avatar img-rounded"/>
-                        <img t-if="message.message_type !== 'email' &amp;&amp; (!message.author_id || !message.author_id[0])" src="/mail/static/src/img/smiley/avatar.jpg" class="o_mail_thread_avatar img-rounded"/>
-                    </t>
+                    <img t-if="message.message_type == 'email' &amp;&amp; (!message.author_id || !message.author_id[0]) &amp;&amp; message.email_from" src="/mail/static/src/img/email_icon.png" alt="avatar" class="o_mail_thread_avatar img-rounded"/>
+                    <img t-if="message.message_type == 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0]) &amp;&amp; !message.email_from" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="o_mail_thread_avatar img-rounded"/>
+                    <img t-if="message.message_type !== 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0])" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="o_mail_thread_avatar img-rounded"/>
+                    <img t-if="message.message_type !== 'email' &amp;&amp; (!message.author_id || !message.author_id[0])" src="/mail/static/src/img/smiley/avatar.jpg" class="o_mail_thread_avatar img-rounded"/>
                 </div>
                 <div t-att-class="'col-md-11 col-sm-11 o_mail_thread_message_core ' + 'o_mail_thread_message_type_' + message.message_type + ' ' + (message.is_note ? 'o_mail_thread_message_subtype_note' : '')">
                     <!-- actions -->
@@ -149,11 +145,12 @@
                     </t>
                     <!-- Attachments -->
                     <t t-foreach="message.attachment_ids" t-as="attachment">
-                        <div t-attf-class="o_mail_attachment">
-                            <a t-att-href='attachment.url' target="_blank">
-                                 <img t-att-src="'/web/static/src/img/mimetypes/' + (attachment.file_type_icon || 'unknown') + '.png'"></img>
-                                <div class='o_mail_attachment_name'><t t-raw='attachment.name'/></div>
-                            </a>
+                        <div t-attf-class="o_mail_attachment" t-att-title="attachment.name">
+                                <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                                    <div class='o_mail_attachment_name'>
+                                        <t t-raw='attachment.name'/>
+                                    </div>
+                                </a>
                         </div>
                     </t>
                 </div>

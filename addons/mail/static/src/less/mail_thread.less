@@ -89,7 +89,7 @@
 // ------------------------------------------------------------------
 // Attachment Icons (common for mail thread message and compose message)
 // ------------------------------------------------------------------
-@o-mail-attachment-image-size: 50px;
+@o-mail-attachment-image-size: 60px;
 
 @-webkit-keyframes oe_mail_attach_loading_anim {
     0% { background: @odoo-brand-optional }
@@ -116,10 +116,11 @@
     position: relative;
     width: 2*@o-mail-attachment-image-size;
     display: inline-block;
-    height: 80px;
+    height: 50px;
     text-align: center;
+    margin-bottom: 15px;
 
-    img {
+    .o_image {
         .o-position-absolute(@top: 0, @left: @o-mail-attachment-image-size/2);
         width: @o-mail-attachment-image-size;
         height: @o-mail-attachment-image-size;

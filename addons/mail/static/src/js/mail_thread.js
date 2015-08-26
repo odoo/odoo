@@ -222,7 +222,8 @@ var MailComposeMessage = Widget.extend({
                 'name': filename,
                 'filename': filename,
                 'url': '',
-                'upload': true
+                'upload': true,
+                'mimetype': '',
             });
             this.set('attachment_ids', attachments);
         }
@@ -239,6 +240,7 @@ var MailComposeMessage = Widget.extend({
                         'id': result.id,
                         'name': result.name || result.filename,
                         'filename': result.filename,
+                        'mimetype': result.mimetype,
                         'url': session.url('/web/content', {'id': result.id, download: true}),
                     });
                 }else{
