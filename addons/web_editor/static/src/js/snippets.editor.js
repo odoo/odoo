@@ -507,7 +507,13 @@ var BuildingBlock = Widget.extend({
         for (var k in template) {
             var Option = opt[template[k]['option']];
             if (Option && Option.prototype.clean_for_save !== dummy) {
-                template[k].selector.all().filter(".o_dirty").each(function () {
+                template[k].selector.all().filter(function () {
+                        var node = this;
+                        while (!/o_dirty|o_editable/.test(node.className) && node !== document) {
+                            node = node.parentNode;
+                        }
+                        return node.className.indexOf("o_dirty") !== -1;
+                    }).each(function () {
                     new Option(self, null, $(this), k).clean_for_save();
                 });
             }
