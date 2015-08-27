@@ -616,18 +616,17 @@ class AccountTax(models.Model):
 
         for tax in self:
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                ret = tax.children_tax_ids._compute_child_taxes(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
-                base = ret['total_excluded']
+                base = ret['base']
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
-                continue
 
             tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
-            tax_amount = currency.round(tax_amount)
 
             if tax_amount:
+                tax_amount = currency.round(tax_amount)
                 if tax.price_include:
                     total_excluded -= tax_amount
                     base -= tax_amount
@@ -661,6 +660,51 @@ class AccountTax(models.Model):
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
         return recs.compute_all(price_unit, currency, quantity, product, partner)
+
+    def _compute_child_taxes(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+        if not self:
+            company_id = self.env.user.company_id
+        else:
+            company_id = self[0].company_id
+        if not currency:
+            currency = company_id.currency_id
+        taxes = []
+
+        prec = currency.decimal_places
+        if company_id.tax_calculation_rounding_method == 'round_globally':
+            prec += 5
+        total_excluded = total_included = base = round(price_unit * quantity, prec)
+
+        for tax in self:
+            tax_amount = tax._compute_amount(base, price_unit, quantity, product, partner)
+
+            if tax_amount:
+                tax_amount = currency.round(tax_amount)
+                if tax.price_include:
+                    total_excluded -= tax_amount
+                    base -= tax_amount
+                else:
+                    total_included += tax_amount
+
+                if tax.include_base_amount:
+                    base += tax_amount
+
+                taxes.append({
+                    'id': tax.id,
+                    'name': tax.name,
+                    'amount': tax_amount,
+                    'sequence': tax.sequence,
+                    'account_id': tax.account_id.id,
+                    'refund_account_id': tax.refund_account_id.id,
+                    'analytic': tax.analytic,
+                })
+
+        return {
+            'taxes': sorted(taxes, key=lambda k: k['sequence']),
+            'total_excluded': currency.round(total_excluded),
+            'total_included': currency.round(total_included),
+            'base': base,
+        }
 
 
 class AccountOperationTemplate(models.Model):
