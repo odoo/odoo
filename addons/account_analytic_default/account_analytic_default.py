@@ -86,8 +86,8 @@ class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
 
     # Method overridden to set the analytic account by default on criterion match
-    def invoice_line_create(self, cr, uid, ids, context=None):
-        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, context=context)
+    def invoice_line_create(self, cr, uid, ids, invoice_id, quantity, context=None):
+        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, invoice_id, quantity, context=context)
         if not ids:
             return create_ids
         sale_line = self.browse(cr, uid, ids[0], context=context)

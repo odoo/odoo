@@ -33,13 +33,17 @@
     partner_id: base.res_partner_3
     note: Create Sales order
     warehouse_id: wh_pps
+    pricelist_id: product.list0
     order_line:
       - product_id: product_mto
+        name: "product_mto"
         product_uom_qty: 5.00
+        product_uom: product.product_uom_unit
 - 
   Confirm the sale order
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_product_mto"), context=context)
 -
   Create another sales order with 2 Dozen of the same product
 -
@@ -49,12 +53,14 @@
     warehouse_id: wh_pps
     order_line:
       - product_id: product_mto
+        name: "product_mto"
         product_uom_qty: 2.00
         product_uom: product.product_uom_dozen
 -
   Confirm the sale order
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto2}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_product_mto2"), context=context)
 -
   I run scheduler.
 -

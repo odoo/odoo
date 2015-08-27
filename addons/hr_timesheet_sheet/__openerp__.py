@@ -26,7 +26,7 @@ The validation can be configured in the company:
 * Maximal difference between timesheet and attendances
     """,
     'website': 'https://www.odoo.com/page/employees',
-    'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
+    'depends': ['hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_sheet_security.xml',

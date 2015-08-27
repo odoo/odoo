@@ -22,17 +22,11 @@ class delivery_carrier(orm.Model):
 class SaleOrder(orm.Model):
     _inherit = 'sale.order'
 
-    def _amount_all_wrapper(self, cr, uid, ids, field_name, arg, context=None):        
-        """ Wrapper because of direct method passing as parameter for function fields """
-        return self._amount_all(cr, uid, ids, field_name, arg, context=context)
-
-    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        res = super(SaleOrder, self)._amount_all(cr, uid, ids, field_name, arg, context=context)
-        currency_pool = self.pool.get('res.currency')
+    def _amount_delivery(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
         for order in self.browse(cr, uid, ids, context=context):
-            line_amount = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
-            currency = order.pricelist_id.currency_id
-            res[order.id]['amount_delivery'] = currency_pool.round(cr, uid, currency, line_amount)
+            res[order.id] = {}
+            res[order.id]['amount_delivery'] = sum([line.price_subtotal for line in order.order_line if line.is_delivery])
         return res
 
     def _has_delivery(self, cr, uid, ids, field_name, arg, context=None):
@@ -52,7 +46,7 @@ class SaleOrder(orm.Model):
 
     _columns = {
         'amount_delivery': fields.function(
-            _amount_all_wrapper, type='float', digits=0,
+            _amount_delivery, type='float', digits=0,
             string='Delivery Amount',
             store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),

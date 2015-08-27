@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_sales_config_sale_stock" model="ir.ui.view">
+    <record id="view_sales_config_inherit_sale_stock" model="ir.ui.view">
         <field name="name">sale settings</field>
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sale.view_sales_config"/>
@@ -12,7 +12,6 @@
                 </group>
             </xpath>
             <xpath expr="//group[@id='sale']" position="inside">
-                <field name="default_order_policy" widget="radio"/>
                 <field name="group_route_so_lines" widget="radio"/>
                 <field name="group_mrp_properties" widget="radio" groups="base.group_no_one"/>
             </xpath>

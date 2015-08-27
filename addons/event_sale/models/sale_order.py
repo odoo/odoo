@@ -7,12 +7,13 @@ from openerp.osv import fields, osv
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
-    def action_button_confirm(self, cr, uid, ids, context=None):
-        # TDE note: This method works on a list of one id (see sale/sale.py) so working on ids[0] seems safe.
-        res = super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
-        redirect_to_event_registration = any(line.event_id for order in self.browse(cr, uid, ids, context=context) for line in order.order_line)
+    def action_confirm(self, cr, uid, ids, context=None):
+        res = super(sale_order, self).action_confirm(cr, uid, ids, context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            redirect_to_event_registration, so_id = any(line.event_id for line in order.order_line), order.id
+            order.order_line._update_registrations(confirm=True)
         if redirect_to_event_registration:
-            event_ctx = dict(context, default_sale_order_id=ids[0])
+            event_ctx = dict(context, default_sale_order_id=so_id)
             return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'event_sale', 'action_sale_order_event_registration', event_ctx)
         else:
             return res
@@ -40,21 +41,14 @@ class sale_order_line(osv.osv):
             res['name'] = '%s: %s' % (res.get('name', ''), event['name'])
         return res
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
-                          qty_uos=0, uos=False, name='', partner_id=False, lang=False,
-                          update_tax=True, date_order=False, packaging=False,
-                          fiscal_position_id=False, flag=False, context=None):
-        """ check product if event type """
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position_id=fiscal_position_id, flag=flag, context=context)
-        if product:
-            product_res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            if product_res.event_ok:
-                res['value'].update(event_type_id=product_res.event_type_id.id,
-                                    event_ok=product_res.event_ok)
-            else:
-                res['value'].update(event_type_id=False,
-                                    event_ok=False)
-        return res
+    @api.onchange('product_id')
+    def product_id_change_event(self):
+        if self.product_id.event_ok:
+            values = dict(event_type_id=self.product_id.event_type_id.id,
+                          event_ok=self.product_id.event_ok)
+        else:
+            values = dict(event_type_id=False, event_ok=False)
+        self.update(values)
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):
@@ -80,16 +74,6 @@ class sale_order_line(osv.osv):
                 self.env['event.registration'].with_context(registration_force_draft=True).create(
                     Registration._prepare_attendee_values(registration))
         return True
-
-    def button_confirm(self, cr, uid, ids, context=None):
-        """ Override confirmation of the sale order line in order to create
-        or update the possible event registrations linked to the sale. """
-        '''
-        create registration with sales order
-        '''
-        res = super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
-        self._update_registrations(cr, uid, ids, confirm=True, context=context)
-        return res
 
     def onchange_event_ticket_id(self, cr, uid, ids, event_ticket_id=False, context=None):
         price = event_ticket_id and self.pool["event.event.ticket"].browse(cr, uid, event_ticket_id, context=context).price or False

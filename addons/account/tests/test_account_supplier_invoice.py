@@ -11,8 +11,6 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test account',
-            'state': 'open',
-            'type': 'normal',
         })
 
         # Should be changed by automatic on_change later

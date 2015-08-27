@@ -588,6 +588,8 @@ class website_sale(http.Controller):
             # create partner
             billing_info['team_id'] = request.website.salesteam_id.id
             partner_id = orm_partner.create(cr, SUPERUSER_ID, billing_info, context=context)
+        order.write({'partner_id': partner_id, 'partner_invoice_id': partner_id})
+        order_obj.onchange_partner_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         # create a new shipping partner
         if checkout.get('shipping_id') == -1:
@@ -598,24 +600,12 @@ class website_sale(http.Controller):
             shipping_info['type'] = 'delivery'
             shipping_info['parent_id'] = partner_id
             checkout['shipping_id'] = orm_partner.create(cr, SUPERUSER_ID, shipping_info, context)
+            order.write({'partner_shipping_id': checkout.get('shipping_id')})
+            order_obj.onchange_partner_shipping_id(cr, SUPERUSER_ID, [order.id], context=context)
 
         order_info = {
-            'partner_id': partner_id,
             'message_partner_ids': [(4, partner_id), (3, request.website.partner_id.id)],
-            'partner_invoice_id': partner_id,
         }
-        order_info.update(order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner_id, context=context)['value'])
-        address_change = order_obj.onchange_delivery_id(cr, SUPERUSER_ID, [], order.company_id.id, partner_id,
-                                                        checkout.get('shipping_id'), None, context=context)['value']
-        order_info.update(address_change)
-        if address_change.get('fiscal_position_id'):
-            fiscal_update = order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [], address_change['fiscal_position_id'],
-                                                               [(4, l.id) for l in order.order_line], context=None)['value']
-            order_info.update(fiscal_update)
-
-        order_info.pop('user_id')
-        order_info.update(partner_shipping_id=checkout.get('shipping_id') or partner_id)
-
         order_obj.write(cr, SUPERUSER_ID, [order.id], order_info, context=context)
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True)

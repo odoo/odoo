@@ -16,7 +16,6 @@
   !record {model: product.template, id: product_template_slidermobile0}:
     categ_id: product_category_allproductssellable0
     list_price: 200.0
-    mes_type: fixed
     name: Slider Mobile
     standard_price: 189.0
     type: product
@@ -28,7 +27,6 @@
   !record {model: product.product, id:  product_product_slidermobile0}:
     categ_id: product_category_allproductssellable0
     list_price: 200.0
-    mes_type: fixed
     name: Slider Mobile
     seller_delay: '1'
     seller_ids:
@@ -72,10 +70,8 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 500.0
         state: draft
-        delay: 7.0
+        customer_lead: 7.0
         product_id: product_product_slidermobile0
-        product_uos_qty: 500.0
-    order_policy: manual
     partner_id: base.res_partner_4
     partner_invoice_id: base.res_partner_address_7
     partner_shipping_id: base.res_partner_address_7
@@ -84,7 +80,8 @@
 -
   I confirm the sale order
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_so0"), context=context)
 -
   I verify that a procurement has been generated for sale order
 -
@@ -120,5 +117,5 @@
     mnf_id = mnf_obj.search(cr, uid, [('origin','like',so.name)])
     assert mnf_id, 'Manufacturing order has not been generated'
     mo = mnf_obj.browse(cr, uid, mnf_id)[0]
-    assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.name)
+    assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.sale_name)
     assert mo.sale_ref == so.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'

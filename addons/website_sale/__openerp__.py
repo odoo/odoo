@@ -10,7 +10,7 @@ OpenERP E-Commerce
 ==================
 
         """,
-    'depends': ['sale', 'website_payment', 'website_mail', 'website_portal_sale', 'rating'],
+    'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_mail', 'rating'],
     'data': [
         'data/data.xml',
         'data/web_planner_data.xml',

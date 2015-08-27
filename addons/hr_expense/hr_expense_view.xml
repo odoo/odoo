@@ -13,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_account"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount" sum="Total" widget="monetary"/>
@@ -94,7 +94,7 @@
                                             <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
                                             <field name="name"/>
                                             <field name="ref"/>
-                                            <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                            <field name="analytic_account"/>
                                         </group>
                                         <group>
                                             <field name="unit_amount"/>
@@ -113,7 +113,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name" string="Description"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>
@@ -130,7 +130,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Accounting Info" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['done', 'paid'])]}">
+                        <page string="Accounting Info" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['done', 'paid', 'accepted'])]}">
                             <group>
                                 <group>
                                     <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal"/>

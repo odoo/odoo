@@ -163,6 +163,7 @@ class project(osv.osv):
         'task_ids': fields.one2many('project.task', 'project_id',
                                     domain=[('stage_id.fold', '=', False)]),
         'color': fields.integer('Color Index'),
+        'user_id': fields.many2one('res.users', 'Project Manager'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
                                     help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
@@ -185,7 +186,9 @@ class project(osv.osv):
                                   'Status', required=True, copy=False),
         'doc_count': fields.function(
             _get_attached_docs, string="Number of documents attached", type='integer'
-        )
+        ),
+        'date_start': fields.date('Start Date'),
+        'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -201,6 +204,7 @@ class project(osv.osv):
         'label_tasks': 'Tasks',
         'state': 'open',
         'sequence': 10,
+        'user_id': lambda self,cr,uid,ctx: uid,
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'employees',
@@ -257,7 +261,6 @@ class project(osv.osv):
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id', False)
             context.update({'analytic_project_copy': True})
             new_date_start = time.strftime('%Y-%m-%d')
             new_date_end = False
@@ -270,14 +273,8 @@ class project(osv.osv):
                                     'name':_("%s (copy)") % (proj.name),
                                     'state':'open',
                                     'date_start':new_date_start,
-                                    'date':new_date_end,
-                                    'parent_id':parent_id}, context=context)
+                                    'date':new_date_end}, context=context)
             result.append(new_id)
-
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
-            parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
-            if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
 
         if result and len(result):
             res_id = result[0]
@@ -308,9 +305,6 @@ class project(osv.osv):
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)])
-            if child_ids:
-                self.setActive(cr, uid, child_ids, value, context=None)
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -321,9 +315,6 @@ class project(osv.osv):
                               alias_model_name=vals.get('alias_model', 'project.task'),
                               alias_parent_model_name=self._name,
                               mail_create_nosubscribe=True)
-
-        if vals.get('type', False) not in ('template', 'contract'):
-            vals['type'] = 'contract'
 
         ir_values = self.pool.get('ir.values').get_default(cr, uid, 'project.config.settings', 'generate_project_alias')
         if ir_values:
@@ -870,8 +861,6 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if not vals.get('name'):
                 vals_for_project['name'] = account.name
-            if not vals.get('type'):
-                vals_for_project['type'] = account.type
             self.project_create(cr, uid, account.id, vals_for_project, context=context)
         return super(account_analytic_account, self).write(cr, uid, ids, vals, context=context)
 

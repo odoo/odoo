@@ -15,13 +15,6 @@ class stock_config_settings(osv.osv_memory):
             ], "Inventory Valuation",
             implied_group='stock_account.group_inventory_valuation',
             help="""Allows to configure inventory valuations on products and product categories."""),
-        'module_stock_invoice_directly': fields.selection([
-                (0, 'Create invoices in batch'),
-                (1, 'Create and open the invoice when the user finishes a delivery order')
-            ], "Invoicing",
-            help='This allows to automatically launch the invoicing wizard if the delivery is '
-                 'to be invoiced when you send or deliver goods.\n'
-                 '-This installs the module stock_invoice_directly.'),
         'module_stock_landed_costs': fields.selection([
                 (0, 'No landed costs'),
                 (1, 'Include landed costs in product costing computation')

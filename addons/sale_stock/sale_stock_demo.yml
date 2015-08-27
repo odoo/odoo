@@ -6,7 +6,6 @@
         if account_id:
             vals = {
               'warehouse_id': ref('stock.warehouse0'),
-              'order_policy': 'prepaid',
             }
             self._update(cr, uid, 'sale.order', 'sale', vals, 'sale_order_4')
 

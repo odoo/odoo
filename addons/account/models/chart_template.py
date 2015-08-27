@@ -135,20 +135,6 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        def _get_analytic_journal(journal_type):
-            # Get the analytic journal
-            data = False
-            try:
-                if journal['type'] == 'sale':
-                    data = self.env.ref('account.analytic_journal_sale')
-                elif journal['type'] == 'purchase':
-                    data = self.env.ref('account.exp')
-                elif journal['type'] == 'general':
-                    pass
-            except ValueError:
-                pass
-            return data and data.id or False
-
         def _get_default_account(journal_vals, type='debit'):
             # Get the default accounts
             default_account = False
@@ -178,7 +164,6 @@ class AccountChartTemplate(models.Model):
                 'name': journal['name'],
                 'code': journal['code'],
                 'company_id': company.id,
-                'analytic_journal_id': _get_analytic_journal(journal),
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
                 'refund_sequence': True,

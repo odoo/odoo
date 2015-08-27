@@ -8,7 +8,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
     def setUp(self):
         super(TestSaleMrpFlow, self).setUp()
-        # Usefull models
+        # Useful models
         self.SaleOrderLine = self.env['sale.order.line']
         self.SaleOrder = self.env['sale.order']
         self.MrpBom = self.env['mrp.bom']
@@ -116,16 +116,20 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         order = self.SaleOrder.create({
             'partner_id': self.partner_agrolite.id,
+            'partner_invoice_id': self.partner_agrolite.id,
+            'partner_shipping_id': self.partner_agrolite.id,
             'date_order': datetime.today(),
+            'pricelist_id': self.env.ref('product.list0').id,
         })
         self.SaleOrderLine.create({
+            'name': product_a.name,
             'order_id': order.id,
             'product_id': product_a.id,
             'product_uom_qty': 10,
             'product_uom': self.uom_dozen.id
         })
         self.assertTrue(order, "Sale order not created.")
-        order.action_button_confirm()
+        order.action_confirm()
 
         # ===============================================================================
         #  Sale order of 10 Dozen product A should create production order
@@ -346,3 +350,48 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should be done.')
         # Check product A avaialble quantity should be 120.
         self.assertEqual(product_a.qty_available, 120, 'Wrong quantity available of product A.')
+
+    def test_01_sale_mrp_delivery_kit(self):
+        """ Test delivered quantity on SO based on delivered quantity in pickings."""
+        # intial so
+        self.partner = self.env.ref('base.res_partner_1')
+        self.product = self.env.ref('product.product_product_3')
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {'name': self.product.name, 'product_id': self.product.id, 'product_uom_qty': 5, 'product_uom': self.product.uom_id.id, 'price_unit': self.product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        }
+        self.so = self.SaleOrder.create(so_vals)
+
+        # confirm our standard so, check the picking
+        self.so.action_confirm()
+        self.assertTrue(self.so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
+
+        # invoice in on delivery, nothing should be invoiced
+        self.so.action_invoice_create()
+        self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
+
+        # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
+        pick = self.so.picking_ids
+        pick.force_assign()
+        pick.pack_operation_product_ids.write({'qty_done': 1})
+        wiz_act = pick.do_new_transfer()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
+        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
+        self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
+
+        # deliver remaining products, check the so's invoice_status and delivered quantities
+        self.assertEqual(len(self.so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
+        pick_2 = self.so.picking_ids[0]
+        pick_2.force_assign()
+        pick_2.pack_operation_product_ids.write({'qty_done': 4})
+        pick_2.do_new_transfer()
+
+        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
+        self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
+        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
