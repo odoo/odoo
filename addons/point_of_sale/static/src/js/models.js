@@ -1275,13 +1275,13 @@ exports.Orderline = Backbone.Model.extend({
             return base_amount >= 0 ? ret : ret * -1;
         }
         if ((tax.amount_type === 'percent' && !tax.price_include) || (tax.amount_type === 'division' && tax.price_include)){
-            return base_amount * tax.amount / 100;
+            return (base_amount * tax.amount / 100) * quantity;
         }
         if (tax.amount_type === 'percent' && tax.price_include){
-            return base_amount - (base_amount / (1 + tax.amount / 100));
+            return (base_amount - (base_amount / (1 + tax.amount / 100))) * quantity;
         }
         if (tax.amount_type === 'division' && !tax.price_include) {
-            return base_amount / (1 - tax.amount / 100) - base_amount;
+            return (base_amount / (1 - tax.amount / 100) - base_amount) * quantity;
         }
         return false;
     },
