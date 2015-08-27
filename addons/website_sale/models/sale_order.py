@@ -267,7 +267,7 @@ class website(orm.Model):
                     flag_pricelist = True
                 fiscal_position = sale_order.fiscal_position_id and sale_order.fiscal_position_id.id or False
 
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
+                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], context=context).get('value', {})
                 if values.get('pricelist_id'):
                     if values['pricelist_id'] != pricelist_id:
                         values['pricelist_id'] = pricelist_id
@@ -301,7 +301,6 @@ class website(orm.Model):
             # update the pricelist
             if update_pricelist:
                 values = {'pricelist_id': pricelist_id}
-                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
                 sale_order.write(values)
                 for line in sale_order.order_line:
                     if line.exists():

@@ -145,8 +145,8 @@ class SaleOrder(models.Model):
             self.fiscal_position_id = fiscal_position
         return {}
 
-    @api.onchange('partner_id')
     @api.multi
+    @api.onchange('partner_id')
     def onchange_partner_id(self):
         if not self.partner_id:
             self.update({
@@ -242,7 +242,7 @@ class SaleOrder(models.Model):
             result['views'] = [(form_view_id, 'form')]
             result['res_id'] = self.invoice_ids.id
         else:
-            result['domain'] = "[('id','in',[]])]"
+            result = {'type': 'ir.actions.act_window_close'}
         return result
 
     @api.multi

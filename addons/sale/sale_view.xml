@@ -131,7 +131,7 @@
                     <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" class="oe_highlight"
                         attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Deposit Invoice"
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" context="{'default_advance_payment_method': 'percentage'}"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="oe_highlight"/>
