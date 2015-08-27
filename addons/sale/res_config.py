@@ -18,15 +18,6 @@ class sale_configuration(osv.TransientModel):
             ], "Product Variants",
             help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
             implied_group='product.group_product_variant'),
-        'module_sale_contract': fields.selection([
-            (0, 'Sell based on sales order only'),
-            (1, 'Activate contract management to track costs and revenues')
-            ], "Contracts",
-            help='Allows to define your customer contracts conditions: invoicing '
-                 'method (fixed price, on timesheet, advance invoice), the exact pricing '
-                 '(650€/day for a developer), the duration (one year support contract).\n'
-                 'You will be able to follow the progress of the contract and invoice automatically.\n'
-                 '-It installs the sale_contract module.'),
         'group_sale_pricelist':fields.selection([
             (0, 'Set a fixed sale price on each product'),
             (1, 'Use pricelists to adapt your price per customers or products')
