@@ -233,21 +233,39 @@
                 -moz-flex: 0 0 auto;
                 -webkit-flex: 0 0 auto;
                 flex: 0 0 auto;
+                background-color: #a24689;
+                color: white;
+                padding: 15px;
 
                 .o_planner_title_block {
                     display: inline-block;
+                    vertical-align: top;
                     width: 25%;
-                    padding-left: 20px;
+                    padding-left: 15px;
+
+                   > h4 {
+                        font-size: 22px;
+                    }
                 }
 
                 .o_planner_progress_block {
                     display: inline-block;
+                    vertical-align: top;
+                    margin-top: 10px;
                     width: 65%;
+                    font-size: 15px;
+                    font-weight: 900;
 
-                    .progress {
+                    > .progress {
                         display: inline-block;
                         margin-bottom: -5px;
+                        margin-left: 15px;
                         width: 120px;
+
+                        > .progress-bar {
+                            background-color: #20b698;
+                            box-shadow: none;
+                        }
                     }
 
                     .o_progress_text {
@@ -258,10 +276,19 @@
 
                 .o_planner_close_block {
                     display: inline-block;
+                    vertical-align: top;
+                    margin-top: 10px;
                     width: 10%;
                     text-align: right;
+
                     > span {
                         cursor: pointer;
+                    }
+
+                    > button {
+                        color: white;
+                        opacity: 1;
+                        text-shadow: none;
                     }
                 }
             }
@@ -272,22 +299,23 @@
                 -webkit-flex: 0 0 auto;
                 flex: 0 0 auto;
                 text-align: left;
+                padding: 5px;
 
                 .o-planner-header() {
                     display: inline-block;
-                    padding: 5px 5px 5px 5px;
                 }
 
                 .o_planner_header_left {
                     .o-planner-header;
                     margin-left: 25%;
-                    padding-left: 9px;
+                    padding-left: 23px;
                     width: 25%;
                 }
 
                 .o_planner_header_right {
                     .o-planner-header;
                     width: 50%;
+                    padding-right: 20px;
                 }
             }
 
@@ -317,20 +345,65 @@
                         -moz-flex: 0 0 25%;
                         -webkit-flex: 0 0 25%;
                         flex: 0 0 25%;
+                        -webkit-box-shadow: 3px 0px 3px 0px rgba(50, 50, 50, 0.3);
+                        -moz-box-shadow:    3px 0px 3px 0px rgba(50, 50, 50, 0.3);
+                        box-shadow:         3px 0px 3px 0px rgba(50, 50, 50, 0.3);
 
                         height: 100%;
                         overflow: auto;
+                        line-height: 1.6;
 
                         > ul {
                             padding-top: 10px;
-                            padding-left: 10px;
+                            padding-left: 18px;
+                            padding-right: 18px;
                             list-style-type: none;
 
+                            > li {
+                                // align multi lines li
+                                text-indent: -18px;
+                                padding-left: 18px;
+
+                                position: relative;
+
+                                > a {
+                                    color: #666666;
+                                    padding-left: 18px;
+                                    font-weight: 600;
+                                    font-size: 14px;
+
+                                    &:hover {
+                                        color: #1fb597;
+                                    }
+
+                                    > .fa {
+                                        position: absolute;
+                                        left: 1px;
+                                        top: 4px;
+                                    }
+                                }
+
+                                &.active > a {
+                                    color: #1fb597;
+                                }
+
+                            }
+
                             > h4 {
-                                padding-left: 5px;
+                                padding-left: 27px;
+                                font-size: 12px;
+                                color: #a8a8a8;
+                                color: #a8a8a8;
+                                border-top: 1px solid #e6e6e6;
+                                border-top: 1px solid #e6e6e6;
+                                margin-left: -15px;
+                                margin-bottom: 15px;
+                                padding-top: 20px;
+
 
                                 > i.fa {
                                     margin-right: 10px;
+                                    font-size: 14px;
                                 }
                             }
                         }
@@ -342,14 +415,40 @@
                         -webkit-flex: 0 0 75%;
                         flex: 0 0 75%;
                         display: none;
-                        padding-left:  15px;
-                        padding-right: 15px;
+                        padding-left:  25px;
+                        padding-right: 25px;
                         height: 100%;
                         overflow: auto;
 
                         > h1 {
-                            font-size: 3.5em;
-                            font-weight: 100;
+                            font-size: 2.5em;
+                            font-weight: 300;
+                        }
+
+                        .well, .panel, .alert {
+                            box-shadow: none;
+                            border-radius: 0;
+                        }
+
+                        .well {
+                            padding: 30px;
+                            padding: 30px;
+                            .label {
+                                font-size: 12px;
+                            }
+                        }
+
+                        .alert {
+                            padding: 30px;
+                        }
+
+                        .fa-lightbulb-o {
+                            padding-top: 5px;
+                            &:before {
+                                float: left;
+                                font-size: 20px;
+                                padding-right: 10px;
+                            }
                         }
 
                         &.marked:after {
@@ -453,6 +552,8 @@
                                         font-size: 16px;
                                         border: none;
                                         background: #F5E7CF;
+                                        padding: 3px;
+                                        width: auto;
                                     }
                                 }
                                 > li:not(.o_planner_notebook_header):hover {
@@ -519,7 +620,6 @@
                         .o_planner_paragraphs .icon {
                             text-align: center;
                             font-size: 2em;
-                            margin: 1em auto .5em;
                             color: #21b799;
                         }
 
