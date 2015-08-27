@@ -63,7 +63,7 @@
                         <td class="text-right"><span t-esc="l.product_id.intrastat_id.name"/></td>
                         <td class="text-right"><span t-esc="l.product_id.weight"/></td>
                         <td class="text-right"><span t-field="l.quantity"/></td>
-                        <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
+                        <td groups="product.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td class="text-right">
