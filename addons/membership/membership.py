@@ -428,8 +428,7 @@ class Partner(osv.osv):
                 'fiscal_position': fpos_id or False
                 }, context=context)
             line_value['invoice_id'] = invoice_id
-            invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context=context)
-            invoice_obj.write(cr, uid, invoice_id, {'invoice_line': [(6, 0, [invoice_line_id])]}, context=context)
+            invoice_line_obj.create(cr, uid, line_value, context=context)
             invoice_list.append(invoice_id)
             if line_value['invoice_line_tax_id']:
                 tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
@@ -457,7 +456,7 @@ class Product(osv.osv):
                 view_id = dict_model['membership_products_form']
             else:
                 view_id = dict_model['membership_products_tree']
-        return super(Product,self).fields_view_get(cr, user, view_id, view_type, context, toolbar, submenu)
+        return super(Product,self).fields_view_get(cr, user, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     '''Product'''
     _inherit = 'product.template'
