@@ -89,9 +89,9 @@ class ir_translation_import_cursor(object):
             params['name'] = 'ir.ui.view,arch_db'
             params['imd_model'] = "ir.ui.view"
 
-        self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
+        self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments, active)
                             VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
-                                    %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
+                                    %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s, True)""" % self._table_name,
                          params)
 
     def finish(self):
@@ -145,8 +145,8 @@ class ir_translation_import_cursor(object):
                 """ % (self._parent_table, self._table_name, find_expr))
 
         # Step 3: insert new translations
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
-            SELECT name, lang, res_id, src, type, value, module, state, comments
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments, active)
+            SELECT name, lang, res_id, src, type, value, module, state, comments, active
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -232,7 +232,7 @@ class ir_translation(osv.osv):
              ('translated','Translated')],
             string="Status",
             help="Automatically set to let administators find new terms that might need to be translated"),
-
+        'active': fields.boolean('Active'),
         # aka gettext extracted-comments - we use them to flag openerp-web translation
         # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
         'comments': fields.text('Translation comments', select=True),
@@ -240,6 +240,7 @@ class ir_translation(osv.osv):
 
     _defaults = {
         'state': 'to_translate',
+        'active': True,
     }
 
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
@@ -284,6 +285,7 @@ class ir_translation(osv.osv):
                     'where lang=%s '
                         'and type=%s '
                         'and name=%s '
+                        'and active=True '
                         'and res_id IN %s',
                     (lang,tt,name,tuple(ids)))
             for res_id, value in cr.fetchall():
@@ -299,6 +301,7 @@ class ir_translation(osv.osv):
                 'where lang=%s '
                     'and type=%s '
                     'and name=%s '
+                    'and active=True '
                     'and res_id IN %s '
                 'returning res_id',
                 (value,src,'translated',lang,tt,name,tuple(ids),))
@@ -313,7 +316,8 @@ class ir_translation(osv.osv):
                 'res_id':id,
                 'value':value,
                 'src':src,
-                'state':'translated'
+                'state':'translated',
+                'active':True
                 })
         return len(ids)
 
@@ -388,7 +392,7 @@ class ir_translation(osv.osv):
     def _get_terms_query(self, field, records):
         """ Utility function that makes the query for field terms. """
         query = """ SELECT * FROM ir_translation
-                    WHERE lang=%s AND type=%s AND name=%s AND res_id IN %s """
+                    WHERE active=True AND lang=%s AND type=%s AND name=%s AND res_id IN %s """
         name = "%s,%s" % (field.model_name, field.name)
         params = (records.env.lang, 'model', name, tuple(records.ids))
         return query, params
@@ -526,12 +530,12 @@ class ir_translation(osv.osv):
         records = records.with_context(lang=None)
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, active)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(active)s
                         FROM res_lang l
-                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.code != 'en_US' and l.active = true AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
+                            WHERE lang=l.code AND type='model' AND active=%(active)s AND name=%(name)s AND res_id=%(res_id)s AND src=%(src)s
                         );
                     """
             for record in records:
@@ -541,24 +545,26 @@ class ir_translation(osv.osv):
                         'name': "%s,%s" % (field.model_name, field.name),
                         'res_id': record.id,
                         'src': term,
+                        'active': True
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, active)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(active)s
                         FROM res_lang l
-                        WHERE l.code != 'en_US' AND NOT EXISTS (
+                        WHERE l.code != 'en_US' and l.active = true AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
-                            WHERE lang=l.code AND type='model' AND name=%(name)s AND res_id=%(res_id)s
+                            WHERE lang=l.code AND type='model' AND active=%(active)s AND name=%(name)s AND res_id=%(res_id)s
                         );
                         UPDATE ir_translation SET src=%(src)s
-                        WHERE type='model' AND name=%(name)s AND res_id=%(res_id)s;
+                        WHERE type='model' AND name=%(name)s AND active=%(active)s AND res_id=%(res_id)s;
                     """
             for record in records:
                 self._cr.execute(query, {
                     'name': "%s,%s" % (field.model_name, field.name),
                     'res_id': record.id,
                     'src': record[field.name] or None,
+                    'active': True
                 })
         self.clear_caches()
 

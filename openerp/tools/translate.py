@@ -998,9 +998,11 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     iso_lang = misc.get_iso_codes(lang)
     try:
         context = {'active_test': False}
-        ids = lang_obj.search(cr, SUPERUSER_ID, [('code', '=', lang)], context=context)
-        lang_obj.write(cr, SUPERUSER_ID, ids, {'active': True})
-        if not ids:
+        languages = lang_obj.search_read(cr, SUPERUSER_ID, [('code', '=', lang)], ['active'], context=context)
+        for language in languages:
+            if language['active'] is False:
+                lang_obj.write(cr, SUPERUSER_ID, language['id'], {'active': True}, context=context)
+        if not languages:
             # lets create the language with locale information
             lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
 

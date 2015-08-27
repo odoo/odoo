@@ -181,15 +181,18 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
-             ids = [ids]
-
-        if vals.get('active') == False:
+            ids = [ids]
+        if 'active' in vals:
             users = self.pool.get('res.users')
-
-            for current_id in ids:
-                current_language = self.browse(cr, uid, current_id, context=context)
-                if users.search(cr, uid, [('lang', '=', current_language.code)], context=context):
+            trans_obj = self.pool.get('ir.translation')
+            for id in ids:
+                language = self.browse(cr, uid, id, context=context)
+                user_lang = users.search_count(cr, uid, [('lang', '=', language.code)], context=context)
+                if vals['active'] is False and user_lang:
                     raise UserError(_("Cannot unactivate a language that is currently used by users."))
+
+                trans_ids = trans_obj.search(cr, uid, [('lang', '=', language.code)], context=context)
+                trans_obj.write(cr, uid, trans_ids, {'active': vals['active']}, context=context)
 
         self._lang_get.clear_cache(self)
         self._lang_data_get.clear_cache(self)
