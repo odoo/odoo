@@ -151,7 +151,7 @@ class survey_survey(osv.Model):
 
     _columns = {
         'title': fields.char('Title', required=1, translate=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility="onchane"),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Pages', copy=True),
         'stage_id': fields.many2one('survey.stage', string="Stage", ondelete="set null", copy=False),
         'auth_required': fields.boolean('Login required',

@@ -50,7 +50,7 @@ class hr_job(osv.Model):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', required=True, select=True, translate=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility='onchange'),
         'expected_employees': fields.function(_get_nbr_employees, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -281,7 +281,7 @@ class hr_department(osv.osv):
 
     _columns = {
         'name': fields.char('Department Name', required=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility="onchange"),
         'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),

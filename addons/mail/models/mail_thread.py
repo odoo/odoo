@@ -211,6 +211,8 @@ class MailThread(models.AbstractModel):
             else:
                 track_thread = thread
             tracked_fields = track_thread._get_tracked_fields(values.keys())
+            # Do not track active field at the document creation
+            tracked_fields.pop('active', None)
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
                 track_thread.message_track(tracked_fields, initial_values)
@@ -241,15 +243,6 @@ class MailThread(models.AbstractModel):
         if tracked_fields:
             initial_values = dict((record.id, dict((key, getattr(record, key)) for key in tracked_fields))
                                   for record in track_self)
-
-        #Check if record archived or unarchived
-        if 'active' in values:
-            if not values['active']:
-                message = _("Record has been Archived")
-            else:
-                message = _("Record has been Unarchived")
-            for record in self:
-                record.message_post(body=message, message_type='comment', subtype='mail.mt_comment')
 
         # Perform write
         result = super(MailThread, self).write(values)
@@ -391,6 +384,11 @@ class MailThread(models.AbstractModel):
         :type init_values: dict
         :returns: a subtype xml_id or False if no subtype is trigerred
         """
+        self.ensure_one()
+        if 'active' in init_values and not self.active:
+            return 'mail.mt_archived'
+        elif 'active' in init_values and self.active:
+            return 'mail.mt_unarchived'
         return False
 
     @api.multi

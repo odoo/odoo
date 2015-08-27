@@ -18,7 +18,7 @@ class Blog(osv.Model):
     _order = 'name'
     _columns = {
         'name': fields.char('Blog Name', required=True, translate=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility="onchange"),
         'subtitle': fields.char('Blog Subtitle', translate=True),
     }
 
@@ -98,7 +98,7 @@ class BlogPost(osv.Model):
 
     _columns = {
         'name': fields.char('Title', required=True, translate=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility="onchange"),
         'subtitle': fields.char('Sub Title', translate=True),
         'author_id': fields.many2one('res.partner', 'Author'),
         'cover_properties': fields.text('Cover Properties'),

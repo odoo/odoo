@@ -47,7 +47,7 @@ class Forum(models.Model):
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, track_visibility="onchange")
     faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
     description = fields.Text(
         'Description',
@@ -196,7 +196,7 @@ class Post(models.Model):
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('close', 'Close'), ('offensive', 'Offensive')], string='Status', default='active')
     views = fields.Integer('Number of Views', default=0)
-    active = fields.Boolean('Active', default=True)
+    active = fields.Boolean('Active', default=True, track_visibility="onchange")
     post_type = fields.Selection([
         ('question', 'Question'),
         ('link', 'Article'),

@@ -540,7 +540,7 @@ class product_template(osv.osv):
         'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
 
-        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it.", track_visibility="onchange"),
         'color': fields.integer('Color Index'),
         'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is a product variant'),
 
@@ -786,6 +786,7 @@ class product_template(osv.osv):
             cr, user, '', args=[('id', 'in', template_ids)],
             operator='ilike', context=context, limit=limit)
 
+
 class product_product(osv.osv):
     _name = "product.product"
     _description = "Product"
@@ -932,7 +933,7 @@ class product_product(osv.osv):
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', select=True),
-        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it.", track_visibility="onchange"),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
         'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={

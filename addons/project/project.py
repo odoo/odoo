@@ -148,7 +148,7 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it.", track_visibility="onchange"),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one(
             'account.analytic.account', 'Contract/Analytic',
@@ -457,7 +457,8 @@ class task(osv.osv):
             store={
                 'project.project': (_get_task_from_project, ['active','state'], 50),
             },
-            string='Not a Template Task', type='boolean', fnct_inv=_inverse_active, help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
+            string='Active', type='boolean', fnct_inv=_inverse_active, track_visibility="onchange",
+            help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.html('Description'),
         'priority': fields.selection([('0','Normal'), ('1','High')], 'Priority', select=True),

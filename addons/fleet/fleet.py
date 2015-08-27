@@ -314,7 +314,7 @@ class fleet_vehicle(osv.Model):
     _order= 'license_plate asc'
     _columns = {
         'name': fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
-        'active': fields.boolean(string='Active'),
+        'active': fields.boolean(string='Active', track_visibility="onchange"),
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate': fields.char('License Plate', required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn': fields.char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False),

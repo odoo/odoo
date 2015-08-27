@@ -103,7 +103,7 @@ class gamification_challenge(osv.Model):
     _order = 'end_date, start_date, name, id'
     _columns = {
         'name': fields.char('Challenge Name', required=True, translate=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', track_visibility="onchange"),
         'description': fields.text('Description', translate=True),
         'state': fields.selection([
                 ('draft', 'Draft'),

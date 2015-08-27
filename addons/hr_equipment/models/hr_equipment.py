@@ -105,7 +105,7 @@ class HrEquipment(models.Model):
         return recs.name_get()
 
     name = fields.Char('Name', required=True, translate=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, track_visibility="onchange")
     user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange')
     employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
@@ -226,7 +226,7 @@ class HrEquipmentRequest(models.Model):
         return super(HrEquipmentRequest, self)._track_subtype(init_values)
 
     name = fields.Char('Subjects', required=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, track_visibility="onchange")
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today)
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)

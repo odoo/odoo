@@ -156,7 +156,7 @@ class crm_lead(format_address, osv.osv):
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Opportunity', required=True, select=1),
-        'active': fields.boolean('Active', required=False),
+        'active': fields.boolean('Active', required=False, track_visibility='onchange'),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
