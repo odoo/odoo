@@ -80,7 +80,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'account.invoice.line': [
             'account_id', 'invoice_id', 'price_subtotal', 'product_id',
-            'quantity', 'uos_id', 'account_analytic_id',
+            'quantity', 'uom_id', 'account_analytic_id',
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
@@ -139,7 +139,7 @@ class AccountInvoiceReport(models.Model):
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
-                LEFT JOIN product_uom u ON u.id = ail.uos_id
+                LEFT JOIN product_uom u ON u.id = ail.uom_id
                 LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
         """
         return from_str
