@@ -11,15 +11,6 @@ class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""
     _inherit = 'sale.order'
 
-    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
-        """Compute the expected date from the requested date, not the order date"""
-        if order and order.requested_date:
-            date_planned = datetime.strptime(order.requested_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            date_planned -= timedelta(days=order.company_id.security_lead)
-            return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        return super(sale_order_dates, self)._get_date_planned(
-                cr, uid, order, line, start_date, context=context)
-
     def _get_effective_date(self, cr, uid, ids, name, arg, context=None):
         """Read the shipping date from the related packings"""
         # TODO: would be better if it returned the date the picking was processed?
@@ -45,7 +36,7 @@ class sale_order_dates(osv.osv):
             for line in order.order_line:
                 if line.state == 'cancel':
                     continue
-                dt = order_datetime + timedelta(days=line.delay or 0.0)
+                dt = order_datetime + timedelta(days=line.customer_lead or 0.0)
                 dt_s = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                 dates_list.append(dt_s)
             if dates_list:
@@ -87,3 +78,17 @@ class sale_order_dates(osv.osv):
             store=True, string='Effective Date',
             help="Date on which the first Delivery Order was created."),
     }
+
+
+class SaleOrderLine(osv.osv):
+    _inherit = 'sale.order.line'
+
+    def _prepare_order_line_procurement(self, cr, uid, ids, group_id=False, context=None):
+        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(cr, uid, ids, group_id=group_id, context=context)
+        line = self.browse(cr, uid, ids, context=context)
+        if line.order_id.requested_date:
+            date_planned = datetime.strptime(line.order_id.requested_date, DEFAULT_SERVER_DATETIME_FORMAT) - timedelta(days=line.order_id.company_id.security_lead)
+            vals.update({
+                'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            })
+        return vals
