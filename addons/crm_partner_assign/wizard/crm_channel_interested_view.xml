@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-    	<record model="ir.ui.view" id="crm_lead_channel_interested_form">
+<odoo>
+    	<record id="crm_lead_channel_interested_form" model="ir.ui.view" >
     		<field name="name">crm_lead_channel_interested</field>
             <field name="model">crm.lead.channel.interested</field>
             <field name="arch" type="xml">
@@ -32,7 +31,7 @@
             	</form>
             </field>
     	</record>
-    	<record model="ir.actions.act_window" id="crm_lead_channel_interested_act">
+    	<record id="crm_lead_channel_interested_act" model="ir.actions.act_window" >
             <field name="name">Lead Feedback</field>
             <field name="res_model">crm.lead.channel.interested</field>
             <field name="view_type">form</field>
@@ -40,5 +39,4 @@
             <field name="view_id" ref="crm_lead_channel_interested_form"/>
             <field name="target">new</field>
         </record>
-    </data>
-</openerp>
+</odoo>

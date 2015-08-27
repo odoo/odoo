@@ -1,12 +1,11 @@
-<?xml version="1.0" ?>
-<openerp>
-    <data>
-        <record model="crm.stage" id="stage_portal_lead_assigned">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record  id="stage_portal_lead_assigned" model="crm.stage">
             <field name="name">Assigned</field>
             <field eval="10" name="probability"/>
             <field eval="12" name="sequence"/>
         </record>
-        <record model="crm.stage" id="stage_portal_lead_recycle">
+        <record id="stage_portal_lead_recycle" model="crm.stage">
             <field name="name">To Recycle</field>
             <field eval="5" name="probability"/>
             <field eval="11" name="sequence"/>
@@ -51,5 +50,4 @@ PS: It looks like you do not have an account manager assigned to you, please con
 % endif
             ]]></field>
         </record>
-    </data>
-</openerp>
+</odoo>
