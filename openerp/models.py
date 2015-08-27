@@ -4005,23 +4005,23 @@ class BaseModel(object):
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
 
-        done = {}
-        recs.env.recompute_old.extend(result)
-        for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
-            key = (model_name, tuple(fields_to_recompute))
-            done.setdefault(key, {})
-            # avoid to do several times the same computation
-            todo = []
-            for id in ids_to_update:
-                if id not in done[key]:
-                    done[key][id] = True
-                    if id not in deleted_related[model_name]:
-                        todo.append(id)
-            self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
-        recs.env.clear_recompute_old()
-
-        # recompute new-style fields
         if recs.env.recompute and context.get('recompute', True):
+            done = {}
+            recs.env.recompute_old.extend(result)
+            for order, model_name, ids_to_update, fields_to_recompute in sorted(recs.env.recompute_old):
+                key = (model_name, tuple(fields_to_recompute))
+                done.setdefault(key, {})
+                # avoid to do several times the same computation
+                todo = []
+                for id in ids_to_update:
+                    if id not in done[key]:
+                        done[key][id] = True
+                        if id not in deleted_related[model_name]:
+                            todo.append(id)
+                self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+            recs.env.clear_recompute_old()
+
+            # recompute new-style fields
             recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
@@ -4271,9 +4271,9 @@ class BaseModel(object):
         result += self._store_get_values(cr, user, [id_new],
                 list(set(vals.keys() + self._inherits.values())),
                 context)
-        recs.env.recompute_old.extend(result)
 
         if recs.env.recompute and context.get('recompute', True):
+            recs.env.recompute_old.extend(result)
             done = []
             for order, model_name, ids, fields2 in sorted(recs.env.recompute_old):
                 if not (model_name, ids, fields2) in done:

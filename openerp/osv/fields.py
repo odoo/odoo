@@ -812,6 +812,7 @@ class one2many(_column):
                     result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
                 elif act[0] == 1:
                     obj.write(cr, user, [act[1]], act[2], context=context)
+                    result += obj._store_get_values(cr, user, [act[1]], act[2].keys(), context)
                 elif act[0] == 2:
                     obj.unlink(cr, user, [act[1]], context=context)
                 elif act[0] == 3:
