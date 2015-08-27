@@ -378,7 +378,7 @@ class res_partner(osv.Model, format_address):
         if state_id:
             state = self.env['res.country.state'].browse(state_id)
             return {'value': {'country_id': state.country_id.id}}
-        return {}
+        return {'value': {}}
 
     @api.multi
     def on_change_company_type(self, company_type):

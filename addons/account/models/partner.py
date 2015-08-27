@@ -2,10 +2,10 @@
 
 from operator import itemgetter
 import time
-from openerp.exceptions import UserError
 
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.exceptions import ValidationError
 
 
 class AccountFiscalPosition(models.Model):
@@ -23,16 +23,26 @@ class AccountFiscalPosition(models.Model):
     note = fields.Text('Notes')
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
-    country_id = fields.Many2one('res.country', string='Countries',
+    country_id = fields.Many2one('res.country', string='Country',
         help="Apply only if delivery or invoicing country match.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
         help="Apply only if delivery or invocing country match the group.")
+    state_ids = fields.Many2many('res.country.state', string='Federal States')
+    zip_from = fields.Integer(string='Zip Range From', default=0)
+    zip_to = fields.Integer(string='Zip Range To', default=0)
+    # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
+    states_count = fields.Integer(compute='_compute_states_count')
 
     @api.one
-    @api.constrains('country_id', 'country_group_id')
-    def _check_country(self):
-        if self.country_id and self.country_group_id:
-            raise UserError(_('You can not select a country and a group of countries.'))
+    def _compute_states_count(self):
+        self.states_count = len(self.country_id.state_ids)
+
+    @api.one
+    @api.constrains('zip_from', 'zip_to')
+    def _check_zip(self):
+        if self.zip_from > self.zip_to:
+            raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
+        return True
 
     @api.v7
     def map_tax(self, cr, uid, fposition_id, taxes, context=None):
@@ -95,6 +105,49 @@ class AccountFiscalPosition(models.Model):
                 accounts[key] = ref_dict[acc]
         return accounts
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        if self.country_id:
+            self.zip_from = self.zip_to = self.country_group_id = False
+            self.state_ids = [(5,)]
+            self.states_count = len(self.country_id.state_ids)
+
+    @api.onchange('country_group_id')
+    def _onchange_country_group_id(self):
+        if self.country_group_id:
+            self.zip_from = self.zip_to = self.country_id = False
+            self.state_ids = [(5,)]
+
+    @api.model
+    def _get_fpos_by_region(self, country_id=False, state_id=False, zipcode=False, vat_required=False):
+        if not country_id:
+            return False
+        domains = [[('auto_apply', '=', True), ('vat_required', '=', vat_required)]]
+        if vat_required:
+            # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
+            domains += [[('auto_apply', '=', True), ('vat_required', '=', False)]]
+        if zipcode and zipcode.isdigit():
+            zipcode = int(zipcode)
+            domain_zip = [('zip_from', '<=', zipcode), ('zip_to', '>=', zipcode)]
+        else:
+            zipcode, domain_zip = 0, [('zip_from', '=', 0), ('zip_to', '=', 0)]
+        state_domain = [('state_ids', '=', False)]
+        if state_id:
+            state_domain = [('state_ids', '=', state_id)]
+        for domain in domains:
+            # Build domain to search records with exact matching criteria
+            fpos_id = self.search(domain + [('country_id', '=', country_id)] + state_domain + domain_zip, limit=1).id
+            # return records that fit the most the criteria, and fallback on less specific fiscal positions if any can be found
+            if not fpos_id and zipcode:
+                fpos_id = self.search(domain + [('country_id', '=', country_id)] + state_domain + [('zip_from', '=', 0), ('zip_to', '=', 0)], limit=1).id
+            if not fpos_id and state_id:
+                fpos_id = self.search(domain + [('country_id', '=', country_id)] + [('state_ids', '=', False)] + domain_zip, limit=1).id
+            if not fpos_id and state_id and zipcode:
+                fpos_id = self.search(domain + [('country_id', '=', country_id)] + [('state_ids', '=', False)] + [('zip_from', '=', 0), ('zip_to', '=', 0)], limit=1).id
+            if fpos_id:
+                return fpos_id
+        return False
+
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
         if not partner_id:
@@ -113,6 +166,10 @@ class AccountFiscalPosition(models.Model):
         if delivery.property_account_position_id or partner.property_account_position_id:
             return delivery.property_account_position_id.id or partner.property_account_position_id.id
 
+        fiscal_position_id = self._get_fpos_by_region(delivery.country_id.id, delivery.state_id.id, delivery.zip, bool(partner.vat))
+        if fiscal_position_id:
+            return fiscal_position_id
+
         domains = [[('auto_apply', '=', True), ('vat_required', '=', bool(partner.vat))]]
         if partner.vat:
             # Possibly allow fallback to non-VAT positions, if no VAT-required position matches
@@ -120,10 +177,6 @@ class AccountFiscalPosition(models.Model):
 
         for domain in domains:
             if delivery.country_id.id:
-                fiscal_position = self.search(domain + [('country_id', '=', delivery.country_id.id)], limit=1)
-                if fiscal_position:
-                    return fiscal_position.id
-
                 fiscal_position = self.search(domain + [('country_group_id.country_ids', '=', delivery.country_id.id)], limit=1)
                 if fiscal_position:
                     return fiscal_position.id
@@ -174,6 +227,18 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
     _description = 'Partner'
+
+    @api.multi
+    def onchange_state(self, state_id):
+        res = super(ResPartner, self).onchange_state(state_id=state_id)
+        res['value']['property_account_position_id'] = self.env['account.fiscal.position']._get_fpos_by_region(
+               country_id=self.env.context.get('country_id'), state_id=state_id, zipcode=self.env.context.get('zip'))
+        return res
+
+    @api.onchange('country_id', 'zip')
+    def _onchange_country_id(self):
+        self.property_account_position_id = self.env['account.fiscal.position']._get_fpos_by_region(
+                country_id=self.country_id.id, state_id=self.state_id.id, zipcode=self.zip)
 
     @api.multi
     def _credit_debit_get(self):
