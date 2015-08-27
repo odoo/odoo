@@ -2,62 +2,14 @@
 <openerp>
     <data>
 
-        <record id="view_project_tree_inherited" model="ir.ui.view">
-            <field name="name">project.project.tree.inherited</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="planned_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
-                    <field name="total_hours" widget="float_time"/>
-                    <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
-                    <field name="progress_rate" widget="progressbar"/>
-                </field>
-            </field>
-        </record>
-
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="options_active"]' position="attributes">
-                    <attribute name="invisible">0</attribute>
-                </xpath>
-                <xpath expr='//div[@name="options_active"]' position='inside'>
-                    <field name="invoice_on_timesheets" class="oe_inline"/>
-                    <label for="invoice_on_timesheets"/>
-                </xpath>
-                <xpath expr='//group[@name="group_alias"]' position='before'>
-                    <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                        To invoice or setup invoicing and renewal options, go to the related contract:
-                        <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
-                    </p>
-                </xpath>
-                <field name="privacy_visibility" position="after">
-                    <field name="planned_hours" widget="float_time"
-                            groups="project.group_time_work_estimation_tasks"/>
-                    <field name="effective_hours" widget="float_time"
-                            groups="project.group_time_work_estimation_tasks"/>
-                </field>
                 <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('invoice_on_timesheets','=',False)]}"
-                        icon="fa-calendar" string="Timesheets"/>
+                    <button class="oe_stat_button" name="open_timesheets" type="object" icon="fa-calendar" string="Timesheets"/>
                 </div>
-                <xpath expr='//field[@name="partner_id"]' position='after'>
-                    <field name="pricelist_id" invisible="1"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="project_invoice_search" model="ir.ui.view">
-            <field name="name">Inherit project search view : Invoicing Data</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.view_project_project_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr='//filter[@name="Template"]' position='after'>
-                    <filter string="Billable" domain="[('to_invoice','!=', False)]"/>
-                </xpath>
             </field>
         </record>
 
@@ -98,45 +50,6 @@
             </field>
         </record>
 
-        <!-- Menus -->
-        <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
-            <field name="name">Invoice Tasks</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,pivot</field>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
-            <field name="help" type="html">
-              <p>
-                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.
-                If you want to record new jobs to invoice, you should use the timesheet menu instead.
-              </p>
-            </field>
-        </record>
-
-        <!--
-            Time Tracking menu in project Management
-        -->
-
-        <record id="action_account_analytic_overdue" model="ir.actions.act_window">
-            <field name="name">Customer Projects</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
-            <field name="context">{}</field>
-            <field name="domain">[('type','=','normal')]</field>
-            <field name="search_view_id" ref="sale_contract.view_account_analytic_account_overdue_search"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a customer contract.
-              </p><p>
-                You will find here the contracts related to your customer
-                projects in order to track the invoicing progress.
-              </p>
-            </field>
-        </record>
-        
         <record model="ir.ui.view" id="view_task_form2_inherited">
             <field name="name">project.task.form.inherited</field>
             <field name="model">project.task</field>
@@ -145,10 +58,6 @@
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">onchange_project(project_id)</attribute>
                 </field>
-                <xpath expr='//field[@name="project_id"]' position='after'>
-                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('project_id', '=', False), ('partner_id', '=', False)]}"
-                    options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
-                </xpath>
                 <field name="tag_ids" position="after">
                     <field name="analytic_account_id" invisible="1"/>
                     <field name="progress" widget="progressbar"
@@ -161,14 +70,8 @@
                             <field name="date"/>
                             <field name="user_id" required="1"/>
                             <field name="name"/>
-                            <field name="account_id" on_change="on_change_account_id(account_id, user_id, unit_amount, is_timesheet, context)"/>
-                            <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" sum="Total time" widget="float_time"/>
-                            <field name="to_invoice"/>
-                            <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" invisible="1"/>
-                            <field name="journal_id" invisible="1"/>
-                            <field name="amount" sum="Total cost" invisible="1"/>
-                            <field name="general_account_id" invisible="1"/>
-                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" domain="[('type','=','service')]" invisible="1"/>
+                            <field name="account_id"/>
+                            <field name="unit_amount" string="Duration" sum="Total time" widget="float_time"/>
                             <field name="is_timesheet" invisible="1"/>
                         </tree>
                     </field>

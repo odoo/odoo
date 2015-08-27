@@ -49,14 +49,11 @@
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="state">open</field>
-            <field name="type">normal</field>
             <field name="name">Website for Sales &amp; WMS</field>
             <field name="color">3</field>
             <field name="partner_id" ref="portal.partner_demo_portal"/>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">portal</field>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(4, ref('project_stage_0')) ,(4,ref('project_stage_1'))]"/>
             <field name="message_follower_ids" eval="[
@@ -67,7 +64,6 @@
 
         <record id="project_project_2" model="project.project">
             <field name="name">Research &amp; Development</field>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
@@ -75,7 +71,6 @@
 
         <record id="project_project_3" model="project.project">
             <field name="sequence">10</field>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="name">E-Learning Integration</field>
             <field name="label_tasks">Trainings</field>
             <field name="user_id" ref="base.user_demo"/>
@@ -85,7 +80,6 @@
 
         <record id="project_project_4" model="project.project">
             <field name="sequence">20</field>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="name">Website Design Templates</field>
             <field name="label_tasks">Designs</field>
             <field name="user_id" ref="base.user_root"/>
@@ -96,7 +90,6 @@
 
         <record id="project_project_5" model="project.project">
             <field name="sequence">2</field>
-            <field name="parent_id" ref="all_projects_account"/>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="name">Data Import/Export Plugin</field>
             <field name="label_tasks">Databases</field>
