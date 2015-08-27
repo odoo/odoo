@@ -1214,9 +1214,11 @@ openerp.account = function (instance) {
     
         changePartnerClickHandler: function() {
             var self = this;
+            var partner_name = self.st_line.partner_name;
             $.when(self.changePartner(false)).then(function(){
                 self.$(".change_partner_container").show();
                 self.$(".partner_name").hide();
+                self.$(".change_partner_container").find("input").attr("placeholder", partner_name);
                 self.change_partner_field.$drop_down.trigger("click");
             })
         },
@@ -1658,10 +1660,9 @@ openerp.account = function (instance) {
                 // Update model
                 .call("write", [[self.st_line_id], {'partner_id': partner_id}])
                 .then(function () {
-                    self.do_load_reconciliation_proposition = false; // of the server might set the statement line's partner
+                    self.do_load_reconciliation_proposition = true; // the server will set the statement line with the new partner
                     self.animation_speed = 0;
                     return $.when(self.restart(self.get("mode"))).then(function(){
-                        self.do_load_reconciliation_proposition = true;
                         self.is_consistent = true;
                         self.set("mode", "match");
                     });
