@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-06-29 01:16+0000\n"
-"Last-Translator: mrshelly <mrshelly@hotmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-08-17 14:08+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -180,7 +180,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n    <p>你好， ${object.partner_id.name},</p>\n    \n    <p>这是你的 ${object.state in ('draft', 'sent') and '报价单' or '确认后的订单'} 来自 ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>摘要</strong><br />\n       &nbsp;&nbsp;订单编号: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;订单总额: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;订单日期: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;订单引用: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;你的引用: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;你的联系人: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    <% set signup_url = object.get_signup_url() %>\n    % if signup_url:\n    <p>\n    你可以通过下面的按钮来访问这个文件并且通过客户门户来在线付款；\n    </p>\n        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n           href=\"${signup_url}\">查看 ${object.state in ('draft', 'sent') and '报价单' or '订单'}</a>\n    % endif\n\n    % if object.paypal_url:\n    <br/>\n    <p>直接用贝宝来付款也是可能的：</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>如果你有任何疑问，不要犹豫，请马上告诉我们。</p>\n    <p>感谢你选择 ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                电话:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n               网址:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        % endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: portal_sale
 #: model:email.template,report_name:portal_sale.email_template_edi_sale
@@ -194,13 +194,13 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and '�
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and '报价单' or '订单'} (编号 ${object.name or 'n/a' })"
 
 #. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} 发票 (编号 ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: view:account.config.settings:portal_sale.portal_sale_payment_option_config
@@ -231,7 +231,7 @@ msgid ""
 "Members of this group see the online payment options\n"
 "on Sale Orders and Customer Invoices. These options are meant for customers who are accessing\n"
 "their documents through the portal."
-msgstr ""
+msgstr "这个组的成员能够在销售订单和客户发票上看到在线付款的选择。\n这些选择是用于那些通过门户来访问他们文件的用户的。"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
@@ -270,7 +270,7 @@ msgstr "销售订单"
 msgid ""
 "Show online payment options on Sale Orders and Customer Invoices to "
 "employees. If not checked, these options are only visible to portal users."
-msgstr ""
+msgstr "在销售订单或客户发票上显示在线付款选择项。如果没有被选择，这些选择只对门户用户可见。"
 
 #. module: portal_sale
 #: field:account.config.settings,group_payment_options:0
@@ -285,19 +285,19 @@ msgstr "查看在线支付选项"
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "我们还没有发送给你发票。"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "我们还没有发送给你报价。"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "我们还没有发送给你销售订单。"
 
 #. module: portal_sale
 #: view:account.invoice:portal_sale.view_account_invoice_filter_share
 msgid "[('share','=', False)]"
-msgstr ""
+msgstr "[('share','=', False)]"

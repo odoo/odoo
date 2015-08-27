@@ -47,7 +47,7 @@ DOMAIN_ALL = [(1, '=', 1)]
 # A good selection of easy to read password characters (e.g. no '0' vs 'O', etc.)
 RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
 def generate_random_pass():
-    return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
+    return ''.join(random.SystemRandom().sample(RANDOM_PASS_CHARACTERS,10))
 
 class share_wizard(osv.TransientModel):
     _name = 'share.wizard'

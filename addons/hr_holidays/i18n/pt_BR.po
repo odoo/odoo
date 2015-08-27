@@ -6,14 +6,16 @@
 # Clemilton Clementino <clemylton@hotmail.com>, 2015
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-02 22:20+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-08-13 10:13+0000\n"
+"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -48,6 +50,11 @@ msgstr "<p>\nVocê pode atribuir as restantes folhas jurídicas para cada empreg
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "Ativo"
+
+#. module: hr_holidays
+#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+msgid "Active Types"
+msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
@@ -254,6 +261,11 @@ msgstr "Situação Atual das Folgas"
 #: field:hr.employee,current_leave_id:0
 msgid "Current Leave Type"
 msgstr "Tipo de Folga Atual"
+
+#. module: hr_holidays
+#: view:hr.holidays:hr_holidays.view_hr_holidays_filter
+msgid "Current Year Leaves"
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays,message_last_post:0
@@ -540,7 +552,7 @@ msgstr "Folgas por Tipo"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2015"
-msgstr ""
+msgstr "Folgas Restantes 2015"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1043,7 +1055,7 @@ msgstr "Você não pode excluir uma folga que está no estado %s."
 #: code:addons/hr_holidays/hr_holidays.py:510
 #, python-format
 msgid "You cannot reduce validated allocation requests"
-msgstr ""
+msgstr "Você não pode reduzir solicitações de alocação validadas"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:330
@@ -1051,7 +1063,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
-msgstr ""
+msgstr "Você não pode definir uma solicitação de licença como '%s'. Contate um gerente de recursos humanos."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44

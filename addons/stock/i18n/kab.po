@@ -9,10 +9,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-04 22:38+0000\n"
-"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle (http://www.transifex.com/projects/p/odoo-8/language/kab/)\n"
+"POT-Creation-Date: 2015-08-03 15:25+0000\n"
+"PO-Revision-Date: 2015-08-19 09:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -114,7 +114,7 @@ msgstr "%s %s %s has been <b>moved to</b> scrap."
 #: code:addons/stock/stock.py:2930
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr ""
+msgstr "%s: Zigeẓ afaris si %s"
 
 #. module: stock
 #: code:addons/stock/res_config.py:43
@@ -130,7 +130,7 @@ msgid ""
 "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
-msgstr "* Nouveau : Quand le mouvement est crée mais pas encore confirmé.\n* Attente d'un autre mouvement : Cet état est visible quand un mouvement est en attente d'au autre, par exemple pour des transferts qui s'enchainent.\n* En attente de disponibilité : Cet état est atteint lorsque la résolution de l'approvisionnement n'est pas finie. Le lancement du planificateur peut être nécessaire, ou la fabrication d'un composant...\n* Disponible : Quand les produits sont disponibles, l'état est 'Disponible'.\n* Terminé : Quand le bon d'expédition est traité, l'état est 'Terminé'."
+msgstr ""
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -216,6 +216,18 @@ msgid ""
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\nSit it merna n ulugen n taǧǧawt.\n</p><p>Tzemreḍ ad tesbaduḍ ilugan n uselɣas addayen, iwakken Odoo ad isirew s webrid awurman tiludna n ufares neɣ isutar n ssuma, akken yella weswir n uselɣas. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a serial number.\n"
+"              </p><p>\n"
+"                This is the list of all the production lots you recorded. When\n"
+"                you select a lot, you can get the traceability of the products contained in lot.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -430,14 +442,14 @@ msgstr "Sireg asmetter ɣef isawaḍen"
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
 msgid "Allow to define several packaging methods on products"
-msgstr "Permet de définir plusieurs méthodes de conditionnement sur les articles"
+msgstr "Ak yeǧǧ ad tesbaduḍ deqs n tarrayin n tnagalt ɣef ifarisen"
 
 #. module: stock
 #: help:stock.config.settings,group_stock_packaging:0
 msgid ""
 "Allows you to create and manage your packaging dimensions and types you want"
 " to be maintained in your system."
-msgstr "Vous permet de créer et de gérer les dimensions et types d'emballage que vous voulez utiliser dans votre système."
+msgstr "Ak yeǧǧ ad ternuḍ w-ad sfrekeḍ tisektiwin ed tewsitin n tnagalt a tesqedceḍ deg unagraw inek."
 
 #. module: stock
 #: help:stock.config.settings,group_uom:0
@@ -450,6 +462,13 @@ msgstr "Ad isireg afran d usefrek n iferdisen n usɣel imgaraden i  yifarisen."
 msgid ""
 "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
 "For instance, you can sell pieces of meat that you invoice based on their weight."
+msgstr ""
+
+#. module: stock
+#: help:stock.config.settings,group_uos:0
+msgid ""
+"Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
+"For instance, you can store pieces of meat that you sell and invoice based on their weight."
 msgstr ""
 
 #. module: stock
@@ -482,7 +501,7 @@ msgstr "Snes"
 msgid ""
 "As an example, a decimal precision of 2 will allow weights like: 9.99 kg, "
 "whereas a decimal precision of 4 will allow weights like:  0.0231 kg."
-msgstr "Par exemple, une précision de 2 autorisera les poids comme \"9,99 kg\", alors qu'une précision de 4 autorisera les poids comme : \"0,0231 Kg\"."
+msgstr "Amedya, tiseddi tamrawant n  2 ad yeǧǧ asekcem am : 9,99KG,  Amedya, timseddi tamrawant n  4 ad yeǧǧ asekcem am : 0,0231KG"
 
 #. module: stock
 #: view:make.procurement:stock.view_make_procurment_wizard
@@ -628,7 +647,7 @@ msgstr "Timeẓri awitay"
 #: code:addons/stock/stock.py:2989
 #, python-format
 msgid "Can't find any customer or supplier location."
-msgstr "Ulac asun n ulṣaɣ neɣ n useǧǧaw."
+msgstr "Ulac adeg n umsaɣ neɣ n useǧǧaw."
 
 #. module: stock
 #: code:addons/stock/stock.py:3074
@@ -643,12 +662,12 @@ msgstr ""
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "Cancel"
-msgstr "Sefsax"
+msgstr "Sefsex"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
 msgid "Cancel Availability"
-msgstr "Sefsax tilin"
+msgstr "Sefsex tilin"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -658,7 +677,7 @@ msgstr "Annuler l'inventaire"
 #. module: stock
 #: view:stock.move:stock.view_move_form
 msgid "Cancel Move"
-msgstr "Sefsax amussu"
+msgstr "Sefsex amussu"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -692,7 +711,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:24
 #, python-format
 msgid "Change Location"
-msgstr "Snifel asun"
+msgstr "Snifel adeg"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -705,14 +724,14 @@ msgstr "Snifel tanecta n ifarisen"
 #: code:addons/stock/static/src/xml/picking.xml:173
 #, python-format
 msgid "Change destination location"
-msgstr "Snifel asun n tuzzna"
+msgstr "Snifel adegn tuzzna"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:169
 #, python-format
 msgid "Change source location"
-msgstr "Snifel asun aɣbalu"
+msgstr "Snifel adeg aɣbalu"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -740,7 +759,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:11
 #, python-format
 msgid "Choose a location"
-msgstr "Fren asun"
+msgstr "Fren adeg"
 
 #. module: stock
 #. openerp-web
@@ -1037,12 +1056,12 @@ msgstr "Amenḍaṛ n usiweḍ i umsaɣ"
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Asun n umsaɣ"
+msgstr "Adeg n umsaɣ"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
 msgid "Customer Locations"
-msgstr "Asun n umsaɣ"
+msgstr "Adeg n umsaɣ"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -1120,7 +1139,7 @@ msgstr "Madame, Monsieur,\n\nD'après nos relevés, il semble que nous sommes en
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
 msgid "Decimal precision on weight"
-msgstr "Précision décimale pour le poids"
+msgstr "Tiseddi tamrawant i taẓayt"
 
 #. module: stock
 #: field:stock.picking.type,default_location_dest_id:0
@@ -1267,7 +1286,7 @@ msgstr "Tansa n tuzzna "
 #: field:stock.picking,location_dest_id:0
 #: field:stock.transfer_details_items,destinationloc_id:0
 msgid "Destination Location"
-msgstr "Asun n tuzzna"
+msgstr "Adeg n tuzzna"
 
 #. module: stock
 #: field:procurement.order,move_dest_id:0 field:stock.move,move_dest_id:0
@@ -1394,7 +1413,7 @@ msgstr "Date prévue"
 #. module: stock
 #: field:stock.config.settings,module_product_expiry:0
 msgid "Expiry date on serial numbers"
-msgstr "Date de péremption sur les numéros de série"
+msgstr "Azemz n uneffeṛ ɣef wuṭṭunen n umazrar"
 
 #. module: stock
 #: code:addons/stock/stock.py:1322
@@ -1412,7 +1431,7 @@ msgstr "FIFO, LIFO..."
 #: code:addons/stock/static/src/xml/picking.xml:101
 #, python-format
 msgid "Filter by location..."
-msgstr "Imzizdeg s wasun..."
+msgstr "Imzizdeg s wadeg..."
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
@@ -1451,7 +1470,7 @@ msgstr ""
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
-msgstr "Force à préciser un numéro de série pour tous les mouvements contenant cet article et provenant d'un emplacement fournisseur"
+msgstr ""
 
 #. module: stock
 #: help:product.template,track_outgoing:0
@@ -1567,7 +1586,7 @@ msgstr "Tilɣa timatutin"
 #. module: stock
 #: field:stock.config.settings,module_procurement_jit:0
 msgid "Generate procurement in real time"
-msgstr ""
+msgstr "Sirew azigeẓ s wakud ilaw"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_5
@@ -1663,7 +1682,7 @@ msgstr "Isseǧǧzwen IT"
 #. module: stock
 #: model:product.template,name:stock.product_icecream_product_template
 msgid "Ice Cream"
-msgstr ""
+msgstr "Ice Cream"
 
 #. module: stock
 #: model:product.template,description:stock.product_icecream_product_template
@@ -1765,6 +1784,16 @@ msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
 
 #. module: stock
+#: help:stock.inventory,filter:0
+msgid ""
+"If you do an entire inventory, you can choose 'All Products' and it will "
+"prefill the inventory with the current stock.  If you only do some products"
+"  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
+"the system won't propose anything.  You can also let the system propose for "
+"a single product / lot /... "
+msgstr ""
+
+#. module: stock
 #: selection:stock.inventory,state:0
 msgid "In Progress"
 msgstr "Anazzal"
@@ -1839,7 +1868,7 @@ msgstr "Anekcum"
 #. module: stock
 #: field:stock.warehouse,wh_input_stock_loc_id:0
 msgid "Input Location"
-msgstr "Asun n unekcum"
+msgstr "Adeg n unekcum"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_picking_wave:0
@@ -1862,7 +1891,7 @@ msgstr "Agensan"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Asun agensan"
+msgstr "Adeg agensan"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -1885,12 +1914,12 @@ msgstr "Tamsisɣelt tagensant"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr ""
+msgstr "Iṣawaḍen igensanen"
 
 #. module: stock
 #: field:res.company,internal_transit_location_id:0
 msgid "Internal Transit Location"
-msgstr ""
+msgstr "Adeg n isawaḍen igensanen"
 
 #. module: stock
 #: field:stock.warehouse,int_type_id:0
@@ -2041,7 +2070,7 @@ msgstr ""
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr "Facturer les articles dans une unité différente du bon de commande"
+msgstr "Feter ifarisen s uferdis n usɣel yemgaraden ed tin yellan di tladna n uznuzu"
 
 #. module: stock
 #: field:stock.picking,message_is_follower:0
@@ -2142,17 +2171,17 @@ msgstr "Aleqqem aneggaru di"
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 #, python-format
 msgid "Late"
-msgstr "Yeɛṭel"
+msgstr "igellel"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr ""
+msgstr "igellel (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr ""
+msgstr "Isawaḍen igellelen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2214,12 +2243,12 @@ msgstr "Asideg"
 #: field:stock.warehouse.orderpoint,location_id:0
 #: view:website:stock.report_inventory
 msgid "Location"
-msgstr "Asun"
+msgstr "Adeg"
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
 msgid "Location & Warehouse"
-msgstr "Asun & agadir"
+msgstr "Adeg & agadir"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_location_barcode
@@ -2246,7 +2275,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Asun n uselɣas"
+msgstr "Adeg n uselɣas"
 
 #. module: stock
 #: field:stock.location,usage:0
@@ -2256,7 +2285,7 @@ msgstr "Tawsit n usun"
 #. module: stock
 #: help:stock.move,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "Asun anda anagraw ad iselɣes ifarisen imden"
+msgstr "Adeg anda anagraw ad iselɣes ifarisen imden"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -2275,12 +2304,12 @@ msgstr "Logistique"
 #. module: stock
 #: field:stock.quant.package,ul_id:0
 msgid "Logistic Unit"
-msgstr ""
+msgstr "Aferdis alujistikan"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 msgid "Logistic Units"
-msgstr ""
+msgstr "Iferdisen ilujistikanen"
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -2334,7 +2363,8 @@ msgid "Make Procurements"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:3071
+#: code:addons/stock/stock.py:3217
+#: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
 msgstr ""
@@ -2394,7 +2424,7 @@ msgstr "Sefrek Isunen d igadiren usgiten"
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_owner:0
 msgid "Manage owner on stock"
-msgstr ""
+msgstr "Sefrek imawlan n uselɣas"
 
 #. module: stock
 #: field:stock.config.settings,module_stock_picking_wave:0
@@ -2410,6 +2440,12 @@ msgstr "Amasay"
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Tamhelt n ufus"
+
+#. module: stock
+#: code:addons/stock/stock.py:2640
+#, python-format
+msgid "Manual Selection of Products"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -2525,7 +2561,8 @@ msgid "Move which caused (created) the procurement"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,quant_ids:0
+#: view:stock.move:stock.view_move_form
+#: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
 msgstr ""
 
@@ -2582,7 +2619,7 @@ msgstr "Isem"
 #. module: stock
 #: field:stock.quant,negative_dest_location_id:0
 msgid "Negative Destination Location"
-msgstr "Asun n tuzzna ibaw"
+msgstr "Adeg n tuzzna ibaw"
 
 #. module: stock
 #: view:product.template:stock.product_template_search_form_view_stock
@@ -2647,12 +2684,12 @@ msgstr "Aucun article à retourner : seules les lignes en état \"Terminé\" et 
 #: code:addons/stock/procurement.py:199
 #, python-format
 msgid "No source location defined!"
-msgstr "Ulac Asun Aɣbalu!"
+msgstr "Ulac Adeg Aɣbalu!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
-msgstr ""
+msgstr "Imsaɣen mačči  n  Uṛup"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -2872,7 +2909,7 @@ msgstr "Tuffɣa"
 #. module: stock
 #: field:stock.warehouse,wh_output_stock_loc_id:0
 msgid "Output Location"
-msgstr "Asun n Tuffɣa"
+msgstr "Adeg n Tuffɣa"
 
 #. module: stock
 #: field:stock.inventory.line,partner_id:0 field:stock.location,partner_id:0
@@ -2976,12 +3013,12 @@ msgstr ""
 #: view:stock.quant.package:stock.quant_package_search_view
 #: field:stock.quant.package,packaging_id:0
 msgid "Packaging"
-msgstr "Azdem"
+msgstr "Tanagalt"
 
 #. module: stock
 #: field:stock.warehouse,wh_pack_stock_loc_id:0
 msgid "Packing Location"
-msgstr "Asun n uzdem"
+msgstr "Adeg n uzdem"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_pack_operation
@@ -3009,7 +3046,7 @@ msgstr "Iɣewwaṛen"
 #: view:stock.location:stock.view_location_search
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Asun amaraw"
+msgstr "Adeg amaraw"
 
 #. module: stock
 #: field:stock.quant.package,parent_id:0
@@ -3203,7 +3240,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,product_packaging:0
 msgid "Prefered Packaging"
-msgstr ""
+msgstr "Tanagalt tasmenyaft"
 
 #. module: stock
 #: field:procurement.order,route_ids:0
@@ -3353,7 +3390,7 @@ msgstr "Afaris"
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Product Categories"
-msgstr "Taggayin n ifarisen"
+msgstr "Tiggayin n ifarisen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -3420,7 +3457,7 @@ msgstr "Afares"
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr "Asun n ufares"
+msgstr "Adegn ufares"
 
 #. module: stock
 #: view:website:stock.report_inventory
@@ -3547,7 +3584,7 @@ msgstr "Asenqed n tɣara"
 #. module: stock
 #: field:stock.warehouse,wh_qc_stock_loc_id:0
 msgid "Quality Control Location"
-msgstr "Asun n Usenqed n Tɣara"
+msgstr "Adeg n Usenqed n Tɣara"
 
 #. module: stock
 #: view:stock.quant:stock.view_stock_quant_form
@@ -4358,7 +4395,7 @@ msgstr "Prévision du niveau de stock"
 #: view:stock.location:stock.view_location_form
 #: view:stock.location:stock.view_location_tree2
 msgid "Stock Location"
-msgstr "Asun n uselɣas"
+msgstr "Adeg n uselɣas"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
@@ -4434,6 +4471,11 @@ msgid "Storage Location"
 msgstr "Emplacement de stockage"
 
 #. module: stock
+#: field:stock.config.settings,group_uos:0
+msgid "Store products in a different unit of measure than the sales order"
+msgstr ""
+
+#. module: stock
 #: field:stock.picking,message_summary:0
 #: field:stock.production.lot,message_summary:0
 msgid "Summary"
@@ -4459,12 +4501,12 @@ msgstr "Tansa n usaǧǧaw"
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Emplacement fournisseur"
+msgstr "Adeg n useǧǧaw"
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
 msgid "Supplier Locations"
-msgstr "Emplacements fournisseurs"
+msgstr "Adeg n useǧǧaw"
 
 #. module: stock
 #: field:stock.location.route,supplier_wh_id:0
@@ -4621,6 +4663,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:1067
+#, python-format
+msgid ""
+"The destination location must be the same for all the moves of the picking."
+msgstr ""
+
+#. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
@@ -4704,6 +4753,17 @@ msgstr ""
 msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
+msgstr ""
+
+#. module: stock
+#: constraint:stock.inventory:0
+msgid "The selected inventory options are not coherent."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1070
+#, python-format
+msgid "The source location must be the same for all the moves of the picking."
 msgstr ""
 
 #. module: stock
@@ -4938,7 +4998,7 @@ msgstr "Conserve différentes dates sur les articles et sur les numéros de sér
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "Ḍfaṛ les lots ed uṭṭunen n umazrar"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -4981,7 +5041,7 @@ msgstr ""
 #. module: stock
 #: field:stock.quant,packaging_type_id:0
 msgid "Type of packaging"
-msgstr ""
+msgstr "Tawsit n tnagalt"
 
 #. module: stock
 #: field:stock.location.path,picking_type_id:0
@@ -4996,7 +5056,7 @@ msgstr ""
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
-msgstr ""
+msgstr "Uṭṭun n umazrar asuf"
 
 #. module: stock
 #: field:stock.quant,cost:0
@@ -5033,7 +5093,7 @@ msgstr "Aferdis n usɣel"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr "Taggayin n Iferdisen n usɣel"
+msgstr "Tiggayin n Iferdisen n usɣel"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -5079,6 +5139,11 @@ msgstr "Messages non lus"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:stock.view_inventory_form
+msgid "UoM"
 msgstr ""
 
 #. module: stock
@@ -5346,16 +5411,16 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/stock.py:368
 #, python-format
-msgid "You can not reserve a negative quantity or a negative quant."
+msgid ""
+"You can not change the unit of measure of a product that has already been "
+"used in a done stock move. If you need to change the unit of measure, you "
+"may deactivate this product."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
-msgid ""
-"You can only change the checked quantity of an existing inventory line. If "
-"you want modify a data, please set the checked quantity to 0 and create a "
-"new inventory line."
+msgid "You can not reserve a negative quantity or a negative quant."
 msgstr ""
 
 #. module: stock
@@ -5410,7 +5475,13 @@ msgid ""
 msgstr "Issefk ad tferneḍ aferdi n usɣel n ufaris di taggayt n uferdis n usɣel n uwennez n tazwara n ufaris."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:69
+#: code:addons/stock/wizard/stock_return_picking.py:62
+#, python-format
+msgid "You may only return one picking at a time!"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
 msgstr ""
@@ -5438,7 +5509,7 @@ msgstr "_Snes"
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "_Cancel"
-msgstr "_Sefsax"
+msgstr "_Sefsex"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -5478,14 +5549,6 @@ msgstr "neɣ"
 #: code:addons/stock/static/src/xml/picking.xml:243
 #, python-format
 msgid "picking(s)"
-msgstr ""
-
-#. module: stock
-#: view:product.template:stock.view_stock_product_template_tree
-msgid ""
-"red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', "
-"'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
-"'end', 'obsolete')"
 msgstr ""
 
 #. module: stock
@@ -5533,21 +5596,6 @@ msgstr ""
 #: field:stock.picking.type,rate_picking_late:0
 msgid "unknown"
 msgstr "Arussin"
-
-#. module: stock
-#: view:product.template:stock.view_template_property_form
-msgid ""
-"{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', "
-"'stock.group_stock_manager']}"
-msgstr "{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}"
-
-#. module: stock
-#: view:product.product:stock.view_stock_product_tree
-msgid ""
-"{'red':virtual_available<0, 'blue':virtual_available>=0 and state in "
-"('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in "
-"('draft', 'end', 'obsolete')}"
-msgstr ""
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form

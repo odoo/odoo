@@ -83,8 +83,7 @@
             </li>
           </ul>
         {% endif %}
-        {{ toctree(titles_only=True, maxdepth=2, includehidden=True,
-        collapse=False, navbar='main') }}
+        {{ toctree(titles_only=True, maxdepth=2, includehidden=True, collapse=False, navbar='main') }}
       </nav>
     </div>
   </nav>
@@ -99,6 +98,7 @@
   <main class="{{ container }} {{ ' '.join(classes) }}">
     {% if pagename != master_doc %}
     <div class="row">
+      {% if 'has-toc' not in meta %}
       <aside>
         <div class="navbar-aside text-center">
           <div class="logo_box">
@@ -113,7 +113,8 @@
           {% endif %}
         </div>
       </aside>
-      <article class="doc-body">
+      {% endif %}
+      <article class="doc-body {% if 'has-toc' in meta %}doc-toc{% endif %}">
         {% endif %}
         {% block body %} {% endblock %}
       {% if pagename != master_doc %}</article>

@@ -6,15 +6,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # jeffery chen fan <jeffery9@gmail.com>, 2015
 # leangjia <liangjia@qq.com>, 2015
-# Talway <1473162392@qq.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
+# Talway <9010446@qq.com>, 2015
+# Talway <9010446@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-04 07:01+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,12 +30,12 @@ msgid ""
 "* The 'Pro-forma' when voucher is in Pro-forma status,voucher does not have an voucher number.                         \n"
 "* The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
 "* The 'Cancelled' status is used when user cancel voucher."
-msgstr "* '草稿'状态用于新建的和未确认凭证.                         \\n\n* '形式发票'状态下凭证，没有凭证编号.                         \\n\n* '已登账'状态指用户创建了凭证，凭证号已经生成，凭证中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭证取消. "
+msgstr "* '草稿'状态用于新建的和未确认凭单.                         \\n\n* '形式发票'状态下凭单，没有凭单编号.                         \\n\n* '已登账'状态指用户创建了凭单，凭单号已经生成，凭单中的项目已经进入账户                         \\n\n* '取消' 状态用于用户将凭单取消. "
 
 #. module: account_voucher
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr "# 凭证行"
+msgstr "# 凭单行"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -55,7 +57,7 @@ msgid ""
 "                Odoo helps you easily track payments you make and the remaining balances you need to pay your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\\\"oe_view_nocontent_create\\\">\n单击新建一个供应商付款。\n</p><p>\nOdoo帮助你跟踪你的实际付款和需要支付给供应商的付款余额。\n</p>"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -67,7 +69,7 @@ msgid ""
 "                payment related to this sales receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\\\"oe_view_nocontent_create\\\">\n单击以创建销售收据。\n</p><p>\n销售收据被确认后，你可以记录客户与此销售收据相关的付款。</p>"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -81,7 +83,7 @@ msgid ""
 "                invoices or sales receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击新建一个付款。\n</p><p>\n输入客户和付款方法，或者手动创建一个付款记录，Odoo将建议你调节还处于打开状态的发票或销售收据。\n</p>        "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -93,7 +95,7 @@ msgid ""
 "                supplier payment related to this purchase receipt.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\\\"oe_view_nocontent_create\\\">\n单击创建采购收据。 \n</p><p>\n采购收据被确认后，你可以记录与该收据相关的供应商付款。\n</p>\\n\n            "
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -105,7 +107,7 @@ msgid ""
 "            this analysis to your needs.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p>从这份报告中看出，你可以提供盖总发票给你的客户以及延迟支付，该工具搜索也可以个性化您的发票等，符合本你的需求分析。</p>"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0 field:account.voucher.line,account_id:0
@@ -116,13 +118,13 @@ msgstr "科目"
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr "科目分录"
+msgstr "科目条目"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "记账凭证"
+msgstr "记账凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
@@ -138,13 +140,13 @@ msgstr "总额"
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项"
+msgstr "分析账户"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr "你确定要反核销并作废这条记录么？"
+msgstr "你确定要反调节并作废这条记录么？"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -155,7 +157,7 @@ msgstr "你确信要取消这个收据？"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Are you sure you want to unreconcile this record?"
-msgstr ""
+msgstr "你确定你想反核销此记录吗？"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:276
@@ -163,7 +165,7 @@ msgstr ""
 msgid ""
 "At the operation date, the exchange rate was\n"
 "%s = %s"
-msgstr ""
+msgstr "会计期间汇率为\\n\n%s = %s"
 
 #. module: account_voucher
 #: field:sale.receipt.report,delay_to_pay:0
@@ -207,7 +209,7 @@ msgstr "取消收据"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Cancel Voucher"
-msgstr "取消凭证"
+msgstr "取消凭单"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0 selection:sale.receipt.report,state:0
@@ -225,7 +227,7 @@ msgstr "不能删除已经开启或者支付的单据。"
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr ""
+msgstr "如果不能确定日记账分录，或者你想把它标注为'待审阅’并交由记账专家来处理，勾选此项。"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0 field:account.voucher.line,company_id:0
@@ -239,7 +241,7 @@ msgstr "公司"
 msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
-msgstr "计算公式 ： 凭证上输入的金额 - 凭证行的金额合计"
+msgstr "计算公式 ： 凭单上输入的金额 - 凭单行的金额合计"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1057
@@ -319,7 +321,7 @@ msgstr "日期"
 #. module: account_voucher
 #: help:account.voucher,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "发布到记录上的最后信息的日期"
+msgstr "发布到记录上的最后消息的日期"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -371,7 +373,7 @@ msgstr "草稿"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Draft Vouchers"
-msgstr "草稿凭证"
+msgstr "草稿凭单"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0 field:account.voucher.line,date_due:0
@@ -404,19 +406,19 @@ msgstr "汇率"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Expense Lines"
-msgstr "费用明细"
+msgstr "费用行"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Extended Filters..."
-msgstr "增加筛选条件"
+msgstr "扩展的过滤器..."
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
 "currency one or not"
-msgstr "此字段由系统内部使用，区分该凭证是否涉及外币"
+msgstr "此字段由系统内部使用，区分该凭单是否涉及外币"
 
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
@@ -448,7 +450,7 @@ msgstr "分组"
 #. module: account_voucher
 #: field:account.voucher,currency_help_label:0
 msgid "Helping Sentence"
-msgstr ""
+msgstr "温馨提示"
 
 #. module: account_voucher
 #: help:account.voucher,message_summary:0
@@ -461,7 +463,7 @@ msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视
 #: field:account.voucher,id:0 field:account.voucher.line,id:0
 #: field:sale.receipt.report,id:0
 msgid "ID"
-msgstr "标识"
+msgstr "ID"
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
@@ -509,7 +511,7 @@ msgstr "是一个关注者"
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 #: field:sale.receipt.report,journal_id:0
 msgid "Journal"
-msgstr "账簿"
+msgstr "分类账"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
@@ -540,7 +542,7 @@ msgstr "保持开放"
 #. module: account_voucher
 #: field:account.voucher,message_last_post:0
 msgid "Last Message Date"
-msgstr "最后信息日期"
+msgstr "最后消息日期"
 
 #. module: account_voucher
 #: field:account.voucher,write_uid:0 field:account.voucher.line,write_uid:0
@@ -570,7 +572,7 @@ msgstr "消息和通信历史"
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "多币种凭证"
+msgstr "多币种凭单"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -596,7 +598,7 @@ msgstr "仅针对价外税"
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr "开帐余额"
+msgstr "开放余额"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -621,7 +623,7 @@ msgstr "原金额"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
 msgid "Other Information"
-msgstr "其它信息"
+msgstr "其他信息"
 
 #. module: account_voucher
 #: field:account.voucher,paid:0
@@ -750,7 +752,7 @@ msgstr "定义分类账 \"%s\" 的默认借方/贷方科目"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Post"
-msgstr "过账"
+msgstr "登帐"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -771,12 +773,12 @@ msgstr "已登账"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Posted Vouchers"
-msgstr "已登帐凭证"
+msgstr "已登帐凭单"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
-msgstr "预付款？"
+msgstr "前面的付款"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -788,7 +790,7 @@ msgstr "形式发票"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Pro-forma Vouchers"
-msgstr "形式凭证"
+msgstr "形式凭单"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0 selection:sale.receipt.report,type:0
@@ -809,7 +811,7 @@ msgstr "采购收据"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr "采购凭证"
+msgstr "采购凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
@@ -820,7 +822,7 @@ msgstr "收据"
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr "核销付款余额"
+msgstr "调节付款余额"
 
 #. module: account_voucher
 #: field:account.voucher,reference:0
@@ -846,7 +848,7 @@ msgstr "销售信息"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 msgid "Sales Lines"
-msgstr "销售明细"
+msgstr "销售行"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -884,7 +886,7 @@ msgstr "销售员"
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor
 #: view:account.voucher:account_voucher.view_voucher_filter_vendor_pay
 msgid "Search Vouchers"
-msgstr "搜索凭证"
+msgstr "搜索凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -946,37 +948,37 @@ msgstr "供应商付款"
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 msgid "Supplier Voucher"
-msgstr "供应商凭证"
+msgstr "供应商凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: field:account.voucher,tax_id:0
 msgid "Tax"
-msgstr "税"
+msgstr "税金"
 
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
 msgid "Tax Amount"
-msgstr "税额"
+msgstr "税金总额"
 
 #. module: account_voucher
 #: help:account.voucher,paid:0
 msgid "The Voucher has been totally paid."
-msgstr "这张凭证已全部付完"
+msgstr "这张凭单已全部付完"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "此单已废"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
 msgid ""
 "The specific rate that will be used, in this voucher, between the selected "
 "currency (in 'Payment Rate Currency' field)  and the voucher currency."
-msgstr "手工指定的汇率，适用于这张凭证，用于转换所选货币（在“付款汇率货币”字段输入）和凭证货币。"
+msgstr "手工指定的汇率，适用于这张凭单，用于转换所选货币（在“付款汇率货币”字段输入）和凭单货币。"
 
 #. module: account_voucher
 #: help:account.voucher,payment_option:0
@@ -985,14 +987,14 @@ msgid ""
 "difference between the paid amount and the sum of allocated amounts. You can"
 " either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
-msgstr "此字段用于选择对已支付金额和已分配金额的差异如何处理。可以选择保持欠款状态，也可以用其他付款来核销。"
+msgstr "此字段用于选择对已支付金额和已分配金额的差异如何处理。可以选择保持欠款状态，也可以用其他付款来调节。"
 
 #. module: account_voucher
 #: help:account.voucher,currency_help_label:0
 msgid ""
 "This sentence helps you to know how to specify the payment rate by giving "
 "you the direct effect it has"
-msgstr ""
+msgstr "本句帮助你了解如何通过借助产生的直接影响来指定支付率。"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1004,7 +1006,7 @@ msgstr "待审查"
 #: view:account.voucher:account_voucher.view_sale_receipt_form
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr "总计"
+msgstr "合计"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_low_priority_payment_form
@@ -1012,7 +1014,7 @@ msgstr "总计"
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Total Allocation"
-msgstr "凭证总额"
+msgstr "分配合计"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
@@ -1024,17 +1026,17 @@ msgstr "总金额"
 #. module: account_voucher
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr "含税总计"
+msgstr "含税合计"
 
 #. module: account_voucher
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr "不含税总金额"
+msgstr "未税合计"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr "交易单号"
+msgstr "交易参考号码"
 
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
@@ -1051,12 +1053,12 @@ msgstr "未读消息"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Unreconcile"
-msgstr "未对账"
+msgstr "未调节"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr "未纳税额"
+msgstr "未税总额"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_purchase_receipt_form
@@ -1064,7 +1066,7 @@ msgstr "未纳税额"
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "Validate"
-msgstr "记账"
+msgstr "验证"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_sale_receipt_form
@@ -1074,7 +1076,7 @@ msgstr "验证付款"
 #. module: account_voucher
 #: view:sale.receipt.report:account_voucher.view_sale_receipt_report_search
 msgid "Validated Vouchers"
-msgstr "已验证的凭证"
+msgstr "已验证的凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_filter
@@ -1087,51 +1089,51 @@ msgstr "已验证的凭证"
 #: model:res.request.link,name:account_voucher.req_link_voucher
 #, python-format
 msgid "Voucher"
-msgstr "凭证"
+msgstr "凭单"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_tree
 #: view:account.voucher:account_voucher.view_voucher_tree_nocreate
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "手工凭证"
+msgstr "凭单条目"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Entry"
-msgstr "凭证条目"
+msgstr "凭单条目"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_voucher_form
 msgid "Voucher Items"
-msgstr "凭证项目"
+msgstr "凭单项目"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
 #: view:account.voucher.line:account_voucher.view_voucher_line_form
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "凭证行"
+msgstr "凭单行"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 msgid "Voucher Payment"
-msgstr "凭证付款"
+msgstr "凭单付款"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.account_cash_statement_graph
 msgid "Voucher Statistics"
-msgstr "凭证统计"
+msgstr "凭单统计"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr "凭证状态"
+msgstr "凭单状态"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "凭证条目"
+msgstr "凭单条目"
 
 #. module: account_voucher
 #: field:account.voucher,website_message_ids:0
@@ -1147,18 +1149,18 @@ msgstr "网站沟通记录"
 #: code:addons/account_voucher/account_voucher.py:377
 #, python-format
 msgid "Write-Off"
-msgstr "补差额"
+msgstr "注销"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr "补差额辅助核算项"
+msgstr "注销分析账户"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1202
 #, python-format
 msgid "Wrong voucher line"
-msgstr "错误凭证行"
+msgstr "错误凭单行"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1243
@@ -1175,7 +1177,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "你需要在账目设置中配置“汇兑收益率”， 以便自动登录与汇率差异相关的科目"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1097
@@ -1184,7 +1186,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' to manage "
 "automatically the booking of accounting entries related to differences "
 "between exchange rates."
-msgstr ""
+msgstr "你应该在会计管理设置里配置损失汇率账户，自动交换率的差异之间的相关会计分录的预订。"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:1114
@@ -1192,21 +1194,21 @@ msgstr ""
 #: code:addons/account_voucher/account_voucher.py:1279
 #, python-format
 msgid "change"
-msgstr "改动"
+msgstr "变更"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. 003/10"
-msgstr ""
+msgstr "例如：003/10"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_payment_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form
 #: view:account.voucher:account_voucher.view_vendor_receipt_form
 msgid "e.g. Invoice SAJ/0042"
-msgstr ""
+msgstr "例如： 发票 SAJ/0042"
 
 #. module: account_voucher
 #: view:account.voucher:account_voucher.view_vendor_receipt_dialog_form

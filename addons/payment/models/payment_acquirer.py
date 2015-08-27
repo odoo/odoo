@@ -341,7 +341,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange', copy=False),
+            track_visibility='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment

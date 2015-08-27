@@ -3,15 +3,16 @@
 # * stock
 # 
 # Translators:
+# Anica Milanova, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"POT-Creation-Date: 2015-08-03 15:25+0000\n"
+"PO-Revision-Date: 2015-08-19 09:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Macedonian (http://www.transifex.com/projects/p/odoo-8/language/mk/)\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -223,6 +224,18 @@ msgid ""
 "                Click to add a serial number.\n"
 "              </p><p>\n"
 "                This is the list of all the production lots you recorded. When\n"
+"                you select a lot, you can get the traceability of the products contained in lot.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a serial number.\n"
+"              </p><p>\n"
+"                This is the list of all the production lots you recorded. When\n"
 "                you select a lot, you can get the \n"
 "                traceability of the products contained in lot. By default, the\n"
 "                list is filtered on the serial numbers that are available in\n"
@@ -309,7 +322,7 @@ msgid ""
 "                from your suppliers.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да регистрирате потврда за овој производ.\n              </p><p>\n                Овде ќе најдете историја на сите потврди позвразни со\n                овој производ, како и сите идни потврди кои ги чекате\n                од вашите добавувачи.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да регистрирате прием за овој производ.\n              </p><p>\n                Овде ќе најдете историја на сите приеми поврзани со\n                овој производ, како и сите идни приеми кои ги чекате\n                од вашите добавувачи.\n              </p>\n            "
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -384,7 +397,7 @@ msgstr "Адреса"
 msgid ""
 "Adds a Claim link to the delivery order.\n"
 "-This installs the module claim_from_delivery."
-msgstr ""
+msgstr "Додава линк за Рекламација на налогот за достава.\n-Ова го инсталира модулот claim_from_delivery."
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -424,7 +437,7 @@ msgstr "Сите движења на залиха што се откажани �
 #. module: stock
 #: field:stock.config.settings,module_claim_from_delivery:0
 msgid "Allow claim on deliveries"
-msgstr "Овозможи потврда на достава"
+msgstr "Овозможи рекламација на достава"
 
 #. module: stock
 #: field:stock.config.settings,group_stock_packaging:0
@@ -450,6 +463,13 @@ msgid ""
 "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
 "For instance, you can sell pieces of meat that you invoice based on their weight."
 msgstr "Дозволува да продавате единици од производ, но да фактурирате според различна единица мерка.\nНа пример, може да продавате парчиња месо што ќе ги фактурирате според нивната тежина."
+
+#. module: stock
+#: help:stock.config.settings,group_uos:0
+msgid ""
+"Allows you to store units of a product, but sell and invoice based on a different unit of measure.\n"
+"For instance, you can store pieces of meat that you sell and invoice based on their weight."
+msgstr ""
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
@@ -506,7 +526,7 @@ msgstr "Автоматско движење"
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "Автоматски без додаден чекор"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_procurement
@@ -874,7 +894,7 @@ msgstr "Својства на копиите на локациите"
 #: code:addons/stock/static/src/xml/picking.xml:166
 #, python-format
 msgid "Create / Change Lot"
-msgstr ""
+msgstr "Креирај / промени лот"
 
 #. module: stock
 #. openerp-web
@@ -882,7 +902,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/picking.xml:43
 #, python-format
 msgid "Create Lot"
-msgstr ""
+msgstr "Креирај лот"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1216,7 +1236,7 @@ msgstr "Испорака"
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Delivery Address:"
-msgstr ""
+msgstr "Адреса на испорака:"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -1510,7 +1530,7 @@ msgstr "Од"
 #. module: stock
 #: field:product.template,track_all:0
 msgid "Full Lots Traceability"
-msgstr ""
+msgstr "Целосна следливост на лот броеви"
 
 #. module: stock
 #: code:addons/stock/product.py:262
@@ -1540,7 +1560,7 @@ msgstr "Идна количина"
 #: code:addons/stock/product.py:252
 #, python-format
 msgid "Future Receipts"
-msgstr "Идни потврди"
+msgstr "Идни приеми"
 
 #. module: stock
 #: code:addons/stock/product.py:258
@@ -1764,6 +1784,16 @@ msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Ако не е означено ќе ви дозволи да го сокриете правилото без да го одстраните."
 
 #. module: stock
+#: help:stock.inventory,filter:0
+msgid ""
+"If you do an entire inventory, you can choose 'All Products' and it will "
+"prefill the inventory with the current stock.  If you only do some products"
+"  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
+"the system won't propose anything.  You can also let the system propose for "
+"a single product / lot /... "
+msgstr ""
+
+#. module: stock
 #: selection:stock.inventory,state:0
 msgid "In Progress"
 msgstr "Во тек"
@@ -1833,12 +1863,12 @@ msgstr "Информација"
 #: model:stock.location,name:stock.stock_location_company
 #, python-format
 msgid "Input"
-msgstr ""
+msgstr "Влез"
 
 #. module: stock
 #: field:stock.warehouse,wh_input_stock_loc_id:0
 msgid "Input Location"
-msgstr ""
+msgstr "Влезна локација"
 
 #. module: stock
 #: help:stock.config.settings,module_stock_picking_wave:0
@@ -2051,7 +2081,7 @@ msgstr "Е пратител"
 #. module: stock
 #: field:stock.location,scrap_location:0
 msgid "Is a Scrap Location?"
-msgstr ""
+msgstr "Локација за кало/отпад?"
 
 #. module: stock
 #: help:stock.move,product_packaging:0
@@ -2308,13 +2338,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Лот/Сериски"
 
 #. module: stock
 #: field:stock.pack.operation,lot_id:0
 #: field:stock.transfer_details_items,lot_id:0
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Лот/Сериски број"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form
@@ -2333,7 +2363,8 @@ msgid "Make Procurements"
 msgstr "Направи набавки"
 
 #. module: stock
-#: code:addons/stock/stock.py:3071
+#: code:addons/stock/stock.py:3217
+#: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
 msgstr "Направи Налог"
@@ -2353,7 +2384,7 @@ msgstr "Управувај со различни сопственици на з�
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
-msgstr ""
+msgstr "Управувај со лот/ сериски броеви"
 
 #. module: stock
 #: model:res.groups,name:stock.group_locations
@@ -2409,6 +2440,12 @@ msgstr "Менаџер"
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "Рачна операција"
+
+#. module: stock
+#: code:addons/stock/stock.py:2640
+#, python-format
+msgid "Manual Selection of Products"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -2524,7 +2561,8 @@ msgid "Move which caused (created) the procurement"
 msgstr "Движење што ја предизвикало (креирало) набавката"
 
 #. module: stock
-#: field:stock.move,quant_ids:0
+#: view:stock.move:stock.view_move_form
+#: view:stock.move:stock.view_move_picking_form field:stock.move,quant_ids:0
 msgid "Moved Quants"
 msgstr "Преместени квантови"
 
@@ -2613,7 +2651,7 @@ msgstr "Не"
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "No Inventory yet"
-msgstr ""
+msgstr "Сеуште нема залиха"
 
 #. module: stock
 #. openerp-web
@@ -2707,7 +2745,7 @@ msgstr "При рака:"
 #: code:addons/stock/stock.py:2554
 #, python-format
 msgid "One Lot/Serial Number"
-msgstr ""
+msgstr "Еден лот/сериски број"
 
 #. module: stock
 #: code:addons/stock/stock.py:2551
@@ -3479,18 +3517,18 @@ msgstr "Достави ги количините на вратените про�
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,pull_ids:0
 msgid "Pull Rules"
-msgstr ""
+msgstr "Pull правила"
 
 #. module: stock
 #: field:stock.move,push_rule_id:0
 msgid "Push Rule"
-msgstr ""
+msgstr "Push правило"
 
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,push_ids:0
 msgid "Push Rules"
-msgstr ""
+msgstr "Push правила"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
@@ -3500,13 +3538,13 @@ msgstr "Наметнати текови"
 #. module: stock
 #: field:stock.fixed.putaway.strat,putaway_id:0
 msgid "Put Away Method"
-msgstr ""
+msgstr "Метод за сместување"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_putaway
 #: field:stock.location,putaway_strategy_id:0
 msgid "Put Away Strategy"
-msgstr ""
+msgstr "Стратегија за сместување"
 
 #. module: stock
 #. openerp-web
@@ -3747,7 +3785,7 @@ msgstr "Потврда во 3 чекори"
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Потврди"
+msgstr "Приеми"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -3763,7 +3801,7 @@ msgstr "Примена количина"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Recheck Availability"
-msgstr ""
+msgstr "Повторно провери достапност"
 
 #. module: stock
 #. openerp-web
@@ -4076,7 +4114,7 @@ msgstr "Распоредувачи"
 #: view:stock.move:stock.view_move_picking_form
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap"
-msgstr "Отпад"
+msgstr "Отпад/кало"
 
 #. module: stock
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
@@ -4096,13 +4134,13 @@ msgstr "Движење на отпад"
 #: view:stock.move:stock.view_move_tree_receipt_picking
 #: view:stock.move.scrap:stock.view_stock_move_scrap_wizard
 msgid "Scrap Products"
-msgstr "Стари производи"
+msgstr "Производи за отпад"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr "Расходувани"
+msgstr "Отпад"
 
 #. module: stock
 #. openerp-web
@@ -4314,7 +4352,7 @@ msgstr "Раздели"
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr ""
+msgstr "Започни попис"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -4431,6 +4469,11 @@ msgstr "Производи на залиха"
 #: view:product.template:stock.view_template_property_form
 msgid "Storage Location"
 msgstr "Локација на Складиште"
+
+#. module: stock
+#: field:stock.config.settings,group_uos:0
+msgid "Store products in a different unit of measure than the sales order"
+msgstr ""
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -4620,6 +4663,13 @@ msgid ""
 msgstr "Стандардниот магацин за надополнување треба да е различен од магацинот што се надополнува!"
 
 #. module: stock
+#: code:addons/stock/stock.py:1067
+#, python-format
+msgid ""
+"The destination location must be the same for all the moves of the picking."
+msgstr ""
+
+#. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
@@ -4666,12 +4716,12 @@ msgstr "Количината на набавка ќе биде заокруже�
 #. module: stock
 #: help:stock.move,rule_id:0
 msgid "The pull rule that created this stock move"
-msgstr ""
+msgstr "Pull правило според кое е креиран овој пренос"
 
 #. module: stock
 #: help:stock.move,push_rule_id:0
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "Push правило според кое е креиран овој пренос"
 
 #. module: stock
 #: code:addons/stock/stock.py:1699
@@ -4704,6 +4754,17 @@ msgid ""
 "The selected UoM for product %s is not compatible with the UoM set on the product form. \n"
 "Please choose an UoM within the same UoM category."
 msgstr "Избраната единица мерка за производ %s не е компатибилна со единицата мерка подесена на формата на производот. \nВе молимие изберете мерна единица од истата категорија единици."
+
+#. module: stock
+#: constraint:stock.inventory:0
+msgid "The selected inventory options are not coherent."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1070
+#, python-format
+msgid "The source location must be the same for all the moves of the picking."
+msgstr ""
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4867,7 +4928,7 @@ msgstr "На овој начин можете да примате продукт
 msgid ""
 "This will show you the locations and allows you to define multiple picking "
 "types and warehouses."
-msgstr ""
+msgstr "Ова ќе ги покаже локациите и ќе дозволи дефинирање на повеќе видови преноси и магацини."
 
 #. module: stock
 #. openerp-web
@@ -4937,7 +4998,7 @@ msgstr "Следење на разни датуми на производите 
 #. module: stock
 #: field:stock.config.settings,group_stock_production_lot:0
 msgid "Track lots or serial numbers"
-msgstr ""
+msgstr "Следење на лот или сериски броеви"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -5081,6 +5142,11 @@ msgid "Unreserve"
 msgstr "Откажи резервација"
 
 #. module: stock
+#: view:stock.inventory:stock.view_inventory_form
+msgid "UoM"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: view:stock.change.product.qty:stock.view_change_product_quantity
 msgid "Update Product Quantity"
@@ -5108,7 +5174,7 @@ msgstr "Користете го овов помошник за да генери
 #. module: stock
 #: help:stock.return.picking.line,lot_id:0
 msgid "Used to choose the lot/serial number of the product returned"
-msgstr ""
+msgstr "Се користи за да се избере лот/сериски број на вратениот производ"
 
 #. module: stock
 #: help:stock.picking.type,sequence:0
@@ -5345,17 +5411,17 @@ msgstr "Можете да избришете ставки за да игнори
 #. module: stock
 #: code:addons/stock/stock.py:368
 #, python-format
-msgid "You can not reserve a negative quantity or a negative quant."
-msgstr "Не можете да резервирате негативна количина или негативен квант."
+msgid ""
+"You can not change the unit of measure of a product that has already been "
+"used in a done stock move. If you need to change the unit of measure, you "
+"may deactivate this product."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
-msgid ""
-"You can only change the checked quantity of an existing inventory line. If "
-"you want modify a data, please set the checked quantity to 0 and create a "
-"new inventory line."
-msgstr ""
+msgid "You can not reserve a negative quantity or a negative quant."
+msgstr "Не можете да резервирате негативна количина или негативен квант."
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5409,7 +5475,13 @@ msgid ""
 msgstr "Треба да изберете единица мерка од иста категорија како стандардната единица мерка на производот"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:69
+#: code:addons/stock/wizard/stock_return_picking.py:62
+#, python-format
+msgid "You may only return one picking at a time!"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:72
 #, python-format
 msgid "You may only return pickings that are Done!"
 msgstr ""
@@ -5480,14 +5552,6 @@ msgid "picking(s)"
 msgstr ""
 
 #. module: stock
-#: view:product.template:stock.view_stock_product_template_tree
-msgid ""
-"red:virtual_available<0;blue:virtual_available>=0 and state in ('draft', "
-"'end', 'obsolete');black:virtual_available>=0 and state not in ('draft', "
-"'end', 'obsolete')"
-msgstr ""
-
-#. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 msgid "reverse"
 msgstr "повратно"
@@ -5532,21 +5596,6 @@ msgstr ""
 #: field:stock.picking.type,rate_picking_late:0
 msgid "unknown"
 msgstr "непознато"
-
-#. module: stock
-#: view:product.template:stock.view_template_property_form
-msgid ""
-"{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', "
-"'stock.group_stock_manager']}"
-msgstr "{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}"
-
-#. module: stock
-#: view:product.product:stock.view_stock_product_tree
-msgid ""
-"{'red':virtual_available<0, 'blue':virtual_available>=0 and state in "
-"('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in "
-"('draft', 'end', 'obsolete')}"
-msgstr "{'red':virtual_available<0, 'blue':virtual_available>=0 and state in ('draft', 'end', 'obsolete'), 'black':virtual_available>=0 and state not in ('draft', 'end', 'obsolete')}"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form

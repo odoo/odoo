@@ -4,15 +4,17 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# zhang hao <zhanghao@jointd.com>, 2015
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-05 12:16+0000\n"
-"Last-Translator: zhang hao <zhanghao@jointd.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/projects/p/odoo-8/language/zh_CN/)\n"
+"PO-Revision-Date: 2015-08-20 08:43+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,7 +34,7 @@ msgid ""
 "* If the payslip is under verification, the status is 'Waiting'.             \n"
 "* If the payslip is confirmed then status is set to 'Done'.            \n"
 "* When user cancel payslip the status is 'Rejected'."
-msgstr ""
+msgstr "* 当工资单创建时状态为“草稿“   。       \n* 如果工资单待审批时, 状态为“等待中“。          \n* 如果工资单被确认后状态为 “已完成”。            \n* 当用户取消工资单时状态为”取消“。"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -45,7 +47,7 @@ msgid ""
 "                estate or anyone that collect or inject money on payslips.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击登记一个新的供款。\n              </p><p>\n                供款登记是第三方参与的\n                员工工资支付。它可能是社会保障金， \n                房地产或任何从工资单收集注入资金的款项。\n              </p>\n            "
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -107,7 +109,7 @@ msgstr "每年"
 #: field:hr.payslip.line,appears_on_payslip:0
 #: field:hr.salary.rule,appears_on_payslip:0
 msgid "Appears on Payslip"
-msgstr "在工资条上显示"
+msgstr "显示在工资单"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,condition_python:0
@@ -121,7 +123,7 @@ msgstr "如果表达式为真，适用这个规则。你可以输入条件，例
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Authorized signature"
-msgstr ""
+msgstr "授权签字"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslip
@@ -214,7 +216,7 @@ msgstr "公司"
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
-msgstr "公司捐款"
+msgstr "公司供款"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:hr_payroll.hr_salary_rule_form
@@ -253,19 +255,19 @@ msgstr "合同"
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
-msgstr "捐款"
+msgstr "供款"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: field:hr.payslip.line,register_id:0 field:hr.salary.rule,register_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
 msgid "Contribution Register"
-msgstr "捐款记录"
+msgstr "供款记录"
 
 #. module: hr_payroll
 #: view:payslip.lines.contribution.register:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
-msgstr "贡献者的工资条明细"
+msgstr "供款记录的工资单明细"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_filter
@@ -273,12 +275,12 @@ msgstr "贡献者的工资条明细"
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
 msgid "Contribution Registers"
-msgstr "捐款记录"
+msgstr "供款记录"
 
 #. module: hr_payroll
 #: help:hr.config.settings,module_hr_payroll_account:0
 msgid "Create journal entries from payslips"
-msgstr "根据工资表创建会计分录"
+msgstr "根据工资单创建分类账分录"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,create_uid:0
@@ -321,7 +323,7 @@ msgstr "起始日期"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date From:"
-msgstr ""
+msgstr "起始日期"
 
 #. module: hr_payroll
 #: field:hr.payslip,date_to:0 field:hr.payslip.run,date_end:0
@@ -334,7 +336,7 @@ msgstr "结束日期"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Date To:"
-msgstr ""
+msgstr "结束日期"
 
 #. module: hr_payroll
 #: help:hr.payslip,struct_id:0
@@ -343,7 +345,7 @@ msgid ""
 "the contract chosen. If you let empty the field contract, this field isn't "
 "mandatory anymore and thus the rules applied will be all the rules set on "
 "the structure of all contracts of the employee valid for the chosen period"
-msgstr "设置依据所选合同在这个工资条上适用的规则。如果合同字段为空，这个字段也不是必输的，这样所有在所选期间内的所有设置在员工合同结构上的规则都生效。"
+msgstr "设置依据所选合同在这个工资单上适用的规则。如果合同字段为空，这个字段也不是必输的，这样所有在所选期间内的所有设置在员工合同结构上的规则都生效。"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:hr_payroll.hr_contribution_register_form
@@ -382,7 +384,7 @@ msgstr "已完成"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
-msgstr "已完成的工资条批次"
+msgstr "已完成的工资单批处理"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -400,7 +402,7 @@ msgstr "草稿"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Draft Payslip Batches"
-msgstr "工资条批次草稿"
+msgstr "草稿工资单批处理"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -429,7 +431,7 @@ msgstr "员工职能"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr "员工工资条"
+msgstr "员工工资单"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
@@ -486,7 +488,7 @@ msgstr "生成"
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_form
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
 msgid "Generate Payslips"
-msgstr "生成工资条"
+msgstr "生成工资单"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
@@ -525,7 +527,7 @@ msgstr "身份证号"
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
-msgstr "如果勾选了这一项，表示这里生成的工资条是退还的工资条。"
+msgstr "如果勾选了这一项，表示这里生成的工资条是退还的工资单"
 
 #. module: hr_payroll
 #: help:hr.payslip.line,active:0 help:hr.salary.rule,active:0
@@ -537,7 +539,7 @@ msgstr "如果去掉了“激活”这个字段上的勾，你可以不必删除
 #. module: hr_payroll
 #: help:hr.payslip,credit_note:0
 msgid "Indicates this payslip has a refund of another"
-msgstr "指定这张工资条和另一张退还的工资条相关"
+msgstr "指定这张工资单和另一张退还的工资单相关"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -700,12 +702,12 @@ msgstr "工资单"
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
-msgstr "工资条批处理"
+msgstr "工资单批处理"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr "工资条明细"
+msgstr "工资单详情"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -715,22 +717,22 @@ msgstr "工资单明细"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
-msgstr "按贡献者的工资条明细"
+msgstr "工资单明细，按供款记录"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
-msgstr "按贡献者的工资条明细"
+msgstr "工资单明细，按供款记录"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
 msgid "PaySlip Lines by Contribution Registers"
-msgstr "按贡献者分组的工资条明细"
+msgstr "工资单明细，按供款记录"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
-msgstr "工资条名称"
+msgstr "工资单名称"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
@@ -753,31 +755,31 @@ msgstr "工资单"
 #. module: hr_payroll
 #: constraint:hr.payslip:0
 msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "工资条的开始日期必须在结束日期之前"
+msgstr "工资单的开始日期必须在结束日期之前"
 
 #. module: hr_payroll
 #: field:hr.payslip,payslip_run_id:0
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Batches"
-msgstr "工资条批处理"
+msgstr "工资单批处理"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
 #: field:hr.payslip,payslip_count:0
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
 msgid "Payslip Computation Details"
-msgstr "工资条计算明细"
+msgstr "工资单计算详情"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
-msgstr "工资条输入"
+msgstr "工资单输入"
 
 #. module: hr_payroll
 #: field:hr.payslip,input_line_ids:0
 msgid "Payslip Inputs"
-msgstr "工资条输入"
+msgstr "工资单输入"
 
 #. module: hr_payroll
 #: view:hr.payslip:hr_payroll.view_hr_payslip_form
@@ -791,23 +793,23 @@ msgstr "工资单明细"
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
 msgid "Payslip Lines"
-msgstr "工资条明细"
+msgstr "工资单明细"
 
 #. module: hr_payroll
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
-msgstr ""
+msgstr "按供款记录的工资单明细"
 
 #. module: hr_payroll
 #: field:hr.payslip,name:0
 msgid "Payslip Name"
-msgstr ""
+msgstr "工资单名称"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days_line_ids:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 msgid "Payslip Worked Days"
-msgstr "工资条工作日数"
+msgstr "工资单的工作日数"
 
 #. module: hr_payroll
 #: view:hr.employee:hr_payroll.payroll_hr_employee_view_form
@@ -826,7 +828,7 @@ msgstr "工资单"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
 msgid "Payslips Batches"
-msgstr "工资条批次"
+msgstr "工资单批处理"
 
 #. module: hr_payroll
 #: view:hr.payslip.employees:hr_payroll.view_hr_payslip_by_employees
@@ -892,7 +894,7 @@ msgstr "数量 / 费率"
 #: view:website:hr_payroll.report_payslip
 #: view:website:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "数量 / 费率"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -932,7 +934,7 @@ msgstr "退还"
 #: code:addons/hr_payroll/hr_payroll.py:334
 #, python-format
 msgid "Refund Payslip"
-msgstr "收回工资条"
+msgstr "退回工资单"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:324
@@ -948,7 +950,7 @@ msgstr "记录明细"
 #. module: hr_payroll
 #: view:website:hr_payroll.report_contributionregister
 msgid "Register Name:"
-msgstr ""
+msgstr "登记名称："
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1045,7 +1047,7 @@ msgstr "已安排的付款"
 #. module: hr_payroll
 #: view:hr.payslip.run:hr_payroll.hr_payslip_run_filter
 msgid "Search Payslip Batches"
-msgstr "搜索工资条批量"
+msgstr "搜索工资单批处理"
 
 #. module: hr_payroll
 #: view:hr.payslip.line:hr_payroll.view_hr_payslip_line_filter
@@ -1149,7 +1151,7 @@ msgstr "这个规则将用于计算%字段的值；一般来说是基数，你�
 msgid ""
 "This wizard will generate payslips for all selected employee(s) based on the"
 " dates and credit note specified on Payslips Run."
-msgstr "向导将根据工资条生成器上输入的日期和付款单号生成所选员工的工资单。"
+msgstr "向导将根据工资单生成器上输入的日期和付款单号生成所选员工的工资单。"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,total:0

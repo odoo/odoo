@@ -123,12 +123,12 @@ class OdooDocker(object):
     def __init__(self):
         self.log_file = NamedTemporaryFile(mode='w+b', prefix="bash", suffix=".txt", delete=False)
         self.port = 8069  # TODO sle: reliable way to get a free port?
-        self.prompt_re = '\[root@nightly-tests\] #'
+        self.prompt_re = '[root@nightly-tests] # '
         self.timeout = 600
 
     def system(self, command):
         self.docker.sendline(command)
-        self.docker.expect(self.prompt_re)
+        self.docker.expect_exact(self.prompt_re)
 
     def start(self, docker_image, build_dir, pub_dir):
         self.build_dir = build_dir
@@ -137,7 +137,8 @@ class OdooDocker(object):
         self.docker = pexpect.spawn(
             'docker run -v %s:/opt/release -p 127.0.0.1:%s:8069'
             ' -t -i %s /bin/bash --noediting' % (self.build_dir, self.port, docker_image),
-            timeout=self.timeout
+            timeout=self.timeout,
+            searchwindowsize=len(self.prompt_re) + 1,
         )
         time.sleep(2)  # let the bash start
         self.docker.logfile_read = self.log_file
@@ -318,7 +319,7 @@ def test_tgz(o):
     with docker('odoo-%s-src-nightly-tests' % version, o.build_dir, o.pub) as wheezy:
         wheezy.release = '*.tar.gz'
         wheezy.system("service postgresql start")
-        wheezy.system('/usr/local/bin/pip install /opt/release/%s' % wheezy.release)
+        wheezy.system('pip install /opt/release/%s' % wheezy.release)
         wheezy.system("useradd --system --no-create-home odoo")
         wheezy.system('su postgres -s /bin/bash -c "createuser -s odoo"')
         wheezy.system('su postgres -s /bin/bash -c "createdb mycompany"')

@@ -5,14 +5,15 @@
 # Translators:
 # Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-22 13:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
-"Language-Team: Dutch (http://www.transifex.com/projects/p/odoo-8/language/nl/)\n"
+"PO-Revision-Date: 2015-07-17 06:35+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -213,7 +214,7 @@ msgid ""
 "Processes like maintaining general ledgers are done through the defined Financial Journals (entry move line or grouping is maintained through a journal) \n"
 "for a particular financial year and for preparation of vouchers there is a module named account_voucher.\n"
 "    "
-msgstr ""
+msgstr "\nBoekhouding en financieel beheer\n====================================\n\nFinanciële en boekhoudkundige module die dekt:\n--------------------------------------------\n* Algemene boekhouding\n* Kost / Analytische boekhouding\n* Derde partij boekhouding\n* Belastingbeheer\n* Budgetten\n* Klant en leverancier facturatie\n* Bankafschriften\n* Reconciliatieproces door partner\n\nMaakt een dashboard voor boekhouders en bevat:\n--------------------------------------------------\n* Lijst van klantfacturen om goed te keuren\n* Bedrijfsanalyse\n* Grafiek van de schatkist\n\nProcessen zoals het beheren van grootboeken worden gedaan door middel van de gedefinieerde financiële journalen (binnenkomende lijn wordt beheerd door een journaal)\nvoor een specifiek financieel jaar en voor het voorbereiden van waardebonnen is er een module genaamd account_voucher."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_order_dates
@@ -882,7 +883,7 @@ msgid ""
 "by the ``auth_signup`` module (signup for new users does not\n"
 "necessarily have to be enabled).\n"
 "\n"
-msgstr ""
+msgstr "\nGeëncrypteerde wachtwoorden\n===================\n\nVervangt de standaard wachtwoord opslag door een sterke geëncrypteerde hash.\n\nDe functie die de sleutels genereerd is momenteel RSA Security LLC's industrie standaard \"PKDF2\", in combinatie met \"SHA512\".\nDit bevat salting en key stretching met duizenden\nronden.\n\nAlle wachtwoorden zijn geëncrypteerd vanaf de module is geïnstalleerd.\nHet encrypteren kan een paar minuten duren als er duizenden gebruikers zijn.\n\nOudere geëncrypteerde wachtwoorden zullen automatisch geüpgrade worden\nnaar het huidige schema wanneer een gebruiker zich aanmeld\n(\"auth_crypt\" gebruikt voordien de zwakkere \"md5cryp\" versleutelingsfunctie).\n\nNotitie: Wanneer deze module wordt geïnstalleerd wordt wachtwoord herstel\ndirect onmogelijk en dit kan niet meer ongedaan gemaakt worden. Het wordt aanbevolen om\neen wachtwoord herstel mechanisme in te schakelen, zoals deze wordt aangeboden\nbij de \"auth_signup\" module (aanmelden voor nieuwe gebruikers hoeft niet\npersé aan te staan).\n\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset

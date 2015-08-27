@@ -24,7 +24,7 @@
             <field eval="False" name="reconcile"/>
             <field ref="cn_root" name="parent_id"/>
             <field name="type">liquidity</field>
-            <field name="name">现金</field>
+            <field name="name">库存现金</field>
             <field name="user_type" ref="user_type_bs1"/>
         </record>
         <record id="chart1002" model="account.account.template">
@@ -95,7 +95,7 @@
             <field name="code">1231</field>
             <field eval="True" name="reconcile"/>
             <field ref="cn_root" name="parent_id"/>
-            <field name="type">other</field>
+            <field name="type">receivable</field>
             <field name="name">其他应收款</field>
             <field name="user_type" ref="user_type_bs7"/>
         </record>
@@ -570,6 +570,14 @@
             <field name="type">other</field>
             <field name="name">应付利息</field>
             <field name="user_type" ref="user_type_bs74"/>
+        </record>
+        <record id="chart2241" model="account.account.template">
+            <field name="code">2241</field>
+            <field eval="True" name="reconcile"/>
+            <field ref="cn_root" name="parent_id"/>
+            <field name="type">payable</field>
+            <field name="name">其他应付款</field>
+            <field name="user_type" ref="user_type_bs73"/>
         </record>
         <record id="chart2401" model="account.account.template">
             <field name="code">2401</field>

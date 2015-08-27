@@ -174,6 +174,16 @@ class TestViewSaving(common.TransactionCase):
             )
         )
 
+    def test_save_escaped_text(self):
+        view_id = self.registry('ir.ui.view').create(self.cr, self.uid, {
+            'arch':'<t>hello world</t>',
+            'type':'qweb'
+        })
+        view = self.registry('ir.ui.view').browse(self.cr, self.uid, view_id)
+        replacement = 'hello world &amp; &lt;angle brackets&gt;!'
+        view.save(replacement, xpath='/t')
+        self.assertEqual(view.render(), replacement, 'html special characters wrongly escaped')
+
     def test_save_only_embedded(self):
         Company = self.registry('res.company')
         company_id = 1

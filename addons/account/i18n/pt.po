@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Daniel Santos <dcs@thinkopensolutions.pt>, 2014
+# Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2015
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:57+0000\n"
+"PO-Revision-Date: 2015-08-19 09:27+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/projects/p/odoo-8/language/pt/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-8/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3859,7 +3861,7 @@ msgstr "Mês Devido"
 #. module: account
 #: model:ir.actions.report.xml,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Pagamentos Vencidos"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -4432,7 +4434,7 @@ msgstr "Posição Fiscal"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Fiscal Position Remark:"
-msgstr ""
+msgstr "Comentário Posição Fiscal"
 
 #. module: account
 #: view:account.fiscal.position.template:account.view_account_position_template_form
@@ -4980,7 +4982,7 @@ msgstr "Ícone"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "Se o \"Montante\" é especificado, então a quantidade também deverá ser."
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5175,7 +5177,7 @@ msgstr "Em disputa"
 #, python-format
 msgid ""
 "In order to close a fiscalyear, you must first post related journal entries."
-msgstr ""
+msgstr "Para conseguir fechar um ano fiscal, primeiro deve publicar as entradas de diário relacionadas. "
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:52
@@ -7979,7 +7981,7 @@ msgstr "Reconcilie Acertos"
 #: code:addons/account/static/src/js/account_tour_bank_statement_reconciliation.js:8
 #, python-format
 msgid "Reconcile the demo bank statement"
-msgstr ""
+msgstr "Reconcilie o extracto bancário demo"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -8102,7 +8104,7 @@ msgstr "Descrição / Referência"
 #. module: account
 #: view:website:account.report_invoice_document
 msgid "Reference:"
-msgstr ""
+msgstr "Referência:"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9143,6 +9145,11 @@ msgstr "Supplier invoice sequence"
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
 msgstr "Fornecedores"
+
+#. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr ""
 
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
@@ -11001,7 +11008,7 @@ msgstr "Fechar montante"
 #: code:addons/account/wizard/account_reconcile.py:115
 #, python-format
 msgid "Write-off"
-msgstr ""
+msgstr "Fechar"
 
 #. module: account
 #: code:addons/account/account.py:2304
@@ -11069,7 +11076,7 @@ msgstr "Não pode reabrir o período que pertence a um ano fiscal fechado."
 #. module: account
 #: constraint:account.fiscal.position:0
 msgid "You can not select a country and a group of countries"
-msgstr ""
+msgstr "Não pode seleccionar um país e um grupo de países."
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -11388,7 +11395,7 @@ msgstr "You have to set the 'End  of Year Entries Journal' for this Fiscal Year 
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:68
 #, python-format
 msgid "You must balance the reconciliation"
-msgstr ""
+msgstr "Deve balancear a reconciliação"
 
 #. module: account
 #. openerp-web
@@ -11653,3 +11660,16 @@ msgstr "utilizado no domínio da reconciliação de extratos, não deve ser util
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "ano"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""

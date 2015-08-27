@@ -588,9 +588,10 @@ class pos_order(osv.osv):
 
     def _process_order(self, cr, uid, order, context=None):
         order_id = self.create(cr, uid, self._order_fields(cr, uid, order, context=context),context)
-
+        journal_ids = set()
         for payments in order['statement_ids']:
             self.add_payment(cr, uid, order_id, self._payment_fields(cr, uid, payments[2], context=context), context=context)
+            journal_ids.add(payments[2]['journal_id'])
 
         session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
         if session.sequence_number <= order['sequence_number']:
@@ -598,18 +599,28 @@ class pos_order(osv.osv):
             session.refresh()
 
         if not float_is_zero(order['amount_return'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')):
-            cash_journal = session.cash_journal_id
+            cash_journal = session.cash_journal_id.id
             if not cash_journal:
-                cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
-                if not len(cash_journal_ids):
-                    raise osv.except_osv( _('error!'),
-                        _("No cash statement found for this session. Unable to record returned cash."))
-                cash_journal = cash_journal_ids[0].journal_id
+                # Select for change one of the cash journals used in this payment
+                cash_journal_ids = self.pool['account.journal'].search(cr, uid, [
+                    ('type', '=', 'cash'),
+                    ('id', 'in', list(journal_ids)),
+                ], limit=1, context=context)
+                if not cash_journal_ids:
+                    # If none, select for change one of the cash journals of the POS
+                    # This is used for example when a customer pays by credit card
+                    # an amount higher than total amount of the order and gets cash back
+                    cash_journal_ids = [statement.journal_id.id for statement in session.statement_ids
+                                        if statement.journal_id.type == 'cash']
+                    if not cash_journal_ids:
+                        raise osv.except_osv( _('error!'),
+                            _("No cash statement found for this session. Unable to record returned cash."))
+                cash_journal = cash_journal_ids[0]
             self.add_payment(cr, uid, order_id, {
                 'amount': -order['amount_return'],
                 'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'payment_name': _('return'),
-                'journal': cash_journal.id,
+                'journal': cash_journal,
             }, context=context)
         return order_id
 
@@ -1158,6 +1169,9 @@ class pos_order(osv.osv):
             # Create an move for each order line
 
             cur = order.pricelist_id.currency_id
+            round_per_line = True
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                round_per_line = False
             for line in order.lines:
                 tax_amount = 0
                 taxes = []
@@ -1167,14 +1181,14 @@ class pos_order(osv.osv):
                 computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit * (100.0-line.discount) / 100.0, line.qty)['taxes']
 
                 for tax in computed_taxes:
-                    tax_amount += cur_obj.round(cr, uid, cur, tax['amount'])
+                    tax_amount += cur_obj.round(cr, uid, cur, tax['amount']) if round_per_line else tax['amount']
                     if tax_amount < 0:
                         group_key = (tax['ref_tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
                     else:
                         group_key = (tax['tax_code_id'], tax['base_code_id'], tax['account_collected_id'], tax['id'])
 
                     group_tax.setdefault(group_key, 0)
-                    group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount'])
+                    group_tax[group_key] += cur_obj.round(cr, uid, cur, tax['amount']) if round_per_line else tax['amount']
 
                 amount = line.price_subtotal
 

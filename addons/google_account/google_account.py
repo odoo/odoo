@@ -163,13 +163,13 @@ class google_service(osv.osv_memory):
             except:
                 pass
         except urllib2.HTTPError, e:
-            if e.code in (400, 401, 410):
-                raise e
-            elif e.code in (204, 404):
+            if e.code in (204, 404):
                 status = e.code
                 response = ""
             else:
                 _logger.exception("Bad google request : %s !" % e.read())
+                if e.code in (400, 401, 410):
+                    raise e
                 raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong with your request to google"), context=context)
         return (status, response, ask_time)
 

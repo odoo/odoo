@@ -1924,6 +1924,11 @@
         subtree: true,
         attributeOldValue: true,
     };
+    var pasting = false;
+    $(document).on('paste', '[contenteditable]', function() {
+        pasting = true;
+        setTimeout(function(){ pasting = false; }, 0);
+    });
     var observer = new website.Observer(function (mutations) {
         // NOTE: Webkit does not fire DOMAttrModified => webkit browsers
         //       relying on JsMutationObserver shim (Chrome < 18, Safari < 6)
@@ -1960,6 +1965,7 @@
                     setTimeout(function () {
                         fixup_browser_crap(m.addedNodes);
                     }, 0);
+                    if (pasting) { remove_oe_attributes(m.addedNodes); }
                     // Remove ignorable nodes from addedNodes or removedNodes,
                     // if either set remains non-empty it's considered to be an
                     // impactful change. Otherwise it's ignored.
@@ -1980,6 +1986,16 @@
             .uniq()
             .each(function (node) { $(node).trigger('content_changed'); })
     });
+    function remove_oe_attributes(nodes) {
+        _.chain(nodes).filter(function(node){ return node.nodeType === 1 }).each(function(node){
+            _.each(_.toArray(node.attributes), function(attr){
+                if(attr.nodeName.indexOf('data-oe-') === 0) {
+                    node.removeAttribute(attr.nodeName)
+                }
+            });
+            remove_oe_attributes(node.childNodes);
+        });
+    };
     function remove_mundane_nodes(nodes) {
         if (!nodes || !nodes.length) { return []; }
 

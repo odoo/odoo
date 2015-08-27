@@ -4,15 +4,18 @@
 # 
 # Translators:
 # Clemilton Clementino <clemylton@hotmail.com>, 2015
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-02 23:06+0000\n"
+"PO-Revision-Date: 2015-08-21 13:08+0000\n"
 "Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -296,7 +299,7 @@ msgstr "Estrutura da LdM"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "Linhas da referida lista de materiais"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -539,7 +542,7 @@ msgstr "Consumo & Produção"
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "Linhas de Consumo"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
@@ -568,7 +571,7 @@ msgstr "Produtos Consumidos"
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "Consumido por"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
@@ -835,7 +838,7 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "Se uma variante do produto é definida a LDM está disponível apenas para este produto. "
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
@@ -1123,7 +1126,7 @@ msgstr "Novo"
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "Nenhuma lista de materiais existente para este produto!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1221,7 +1224,7 @@ msgstr "Rota superior"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "Ref. do Parceiro:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1241,7 +1244,7 @@ msgstr "Por semana"
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "Fantasma"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1249,7 +1252,7 @@ msgid ""
 "Phantom: this product line will not appear in the raw materials of "
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
+msgstr "Fantasma: esta linha de produtos não aparece nas matérias-primas de ordens de produção, ele será substituído diretamente por matérias-primas de sua própria lista, sem disparar uma ordem de produção extra."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1277,7 +1280,7 @@ msgstr "Imprime a Estrutura de Custo do Produto"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "Data de impressão:"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1292,7 +1295,7 @@ msgstr "Aquisição"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regras de Compras"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1421,7 +1424,7 @@ msgstr "Variação do Produto"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "Produto:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1448,12 +1451,12 @@ msgstr "Ordem Produção N °:"
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "Ordem de Produção para Produtos Produzidos"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "Ordem de Produção para Matéria-Prima"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1473,7 +1476,7 @@ msgstr "Centros de Trabalho de produção"
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "Progresso da Produção"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1496,7 +1499,7 @@ msgstr "Produtos"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "Produtos Consumidos"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -1572,7 +1575,7 @@ msgstr ""
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "Quantidade:"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1681,7 +1684,7 @@ msgstr "Roteamentos permitem criar e da gerenciar as operações de produção q
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "Número PV:"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1691,12 +1694,12 @@ msgstr "Data programada"
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
-msgstr ""
+msgstr "Data Programada por Mês"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "Data Programada:"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1948,7 +1951,7 @@ msgstr "Tempo em horas para este Centro de Trabalho para concluir a operação d
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "Para Consumo"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213

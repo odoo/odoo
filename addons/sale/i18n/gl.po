@@ -3,14 +3,15 @@
 # * sale
 # 
 # Translators:
+# Alejandro Santana <alejandrosantana@anubia.es>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 12:59+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/odoo-8/language/gl/)\n"
+"PO-Revision-Date: 2015-07-18 01:07+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>\n"
+"Language-Team: Galician (http://www.transifex.com/odoo/odoo-8/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -99,7 +100,7 @@ msgstr ""
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
 msgid "# Sales"
-msgstr ""
+msgstr "# Vendas"
 
 #. module: sale
 #: field:sale.report,nbr:0
@@ -109,31 +110,31 @@ msgstr "# de líneas"
 #. module: sale
 #: field:sale.report,product_uom_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "# de cantidade"
 
 #. module: sale
 #: field:res.partner,sale_order_count:0
 msgid "# of Sales Order"
-msgstr ""
+msgstr "# de pedido de venda"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
 "'draft' or ''}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'Presuposto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(actualizar)"
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -143,7 +144,7 @@ msgid ""
 "* The 'Exception' status is set when the related sales order is set as exception.                     \n"
 "* The 'Done' status is set when the sales order line has been picked.                     \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
-msgstr ""
+msgstr "* O estado 'Borrador' establécese cando o pedido de venda relacionado está como borrador.\n* O estado 'Confirmado' establécese cando o pedido de venda relacionado se confirma.\n* O estado de excepción establécese cando o pedido de venda relacionado está nun dos estados de excepción.\n* O estado 'Realizado' establécese cando todalas liñas do pedido de venda foron albaranadas.\n* O estado 'Cancelado' establécese cando un usuario cancela o pedido de venda asociado."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -156,7 +157,7 @@ msgid ""
 "                    quotation, sales order, delivery, invoicing and payment.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear un presuposto que se poderá convertir nun\npedido de venda.\n</p><p>\nOdoo axudaralle a manexar de xeito eficiente o proceso de venda completo: presuposto, pedido de venda, envío, facturación e pagamento.\n</p>"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -386,17 +387,17 @@ msgstr "Conta analítica"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Contabilidade analítica para vendas"
 
 #. module: sale
 #: field:account.config.settings,group_analytic_account_for_sales:0
 msgid "Analytic accounting for sales"
-msgstr ""
+msgstr "Contabilidade analítica para vendas"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Before Delivery"
-msgstr ""
+msgstr "Antes do envío"
 
 #. module: sale
 #: code:addons/sale/sale.py:1048
@@ -404,22 +405,22 @@ msgstr ""
 msgid ""
 "Before choosing a product,\n"
 " select a customer in the sales form."
-msgstr ""
+msgstr "Antes de elexir un produto,\nselccione un cliente no formulario de venda."
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr ""
+msgstr "Por produto"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "Por comercial"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
 msgid "By Salesteam"
-msgstr ""
+msgstr "Por equipo de venda"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
@@ -431,17 +432,17 @@ msgstr "Cancelar"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr ""
+msgstr "Cancelar liña"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Order"
-msgstr ""
+msgstr "Cancelar pedido"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Cancel Quotation"
-msgstr ""
+msgstr "Cancelar presuposto"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -453,13 +454,13 @@ msgstr "Cancelado"
 #: code:addons/sale/sale.py:588
 #, python-format
 msgid "Cannot cancel this sales order!"
-msgstr ""
+msgstr "¡Non pode cancelar este pedido de venda!"
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
-msgstr ""
+msgstr "Non pode eliminar unha liña de pedido de venda que está en estado '%s'."
 
 #. module: sale
 #: code:addons/sale/sale.py:1140
@@ -467,7 +468,7 @@ msgstr ""
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
+msgstr "Non se pode atopar unha liña de tarifa de precios que cadre con este produto e esta cantidade.\nDebe mudar o produto, a cantidade ou a tarifa de precios."
 
 #. module: sale
 #: view:sale.report:sale.view_order_product_search
@@ -478,32 +479,32 @@ msgstr "Categoría do Produto"
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Marque a casa para agrupar as facturas por cliente"
 
 #. module: sale
 #: help:crm.case.section,use_quotations:0
 msgid "Check this box to manage quotations in this sales team."
-msgstr ""
+msgstr "Marque esta casa para xestionar presupostos neste equipo de venda."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to acces the Sales Analysis."
-msgstr ""
+msgstr "Pulse para acceder á Análise de venda."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis of invoices."
-msgstr ""
+msgstr "Pulse para ver unha análise detallada de facturas."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
 msgid "Click to see a detailed analysis."
-msgstr ""
+msgstr "Pulse para ver unha análise detallada."
 
 #. module: sale
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "Demora na realización"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -528,12 +529,12 @@ msgstr "¡Erro de Configuración!"
 #. module: sale
 #: view:sale.order:sale.view_order_form
 msgid "Confirm Sale"
-msgstr ""
+msgstr "Confirmar pedido"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
 msgid "Confirmation Date"
-msgstr ""
+msgstr "Data de confirmación"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -543,27 +544,27 @@ msgstr "Confirmado"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr ""
+msgstr "Liñas de pedidos de venda confirmados, sen enviar"
 
 #. module: sale
 #: field:sale.order,project_id:0
 msgid "Contract / Analytic"
-msgstr ""
+msgstr "Contrato / Conta analítica"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contract Features"
-msgstr ""
+msgstr "Caraterísticas do contrato"
 
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Contracts Management"
-msgstr ""
+msgstr "Xestión de contratos"
 
 #. module: sale
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create & View Invoice"
-msgstr ""
+msgstr "Crear e ver factura"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
@@ -571,24 +572,24 @@ msgstr ""
 #: view:sale.order:sale.view_order_form field:sale.order,order_policy:0
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Create Invoice"
-msgstr ""
+msgstr "Crear factura"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create Invoices"
-msgstr ""
+msgstr "Crear facturas"
 
 #. module: sale
 #: view:sale.advance.payment.inv:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "Crear e ver factura"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
 #: view:sale.order.line.make.invoice:sale.view_sale_order_line_make_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Crear facturas"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_uid:0
@@ -596,7 +597,7 @@ msgstr ""
 #: field:sale.order.line,create_uid:0
 #: field:sale.order.line.make.invoice,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: sale
 #: field:sale.advance.payment.inv,create_date:0
@@ -626,7 +627,7 @@ msgstr "Cliente"
 #: code:addons/sale/sale.py:464
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "Facturas de cliente"
 
 #. module: sale
 #: field:sale.order,date_order:0
@@ -636,7 +637,7 @@ msgstr "Data"
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "Data de confirmación"
 
 #. module: sale
 #: field:sale.report,date:0
@@ -666,7 +667,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:sale.view_sales_config
 msgid "Default Options"
-msgstr ""
+msgstr "Opcións por defecto"
 
 #. module: sale
 #: field:res.company,sale_note:0
@@ -693,7 +694,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Enderezo de envío"
 
 #. module: sale
 #: field:sale.order.line,delay:0
@@ -723,12 +724,12 @@ msgstr "Desconto (%)"
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Desconto nas liñas"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_margin:0
 msgid "Display margins on sales orders"
-msgstr ""
+msgstr "Amosar marxes nos pedidos de venda"
 
 #. module: sale
 #: view:sale.make.invoice:sale.view_sale_order_make_invoice
@@ -1087,7 +1088,7 @@ msgstr ""
 #: field:sale.order.line,write_uid:0
 #: field:sale.order.line.make.invoice,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización de"
 
 #. module: sale
 #: field:sale.advance.payment.inv,write_date:0
@@ -1095,7 +1096,7 @@ msgstr ""
 #: field:sale.order.line,write_date:0
 #: field:sale.order.line.make.invoice,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización en"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice

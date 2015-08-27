@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 13:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-08-20 08:55+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr "줄의 수"
+msgstr "# 명세"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,state:0
@@ -31,7 +31,7 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr ""
+msgstr "* 작업 지시가 작성되면 '기안' 상태입니다.\n* 시작 모드로 작업 지시가 설정되면 '진행 중' 상태로 설정합니다.\n* 사용자가 중지 또는 주문을 변경하고자 '보류' 상태로 설정하려면 작업 지시는 진행모드에 있어야 합니다\n* 사용자가 작업 지시를 취소하면 '취소' 상태로 설정합니다.\n* 주문이 완료된 상태라면 '완료' 상태로 설정합니다."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -46,7 +46,7 @@ msgid ""
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            새로운 작업 지시를 시작합니다.\n           </p><p>\n            제조 또는 제품 조립. 귀하는 제조 작업을 처리해야\n            완제품과 원료를 사용합니다. \n            제조 작업은 종종 작업 지시라고 합니다.\n            다양한 작업은 사용가능한 작업량에 따라\n            제조 및 비용 계획에 서로 다른 영향을 미칠 것입니다.\n           </p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -62,7 +62,7 @@ msgid ""
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            새로운 작업 지시를 시작합니다.\n            </p><p>\n            작업 지시는 각 제조 주문에 대해 수행될 작업의 목록입니다.\n             만약 제조 주문의 최초 작업 지시가 시작된다면,\n             그 제조 주문이 자동으로 시작으로 표시됩니다.\n             만약 제조 순서의 마지막 작업이 끝난다면,\n             제조 주문은 자동적으로 수행되며 관련 제품이 생산됩니다.\n           </p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -72,7 +72,7 @@ msgstr "실제 생산일"
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.operation_calendar_view
 msgid "Calendar View"
-msgstr "카렌더 뷰"
+msgstr "달력 화면"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -101,12 +101,12 @@ msgstr "취소됨"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr ""
+msgstr "의존하는 것 없이 독립적으로 모든 제품 주문을 이동할 수 있게 확인합니다."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr ""
+msgstr "하위 이동"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -117,19 +117,19 @@ msgstr "코드"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr "확정된 작업 주문"
+msgstr "확인된 작업 지시"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,create_uid:0
 #: field:mrp_operations.operation.code,create_uid:0
 msgid "Created by"
-msgstr "작성자:"
+msgstr "작성자"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,create_date:0
 #: field:mrp_operations.operation.code,create_date:0
 msgid "Created on"
-msgstr "작성일:"
+msgstr "작성일"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
@@ -164,7 +164,7 @@ msgstr "완료"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Draft"
-msgstr "초안"
+msgstr "기안"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -176,7 +176,7 @@ msgstr "기간"
 #: field:mrp.production.workcenter.line,date_planned_end:0
 #: field:mrp_operations.operation,date_finished:0
 msgid "End Date"
-msgstr "종료 날짜"
+msgstr "마감일"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:122
@@ -186,7 +186,7 @@ msgstr "종료 날짜"
 #: code:addons/mrp_operations/mrp_operations.py:464
 #, python-format
 msgid "Error!"
-msgstr "에러!"
+msgstr "오류 !"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -205,7 +205,7 @@ msgstr "완료됨"
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr ""
+msgstr "자유로운 직렬"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
@@ -221,7 +221,7 @@ msgstr "분류 기준"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.graph_in_hrs_workcenter
 msgid "Hours by Work Center"
-msgstr "작업 센터별 시간"
+msgstr "작업장별 시간"
 
 #. module: mrp_operations
 #: field:mrp.workorder,id:0 field:mrp_operations.operation,id:0
@@ -232,7 +232,7 @@ msgstr "ID"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "In Production"
-msgstr "생산중"
+msgstr "생산 중"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -246,7 +246,7 @@ msgstr "진행 중"
 #, python-format
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
-msgstr "작업을 완료하려면 시작이나 재개 상태여야 핣니다!"
+msgstr "작업을 완료하려면 시작이나 재개 상태여야 합니다!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:445
@@ -270,13 +270,13 @@ msgstr "정보"
 #: field:mrp_operations.operation,write_uid:0
 #: field:mrp_operations.operation.code,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,write_date:0
 #: field:mrp_operations.operation.code,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -286,13 +286,13 @@ msgstr "최신"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "생산주문"
+msgstr "생산 주문"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:122
 #, python-format
 msgid "Manufacturing order cannot be started in state \"%s\"!"
-msgstr "생산주문은  \"%s\" 상태에서 시작할 수 없습니다!"
+msgstr "생산 주문은  \"%s\" 상태에서 시작할 수 없습니다!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
@@ -313,7 +313,7 @@ msgstr "작업 코드"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "오퍼레이션 이름"
+msgstr "작업 이름"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:441
@@ -346,7 +346,7 @@ msgstr "작업이 아직 시작되지 않았습니다!"
 #: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_calendar
 #: view:mrp.production.workcenter.line:mrp_operations.workcenter_line_gantt
 msgid "Operations"
-msgstr "오퍼레이션"
+msgstr "작업"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -362,7 +362,7 @@ msgstr "일시정지"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Pause Work Order"
-msgstr "작업 주문 일시정지"
+msgstr "작업 지시 일시정지"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -398,7 +398,7 @@ msgstr "상품 수량"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Product to Produce"
-msgstr "생산할 제품"
+msgstr "생산할 상품"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -411,13 +411,13 @@ msgstr "생산"
 #. module: mrp_operations
 #: view:mrp_operations.operation:mrp_operations.mrp_production_operation_tree_view
 msgid "Production Operation"
-msgstr "생산 오퍼레이션"
+msgstr "생산 작업"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_form_view
 #: view:mrp_operations.operation.code:mrp_operations.mrp_production_code_tree_view
 msgid "Production Operation Code"
-msgstr "생산 오퍼레이션 코드"
+msgstr "생산 작업 코드"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
@@ -427,7 +427,7 @@ msgstr "생산 상태"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Production Workcenter"
-msgstr "생산 작업센터"
+msgstr "생산 작업장"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -460,7 +460,7 @@ msgstr "재개"
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Resume Work Order"
-msgstr "작업 주문 재개"
+msgstr "작업 지시 재개"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
@@ -485,19 +485,19 @@ msgstr "검색"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 msgid "Search Work Orders"
-msgstr "작업 주문 검색"
+msgstr "작업 지시 검색"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view2
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
 msgid "Set Draft"
-msgstr "초안으로 설정"
+msgstr "기안으로 설정"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
 msgid "Set to Draft"
-msgstr "초안으로 설정"
+msgstr "기안으로 설정"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:434
@@ -520,7 +520,7 @@ msgstr "시작"
 #: field:mrp.production.workcenter.line,date_start:0
 #: field:mrp_operations.operation,date_start:0
 msgid "Start Date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 #. module: mrp_operations
 #: view:mrp.production:mrp_operations.mrp_production_form_inherit_view
@@ -554,7 +554,7 @@ msgstr "재고 이동"
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
-msgstr "이 작업 센터의 작업 시작과 중단의 경과 시간"
+msgstr "이 작업장의 작업 시작과 중단의 경과 시간"
 
 #. module: mrp_operations
 #: field:mrp.workorder,total_cycles:0
@@ -582,33 +582,33 @@ msgstr "자재 대기중"
 #: field:mrp.workorder,workcenter_id:0
 #: field:mrp_operations.operation,workcenter_id:0
 msgid "Work Center"
-msgstr "워크센터"
+msgstr "작업장"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr "작업센터"
+msgstr "작업장"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr "작업센터 바코드"
+msgstr "작업장 바코드"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr "작업 주문"
+msgstr "작업 지시"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr "작업 주문 분석"
+msgstr "작업 지시 분석"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr "작업 주문 보고서"
+msgstr "작업 지시 보고서"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -618,17 +618,17 @@ msgstr "작업 주문 보고서"
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_graph
 msgid "Work Orders"
-msgstr "작업 주문"
+msgstr "작업 지시"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
 msgid "Work Orders By Resource"
-msgstr "참조별 작업 주문"
+msgstr "자원별 작업 지시"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr "작업 주문 계획"
+msgstr "작업 지시 계획"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0

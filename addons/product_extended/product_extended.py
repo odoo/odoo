@@ -74,7 +74,7 @@ class product_template(osv.osv):
         uom_obj = self.pool.get("product.uom")
         tmpl_obj = self.pool.get('product.template')
         for sbom in bom.bom_line_ids:
-            my_qty = sbom.product_qty
+            my_qty = sbom.product_qty / sbom.product_efficiency
             if not sbom.attribute_value_ids:
                 # No attribute_value_ids means the bom line is not variant specific
                 price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty

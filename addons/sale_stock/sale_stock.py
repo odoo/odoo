@@ -196,7 +196,7 @@ class product_product(osv.osv):
         #when sale/product is installed alone, there is no need to create procurements, but with sale_stock
         #we must create a procurement for each product that is not a service.
         for product in self.browse(cr, uid, ids, context=context):
-            if product.type != 'service':
+            if product.id and product.type != 'service':
                 return True
         return super(product_product, self).need_procurement(cr, uid, ids, context=context)
 
@@ -424,6 +424,8 @@ class stock_move(osv.osv):
                     fp = move.picking_id.sale_id.fiscal_position
                     res = self.pool.get("account.invoice.line").product_id_change(cr, uid, [], move.product_id.id, None, partner_id=move.picking_id.partner_id.id, fposition_id=(fp and fp.id), context=context)
                     extra_move_tax[0, move.product_id] = [(6, 0, res['value']['invoice_line_tax_id'])]
+                else:
+                    extra_move_tax[0, move.product_id] = [(6, 0, [x.id for x in move.product_id.product_tmpl_id.taxes_id])]
         return (is_extra_move, extra_move_tax)
 
     def _get_taxes(self, cr, uid, move, context=None):

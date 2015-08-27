@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-29 13:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/projects/p/odoo-8/language/ko/)\n"
+"PO-Revision-Date: 2015-08-20 23:58+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,12 +22,12 @@ msgstr ""
 #: code:addons/mrp/stock.py:262
 #, python-format
 msgid " Manufacture"
-msgstr " 생산"
+msgstr "  제조"
 
 #. module: mrp
 #: field:product.template,bom_count:0
 msgid "# Bill of Material"
-msgstr "# 부품명세서"
+msgstr "# 재료 명세서"
 
 #. module: mrp
 #: field:product.product,mo_count:0 field:product.template,mo_count:0
@@ -51,7 +51,7 @@ msgstr "%s 생산됨"
 msgid ""
 "'Consume only' mode will only consume the products with the quantity selected.\n"
 "'Consume & Produce' mode will consume as well as produce the products with the quantity selected and it will finish the production order when total ordered quantities are produced."
-msgstr ""
+msgstr "'소비' 모드는 선택된 상품의 양을 소비하는 것입니다.\n'소비 및 생산' 모드는 소비 뿐만 아니라 선택된 상품의 양을 생산하고, 총 주문 수량이 생산될 때 생산 주문을 완료하는 것입니다."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
@@ -64,7 +64,7 @@ msgid ""
 "                search in which BoM a specific component is used.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                재료 명세서를 위한 구성 요소를 추가합니다..\n              </p><p>\n                재료 명세서 구성 요소는 마스터 재료 명세서를 작성하는데\n                사용되는 구성 요소 및 부산물입니다. 지정된 구성 요소가\n                사용된 재료명세서에 검색 메뉴를 사용합니다.\n                             </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -78,7 +78,7 @@ msgid ""
 "                and planning forecast.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                작업장을 추가합니다.\n              </p><p>\n                작업장은 생성 및 제조 장치를 관리할 수 있습니다.\n                작업 할당 뿐만 아니라 능력 및 사전 계획을 위한 단위로 간주되는\n                근로자 및/또는 기계로 구성되어 있습니다.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -94,7 +94,7 @@ msgid ""
 "                orders according to procurement needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                재료 명세서를 작성합니다. \n              </p><p>\n                재료 명세서는 완제품을 만들기 위해 사용되는 필수 원자재의\n                하목을 정의할 수 있습니다; 제조 주문 또는 제품의 팩을 통해.\n              </p><p>\n                Odoo는 조달 요구에 따라 제조 주문을 자동 제안하기 위해 BoM을\n                사용합니다\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -113,7 +113,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                속성 그룹을 생성합니다.\n              </p><p>\n                재료 명세서 및 판매 주문에 할당할 수 있는 특정 속성 그룹을\n                정의합니다. 속성은 영업 사원의 판매 주문에서 선택된 속성에\n                따라 오른쪽 재료 명세서를 자동으로 선택할 수 있는 Odoo를 지정합니다.\n              </p><p>\n                예를 들어, 속성 그룹 \"보증\"에, 두가지 속성이 있습니다 :\n                1년 보증, 3년 보증. 판매 주문에서 선택된 속성에 따라, Odoo는\n                재료 명세서 일치를 사용하여 생산 일정을 계획할 것입니다.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -129,7 +129,7 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                제조 주문을 작성합니다. \n              </p><p>\n                재료 명세서 기반으로 제조 주문은 원자재 및 생산 완제품을\n                소비합니다.\n              </p><p>\n                제조 주문은 일반적으로 고객으 요구 사항 또는 재고 규칙 같은\n                자동화된 규칙을 기반으로 자동 제안되고 있다.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
@@ -146,7 +146,7 @@ msgid ""
 "                the needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새 속성을 작성합니다.\n              </p><p>\n                Odoo의 속성은 같은 제품을 구축하는 여러 가지 방법을 가질 때\n                제품을 제조하기 위한 오른쪽 재료 명세서를 사용합니다.\n                각 재료 명세서에 여러 속성을 지정할 수 있습니다.\n                판매사원이 판매 주문을 작성할 때, 몇 가지의 속성에 관련될 수 있고,\n                Odoo는 필요에 따라 사용하는 재료 명세서를 자동으로 선택합니다.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -160,7 +160,7 @@ msgid ""
 "                materials that will define the required raw materials.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                연결 경로를 작성합니다.\n              </p><p>\n                연결 경로를 작성하고 제품을 생산하기 위한 작업장 주문 안을\n                따라야 하는 제조 작업을 관리할 수 있습니다. 필요한 원자재를\n                정의하는 재료 명세서에 부착됩니다.\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -176,17 +176,17 @@ msgid ""
 "                stock rule.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                새로운 제조 주문을 시작합니다. \n              </p><p>\n                재료 명세서를 기반으로 제조 주문은 원자재 소비 및\n                완제품을 생산할 예정입니다.\n              </p><p>\n                제조 주문은 일반적으로 고객의 요구 사항 또는 최고 재고 규칙같은\n                자동화된 규칙을 기반으로 자동 제안되고 있습니다.\n              </p>\n            "
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% during the production process."
-msgstr ""
+msgstr "0.9 계수는 생산 과정 동안 10%의 손실을 의미합니다."
 
 #. module: mrp
 #: help:mrp.bom.line,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr ""
+msgstr "0.9 계수는 생산 진행 내에서 10%의 손실을 의미합니다."
 
 #. module: mrp
 #: field:mrp.bom,active:0 field:mrp.routing,active:0
@@ -197,24 +197,24 @@ msgstr "활성"
 #: code:addons/mrp/wizard/change_production_qty.py:68
 #, python-format
 msgid "Active Id not found"
-msgstr ""
+msgstr "활성 아이디를 찾을 수 없습니다."
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "모든 상품의 숫자는 0보다 커야 합니다.\n재료 명세서에 여분의 상품을 관리하려면 mrp_byproduct 모듈을 설치해야 합니다!"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
 msgid "Allow detailed planning of work order"
-msgstr ""
+msgstr "작업 지시에 세부 계획 허용"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_properties:0
 msgid "Allow several bill of materials per products using properties"
-msgstr ""
+msgstr "속성을 사용하여 상품별로 여러 개의 재료 명세서 허용"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -227,17 +227,17 @@ msgid ""
 "* Repair quotation report\n"
 "* Notes for the technician and for the final customer.\n"
 "-This installs the module mrp_repair."
-msgstr ""
+msgstr "모든 상품의 수리를 관리할 수 있습니다.\n* 수리 상품 추가/제거\n* 재고 영향\n* 송장 발행(상품 및/또는 서비스)\n* 보증 개념\n* 수리 견적 보고서\n* 기술자와 최종 고객에 대한 주의 사항.\n- mrp_repair 모듈을 설치합니다."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr "사이클 내 금액"
+msgstr "회전 금액"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr "수량 (시간)"
+msgstr "시간당 수량"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -247,7 +247,7 @@ msgstr "수량 측정 단위"
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr "분석 저널"
+msgstr "분석 분개"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -264,38 +264,38 @@ msgstr "승인"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr ""
+msgstr "제품 생산을 위한 일 평균 지연. 다단계 재료 명세서의 경우 부품의 제조 지시 시간이 추가될 것입니다."
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "원자재 대기 중"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Name"
-msgstr ""
+msgstr "재료 명세서 명"
 
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "변형 제품 재료 명세서는 명세서에 적용할 양식이 필요합니다."
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Ref"
-msgstr ""
+msgstr "참조 재료 명세서"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_structure
 #: view:website:mrp.report_mrpbomstructure
 msgid "BOM Structure"
-msgstr "BOM 구조"
+msgstr "재료 명세서 구조"
 
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "참조된 재료 명세서의 재료 명세"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -304,26 +304,26 @@ msgid ""
 "Because the product %s requires it, you must assign a serial number to your "
 "raw material %s to proceed further in your production. Please use the "
 "'Produce' button to do so."
-msgstr ""
+msgstr "%s 부품을 필요로 하기 때문에 생산을 진행하기 위해 원자재 %s의 일련 번호를 지정해야 합니다. '생산' 버튼을 사용하세요."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 #: view:website:mrp.report_mrporder
 msgid "Bill Of Material"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom view:mrp.bom:mrp.mrp_bom_form_view
 #: field:mrp.production,bom_id:0
 msgid "Bill of Material"
-msgstr "BOM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr ""
+msgstr "재료 명세서 구성"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -335,30 +335,30 @@ msgstr ""
 #: view:product.template:mrp.product_template_form_view_bom_button
 #: field:product.template,bom_ids:0
 msgid "Bill of Materials"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr "BoM 구조"
+msgstr "재료 명세서 구조"
 
 #. module: mrp
 #: help:mrp.production,bom_id:0
 msgid ""
 "Bill of Materials allow you to define the list of required raw materials to "
 "make a finished product."
-msgstr ""
+msgstr "재료 명세서는 완성된 제품을 만드는데 필요한 원자재 목록을 정의할 수 있습니다."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
-msgstr "BoM"
+msgstr "재료 명세서"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:289
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
-msgstr ""
+msgstr "\"%s\" 재료 명세서는 반복 제품과 함께 재료 명세를 포함합니다 : \"%s\""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:315
@@ -366,28 +366,28 @@ msgstr ""
 msgid ""
 "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have "
 "any BoM defined."
-msgstr ""
+msgstr "\"%s\" BoM은 팬텀(실체가 없는) BoM 명세를 포함하지만 \"%s\" 제품은 BoM이 정의되어 있지 않습니다."
 
 #. module: mrp
 #: field:mrp.bom.line,type:0
 msgid "BoM Line Type"
-msgstr ""
+msgstr "재료 명세 유형"
 
 #. module: mrp
 #: field:mrp.bom,bom_line_ids:0
 msgid "BoM Lines"
-msgstr "BoM 라인"
+msgstr "재료 명세"
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "BoM 유형"
+msgstr "재료 명세서 유형"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "일반 제조 경로를 찾을 수 없습니다."
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -402,7 +402,7 @@ msgstr "취소"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Cancel Production"
-msgstr ""
+msgstr "생산 취소"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -413,26 +413,26 @@ msgstr "취소됨"
 #: code:addons/mrp/stock.py:183
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
-msgstr ""
+msgstr "0 또는 음수 수량 이동은 소모되지 않습니다."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
-msgstr ""
+msgstr "'%s' 상태의 제조 주문을 삭제할 수 없습니다."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:679
 #, python-format
 msgid "Cannot find a bill of material for this product."
-msgstr ""
+msgstr "상품을 위한 재료 명세서를 찾을 수 없습니다."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:83
 #: code:addons/mrp/wizard/change_production_qty.py:88
 #, python-format
 msgid "Cannot find bill of material for this product."
-msgstr ""
+msgstr "상품을 위한 재료 명세서를 찾을 수 없습니다."
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
@@ -453,17 +453,17 @@ msgstr "상품 수량 변경"
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
 msgid "Change Quantity"
-msgstr ""
+msgstr "변경 수량"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "상품의 수량을 변경"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Check Availability"
-msgstr "가용성 체크"
+msgstr "가용성 확인"
 
 #. module: mrp
 #: field:mrp.routing,code:0
@@ -473,7 +473,7 @@ msgstr "코드"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr "업체"
+msgstr "회사"
 
 #. module: mrp
 #: field:mrp.bom,company_id:0 field:mrp.production,company_id:0
@@ -481,7 +481,7 @@ msgstr "업체"
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 #: field:report.mrp.inout,company_id:0
 msgid "Company"
-msgstr "업체"
+msgstr "회사"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
@@ -490,19 +490,19 @@ msgstr "업체"
 #: view:product.template:mrp.product_template_search_view_procurment
 #, python-format
 msgid "Components"
-msgstr "구성 요소"
+msgstr "부품"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:189
 #, python-format
 msgid "Components Cost of %s %s"
-msgstr ""
+msgstr "%s %s의 부품 비용"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Components suppliers"
-msgstr ""
+msgstr "부품 공급업체"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -512,80 +512,80 @@ msgstr "데이터 계산"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
 msgid "Configuration"
-msgstr "구성"
+msgstr "환경 설정"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "제조 구성"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Confirm"
-msgstr "확정"
+msgstr "확인"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Confirm Production"
-msgstr "생산 확정"
+msgstr "생산 확인"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "소모 및 생산"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "Consume Lines"
-msgstr ""
+msgstr "소모 명세"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.move_consume
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Move"
-msgstr ""
+msgstr "소모 이동"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "소모만"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_consume
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:stock.move.consume:mrp.view_stock_move_consume_wizard
 msgid "Consume Products"
-msgstr ""
+msgstr "소모 제품"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines2:0 view:website:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr "소비된 상품"
+msgstr "소모된 제품"
 
 #. module: mrp
 #: field:stock.move,consumed_for:0
 msgid "Consumed for"
-msgstr ""
+msgstr "소모"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Cost Price per Unit of Measure"
-msgstr ""
+msgstr "측정 단위 당 원가 가격"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:148
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
-msgstr ""
+msgstr "원가 구조"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr "사이클당 원가"
+msgstr "회전당 원가"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -595,7 +595,7 @@ msgstr "시간당 원가"
 #. module: mrp
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 msgid "Costing Information"
-msgstr ""
+msgstr "원가 계산 정보"
 
 #. module: mrp
 #: field:change.production.qty,create_uid:0 field:mrp.bom,create_uid:0
@@ -610,7 +610,7 @@ msgstr ""
 #: field:mrp.workcenter,create_uid:0 field:mrp.workcenter.load,create_uid:0
 #: field:stock.move.consume,create_uid:0
 msgid "Created by"
-msgstr "생성자:"
+msgstr "작성자"
 
 #. module: mrp
 #: field:change.production.qty,create_date:0 field:mrp.bom,create_date:0
@@ -625,29 +625,29 @@ msgstr "생성자:"
 #: field:mrp.workcenter,create_date:0 field:mrp.workcenter.load,create_date:0
 #: field:stock.move.consume,create_date:0
 msgid "Created on"
-msgstr "생성일:"
+msgstr "작성일"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr "사이클 계정"
+msgstr "회전 계정"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Cycles Cost"
-msgstr "사이클 원가"
+msgstr "회전 원가"
 
 #. module: mrp
 #: help:mrp.bom,message_last_post:0 help:mrp.production,message_last_post:0
 #: help:mrp.production.workcenter.line,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr "기록에 게시된 최근 메시지의 날짜."
+msgstr "레코드에 게시된 최근 메시지의 날짜."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr "일일"
+msgstr "매일"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -658,7 +658,7 @@ msgstr "기본 측정 단위"
 #. module: mrp
 #: field:mrp.config.settings,module_product_manufacturer:0
 msgid "Define manufacturers on products "
-msgstr ""
+msgstr "상품 제조업체 정의 "
 
 #. module: mrp
 #: field:mrp.property,description:0 field:mrp.property.group,description:0
@@ -672,12 +672,12 @@ msgstr "설명"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr ""
+msgstr "작업장 설명. 작업장에 따르면 회전이 무엇인지 설명합니다."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Destination Loc."
-msgstr ""
+msgstr "목적지 위치."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -692,7 +692,7 @@ msgstr "완료"
 #. module: mrp
 #: field:mrp.production,date_finished:0
 msgid "End Date"
-msgstr "마감 날짜"
+msgstr "마감일"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:679 code:addons/mrp/stock.py:183
@@ -714,14 +714,14 @@ msgstr "추가 정보"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr ""
+msgstr "생산 주문에 자동 분석 회계 항목을 원하는 경우에만 입력하세요."
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr ""
+msgstr "손쉽게 분석 회계에서 생산 비용을 추적하기 위해 상품을 채웁니다."
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -743,14 +743,14 @@ msgstr "팔로워"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Force Reservation"
-msgstr "예약하기"
+msgstr "강제 예약"
 
 #. module: mrp
 #: help:product.template,track_production:0
 msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "generated by a Manufacturing Order"
-msgstr ""
+msgstr "상품과 제조 주문에 의해 생성된 것을 포함하여 모든 이동에 대해 일련 번호를 강제로 지정"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
@@ -765,28 +765,28 @@ msgstr "일반 정보"
 #. module: mrp
 #: help:mrp.bom,sequence:0
 msgid "Gives the sequence order when displaying a list of bills of material."
-msgstr ""
+msgstr "재료 명세서 목록을 표시할 때 주문 순서를 제공합니다."
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
+msgstr "작업장 경로 목록을 표시할 때 주문 순서를 제공합니다."
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "작업 주문 목록을 표시할 때 주문 순서를 제공합니다."
 
 #. module: mrp
 #: help:mrp.bom.line,sequence:0
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "표시할 때 주문 순서를 제공합니다."
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "분류 기준"
+msgstr "그룹화"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -795,7 +795,7 @@ msgstr "분류 기준"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr "분류 기준..."
+msgstr "그룹화..."
 
 #. module: mrp
 #: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
@@ -803,7 +803,7 @@ msgstr "분류 기준..."
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "대화 요약 (메시지 개수, ...)을 포함함. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
+msgstr "대화 요약 (메시지 개수, ...)을 포함합니다. 이 요약은 간판 화면에 삽입할 수 있도록 직접적인 html 형식입니다."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -814,7 +814,7 @@ msgstr "시간 계정"
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "시간당 비용"
 
 #. module: mrp
 #: field:change.production.qty,id:0 field:mrp.bom,id:0 field:mrp.bom.line,id:0
@@ -834,27 +834,27 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "이 제품에만 사용할 수 있는 BOM이 정의된 변형 제품인 경우."
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
 #: help:mrp.production.workcenter.line,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
+msgstr "선택하면 새로운 메시지에 주목할 필요가 있습니다."
 
 #. module: mrp
 #: help:mrp.bom,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 재료 명세서를 숨길 수 있습니다."
 
 #. module: mrp
 #: help:mrp.routing,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
-msgstr ""
+msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 경로를 숨길 수 있습니다."
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -865,7 +865,7 @@ msgstr "생산 중"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Inactive"
-msgstr ""
+msgstr "비활성"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -877,14 +877,14 @@ msgstr "내부 참조"
 #: code:addons/mrp/mrp.py:605
 #, python-format
 msgid "Invalid Action!"
-msgstr "유효하지 않은 액션!"
+msgstr "잘못된 동작!"
 
 #. module: mrp
 #: field:mrp.bom,message_is_follower:0
 #: field:mrp.production,message_is_follower:0
 #: field:mrp.production.workcenter.line,message_is_follower:0
 msgid "Is a Follower"
-msgstr "은(는) 팔로워임"
+msgstr "팔로워입니까?"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -892,7 +892,7 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr "완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우, 위치를 설정하십시오. 생산 오퍼레이션을 하청 계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
+msgstr "완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우에는 위치를 설정하십시오. 제조 작업을 하청 계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
 
 #. module: mrp
 #: field:mrp.bom,message_last_post:0 field:mrp.production,message_last_post:0
@@ -913,7 +913,7 @@ msgstr "최근 메시지 날짜"
 #: field:mrp.workcenter,write_uid:0 field:mrp.workcenter.load,write_uid:0
 #: field:stock.move.consume,write_uid:0
 msgid "Last Updated by"
-msgstr "최근 업데이트한 사람:"
+msgstr "최근 갱신한 사람"
 
 #. module: mrp
 #: field:change.production.qty,write_date:0 field:mrp.bom,write_date:0
@@ -928,7 +928,7 @@ msgstr "최근 업데이트한 사람:"
 #: field:mrp.workcenter,write_date:0 field:mrp.workcenter.load,write_date:0
 #: field:stock.move.consume,write_date:0
 msgid "Last Updated on"
-msgstr "최근 업데이트 날짜:"
+msgstr "최근 갱신 날짜"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -943,33 +943,33 @@ msgstr "위치"
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "부품을 찾을 위치"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "완제품을 보관할 시스템의 위치"
+msgstr "완제품을 보관할 위치"
 
 #. module: mrp
 #: field:mrp.product.produce,lot_id:0 field:mrp.product.produce.line,lot_id:0
 #: field:stock.move.consume,restrict_lot_id:0
 msgid "Lot"
-msgstr "로트"
+msgstr "롯트"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Routings"
-msgstr ""
+msgstr "연결 경로 관리"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_repair:0
 msgid "Manage repairs of products "
-msgstr ""
+msgstr "상품 수리 관리"
 
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr ""
+msgstr "연결 경로와 작업 지시 관리 "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -980,17 +980,17 @@ msgstr "관리자"
 #: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
 #, python-format
 msgid "Manufacture"
-msgstr ""
+msgstr "제조"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_pull_id:0
 msgid "Manufacture Rule"
-msgstr ""
+msgstr "제조 규칙"
 
 #. module: mrp
 #: field:stock.warehouse,manufacture_to_resupply:0
 msgid "Manufacture in this Warehouse"
-msgstr ""
+msgstr "이 창고에서 제조"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -1003,13 +1003,13 @@ msgstr "제조"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0 field:mrp.bom.line,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr ""
+msgstr "제조 효율성"
 
 #. module: mrp
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr "생산 리드 타임"
+msgstr "생산 소요 시간"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1018,13 +1018,13 @@ msgstr "생산 리드 타임"
 #: field:mrp.production.workcenter.line,production_id:0
 #: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
-msgstr "생산주문"
+msgstr "제조 주문"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:131
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
-msgstr ""
+msgstr "<em>%s</em> 제조 주문이 작성됨."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production
@@ -1036,52 +1036,52 @@ msgstr ""
 #: view:mrp.production:mrp.view_production_calendar
 #: view:mrp.production:mrp.view_production_graph
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "제조 주문"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
-msgstr ""
+msgstr "제조 주문 시작"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
-msgstr ""
+msgstr "제조 주문 대기 상품"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr ""
+msgstr "진행 중인 제조 주문"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "현재 생산되는 제조 주문"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "생산을 준비 중인 제조 주문"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are waiting for raw materials."
-msgstr ""
+msgstr "원자재 대기중인 제조 주문"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Mark as Started"
-msgstr ""
+msgstr "시작으로 표시"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
 msgid "Master Bill of Materials"
-msgstr ""
+msgstr "전체 재료 명세서"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Master Data"
-msgstr ""
+msgstr "전체 데이터"
 
 #. module: mrp
 #: field:mrp.bom,message_ids:0 field:mrp.production,message_ids:0
@@ -1093,7 +1093,7 @@ msgstr "메시지"
 #: help:mrp.bom,message_ids:0 help:mrp.production,message_ids:0
 #: help:mrp.production.workcenter.line,message_ids:0
 msgid "Messages and communication history"
-msgstr "메시지 및 대화이력"
+msgstr "메시지 및 대화 이력"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1103,7 +1103,7 @@ msgstr "모델"
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr ""
+msgstr "자재소요계획 작업장"
 
 #. module: mrp
 #: field:mrp.bom,name:0 field:mrp.production.product.line,name:0
@@ -1116,18 +1116,18 @@ msgstr "이름"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr "새로 만들기"
+msgstr "신규"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:127
 #, python-format
 msgid "No BoM exists for this product!"
-msgstr ""
+msgstr "이 제품의 BOM이 존재하지 않습니다!"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "No. Of Cycles"
-msgstr "싸이클 횟수"
+msgstr "회전 횟수"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
@@ -1160,7 +1160,7 @@ msgstr "노트"
 #: field:mrp.routing.workcenter,cycle_nbr:0
 #: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "회전 횟수"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -1173,24 +1173,24 @@ msgstr "시간"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr ""
+msgstr "연결 경로의 지정된 작업을 해야 하는 작업장 반복 횟수."
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr ""
+msgstr "병렬로 할 수 있는 작업장의 작업 횟수. 작업장이 5명이 한 팀인 경우 회전 용량은 5입니다."
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
 msgid "Open MRP Menu"
-msgstr ""
+msgstr "자재소요계획 메뉴 열기"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Operation"
-msgstr "오퍼레이션"
+msgstr "작업"
 
 #. module: mrp
 #: view:mrp.config.settings:mrp.view_mrp_config
@@ -1200,27 +1200,27 @@ msgstr "주문"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 msgid "Order Planning"
-msgstr ""
+msgstr "주문 계획"
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "주문 수량은 음수 또는 0이 될 수 없습니다!"
 
 #. module: mrp
 #: field:mrp.bom.line,bom_id:0
 msgid "Parent BoM"
-msgstr "부모 BoM"
+msgstr "상위 재료명세서"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "부모 라우팅"
+msgstr "상위 연결 경로"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Partner Ref:"
-msgstr ""
+msgstr "파트너 참조 :"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1235,12 +1235,12 @@ msgstr "월별"
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr "주당"
+msgstr "주별"
 
 #. module: mrp
 #: selection:mrp.bom.line,type:0
 msgid "Phantom"
-msgstr ""
+msgstr "팬텀"
 
 #. module: mrp
 #: help:mrp.bom.line,type:0
@@ -1248,7 +1248,7 @@ msgid ""
 "Phantom: this product line will not appear in the raw materials of "
 "manufacturing orders,it will be directly replaced by the raw materials of "
 "its own BoM, without triggeringan extra manufacturing order."
-msgstr ""
+msgstr "팬텀 : 이 제품 명세는 제조 주문의 원자재에 표시되지 않습니다. 별도의 제조 주문을 유발하지 않고도 자신의 BOM의 원자재로 대체할 수 있습니다."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1266,17 +1266,17 @@ msgstr "적절한 수량을 제공하십시오."
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
 msgid "Print"
-msgstr "출력"
+msgstr "인쇄"
 
 #. module: mrp
 #: view:mrp.product_price:mrp.view_mrp_product_price_wizard
 msgid "Print Cost Structure of Product."
-msgstr ""
+msgstr "제품의 비용 구조 인쇄"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Printing date:"
-msgstr ""
+msgstr "인쇄 날짜 :"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1291,25 +1291,25 @@ msgstr "조달"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "조달 규칙"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Produce"
-msgstr ""
+msgstr "생산"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_byproduct:0
 msgid "Produce several products from one manufacturing order"
-msgstr ""
+msgstr "하나의 제조 주문으로 여러 제품 생산"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "생산된 상품"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1332,22 +1332,22 @@ msgstr "상품 원가 구조"
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Product Move"
-msgstr ""
+msgstr "상품 이동"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr ""
+msgstr "상품 가격"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "상품 생산"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
 msgid "Product Produce Consume lines"
-msgstr ""
+msgstr "상품 생산 소비 명세"
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
@@ -1369,30 +1369,30 @@ msgstr "상품 반올림"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
 msgid "Product Template"
-msgstr "상품 양식"
+msgstr "상품 서식"
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr "상품 UOS"
+msgstr "상품 판매 단위"
 
 #. module: mrp
 #: help:mrp.bom.line,product_uos:0
 msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
-msgstr ""
+msgstr "제품 UOS(판매 단위)는 송장 발행 및 재고 소모 촉진을 위한 측정 단위입니다."
 
 #. module: mrp
 #: field:mrp.bom.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr "상품 UOS 수량"
+msgstr "상품 판매 단위 수량"
 
 #. module: mrp
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Quantity"
-msgstr ""
+msgstr "상품 판매 단위 수량"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0 field:mrp.bom.line,product_uom:0
@@ -1400,17 +1400,17 @@ msgstr ""
 #: field:mrp.production.product.line,product_uom:0
 #: field:stock.move.consume,product_uom:0
 msgid "Product Unit of Measure"
-msgstr "상품 UoM"
+msgstr "상품 측정 단위"
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr "상품 UoS"
+msgstr "상품 판매 단위"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Quantity"
-msgstr ""
+msgstr "상품 판매 단위 수량"
 
 #. module: mrp
 #: field:mrp.bom,product_id:0
@@ -1420,7 +1420,7 @@ msgstr "상품 편차"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Product:"
-msgstr ""
+msgstr "상품 :"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1442,42 +1442,42 @@ msgstr "생산 주문"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Production Order N° :"
-msgstr "생산 주문 번호:"
+msgstr "생산 주문 번호 :"
 
 #. module: mrp
 #: field:stock.move,production_id:0
 msgid "Production Order for Produced Products"
-msgstr ""
+msgstr "생산 상품에 대한 생산 주문"
 
 #. module: mrp
 #: field:stock.move,raw_material_production_id:0
 msgid "Production Order for Raw Materials"
-msgstr ""
+msgstr "원료에 대한 생산 주문"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "생산 예정 상품"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "생산 시작"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Production Work Centers"
-msgstr ""
+msgstr "생산 작업 센터"
 
 #. module: mrp
 #: field:mrp.production,progress:0
 msgid "Production progress"
-msgstr ""
+msgstr "생산 진행"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr "생산 시작 직연"
+msgstr "생산 시작 지연"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_production_gantt
@@ -1495,24 +1495,24 @@ msgstr "상품"
 #. module: mrp
 #: field:mrp.product.produce,consume_lines:0
 msgid "Products Consumed"
-msgstr ""
+msgstr "소모된 제품"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_lines:0 view:website:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr ""
+msgstr "소모될 제품"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Products to Finish"
-msgstr ""
+msgstr "완료될 상품"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
-msgstr ""
+msgstr "생산할 상품"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1528,7 +1528,7 @@ msgstr "속성"
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr "속성 카테고리"
+msgstr "속성 분류"
 
 #. module: mrp
 #: field:mrp.property,composition:0
@@ -1551,7 +1551,7 @@ msgstr "속성 그룹"
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "속성 그룹"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:141 view:mrp.bom:mrp.mrp_bom_form_view
@@ -1566,17 +1566,17 @@ msgstr "수량"
 #. module: mrp
 #: field:mrp.product.produce.line,product_qty:0
 msgid "Quantity (in default UoM)"
-msgstr ""
+msgstr "수량(기본 측정 단위)"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Quantity:"
-msgstr ""
+msgstr "수량 :"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 msgid "Raw Materials Location"
-msgstr "원재료 위치"
+msgstr "원자재 위치"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1597,43 +1597,43 @@ msgstr "참조"
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "참조는 회사마다 고유합니다!"
 
 #. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
-msgstr ""
+msgstr "생산 주문 요청을 생성한 문서의 참조"
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr "외부 플랜 내 위치에 대한 참조"
+msgstr "외부 계획에 위치를 참조합니다."
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr "리소스"
+msgstr "자원"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "휴가 자원"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
-msgstr ""
+msgstr "자원"
 
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr "담당자:"
+msgstr "담당자"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
+msgstr "제품 수량에 적용된 반올림"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -1646,13 +1646,13 @@ msgstr ""
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.routing:mrp.mrp_routing_tree_view
 msgid "Routing"
-msgstr "라우팅"
+msgstr "연결 경로"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_form_view
 #: view:mrp.routing.workcenter:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "연결 경로 작업장"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -1660,13 +1660,13 @@ msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
 "Routing is indicated then,the third tab of a production order (Work Centers)"
 " will be automatically pre-completed."
-msgstr ""
+msgstr "연결 경로는 시간 및/또는 회전을 사용하는 모든 작업장을 나타냅니다. 연결 경로가 표시되는 경우 생산 주문(작업장)의 세 번째 탭이 자동으로 사전에 완료됩니다."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "라우팅"
+msgstr "연결 경로"
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_routings:0
@@ -1675,12 +1675,12 @@ msgid ""
 "should be followed within your work centers in order to produce a product. "
 "They are attached to bills of materials that will define the required raw "
 "materials."
-msgstr ""
+msgstr "연결 경로를 작성하고 제품을 생산하기 위한 작업장 주문 안을 따라야 하는 제조 작업을 관리할 수 있습니다. 필요한 원자재를 정의해서 재료 명세서에 부착합니다."
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "SO Number:"
-msgstr ""
+msgstr "SO 번호 :"
 
 #. module: mrp
 #: field:mrp.production,date_planned:0
@@ -1695,7 +1695,7 @@ msgstr "월별 예정일"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Scheduled Date:"
-msgstr ""
+msgstr "예정 날짜 :"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1707,7 +1707,7 @@ msgstr "예정달"
 #: view:mrp.production.product.line:mrp.mrp_production_product_form_view
 #: view:mrp.production.product.line:mrp.mrp_production_product_tree_view
 msgid "Scheduled Products"
-msgstr "계획된 상품"
+msgstr "예약된 상품"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -1717,7 +1717,7 @@ msgstr "계획된 제품"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Scrap Products"
-msgstr ""
+msgstr "고물 제품"
 
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
@@ -1727,32 +1727,32 @@ msgstr "검색"
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr ""
+msgstr "자재 명세서 검색"
 
 #. module: mrp
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "부품 명세서 검색"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr ""
+msgstr "생산 검색"
 
 #. module: mrp
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "자재소요계획 작업장 검색"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr "각 생산 오퍼레이션을 위한 여유 기간 (일)"
+msgstr "각 생산 작업을 위한 여유 기간(일)"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "선택 수량"
 
 #. module: mrp
 #: view:mrp.workcenter.load:mrp.view_mrp_workcenter_load_wizard
@@ -1764,19 +1764,19 @@ msgstr "시간 단위 선택"
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0 view:website:mrp.report_mrporder
 msgid "Sequence"
-msgstr "시퀀스"
+msgstr "순서"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Set"
-msgstr ""
+msgstr "설정"
 
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid ""
 "Set: When processing a sales order for this product, the delivery order will"
 " contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "설정 : 제품에 대한 판매 주문이 진행중이면 배송 주문은 완제품 대신에 원자재를 포함하게 됩니다."
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1786,34 +1786,34 @@ msgstr "원본 문서"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Document:"
-msgstr ""
+msgstr "원본 문서 :"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "Source Location"
-msgstr "출발지"
+msgstr "재료 위치"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr ""
+msgstr "주기 당 작업장의 비용을 지정합니다."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "시간 당 작업장의 비용을 지정합니다."
 
 #. module: mrp
 #: help:mrp.product_price,number:0
 msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
-msgstr ""
+msgstr "생산 또는 구매 제품의 수량을 지정합니다. 원가 구조의 보고서는 수량에 기반하여 표시됩니다."
 
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr "시작 날짜"
+msgstr "시작일"
 
 #. module: mrp
 #: view:mrp.production:mrp.view_mrp_production_filter
@@ -1829,7 +1829,7 @@ msgstr "재고 이동"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "재고 값"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
@@ -1837,7 +1837,7 @@ msgstr ""
 #: view:report.mrp.inout:mrp.view_report_in_out_picking_graph
 #: view:report.mrp.inout:mrp.view_report_in_out_picking_tree
 msgid "Stock value variation"
-msgstr ""
+msgstr "재고 값 변동"
 
 #. module: mrp
 #: field:mrp.bom,message_summary:0 field:mrp.production,message_summary:0
@@ -1849,12 +1849,12 @@ msgstr "요약"
 #: code:addons/mrp/report/price.py:141
 #, python-format
 msgid "Supplier Price per Unit of Measure"
-msgstr ""
+msgstr "측정 단위 당 공급 가격"
 
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "기술 필드는 생산된 제품을 추적하는데 사용"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -1862,7 +1862,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "상품 측정 단위는 상품 형태와는 다른 분류를 선택합니다."
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -1871,7 +1871,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr ""
+msgstr "완제품을 생산하는 작업 목록(작업장 목록). 연결 경로는 주로 작업 중에 작업장을 평가하고 체계적인 계획 생산에 기반으로 작업장에 향후 적재를 계획합니다."
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
@@ -1880,21 +1880,21 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "planning."
-msgstr ""
+msgstr "완제품을 생산하는 작업 목록(작업장 목록). 연결 경로는 주로 작업 중에 작업장을 평가하고 계획 생산에 기반으로 작업장에 향후 적재를 계획합니다."
 
 #. module: mrp
 #: help:mrp.config.settings,group_mrp_properties:0
 msgid ""
 "The selection of the right Bill of Material to use will depend on the "
 "properties specified on the sales order and the Bill of Material."
-msgstr ""
+msgstr "판매 주문과 재료 명세서에 지정된 속성에 따라 사용되는 재료 명세서의 선택"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
 "This allows to add state, date_start,date_stop in production order operation lines (in the \"Work Centers\" tab).\n"
 "-This installs the module mrp_operations."
-msgstr ""
+msgstr "생산 주문 작업 명세에 상태, 시작_날짜, 마감_날짜를 추가할 수 있습니다(\"작업장\" 탭에서).\n- mrp_operations 모듈을 설치합니다."
 
 #. module: mrp
 #: help:mrp.config.settings,module_product_manufacturer:0
@@ -1905,7 +1905,7 @@ msgid ""
 "* Manufacturer Product Code\n"
 "* Product Attributes.\n"
 "-This installs the module product_manufacturer."
-msgstr ""
+msgstr "제품에 대해 다음과 같이 정의할 수 있습니다 :\n* 제조업체\n* 제조업체 제품 명\n* 제조업체 제품 코드\n* 상품 속성\n- product_manufacturer 모듈을 설치합니다."
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -1920,12 +1920,12 @@ msgstr "생산 준비 시간"
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr "1 사이클 시간"
+msgstr "1 주기(시간) 시간"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr "한 사이클을 수행하는 시간"
+msgstr "한 주기를 수행하는 시간"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -1935,31 +1935,31 @@ msgstr "청소 시간"
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
 msgid "Time in hours for the setup."
-msgstr "셋업 시간"
+msgstr "설정 시간"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr ""
+msgstr "지정된 연결 경로의 작업을 달성하기 위한 작업장에 대한 시간"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
 msgid "To Consume"
-msgstr ""
+msgstr "소비"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:162 code:addons/mrp/report/price.py:213
 #, python-format
 msgid "Total Cost of %s %s"
-msgstr ""
+msgstr "%s %s의 총 비용"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr "총 사이클"
+msgstr "총 주기"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_tree_view
@@ -1975,12 +1975,12 @@ msgstr "총 수량"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "제조 롯트 추적"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr ""
+msgstr "생산 추적"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2004,7 +2004,7 @@ msgstr "측정 단위"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "측정 단위(UOM)는 재고 관리를 위한 측정 단위입니다."
 
 #. module: mrp
 #: field:mrp.bom,message_unread:0 field:mrp.production,message_unread:0
@@ -2015,7 +2015,7 @@ msgstr "읽지않은 메시지"
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 msgid "Update"
-msgstr "업데이트"
+msgstr "갱신"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2030,44 +2030,44 @@ msgstr "사용자"
 #. module: mrp
 #: field:mrp.bom,date_start:0 field:mrp.bom.line,date_start:0
 msgid "Valid From"
-msgstr "유효 시작 날짜"
+msgstr "유효 시작일"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Date by Month"
-msgstr ""
+msgstr "유효 일"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 #: view:mrp.bom.line:mrp.view_mrp_bom_line_filter
 msgid "Valid From Month"
-msgstr ""
+msgstr "유효월"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0 field:mrp.bom.line,date_stop:0
 msgid "Valid Until"
-msgstr "유효 마감 날짜"
+msgstr "유효 마감일"
 
 #. module: mrp
 #: help:mrp.bom.line,date_start:0 help:mrp.bom.line,date_stop:0
 msgid "Validity of component. Keep empty if it's always valid."
-msgstr ""
+msgstr "부품의 유효성. 항상 유효한 경우 비워두십시오."
 
 #. module: mrp
 #: help:mrp.bom,date_start:0 help:mrp.bom,date_stop:0
 msgid "Validity of this BoM. Keep empty if it's always valid."
-msgstr ""
+msgstr "BoM 유효성. 항상 유효한 경우 비워두십시오."
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
 msgid "Variant"
-msgstr ""
+msgstr "변형"
 
 #. module: mrp
 #: field:mrp.bom.line,attribute_value_ids:0
 msgid "Variants"
-msgstr "변량"
+msgstr "변형"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2097,14 +2097,14 @@ msgstr "경고!"
 #: field:mrp.production,website_message_ids:0
 #: field:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website Messages"
-msgstr "웹 사이트 메시지"
+msgstr "웹사이트 메시지"
 
 #. module: mrp
 #: help:mrp.bom,website_message_ids:0
 #: help:mrp.production,website_message_ids:0
 #: help:mrp.production.workcenter.line,website_message_ids:0
 msgid "Website communication history"
-msgstr "웹 사이트 대화이력"
+msgstr "웹사이트 대화 이력"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2116,7 +2116,7 @@ msgstr "주"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
-msgstr ""
+msgstr "주간 재고 값 변동"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2124,20 +2124,20 @@ msgid ""
 "Weekly Stock Value Variation enables you to track the stock value evolution "
 "linked to manufacturing activities, receipts of products and delivery "
 "orders."
-msgstr ""
+msgstr "주간 재고 값 변동은 제조 활동, 제품 및 배송 주문 영수증에 연결된 재고 값의 변화를 추적할 수 있습니다."
 
 #. module: mrp
 #: view:mrp.bom:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
 "                                will contain the raw materials, instead of the finished product."
-msgstr ""
+msgstr "제품에 대한 판매 주문이 진행중이면 배송 주문은\n                                 완제품 대신에 원자재를 포함하게 됩니다."
 
 #. module: mrp
 #: help:stock.warehouse,manufacture_to_resupply:0
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr ""
+msgstr "제품이 제조된 경우 이 창고에서 제조할 수 있습니다."
 
 #. module: mrp
 #: help:mrp.production,state:0
@@ -2148,7 +2148,7 @@ msgid ""
 "                If the stock is available then the status is set to 'Ready to Produce'.\n"
 "                When the production gets started then the status is set to 'In Production'.\n"
 "                When the production is over, the status is set to 'Done'."
-msgstr ""
+msgstr "생산 주문이 작성될 때 '기안' 상태로 설정됩니다.\n                 주문이 확인되면 '대기 물품' 상태로 설정됩니다.\n                 예외가 있을 경우, '예외 출고'로 설정됩니다.\n                 이용 가능한 재고가 있는 경우 다음 상태는 '생산 준비'로 설정됩니다.\n                 생산이 시작되었을 때, '생산 중'으로 설정됩니다.\n                 생산이 종료되면, '완료'로 설정됩니다."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -2158,76 +2158,76 @@ msgstr ""
 #: view:mrp.workcenter:mrp.mrp_workcenter_view
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr "워크센터"
+msgstr "작업장"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr ""
+msgstr "작업장 부하"
 
 #. module: mrp
 #: view:report.workcenter.load:mrp.view_workcenter_load_tree
 msgid "Work Center Loads"
-msgstr ""
+msgstr "작업장 부하"
 
 #. module: mrp
 #: view:mrp.routing:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr ""
+msgstr "작업장 운영"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "작업장 제품"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "작업장 사용"
 
 #. module: mrp
 #: view:report.workcenter.load:mrp.view_workcenter_load_graph
 #: view:report.workcenter.load:mrp.view_workcenter_load_search
 msgid "Work Center load"
-msgstr ""
+msgstr "작업장 부하"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Center name"
-msgstr ""
+msgstr "작업장 명"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr "작업센터"
+msgstr "작업장"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "작업장 활용도"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:132
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "작업 비용"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:206
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "%s %s의 작업 비용"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "작업 주문"
+msgstr "작업 지시"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -2238,7 +2238,7 @@ msgstr "작업 지시"
 #. module: mrp
 #: view:website:mrp.report_mrporder
 msgid "WorkCenter"
-msgstr "워크센터"
+msgstr "작업장"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -2252,7 +2252,7 @@ msgid ""
 "Without this module: A + B + C -> D.\n"
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
-msgstr ""
+msgstr "재료 명세서에 부산물을 구성할 수 있습니다.\n모듈이 없는 경우 : A + B + C -> D.\n모듈을 설치한 경우 : A + B + C -> D + E.\n- mrp_byproduct 모듈을 설치합니다."
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:339
@@ -2260,13 +2260,13 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
-msgstr ""
+msgstr "제조 주문을 진행 중에는 재료 명세서를 삭제할 수 없습니다.\n먼저 닫거나 취소하십시오."
 
 #. module: mrp
 #: code:addons/mrp/stock.py:42
 #, python-format
 msgid "You must assign a serial number for the product %s"
-msgstr ""
+msgstr "%s 제품의 일련 번호를 지정해야 합니다."
 
 #. module: mrp
 #: view:product.template:mrp.view_mrp_product_template_form_inherited

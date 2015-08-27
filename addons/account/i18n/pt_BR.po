@@ -6,14 +6,15 @@
 # Clemilton Clementino <clemylton@hotmail.com>, 2015
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-06-29 17:29+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/projects/p/odoo-8/language/pt_BR/)\n"
+"PO-Revision-Date: 2015-08-22 20:19+0000\n"
+"Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -337,7 +338,7 @@ msgid ""
 "                can generate it directly from the related customer invoice.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para criar um reembolso ao cliente.\n              </p><p>\n                A restituição é um documento que credita uma fatura completamente ou\n                parcialmente.\n              </p><p>\n                Em vez de criar manualmente um reembolso ao cliente, você\n                pode gerá-lo diretamente a partir da fatura de cliente relacionado.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -424,7 +425,7 @@ msgid ""
 "                one or several tax code.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para definir um novo código de imposto.\n              </p><p>\n                Dependendo do país, um código de imposto é geralmente uma célula para preencher\n                 em sua declaração de imposto legal. Odoo permite que você defina o\n                 estrutura tributária e cada cálculo do imposto será registrado no\n                 um ou vários código de imposto.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -437,7 +438,7 @@ msgid ""
 "                draft invoices automatically from purchase orders or receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para gravar uma nova fatura do fornecedor.\n              </p><p>\n                Você pode controlar a fatura do seu fornecedor de acordo com\n                 o que você comprou ou recebeu. Odoo também pode gerar\n                 faturas automaticamente de ordens de compra ou recebimentos.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -453,7 +454,7 @@ msgid ""
 "                the related sale or puchase invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para registrar um extrato bancário.\n              </p><p>\n                Um extrato bancário é um resumo de todas as transações financeiras\n                 que ocorre ao longo de um determinado período de tempo em uma conta bancária. você\n                 deve receber este periodicamente do seu banco.\n              </p><p>\n                Odoo permite conciliar uma linha comunicado diretamente com\n                 a venda ou notas fiscais relacionadas compra.\n              </p>\n            "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -512,7 +513,7 @@ msgid ""
 "            accounts will be created automatically based on these data.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para configurar uma nova conta bancária. \n          </p><p>\n            Configure a conta bancária de sua empresa e selecionar aqueles que devem\n             aparecer no rodapé do relatório.\n          </p><p>\n          Se você usa o aplicativo de contabilidade de Odoo, diários e\n             contas serão criadas automaticamente com base nesses dados.\n          </p>\n        "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_manual_reconcile
@@ -9147,6 +9148,11 @@ msgid "Suppliers"
 msgstr "Fornecedores"
 
 #. module: account
+#: view:website:account.report_invoice_document
+msgid "TIN:"
+msgstr ""
+
+#. module: account
 #: view:cash.box.out:account.cash_box_out_form
 #: model:ir.actions.act_window,name:account.action_cash_box_out
 msgid "Take Money Out"
@@ -11655,3 +11661,16 @@ msgstr "utilizados no domínio da reconciliação de extratos, mas não deve ser
 #: selection:account.subscription,period_type:0
 msgid "year"
 msgstr "Ano"
+
+#. module: account
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
