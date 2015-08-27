@@ -16,9 +16,21 @@
                         </group>
                         <group>
                             <field name="auto_apply"/>
+                            <field name="states_count" invisible="1"/>
                             <field name="vat_required" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
-                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
                             <field name="country_group_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="country_id" attrs="{'invisible': [('auto_apply', '!=', True)]}"/>
+                            <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
+                                attrs="{'invisible': ['|', '|', ('auto_apply', '!=', True), ('country_id', '=', False), ('states_count', '=', 0)]}"/>
+                            <label for="zip_from" string="Zip Range"
+                                attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}"/>
+                            <div attrs="{'invisible': ['|', ('auto_apply', '!=', True), ('country_id', '=', False)]}">
+                                <span> From </span>
+                                <field name="zip_from" class="oe_inline"/>
+                                <div class="oe_edit_only"/>
+                                <span> To </span>
+                                <field name="zip_to" class="oe_inline"/>
+                            </div>
                         </group>
                     </group>
                     <notebook>
