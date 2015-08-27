@@ -1854,8 +1854,6 @@ class stock_move(osv.osv):
                 "the product reservation, and should be done with care."
         ),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoS'), states={'done': [('readonly', True)]}),
-        'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
 
         'product_packaging': fields.many2one('product.packaging', 'preferred Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
@@ -1992,8 +1990,6 @@ class stock_move(osv.osv):
             'product_id': move.product_id.id,
             'product_qty': move.product_uom_qty,
             'product_uom': move.product_uom.id,
-            'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_uom_qty,
-            'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
             'location_id': move.location_id.id,
             'move_dest_id': move.id,
             'group_id': group_id,
@@ -2048,7 +2044,7 @@ class stock_move(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         # Check that we do not modify a stock.move which is done
-        frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
+        frozen_fields = set(['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id'])
         for move in self.browse(cr, uid, ids, context=context):
             if move.state == 'done':
                 if frozen_fields.intersection(vals):
@@ -2088,26 +2084,21 @@ class stock_move(osv.osv):
                         self.write(cr, uid, [move.move_dest_id.id], propagated_changes_dict, context=context)
         return super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
-    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
-        """ On change of product quantity finds UoM and UoS quantities
+    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom):
+        """ On change of product quantity finds UoM
         @param product_id: Product id
         @param product_qty: Changed Quantity of product
         @param product_uom: Unit of measure of product
-        @param product_uos: Unit of sale of product
         @return: Dictionary of values
         """
-        result = {
-            'product_uos_qty': 0.00
-        }
         warning = {}
+        result = {}
 
         if (not product_id) or (product_qty <= 0.0):
             result['product_qty'] = 0.0
             return {'value': result}
 
         product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-
         # Warn if the quantity was decreased
         if ids:
             for move in self.read(cr, uid, ids, ['product_qty']):
@@ -2118,47 +2109,10 @@ class stock_move(osv.osv):
                                 "new quantity as complete: Odoo will not "
                                 "automatically generate a back order.")})
                 break
-
-        if product_uos and product_uom and (product_uom != product_uos):
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product UoS')
-            result['product_uos_qty'] = float_round(product_qty * uos_coeff['uos_coeff'], precision_digits=precision)
-        else:
-            result['product_uos_qty'] = product_qty
-
-        return {'value': result, 'warning': warning}
-
-    def onchange_uos_quantity(self, cr, uid, ids, product_id, product_uos_qty,
-                          product_uos, product_uom):
-        """ On change of product quantity finds UoM and UoS quantities
-        @param product_id: Product id
-        @param product_uos_qty: Changed UoS Quantity of product
-        @param product_uom: Unit of measure of product
-        @param product_uos: Unit of sale of product
-        @return: Dictionary of values
-        """
-        result = {
-            'product_uom_qty': 0.00
-        }
-
-        if (not product_id) or (product_uos_qty <= 0.0):
-            result['product_uos_qty'] = 0.0
-            return {'value': result}
-
-        product_obj = self.pool.get('product.product')
-        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-
-        # No warning if the quantity was decreased to avoid double warnings:
-        # The clients should call onchange_quantity too anyway
-
-        if product_uos and product_uom and (product_uom != product_uos):
-            precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
-            result['product_uom_qty'] = float_round(product_uos_qty / uos_coeff['uos_coeff'], precision_digits=precision)
-        else:
-            result['product_uom_qty'] = product_uos_qty
-        return {'value': result}
+        return {'warning': warning}
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, partner_id=False):
-        """ On change of product id, if finds UoM, UoS, quantity and UoS quantity.
+        """ On change of product id, if finds UoM, quantity
         @param prod_id: Changed Product id
         @param loc_id: Source location id
         @param loc_dest_id: Destination location id
@@ -2176,13 +2130,10 @@ class stock_move(osv.osv):
         ctx = {'lang': lang}
 
         product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
-        uos_id = product.uos_id and product.uos_id.id or False
         result = {
             'name': product.partner_ref,
             'product_uom': product.uom_id.id,
-            'product_uos': uos_id,
             'product_uom_qty': 1.00,
-            'product_uos_qty': self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty'],
         }
         if loc_id:
             result['location_id'] = loc_id
@@ -2696,11 +2647,9 @@ class stock_move(osv.osv):
                 #restrict to scrap from a virtual location because it's meaningless and it may introduce errors in stock ('creating' new products from nowhere)
                 #raise UserError(_('Forbidden operation: it is not allowed to scrap products from a virtual location.'))
             move_qty = move.product_qty
-            uos_qty = quantity / move_qty * move.product_uos_qty
             default_val = {
                 'location_id': source_location.id,
                 'product_uom_qty': quantity,
-                'product_uos_qty': uos_qty,
                 'state': move.state,
                 'scrapped': True,
                 'location_dest_id': location_id,
@@ -2757,11 +2706,8 @@ class stock_move(osv.osv):
 
         #HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
         uom_qty = uom_obj._compute_qty_obj(cr, uid, move.product_id.uom_id, qty, move.product_uom, rounding_method='HALF-UP', context=context)
-        uos_qty = uom_qty * move.product_uos_qty / move.product_uom_qty
-
         defaults = {
             'product_uom_qty': uom_qty,
-            'product_uos_qty': uos_qty,
             'procure_method': 'make_to_stock',
             'restrict_lot_id': restrict_lot_id,
             'restrict_partner_id': restrict_partner_id,
@@ -2778,7 +2724,6 @@ class stock_move(osv.osv):
         ctx['do_not_propagate'] = True
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
-            'product_uos_qty': move.product_uos_qty - uos_qty,
         }, context=ctx)
 
         if move.move_dest_id and move.propagate and move.move_dest_id.state not in ('done', 'cancel'):
