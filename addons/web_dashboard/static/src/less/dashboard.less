@@ -1,107 +1,120 @@
-
 .o_web_dashboard {
-    .o_dashboard_card(){
+
+    @bg-dashboard-col: #FFF;
+
+    .o_dashboard_card() {
         box-shadow: 0 1px 2px 0 rgba(0,0,0,.14);
         background: @bg-dashboard-col;
         border-radius: 2px;
     }
-    @bg-dashboard-col:#FFF;
+
     background: #F7F7F7;
     height: 100%;
-    padding: 0px 5px;
-    overflow: auto;
-    .mt16{
-        margin-top: 16px;
-    }
-    .mt32{
-        margin-top: 32px;
-    }
+
     .o_web_dashboard_col {
         padding: 10px 8px;
+
+        > div > hr {
+            margin: 12px -18px 15px -18px;
+            border-color: #CBCBCB;
+        }
+
         > div:first-child {
             .o_dashboard_card();
             padding: 25px 18px 18px 18px;
-                .o_web_dashboard_header{
+                .o_web_dashboard_header {
                     font-size: 22px;
                     margin-bottom: 8px;
                 }
         }
-        .o_web_dashboard_pills{
+        .o_web_dashboard_pills {
             margin-top: 10px;
-            i.fa {
-                vertical-align: middle;
-                font-size: 1.5em;
-            }
-            a{
+
+            > li > a {
                 .o_dashboard_card();
                 padding: 10px;
+
+                > i.fa {
+                    vertical-align: middle;
+                    font-size: 1.5em;
+                }
+            }
+            @media (max-width: 1200px) {
+                > li {
+                    width: 100%;
+                    margin-bottom: 5px;
+                }
             }
         }
-        .btn.o_install_new_apps, .btn.o_send_invitations{
+        .btn.o_browse_apps, .btn.o_send_invitations {
             margin-top: 12px;
         }
-        .o_compact_subtitle{
+        .o_compact_subtitle {
             line-height: 12px;
             display: block;
         }
-        hr{
-            margin: 12px -18px 15px -18px;
-            border-color: #CBCBCB;
-        }
-        .o_web_dashboard_invitations{
-            .o_invitation_form{
+        .o_web_dashboard_invitations {
+            .o_invitation_form {
                 text-align: left;
-                textarea{
+                > textarea {
                     resize: vertical;
                     width: 100%;
+                    &.optional_message {
+                        display: none;
+                    }
+                }
+                .optional_message_toggler {
+                    > a {
+                        vertical-align: top;
+                    }
                 }
             }
-            a.o_access_rights{
+            a.o_access_rights {
               line-height: 24px;
             }
         }
-        .o_web_dashboard_planner{
-            .progress{
+        .o_web_dashboard_planner {
+            .progress {
                 height: 10px;
                 background-color: darken(@bg-dashboard-col, 15%);
                 cursor: pointer;
                 margin-bottom: 30px;
             }
-            .o_dashboard_planner_progress_text{
+            .o_dashboard_planner_progress_text {
                 font-size: 18px;
                 padding-right: 0px;
                 padding-top: 3px;
             }
-            .o_dashboard_planner_progress_bar{
+            .o_dashboard_planner_progress_bar {
                 padding-left: 10px;
             }
-            .o_progress_title{
-                font-weight:bold;
+            .o_progress_title {
+                font-weight: bold;
                 cursor: pointer;
-                color:@odoo-brand-optional;
+                color: @odoo-brand-optional;
             }
-            .o_progress_100{
+            .o_progress_100 {
                 -webkit-filter: grayscale(100%);
                 filter: grayscale(100%);
-                &.o_dashboard_planner_progress_text{
+                &.o_dashboard_planner_progress_text {
                     font-size: 15px
                 }
             }
         }
-        .o_web_dashboard_gift{
-            .o_dashboard_sharearea{
+        .o_web_dashboard_gift {
+            .o_dashboard_sharearea {
                 width: 100%;
                 resize: none;
                 word-break: break-all;
                 cursor: pointer;
             }
-            .o_dashboard_sharearea:focus{
+            .o_dashboard_sharearea:focus {
                 outline: none;
             }
-            .o_dashboard_seprator{
+            .o_dashboard_separator {
                 position: relative;
                 margin-top: 14px;
-                span{
+                > span {
                     background-color: @bg-dashboard-col;
                     padding: 0px 14px;
                     font-size: 17px;
@@ -109,19 +122,15 @@
                     position: relative;
                     z-index: 2;
                 }
-                hr{
-                    position: absolute;
+                > hr {
+                    position: absolute;  // hr on top of the text
                     width: 100%;
                     margin: -10px 0px 15px 0px;
                 }
             }
+            .o_clipbord_success_alert {
+                display: none;
+            }
         }
-    }
-}
-
-@media (max-width: 1200px) {
-    .o_web_dashboard .o_web_dashboard_col .o_web_dashboard_pills li {
-        width: 100%;
-        margin-bottom: 5px;
     }
 }

@@ -16,16 +16,16 @@ var _t = core._t;
 var Dashboard = Widget.extend({
     template: 'DashboardMain',
     events: {
-        'click .o_install_new_apps': 'new_apps',
+        'click .o_browse_apps': 'on_new_apps',
     },
     start: function(){
-        //Add 'gift' instead of 'share' to enable amazone dashboard
+        // Add 'gift' instead of 'share' to enable amazone dashboard
         return this.load(['apps', 'invitations', 'planner', 'share'])
     },
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
-        session.rpc("/dashboard/info", {}).then(function (data) {
+        session.rpc("/dashboard/data", {}).then(function (data) {
             var deferred_promises = []
             _.each(dashboards, function(dashboard) {
                 var def = self[dashboard](data);
@@ -56,7 +56,7 @@ var Dashboard = Widget.extend({
     gift: function(data){
         return new DashboardGift(this, data['gift']).replace(this.$('.o_web_dashboard_gift'));
     },
-    new_apps: function(){
+    on_new_apps: function(){
         this.do_action('base.open_module_tree', {
             'additional_context': {'search_default_app': 1, 'search_default_not_installed': 1}
         });
@@ -86,22 +86,23 @@ var DashboardInvitations = Widget.extend({
             return re.test(email);
         });
         var optional_message = this.$('#optional_message').val();
-        if(is_valid_emails){
+        if (is_valid_emails) {
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             new Model("res.users")
                 .call("web_dashboard_create_users", [user_emails, optional_message])
-                .then(function (result) {
+                .then(function() {
                     self.reload();
                 });
 
-        }else{
+        }
+        else {
             this.do_warn(_t("Please provide valid email addresses"), "");
         }
     },
-    on_user_clicked: function (event) {
+    on_user_clicked: function (e) {
         var self = this;
-        var user_id = $(event.target).data('user-id');
+        var user_id = $(e.currentTarget).data('user-id');
         var action = {
             type: 'ir.actions.act_window',
             view_type: 'form',
@@ -168,10 +169,15 @@ var DashboardPlanner = Widget.extend({
         this.planners = _.sortBy(this.planners, function(planner){ return (planner.progress == 100) ? "zz" + planner.name : planner.name});
     },
     on_planner_clicked: function(e){
+
+        // TODO: fix planner
+        debugger;
+
         var menu_id = $(e.currentTarget).attr('data-menu-id');
         if (this.planner && this.planner.menu_id[0] == menu_id) {
              this.dialog.do_show();
-        }else{
+        }
+        else {
             this.setup_planner(menu_id);
         }
     },
@@ -213,8 +219,8 @@ var DashboardGift = Widget.extend({
         return $.when(this._super()).then(function() {
             var client = new ZeroClipboard(self.$('.o_dashboard_sharearea'));
             client.on("ready", function(readyEvent) {
-                client.on("aftercopy", function(event) {
-                    $(event.target).hide();
+                client.on("aftercopy", function(e) {
+                    $(e.currentTarget).hide();
                     self.$('.o_clipbord_success_alert').show();
                 });
             });
@@ -237,7 +243,7 @@ var DashboardGift = Widget.extend({
         window.open(
             popup_url,
             'Share Dialog',
-            'width=626,height=436');
+            'width=600,height=400'); // We have to add a size otherwise the window pops in a new tab
     }
 });
 
