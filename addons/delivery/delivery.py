@@ -186,7 +186,7 @@ class delivery_grid(osv.osv):
             if line.state == 'cancel':
                 continue
             if line.is_delivery:
-                total_delivery += line.price_subtotal + self.pool['sale.order']._amount_line_tax(cr, uid, line, context=context)
+                total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
             q = product_uom_obj._compute_qty(cr, uid, line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
