@@ -171,7 +171,12 @@
                     </header>
                     <sheet>
                         <field name="id" invisible="1"/>
-                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                                <field name="active" widget="boolean_button"
+                                    options='{"true": "Active User", "false": "Inactive User"}'/>
+                            </button>
+                        </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -182,7 +187,6 @@
                             <group>
                                 <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
                                         attrs="{'invisible': [('id', '=', False)]}"/>
-                                <field name="active"/>
                             </group>
                         </div>
                         <notebook colspan="4">
@@ -235,6 +239,7 @@
                     <field name="company_ids" string="Company" groups="base.group_light_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>

@@ -572,6 +572,11 @@ class res_users(osv.osv):
     def _is_admin(self):
         return self.id == openerp.SUPERUSER_ID or self.sudo(self).has_group('base.group_erp_manager')
 
+    @api.multi
+    def toggle_active(self):
+        for user in self:
+            user.active = not user.active
+
     def get_company_currency_id(self, cr, uid, context=None):
         return self.browse(cr, uid, uid, context=context).company_id.currency_id.id
 

@@ -359,6 +359,10 @@ $sheet-padding: 16px
         text-align: right
         .oe_stat_button
             display: inline-table
+            .o_stat_info:not(.is_true) > .o_stat_text.oe_true
+                display: none
+            .o_stat_info.is_true > .o_stat_text.oe_false
+                display: none
     button.oe_toggle_button
         box-shadow: none
         white-space: nowrap
