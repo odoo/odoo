@@ -1236,6 +1236,7 @@ class AssetsBundle(object):
             values["name"] = "/web/content/%s" % type
             values["datas_fname"] = '%s%s.%s' % (self.xmlid, ('' if inc is None else '.%s' % inc), type)
             values["res_model"] = 'ir.ui.view'
+            values["public"] = True
             values["type"] = 'binary'
             attachment_id = ira.create(self.cr, openerp.SUPERUSER_ID, values, context=self.context)
             url = '/web/content/%s-%s/%s' % (attachment_id, self.version, values["datas_fname"])
