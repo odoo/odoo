@@ -4,7 +4,6 @@
 import logging
 
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -19,15 +18,6 @@ class sale_configuration(osv.TransientModel):
             ], "Product Variants",
             help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
             implied_group='product.group_product_variant'),
-        'module_sale_contract': fields.selection([
-            (0, 'Sell based on sales order only'),
-            (1, 'Activate contract management to track costs and revenues')
-            ], "Contracts",
-            help='Allows to define your customer contracts conditions: invoicing '
-                 'method (fixed price, on timesheet, advance invoice), the exact pricing '
-                 '(650€/day for a developer), the duration (one year support contract).\n'
-                 'You will be able to follow the progress of the contract and invoice automatically.\n'
-                 '-It installs the sale_contract module.'),
         'group_sale_pricelist':fields.selection([
             (0, 'Set a fixed sale price on each product'),
             (1, 'Use pricelists to adapt your price per customers or products')
@@ -67,9 +57,18 @@ class sale_configuration(osv.TransientModel):
         'group_sale_delivery_address': fields.selection([
             (0, "Invoicing and shipping addresses are always the same (Example: services companies)"),
             (1, 'Have 3 fields on sales orders: customer, invoice address, delivery address')
-            ], "Customer Addresses",
-            implied_group='sale.group_delivery_invoice_address'),
+            ], "Customer Addresses", implied_group='sale.group_delivery_invoice_address'),
+        'default_invoice_policy': fields.selection([
+            ('order', 'Invoice ordered quantities'),
+            ('delivery', 'Invoice delivered quantities'),
+            ('cost', 'Invoice based on costs (time and material, expenses)')
+            ], 'Default Invoicing', default_model='product.template')
     }
+
+    _defaults = {
+        'default_invoice_policy': 'order',
+    }
+
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         return {}
