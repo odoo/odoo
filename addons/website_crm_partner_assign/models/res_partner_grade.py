@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api, fields, models
+from odoo import api, fields, models
 from openerp.addons.website.models.website import slug
 
 

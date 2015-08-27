@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import werkzeug
-from openerp import http, _
-from openerp.http import request
+from odoo import http, _
+from odoo.http import request
 from openerp.addons.website.models.website import slug, unslug
 from openerp.addons.website_partner.controllers.main import WebsitePartnerPage
 
@@ -95,11 +95,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             url=url, total=partner_count, page=page, step=self._references_per_page, scope=7,
             url_args=url_args)
 
-        # search partners matching current search parameters
-        partners = PartnerSudo.search(base_partner_domain, order="grade_id DESC")  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
-        # remove me in trunk
-        partners = sorted(partners, key=lambda x: (x.grade_id.sequence if x.grade_id else 0, len([i for i in x.implemented_partner_ids if i.website_published])), reverse=True)
-        partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
+        partners = PartnerSudo.search(base_partner_domain, order="grade_id DESC, implemented_partner_ids", offset=pager['offset'], limit=self._references_per_page)
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
 
