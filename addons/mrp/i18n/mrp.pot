@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-08-27 14:00+0000\n"
+"PO-Revision-Date: 2015-08-27 14:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,20 +34,15 @@ msgid "# Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:347
+#: code:addons/mrp/mrp.py:346
 #, python-format
 msgid "%s (copy)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1043
+#: code:addons/mrp/mrp.py:1050
 #, python-format
 msgid "%s produced"
-msgstr ""
-
-#. module: mrp
-#: model:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "&gt;"
 msgstr ""
 
 #. module: mrp
@@ -257,7 +252,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
-#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Bill Of Material"
 msgstr ""
@@ -311,13 +305,13 @@ msgid "BoM"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:313
+#: code:addons/mrp/mrp.py:312
 #, python-format
 msgid "BoM \"%s\" contains a BoM line with a product recursion: \"%s\"."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:339
+#: code:addons/mrp/mrp.py:338
 #, python-format
 msgid "BoM \"%s\" contains a phantom BoM line but the product \"%s\" does not have any BoM defined."
 msgstr ""
@@ -383,13 +377,13 @@ msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:668
+#: code:addons/mrp/mrp.py:675
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:743
+#: code:addons/mrp/mrp.py:750
 #, python-format
 msgid "Cannot find a bill of material for this product."
 msgstr ""
@@ -1104,7 +1098,7 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:808
+#: code:addons/mrp/mrp.py:815
 #, python-format
 msgid "Manufacturing order cancelled."
 msgstr ""
@@ -1152,7 +1146,6 @@ msgid "Mrp Workcenter"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
@@ -1599,7 +1592,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9852
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9998
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1646,8 +1639,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_name
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
+msgid "Recipe"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_name
 msgid "Reference"
 msgstr ""
 
@@ -1858,8 +1856,8 @@ msgid "Technical field used to make the traceability of produced products"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
-#: code:addons/mrp/mrp.py:455
+#: code:addons/mrp/mrp.py:356
+#: code:addons/mrp/mrp.py:462
 #, python-format
 msgid "The Product Unit of Measure you chose has a different category than in the product form."
 msgstr ""
@@ -2064,8 +2062,8 @@ msgid "Warehouse"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:357
-#: code:addons/mrp/mrp.py:455
+#: code:addons/mrp/mrp.py:356
+#: code:addons/mrp/mrp.py:462
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -2253,7 +2251,7 @@ msgid "You can configure by-products in the bill of material.\n"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:363
+#: code:addons/mrp/mrp.py:362
 #, python-format
 msgid "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."

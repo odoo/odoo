@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-08-27 14:00+0000\n"
+"PO-Revision-Date: 2015-08-27 14:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -147,6 +147,16 @@ msgid "&amp;bull;"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "(QIF, OFX, CODA or CSV format)"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "(US, Canada, NZ only)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:314
 #, python-format
 msgid "1 transaction was automatically reconciled."
@@ -158,23 +168,118 @@ msgid "15 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,name:account.account_payment_term
-msgid "30 Days End of Month"
-msgstr ""
-
-#. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
 msgstr ""
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
-msgid "30% Advance End 30 Days"
+msgid "30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Active Now"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"fa\"/> Invite Your User"
 msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-copy\"/>\n"
+"                                            <strong> Use Importation</strong><br/>\n"
+"                                            <span class=\"small\">from a CSV file</span>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-edit\"/>\n"
+"                                            <strong> Create manually</strong><br/>\n"
+"                                            <span class=\"small\">Each product one by one</span>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-edit\"/>\n"
+"                                            <strong> Create manually</strong><br/>\n"
+"                                            <span class=\"small\">One by one</span>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Accountant</strong> (Advanced access)\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Advisor</strong> (Full access)\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Billing</strong> (Limited access)\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Customer follow-up</strong>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Encode your Bills</strong>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Invoice payment by Check</strong>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Invoice payment by Wire Transfer</strong>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Pay your bills</strong>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span class=\"panel-title\">\n"
+"                                            <strong>Reconcile Bank Statements</strong>\n"
+"                                        </span>"
 msgstr ""
 
 #. module: account
@@ -188,8 +293,28 @@ msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "<span> From </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "<span> To </span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span>Depending on your volume of transactions, you should do this from once a week to several times a day.</span>"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "<span>Duplicate</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span>In this case, Odoo should automatically match the bank statement with the previously recorded check transaction.</span>"
 msgstr ""
 
 #. module: account
@@ -223,8 +348,73 @@ msgid "<span>Reports</span>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span>Simply click on the 'Pay' button.</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<span>Usually generated from Contracts, but can also come from Sales Orders or Deliveries.</span>"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong> Create a Customer Invoice</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>-The Odoo Team</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>1. Register Outstanding Invoices</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>2. Register Unmatched Payments</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Assets Management</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Automated documents sending:</strong> automatically print, send and deliver your invoices &amp; letters by regular mail or email."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Bank interface:</strong> your bank statements are automatically synchronized with your bank."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Cash transactions</strong> (for which there is no invoice or bill), should be entered directly into your Cash Registers bank account."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Check the Taxes configuration:</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Check unpaid invoices</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Clean customer invoices:</strong> easy to create, beautiful and fully featured invoices (payment terms, multiple taxes, discounts, etc)."
 msgstr ""
 
 #. module: account
@@ -233,8 +423,33 @@ msgid "<strong>Comment:</strong>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Contracts &amp; Subscriptions</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Create a Customer Invoice</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Create a Deposit Ticket with the check</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Create the bill in Odoo</strong> with a proper due date, and create the vendor if it doesnt' exist yet."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Deposit Tickets</strong>"
 msgstr ""
 
 #. module: account
@@ -248,8 +463,23 @@ msgid "<strong>Due Date:</strong>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Enter your Accounts Balances</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Expenses</strong>"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Here's the proper way to manage your vendors:</strong>"
 msgstr ""
 
 #. module: account
@@ -258,13 +488,98 @@ msgid "<strong>Invoice Date:</strong>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Mark the bills to pay</strong> Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Next action:</strong><br/>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>On-the-fly payment reconciliation:</strong> automatic suggestion of outstanding payments when creating an invoice."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Or generate payment orders</strong> Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Print checks</strong> From the Vendor Payments list, select those you want to pay and click on Print Check (you may first need to activate the check feature in the"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Purchases</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Reconcile Bank Statement</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Reconcile Bank Statements</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Reconcile with existing transaction</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Record Bank Statement (or import file)</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Record Bank Statement</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Record Check payment on the Invoice</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Reduced data entry:</strong> no need to manually create every invoice, register bank statements, follow-up payments, etc."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Revenue Recognition</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Send follow-up letters</strong>"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Test these 3 customer flows to get familiar with Odoo:</strong>"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>There are 3 different roles in Odoo:</strong>"
 msgstr ""
 
 #. module: account
@@ -278,12 +593,39 @@ msgid "<strong>Total</strong>"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>Validate the bill</strong> after encoding the products and taxes."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "<strong>What we have so far:</strong>"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "A Cash Register allows you to manage cash entries in your cash\n"
 "                journals. This feature provides an easy way to follow up cash\n"
 "                payments on a daily basis. You can enter the coins that are in\n"
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "A Chart of Accounts related to your country has been installed. You should review it and create any additionnal accounts now. It's recommended to not delete any accounts even if you don't need them for now."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1213
+#, python-format
+msgid "A Payment Term should have its last line of type Balance."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1216
+#, python-format
+msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
 
 #. module: account
@@ -608,6 +950,11 @@ msgid "Accounting Application Configuration"
 msgstr ""
 
 #. module: account
+#: model:web.planner,tooltip_planner:account.planner_account
+msgid "Accounting Configuration: a step-by-step guide."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
@@ -621,6 +968,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Accounting Entries"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Accounting Settings"
 msgstr ""
 
 #. module: account
@@ -649,6 +1001,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Activate the corresponding option in the"
 msgstr ""
 
 #. module: account
@@ -713,6 +1070,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_include_base_amount
 msgid "Affect Subsequent Taxes"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Aged Receivable report"
 msgstr ""
 
 #. module: account
@@ -811,11 +1173,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
-msgid "Amount Computation"
 msgstr ""
 
 #. module: account
@@ -1080,7 +1437,6 @@ msgstr ""
 
 #. module: account
 #: selection:account.payment.term.line,value:0
-#: model:ir.model.fields,field_description:account.field_account_financial_report_balance
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance
 msgid "Balance"
 msgstr ""
@@ -1234,6 +1590,21 @@ msgid "Bank statements are fully reconciled."
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Base currency"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Before continuing, you should install the Chart of Account related to your country (or the generic one if your country is not listed)."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Before proceeding further, check that"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Bill"
@@ -1299,6 +1670,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_operation_template_name
 msgid "Button Label"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "By"
 msgstr ""
 
 #. module: account
@@ -1821,11 +2197,6 @@ msgid "Compose Email"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_payment_term_form
-msgid "Computation"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
 msgid "Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports."
 msgstr ""
@@ -1921,6 +2292,11 @@ msgid "Congrats, you're all done !"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Congratulations, you're done !"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
 msgid "Contains the logic shared between models which allows to register payments"
 msgstr ""
@@ -1953,7 +2329,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_country_id
-msgid "Countries"
+msgid "Country"
 msgstr ""
 
 #. module: account
@@ -1967,8 +2343,28 @@ msgid "Country of the Partner Company"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Create Bank Accounts"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Create Customer"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Create Products"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Create Refund"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Create Vendor"
 msgstr ""
 
 #. module: account
@@ -2103,7 +2499,6 @@ msgid "Created on"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_financial_report_credit
 #: model:ir.model.fields,field_description:account.field_account_move_line_credit
 msgid "Credit"
 msgstr ""
@@ -2220,6 +2615,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:166
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
+#: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Customer Invoices"
 msgstr ""
@@ -2298,24 +2694,11 @@ msgid "Dates"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_payment_term_line_days2
-msgid "Day of the Month"
+#: selection:account.payment.term.line,option:0
+msgid "Day(s) after the invoice date"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_payment_term_line_days2
-msgid "Day of the month \n"
-"\n"
-" Set : \n"
-"1)-1 for the last day of the current month. \n"
-"2) 0 for net days\n"
-"3) A positive number for the specific day of the next month.\n"
-"\n"
-"Example : if Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_financial_report_debit
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 msgid "Debit"
 msgstr ""
@@ -2418,31 +2801,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Definition"
-msgstr ""
-
-#. module: account
-#: model:account.account.tag,name:account.demo_ceo_wages_account
-msgid "Demo CEO Wages Account"
-msgstr ""
-
-#. module: account
-#: model:account.account.tag,name:account.demo_capital_account
-msgid "Demo Capital Account"
-msgstr ""
-
-#. module: account
-#: model:account.account.tag,name:account.demo_coffee_machine_account
-msgid "Demo Coffe Machine Account"
-msgstr ""
-
-#. module: account
-#: model:account.account.tag,name:account.demo_sale_of_land_account
-msgid "Demo Sale of Land Account"
-msgstr ""
-
-#. module: account
-#: model:account.account.tag,name:account.demo_stock_account
-msgid "Demo Stock Account"
 msgstr ""
 
 #. module: account
@@ -2603,6 +2961,21 @@ msgid "Display this bank account on the footer of printed documents like invoice
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "DocsAway integration"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Don't hesitate to"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Don't share login details: if you do, you won't be able to maintain a reliable audit trail of access and data changes."
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: selection:account.invoice.report,state:0
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2459
@@ -2673,6 +3046,11 @@ msgid "Due Month"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
+msgid "Due Type"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_date_maturity
 msgid "Due date"
 msgstr ""
@@ -2697,6 +3075,11 @@ msgid "EXJ"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Edit Company Infomation"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1508
 #, python-format
@@ -2712,6 +3095,11 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
 msgstr ""
 
 #. module: account
@@ -2835,6 +3223,11 @@ msgid "February"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
+msgid "Federal States"
+msgstr ""
+
+#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "File Import"
 msgstr ""
@@ -2863,8 +3256,8 @@ msgid "Financial Report Style"
 msgstr ""
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_financing
-msgid "Financing Activities"
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "First, register any outstanding customer invoices and vendor bills:"
 msgstr ""
 
 #. module: account
@@ -2954,6 +3347,11 @@ msgid "Fixed amount will count as a debit if it is negative, as a credit if it i
 msgstr ""
 
 #. module: account
+#: selection:account.payment.term.line,option:0
+msgid "Fixed day of the following month"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_follower_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_message_follower_ids
 msgid "Followers"
@@ -2979,6 +3377,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value_amount
 msgid "For percent enter a ratio between 0-100."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "For the Odoo Team,<br/>\n"
+"                        Fabien Pinckaers, Founder"
 msgstr ""
 
 #. module: account
@@ -3053,6 +3457,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_tax_sequence
 msgid "Gives the sequence order when displaying a list of invoice tax."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
+msgid "Gives the sequence order when displaying a list of payment term lines."
 msgstr ""
 
 #. module: account
@@ -3245,6 +3654,16 @@ msgid "If you do not check this box, you will be able to do invoicing & payments
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "If you have a just starting your business, your opening balances are likely to all be zero."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "If you keep the payment term and the due date empty, it means it's a direct payment."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company_tax_calculation_rounding_method
 msgid "If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
@@ -3276,8 +3695,23 @@ msgid "If you use payment terms, the due date will be computed automatically at 
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "If you use the Sales app, you can also force a specific fiscal position by changing it directly on the  Sales Order or Contract."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "If you'd like some help on any subject dont hesitate to contact our Accounting experts by using the <span class=\"fa fa-question-circle\"/> icon on the top bar."
+msgstr ""
+
+#. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "In Odoo,"
 msgstr ""
 
 #. module: account
@@ -3302,6 +3736,11 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:128
 #, python-format
 msgid "In order to pay multiple invoices at once, they must use the same currency."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "In your old accounting software, print a Trial Balance"
 msgstr ""
 
 #. module: account
@@ -3362,6 +3801,11 @@ msgid "Information addendum"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Install Chart of Account"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Install more chart templates"
 msgstr ""
@@ -3379,11 +3823,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company_transfer_account_id
 #: model:ir.model.fields,help:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Intermediary account used when moving money from a liquidity account to another"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.product_template_form_view
-msgid "Internal Category"
 msgstr ""
 
 #. module: account
@@ -3409,8 +3848,9 @@ msgid "Internal notes..."
 msgstr ""
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_investing
-msgid "Investing & Extraordinary Activities"
+#: code:addons/account/models/partner.py:44
+#, python-format
+msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr ""
 
 #. module: account
@@ -3496,7 +3936,7 @@ msgid "Invoice refund"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1277
+#: code:addons/account/models/account_invoice.py:1298
 #, python-format
 msgid "Invoice sent"
 msgstr ""
@@ -3963,6 +4403,16 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: account
+#: selection:account.payment.term.line,option:0
+msgid "Last day of current month"
+msgstr ""
+
+#. module: account
+#: selection:account.payment.term.line,option:0
+msgid "Last day of following month"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_partner_last_time_entries_checked
 msgid "Last time the invoices & payments matching was performed for this partner. It is set either if there's not at least an unreconciled debit and an unreconciled credit or if you click the \"Done\" button."
 msgstr ""
@@ -3976,6 +4426,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_partner_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Legal Name"
 msgstr ""
 
 #. module: account
@@ -4081,6 +4536,21 @@ msgid "Main currency of the company."
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Manage time &amp; material contracts or fixed-price recurring subscriptions."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Manage your employees expenses, from encoding to payment and reporting."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Manage your properties like buildings, machinery, materials, cars etc. and calculate their depreciations over time."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
 #: model:ir.ui.menu,name:account.account_reports_management_menu
 msgid "Management"
@@ -4095,6 +4565,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_form
 #: model:ir.ui.view,arch_db:account.view_invoice_tax_tree
 msgid "Manual Invoice Taxes"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Manually, using our"
 msgstr ""
 
 #. module: account
@@ -4309,6 +4784,11 @@ msgid "New preset"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Next, register any unmatched payments:<br/>"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_invoice.py:987
 #, python-format
 msgid "No Analytic Journal! You have to define an analytic journal on the '%s' journal!"
@@ -4428,11 +4908,6 @@ msgid "Number of Days"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_payment_term_line_days
-msgid "Number of days to add before computing the day of the month."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_accounts_code_digits
 msgid "Number of digits in an account code"
 msgstr ""
@@ -4462,6 +4937,11 @@ msgid "October"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Odoo Accounting has many free extra-features:"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
@@ -4482,6 +4962,21 @@ msgid "Odoo automatically creates one journal entry per accounting\n"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Odoo can manage multiple companies, but we suggest to setup everything for your first company before configuring the other ones."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Odoo has already preconfigured a few taxes according to your country.<br/>Simply review them and check if you need more."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Odoo should do most of the reconciliation work automatically, so you'll only need to review a few of them when a <strong>'Reconcile Items'</strong> button appears on your Vendor Bills dash."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
 msgid "Odoo's electronic invoicing allows to ease and fasten the\n"
 "                collection of customer payments. Your customer receives the\n"
@@ -4495,6 +4990,11 @@ msgid "Once draft invoices are confirmed, you will not be able\n"
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Once you're done, you'll benefit from:"
 msgstr ""
 
 #. module: account
@@ -4555,11 +5055,6 @@ msgid "Opening Unit Numbers"
 msgstr ""
 
 #. module: account
-#: model:account.account.tag,name:account.account_tag_operating
-msgid "Operating Activities"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_operation_template_form
 msgid "Operation Templates"
 msgstr ""
@@ -4583,6 +5078,7 @@ msgid "Optional tags you may want to assign for custom reporting"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "Options"
 msgstr ""
@@ -4839,6 +5335,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
+#: model:ir.ui.view,arch_db:account.account_planner
 msgid "Payment Terms"
 msgstr ""
 
@@ -4873,18 +5370,18 @@ msgid "Payment term: 15 Days"
 msgstr ""
 
 #. module: account
-#: model:account.payment.term,note:account.account_payment_term
-msgid "Payment term: 30 Days End of Month"
-msgstr ""
-
-#. module: account
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "Payment term: 30 Net Days"
 msgstr ""
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
-msgid "Payment term: 30% Advance End 30 Days"
+msgid "Payment term: 30% Advance End of Following Month"
+msgstr ""
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment term: End of Following Month"
 msgstr ""
 
 #. module: account
@@ -4996,7 +5493,7 @@ msgid "Percentage of balance"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1263
+#: code:addons/account/models/account_invoice.py:1280
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr ""
@@ -5004,6 +5501,11 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Period"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_web_planner
+msgid "Planner"
 msgstr ""
 
 #. module: account
@@ -5080,6 +5582,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Postal address"
 msgstr ""
 
 #. module: account
@@ -5430,6 +5937,11 @@ msgid "Record Manually"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Record all your debits and credits in your company currency (Odoo will compute the amount automatically for accounts that are in another currency)."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_ref
 msgid "Ref."
 msgstr ""
@@ -5524,8 +6036,23 @@ msgid "Register Payment"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Register Payments"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_register_payments
 msgid "Register payments on multiple invoices"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Registering outstanding invoices and payments can be a huge work, so you can start using Odoo without it, by:"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Registering payments related to outstanding invoices separately in a different account (e.g. Account Receivables 2014)"
 msgstr ""
 
 #. module: account
@@ -5625,6 +6152,31 @@ msgid "Reverse balance sign"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Review Chart of Accounts"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Review Fiscal Positions"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Review Payment Terms"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Review existing Taxes"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Review the list of available currencies (from the Accounting Configuration menu)"
+msgstr ""
+
+#. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
 msgstr ""
@@ -5632,6 +6184,11 @@ msgstr ""
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Run an"
 msgstr ""
 
 #. module: account
@@ -5786,6 +6343,11 @@ msgid "Send by Email"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Sending customer statements (outstanding invoices) manually during the transition period"
+msgstr ""
+
+#. module: account
 #: selection:account.payment,state:0
 #: model:ir.model.fields,field_description:account.field_account_invoice_sent
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -5805,6 +6367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence
 #: model:ir.model.fields,field_description:account.field_account_operation_template_sequence
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_group_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template_sequence
@@ -5815,6 +6378,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_active
 #: model:ir.model.fields,help:account.field_account_tax_template_active
 msgid "Set active to false to hide the tax without removing it."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Set the default Sales and Purchase taxes"
 msgstr ""
 
 #. module: account
@@ -5873,6 +6441,11 @@ msgid "Sign on Reports"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Simplify your cash, checks, or credit cards deposits with an integrated batch payment function."
+msgstr ""
+
+#. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
 msgstr ""
@@ -5881,6 +6454,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_origin
 #: model:ir.model.fields,field_description:account.field_account_invoice_origin
 msgid "Source Document"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Start by creating each bank account manually:"
 msgstr ""
 
 #. module: account
@@ -5926,6 +6504,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "States"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
+msgid "States count"
 msgstr ""
 
 #. module: account
@@ -6039,6 +6622,11 @@ msgid "Tax Group"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Tax ID (VAT)"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_tax
 #: model:ir.actions.act_window,name:account.act_account_tax_tax_posted
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_line_ids
@@ -6140,6 +6728,11 @@ msgid "Taxes used in Sales"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Technical Documentation"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance
 msgid "Technical field holding the debit - credit in order to open meaningful graph views from reports"
 msgstr ""
@@ -6234,8 +6827,19 @@ msgid "Templates for Taxes"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.view_payment_term_line_form
+msgid "Term Type"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_ids
+#: model:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Terms"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. module: account
@@ -6254,6 +6858,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_account_internal_type
 #: model:ir.model.fields,help:account.field_account_account_type_type
 msgid "The 'Internal Type' is used for features available on different types of accounts: liquidity type is for cash or bank accounts, payable/receivable is for vendor/customer accounts."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "The Deposit Ticket module can also be used to settle credit card batch made of multiple transactions."
 msgstr ""
 
 #. module: account
@@ -6383,8 +6992,18 @@ msgid "The last line's computation type should be \"Balance\" to ensure that the
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "The manager has full access to the application plus miscellaneous operations like salary, assets..."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
 msgid "The move of this entry line."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "The multi-currency option allows you to send or receive documents (excluding expense claims) in currencies other than your own, to set up bank accounts in other currencies and run reports on your foreign currency activities.<br/>Note: it's important to configure multi-currency before balancing your Accounts."
 msgstr ""
 
 #. module: account
@@ -6467,6 +7086,11 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:429
 #, python-format
 msgid "The sequence of journal %s is deactivated."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Then, register your statements:"
 msgstr ""
 
 #. module: account
@@ -6561,6 +7185,11 @@ msgid "This allows accountants to manage analytic and crossovered budgets. Once 
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "This allows you to record the different payments that constitute your bank deposit.(You may need to"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_complete_tax_set
 msgid "This boolean helps you to choose if you want to propose to the user to encode\n"
 "             the sales and purchase rates or use the usual m2o fields. This last choice assumes that\n"
@@ -6606,6 +7235,16 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
 msgid "This field is used to record the third party name when importing bank statement in electronic format, when the partner doesn't exist yet in the database (or cannot be found)."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "This guide will accompany you through the initial configuration of Odoo Accounting."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "This information will appear on your invoices and legals statements."
 msgstr ""
 
 #. module: account
@@ -6661,6 +7300,11 @@ msgid "This purchase tax will be assigned by default on new products."
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "This role is suited for the day-to-day work of an accountant:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_default_sale_tax_id
 msgid "This sale tax will be assigned by default on new products."
 msgstr ""
@@ -6709,9 +7353,24 @@ msgid "To Pay"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "To get a correct starting point in Odoo, enter your debit / credit for every accounts."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "To manage the tax applied when invoicing a Company, Odoo uses the concept of Fiscal Position: they serve to automatically set the right tax and/or account according to the customer country and state."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:774
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries!"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "To use the <strong>multi-currency option:</strong>"
 msgstr ""
 
 #. module: account
@@ -6882,6 +7541,11 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Unless you are starting a new business, you probably have a list of Customers and Vendors you'd like to import into Odoo."
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
 msgstr ""
@@ -6976,6 +7640,11 @@ msgid "Use anglo-saxon accounting"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Use in combination with Contracts to calculate monthly revenues for multi-months Contracts."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Use this option if you want to cancel an invoice and create a new\n"
 "                                one. The credit note will be created, validated and reconciled\n"
@@ -6988,6 +7657,11 @@ msgstr ""
 msgid "Use this option if you want to cancel an invoice you should not\n"
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Use this role to manage only billing."
 msgstr ""
 
 #. module: account
@@ -7046,6 +7720,11 @@ msgid "Validate Account Move"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Validate purchase orders and control vendor bills by departments."
+msgstr ""
+
+#. module: account
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
@@ -7082,6 +7761,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:167
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree2
+#: model:ir.ui.view,arch_db:account.account_planner
 #, python-format
 msgid "Vendor Bills"
 msgstr ""
@@ -7119,6 +7799,11 @@ msgid "Vendor Taxes"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Vendor bills can also be generated from a purchase order or an incoming shipment (activate in"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #: model:ir.ui.menu,name:account.menu_account_supplier
@@ -7139,6 +7824,16 @@ msgid "Warning!"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "We can handle the whole importation process for you: simply send your Odoo Project Manager a CSV file containing all your data."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "We hope this planner helped you implement our accounting application."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_website_message_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_website_message_ids
 msgid "Website Messages"
@@ -7148,6 +7843,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_website_message_ids
 #: model:ir.model.fields,help:account.field_account_invoice_website_message_ids
 msgid "Website communication history"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "When inviting users, you need to define which access and rights they are allowed.<br/>This is done by attributing a role to each users."
 msgstr ""
 
 #. module: account
@@ -7206,6 +7906,11 @@ msgid "You are trying to reconcile some entries that are already reconciled!"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "You can also use our API to load data automatically through scripts: read the"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_blocked
 msgid "You can check this box to mark this journal item as a litigation with the associated partner"
 msgstr ""
@@ -7236,12 +7941,6 @@ msgid "You can not delete a payment that is already posted"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/partner.py:35
-#, python-format
-msgid "You can not select a country and a group of countries."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_payment.py:122
 #, python-format
 msgid "You can only register payments for open invoices"
@@ -7250,6 +7949,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite
 msgid "You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level')."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "You can setup Odoo to automatically sent by regular mail an Aged Receivable report to you customers, thanks to"
 msgstr ""
 
 #. module: account
@@ -7424,6 +8128,26 @@ msgid "You will be able to edit and validate this\n"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "Your Company's Logo"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.view_account_position_form
+msgid "Zip Range"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_zip_from
+msgid "Zip Range From"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_zip_to
+msgid "Zip Range To"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
 msgstr ""
@@ -7439,10 +8163,20 @@ msgid "account.tax.group"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "activate the feature"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:297
 #, python-format
 msgid "all"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "and check which customers still owe you money."
 msgstr ""
 
 #. module: account
@@ -7473,6 +8207,16 @@ msgid "code"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "connecting to your Bank"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "create a journal entry"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:294
 #, python-format
@@ -7495,6 +8239,16 @@ msgid "eInvoicing & Payments"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "fast recording interface"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "first)"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
@@ -7502,6 +8256,21 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "for this supplier. You can allocate them to mark this bill as paid."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "importing a statement file"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "is correct."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "manage bank feeds"
 msgstr ""
 
 #. module: account
@@ -7527,10 +8296,20 @@ msgid "outstanding payments"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "reconcile entries"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:214
 #, python-format
 msgid "reconciliations with the ctrl-enter shortcut."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "record invoices"
 msgstr ""
 
 #. module: account
@@ -7554,6 +8333,11 @@ msgid "seconds per transaction."
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "send us an email"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:295
 #, python-format
@@ -7561,8 +8345,18 @@ msgid "suppliers"
 msgstr ""
 
 #. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "the code of your main bank account"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "to describe<br/> your experience or to suggest improvements !"
 msgstr ""
 
 #. module: account
@@ -7577,6 +8371,11 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:212
 #, python-format
 msgid "transactions."
+msgstr ""
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.account_planner
+msgid "with a debit and a credit for every account of your new Chart of Account"
 msgstr ""
 
 #. module: account
