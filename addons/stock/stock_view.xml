@@ -846,7 +846,6 @@
                                     <button name="split_lot" string="Lot Split" type="object" icon="fa-list" groups="stock.group_production_lot"
                                             attrs="{'invisible': ['|', ('lots_visible', '=', False), ('state', 'not in', ['confirmed', 'assigned', 'waiting', 'partially_available','done'])]}"/>
                                     <field name="product_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}"/>
-                                    <field name="location_processed" invisible="1"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available"/>
                                 </tree>
@@ -864,7 +863,6 @@
                                     <field name="qty_done" invisible="1"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="processed_boolean"/>
-                                    <field name="location_processed" invisible="1"/>
                                     <button name="%(stock.pack_details)d" string="Modify" type="action" icon="STOCK_EXECUTE"
                                             states="confirmed,assigned,waiting,partially_available" groups="base.group_no_one"/>
                                 </tree>
