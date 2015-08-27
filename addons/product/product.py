@@ -412,7 +412,7 @@ class product_template(osv.osv):
 
         product = self.browse(cr, uid, id, context=context)
         if 'uom' in context:
-            uom = product.uos_id or product.uom_id
+            uom = product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
                     context['uom'], value, uom.id)
 
@@ -508,12 +508,6 @@ class product_template(osv.osv):
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_rel_id': fields.related('uom_id', type="many2one", relation="product.uom", readonly=True, string='Default UoM'),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
-        'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
-            help='Specify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),
-        'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
-            help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
-            ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -586,7 +580,7 @@ class product_template(osv.osv):
             if ptype == 'list_price':
                 res[product.id] += product._name == "product.product" and product.price_extra or 0.0
             if 'uom' in context:
-                uom = product.uom_id or product.uos_id
+                uom = product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, res[product.id], context['uom'])
             # Convert from price_type currency to asked one
@@ -746,11 +740,9 @@ class product_template(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'list_price': 1,
         'standard_price': 0.0,
-        'sale_ok': 1,        
+        'sale_ok': 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        'uos_coeff': 1.0,
-        'mes_type': 'fixed',
         'categ_id' : _default_category,
         'type' : 'consu',
         'active': True,
@@ -851,7 +843,7 @@ class product_product(osv.osv):
 
         for product in self.browse(cr, uid, ids, context=context):
             if 'uom' in context:
-                uom = product.uos_id or product.uom_id
+                uom = product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, product.list_price, context['uom'])
             else:
@@ -865,7 +857,7 @@ class product_product(osv.osv):
 
         product = self.browse(cr, uid, id, context=context)
         if 'uom' in context:
-            uom = product.uos_id or product.uom_id
+            uom = product.uom_id
             value = product_uom_obj._compute_price(cr, uid,
                     context['uom'], value, uom.id)
         value =  value - product.price_extra
@@ -1156,37 +1148,6 @@ class product_product(osv.osv):
             context = {}
         ctx = dict(context or {}, create_product_product=True)
         return super(product_product, self).create(cr, uid, vals, context=ctx)
-
-    def need_procurement(self, cr, uid, ids, context=None):
-        return False
-
-    def _compute_uos_qty(self, cr, uid, ids, uom, qty, uos, context=None):
-        '''
-        Computes product's invoicing quantity in UoS from quantity in UoM.
-        Takes into account the
-        :param uom: Source unit
-        :param qty: Source quantity
-        :param uos: Target UoS unit.
-        '''
-        if not uom or not qty or not uos:
-            return qty
-        uom_obj = self.pool['product.uom']
-        product_id = ids[0] if isinstance(ids, (list, tuple)) else ids
-        product = self.browse(cr, uid, product_id, context=context)
-        if isinstance(uos, (int, long)):
-            uos = uom_obj.browse(cr, uid, uos, context=context)
-        if isinstance(uom, (int, long)):
-            uom = uom_obj.browse(cr, uid, uom, context=context)
-        if product.uos_id:  # Product has UoS defined
-            # We cannot convert directly between units even if the units are of the same category
-            # as we need to apply the conversion coefficient which is valid only between quantities
-            # in product's default UoM/UoS
-            qty_default_uom = uom_obj._compute_qty_obj(cr, uid, uom, qty, product.uom_id)  # qty in product's default UoM
-            qty_default_uos = qty_default_uom * product.uos_coeff
-            return uom_obj._compute_qty_obj(cr, uid, product.uos_id, qty_default_uos, uos)
-        else:
-            return uom_obj._compute_qty_obj(cr, uid, uom, qty, uos)
-
 
 
 class product_packaging(osv.osv):
