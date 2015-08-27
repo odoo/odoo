@@ -43,14 +43,18 @@
     partner_id: base.res_partner_3
     note: Create Sales order
     warehouse_id: wh_pps
+    pricelist_id: product.list0
     order_line:
       - product_id: product_manu
+        name: "product_manu"
         product_uom_qty: 5.00
+        product_uom: product.product_uom_unit
 
 - 
   Confirm sales order
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_manu}
+  !python {model: sale.order}: |
+    self.action_confirm(cr, uid, ref("sale_order_product_manu"), context=context)
 -
   I run scheduler.
 -
