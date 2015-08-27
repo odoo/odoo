@@ -30,7 +30,7 @@
             <field name="name">Sales Teams</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">sales_team_dashboard</field>
             <field name="context">{}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
@@ -144,7 +144,9 @@
         <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/sales_team/static/src/css/sales_team.css"/>
+                <link rel="stylesheet" href="/sales_team/static/src/less/sales_team_dashboard.less"/>
                 <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
+                <script type="text/javascript" src="/sales_team/static/src/js/sales_team_dashboard.js"></script>
             </xpath>
         </template>
 
