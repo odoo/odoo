@@ -3,11 +3,7 @@
 // Layout
 // ------------------------------------------------------------------
 .o_mail_chat {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    .o-position-absolute(0, 0, 0, 0);
     height: 100%;
 
     @media (max-width: @screen-xs-max) {
@@ -21,6 +17,7 @@
     .o_mail_chat_sidebar {
         .o-flex(0, 0, 15%);
         overflow: auto;
+        padding: 1%;
     }
 
     .o_mail_chat_content {
@@ -49,7 +46,6 @@
 .o_mail_chat {
     .o_mail_chat_sidebar {
         background-color: @gray;
-        padding: 1%;
 
         > .nav-pills {
             > li {
@@ -122,74 +118,15 @@
                 padding: 25px 0;
                 text-align: justify;
             }
-
-            .o_mail_thread_date_separator, .o_mail_thread_message {
-                margin: auto; // override the margin-{left,right}: -15px defined on .row
-            }
-
-            .o_mail_thread_date_separator{
-                .o_mail_thread_date_wrapper {
-                    border-bottom: solid @gray-lighter 2px;
-                    margin-bottom: 15px;
-                    .o_mail_thread_date_separator_title {
-                        display: table;
-                        position: relative;
-                        top: 10px;
-                        margin: 0 auto;
-                        padding: 0 10px 0 10px;
-                        font-weight: bold;
-                        background: white;
-                    }
-                }
-            }
         }
-
-
-
-        .o_mail_thread_message{
-            //border-bottom: solid WhiteSmoke 1px;
-        }
-        /*
-        .o_mail_chat_messages {
-            .o_slack_message {
-                .o_slack_message_avatar {
-                    > img {
-
-                    }
-                }
-                .o_slack_message_content {
-                    .o_slack_message_author {
-                        font-weight: bold;
-                        .o_slack_message_time {
-                            font-weight: normal;
-                            color: @gray-light;
-                        }
-                    }
-
-                }
-            }
-        }
-        */
 
         .o_mail_chat_composer_wrapper {
             border-top: 1px solid @gray-lighter;
             background-color: @gray-lighter;
             .o-webclient-padding(@top: 10px, @bottom: 5px);
-            /*
-            > img {
-                background-image: url(/web/static/src/img/placeholder.png);
-            }
-            > input {
-                padding-left: 15px;
-                resize: none;
-                border: 0;
-                outline: none;
-            }
-            */
         }
     }
 }
-
 
 // ------------------------------------------------------------------
 // Other components

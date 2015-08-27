@@ -2,6 +2,24 @@
 // Mail Thread 'Mixin'
 // ------------------------------------------------------------------
 .o_mail_thread {
+    .o_mail_thread_date_separator, .o_mail_thread_message {
+        margin: auto; // override the margin-{left,right}: -15px defined on .row
+    }
+    .o_mail_thread_date_separator {
+        .o_mail_thread_date_wrapper {
+            border-bottom: solid @gray-lighter 2px;
+            margin-bottom: 15px;
+            .o_mail_thread_date_separator_title {
+                display: table;
+                position: relative;
+                top: 10px;
+                margin: 0 auto;
+                padding: 0 10px 0 10px;
+                font-weight: bold;
+                background: white;
+            }
+        }
+    }
     .o_mail_thread_message_star, .o_mail_thread_message_needaction {
         cursor: pointer;
         opacity: 0.5;
@@ -42,10 +60,14 @@
 }
 .o_mail_compose_message {
     width: 100%;
-    .o_mail_compose_message_input {
+    input.o_mail_compose_message_input {
         border: none;
         padding: 5px;
         margin-right: 5px;
+    }
+    textarea.o_mail_compose_message_input {
+        width: 100%;
+        margin: 5px 0;
     }
 }
 .o_mail_mention_partner_tags {

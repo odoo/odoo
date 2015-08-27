@@ -44,6 +44,7 @@ var ChatterMailComposeMessage = mail_thread.MailComposeMessage.extend({
     },
     start: function(){
         this.$input = this.$('.o_mail_compose_message_input');
+        autosize(this.$input);
         this.$input.focus();
         return this._super.apply(this, arguments);
     },
@@ -359,8 +360,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
     // composer toggle
     on_open_composer: function(event){
         var self = this;
-        this.$('.o_mail_chatter_compose_buttons').hide();
-        this.$('.o_mail_chatter_compose_message_wrap').show();
+        this.$('.o_mail_chatter_compose_message').show();
         // destroy existing composer
         if(this.message_composer){
             this.message_composer.destroy();
@@ -373,7 +373,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
             'context': this.context,
             'record_name': this.record_name,
         });
-        this.message_composer.appendTo(this.$('.o_mail_chatter_compose_message_wrap'));
+        this.message_composer.appendTo(this.$('.o_mail_chatter_compose_message'));
         this.message_composer.on('message_sent', this, this.on_message_post);
         this.message_composer.on('need_refresh', this, function(){
             self.message_refresh();
@@ -382,8 +382,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
     },
     on_close_composer: function(){
         if(this.message_composer && this.message_composer.is_empty() && !this.stay_open){
-            this.$('.o_mail_chatter_compose_buttons').show();
-            this.$('.o_mail_chatter_compose_message_wrap').hide();
+            this.$('.o_mail_chatter_compose_message').hide();
         }
     },
     /**
