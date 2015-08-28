@@ -201,18 +201,6 @@ class product_pricelist(osv.osv):
                     # price_get returns the price in the context UoM, i.e. qty_uom_id
                     price = product._price_get(rule.base, context=context)
 
-                    #TOCHECK
-                    for seller in product.seller_ids:
-                        partner = partner.id if partner and not isinstance(partner, int) else partner
-                        if seller.name.id == partner:
-                            qty_in_seller = qty
-                            seller_uom = seller.product_uom and seller.product_uom.id or False
-                            if qty_uom_id != seller_uom:
-                                qty_in_seller = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
-                            for line in seller.pricelist_ids:
-                                if line.min_quantity <= qty_in_seller:
-                                    price = line.price
-
                 if price is not False:
                     if rule.compute_price == 'fixed':
                         price = rule.fixed_price
