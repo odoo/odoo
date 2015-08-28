@@ -1328,7 +1328,7 @@ class MailThread(models.AbstractModel):
                 obj._message_add_suggested_recipient(result, partner=obj.user_id.partner_id, reason=self._fields['user_id'].string)
         return result
 
-    @api.model
+    @api.multi
     def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True):
         """ Utility method to find partners from email addresses. The rules are :
             1 - check in document (model | self, id) followers
