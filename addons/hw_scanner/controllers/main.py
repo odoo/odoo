@@ -111,6 +111,8 @@ class Scanner(Thread):
 
     def get_device(self):
         try:
+            if not evdev:
+                return None
             devices   = [ device for device in listdir(self.input_dir)]
             keyboards = [ device for device in devices if ('kbd' in device) and ('keyboard' not in device.lower())]
             scanners  = [ device for device in devices if ('barcode' in device.lower()) or ('scanner' in device.lower())]
@@ -133,6 +135,7 @@ class Scanner(Thread):
             been returned before. This is necessary to catch barcodes scanned while the POS is
             busy reading another barcode
         """
+
         self.lockedstart()
 
         while True:
@@ -164,10 +167,13 @@ class Scanner(Thread):
                 try:
                     device.ungrab() 
                 except Exception as e:
+                    device = None
                     self.set_status('error',str(e))
             else:
                 time.sleep(5)   # wait until a suitable device is plugged
                 device = self.get_device()
+                if not device:
+                    continue
 
             try:
                 device.grab()
@@ -208,5 +214,5 @@ if evdev:
 
 class ScannerDriver(hw_proxy.Proxy):
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def scanner_thread(self):
+    def scanner(self):
         return scanner_thread.get_barcode() if scanner_thread else None

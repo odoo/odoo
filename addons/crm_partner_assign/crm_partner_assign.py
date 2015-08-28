@@ -207,7 +207,8 @@ class crm_lead(osv.osv):
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
-                                  WHERE partner_longitude is not null
+                                  WHERE active
+                                        AND partner_longitude is not null
                                         AND partner_latitude is not null
                                         AND partner_weight > 0) AS d
                                   ORDER BY distance LIMIT 1""", (longitude, latitude))

@@ -544,7 +544,7 @@ openerp.web_calendar = function(instance) {
                             attendee_showed += 1;
                             if (attendee_showed<= MAX_ATTENDEES) {
                                 if (self.avatar_model !== null) {
-                                       the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="attendee_head"  \
+                                       the_title_avatar += '<img title="' + _.escape(self.all_attendees[the_attendee_people]) + '" class="attendee_head"  \
                                                             src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
                                 }
                                 else {
@@ -552,12 +552,12 @@ openerp.web_calendar = function(instance) {
                                             tempColor = (self.all_filters[the_attendee_people] !== undefined) 
                                                         ? self.all_filters[the_attendee_people].color
                                                         : (self.all_filters[-1] ? self.all_filters[-1].color : 1);
-                                        the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
+                                        the_title_avatar += '<i class="fa fa-user attendee_head color_'+tempColor+'" title="' + _.escape(self.all_attendees[the_attendee_people]) + '" ></i>';
                                     }//else don't add myself
                                 }
                             }
                             else {
-                                attendee_other += self.all_attendees[the_attendee_people] +", ";
+                                attendee_other += _.escape(self.all_attendees[the_attendee_people]) +", ";
                             }
                         }
                     );
@@ -688,9 +688,9 @@ openerp.web_calendar = function(instance) {
                             var color_field = self.fields[self.color_field];
                             _.each(events, function (e) {
                                 var key,val = null;
-                                if (self.color_field.type == "selection") {
+                                if (color_field.type == "selection") {
                                     key = e[self.color_field];
-                                    val = _.find( self.color_field.selection, function(name){ return name[0] === key;});
+                                    val = _.find(color_field.selection, function(name){ return name[0] === key;});
                                 }
                                 else {
                                     key = e[self.color_field][0];
@@ -716,7 +716,7 @@ openerp.web_calendar = function(instance) {
                                 self.sidebar.filter.set_filters();
                                 
                                 events = $.map(events, function (e) {
-                                    var key = self.color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                    var key = color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
                                     if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                         return e;
                                     }
@@ -1026,7 +1026,7 @@ openerp.web_calendar = function(instance) {
         
         slow_add: function() {
             var val = this.$input.val();
-            this.slow_create({'name': val});
+            this.slow_create(_.isEmpty(val) ? {} : {'name': val});
         },
 
         /**

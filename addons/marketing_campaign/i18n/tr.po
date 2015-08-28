@@ -1,21 +1,22 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-11-21 04:06+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
-"Language-Team: Turkish <tr@li.org>\n"
+"PO-Revision-Date: 2015-07-22 03:23+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:55+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -29,14 +30,11 @@ msgid ""
 "            Click to create a marketing campaign.\n"
 "          </p><p>\n"
 "            Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) "
-"on\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fullfil the campaign.\n"
 "          </p><p>\n"
-"            A campaign can have many activities like sending an email, "
-"printing\n"
-"            a letter, assigning to a team, etc. These activities are "
-"triggered\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
@@ -78,14 +76,14 @@ msgstr "Tümü"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "Tüm kayıtların (yineleme yok)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
+msgstr "Bir sinyal ile etkinlik programlı olarak çağrılabilir. Dikkat et, sinyal gönderilirken WorkItem her zaman oluşturulur."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -113,7 +111,7 @@ msgstr "Otomatik geçiş"
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
+msgstr "Bu seçenek etkinleştirildiğinde, koşulu karşılanmadı çünkü idam değil workitems silmek yerine iptal edildi olarak işaretlenir."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -198,8 +196,7 @@ msgid "Cancel Workitem"
 msgstr "Çalışma Öğesi İptal"
 
 #. module: marketing_campaign
-#: selection:campaign.analysis,state:0
-#: selection:marketing.campaign,state:0
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
@@ -223,12 +220,12 @@ msgstr "Koşul"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Tebrikler! Silver Partner oldunuz!"
 
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Tebrikler! Gold Partner oldunuz!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:502
@@ -255,7 +252,7 @@ msgstr "Ülke"
 #: field:marketing.campaign.transition,create_uid:0
 #: field:marketing.campaign.workitem,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oluşturan"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,create_date:0
@@ -264,7 +261,7 @@ msgstr ""
 #: field:marketing.campaign.transition,create_date:0
 #: field:marketing.campaign.workitem,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oluşturulma"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -281,12 +278,12 @@ msgstr "Tarih"
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
+msgstr "Üzerinde bu segmentteki son kez (otomatik veya manuel) eşitlendi: Tarih"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Bu segment son tarihi kapalı veya iptal edildi."
 
 #. module: marketing_campaign
 #: field:campaign.analysis,day:0
@@ -310,9 +307,9 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that "
-"already entered the campaign."
-msgstr ""
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr "Kampanyaya eklenecek yeni kayıtları seçerken için filtre eklemek ek bir kriter belirler. \"Yinelenen yok\" engeller kampanya daha önce girmiş kayıt seçme. Kampanya \"benzersiz alan\" varsa küme, \"yinelenen yok\" da engel hangi kampanya girmiş gibi diğer kayıtları benzersiz alan için aynı değeri kayıt seçme."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -322,7 +319,7 @@ msgstr "Dizin"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "WorkItems silmeyin"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -419,7 +416,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr ""
+msgstr "Bu segmente ait eşleşen kaynak kayıtları seçmek için filtre uygulayın. Yeni filtreler oluşturulabilir ve gelişmiş arama kaynak liste görünümünü kullanarak kaydetmiş. Bir filtre ayarlarsanız, tüm kayıtları süzme olmadan seçilir. Eşitleme modu da filtreye ölçüt ekleme."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -429,10 +426,10 @@ msgstr "Sabit Masraflar"
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and "
-"revenue on each campaign activity. Cost and Revenue statistics are included "
-"in Campaign Reporting."
-msgstr ""
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr "Bu kampanya çalıştırmak için sabit bir maliyet. Değişken maliyet ve gelir her kampanya aktivitesi da belirtebilirsiniz. Maliyet ve gelir istatistikleri kampanya raporlamaya dahil edilir."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -450,20 +447,20 @@ msgstr "Gruplandır"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Merhaba, kısa bir süre hoşgeldin paketinizi e-posta yoluyla alacaksınız."
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
 msgid ""
-"Hi, we are delighted to let you know that you have entered the select circle "
-"of our Gold Partners"
-msgstr ""
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
+msgstr "Merhaba, altın ortaklarımız arasına girdiğinizi bildirmekten mutluyuz"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Merhaba, bugün itibariyle gümüş ortaklarımız arasında sizi ağırlamaktan mutluyuz!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -473,11 +470,10 @@ msgstr "Saat(ler)"
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "Nasıl hedef WorkItem tetiklenir"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,id:0
-#: field:marketing.campaign,id:0
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
 #: field:marketing.campaign.activity,id:0
 #: field:marketing.campaign.segment,id:0
 #: field:marketing.campaign.transition,id:0
@@ -488,14 +484,14 @@ msgstr "ID"
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "Tarihi ayarlanmamışsa bu WorkItem el ile çalışmak zorundadır."
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to "
-"avoid selecting similar records twice. Similar records are records that have "
-"the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
@@ -511,7 +507,7 @@ msgstr "Gelen Geçişler"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "Bu segmentin başlangıç tarihi."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_type:0
@@ -521,7 +517,7 @@ msgstr "Aralık Birimi"
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
 msgid "Interval Value"
-msgstr ""
+msgstr "Aralık değeri"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -550,7 +546,7 @@ msgstr "Son Eşleme"
 #: field:marketing.campaign.transition,write_uid:0
 #: field:marketing.campaign.workitem,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Son Güncelleyen"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,write_date:0
@@ -559,7 +555,7 @@ msgstr ""
 #: field:marketing.campaign.transition,write_date:0
 #: field:marketing.campaign.workitem,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Son Güncelleme"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_run:0
@@ -629,7 +625,7 @@ msgstr "Kip"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
+msgstr "Modeli filtre kampanya kaynak modeli olarak aynı olmalıdır."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
@@ -643,8 +639,7 @@ msgid "Month(s)"
 msgstr "Ay(lar)"
 
 #. module: marketing_campaign
-#: field:marketing.campaign,name:0
-#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
 #: field:marketing.campaign.segment,name:0
 #: field:marketing.campaign.transition,name:0
 msgid "Name"
@@ -685,7 +680,7 @@ msgstr "Sonraki Senkronizasyon"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
+msgstr "Bir daha ki sefere eşitleme otomatik olarak çalışmak üzere zamanlandığı"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -716,17 +711,17 @@ msgstr "Ekim"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Eşitleme modu: sadece son eşitlemeden sonra oluşturulan kayıtları"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
+msgstr "Eşitleme modu: sadece son eşitlemeden sonra güncelleştirilen kayıtlar"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Pazarlama Menüsünü Aç"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:189
@@ -781,9 +776,7 @@ msgstr "Süreç"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
@@ -876,7 +869,7 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr ""
+msgstr "Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir maliyet gerektirdiği düşünün bir değişken maliyet ayarla. Sen-ebilmek almak maliyet istatistikleri raporlama bölümünde"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,revenue:0
@@ -884,7 +877,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr ""
+msgstr "Eğer bu noktaya ulaşmış her kampanya öğesi belirli bir gelir üretti düşünürsek beklenen gelir ayarlayın. Sen-ebilmek almak gelir istatistikleri raporlama bölümünde"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
@@ -922,39 +915,35 @@ msgstr "Durumu"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Eşitleme modu: tüm kayıtlar"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Eşitleme modu: sadece son eşitlemeden sonra oluşturulan kayıtları"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
+msgstr "Eşitleme modu: sadece son eşitlemeden sonra güncelleştirilen kayıtlar"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
 msgid "Synchronization mode"
-msgstr ""
+msgstr "Senkronizasyon Modu"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Synchronize Manually"
-msgstr ""
+msgstr "Manuel Çalıştır"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,mode:0
 msgid ""
-"Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
-"Test in Realtime - It creates and processes all the activities directly but "
-"does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and "
-"reports (be very careful with this mode, you're live!)"
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
 
 #. module: marketing_campaign
@@ -980,13 +969,13 @@ msgstr "Geçişin Kime/Kimden Eylemi aynı Kampanyaya ait olmalı "
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "Bu faaliyetin etkin olduğunda gerçekleştirilecek eylem"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:133
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "Kampanya tüm kesimleri kapalı olduğundan önce olarak işaretlenemez."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
@@ -994,13 +983,13 @@ msgstr ""
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "Kampanya başlatılamıyor. Başlangıç herhangi bir faaliyet yok. Bir başlangıç noktası olarak işaretlemek için kampanya aktiviteleri değiştirin."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:111
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "Kampanya başlatılamıyor. Aktivite yok."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:800
@@ -1011,16 +1000,16 @@ msgstr "Bu öğenin geçerli adımında önizlenecek eposta ve rapor yok."
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "Bu faaliyetin etkinleştirildiğinde göndermek için e-posta"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
 msgid ""
-"The generated workitems will be linked to the partner related to the record. "
-"If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
+msgstr "Oluşturulan WorkItems kayıtla ilgili ortak bağlanır. Kaydı ortağı varsa, bu alanı boş bırakın. Raporlama amacıyla kampanya analizi veya kampanya takip sayısı ile yararlıdır."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1030,29 +1019,27 @@ msgstr "Aralık artı ya da sıfır değerde olmalı"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "Bu faaliyetin etkinleştirildiğinde üretmek için rapor"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr ""
+msgstr "Bir öğeyi bu etkinliği gibi girdiğinde yürütülecek eylem türünü: \n - e-posta: önceden tanımlanmış e-posta template\n - rapor kullanarak e-posta gönder: kaynak öğesinde tanımlanmış varolan bir raporu yazdırmak ve belirli bir directory\n - özel eylem kaydetmek: Örneğin bir önceden tanımlanmış eylemi yürütmek kaynak record\n alanları değiştirmek için"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "Bu faaliyet başlatılan kampanya başlar."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
 msgid "This folder is used to store the generated reports"
-msgstr ""
+msgstr "Bu klasörde oluşturulan raporları depolamak için kullanılır"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -1095,7 +1082,7 @@ msgstr "Odoo Ortak Kanalına hoşgeldiniz!"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "Elle Onaylama"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
@@ -1116,4 +1103,4 @@ msgstr "Yıl(lar)"
 #: code:addons/marketing_campaign/marketing_campaign.py:189
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "Henüz desteklenmeyen bir kampanya yinelenen olamaz."

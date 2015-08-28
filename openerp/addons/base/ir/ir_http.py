@@ -109,11 +109,9 @@ class ir_http(osv.AbstractModel):
             datas = attach[0]['datas'] or ''
             name = attach[0]['name']
 
-            if not datas:
-                if name.startswith(('http://', 'https://', '/')):
-                    return werkzeug.utils.redirect(name, 301)
-                else:
-                    return werkzeug.wrappers.Response(status=204)     # NO CONTENT
+            if (not datas and name != request.httprequest.path and
+                    name.startswith(('http://', 'https://', '/'))):
+                return werkzeug.utils.redirect(name, 301)
 
             response = werkzeug.wrappers.Response()
             server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
@@ -137,9 +135,10 @@ class ir_http(osv.AbstractModel):
     def _handle_exception(self, exception):
         # This is done first as the attachment path may
         # not match any HTTP controller.
-        attach = self._serve_attachment()
-        if attach:
-            return attach
+        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
+            attach = self._serve_attachment()
+            if attach:
+                return attach
 
         # If handle_exception returns something different than None, it will be used as a response
         try:

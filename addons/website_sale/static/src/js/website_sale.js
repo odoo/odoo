@@ -41,10 +41,13 @@ $('.oe_website_sale').each(function () {
         $(ev.currentTarget).parents(".thumbnail").toggleClass("disabled");
     });
 
-    $(oe_website_sale).on("change", ".oe_cart input.js_quantity", function (event) {
+    $(oe_website_sale).find(".oe_cart input.js_quantity").on("change", function () {
         var $input = $(this);
+        if ($input.data('update_change')) {
+            return;
+        }
         var value = parseInt($input.val(), 10);
-        var $dom = $(event.target).closest('tr');
+        var $dom = $(this).closest('tr');
         var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
         var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
         var line_id = parseInt($input.data('line-id'),10);
@@ -54,6 +57,7 @@ $('.oe_website_sale').each(function () {
             product_ids.push($(this).find('span[data-product-id]').data('product-id'));
         });
         if (isNaN(value)) value = 0;
+        $input.data('update_change', true);
         openerp.jsonRpc("/shop/get_unit_price", 'call', {
             'product_ids': product_ids,
             'add_qty': value,
@@ -74,8 +78,13 @@ $('.oe_website_sale').each(function () {
             'product_id': parseInt($input.data('product-id'),10),
             'set_qty': value})
             .then(function (data) {
+                $input.data('update_change', false);
+                if (value !== parseInt($input.val(), 10)) {
+                    $input.trigger('change');
+                    return;
+                }
                 if (!data.quantity) {
-                    location.reload();
+                    location.reload(true);
                     return;
                 }
                 var $q = $(".my_cart_quantity");
@@ -209,6 +218,11 @@ $('.oe_website_sale').each(function () {
             $parent.find(".js_check_product").attr("disabled", "disabled");
         }
     });
+
+    $('div.js_product', oe_website_sale).each(function () {
+        $('input.js_product_change', this).first().trigger('change');
+    });
+
     $('ul.js_add_cart_variants', oe_website_sale).each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });

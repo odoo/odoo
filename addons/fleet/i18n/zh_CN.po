@@ -1,27 +1,33 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# leangjia <liangjia@qq.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
+# tony <gm@wffeitas.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: 卓忆科技 <zhanghao@jointd.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 07:42+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:387
 #, python-format
 msgid "%s %s has been added to the fleet!"
-msgstr ""
+msgstr "汽车 %s %s已添加到车队"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:663
@@ -36,11 +42,7 @@ msgid ""
 "                Click to create a new brand.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击创建一个新的品牌。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击创建一个新的品牌。\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -56,7 +58,7 @@ msgid ""
 "                (reparation, insurances, periodic maintenance).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建一份新的合同。 \n</p><p>\n管理你所有合同(租赁、保险等)的相关服务和费用。Odoo会在合同需要更新的时候自动提醒你。</p><p>\n每份合同(例如租赁)可能包含多项服务(赔偿、保险、定期维护)。</p>"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
@@ -69,7 +71,7 @@ msgid ""
 "                contracts (fixed or recurring) and fuel logs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n 单击，创建一个新的成本费用。\n</p><p>\n Odoo帮你管理不同汽车的成本费用.。成本费用被自动从服务，合同(固定或者定期的)和燃油记录中创建.\n</p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
@@ -77,13 +79,12 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new fuel log.\n"
 "              </p><p>\n"
-"                Here you can add refuelling entries for all vehicles.  You "
-"can\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
 "                also filter logs of a particular vehicle using the search\n"
 "                field.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建一条新的加油记录。 \n</p><p>\n在这里，你可以为所有汽车添加燃油记录。你也可以使用搜索字段过滤掉特殊汽车的燃油记录。\n</p>"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
@@ -91,17 +92,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new model.\n"
 "              </p><p>\n"
-"                You can define several models (e.g. A3, A4) for each brand "
-"(Audi).\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                单击添加新的型号。\n"
-"              </p><p>\n"
-"                你能为每个品牌(Audi)定义多个型号(例如：A3, A4)。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                单击添加新的型号。\n              </p><p>\n                你能为每个品牌(Audi)定义多个型号(例如：A3, A4)。\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
@@ -111,12 +105,11 @@ msgid ""
 "              </p>\n"
 "              <p>\n"
 "                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
+"                You can also show odometer value for a particular vehicle using\n"
 "                the search field.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建一条新的加油记录。 \n</p><p>\n在这里，你可以为所有汽车添加加油记录。你也可以使用搜索字段过滤掉特殊汽车的加油记录。\n</p>"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
@@ -129,7 +122,7 @@ msgid ""
 "                repair, fixed maintenance, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击新建一个服务条目。\n</p><p>\nOdoo帮助你跟踪汽车的所有已完成服务。服务可以包含多种类型：临时维修、定期保养等等。\n</p>"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
@@ -137,16 +130,10 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new type of service.\n"
 "              </p><p>\n"
-"                Each service can used in contracts, as a standalone service "
-"or both.\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"\t\t点击创建服务类型。\n"
-"\t\t</p><p>\n"
-"\t\t每个服务都可以在合同中存在，作为一个独立的服务或两者具备同样的类型\t\t</p><p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n\t\t点击创建服务类型。\n\t\t</p><p>\n\t\t每个服务都可以在合同中存在，作为一个独立的服务或两者具备同样的类型\t\t</p><p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -154,17 +141,15 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a new vehicle.\n"
 "              </p><p>\n"
-"                You will be able to manage your fleet by keeping track of "
-"the\n"
-"                contracts, services, fixed and recurring costs, odometers "
-"and\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
 "                fuel logs associated to each vehicle.\n"
 "            </p><p>\n"
 "                Odoo will warn you when services or contract have to be\n"
 "                renewed.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击新增一辆汽车。\n</p><p>\n你可以通过跟踪每辆汽车的合同、服务、固定的或经常性的费用、里程表和补充燃油记录来管理你的车队。 </p><p>\nOdoo会在服务或合同需要更新的时候提醒你。</p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
@@ -172,18 +157,11 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Click to create a vehicule status.\n"
 "              </p><p>\n"
-"                You can customize available status to track the evolution "
-"of\n"
+"                You can customize available status to track the evolution of\n"
 "                each vehicule. Example: Active, Being Repaired, Sold.\n"
 "              </p>\n"
 "            "
-msgstr ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                点击创建车辆状况信息。\n"
-"              </p><p>\n"
-"                您可以自定义可用状态，跟踪每个车辆的行踪。例如：在用的，正在维修，销售出去的等。\n"
-"              </p>\n"
-"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建汽车状况信息。\n              </p><p>\n                您可以自定义可用状态，跟踪每个汽车的行踪。例如：在用，正在维修，售出的等。\n              </p>\n            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
@@ -191,16 +169,14 @@ msgstr ""
 msgid ""
 "<p>\n"
 "          Odoo helps you managing the costs for your different vehicles\n"
-"          Costs are generally created from services and contract and appears "
-"here.\n"
+"          Costs are generally created from services and contract and appears here.\n"
 "        </p>\n"
 "        <p>\n"
-"          Thanks to the different filters, Odoo can only print the "
-"effective\n"
+"          Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle.\n"
 "        </p>\n"
 "      "
-msgstr ""
+msgstr "<p>\nOdoo的帮助您管理不同汽车的费用，并在这里出现成本常规服务的创建和合同订约。\n</p>\n<p>\n基于不同的过滤器，Odoo 只能打印有效的费用成本。并按类型和汽车对它们进行排序。\n</p>"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_1
@@ -210,12 +186,12 @@ msgstr "A/C 压缩机更换"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_2
 msgid "A/C Condenser Replacement"
-msgstr "压缩机 电容更换"
+msgstr "A/C 电容更换"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr "A/C检查"
+msgstr "A/C 诊断"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_4
@@ -339,7 +315,7 @@ msgstr "汽车品牌型号"
 #. module: fleet
 #: help:fleet.vehicle.model,brand_id:0
 msgid "Brand of the vehicle"
-msgstr "车辆的品牌"
+msgstr "汽车的品牌"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
@@ -354,7 +330,7 @@ msgstr "二氧化碳排放量"
 #. module: fleet
 #: help:fleet.vehicle,co2:0
 msgid "CO2 emissions of the vehicle"
-msgstr "车辆的CO2排放量"
+msgstr "汽车的CO2排放量"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
@@ -364,7 +340,7 @@ msgstr "计算实际利益"
 #. module: fleet
 #: field:fleet.vehicle,car_value:0
 msgid "Car Value"
-msgstr "车辆价值"
+msgstr "汽车价值"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_14
@@ -394,7 +370,7 @@ msgstr "充电系统故障诊断"
 #. module: fleet
 #: field:fleet.vehicle,vin_sn:0
 msgid "Chassis Number"
-msgstr "底架号"
+msgstr "车架号"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,state:0
@@ -403,9 +379,8 @@ msgstr "选择合同是否依旧有效"
 
 #. module: fleet
 #: help:fleet.service.type,category:0
-msgid ""
-"Choose wheter the service refer to contracts, vehicle services or both"
-msgstr "选择是服务合同还是车辆服务，或两者的"
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr "选择是服务合同还是汽车服务，或两者的"
 
 #. module: fleet
 #: field:fleet.vehicle,color:0
@@ -415,7 +390,7 @@ msgstr "颜色"
 #. module: fleet
 #: help:fleet.vehicle,color:0
 msgid "Color of the vehicle"
-msgstr "车辆颜色"
+msgstr "汽车颜色"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
@@ -430,7 +405,7 @@ msgstr "公司"
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
 msgid "Configuration"
-msgstr "设置中心"
+msgstr "配置"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_contract_state
@@ -447,7 +422,7 @@ msgstr "合同"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_graph
 msgid "Contract Costs Per Month"
-msgstr "每月合同成本"
+msgstr "每月合同费用"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,expiration_date:0
@@ -462,7 +437,7 @@ msgstr "合同编号"
 #. module: fleet
 #: field:fleet.vehicle.log.contract,start_date:0
 msgid "Contract Start Date"
-msgstr "合同起始日期"
+msgstr "合同开始日期"
 
 #. module: fleet
 #: field:fleet.contract.state,name:0
@@ -472,7 +447,7 @@ msgstr "合同状态"
 #. module: fleet
 #: help:fleet.vehicle.cost,contract_id:0
 msgid "Contract attached to this cost"
-msgstr "合同附加成本"
+msgstr "费用附加的合同"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -482,7 +457,7 @@ msgstr "合同细节"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr "车辆上的联系人信息"
+msgstr "汽车上的联系人信息"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -497,8 +472,7 @@ msgstr "承包人"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
-#: field:fleet.vehicle,contract_count:0
-#: field:fleet.vehicle,log_contracts:0
+#: field:fleet.vehicle,contract_count:0 field:fleet.vehicle,log_contracts:0
 msgid "Contracts"
 msgstr "合同"
 
@@ -517,7 +491,7 @@ msgstr "费用"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
 msgid "Cost Details"
-msgstr "费用明细"
+msgstr "费用详情"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
@@ -532,12 +506,12 @@ msgstr "费用类型"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_cost
 msgid "Cost related to a vehicle"
-msgstr "相关车辆的费用"
+msgstr "汽车相关的费用"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr ""
+msgstr "合同创建时付的一次性费用"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_subtype_id:0
@@ -554,7 +528,7 @@ msgstr "费用"
 #: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 msgid "Costs Analysis"
-msgstr "成本分析"
+msgstr "费用分析"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_graph
@@ -577,8 +551,7 @@ msgstr "在年底开始的日期，自动创建一个新的与目前的合同相
 
 #. module: fleet
 #: field:fleet.contract.state,create_uid:0
-#: field:fleet.service.type,create_uid:0
-#: field:fleet.vehicle,create_uid:0
+#: field:fleet.service.type,create_uid:0 field:fleet.vehicle,create_uid:0
 #: field:fleet.vehicle.cost,create_uid:0
 #: field:fleet.vehicle.log.contract,create_uid:0
 #: field:fleet.vehicle.log.fuel,create_uid:0
@@ -586,15 +559,13 @@ msgstr "在年底开始的日期，自动创建一个新的与目前的合同相
 #: field:fleet.vehicle.model,create_uid:0
 #: field:fleet.vehicle.model.brand,create_uid:0
 #: field:fleet.vehicle.odometer,create_uid:0
-#: field:fleet.vehicle.state,create_uid:0
-#: field:fleet.vehicle.tag,create_uid:0
+#: field:fleet.vehicle.state,create_uid:0 field:fleet.vehicle.tag,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: fleet
 #: field:fleet.contract.state,create_date:0
-#: field:fleet.service.type,create_date:0
-#: field:fleet.vehicle,create_date:0
+#: field:fleet.service.type,create_date:0 field:fleet.vehicle,create_date:0
 #: field:fleet.vehicle.cost,create_date:0
 #: field:fleet.vehicle.log.contract,create_date:0
 #: field:fleet.vehicle.log.fuel,create_date:0
@@ -605,28 +576,27 @@ msgstr ""
 #: field:fleet.vehicle.state,create_date:0
 #: field:fleet.vehicle.tag,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建"
 
 #. module: fleet
 #: help:fleet.vehicle,state_id:0
 msgid "Current state of the vehicle"
-msgstr "车辆的当前状态"
+msgstr "汽车的当前状态"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Daily"
-msgstr "日常"
+msgstr "每天"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,date:0
-#: field:fleet.vehicle.odometer,date:0
+#: field:fleet.vehicle.cost,date:0 field:fleet.vehicle.odometer,date:0
 msgid "Date"
 msgstr "日期"
 
 #. module: fleet
 #: help:fleet.vehicle,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布到记录上的最后信息的日期"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,date:0
@@ -641,14 +611,14 @@ msgstr "有效期内的合同的起始日期"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
 msgid ""
-"Date when the coverage of the contract expirates (by default, one year after "
-"begin date)"
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
 msgstr "合同的覆盖范围的有效日期（默认情况下，开始日期一年之后）"
 
 #. module: fleet
 #: help:fleet.vehicle,acquisition_date:0
 msgid "Date when the vehicle has been bought"
-msgstr "车辆购买日期"
+msgstr "汽车购买日期"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
@@ -678,7 +648,7 @@ msgstr "驾驶员"
 #. module: fleet
 #: help:fleet.vehicle,driver_id:0
 msgid "Driver of the vehicle"
-msgstr "车辆驾驶员"
+msgstr "汽车驾驶员"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:404
@@ -689,7 +659,7 @@ msgstr "驾驶员：from'%s'to'%s'"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Effective Costs"
-msgstr "实际成本"
+msgstr "实际费用"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -710,7 +680,7 @@ msgstr "公司雇员轿车"
 #: code:addons/fleet/fleet.py:47
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "不允许私自清空车辆的里程表值。"
+msgstr "不允许私自清空汽车的里程表值。"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_18
@@ -725,7 +695,7 @@ msgstr "更换引擎冷却剂"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "Engine Options"
-msgstr "发动机选项"
+msgstr "发动机参数"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_20
@@ -747,12 +717,12 @@ msgstr "排气管更换"
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 #: model:ir.ui.menu,name:fleet.menu_root
 msgid "Fleet"
-msgstr "车辆管理"
+msgstr "车队"
 
 #. module: fleet
 #: field:fleet.vehicle,message_follower_ids:0
 msgid "Followers"
-msgstr "追踪"
+msgstr "关注者"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_type:0
@@ -762,18 +732,18 @@ msgstr "仅限内部用途"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Frequency of the recuring cost"
-msgstr "复发成本的频率"
+msgstr "定期费用的频率"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Fuel"
-msgstr "油"
+msgstr "燃油"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_graph
 msgid "Fuel Costs Per Month"
-msgstr "每月的燃油费"
+msgstr "每月的燃油费用"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_22
@@ -781,8 +751,7 @@ msgid "Fuel Injector Replacement"
 msgstr "更换化油器"
 
 #. module: fleet
-#: field:fleet.vehicle,fuel_logs_count:0
-#: field:fleet.vehicle,log_fuel:0
+#: field:fleet.vehicle,fuel_logs_count:0 field:fleet.vehicle,log_fuel:0
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_tree
 msgid "Fuel Logs"
@@ -801,12 +770,12 @@ msgstr "燃油类型"
 #. module: fleet
 #: help:fleet.vehicle,fuel_type:0
 msgid "Fuel Used by the vehicle"
-msgstr "车辆的燃料"
+msgstr "汽车的燃油"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
-msgstr "车辆加油日志"
+msgstr "汽车燃油日志"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -821,12 +790,12 @@ msgstr "常规属性"
 #. module: fleet
 #: field:fleet.vehicle.log.contract,generated_cost_ids:0
 msgid "Generated Costs"
-msgstr "已产生的费用"
+msgstr "生成的费用"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Generated Recurring Costs"
-msgstr ""
+msgstr "生成的定期费用"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -835,7 +804,7 @@ msgstr ""
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Group By"
-msgstr ""
+msgstr "分组"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_search
@@ -892,7 +861,7 @@ msgstr "马力"
 #. module: fleet
 #: field:fleet.vehicle,horsepower_tax:0
 msgid "Horsepower Taxation"
-msgstr "车船税（应该是）"
+msgstr "车船税"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -900,20 +869,14 @@ msgid "Hybrid"
 msgstr "混合动力"
 
 #. module: fleet
-#: field:fleet.contract.state,id:0
-#: field:fleet.service.type,id:0
-#: field:fleet.vehicle,id:0
-#: field:fleet.vehicle.cost,id:0
-#: field:fleet.vehicle.log.contract,id:0
-#: field:fleet.vehicle.log.fuel,id:0
-#: field:fleet.vehicle.log.services,id:0
-#: field:fleet.vehicle.model,id:0
-#: field:fleet.vehicle.model.brand,id:0
-#: field:fleet.vehicle.odometer,id:0
-#: field:fleet.vehicle.state,id:0
-#: field:fleet.vehicle.tag,id:0
+#: field:fleet.contract.state,id:0 field:fleet.service.type,id:0
+#: field:fleet.vehicle,id:0 field:fleet.vehicle.cost,id:0
+#: field:fleet.vehicle.log.contract,id:0 field:fleet.vehicle.log.fuel,id:0
+#: field:fleet.vehicle.log.services,id:0 field:fleet.vehicle.model,id:0
+#: field:fleet.vehicle.model.brand,id:0 field:fleet.vehicle.odometer,id:0
+#: field:fleet.vehicle.state,id:0 field:fleet.vehicle.tag,id:0
 msgid "ID"
-msgstr ""
+msgstr "标识"
 
 #. module: fleet
 #: help:fleet.vehicle,message_unread:0
@@ -941,12 +904,12 @@ msgstr "包括服务"
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 #: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
 msgid "Indicative Cost"
-msgstr "指标性成本"
+msgstr "指标性费用"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Indicative Costs"
-msgstr "指示性费用"
+msgstr "指标性费用"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs_non_effective
@@ -958,12 +921,12 @@ msgstr "指标性成本分析"
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 #: field:fleet.vehicle.log.contract,sum_cost:0
 msgid "Indicative Costs Total"
-msgstr "所涉指示性费用总计"
+msgstr "指标性成本总计"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle
 msgid "Information on a vehicle"
-msgstr "车辆上的信息"
+msgstr "汽车上的信息"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_30
@@ -999,33 +962,29 @@ msgstr "公里"
 #. module: fleet
 #: field:fleet.vehicle,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最后信息日期"
 
 #. module: fleet
 #: field:fleet.vehicle,odometer:0
 msgid "Last Odometer"
-msgstr "最新行驶里程"
+msgstr "最新里程表"
 
 #. module: fleet
-#: field:fleet.contract.state,write_uid:0
-#: field:fleet.service.type,write_uid:0
-#: field:fleet.vehicle,write_uid:0
-#: field:fleet.vehicle.cost,write_uid:0
+#: field:fleet.contract.state,write_uid:0 field:fleet.service.type,write_uid:0
+#: field:fleet.vehicle,write_uid:0 field:fleet.vehicle.cost,write_uid:0
 #: field:fleet.vehicle.log.contract,write_uid:0
 #: field:fleet.vehicle.log.fuel,write_uid:0
 #: field:fleet.vehicle.log.services,write_uid:0
 #: field:fleet.vehicle.model,write_uid:0
 #: field:fleet.vehicle.model.brand,write_uid:0
 #: field:fleet.vehicle.odometer,write_uid:0
-#: field:fleet.vehicle.state,write_uid:0
-#: field:fleet.vehicle.tag,write_uid:0
+#: field:fleet.vehicle.state,write_uid:0 field:fleet.vehicle.tag,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "最后更新"
 
 #. module: fleet
 #: field:fleet.contract.state,write_date:0
-#: field:fleet.service.type,write_date:0
-#: field:fleet.vehicle,write_date:0
+#: field:fleet.service.type,write_date:0 field:fleet.vehicle,write_date:0
 #: field:fleet.vehicle.cost,write_date:0
 #: field:fleet.vehicle.log.contract,write_date:0
 #: field:fleet.vehicle.log.fuel,write_date:0
@@ -1033,10 +992,9 @@ msgstr ""
 #: field:fleet.vehicle.model,write_date:0
 #: field:fleet.vehicle.model.brand,write_date:0
 #: field:fleet.vehicle.odometer,write_date:0
-#: field:fleet.vehicle.state,write_date:0
-#: field:fleet.vehicle.tag,write_date:0
+#: field:fleet.vehicle.state,write_date:0 field:fleet.vehicle.tag,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "最后一次更新"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_leasing
@@ -1046,7 +1004,7 @@ msgstr "租赁"
 #. module: fleet
 #: field:fleet.vehicle,license_plate:0
 msgid "License Plate"
-msgstr "车辆牌照"
+msgstr "汽车牌照"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:411
@@ -1057,7 +1015,7 @@ msgstr "车牌：从'%s'到'%s'"
 #. module: fleet
 #: help:fleet.vehicle,license_plate:0
 msgid "License plate number of the vehicle (ie: plate number for a car)"
-msgstr "车辆的车牌号（即：车的车牌号码）"
+msgstr "汽车的车牌号（即：车的车牌号码）"
 
 #. module: fleet
 #: field:fleet.vehicle.log.fuel,liter:0
@@ -1072,26 +1030,23 @@ msgstr "位置"
 #. module: fleet
 #: help:fleet.vehicle,location:0
 msgid "Location of the vehicle (garage, ...)"
-msgstr "车辆的位置（车库，...）"
+msgstr "汽车的位置（车库，...）"
 
 #. module: fleet
-#: field:fleet.vehicle,image:0
-#: field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle,image:0 field:fleet.vehicle.model,image:0
 #: field:fleet.vehicle.model.brand,image:0
 msgid "Logo"
 msgstr "Logo标志"
 
 #. module: fleet
-#: field:fleet.vehicle,image_medium:0
-#: field:fleet.vehicle.model,image_medium:0
+#: field:fleet.vehicle,image_medium:0 field:fleet.vehicle.model,image_medium:0
 msgid "Logo (medium)"
-msgstr ""
+msgstr "汽车标志图片(普通大小)"
 
 #. module: fleet
-#: field:fleet.vehicle,image_small:0
-#: field:fleet.vehicle.model,image_small:0
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image_small:0
 msgid "Logo (small)"
-msgstr ""
+msgstr "汽车标志图片(小图片)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -1154,7 +1109,7 @@ msgstr "品牌型号"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Model brand of Vehicle"
-msgstr "车辆型号品牌"
+msgstr "汽车型号品牌"
 
 #. module: fleet
 #: field:fleet.vehicle.model,modelname:0
@@ -1164,12 +1119,12 @@ msgstr "型号名称"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model
 msgid "Model of a vehicle"
-msgstr "车辆型号"
+msgstr "汽车型号"
 
 #. module: fleet
 #: help:fleet.vehicle,model_id:0
 msgid "Model of the vehicle"
-msgstr "车辆型号"
+msgstr "汽车型号"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:400
@@ -1185,22 +1140,18 @@ msgstr "型号"
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Monthly"
-msgstr "月度"
+msgstr "每月"
 
 #. module: fleet
-#: field:fleet.service.type,name:0
-#: field:fleet.vehicle,name:0
-#: field:fleet.vehicle.cost,name:0
-#: field:fleet.vehicle.log.contract,name:0
-#: field:fleet.vehicle.model,name:0
-#: field:fleet.vehicle.odometer,name:0
-#: field:fleet.vehicle.state,name:0
-#: field:fleet.vehicle.tag,name:0
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
 msgid "Name"
 msgstr "名称"
 
@@ -1215,10 +1166,8 @@ msgid "No"
 msgstr "NO"
 
 #. module: fleet
-#: code:addons/fleet/fleet.py:399
-#: code:addons/fleet/fleet.py:403
-#: code:addons/fleet/fleet.py:407
-#: code:addons/fleet/fleet.py:410
+#: code:addons/fleet/fleet.py:399 code:addons/fleet/fleet.py:403
+#: code:addons/fleet/fleet.py:407 code:addons/fleet/fleet.py:410
 #, python-format
 msgid "None"
 msgstr "无"
@@ -1234,17 +1183,16 @@ msgstr "备注"
 #. module: fleet
 #: help:fleet.vehicle,doors:0
 msgid "Number of doors of the vehicle"
-msgstr "车辆的门数"
+msgstr "汽车车门数量"
 
 #. module: fleet
 #: help:fleet.vehicle,seats:0
 msgid "Number of seats of the vehicle"
-msgstr "车辆座位数"
+msgstr "汽车座位数"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
-#: field:fleet.vehicle,odometer_count:0
-#: field:fleet.vehicle.cost,odometer_id:0
+#: field:fleet.vehicle,odometer_count:0 field:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer"
 msgstr "里程表"
 
@@ -1258,7 +1206,7 @@ msgstr "里程表详细信息"
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_form
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_tree
 msgid "Odometer Logs"
-msgstr "里程记录"
+msgstr "里程表记录"
 
 #. module: fleet
 #: field:fleet.vehicle,odometer_unit:0
@@ -1266,32 +1214,30 @@ msgid "Odometer Unit"
 msgstr "里程表单位"
 
 #. module: fleet
-#: field:fleet.vehicle.cost,odometer:0
-#: field:fleet.vehicle.odometer,value:0
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
 msgid "Odometer Value"
-msgstr "行驶里程数"
+msgstr "里程表数值"
 
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
 msgid "Odometer Values Per Vehicle"
-msgstr ""
+msgstr "每个汽车的里程表数值"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
 msgid "Odometer details"
-msgstr "行驶里程详细信息"
+msgstr "里程表详细信息"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "车辆里程记录"
+msgstr "汽车的里程表记录"
 
 #. module: fleet
-#: help:fleet.vehicle,odometer:0
-#: help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
 #: help:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "查看在此日志中为那一刻车辆的里程表"
+msgstr "查看在此日志中为那一刻汽车的里程表"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1306,7 +1252,7 @@ msgstr "更换油泵"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_omnium
 msgid "Omnium"
-msgstr "z总额"
+msgstr "Omnium"
 
 #. module: fleet
 #: model:ir.actions.client,name:fleet.action_fleet_menu
@@ -1358,7 +1304,7 @@ msgstr "该合约的签署人"
 #. module: fleet
 #: field:fleet.vehicle,power:0
 msgid "Power"
-msgstr ""
+msgstr "动力"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -1373,7 +1319,7 @@ msgstr "动力转向泵更换"
 #. module: fleet
 #: help:fleet.vehicle,power:0
 msgid "Power in kW of the vehicle"
-msgstr "车辆总功率"
+msgstr "汽车总功率"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1407,12 +1353,12 @@ msgstr "散热器修理"
 #. module: fleet
 #: field:fleet.vehicle.log.contract,cost_generated:0
 msgid "Recurring Cost Amount"
-msgstr "周期性成本金额"
+msgstr "定期费用金额"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Recurring Cost Frequency"
-msgstr "周期性成本"
+msgstr "定期费用频率"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_refueling
@@ -1450,7 +1396,7 @@ msgstr "正在修复"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
 msgid "Replacement Vehicle"
-msgstr "更换车辆"
+msgstr "更换汽车"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
@@ -1548,7 +1494,7 @@ msgstr "服务日志"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_services
 msgid "Services for vehicles"
-msgstr "车辆服务"
+msgstr "汽车服务"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1564,8 +1510,8 @@ msgstr "小尺寸图片"
 #: help:fleet.vehicle.model.brand,image_small:0
 msgid ""
 "Small-sized photo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is "
-"required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
 msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图片。"
 
 #. module: fleet
@@ -1730,7 +1676,7 @@ msgstr "变速箱更换"
 #. module: fleet
 #: help:fleet.vehicle,transmission:0
 msgid "Transmission Used by the vehicle"
-msgstr "车辆的变速器"
+msgstr "汽车的变速器"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,cost_subtype_id:0
@@ -1740,12 +1686,12 @@ msgstr "类型"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
 msgid "Type of services available on a vehicle"
-msgstr "提供的服务车辆的类型"
+msgstr "提供的服务汽车的类型"
 
 #. module: fleet
 #: help:fleet.vehicle,vin_sn:0
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
-msgstr "发动机上的唯一编号（VIN/SN 号）"
+msgstr "车辆识别代号，发动机上的唯一编号 (VIN/SN 号)，通俗说法为车架号。"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,odometer_unit:0
@@ -1776,7 +1722,7 @@ msgstr "用户"
 #. module: fleet
 #: help:fleet.vehicle,car_value:0
 msgid "Value of the bought vehicle"
-msgstr "购买车辆的价钱"
+msgstr "购买汽车的价钱"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
@@ -1788,46 +1734,46 @@ msgstr "购买车辆的价钱"
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 #: field:fleet.vehicle.odometer,vehicle_id:0
 msgid "Vehicle"
-msgstr "车辆"
+msgstr "汽车"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_cost_tree
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 msgid "Vehicle Costs"
-msgstr "车辆成本"
+msgstr "汽车成本"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
 msgid "Vehicle Costs by Month"
-msgstr ""
+msgstr "汽车费用按月份"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
 msgid "Vehicle Details"
-msgstr "车辆的详细资料"
+msgstr "汽车的详细资料"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
 msgid "Vehicle Model"
-msgstr "车辆型号"
+msgstr "汽车型号"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
-msgstr "车辆状态"
+msgstr "汽车状态"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
 msgid "Vehicle concerned by this log"
-msgstr "此车辆的有关日志"
+msgstr "此汽车的有关日志"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
 msgid "Vehicle costs"
-msgstr "车辆花费"
+msgstr "汽车费用"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_act
@@ -1840,26 +1786,26 @@ msgstr "汽车"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
 msgid "Vehicles Contracts"
-msgstr "车辆合同"
+msgstr "汽车合同"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 msgid "Vehicles Fuel Logs"
-msgstr "车辆加油记录"
+msgstr "汽车燃油记录"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr "车辆里程表"
+msgstr "汽车里程表"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr "车辆服务日志"
+msgstr "汽车服务日志"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
@@ -1867,12 +1813,12 @@ msgstr "车辆服务日志"
 #: view:fleet.vehicle.cost:fleet.fleet_vehicle_indicative_costs_report
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
 msgid "Vehicles costs"
-msgstr "车辆费用"
+msgstr "汽车费用"
 
 #. module: fleet
 #: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
 msgid "Vehicles odometers"
-msgstr ""
+msgstr "汽车里程表"
 
 #. module: fleet
 #: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
@@ -1938,7 +1884,7 @@ msgstr "年"
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "Yearly"
-msgstr "年度"
+msgstr "每年"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
@@ -1948,12 +1894,12 @@ msgstr "数量"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_kanban
 msgid "and"
-msgstr "and"
+msgstr "与"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "g/km"
-msgstr ""
+msgstr "克/公里"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_kanban
@@ -1968,59 +1914,19 @@ msgstr "显示这辆车的所有费用"
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show the contract for this vehicle"
-msgstr "显示该车辆的合同"
+msgstr "显示该汽车的合同"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show the fuel logs for this vehicle"
-msgstr "显示车辆的燃油日志"
+msgstr "显示汽车的燃油日志"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show the odometer logs for this vehicle"
-msgstr "显示辆车的里程表日志"
+msgstr "显示辆车的里程表记录"
 
 #. module: fleet
 #: view:fleet.vehicle:fleet.fleet_vehicle_form
 msgid "show the services logs for this vehicle"
-msgstr "显示该车辆的服务日志"
-
-#~ msgid ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                Click to create a new fuel log. \n"
-#~ "              </p><p>\n"
-#~ "                Here you can add refuelling entries for all vehicles.  You "
-#~ "can\n"
-#~ "                also filter logs of a particular vehicle using the search\n"
-#~ "                field.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                点击创建一个新的加油日志。 \n"
-#~ "              </p><p>\n"
-#~ "               在这里，你可以添加条目为所有车辆添加加油日志。\n"
-#~ "\t\t您也可以使用搜索领域的特殊车辆过滤加油日志。\n"
-#~ "\t\t</p><p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                Click to create a new odometer log. \n"
-#~ "              </p>\n"
-#~ "              <p>\n"
-#~ "                Here you can add various odometer entries for all vehicles.\n"
-#~ "                You can also show odometer value for a particular vehicle "
-#~ "using\n"
-#~ "                the search field.\n"
-#~ "              </p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                点击创建一个新的里程记录 \n"
-#~ "              </p>\n"
-#~ "              <p>\n"
-#~ "                这里可以为所有车辆添加不同的里程记录.\n"
-#~ "                你也能使用 搜索字段为部分车辆展示里程记录值 。\n"
-#~ "              </p>\n"
-#~ "            "
+msgstr "显示该汽车的服务日志"

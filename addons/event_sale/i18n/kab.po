@@ -1,26 +1,28 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event_sale
+# 
+# Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-03-20 14:51+0000\n"
+"PO-Revision-Date: 2015-07-17 07:08+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-21 05:46+0000\n"
-"X-Generator: Launchpad (build 17405)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
 #: field:event.event.ticket,seats_available:0
 msgid "Available Seats"
-msgstr ""
+msgstr "Imḍiqen yellan"
 
 #. module: event_sale
 #: view:event.event:event_sale.view_event_form
@@ -63,7 +65,7 @@ msgstr ""
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr ""
+msgstr "Fren tadyant sakin tiggezt ad ternu swudem awurman i tedyant agi"
 
 #. module: event_sale
 #: help:sale.order.line,event_ticket_id:0
@@ -75,17 +77,17 @@ msgstr ""
 #. module: event_sale
 #: model:product.template,name:event_sale.event_2_product_product_template
 msgid "Conference on Business Applications"
-msgstr ""
+msgstr "Asarag ɣef isnasen n uwezlu"
 
 #. module: event_sale
 #: field:event.event.ticket,create_uid:0
 msgid "Created by"
-msgstr "Ilul-ed sɣuṛ"
+msgstr "Yerna-t"
 
 #. module: event_sale
 #: field:event.event.ticket,create_date:0
 msgid "Created on"
-msgstr "Ilul-ed di"
+msgstr "Yerna di"
 
 #. module: event_sale
 #: help:product.template,event_ok:0
@@ -99,12 +101,12 @@ msgstr ""
 #: model:ir.model,name:event_sale.model_event_event
 #: field:sale.order.line,event_id:0
 msgid "Event"
-msgstr ""
+msgstr "Tadyant"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 msgid "Event Registration"
-msgstr ""
+msgstr "Tiggezt n tedyant:"
 
 #. module: event_sale
 #: field:product.template,event_ok:0
@@ -127,7 +129,7 @@ msgstr ""
 #. module: event_sale
 #: field:sale.order.line,event_type_id:0
 msgid "Event Type"
-msgstr ""
+msgstr "Tawsit n tedyant"
 
 #. module: event_sale
 #: view:event.event:event_sale.view_event_form
@@ -177,7 +179,7 @@ msgstr "Aleqqem aneggaru di"
 #. module: event_sale
 #: field:event.event.ticket,seats_max:0
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Afellay n imḍiqen illan"
 
 #. module: event_sale
 #: field:event.event.ticket,name:0
@@ -185,8 +187,7 @@ msgid "Name"
 msgstr "Isem"
 
 #. module: event_sale
-#: constraint:event.event.ticket:0
-#: constraint:event.registration:0
+#: constraint:event.event.ticket:0 constraint:event.registration:0
 msgid "No more available tickets."
 msgstr ""
 
@@ -203,17 +204,17 @@ msgstr ""
 #. module: event_sale
 #: view:event.event:event_sale.view_event_form
 msgid "Payments"
-msgstr ""
+msgstr "Afru"
 
 #. module: event_sale
 #: field:event.event.ticket,price:0
 msgid "Price"
-msgstr "Azal"
+msgstr "Ssuma"
 
 #. module: event_sale
 #: field:event.event.ticket,price_reduce:0
 msgid "Price Reduce"
-msgstr ""
+msgstr "Tuǧǧit di ssuma"
 
 #. module: event_sale
 #: field:event.event.ticket,product_id:0
@@ -229,7 +230,7 @@ msgstr "Taneɣruft n ufaris"
 #. module: event_sale
 #: field:event.event.ticket,registration_ids:0
 msgid "Registrations"
-msgstr ""
+msgstr "Tiggaz"
 
 #. module: event_sale
 #: field:event.event.ticket,seats_reserved:0
@@ -244,13 +245,13 @@ msgstr "Tagara n uznuzu"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Izrig n tludna n uznuzu"
+msgstr "Izirig n tludna n uznuzu"
 
 #. module: event_sale
 #: help:product.template,event_type_id:0
 msgid ""
-"Select event types so when we use this product in sales order lines, it will "
-"filter events of this type only."
+"Select event types so when we use this product in sales order lines, it will"
+" filter events of this type only."
 msgstr ""
 
 #. module: event_sale
@@ -270,12 +271,12 @@ msgstr "Addad"
 #: code:addons/event_sale/event_sale.py:154
 #, python-format
 msgid "Subscription"
-msgstr ""
+msgstr "Abonnement"
 
 #. module: event_sale
 #: model:product.template,name:event_sale.event_3_product_product_template
 msgid "Technical Training"
-msgstr ""
+msgstr "Assileɣ atiknikan"
 
 #. module: event_sale
 #: code:addons/event_sale/event_sale.py:123
@@ -283,7 +284,7 @@ msgstr ""
 msgid ""
 "The registration has been created for event <i>%s</i> from the Sale Order "
 "%s. "
-msgstr ""
+msgstr "Tiggezt terna ɣer tedyant  <i>%s</i> si tladna n uznuzu %s. "
 
 #. module: event_sale
 #: code:addons/event_sale/event_sale.py:121
@@ -291,7 +292,7 @@ msgstr ""
 msgid ""
 "The registration has been created for event <i>%s</i> with the ticket "
 "<i>%s</i> from the Sale Order %s. "
-msgstr ""
+msgstr "Tiggezt terna ɣer tedyant <i>%s</i> s ticket <i>%s</i>si tladna n uznuzu %s. "
 
 #. module: event_sale
 #: view:event.registration:event_sale.view_event_registration_ticket_search
@@ -306,7 +307,7 @@ msgstr ""
 #. module: event_sale
 #: field:product.template,event_type_id:0
 msgid "Type of Event"
-msgstr ""
+msgstr "Tawsit n tedyant"
 
 #. module: event_sale
 #: field:event.event.ticket,seats_unconfirmed:0

@@ -203,7 +203,7 @@ class view(osv.osv):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self.browse(cr, uid, ids, context):
-            view_def = self.read_combined(cr, uid, view.id, None, context=context)
+            view_def = self.read_combined(cr, uid, view.id, ['arch'], context=context)
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
                 view_doc = etree.fromstring(view_arch_utf8)
@@ -527,7 +527,7 @@ class view(osv.osv):
 
         # arch and model fields are always returned
         if fields:
-            fields = list(set(fields) | set(['arch', 'model']))
+            fields = list({'arch', 'model'}.union(fields))
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
@@ -662,7 +662,7 @@ class view(osv.osv):
                     orm.transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag in ('form', 'tree'):
-            result = Model.view_header_get(cr, user, False, node.tag, context)
+            result = Model.view_header_get(cr, user, False, node.tag, context=context)
             if result:
                 node.set('string', result)
             in_tree_view = node.tag == 'tree'
@@ -801,15 +801,15 @@ class view(osv.osv):
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.pool[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(cr, user, None, context)
+                node_fields = node_model.fields_get(cr, user, None, context=context)
                 fields.update(node_fields)
                 if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
+                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context=context)
                 fields.update(arrow_fields)
         else:
-            fields = Model.fields_get(cr, user, None, context)
+            fields = Model.fields_get(cr, user, None, context=context)
 
         node = self.add_on_change(cr, user, model, node)
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
@@ -833,10 +833,7 @@ class view(osv.osv):
             if k not in fields_def:
                 del fields[k]
         for field in fields_def:
-            if field == 'id':
-                # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
-                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
-            elif field in fields:
+            if field in fields:
                 fields[field].update(fields_def[field])
             else:
                 message = _("Field `%(field_name)s` does not exist") % \
@@ -948,7 +945,7 @@ class view(osv.osv):
         def get_trans(text):
             if not text or not text.strip():
                 return None
-            text = h.unescape(text.strip())
+            text = text.strip()
             if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
                 return None
             return translate_func(text)

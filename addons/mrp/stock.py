@@ -43,6 +43,23 @@ class StockMove(osv.osv):
         if move.raw_material_production_id and move.location_dest_id.usage == 'production' and move.raw_material_production_id.product_id.track_production and not move.consumed_for:
             raise osv.except_osv(_('Warning!'), _("Because the product %s requires it, you must assign a serial number to your raw material %s to proceed further in your production. Please use the 'Produce' button to do so.") % (move.raw_material_production_id.product_id.name, move.product_id.name))
 
+    # TODO master: remove me, no longer used
+    def _check_phantom_bom(self, cr, uid, move, context=None):
+        """check if product associated to move has a phantom bom
+            return list of ids of mrp.bom for that product """
+        user_company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        #doing the search as SUPERUSER because a user with the permission to write on a stock move should be able to explode it
+        #without giving him the right to read the boms.
+        domain = [
+            '|', ('product_id', '=', move.product_id.id),
+            '&', ('product_id', '=', False), ('product_tmpl_id.product_variant_ids', '=', move.product_id.id),
+            ('type', '=', 'phantom'),
+            '|', ('date_start', '=', False), ('date_start', '<=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            '|', ('date_stop', '=', False), ('date_stop', '>=', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
+            ('company_id', '=', user_company)]
+        return self.pool.get('mrp.bom').search(cr, SUPERUSER_ID, domain, context=context)
+
+
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
@@ -175,6 +192,8 @@ class StockMove(osv.osv):
             quantity_rest_uom = move.product_uom_qty - self.pool.get("product.uom")._compute_qty_obj(cr, uid, move.product_id.uom_id, product_qty, move.product_uom)
             if float_compare(quantity_rest_uom, 0, precision_rounding=move.product_uom.rounding) != 0:
                 new_mov = self.split(cr, uid, move, quantity_rest, context=context)
+                if move.production_id:
+                    self.write(cr, uid, [new_mov], {'production_id': move.production_id.id}, context=context)
                 res.append(new_mov)
             vals = {'restrict_lot_id': restrict_lot_id,
                     'restrict_partner_id': restrict_partner_id,
@@ -206,9 +225,9 @@ class StockMove(osv.osv):
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
-            for new_move in new_moves:
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
-                res.append(new_move)
+            if move.production_id.id:
+                self.write(cr, uid, new_moves, {'production_id': move.production_id.id}, context=context)
+            res.append(new_moves)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):

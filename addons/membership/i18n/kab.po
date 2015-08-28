@@ -1,21 +1,23 @@
-# Kabyle translation for openobject-addons
-# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-03-23 18:26+0000\n"
+"PO-Revision-Date: 2015-07-18 18:18+0000\n"
 "Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
-"Language-Team: Kabyle <kab@li.org>\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-03-24 06:13+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: membership
 #: field:report.membership,num_invoiced:0
@@ -74,7 +76,7 @@ msgstr ""
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partenaire Associé"
 
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
@@ -89,7 +91,7 @@ msgstr ""
 #. module: membership
 #: view:membership.invoice:membership.view_membership_invoice_view
 msgid "Cancel"
-msgstr "Sefsax"
+msgstr "Sefsex"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -99,7 +101,7 @@ msgstr ""
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
-msgstr "Azemz n usefsax"
+msgstr "Azemz n usefsex"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -128,19 +130,19 @@ msgstr "Takebbwanit"
 #. module: membership
 #: view:res.partner:membership.view_partner_tree
 msgid "Contacts"
-msgstr "Inarmisen"
+msgstr "Inermisen"
 
 #. module: membership
 #: field:membership.invoice,create_uid:0
 #: field:membership.membership_line,create_uid:0
 msgid "Created by"
-msgstr "Ilul-ed sɣuṛ"
+msgstr "Yerna-t"
 
 #. module: membership
 #: field:membership.invoice,create_date:0
 #: field:membership.membership_line,create_date:0
 msgid "Created on"
-msgstr "Ilul-ed di"
+msgstr "Yerna di"
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
@@ -203,7 +205,7 @@ msgstr ""
 #. module: membership
 #: view:res.partner:membership.view_res_partner_member_filter
 msgid "End Month"
-msgstr ""
+msgstr "Azemz n tagara"
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -223,7 +225,7 @@ msgstr ""
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Tuccḍa ! Ur tezmir-eḍ ara ad ternuḍ  imedrawen isnalasen."
 
 #. module: membership
 #: code:addons/membership/membership.py:402
@@ -240,13 +242,12 @@ msgstr ""
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
 msgid "Forecast"
-msgstr ""
+msgstr "Prévisions"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
-#: field:res.partner,free_member:0
-#: selection:res.partner,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
 msgid "Free Member"
 msgstr ""
 
@@ -277,8 +278,7 @@ msgid "Group by..."
 msgstr "Sdukel s ..."
 
 #. module: membership
-#: field:membership.invoice,id:0
-#: field:membership.membership_line,id:0
+#: field:membership.invoice,id:0 field:membership.membership_line,id:0
 #: field:report.membership,id:0
 msgid "ID"
 msgstr "Asulay"
@@ -297,7 +297,7 @@ msgstr "Tafaturt"
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Izrig n tfaturt"
+msgstr "Izirig n tfaturt"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
@@ -324,8 +324,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -334,18 +333,12 @@ msgstr ""
 #: help:membership.membership_line,state:0
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -368,7 +361,7 @@ msgstr "Aleqqem aneggaru di"
 #. module: membership
 #: field:report.membership,partner_id:0
 msgid "Member"
-msgstr ""
+msgstr "Amedraw"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
@@ -599,7 +592,7 @@ msgstr "Isseǧǧawen"
 #. module: membership
 #: view:product.template:membership.membership_products_form
 msgid "Taxes"
-msgstr "Tizendiyin"
+msgstr "Tiẓeṭṭaḍin"
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -609,7 +602,7 @@ msgstr ""
 #. module: membership
 #: view:product.template:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Awennit agi ad yeţwasken ɣef isutar n ssuma...."
 
 #. module: membership
 #: view:report.membership:membership.view_report_membership_search
@@ -631,7 +624,7 @@ msgstr "Ɣer"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Amedraw yeţraǧun"
 
 #. module: membership
 #: view:membership.invoice:membership.view_membership_invoice_view

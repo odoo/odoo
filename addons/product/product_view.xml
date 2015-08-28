@@ -107,8 +107,8 @@
                                     </group>
                                     <group name="weight" string="Weights" attrs="{'invisible':[('type','=','service')]}">
                                         <field digits="(14, 3)" name="volume"/>
-                                        <field digits="(14, 3)" name="weight"/>
-                                        <field digits="(14, 3)" name="weight_net"/>
+                                        <field name="weight"/>
+                                        <field name="weight_net"/>
                                     </group>
                                 </group>
                                 <group name="packaging" string="Packaging" attrs="{'invisible':[('type','=','service')]}" groups="product.group_stock_packaging" colspan="4">

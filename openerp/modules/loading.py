@@ -142,7 +142,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
-        new_install = package.installed_version is None
+        new_install = package.state == 'to install'
         if new_install:
             py_module = sys.modules['openerp.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')

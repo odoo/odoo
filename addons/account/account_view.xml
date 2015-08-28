@@ -872,6 +872,7 @@
             <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="sum_period"/>
@@ -891,6 +892,7 @@
                             <field name="code"/>
                             <field name="parent_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
                         </group>
                         <group string="Reporting Configuration">
                             <field name="notprintable"/>
@@ -1197,8 +1199,8 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" editable="top">
-                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
+                    <field name="journal_id" options='{"no_open":True}'/>
+                    <field name="period_id" options='{"no_open":True}'/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -2147,6 +2149,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Code Template" toolbar="1">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="parent_id" invisible="1"/>
@@ -2176,6 +2179,7 @@
                         <field name="code"/>
                         <field name="parent_id"/>
                         <field name="sign"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Description"/>
                     <field name="info"/>

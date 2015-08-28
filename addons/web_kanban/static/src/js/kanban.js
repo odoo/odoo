@@ -257,12 +257,12 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 self.fields_keys = _.unique(self.fields_keys.concat(grouping_fields));
             }
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query(self.fields_keys).group_by(grouping_fields);
-            return self.alive($.when(grouping)).done(function(groups) {
+            return self.alive($.when(grouping)).then(function(groups) {
                 self.remove_no_result();
                 if (groups) {
-                    self.do_process_groups(groups);
+                    return self.do_process_groups(groups);
                 } else {
-                    self.do_process_dataset();
+                    return self.do_process_dataset();
                 }
             });
         });
@@ -271,7 +271,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_ungrouped').addClass('oe_kanban_grouped');
-        this.add_group_mutex.exec(function() {
+        return this.add_group_mutex.exec(function() {
             self.do_clear_groups();
             self.dataset.ids = [];
             if (!groups.length) {
@@ -310,7 +310,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self = this;
         this.$el.find('table:first').show();
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
-        this.add_group_mutex.exec(function() {
+        return this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
@@ -1278,6 +1278,17 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
     },
 });
 
+instance.web_kanban.FormatChar = instance.web_kanban.AbstractField.extend({
+    tagName: 'span',
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.format_descriptor = _.extend({}, this.field, {'widget': this.$node.attr('widget')});
+    },
+    renderElement: function() {
+        this.$el.text(instance.web.format_value(this.field.raw_value, this.format_descriptor));
+    }
+});
+
 instance.web_kanban.Priority = instance.web_kanban.AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
@@ -1373,6 +1384,7 @@ instance.web_kanban.KanbanSelection = instance.web_kanban.AbstractField.extend({
 instance.web_kanban.fields_registry = new instance.web.Registry({});
 instance.web_kanban.fields_registry.add('priority','instance.web_kanban.Priority');
 instance.web_kanban.fields_registry.add('kanban_state_selection','instance.web_kanban.KanbanSelection');
+instance.web_kanban.fields_registry.add('float_time','instance.web_kanban.FormatChar');
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

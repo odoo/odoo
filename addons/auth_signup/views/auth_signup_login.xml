@@ -42,7 +42,9 @@
             <t t-call="web.login_layout">
                 <form class="oe_signup_form" role="form" method="post" t-if="not message">
 
-                    <t t-call="auth_signup.fields"/>
+                    <t t-call="auth_signup.fields">
+                        <t t-set="only_passwords" t-value="bool(token)"/>
+                    </t>
 
                     <p class="alert alert-danger" t-if="error">
                         <t t-esc="error"/>

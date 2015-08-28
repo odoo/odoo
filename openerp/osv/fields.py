@@ -43,6 +43,7 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
+from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
@@ -52,13 +53,22 @@ from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import simplejson
 from openerp import SUPERUSER_ID, registry
 
-def get_cursor():
-    # retrieve a valid cursor from any environment
+@contextmanager
+def _get_cursor():
+    # yield a valid cursor from any environment or create a new one if none found
     from openerp.api import Environment
+    from openerp.http import request
+    try:
+        request.env     # force request's env to be computed
+    except RuntimeError:
+        pass    # ignore if not in a request
     for env in Environment.envs:
         if not env.cr.closed:
-            return env.cr
-    raise RuntimeError("No valid cursor found")
+            yield env.cr
+            break
+    else:
+        with registry().cursor() as cr:
+            yield cr
 
 EMPTY_DICT = frozendict()
 
@@ -201,8 +211,6 @@ class _column(object):
         """ return a dictionary with all the arguments to pass to the field """
         base_items = [
             ('copy', self.copy),
-        ]
-        truthy_items = filter(itemgetter(1), [
             ('index', self.select),
             ('manual', self.manual),
             ('string', self.string),
@@ -213,6 +221,8 @@ class _column(object):
             ('groups', self.groups),
             ('change_default', self.change_default),
             ('deprecated', self.deprecated),
+        ]
+        truthy_items = filter(itemgetter(1), [
             ('group_operator', self.group_operator),
             ('size', self.size),
             ('ondelete', self.ondelete),
@@ -396,7 +406,8 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            return self._digits_compute(get_cursor())
+            with _get_cursor() as cr:
+                return self._digits_compute(cr)
         else:
             return self._digits
 
@@ -977,11 +988,10 @@ class many2many(_column):
 
         wquery = obj._where_calc(cr, user, domain, context=context)
         obj._apply_ir_rules(cr, user, wquery, 'read', context=context)
+        order_by = obj._generate_order_by(None, wquery)
         from_c, where_c, where_params = wquery.get_sql()
         if where_c:
             where_c = ' AND ' + where_c
-
-        order_by = ' ORDER BY "%s".%s' %(obj._table, obj._order.split(',')[0])
 
         limit_str = ''
         if self._limit is not None:
@@ -1058,6 +1068,8 @@ def get_nice_size(value):
         size = value
     elif value: # this is supposed to be a string
         size = len(value)
+        if size < 12:  # suppose human size
+            return value
     return tools.human_size(size)
 
 # See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
@@ -1316,7 +1328,8 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            return self._digits_compute(get_cursor())
+            with _get_cursor() as cr:
+                return self._digits_compute(cr)
         else:
             return self._digits
 
@@ -1579,6 +1592,8 @@ class sparse(function):
         """
 
         if self._type == 'many2many':
+            if not value:
+                return []
             assert value[0][0] == 6, 'Unsupported m2m value for sparse field: %s' % value
             return value[0][2]
 

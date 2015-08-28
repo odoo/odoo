@@ -163,7 +163,10 @@ class event_event(osv.osv):
     @api.one
     @api.depends('event_ticket_ids.seats_max')
     def _compute_seats_max(self):
-        self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
+        if any(ticket.seats_max == 0 for ticket in self.event_ticket_ids):
+            self.seats_max = 0
+        else:
+            self.seats_max = sum(ticket.seats_max for ticket in self.event_ticket_ids)
 
 class event_ticket(osv.osv):
     _name = 'event.event.ticket'

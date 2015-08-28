@@ -1,21 +1,25 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * procurement
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# leangjia <liangjia@qq.com>, 2015
+# mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-10-28 04:59+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-08-20 10:58+0000\n"
+"Last-Translator: leangjia <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:06+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -24,25 +28,17 @@ msgid ""
 "                 Click to create a Procurement.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Procurement Orders</b> represent the need for a certain "
-"quantity of products, at a given time, in a given location.\n"
+"                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.\n"
 "              </p>\n"
 "              <p>\n"
-"                <b>Sales Orders</b> are one typical source of Procurement "
-"Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product "
-"configuration, the procurement engine will attempt to satisfy the need by "
-"reserving products from stock, ordering products from a supplier, or passing "
-"a manufacturing order, etc...\n"
+"                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
+"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...\n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>Procurement Exception</b> occurs when the system cannot "
-"find a way to fulfill a procurement. Some exceptions will resolve themselves "
-"automatically, but others require manual intervention (those are identified "
-"by a specific error message in the chatter).\n"
+"                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class='oe_view_nocontent_create'>\n点击这里新建一个补货单\n</p>\n<p>\n<b>补货单</b>表示在特定时间和特定库位所需产品的确切数量。销售订单是补货单的典型来源（还包括其它不同的单据）。\n<br/>\n依据补货参数和产品配置，补货引擎将通过库存产品保留定，从供应商订购产品、生产单等单据来满足补货需要。\n</p>\n例如：当系统不能找到一个满足补货的方法时将产生补货意外。有些<b>补货异常</b>将被他们自行解决，但是有些要人工干预（通过识别不同的错误信息）才能解决。\n</p>"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -51,47 +47,43 @@ msgid ""
 "                 Click to create a procurement order.  \n"
 "              </p>\n"
 "              <p>\n"
-"                A <b>procurement order</b> is used to record a need for a "
-"specific\n"
-"                product at a specific location. Procurement orders are "
-"usually\n"
-"                created automatically from <i>sales orders, pull logistic "
-"rules or\n"
+"                A <b>procurement order</b> is used to record a need for a specific\n"
+"                product at a specific location. Procurement orders are usually\n"
+"                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>\n"
 "              </p>\n"
 "              <p>\n"
 "                When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: "
-"purchase\n"
+"                creates the necessary operations to fullfil the need: purchase\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建需求订单 . \n</p><p>\n需求订单用来记录指定库位的指定产品的需要。需求订单通常是从 根据销售订单、拉式物流规则或者最小库存规则自动生成的。\n</p><p>\n当需求订单被确认时，他自动建立必须的业务操作来满足需要：采购单  ，生产单等等。\n</p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
 msgid "Action"
-msgstr ""
+msgstr "动作"
 
 #. module: procurement
 #: field:procurement.rule,active:0
 msgid "Active"
-msgstr "生效"
+msgstr "有效"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "一次性全部"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "取消(&C)"
+msgstr "取消"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "取消补货"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -107,30 +99,30 @@ msgstr "不能删除%s 状态的补货订单"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "检查补货"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
 msgid ""
-"Chosen rule for the procurement resolution. Usually chosen by the system but "
-"can be manually set by the procurement manager to force an unusual behavior."
-msgstr ""
+"Chosen rule for the procurement resolution. Usually chosen by the system but"
+" can be manually set by the procurement manager to force an unusual "
+"behavior."
+msgstr "为正式的需求选择规则，通常是由系统选择的，但可以通过采购经理进行手动设置，进行一个特殊的操作。"
 
 #. module: procurement
-#: field:procurement.order,company_id:0
-#: field:procurement.rule,company_id:0
+#: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
 msgid "Company"
 msgstr "公司"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "在背后计算所有补货"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "计算所有排程"
+msgstr "计算所有排程器"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -138,30 +130,28 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: procurement
-#: field:procurement.group,create_uid:0
-#: field:procurement.order,create_uid:0
+#: field:procurement.group,create_uid:0 field:procurement.order,create_uid:0
 #: field:procurement.order.compute.all,create_uid:0
 #: field:procurement.rule,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建人"
 
 #. module: procurement
-#: field:procurement.group,create_date:0
-#: field:procurement.order,create_date:0
+#: field:procurement.group,create_date:0 field:procurement.order,create_date:0
 #: field:procurement.order.compute.all,create_date:0
 #: field:procurement.rule,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "创建"
 
 #. module: procurement
 #: help:procurement.order,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "发布到记录上的最后信息的日期"
 
 #. module: procurement
 #: field:procurement.group,move_type:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "送货方式"
 
 #. module: procurement
 #: field:procurement.order,name:0
@@ -186,7 +176,7 @@ msgstr "异常"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "External note..."
-msgstr ""
+msgstr "外部备注..."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -196,12 +186,12 @@ msgstr "额外信息"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "固定的补货组"
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -232,10 +222,8 @@ msgid ""
 msgstr "保留复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: procurement
-#: field:procurement.group,id:0
-#: field:procurement.order,id:0
-#: field:procurement.order.compute.all,id:0
-#: field:procurement.rule,id:0
+#: field:procurement.group,id:0 field:procurement.order,id:0
+#: field:procurement.order.compute.all,id:0 field:procurement.rule,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -247,7 +235,7 @@ msgstr "如果勾选此项，有新消息会提醒你"
 #. module: procurement
 #: help:procurement.rule,active:0
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "如果不选中，允许您隐藏价格表而无需删除"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:155
@@ -266,16 +254,14 @@ msgid "Last Message Date"
 msgstr "最新消息日期"
 
 #. module: procurement
-#: field:procurement.group,write_uid:0
-#: field:procurement.order,write_uid:0
+#: field:procurement.group,write_uid:0 field:procurement.order,write_uid:0
 #: field:procurement.order.compute.all,write_uid:0
 #: field:procurement.rule,write_uid:0
 msgid "Last Updated by"
 msgstr "最近更新者"
 
 #. module: procurement
-#: field:procurement.group,write_date:0
-#: field:procurement.order,write_date:0
+#: field:procurement.group,write_date:0 field:procurement.order,write_date:0
 #: field:procurement.order.compute.all,write_date:0
 #: field:procurement.rule,write_date:0
 msgid "Last Updated on"
@@ -289,7 +275,7 @@ msgstr "延迟"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "留空"
 
 #. module: procurement
 #: view:res.company:procurement.mrp_company
@@ -335,7 +321,7 @@ msgstr "备注"
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "部分"
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -358,7 +344,7 @@ msgstr "补货异常"
 #. module: procurement
 #: field:procurement.order,group_id:0
 msgid "Procurement Group"
-msgstr ""
+msgstr "补货组"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -431,12 +417,12 @@ msgstr "补货组的沿用"
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Pull Rule"
-msgstr ""
+msgstr "拉式规则"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_tree
 msgid "Pull Rules"
-msgstr ""
+msgstr "拉式规则"
 
 #. module: procurement
 #: field:procurement.order,product_qty:0
@@ -446,24 +432,24 @@ msgstr "数量"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr "再次确认补货"
+msgstr "再确认补货"
 
 #. module: procurement
 #: field:procurement.group,name:0
 msgid "Reference"
-msgstr ""
+msgstr "参考"
 
 #. module: procurement
 #: help:procurement.order,origin:0
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr ""
+msgstr "创建此需求单的原始单据号。\n此项由Odoo自动填写。"
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
 msgid "Rule"
-msgstr ""
+msgstr "规则"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -474,7 +460,7 @@ msgstr "运行补货"
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
-msgstr "计划运行"
+msgstr "计划排程器"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -489,17 +475,17 @@ msgstr "计划日期"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "月计划"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr "排程参数"
+msgstr "排程器参数"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "调度"
 
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
@@ -509,7 +495,7 @@ msgstr "搜索补货"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序列"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -530,7 +516,7 @@ msgstr "摘要"
 #. module: procurement
 #: help:procurement.rule,name:0
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "这个区域将填入分拣源和库存移动的名称"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_tree_view
@@ -550,7 +536,7 @@ msgstr "销售单位数量"
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
-msgstr "紧急的"
+msgstr "紧急"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -560,7 +546,7 @@ msgstr "非常紧急"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
+msgstr "示例：SO005"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard

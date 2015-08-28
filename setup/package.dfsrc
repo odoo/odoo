@@ -3,9 +3,6 @@
 FROM debian:stable
 MAINTAINER Odoo S.A. <info@odoo.com>
 
-# Change policy-rc.d so that services start automatically once installed
-RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
-
 RUN apt-get update && \
 	apt-get install -y locales && \
 	rm -rf /var/lib/apt/lists/*
@@ -33,6 +30,7 @@ RUN apt-get update -qq &&  \
 		python-pip \
 		build-essential \
 		python -y && \
+	easy_install --upgrade pip && \
 	rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /opt/release/requirements.txt

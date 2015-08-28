@@ -1,20 +1,21 @@
+:banner: banners/odoo_guideline.jpg
+
 .. highlight:: python
 
-=================
+===============
 Odoo Guidelines
-=================
+===============
 
-This page introduce the new Odoo Coding Guidelines. This guidelines
-aims to improve the quality of the code (better readability of source,
-...) but also to improve Odoo Apps ! Indeed, a proper code will ease
-the maintenance and debugging, lower the complexity and promote the
-reliability.
+This page introduce the new Odoo Coding Guidelines. These guidelines
+aim to improve the quality of the code (better readability of source,
+...) and  Odoo Apps. Indeed, proper code ought ease maintenance, aid
+debugging, lower complexity and promote reliability.
 
 Module structure
 ================
 
 Directories
-------------
+-----------
 A module is organised in a few directory :
 
 - *data/* : demo and data xml
@@ -24,24 +25,24 @@ A module is organised in a few directory :
 - *static/* : contains the web assets, separated into *css/, js/, img/, lib/, ...*
 
 File naming
-------------
+-----------
 For *views* declarations, split backend views from (frontend)
 templates in 2 differents files.
 
-For *models*, split the business logic by sets of models, in each sets
+For *models*, split the business logic by sets of models, in each set
 select a main model, this model gives its name to the set. If there is
-only one set of module, its name is the same as the module name. For
+only one model, its name is the same as the module name. For
 each set named <main_model> the following files may be created:
 
-- models/<main_model>.py
-- models/<inherited_main_model.py
-- views/<main_model>_templates.xml
-- views/<main_model>_views.xml
+- :file:`models/{<main_model>}.py`
+- :file:`models/{<inherited_main_model>}.py`
+- :file:`views/{<main_model>}_templates.xml`
+- :file:`views/{<main_model>}_views.xml`
 
-For instance, *sale* module introduce ``sale_order`` and
+For instance, *sale* module introduces ``sale_order`` and
 ``sale_order_line`` where ``sale_order`` is dominant. So the
-<main_model> files will be named *models/sale_order.py* and
-*views/sale_order_views.py*.
+``<main_model>`` files will be named :file:`models/sale_order.py` and
+:file:`views/sale_order_views.py`.
 
 
 For *data*, split them by purpose : demo or data. The filename will be
@@ -54,7 +55,7 @@ static/js/im_chat.js, static/css/im_chat.css, static/xml/im_chat.xml,
 ...). Don't link data (image, libraries) outside Odoo : don't use an
 url to an image but copy it in our codebase instead.
 
-The complete tree should looks like
+The complete tree should look like
 
 .. code-block:: text
 
@@ -96,7 +97,8 @@ The complete tree should looks like
         `-- <inherited_main_model>_views.xml
 
 
-.. note:: Filename should only use only ``[a-z0-9_]``
+.. note:: File names should only contain ``[a-z0-9_]`` (lowercase
+          alphanumerics and ``_``)
 
 .. warning:: Use correct file permissions : folder 755 and file 644.
 
@@ -141,16 +143,17 @@ Security, View and Action
 
 Use the following pattern :
 
-* For a menu : *<model_name>_menu*
-* For a view : *<model_name>_view_<view_type>*, where *view_type* is kanban, form, tree, search, ...
-* For an action : the main action respects *<model_name>_action*.
-  Others are suffixed with *_<detail>*, where *detail* is a underscore
-  lowercase string explaining a little bit the action (Should not be
-  long). This is used only if multiple action are declared for the
+* For a menu: :samp:`{<model_name>}_menu`
+* For a view: :samp:`{<model_name>}_view_{<view_type>}`, where *view_type* is
+  ``kanban``, ``form``, ``tree``, ``search``, ...
+* For an action: the main action respects :samp:`{<model_name>}_action`.
+  Others are suffixed with :samp:`_{<detail>}`, where *detail* is a
+  lowercase string briefly explaining the action.
+  This is used only if multiple actions are declared for the
   model.
-* For a group : *<model_name>_group_<group_name>* where *group_name*
-  is the name of the group, genrally 'user', 'manager', ...
-* For a rule : *<model_name>_rule_<concerned_group>* where
+* For a group: :samp:`{<model_name>}_group_{<group_name>}` where *group_name*
+  is the name of the group, generally 'user', 'manager', ...
+* For a rule: :samp:`{<model_name>}_rule_{<concerned_group>}` where
   *concerned_group* is the short name of the concerned group ('user'
   for the 'model_name_group_user', 'public' for public user, 'company'
   for multi-company rules, ...).
@@ -194,12 +197,19 @@ Use the following pattern :
 
 
 
-.. note:: View name use dot notation ``my.model.view_type`` or ``my.model.view_type.inherit`` instead of *"This is the form view of My Model"*.
+.. note:: View names use dot notation ``my.model.view_type`` or
+          ``my.model.view_type.inherit`` instead of *"This is the form view of
+          My Model"*.
 
 
 Inherited XML
 ~~~~~~~~~~~~~
-The naming pattern of inherited view is *<base_view>_inherit_<current_module_name>*. A module can extend a view only one time, suffix the orginal name with *_inherit_<current_module_name>*, where *current_module_name* is the technical name of the module extending the view.
+
+The naming pattern of inherited view is
+:samp:`{<base_view>}_inherit_{<current_module_name>}`. A module may only
+extend a view once.  Suffix the orginal name with
+:samp:`_inherit_{<current_module_name>}` where *current_module_name* is the
+technical name of the module extending the view.
 
 
 .. code-block:: xml
@@ -215,7 +225,8 @@ Python
 PEP8 options
 ------------
 
-Using a linter can help to see syntax and semantic warning or error. Odoo Source Code try to respect Python standard, but some of them can be ignored.
+Using a linter can help show syntax and semantic warnings or errors. Odoo
+source code tries to respect Python standard, but some of them can be ignored.
 
 - E501: line too long
 - E301: expected 1 blank line, found 0
@@ -230,7 +241,7 @@ Imports
 -------
 The imports are ordered as
 
-#. Externals libs (One per line sorted and splitted in python stdlib)
+#. External libraries (one per line sorted and split in python stdlib)
 #. Imports of ``openerp``
 #. Imports from Odoo modules (rarely, and only if necessary)
 
@@ -253,7 +264,7 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
 
 
 Idioms
--------
+------
 
 - Prefer ``%`` over ``.format()``, prefer ``%(varname)`` instead of position (This is better for translation)
 - Try to avoid generators and decorators
@@ -304,8 +315,8 @@ Symbols
 - In a Model attribute order should be
     #. Private attributes (``_name``, ``_description``, ``_inherit``, ...)
     #. Default method and ``_default_get``
-    #. Fields declarations
-    #. Compute and search methods in the same order than field declaration
+    #. Field declarations
+    #. Compute and search methods in the same order as field declaration
     #. Constrains methods (``@api.constrains``) and onchange methods (``@api.onchange``)
     #. CRUD methods (ORM overrides)
     #. Action methods
@@ -394,19 +405,18 @@ Prefix your commit with
 
 Then, in the message itself, specify the part of the code impacted by your changes (module name, lib, transversal object, ...) and a description of the changes.
 
-- Always put meaning full commit message: commit message should be
-  self explanatory (long enough) including the name of the module that
-  has been changed and the reason behind that change. Do not use
-  single words like "bugfix" or "improvements".
-
-- Avoid commits which simultaneously impacts lots of modules. Try to
-  splits into different commits where impacted modules are different
-  (It will be helpful when we are going to revert that module
-  separately).
+- Always include a meaningful commit message: it should be self explanatory
+  (long enough) including the name of the module that has been changed and the
+  reason behind the change. Do not use single words like "bugfix" or
+  "improvements".
+- Avoid commits which simultaneously impact multiple modules. Try to
+  split into different commits where impacted modules are different
+  (It will be helpful if we need to revert a module separately).
 
 .. code-block:: text
 
     [FIX] website, website_mail: remove unused alert div, fixes look of input-group-btn
+
     Bootstrap's CSS depends on the input-group-btn
     element being the first/last child of its parent.
     This was not the case because of the invisible
@@ -415,10 +425,10 @@ Then, in the message itself, specify the part of the code impacted by your chang
     [IMP] fields: reduce memory footprint of list/set field attributes
 
     [REF] web: add module system to the web client
+
     This commit introduces a new module system for the javascript code.
     Instead of using global ...
 
 
-.. note:: The long description try to explain the *why* not the
-   *what*, the *what* can be seen in the diff
-
+.. note:: Use the long description to explain the *why* not the
+          *what*, the *what* can be seen in the diff

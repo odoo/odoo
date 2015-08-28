@@ -301,7 +301,7 @@
             var $cell = $(cell);
 
             field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
-            field.$el.position({
+            field.$el.css({top: 0, left: 0}).position({
                 my: 'left top',
                 at: 'left top',
                 of: $cell
@@ -659,6 +659,7 @@
                 e.preventDefault();
                 return this._next();
             }
+            this.editor.form.__clicked_inside = true;
             return $.when();
         }
     });

@@ -430,6 +430,8 @@ class TestResource(TestResourceCommon):
 
         res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, 5, day_date=self.date1)
         self.assertEqual(res.date(), datetime.strptime('2013-02-26 00:0:00', _format).date(), 'resource_calendar: wrong days scheduling')
+        res = self.resource_calendar.schedule_days_get_date(cr, uid, self.calendar_id, -2, day_date=self.date1)
+        self.assertEqual(res.date(), datetime.strptime('2013-02-08 00:00:00', _format).date(), 'resource_calendar: wrong days scheduling')
 
         res = self.resource_calendar.schedule_days_get_date(
             cr, uid, self.calendar_id, 5, day_date=self.date1,

@@ -14,7 +14,7 @@ def _partner_format_address(address1=False, address2=False):
 
 
 def _partner_split_name(partner_name):
-    return [' '.join(partner_name.split()[-1:]), ' '.join(partner_name.split()[:-1])]
+    return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
 
 
 class ValidationError(ValueError):
@@ -341,7 +341,7 @@ class PaymentTransaction(osv.Model):
              ('done', 'Done'), ('error', 'Error'),
              ('cancel', 'Canceled')
              ], 'Status', required=True,
-            track_visiblity='onchange', copy=False),
+            track_visibility='onchange', copy=False),
         'state_message': fields.text('Message',
                                      help='Field used to store error and/or validation messages for information'),
         # payment

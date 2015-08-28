@@ -33,16 +33,15 @@
 
 <template id="website.submenu" name="Submenu">
     <li t-if="not submenu.child_id" t-att-class="
-        ((submenu.url and submenu.url != '/' and request.httprequest.path.startswith(submenu.url)) or
-         request.httprequest.path == submenu.url) and 'active'
+        'active' if submenu.url and submenu.url != '/' and request.httprequest.path == submenu.url.replace('/page/website.', '/page/') else None
         ">
         <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
     <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        ((submenu.url and submenu.url != '/' and [1 for submenu in submenu.child_id if request.httprequest.path.startswith(submenu.url)]) or
-         request.httprequest.path == submenu.url) and 'active'
+        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id]) or
+         request.httprequest.path == submenu.url.replace('/page/website.', '/page/')) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
@@ -85,8 +84,8 @@
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
             <t t-if="request and request.website_multilang and website">
-                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lang">
-                    <link rel="alternate" t-att-hreflang="lang['hreflang']" t-att-href="lang['href']"/>
+                <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
+                    <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
             </t>
 
@@ -235,10 +234,10 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In" groups="base.group_public">
+<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
     <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider"/>
-        <li>
+        <li class="divider" groups="base.group_public"/>
+        <li groups="base.group_public">
             <a t-attf-href="/web/login">
                 <b>Sign in</b>
             </a>

@@ -164,7 +164,7 @@ class crm_lead(format_address, osv.osv):
             action = self.get_formview_action(cr, user, context['opportunity_id'], context=context)
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(crm_lead, self).fields_view_get(cr, user, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
         return res
@@ -310,9 +310,10 @@ class crm_lead(format_address, osv.osv):
         values = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            partner_name = (partner.parent_id and partner.parent_id.name) or (partner.is_company and partner.name) or False
             values = {
-                'partner_name': partner.parent_id.name if partner.parent_id else partner.name,
-                'contact_name': partner.name if partner.parent_id else False,
+                'partner_name': partner_name,
+                'contact_name': (not partner.is_company and partner.name) or False,
                 'title': partner.title and partner.title.id or False,
                 'street': partner.street,
                 'street2': partner.street2,

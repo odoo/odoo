@@ -51,12 +51,15 @@ class WebsiteMembership(http.Controller):
         # group by country, based on all customers (base domain)
         if membership_id != 'free':
             membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, base_line_domain, context=context)
-            country_domain = ('member_lines', 'in', membership_line_ids)
+            country_domain = [('member_lines', 'in', membership_line_ids)]
         else:
             membership_line_ids = []
-            country_domain = ('free_member', '=', True)
+            country_domain = [('membership_state', '=', 'free')]
+            if post_name:
+                country_domain += ['|', ('name', 'ilike', post_name),
+                                      ('website_description', 'ilike', post_name)]
         countries = partner_obj.read_group(
-            cr, SUPERUSER_ID, [country_domain, ("website_published", "=", True)], ["id", "country_id"],
+            cr, SUPERUSER_ID, country_domain + [("website_published", "=", True)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
         countries_total = sum(country_dict['country_id_count'] for country_dict in countries)
 
@@ -103,7 +106,7 @@ class WebsiteMembership(http.Controller):
             membership_lines_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
             google_map_partner_ids = membership_line_obj.get_published_companies(cr, uid, membership_line_ids, limit=2000, context=context)
 
-        search_domain = [('free_member', '=', True), ('website_published', '=', True)]
+        search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
         if post_name:
             search_domain += ['|', ('name', 'ilike', post_name), ('website_description', 'ilike', post_name)]
         if country_id:

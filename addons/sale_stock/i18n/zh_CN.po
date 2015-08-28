@@ -1,21 +1,24 @@
-# Chinese (Simplified) translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_stock
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
+# jeffery chen fan <jeffery9@gmail.com>, 2015
+# 卓忆科技 <zhanghao@jointd.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2015-08-12 15:17+0000\n"
+"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-01-22 08:21+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:266
@@ -26,7 +29,7 @@ msgstr "(n/a)"
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr "允许追加运输成本"
+msgstr "允许追加送货成本"
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -34,12 +37,12 @@ msgid ""
 "Allows you to add delivery methods in sales orders and delivery orders.\n"
 "You can define your own carrier and delivery grids for prices.\n"
 "-This installs the module delivery."
-msgstr ""
+msgstr "允许您在销售订单和交货订单中添加送货方式。\n您可以定义自己的承运商和运输网的价格\n-这将安装delivery模块。"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_route_so_lines:0
 msgid "Allows you to choose a delivery route on sales order lines"
-msgstr ""
+msgstr "允许在销售订单行上选择一个送货路线"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
@@ -60,7 +63,7 @@ msgstr "不能取消销售订单！"
 #. module: sale_stock
 #: field:sale.config.settings,group_route_so_lines:0
 msgid "Choose MTO, drop shipping,... on sales order lines"
-msgstr ""
+msgstr "在销售订单行上选择“按订单生成MTO”、“供应商直运drop shipping”..."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -72,7 +75,7 @@ msgstr "公司"
 #: code:addons/sale_stock/sale_stock.py:352
 #, python-format
 msgid "Configuration Error!"
-msgstr "设置错误!"
+msgstr "配置错误!"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -87,17 +90,17 @@ msgstr "默认选项"
 #. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
-msgstr "当所有商品可用后一次性发运"
+msgstr "当所有商品可用后一次性送货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "一次性交货"
+msgstr "一次性送货"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "可以分批交货"
+msgstr "分批送货"
 
 #. module: sale_stock
 #: field:sale.order,shipped:0
@@ -108,22 +111,22 @@ msgstr "已送货"
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "已交付部分开票"
+msgstr "待开票的送货"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr "允许开发运单"
+msgstr "开启按送货单开票"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "开启销售订单行上的路线"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr "基于发运单生产发票"
+msgstr "基于送货单开票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
@@ -145,34 +148,31 @@ msgstr "国际商业条款是一系列预定义的用于国际贸易的商业条
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "库存路线"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "根据送货单生成发票"
+msgstr "基于送货单的发票"
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr "基于销售单的发票"
+msgstr "基于销售单的开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,task_work:0
 msgid ""
-"Lets you transfer the entries under tasks defined for Project Management to "
-"the Timesheet line entries for particular date and particular user  with the "
-"effect of creating, editing and deleting either ways and to automatically "
-"creates project tasks from procurement lines.\n"
+"Lets you transfer the entries under tasks defined for Project Management to the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways and to automatically creates project tasks from procurement lines.\n"
 "-This installs the modules project_timesheet and sale_service."
-msgstr ""
+msgstr "能让您在创建项目管理中的任务工作摘要区域的明细条目\n自动传送到计工单中的相应区域。当编辑或删除时会从需求单自动创建项目任务。\n-这会安装模块project_timesheet和sale_service。"
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr "向客户承诺日期的误差幅度。产品将被比实际承诺的日期提前很多天安排采购和交付，以应对供应链中的意外延误。"
 
 #. module: sale_stock
@@ -184,18 +184,18 @@ msgstr "没足够的库存！： "
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "包装数"
+msgstr "包裹数"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:78
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "只有管理员可以改变该设置"
 
 #. module: sale_stock
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr "打包装"
+msgstr "包装形式"
 
 #. module: sale_stock
 #: help:sale.order,picking_policy:0
@@ -207,17 +207,17 @@ msgstr "如果你允许部分交付， 选择‘每个产品可用时发运’"
 #: code:addons/sale_stock/sale_stock.py:275
 #, python-format
 msgid "Picking Information ! : "
-msgstr "装箱信息！： "
+msgstr "分拣信息！： "
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Picking List"
-msgstr "装箱单"
+msgstr "分拣清单"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
 msgid "Picking associated to this sale"
-msgstr ""
+msgstr "与此销售相关的分拣"
 
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
@@ -227,12 +227,12 @@ msgstr "基于任务的进展准备发票"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: sale_stock
 #: field:sale.order.line,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "产品模板"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -242,17 +242,17 @@ msgstr "订单行上面的产品属性"
 #. module: sale_stock
 #: field:sale.config.settings,module_project_timesheet:0
 msgid "Project Timesheet"
-msgstr "项目时间表"
+msgstr "项目工时单"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "Recreate Delivery Order"
-msgstr "重建发运单"
+msgstr "重建送货单"
 
 #. module: sale_stock
 #: field:sale.order.line,route_id:0
 msgid "Route"
-msgstr ""
+msgstr "路线"
 
 #. module: sale_stock
 #: field:stock.picking,sale_id:0
@@ -262,12 +262,12 @@ msgstr "销售订单"
 #. module: sale_stock
 #: view:stock.location.route:sale_stock.stock_location_route_form_view_inherit
 msgid "Sale Order Lines"
-msgstr ""
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_sale_service:0
 msgid "Sale Service"
-msgstr ""
+msgstr "销售服务"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -277,7 +277,7 @@ msgstr "销售订单"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单明细"
+msgstr "销售订单行"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -300,18 +300,17 @@ msgstr "安全天数"
 #. module: sale_stock
 #: field:stock.location.route,sale_selectable:0
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "在销售订单行上可选"
 
 #. module: sale_stock
-#: field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: field:sale.report,shipped:0 field:sale.report,shipped_qty_1:0
 msgid "Shipped"
 msgstr "已送货"
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr "运送方式"
+msgstr "送货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -326,30 +325,28 @@ msgstr "默认的开票方法"
 #. module: sale_stock
 #: view:stock.picking:sale_stock.view_picking_internal_search_inherit
 msgid "To Invoice"
-msgstr ""
+msgstr "待开票"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
-msgstr "允许销售员 使用菜单“按已交付数量开票”  根据发运单开发票"
+msgstr "允许销售员 使用菜单“待开票的送货”  根据送货单开发票"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "View Delivery Order"
-msgstr "查看出货单"
+msgstr "查看送货单"
 
 #. module: sale_stock
-#: field:sale.order,warehouse_id:0
-#: field:sale.report,warehouse_id:0
+#: field:sale.order,warehouse_id:0 field:sale.report,warehouse_id:0
 msgid "Warehouse"
 msgstr "仓库"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
+msgid "You can generate invoices based on sales orders or based on shippings."
 msgstr "你可以根据销售订单或送货单生成发票。"
 
 #. module: sale_stock
@@ -357,7 +354,7 @@ msgstr "你可以根据销售订单或送货单生成发票。"
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
-msgstr "你必须先取消这个销售订单附加的所有发运单。"
+msgstr "你必须先取消附加到这个销售订单的所有送货单。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:343
@@ -365,9 +362,7 @@ msgstr "你必须先取消这个销售订单附加的所有发运单。"
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"你计划销售 %.2f %s 但是只要 %.2f %s 是有效的 ！\n"
-"实际库存有 %.2f %s。 （没有预订）"
+msgstr "你计划销售 %.2f %s 但是只要 %.2f %s 是有效的 ！\n实际库存有 %.2f %s。 （没有预订）"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:270
@@ -377,21 +372,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"你选择了 %d 单位的数量。但它不兼容选定的包装。\n"
-"这是对应该包装的建议数量：EAN: %s ，  数量: %s， 单位类型: %s"
+msgstr "你选择了 %d 单位的数量。但它不兼容选定的包装。\n这是对应该包装的建议数量：EAN: %s ，  数量: %s， 单位类型: %s"
 
 #. module: sale_stock
 #: view:sale.order:sale_stock.view_order_form_inherit
 msgid "days"
 msgstr "天数"
-
-#. module: sale_stock
-#: view:sale.order:sale_stock.view_order_form_inherit
-msgid ""
-"{\"shipping_except\":\"red\",\"invoice_except\":\"red\",\"waiting_date\":\"bl"
-"ue\"}"
-msgstr ""
-
-#~ msgid "Picked"
-#~ msgstr "已装箱"

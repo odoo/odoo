@@ -4,6 +4,7 @@
 from datetime import date, datetime
 from collections import defaultdict
 
+from openerp.exceptions import AccessError
 from openerp.tests import common
 from openerp.exceptions import except_orm
 
@@ -338,6 +339,24 @@ class TestNewFields(common.TransactionCase):
             data = message.read(['display_name', 'size'])[0]
             self.assertEqual(data['display_name'], display_name)
             self.assertEqual(data['size'], size)
+
+    def test_31_prefetch(self):
+        """ test prefetch of records handle AccessError """
+        Category = self.env['test_new_api.category']
+        cat_1 = Category.create({'name': 'NOACCESS'}).id
+        cat_2 = Category.create({'name': 'ACCESS', 'parent': cat_1}).id
+
+        self.env.clear()
+
+        cat = Category.browse(cat_2)
+        self.assertEqual(cat.name, 'ACCESS')
+        # both categories should be in prefetch ids
+        self.assertSetEqual(self.env.prefetch[Category._name], set([cat_1, cat_2]))
+        # but due to our (lame) overwrite of `read`, it should not forbid us to read records we have access to
+        self.assertFalse(len(cat.discussions))
+        self.assertEqual(cat.parent.id, cat_1)
+        with self.assertRaises(AccessError):
+            Category.browse(cat_1).name
 
     def test_40_new(self):
         """ test new records. """

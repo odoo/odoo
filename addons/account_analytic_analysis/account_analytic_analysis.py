@@ -45,7 +45,7 @@ class account_analytic_invoice_line(osv.osv):
 
     _columns = {
         'product_id': fields.many2one('product.product','Product',required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', ondelete='cascade'),
         'name': fields.text('Description', required=True),
         'quantity': fields.float('Quantity', required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure',required=True),
@@ -374,7 +374,7 @@ class account_analytic_account(osv.osv):
         inv_ids = []
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
-            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('invoice_id.state', 'not in', ['draft', 'cancel']), ('to_invoice','!=', False), ('journal_id.type', '=', 'general'), ('invoice_id.type', 'in', ['out_invoice', 'out_refund'])], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
                 if line.invoice_id not in inv_ids:
                     inv_ids.append(line.invoice_id)
@@ -704,8 +704,31 @@ class account_analytic_account(osv.osv):
            'fiscal_position': fpos_id,
            'payment_term': partner_payment_term,
            'company_id': contract.company_id.id or False,
+           'user_id': contract.manager_id.id or uid,
         }
         return invoice
+
+    def _prepare_invoice_line(self, cr, uid, line, fiscal_position, context=None):
+        fpos_obj = self.pool.get('account.fiscal.position')
+        res = line.product_id
+        account_id = res.property_account_income.id
+        if not account_id:
+            account_id = res.categ_id.property_account_income_categ.id
+        account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
+
+        taxes = res.taxes_id or False
+        tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
+        values = {
+            'name': line.name,
+            'account_id': account_id,
+            'account_analytic_id': line.analytic_account_id.id,
+            'price_unit': line.price_unit or 0.0,
+            'quantity': line.quantity,
+            'uos_id': line.uom_id.id or False,
+            'product_id': line.product_id.id or False,
+            'invoice_line_tax_id': [(6, 0, tax_id)],
+        }
+        return values
 
     def _prepare_invoice_lines(self, cr, uid, contract, fiscal_position_id, context=None):
         fpos_obj = self.pool.get('account.fiscal.position')
@@ -714,26 +737,8 @@ class account_analytic_account(osv.osv):
             fiscal_position = fpos_obj.browse(cr, uid,  fiscal_position_id, context=context)
         invoice_lines = []
         for line in contract.recurring_invoice_line_ids:
-
-            res = line.product_id
-            account_id = res.property_account_income.id
-            if not account_id:
-                account_id = res.categ_id.property_account_income_categ.id
-            account_id = fpos_obj.map_account(cr, uid, fiscal_position, account_id)
-
-            taxes = res.taxes_id or False
-            tax_id = fpos_obj.map_tax(cr, uid, fiscal_position, taxes)
-
-            invoice_lines.append((0, 0, {
-                'name': line.name,
-                'account_id': account_id,
-                'account_analytic_id': contract.id,
-                'price_unit': line.price_unit or 0.0,
-                'quantity': line.quantity,
-                'uos_id': line.uom_id.id or False,
-                'product_id': line.product_id.id or False,
-                'invoice_line_tax_id': [(6, 0, tax_id)],
-            }))
+            values = self._prepare_invoice_line(cr, uid, line, fiscal_position, context=context)
+            invoice_lines.append((0, 0, values))
         return invoice_lines
 
     def _prepare_invoice(self, cr, uid, contract, context=None):

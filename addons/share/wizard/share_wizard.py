@@ -47,7 +47,7 @@ DOMAIN_ALL = [(1, '=', 1)]
 # A good selection of easy to read password characters (e.g. no '0' vs 'O', etc.)
 RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
 def generate_random_pass():
-    return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
+    return ''.join(random.SystemRandom().sample(RANDOM_PASS_CHARACTERS,10))
 
 class share_wizard(osv.TransientModel):
     _name = 'share.wizard'
@@ -600,8 +600,8 @@ class share_wizard(osv.TransientModel):
                     # other groups, so we duplicate if needed
                     rule = self._check_personal_rule_or_duplicate(cr, group_id, rule, context=context)
                     eval_ctx = rule_obj._eval_context_for_combinations()
-                    org_domain = expression.normalize_domain(eval(rule.domain_force, eval_ctx))
-                    new_clause = expression.normalize_domain(eval(domain, eval_ctx))
+                    org_domain = expression.normalize_domain(safe_eval(rule.domain_force, eval_ctx))
+                    new_clause = expression.normalize_domain(safe_eval(domain, eval_ctx))
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
                     _logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)

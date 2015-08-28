@@ -31,6 +31,7 @@ import random
 import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
 
 from itertools import groupby
 from operator import itemgetter
@@ -309,7 +310,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         step = context.get('step', 'new_window')
 
-        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
+        res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context=context, *args, **kwargs)
 
         eview = etree.fromstring(res['arch'])
         placeholder = eview.xpath("group[@name='placeholder1']")

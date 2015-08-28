@@ -1,21 +1,22 @@
-# Danish translation for openobject-addons
-# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2014-08-14 16:10+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Danish <da@li.org>\n"
+"PO-Revision-Date: 2015-05-29 13:13+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Danish (http://www.transifex.com/projects/p/odoo-8/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2015-02-19 05:41+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
 #: field:res.partner,task_count:0
@@ -34,8 +35,7 @@ msgid "# of Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:360
-#: code:addons/project/project.py:380
+#: code:addons/project/project.py:360 code:addons/project/project.py:380
 #: code:addons/project/project.py:703
 #, python-format
 msgid "%s (copy)"
@@ -74,8 +74,7 @@ msgid ""
 "                Click to add a stage in the task pipeline.\n"
 "              </p><p>\n"
 "                Define the steps that will be used in the project from the\n"
-"                creation of the task, up to the closing of the task or "
-"issue.\n"
+"                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue.\n"
 "              </p>\n"
@@ -87,12 +86,9 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p>\n"
-"                    Odoo's project management allows you to manage the "
-"pipeline\n"
-"                    of tasks in order to get things done efficiently. You "
-"can\n"
-"                    track progress, discuss on tasks, attach documents, "
-"etc.\n"
+"                    Odoo's project management allows you to manage the pipeline\n"
+"                    of tasks in order to get things done efficiently. You can\n"
+"                    track progress, discuss on tasks, attach documents, etc.\n"
 "                </p>\n"
 "            "
 msgstr ""
@@ -103,14 +99,13 @@ msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next "
-"stage"
+" * Ready for next stage indicates the task is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "Acceptér mails fra"
 
 #. module: project
 #: field:project.project,active:0
@@ -175,8 +170,7 @@ msgstr "Analyse konto"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Append this project to another one using analytic accounts hierarchy"
-msgstr ""
-"Knytter dette projekt til et andet ved at bruge analytisk konto hierarki"
+msgstr "Knytter dette projekt til et andet ved at bruge analytisk konto hierarki"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -191,7 +185,7 @@ msgstr "Uddelegér til"
 #. module: project
 #: field:report.project.task.user,date_start:0
 msgid "Assignation Date"
-msgstr ""
+msgstr "Tilknytnings dato"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -240,7 +234,7 @@ msgstr "Blokeret"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Af ansvarlige"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_reviewer
@@ -290,9 +284,7 @@ msgstr "Kategori for projekt opgaver, sager, ..."
 msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
-msgstr ""
-"Underopgave er stadig åben.\n"
-"Annulér eller færdiggør underopgave først."
+msgstr "Underopgave er stadig åben.\nAnnulér eller færdiggør underopgave først."
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -305,8 +297,7 @@ msgid "Closed"
 msgstr "Lukket"
 
 #. module: project
-#: field:project.project,color:0
-#: field:project.task,color:0
+#: field:project.project,color:0 field:project.task,color:0
 msgid "Color Index"
 msgstr "Farve index"
 
@@ -322,8 +313,7 @@ msgstr "Firmaer"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
+#: field:project.task,company_id:0 field:project.task.work,company_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
 #: field:report.project.task.user,company_id:0
 msgid "Company"
@@ -334,9 +324,7 @@ msgstr "Firma"
 msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
-msgstr ""
-"Beregnet som forskellen mellem timer planlagt af projektleder og total antal "
-"timer realiseret på opgaven"
+msgstr "Beregnet som forskellen mellem timer planlagt af projektleder og total antal timer realiseret på opgaven"
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -379,23 +367,20 @@ msgstr "Opret dato"
 #. module: project
 #: field:project.category,create_uid:0
 #: field:project.config.settings,create_uid:0
-#: field:project.project,create_uid:0
-#: field:project.task,create_uid:0
+#: field:project.project,create_uid:0 field:project.task,create_uid:0
 #: field:project.task.delegate,create_uid:0
-#: field:project.task.type,create_uid:0
-#: field:project.task.work,create_uid:0
+#: field:project.task.type,create_uid:0 field:project.task.work,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Oprettet af"
 
 #. module: project
 #: field:project.category,create_date:0
 #: field:project.config.settings,create_date:0
 #: field:project.project,create_date:0
 #: field:project.task.delegate,create_date:0
-#: field:project.task.type,create_date:0
-#: field:project.task.work,create_date:0
+#: field:project.task.type,create_date:0 field:project.task.work,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Oprettet den"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
@@ -411,15 +396,13 @@ msgid "Cumulative Flow"
 msgstr "Kumulativt flow"
 
 #. module: project
-#: view:project.project:project.edit_project
-#: field:project.task,partner_id:0
+#: view:project.project:project.edit_project field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Kunde"
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
 msgid "Date"
 msgstr "Dato"
 
@@ -427,12 +410,12 @@ msgstr "Dato"
 #: help:project.project,message_last_post:0
 #: help:project.task,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Dato for sidste besked på denne post."
 
 #. module: project
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Assign"
-msgstr ""
+msgstr "Dage til tildeling"
 
 #. module: project
 #: field:report.project.task.user,closing_days:0
@@ -503,8 +486,7 @@ msgid "Delete"
 msgstr "Slet"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,description:0
+#: view:project.task:project.view_task_form2 field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Beskrivelse"
@@ -549,7 +531,7 @@ msgstr "Effektive timer"
 #. module: project
 #: view:project.project:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "E-mail alias"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -559,8 +541,7 @@ msgid "End Date"
 msgstr "Slut dato"
 
 #. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Slut dato"
 
@@ -584,9 +565,7 @@ msgstr "Fejl! projekt-startdato skal være lavere end projekt-slutdato."
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr ""
-"Forventet tid til din godkendelse af arbejde udført af den du uddelegerer "
-"denne opgave til."
+msgstr "Forventet tid til din godkendelse af arbejde udført af den du uddelegerer denne opgave til."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -598,9 +577,7 @@ msgstr "Forventet tid til den tildelte bruger afslutter denne opgave"
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr ""
-"Forventet tid til at klare opgaven, normalt angivet af projektlederen, når "
-"opgaven er i kladde-status."
+msgstr "Forventet tid til at klare opgaven, normalt angivet af projektlederen, når opgaven er i kladde-status."
 
 #. module: project
 #: model:project.category,name:project.project_category_03
@@ -610,7 +587,7 @@ msgstr "Eksperiment"
 #. module: project
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Udvidede filtre"
 
 #. module: project
 #: view:project.task:project.view_task_form2
@@ -625,16 +602,14 @@ msgstr "Feature anmodning"
 #. module: project
 #: field:project.task.type,fold:0
 msgid "Folded in Kanban View"
-msgstr ""
+msgstr "Foldet i kanban view"
 
 #. module: project
 #: view:project.project:project.edit_project
 msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
-msgstr ""
-"Følg dette projekt for automatisk at se handlinger knyttet til dette "
-"projekts opgaver og sager."
+msgstr "Følg dette projekt for automatisk at se handlinger knyttet til dette projekts opgaver og sager."
 
 #. module: project
 #: field:project.project,message_follower_ids:0
@@ -673,7 +648,7 @@ msgstr "Styrer rækkefølgen ved visning af opgaver."
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppér efter"
 
 #. module: project
 #: view:project.config.settings:project.view_config_settings
@@ -684,7 +659,7 @@ msgstr "Helpdesk & Support"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "Høj"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -693,14 +668,11 @@ msgid "History of Tasks"
 msgstr "Opgave historik"
 
 #. module: project
-#: help:project.project,message_summary:0
-#: help:project.task,message_summary:0
+#: help:project.project,message_summary:0 help:project.task,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
-"Indeholder chat sammendraget (antal beskeder). Dette sammendrag er i html "
-"format for at kunne sættes ind i kanban views."
+msgstr "Indeholder chat sammendraget (antal beskeder). Dette sammendrag er i html format for at kunne sættes ind i kanban views."
 
 #. module: project
 #: help:project.project,privacy_visibility:0
@@ -713,8 +685,7 @@ msgid ""
 "   if portal is activated, portal users see the tasks or issues followed by\n"
 "   them or by someone of their company\n"
 "- Employees Only: employees see all tasks or issues\n"
-"- Followers Only: employees see only the followed tasks or issues; if "
-"portal\n"
+"- Followers Only: employees see only the followed tasks or issues; if portal\n"
 "   is activated, portal users see the followed tasks or issues."
 msgstr ""
 
@@ -729,63 +700,49 @@ msgid "Hours to Validate"
 msgstr "Timer til godkendelse"
 
 #. module: project
-#: field:project.category,id:0
-#: field:project.config.settings,id:0
-#: field:project.project,id:0
-#: field:project.task,id:0
-#: field:project.task.delegate,id:0
-#: field:project.task.history,id:0
-#: field:project.task.history.cumulative,id:0
-#: field:project.task.type,id:0
-#: field:project.task.work,id:0
-#: field:report.project.task.user,id:0
+#: field:project.category,id:0 field:project.config.settings,id:0
+#: field:project.project,id:0 field:project.task,id:0
+#: field:project.task.delegate,id:0 field:project.task.history,id:0
+#: field:project.task.history.cumulative,id:0 field:project.task.type,id:0
+#: field:project.task.work,id:0 field:report.project.task.user,id:0
 msgid "ID"
 msgstr "ID"
 
 #. module: project
-#: help:project.project,message_unread:0
-#: help:project.task,message_unread:0
+#: help:project.project,message_unread:0 help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Hvis afmærket, kræver nye beskeder din attention"
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
 msgid ""
-"If checked, this contract will be available in the project menu and you will "
-"be able to manage tasks or track issues"
-msgstr ""
-"Hvis afmærket, vil kontrakten være tilgængelig i projektmenuen, og du kan "
-"oprette opgaver og følge sager"
+"If checked, this contract will be available in the project menu and you will"
+" be able to manage tasks or track issues"
+msgstr "Hvis afmærket, vil kontrakten være tilgængelig i projektmenuen, og du kan oprette opgaver og følge sager"
 
 #. module: project
 #: help:project.project,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr ""
-"Hvis det aktive felt er blankt, kan du gemme projektet uden at slette det."
+msgstr "Hvis det aktive felt er blankt, kan du gemme projektet uden at slette det."
 
 #. module: project
 #: help:project.task,progress:0
 msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
-msgstr ""
-"Hvis en opgave har fremdrift 99,99% bør du lukke opgaven hvis den er færdig "
-"eller revurdere tiden."
+msgstr "Hvis en opgave har fremdrift 99,99% bør du lukke opgaven hvis den er færdig eller revurdere tiden."
 
 #. module: project
 #: help:project.task.type,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
-msgstr ""
-"Hvis du afmærker dette felt, vil denne fase blive foreslået som standard for "
-"nye projekter. Det vil ikke tildele denne fase til eksisterende projekter."
+msgstr "Hvis du afmærker dette felt, vil denne fase blive foreslået som standard for nye projekter. Det vil ikke tildele denne fase til eksisterende projekter."
 
 #. module: project
-#: selection:project.project,state:0
-#: selection:project.task,kanban_state:0
+#: selection:project.project,state:0 selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "I gang"
@@ -806,9 +763,7 @@ msgid ""
 "Internal email associated with this project. Incoming emails are "
 "automatically synchronizedwith Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
-msgstr ""
-"Intern email knyttet til dette projekt. Indkommende mails bliver automatisk "
-"synkroniseret med opgaver (eller sager, hvis sags modulet er installeret)."
+msgstr "Intern email knyttet til dette projekt. Indkommende mails bliver automatisk synkroniseret med opgaver (eller sager, hvis sags modulet er installeret)."
 
 #. module: project
 #: code:addons/project/project.py:201
@@ -839,8 +794,7 @@ msgid "Issue Version"
 msgstr "Sags-version"
 
 #. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "Kanban status"
@@ -848,13 +802,13 @@ msgstr "Kanban status"
 #. module: project
 #: view:project.task:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "Sidste besked"
 
 #. module: project
 #: field:project.project,message_last_post:0
 #: field:project.task,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Sidste besked Dato"
 
 #. module: project
 #: field:project.task,write_date:0
@@ -865,47 +819,38 @@ msgstr ""
 #: field:project.task,date_last_stage_update:0
 #: field:report.project.task.user,date_last_stage_update:0
 msgid "Last Stage Update"
-msgstr ""
+msgstr "Sidste fase opdatering"
 
 #. module: project
 #: field:project.category,write_uid:0
-#: field:project.config.settings,write_uid:0
-#: field:project.project,write_uid:0
-#: field:project.task,write_uid:0
-#: field:project.task.delegate,write_uid:0
-#: field:project.task.type,write_uid:0
-#: field:project.task.work,write_uid:0
+#: field:project.config.settings,write_uid:0 field:project.project,write_uid:0
+#: field:project.task,write_uid:0 field:project.task.delegate,write_uid:0
+#: field:project.task.type,write_uid:0 field:project.task.work,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Sidst opdateret af"
 
 #. module: project
 #: field:project.category,write_date:0
 #: field:project.config.settings,write_date:0
-#: field:project.project,write_date:0
-#: field:project.task.delegate,write_date:0
-#: field:project.task.type,write_date:0
-#: field:project.task.work,write_date:0
+#: field:project.project,write_date:0 field:project.task.delegate,write_date:0
+#: field:project.task.type,write_date:0 field:project.task.work,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Sidst opdateret den"
 
 #. module: project
 #: help:project.config.settings,module_pad:0
 msgid ""
-"Lets the company customize which Pad installation should be used to link to "
-"new pads (for example: http://etherpad.com/).\n"
+"Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
 
 #. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
+"Link this project to an analytic account if you need financial management on"
+" projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Knyt dette projekt til en analytisk konto hvis du ønsker finansiel styring. "
-"Sætter dig i stand til at forbinde projekter med budgetter, planlægning "
-"omkostnings og omsætningsanalyser, tidsskemaer o.s.v."
+msgstr "Knyt dette projekt til en analytisk konto hvis du ønsker finansiel styring. Sætter dig i stand til at forbinde projekter med budgetter, planlægning omkostnings og omsætningsanalyser, tidsskemaer o.s.v."
 
 #. module: project
 #: field:project.config.settings,group_tasks_work_on_tasks:0
@@ -940,14 +885,12 @@ msgid "Merge"
 msgstr "Flet"
 
 #. module: project
-#: field:project.project,message_ids:0
-#: field:project.task,message_ids:0
+#: field:project.project,message_ids:0 field:project.task,message_ids:0
 msgid "Messages"
 msgstr "Beskeder"
 
 #. module: project
-#: help:project.project,message_ids:0
-#: help:project.task,message_ids:0
+#: help:project.project,message_ids:0 help:project.task,message_ids:0
 msgid "Messages and communication history"
 msgstr "Besked- og kommunikations historik"
 
@@ -994,7 +937,7 @@ msgstr "Ny"
 #: view:project.project:project.view_project_project_filter
 #: view:project.task:project.view_task_search_form
 msgid "New Mail"
-msgstr ""
+msgstr "Ny E-Mail"
 
 #. module: project
 #: view:project.project:project.edit_project
@@ -1012,9 +955,7 @@ msgstr "Ny opgavebeskrivelse"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr ""
-"Nyt stadie af din opgave. Afventende bliver automatisk genåbnet når den "
-"uddelegerede opgave lukkes"
+msgstr "Nyt stadie af din opgave. Afventende bliver automatisk genåbnet når den uddelegerede opgave lukkes"
 
 #. module: project
 #: help:project.task.delegate,name:0
@@ -1087,8 +1028,7 @@ msgid "Parent"
 msgstr "Overordnet"
 
 #. module: project
-#: view:project.task:project.view_task_form2
-#: field:project.task,parent_ids:0
+#: view:project.task:project.view_task_form2 field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Moder-opgaver"
 
@@ -1100,8 +1040,7 @@ msgstr "Kontakt"
 #. module: project
 #: view:project.project:project.edit_project
 #: view:project.project:project.view_project_project_filter
-#: selection:project.project,state:0
-#: selection:project.task.delegate,state:0
+#: selection:project.project,state:0 selection:project.task.delegate,state:0
 msgid "Pending"
 msgstr "Afventer"
 
@@ -1135,8 +1074,7 @@ msgid "Please delete the project linked with this account first."
 msgstr "Slet projektet knyttet til denne konto først."
 
 #. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
+#: field:project.task,priority:0 field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioritet"
 
@@ -1163,8 +1101,7 @@ msgstr "Fremdrift"
 #: view:project.project:project.edit_project
 #: view:project.task:project.view_task_form2
 #: view:project.task:project.view_task_search_form
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
+#: field:project.task,project_id:0 field:project.task.delegate,project_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,project_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1240,9 +1177,7 @@ msgstr "Projekt opgave"
 msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
-msgstr ""
-"Projektmedlemmer er brugere, der kan få adgang til opgaver knyttet til dette "
-"projekt."
+msgstr "Projektmedlemmer er brugere, der kan få adgang til opgaver knyttet til dette projekt."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -1255,8 +1190,7 @@ msgstr "Projekt opgaver"
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:project.view_project
 #: view:project.project:project.view_project_project_gantt
-#: field:project.task.type,project_ids:0
-#: view:res.company:project.task_company
+#: field:project.task.type,project_ids:0 view:res.company:project.task_company
 #, python-format
 msgid "Projects"
 msgstr "Projekter"
@@ -1343,7 +1277,7 @@ msgstr "Ansvarlig"
 #: field:project.task,reviewer_id:0
 #: field:report.project.task.user,reviewer_id:0
 msgid "Reviewer"
-msgstr ""
+msgstr "Efterset af"
 
 #. module: project
 #: view:project.project:project.view_project_project_filter
@@ -1351,8 +1285,7 @@ msgid "Search Project"
 msgstr "Søg projekt"
 
 #. module: project
-#: field:project.project,sequence:0
-#: field:project.task,sequence:0
+#: field:project.project,sequence:0 field:project.task,sequence:0
 #: field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Rækkefølge"
@@ -1375,8 +1308,7 @@ msgstr "Forbrugte timer"
 
 #. module: project
 #: view:project.task:project.view_task_search_form
-#: field:project.task,stage_id:0
-#: field:project.task.history,type_id:0
+#: field:project.task,stage_id:0 field:project.task.history,type_id:0
 #: view:project.task.history.cumulative:project.view_task_history_search
 #: field:project.task.history.cumulative,type_id:0
 #: view:report.project.task.user:project.view_task_project_user_search
@@ -1431,25 +1363,21 @@ msgstr "Status"
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Sum af planlagte timer fra alle opgaver på dette projekt med underprojekter."
+msgstr "Sum af planlagte timer fra alle opgaver på dette projekt med underprojekter."
 
 #. module: project
 #: help:project.project,effective_hours:0
 msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Antal timer brugt på alle opgaver relateret til dette projekt og dets "
-"underprojekter"
+msgstr "Antal timer brugt på alle opgaver relateret til dette projekt og dets underprojekter"
 
 #. module: project
 #: help:project.project,total_hours:0
 msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
-"Totalt antal timer på alle opgaver på dette projekt med underprojekter"
+msgstr "Totalt antal timer på alle opgaver på dette projekt med underprojekter"
 
 #. module: project
 #: field:project.project,message_summary:0
@@ -1546,8 +1474,7 @@ msgid "Task Stages"
 msgstr "Opgave faser"
 
 #. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
+#: field:project.task,name:0 field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Opgave resumé"
 
@@ -1645,26 +1572,19 @@ msgstr "Afprøver"
 msgid ""
 "The kind of document created when an email is received on this project's "
 "email alias"
-msgstr ""
-"Type dokument der oprettes, når der modtages en email på projektets email "
-"alias"
+msgstr "Type dokument der oprettes, når der modtages en email på projektets email alias"
 
 #. module: project
 #: help:project.config.settings,module_project_timesheet:0
 msgid ""
-"This allows you to transfer the entries under tasks defined for Project "
-"Management to the timesheet line entries for particular date and user, with "
-"the effect of creating, editing and deleting either ways.\n"
+"This allows you to transfer the entries under tasks defined for Project Management to the timesheet line entries for particular date and user, with the effect of creating, editing and deleting either ways.\n"
 "-This installs the module project_timesheet."
 msgstr ""
 
 #. module: project
 #: help:project.config.settings,module_sale_service:0
 msgid ""
-"This feature automatically creates project tasks from service products in "
-"sale orders. More precisely, tasks are created for procurement lines with "
-"product of type 'Service', procurement method 'Make to Order', and supply "
-"method 'Manufacture'.\n"
+"This feature automatically creates project tasks from service products in sale orders. More precisely, tasks are created for procurement lines with product of type 'Service', procurement method 'Make to Order', and supply method 'Manufacture'.\n"
 "-This installs the module sale_service."
 msgstr ""
 
@@ -1674,10 +1594,7 @@ msgid ""
 "This field is computed automatically and have the same behavior than the "
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
-msgstr ""
-"Dette felt beregnes automatisk og opfører sig som det booleske \"Aktiv\" "
-"felt: Hvis opgaven knyttes til en skabelon eller et uaktiveret projekt, "
-"bliver det gemt med mindre man specifikt beder om andet."
+msgstr "Dette felt beregnes automatisk og opfører sig som det booleske \"Aktiv\" felt: Hvis opgaven knyttes til en skabelon eller et uaktiveret projekt, bliver det gemt med mindre man specifikt beder om andet."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1685,18 +1602,14 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-"Denne rapport gør det muligt for dig at analysere performance på projekter "
-"og brugere. Du kan måle på antal opgaver, antal timer brugt sammenlignet med "
-"forventede timer, det gennemsnitlige antal dage til at starte og slutte en "
-"opgave etc."
+msgstr "Denne rapport gør det muligt for dig at analysere performance på projekter og brugere. Du kan måle på antal opgaver, antal timer brugt sammenlignet med forventede timer, det gennemsnitlige antal dage til at starte og slutte en opgave etc."
 
 #. module: project
 #: help:project.task.type,fold:0
 msgid ""
 "This stage is folded in the kanban view whenthere are no records in that "
 "stage to display."
-msgstr ""
+msgstr "Denne fase er folded i kanban viewet når der ikke er nogen poster i fasen."
 
 #. module: project
 #: help:project.config.settings,time_unit:0
@@ -1707,8 +1620,7 @@ msgstr "Dette definerer enheden brugt på projekter og opgaver."
 #: help:res.company,project_time_mode_id:0
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
 msgstr "Dette styrer den enhed, der bruges på projektet og dets opgaver."
 
 #. module: project
@@ -1717,16 +1629,14 @@ msgid "Time Estimation on Tasks"
 msgstr "Tidsestimat på opgaver"
 
 #. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
+#: field:project.project,effective_hours:0 field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Tidsforbrug"
 
 #. module: project
 #: help:project.project,resource_calendar_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr ""
-"Skema for arbejdstimer til brug for justering af gantt diagram rapprten"
+msgstr "Skema for arbejdstimer til brug for justering af gantt diagram rapprten"
 
 #. module: project
 #: help:project.task.delegate,prefix:0
@@ -1738,8 +1648,7 @@ msgstr "Titel for din evalueringsopgave"
 msgid ""
 "To invoice or setup invoicing and renewal options, go to the related "
 "contract:"
-msgstr ""
-"Gå til den relaterede kontrakt for at definere fakturering og genfornyelse:"
+msgstr "Gå til den relaterede kontrakt for at definere fakturering og genfornyelse:"
 
 #. module: project
 #: field:project.task,total_hours:0
@@ -1761,9 +1670,7 @@ msgstr "Tid i alt"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr ""
-"Den samlede tilbageværende tid kan genberegnes periodisk af den "
-"opgaveansvarlige."
+msgstr "Den samlede tilbageværende tid kan genberegnes periodisk af den opgaveansvarlige."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1774,7 +1681,7 @@ msgstr "Følg sager og fejl"
 #: view:project.task:project.view_task_search_form
 #: view:report.project.task.user:project.view_task_project_user_search
 msgid "Unassigned"
-msgstr ""
+msgstr "Ikke tildelt"
 
 #. module: project
 #: view:project.task.history.cumulative:project.view_task_history_search
@@ -1782,8 +1689,7 @@ msgid "Unassigned Tasks"
 msgstr "Ikke-tildelte opgaver"
 
 #. module: project
-#: field:project.project,message_unread:0
-#: field:project.task,message_unread:0
+#: field:project.project,message_unread:0 field:project.task,message_unread:0
 msgid "Unread Messages"
 msgstr "Ulæste beskeder"
 
@@ -1834,8 +1740,7 @@ msgid "Validation Task Title"
 msgstr "Evaluerings titel"
 
 #. module: project
-#: code:addons/project/project.py:435
-#: code:addons/project/project.py:921
+#: code:addons/project/project.py:435 code:addons/project/project.py:921
 #: code:addons/project/project.py:1228
 #, python-format
 msgid "Warning!"
@@ -1876,10 +1781,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete a project containing tasks. You can either delete all the "
-"project's tasks and then delete the project or simply deactivate the project."
-msgstr ""
-"Du kan ikke slette et projekt med opgaver på. Du kan enten slette alle "
-"projektopgaverne og dernæst slette projektet, eller deaktivere projektet."
+"project's tasks and then delete the project or simply deactivate the "
+"project."
+msgstr "Du kan ikke slette et projekt med opgaver på. Du kan enten slette alle projektopgaverne og dernæst slette projektet, eller deaktivere projektet."
 
 #. module: project
 #: code:addons/project/project.py:435
@@ -1919,9 +1823,3 @@ msgstr ""
 #: field:project.project,task_ids:0
 msgid "unknown"
 msgstr "ukendt"
-
-#~ msgid "Users"
-#~ msgstr "Brugere"
-
-#~ msgid "# of tasks"
-#~ msgstr "Antal opgaver"

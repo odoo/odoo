@@ -75,6 +75,7 @@ TXT_ENC_PC861   = '\x1b\x74\x23' # PC861 Icelandic
 TXT_ENC_PC862   = '\x1b\x74\x24' # PC862 Hebrew
 TXT_ENC_PC864   = '\x1b\x74\x25' # PC864 Arabic
 TXT_ENC_PC869   = '\x1b\x74\x26' # PC869 Greek
+TXT_ENC_PC936   = '\x1C\x21\x00' # PC936 GBK(Guobiao Kuozhan)
 TXT_ENC_8859_2  = '\x1b\x74\x27' # ISO8859-2 Latin2
 TXT_ENC_8859_9  = '\x1b\x74\x28' # ISO8859-2 Latin9
 TXT_ENC_PC1098  = '\x1b\x74\x29' # PC1098 Farsi

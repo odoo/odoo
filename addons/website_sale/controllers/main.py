@@ -241,6 +241,7 @@ class website_sale(http.Controller):
 
         if category:
             category = category_obj.browse(cr, uid, int(category), context=context)
+            category = category if category.exists() else False
 
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [map(int,v.split("-")) for v in attrib_list if v]
@@ -277,7 +278,7 @@ class website_sale(http.Controller):
         }
         return request.website.render("website_sale.product", values)
 
-    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", methods=['POST'], website=True)
+    @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", website=True)
     def product_comment(self, product_template_id, **post):
         if not request.session.uid:
             return login_redirect()
@@ -289,7 +290,7 @@ class website_sale(http.Controller):
                 type='comment',
                 subtype='mt_comment',
                 context=dict(context, mail_create_nosubscribe=True))
-        return werkzeug.utils.redirect(request.httprequest.referrer + "#comments")
+        return werkzeug.utils.redirect('/shop/product/%s#comments' % product_template_id)
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
@@ -330,7 +331,14 @@ class website_sale(http.Controller):
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True)
     def cart_update_json(self, product_id, line_id, add_qty=None, set_qty=None, display=True):
         order = request.website.sale_get_order(force_create=1)
+        if order.state != 'draft':
+            request.website.sale_reset()
+            return {}
+
         value = order._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty)
+        if not order.cart_quantity:
+            request.website.sale_reset()
+            return {}
         if not display:
             return None
         value['cart_quantity'] = order.cart_quantity
@@ -460,7 +468,7 @@ class website_sale(http.Controller):
         # set data
         if isinstance(data, dict):
             query = dict((prefix + field_name, data[prefix + field_name])
-                for field_name in all_fields if data.get(prefix + field_name))
+                for field_name in all_fields if prefix + field_name in data)
         else:
             query = dict((prefix + field_name, getattr(data, field_name))
                 for field_name in all_fields if getattr(data, field_name))
@@ -478,7 +486,7 @@ class website_sale(http.Controller):
         if not remove_prefix:
             return query
 
-        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if data.get(prefix + field_name))
+        return dict((field_name, data[prefix + field_name]) for field_name in all_fields if prefix + field_name in data)
 
     def checkout_form_validate(self, data):
         cr, uid, context, registry = request.cr, request.uid, request.context, request.registry
@@ -519,7 +527,7 @@ class website_sale(http.Controller):
 
         partner_lang = request.lang if request.lang in [lang.code for lang in request.website.language_ids] else None
 
-        billing_info = {}
+        billing_info = {'customer': True}
         if partner_lang:
             billing_info['lang'] = partner_lang
         billing_info.update(self.checkout_parse('billing', checkout, True))
@@ -695,6 +703,7 @@ class website_sale(http.Controller):
             if tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
                 tx.write({
                     'acquirer_id': acquirer_id,
+                    'amount': order.amount_total,
                 })
             tx_id = tx.id
         else:
@@ -758,8 +767,8 @@ class website_sale(http.Controller):
                 message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
                 if tx.acquirer_id.post_msg:
                     message += tx.acquirer_id.post_msg
-            else:
-                message = '<p>%s</p>' % _('Your transaction is waiting confirmation.')
+            elif state == 'error':
+                message = '<p>%s</p>' % _('An error occurred during the transaction.')
             validation = tx.acquirer_id.validation
 
         return {
@@ -797,35 +806,15 @@ class website_sale(http.Controller):
             if (not order.amount_total and not tx):
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
-                order.action_button_confirm()
-            # send by email
-            email_act = sale_order_obj.action_quotation_send(cr, SUPERUSER_ID, [order.id], context=request.context)
+                order.with_context(dict(context, send_email=True)).action_button_confirm()
         elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
 
-        # send the email
-        if email_act and email_act.get('context'):
-            composer_obj = request.registry['mail.compose.message']
-            composer_values = {}
-            email_ctx = email_act['context']
-            template_values = [
-                email_ctx.get('default_template_id'),
-                email_ctx.get('default_composition_mode'),
-                email_ctx.get('default_model'),
-                email_ctx.get('default_res_id'),
-            ]
-            composer_values.update(composer_obj.onchange_template_id(cr, SUPERUSER_ID, None, *template_values, context=context).get('value', {}))
-            if not composer_values.get('email_from') and uid == request.website.user_id.id:
-                composer_values['email_from'] = request.website.user_id.company_id.email
-            for key in ['attachment_ids', 'partner_ids']:
-                if composer_values.get(key):
-                    composer_values[key] = [(6, 0, composer_values[key])]
-            composer_id = composer_obj.create(cr, SUPERUSER_ID, composer_values, context=email_ctx)
-            composer_obj.send_mail(cr, SUPERUSER_ID, [composer_id], context=email_ctx)
-
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset(context=context)
+        if tx and tx.state == 'draft':
+            return request.redirect('/shop')
 
         return request.redirect('/shop/confirmation')
 
@@ -909,17 +898,18 @@ class website_sale(http.Controller):
         for line in order_lines:
             ret.append({
                 'id': line.order_id and line.order_id.id,
-                'name': line.product_id.categ_id and line.product_id.categ_id.name or '-',
                 'sku': line.product_id.id,
-                'quantity': line.product_uom_qty,
+                'name': line.product_id.name or '-',
+                'category': line.product_id.categ_id and line.product_id.categ_id.name or '-',
                 'price': line.price_unit,
+                'quantity': line.product_uom_qty,
             })
         return ret
 
     @http.route(['/shop/tracking_last_order'], type='json', auth="public")
     def tracking_cart(self, **post):
         """ return data about order in JSON needed for google analytics"""
-        cr, uid, context = request.cr, request.uid, request.context
+        cr, context = request.cr, request.context
         ret = {}
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
