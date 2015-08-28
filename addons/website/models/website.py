@@ -320,13 +320,10 @@ class website(osv.osv):
         return '%s.%s' % (module, slugify(name, max_length=50))
 
     def page_exists(self, cr, uid, ids, name, module='website', context=None):
-        try:
-            name = (name or "").replace("/page/website.", "").replace("/page/", "")
-            if not name:
-                return False
-            return self.pool["ir.model.data"].get_object_reference(cr, uid, module, name)
-        except:
+        name = (name or "").replace("/page/website.", "").replace("/page/", "")
+        if not name:
             return False
+        return bool(self.pool["ir.ui.view"].search(cr, uid, [('key', '=', "%s.%s" % (module, name))], context=context))
 
     @openerp.tools.ormcache('id')
     def _get_languages(self, cr, uid, id, context=None):
@@ -510,44 +507,104 @@ class website(osv.osv):
             converters = rule._converters or {}
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
-            values = [{}]
+            query_string = query_string.strip()
+
             convitems = converters.items()
             # converters with a domain are processed after the other ones
             gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain <> '[]')
             convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
-            for (i,(name, converter)) in enumerate(convitems):
-                newval = []
-                for val in values:
-                    query = i==(len(convitems)-1) and query_string
-                    for v in converter.generate(request.cr, uid, query=query, args=val, context=context):
-                        newval.append( val.copy() )
-                        v[name] = v['loc']
-                        del v['loc']
-                        newval[-1].update(v)
-                values = newval
 
-            for value in values:
-                domain_part, url = rule.build(value, append_unknown=False)
-                page = {'loc': url}
-                for key,val in value.items():
-                    if key.startswith('__'):
-                        page[key[2:]] = val
-                if url in ('/sitemap.xml',):
-                    continue
-                if url in url_list:
-                    continue
-                url_list.append(url)
+            # pre-process converters
+            is_page = '/page/' in str(rule)
+            if is_page:
+                converters = [(0, 'page', 'ir.ui.view', "[('type','=','qweb'), ('mode','=','primary'), ('key', 'like', 'website.'), ('arch_db', 'like', '%.layout')]")]
+                converters_model = {'ir.ui.view': 'page'}
+            else:
+                converters = [(i, name, converter.model, converter.domain) for (i, (name, converter)) in enumerate(convitems) if getattr(converter, 'model', None)]
+                converters_model = {model: name for i, name, model, domain in converters}
 
-                yield page
+            # create filter and query search parts
+            post_filter = [part for part in re.compile(r"\s*-\s*|\s+").split(query_string) if part]
+            query_string_parts = []
+            for part in filter(lambda s: s, re.compile(r"\s*/\s*|\s+").split(query_string)):
+                query_string_parts.append(part)
+                if "-" in part:
+                    query_string_parts.append(" ".join(part.split('-')))
+            separators = ['%/', '% ', '%-', '']
+
+            # check if the search words is already in the static rule parts
+            match_without_model = [query_string_part for query_string_part in query_string_parts if query_string_part in re.sub(re.compile(r"/?<[^>]+>/?"), r'/', str(rule))]
+
+            for i, name, model, domain in converters:
+                obj = request.env[model].sudo()
+
+                # create domain for rule record
+                search_domain = []
+                if not match_without_model:
+                    for query_string_part in query_string_parts:
+                        dom = ['|', '|', '|'] + [(obj._rec_name, 'ilike', "%s%s%%" % (pre, query_string_part)) for pre in separators]
+                        search_domain = (search_domain and ['|'] or []) + search_domain + dom
+                search_domain = (i == 0 and safe_eval(domain, {}) or []) + search_domain
+
+                # add record rule values
+                values = []
+                fields = re.findall('[(][\'"]([^\'"]+)', domain)
+                read_values = obj.search_read(search_domain, fields + [obj._rec_name], context=context)
+                for read_value in read_values:
+                    new_value = {name: is_page and read_value['key'].replace('website.', '') or (read_value['id'], read_value[obj._rec_name])}
+
+                    for field in fields:
+                        if obj._columns[field]._obj:
+                            route_arg_name = converters_model[obj._columns[field]._obj]
+                            if read_value[field]:
+                                new_value[route_arg_name] = read_value[field]
+
+                    if i < len(converters)-1:
+                        for next_i, next_name, next_model, next_domain in converters[i+1:]:
+                            next_obj = request.env[next_model].sudo()
+                            next_domain = safe_eval(next_domain, new_value)
+                            for next_read_value in next_obj.search_read(next_domain, [next_obj._rec_name], context=context):
+                                new_value[next_name] = (next_read_value['id'], next_read_value[next_obj._rec_name])
+                                values.append(dict(new_value))
+                    else:
+                        values.append(new_value)
+
+                # build url
+                for value in values:
+                    try:
+                        domain_part, url = rule.build(value, append_unknown=False)
+                    except KeyError, e:
+                        logger.warning("Can't create url, missing value %s for controller '%s'", e, rule)
+                        continue
+
+                    # filter to have all search word
+                    index = 0
+                    for pf in post_filter:
+                        index = url.find(pf, index)
+                        if index == -1:
+                            break
+                        index += len(pf)
+                    if index == -1:
+                        continue
+
+                    page = {'loc': url}
+                    for key, val in value.items():
+                        if key.startswith('__'):
+                            page[key[2:]] = val
+                    if url in ('/sitemap.xml',):
+                        continue
+                    if url in url_list:
+                        continue
+                    url_list.append(url)
+
+                    yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
         res = []
-        for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+        for page in self.enumerate_pages(cr, uid, ids, query_string=needle, context=context):
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def _image_placeholder(self, response):

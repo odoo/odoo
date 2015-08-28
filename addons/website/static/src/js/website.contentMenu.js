@@ -308,27 +308,27 @@ var EditMenuDialog = widget.Dialog.extend({
 
 var MenuEntryDialog = widget.LinkDialog.extend({
     template: 'website.contentMenu.dialog.add',
+    events: _.extend({}, widget.LinkDialog.prototype.events, {
+        'change #link-page': 'on_change_link',
+        'change #link-external': 'on_change_link_external',
+    }),
     init: function (editor, data) {
         data.text = data.name || '';
         data.newWindow = data.new_window;
         this.data = data;
         return this._super.apply(this, arguments);
     },
-    start: function () {
-        var self = this;
-        var result = $.when(this._super.apply(this, arguments)).then(function () {
-            if (self.data) {
-                self.bind_data();
-            }
-            var $link_text = self.$('#link-text').focus();
-            self.$('#link-page').change(function (e) {
-                if ($link_text.val()) { return; }
-                var data = $(this).select2('data');
-                $link_text.val(data.create ? data.id : data.text);
-                $link_text.focus();
-            });
-        });
-        return result;
+    on_change_link: function (event) {
+        var $input = $(event.target);
+        var data = $input.select2('data');
+        $input.val(data.create ? data.id : data.text);
+        $input.focus();
+    },
+    on_change_link_external: function (event) {
+        var $input = $(event.target);
+        if (!/(:\/\/)|(^\/)|@/.test($input.val())) {
+            $input.val('http://' + $input.val());
+        }
     },
     save: function () {
         var $e = this.$('#link-text');
@@ -338,9 +338,6 @@ var MenuEntryDialog = widget.LinkDialog.extend({
             return;
         }
         return this._super.apply(this, arguments);
-    },
-    destroy: function () {
-        this._super.apply(this, arguments);
     },
 });
 

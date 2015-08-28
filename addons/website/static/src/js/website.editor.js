@@ -122,6 +122,7 @@ widget.LinkDialog.include({
             minimumInputLength: 1,
             placeholder: _t("New or existing page"),
             query: function (q) {
+                q.term = _.str.strip(q.term);
                 if (q.term == last) return;
                 last = q.term;
                 $.when(
@@ -146,6 +147,22 @@ widget.LinkDialog.include({
                     q.callback({more: false, results: []});
                 });
             },
+            formatResult: function(result, container, query, escapeMarkup) {
+                var index = 0;
+                var text = escapeMarkup(result.text);
+                _.each(_.compact(escapeMarkup(query.term).split(/\s+/)), function (term) {
+                    var ind = text.indexOf(term, index);
+                    if (ind === -1 && term.indexOf('-') !== -1) {
+                        term = term.replace('-', ' ');
+                        ind = text.indexOf(term, index);
+                    }
+                    if (ind !== -1) {
+                        text = text.slice(0, ind) + '<<' + term + '>>' + text.slice(ind + term.length);
+                        index = ind + term.length + 4;
+                    }
+                });
+                return text.replace(/<</g, '<span class="select2-match">').replace(/>>/g, '</span>');
+            }
         });
 
         if (href) {
@@ -183,6 +200,9 @@ widget.LinkDialog.include({
                 .filter(function () { return !!$(this).data('select2'); })
                 .select2('data', null);
         this._super(e);
+        if (!$(e.target).is('#link-external')){
+            this.$('input.window-new').removeProp('checked').closest("div").hide();
+        }
     },
     call: function (method, args, kwargs) {
         var self = this;
