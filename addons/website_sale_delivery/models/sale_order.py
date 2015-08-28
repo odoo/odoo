@@ -13,6 +13,8 @@ class delivery_carrier(orm.Model):
 
     _columns = {
         'website_description': fields.text('Description for Online Quotations'),
+        'country_ids': fields.many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries'),
+        'state_ids': fields.many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States'),
     }
     _defaults = {
         'website_published': False

@@ -19,6 +19,10 @@
                 <group name="website">
                     <field name="website_description" attrs="{'invisible':[('website_published', '=', False)]}"/>
                 </group>
+                <group string="Destinations" attrs="{'invisible':[('use_detailed_pricelist','=',True)]}">
+                    <field name="country_ids" widget="many2many_tags" style="width: 35%"/>
+                    <field name="state_ids" widget="many2many_tags" style="width: 35%"/>
+                </group>
             </xpath>
         </field>
     </record>
