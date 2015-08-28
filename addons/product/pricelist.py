@@ -199,7 +199,7 @@ class product_pricelist(osv.osv):
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_get returns the price in the context UoM, i.e. qty_uom_id
-                    price = product._price_get(rule.base, context=context)
+                    price = product.product_tmpl_id._price_get(rule.base, context=context)
 
                 if price is not False:
                     if rule.compute_price == 'fixed':
