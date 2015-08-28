@@ -28,8 +28,6 @@ class sale_order_line(osv.osv):
             rule_id = False
         if rule_id:
             item_base = item_obj.browse(cr, uid, rule_id, context=context).base
-            if item_base == 'list_price':
-                field_name = 'list_price'
             if item_base == 'standard_price':
                 field_name = 'standard_price'
             currency_id = item_base.pricelist_id.currency_id.id
