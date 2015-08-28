@@ -301,10 +301,10 @@
 .openerp .oe_button_box .oe_stat_button {
   display: inline-table;
 }
-.openerp .oe_button_box .oe_stat_button .o_stat_info:not(.is_true) .o_true {
+.openerp .oe_button_box .oe_stat_button:not(:hover) .o_stat_info > .o_hover {
   display: none !important;
 }
-.openerp .oe_button_box .oe_stat_button .o_stat_info.is_true .o_false {
+.openerp .oe_button_box .oe_stat_button:hover .o_stat_info > :not(.o_hover) {
   display: none !important;
 }
 .openerp button.oe_toggle_button {

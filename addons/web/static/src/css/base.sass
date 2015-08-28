@@ -359,10 +359,11 @@ $sheet-padding: 16px
         text-align: right
         .oe_stat_button
             display: inline-table
-            .o_stat_info:not(.is_true) .o_true
-                display: none !important
-            .o_stat_info.is_true .o_false
-                display: none !important
+        // boolean_button rules: show the elements depending on hover status
+        .oe_stat_button:not(:hover) .o_stat_info > .o_hover
+            display: none !important
+        .oe_stat_button:hover .o_stat_info > :not(.o_hover)
+            display: none !important
     button.oe_toggle_button
         box-shadow: none
         white-space: nowrap

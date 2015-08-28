@@ -634,13 +634,32 @@ var FieldBoolean = common.AbstractField.extend({
     It is a read-only field that will display a simple string "<label of value>".
 */
 var FieldBooleanButton = common.AbstractField.extend({
-    template: 'BooleanButton',
+    className: 'o_stat_info',
+    init: function() {
+        this._super.apply(this, arguments);
+        switch (this.options["terminology"]) {
+            case "active":
+                this.string_true = _t("Active");
+                this.hover_true = _t("Deactivate");
+                this.string_false = _t("Inactive");
+                this.hover_false = _t("Activate");
+                break;
+            case "archive":
+                this.string_true = _t("Not Archived");
+                this.hover_true = _t("Archive");
+                this.string_false = _t("Archived");
+                this.hover_false = _t("Unarchive");
+                break;
+            default:
+                this.string_true = _t("On");
+                this.hover_true = _t("Switch Off");
+                this.string_false = _t("Off");
+                this.hover_false = _t("Switch On");
+        }
+    },
     render_value: function() {
         this._super();
-        this.$el.toggleClass("is_true", this.get_value());
-        if (this.node.attrs.class) {
-            this.$el.addClass(this.node.attrs.class);
-        }
+        this.$el.html(QWeb.render("BooleanButton", {widget: this}));
     },
     is_false: function() {
         return false;

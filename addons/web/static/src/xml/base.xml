@@ -1436,6 +1436,15 @@
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
 
-<div t-name="BooleanButton" class="o_stat_info is_true"/>
+<t t-name="BooleanButton">
+    <t t-if="widget.get_value()">
+        <span class="o_stat_text text-success"><t t-esc="widget.string_true"/></span>
+        <span class="o_stat_text o_hover text-danger"><t t-esc="widget.hover_true"/></span>
+    </t>
+    <t t-if="!widget.get_value()">
+        <span class="o_stat_text text-danger"><t t-esc="widget.string_false"/></span>
+        <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
+    </t>
+</t>
 
 </templates>
