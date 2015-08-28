@@ -12,9 +12,9 @@ Display best tweets
     'depends': ['website'],
     'data': [
         'security/ir.model.access.csv',
-        'data/twitter_data.xml',
-        'views/twitter_view.xml',
-        'views/twitter_snippet.xml'
+        'data/website_twitter_data.xml',
+        'views/website_twitter_settings_views.xml',
+        'views/website_twitter_snippet_templates.xml'
     ],
     'demo': [],
     'qweb': [],
