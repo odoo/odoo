@@ -112,7 +112,6 @@ var LivechatButton = Widget.extend({
         });
         this.rule = rule || false;
         this.mail_channel = false;
-        user_session.setup(server_url, {use_cors: false});
     },
     willStart: function(){
         return $.when(this.load_qweb_template(), this._super());
