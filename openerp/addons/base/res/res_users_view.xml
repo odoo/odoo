@@ -173,8 +173,10 @@
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
-                                <field name="active" widget="boolean_button"
-                                    options='{"true": "Active User", "false": "Inactive User"}'/>
+                                <field name="active" widget="boolean_button">
+                                    <span class="o_stat_text o_true text-success">Active User</span>
+                                    <span class="o_stat_text o_false text-danger">Inactive User</span>
+                                </field>
                             </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>

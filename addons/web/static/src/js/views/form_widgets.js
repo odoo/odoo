@@ -635,11 +635,6 @@ var FieldBoolean = common.AbstractField.extend({
 */
 var FieldBooleanButton = common.AbstractField.extend({
     template: 'BooleanButton',
-    init: function() {
-        this._super.apply(this, arguments);
-        this.true_string = this.options['true'] || _t('True');
-        this.false_string = this.options['false'] || _t('False');
-    },
     render_value: function() {
         this._super();
         this.$el.toggleClass("is_true", this.get_value());

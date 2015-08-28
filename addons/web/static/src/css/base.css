@@ -301,11 +301,11 @@
 .openerp .oe_button_box .oe_stat_button {
   display: inline-table;
 }
-.openerp .oe_button_box .oe_stat_button .o_stat_info:not(.is_true) > .o_stat_text.oe_true {
-  display: none;
+.openerp .oe_button_box .oe_stat_button .o_stat_info:not(.is_true) .o_true {
+  display: none !important;
 }
-.openerp .oe_button_box .oe_stat_button .o_stat_info.is_true > .o_stat_text.oe_false {
-  display: none;
+.openerp .oe_button_box .oe_stat_button .o_stat_info.is_true .o_false {
+  display: none !important;
 }
 .openerp button.oe_toggle_button {
   box-shadow: none;
