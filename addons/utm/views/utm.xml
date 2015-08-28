@@ -44,7 +44,7 @@
             <field name="arch" type="xml">
                 <tree string="Medium">
                     <field name="name"/>
-                    <field name="active"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -55,9 +55,19 @@
                 <form string="Channel">
                     <group>
                         <field name="name"/>
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                     </group>
                 </form>
+            </field>
+        </record>
+        <record id="utm_medium_view_search" model="ir.ui.view">
+            <field name="name">utm.medium.search</field>
+            <field name="model">utm.medium</field>
+            <field name="arch" type="xml">
+                <search string="Channel">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
         <record id="utm_medium_action" model="ir.actions.act_window">

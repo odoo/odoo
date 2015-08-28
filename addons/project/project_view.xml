@@ -29,6 +29,7 @@
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <field name="stage_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
@@ -56,7 +57,6 @@
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
-                'active_test': False,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -120,7 +120,7 @@
                                 </group>
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+                                    <field name="active" invisible="1"/>
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                 </group>
                             </group>
@@ -157,6 +157,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="name" string="Project Name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter string="Open" name="Current" domain="[('state', '=','open')]"/>
                     <filter string="Pending" name="Pending" domain="[('state', '=','pending')]"/>
                     <filter string="Template" name="Template" domain="[('state', '=','template')]"/>
@@ -187,6 +188,7 @@
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -228,6 +230,7 @@
                             options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
+                    <field name="active" invisible="1"/>
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
@@ -308,6 +311,7 @@
                     <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="displayed_image_id"/>
+                    <field name="active" invisible="1"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
@@ -318,6 +322,7 @@
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                     <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -375,6 +380,7 @@
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
                     <field name="date_start" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_end" groups="project.group_time_work_estimation_tasks"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

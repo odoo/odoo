@@ -39,8 +39,8 @@
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
                     <field name="active"/>
-                    <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
-                    <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
+                    <filter name="active" string="Unarchived" domain="[('active','=',True)]" help="Show unarchived currencies"/>
+                    <filter name="inactive" string="Archived" domain="[('active','=',False)]" help="Show archived currencies"/>
                 </search>
             </field>
         </record>
@@ -55,7 +55,7 @@
                     <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
-                    <field name="active"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -72,7 +72,7 @@
                         <group col="4">
                             <field name="name"/>
                             <field name="rate"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
 
                         <group groups="base.group_no_one">

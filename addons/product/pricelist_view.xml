@@ -21,7 +21,7 @@
                         <group>
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -41,7 +41,19 @@
                     <field name="pricelist_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
+                    <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="product_pricelist_version_search_view" model="ir.ui.view">
+            <field name="name">product.pricelist.version.search</field>
+            <field name="model">product.pricelist.version</field>
+            <field name="arch" type="xml">
+                <search string="Pricelist Version">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 
@@ -132,6 +144,7 @@
                     <field name="type"/>
                     <field name="active" />
                     <field name="currency_id" groups="base.group_multi_currency"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -145,7 +158,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="active" />
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -159,7 +172,7 @@
                         <field name="name"/>
                     </h1>
                     <group col="4">
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                         <field name="type"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -240,11 +253,33 @@
                 <form string="Products Price Type">
                     <group col="4">
                         <field name="name"/>
-                        <field name="active"/>
                         <field name="field"/>
                         <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="active" invisible="1"/>
                     </group>
                 </form>
+            </field>
+        </record>
+
+        <record id="product_price_type_view_tree" model="ir.ui.view">
+            <field name="name">product.price.type.tree</field>
+            <field name="model">product.price.type</field>
+            <field name="arch" type="xml">
+                <tree string="Products Price Type">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_price_type_view_search" model="ir.ui.view">
+            <field name="name">product.price.type.search</field>
+            <field name="model">product.price.type</field>
+            <field name="arch" type="xml">
+                <search string="Products Price Type">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 

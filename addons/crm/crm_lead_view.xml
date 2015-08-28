@@ -106,18 +106,12 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="action_set_unactive" string="Archive"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
                     <button name="action_set_won" string="Mark Won"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
                     <button name="action_set_lost" string="Mark Lost"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': [('active', '=', False)]}"/>
-                    <button name="action_set_active" string="Unarchive"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
@@ -192,7 +186,7 @@
                             </group>
                             <group name="misc">
                                 <field name="probability" groups="base.group_no_one"/>
-                                <field name="active"/>
+                                <field name="active" invisible="1"/>
                                 <field name="referred"/>
                             </group>
                             <group>
@@ -257,6 +251,7 @@
                     <field name="referred" invisible="1"/>
                     <field name="medium_id" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -303,10 +298,9 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.active_field_exists"><li><a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a></li></t>
                                         <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Unarchive</a></li>
-                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -358,8 +352,7 @@
                     <field name="create_date"/>
                     <field name="country_id"/>
                     <separator/>
-                    <filter string="Archived"
-                            domain="[('active', '=', False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator />
                     <filter string="Leads"
                             name="type_lead"
@@ -408,9 +401,6 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="action_set_unactive" string="Archive"
-                                type="object" class="oe_highlight"
-                                attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
                         <button name="action_set_won" string="Mark Won"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
@@ -418,9 +408,6 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False)]}"/>
-                        <button name="action_set_active" string="Unarchive"
-                                type="object" class="oe_highlight"
-                                attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
@@ -550,7 +537,7 @@
                                     <field name="source_id" />
                                 </group>
                                 <group string="Misc" name="Misc">
-                                    <field name="active"/>
+                                    <field name="active" invisible="1"/>
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
@@ -594,6 +581,7 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="write_date" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -615,8 +603,7 @@
                     <field name="probability"/>
                     <field name="lost_reason"/>
                     <separator/>
-                    <filter string="Archived"
-                            domain="[('active', '=', False)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]"/>

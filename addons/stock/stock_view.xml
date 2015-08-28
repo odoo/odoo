@@ -333,7 +333,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="scrap_location"/>
                             <field name="return_location"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                         <group string="Localization" name="localization">
                             <field name="posx"/>
@@ -360,6 +360,7 @@
                     <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                     <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
                     <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="location_id" string="Parent Location"/>
                 </search>
             </field>
@@ -375,6 +376,7 @@
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -420,6 +422,7 @@
             <field name="model">stock.location.path</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Location Paths">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
                 </search>
             </field>
@@ -433,6 +436,7 @@
                     <field name="location_from_id" />
                     <field name="location_dest_id" />
                     <field name="name" />
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -448,7 +452,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                         <group>
                             <field name="sequence"/>
@@ -543,6 +547,7 @@
                                     class="oe_stat_button" 
                                     type="object"/> 
                         </div>
+                        <field name="active" invisible="1" />
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                         <group>
@@ -593,9 +598,22 @@
                     <field name="name"/>
                     <field name="lot_stock_id" groups="stock.group_locations"/>
                     <field name="partner_id"/>
+                    <field name="active" invisible="1" />
                 </tree>
             </field>
         </record>
+
+        <record id="view_warehouse_search" model="ir.ui.view">
+            <field name="name">stock.warehouse.search</field>
+            <field name="model">stock.warehouse</field>
+            <field name="arch" type="xml">
+                <search string="Warehouse">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_warehouse_form" model="ir.actions.act_window">
             <field name="name">Warehouses</field>
             <field name="res_model">stock.warehouse</field>
@@ -1565,6 +1583,7 @@
                 <tree string="Incoterms">
                     <field name="code"/>
                     <field colspan="4" name="name"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1577,10 +1596,20 @@
                         <group>
                             <field name="name"/>
                             <field name="code"/>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+        <record id="stock_incoterms_search" model="ir.ui.view">
+            <field name="name">stock.incoterms.search</field>
+            <field name="model">stock.incoterms</field>
+            <field name="arch" type="xml">
+                <search string="Incoterms">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
         <record id="action_incoterms_tree" model="ir.actions.act_window">
@@ -1601,6 +1630,7 @@
                     <field name="name"/>
                     <field name="sequence_id"/>
                     <field name="warehouse_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -1613,6 +1643,7 @@
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="sequence_id"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1624,6 +1655,7 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="active" invisible="1"/>
                                 <field name="name"/>
                                 <field name="sequence_id"/>
                                 <field name="warehouse_id"/>
@@ -1764,6 +1796,7 @@
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1778,6 +1811,7 @@
                     <field name="location_id" groups="stock.group_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="product_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Warehouse" domain="[]"  context="{'group_by':'warehouse_id'}"/>
                         <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
@@ -1814,7 +1848,7 @@
                                 <field name="product_max_qty" />
                                 <field name="qty_multiple" string="Quantity Multiple"/>
                             </group>
-                            <group string="Misc">
+                            <group string="Misc" invisible="1">
                                 <field name="active" />
                                 <label for="lead_days"/>
                                 <div class="o_row">
@@ -2196,6 +2230,7 @@
                 <tree string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -2214,7 +2249,7 @@
                     <group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="active" groups="stock.group_adv_location" />
+                            <field name="active" invisible="1" />
                         </group>
                         <group>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
@@ -2249,7 +2284,19 @@
                 </form>
             </field>
         </record>
-        
+
+
+        <record id="stock_location_route_search" model="ir.ui.view">
+            <field name="name">stock.location.route.search</field>
+            <field name="model">stock.location.route</field>
+            <field name="arch" type="xml">
+                <search string="Route">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="action_routes_form" model="ir.actions.act_window">
             <field name="name">Routes</field>
             <field name="res_model">stock.location.route</field>

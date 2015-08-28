@@ -15,6 +15,7 @@
                 <field name="alias_name"/>
                 <field name="alias_domain"/>
                 <field name="doc_count"/>
+                <field name="active" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_flexbox #{kanban_color(record.color.raw_value)} oe_kanban_global_click">
@@ -39,6 +40,11 @@
                                         <div>
                                             <a name="%(action_view_task_history_cumulative_filter)d" type="action">Cumulative Flow</a>
                                         </div>
+                                    </div>
+                                    <div groups="base.group_user">
+                                        <t t-if="widget.active_field_exists">
+                                            <a type="archive_unarchive"><t t-esc="widget.archive_unarchive_label"/></a>
+                                        </t>
                                     </div>
                                     <div t-if="widget.editable" class="o_project_kanban_colorpicker">
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>

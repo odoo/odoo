@@ -129,7 +129,7 @@ class project_issue(osv.Model):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', required=True),
-        'active': fields.boolean('Active', required=False),
+        'active': fields.boolean('Active', required=False, track_visibility="onchange"),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'days_since_creation': fields.function(_compute_day, string='Days since creation date', \

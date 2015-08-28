@@ -24,6 +24,8 @@ var KanbanColumn = Widget.extend({
         },
         'click .o_column_edit': 'edit_column',
         'click .o_column_delete': 'delete_column',
+        'click .o_column_achive': 'archive_unarchive_records',
+        'click .o_column_unarchive': 'archive_unarchive_records',
         'click .o_kanban_quick_add': 'add_quick_create',
         'click .o_kanban_load_more': 'load_more',
     },
@@ -49,6 +51,7 @@ var KanbanColumn = Widget.extend({
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.active_field_exists = options.active_field_exists;
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
@@ -172,6 +175,31 @@ var KanbanColumn = Widget.extend({
             this.$('.o_kanban_load_more').remove();
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget:this}))
+        }
+    },
+
+    archive_unarchive_records: function(event) {
+        event.preventDefault();
+        var action = $(event.target).data('action');
+        if (action == "archive") {
+            var buttons = [
+                {
+                    text: _t("Ok"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: this.trigger_up.bind(this, 'kanban_column_archive_unarchive', {'action': action})
+                },
+                {text: _t("Cancel"), close: true}
+            ];
+            new Dialog(this, {
+                size: 'medium',
+                buttons: buttons,
+                $content: $('<div>', {
+                    text: _t("Are you sure that you want to Archive records of this column ?")
+                }),
+            }).open();
+        } else {
+            this.trigger_up('kanban_column_archive_unarchive', {'action': action})
         }
     },
 

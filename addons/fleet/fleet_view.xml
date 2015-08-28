@@ -232,6 +232,7 @@
                                 <field name="odometer_count" widget="statinfo" string="Odometer"/>
                             </button>
                         </div>
+                        <field name="active" invisible="1" />
                         <field name="image_medium" widget='image' class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
@@ -307,6 +308,7 @@
                     <field name="contract_renewal_due_soon" invisible="1"/>
                     <field name="contract_renewal_overdue" invisible="1" />
                     <field name="contract_renewal_total" invisible="1"/>
+                    <field name="active" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -321,6 +323,7 @@
                     <field name="tag_ids"/>
                     <field name="location"/>
                     <field name="state_id" />
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
                     <group expand="1" string="Group By">
                         <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
@@ -424,6 +427,7 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
+                        <field name='active' invisible="1"/>
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
@@ -514,7 +518,19 @@
                     <field name="cost_generated"/>
                     <field name="cost_frequency"/>
                     <field name="state" />
+                    <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="fleet_vehicle_log_contract_search" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.contract.search</field>
+            <field name="model">fleet.vehicle.log.contract</field>
+            <field name="arch" type="xml">
+                <search string="All vehicles">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+               </search>
             </field>
         </record>
 
@@ -558,6 +574,7 @@
                 <form string="Odometer Logs">
                     <sheet>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <div>
                                     <field name="value" class="oe_inline"/>
@@ -579,6 +596,7 @@
                     <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                     <field name="value" />
                     <field name="unit" />
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -592,6 +610,7 @@
                     <field name="value"/>
                     <field name="unit"/>
                     <field name="date"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                     </group>
@@ -636,6 +655,7 @@
             <field name="arch" type="xml">
                 <form string="Fuel Logs">
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <group>
                             <group string="Vehicle Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
@@ -682,6 +702,7 @@
                     <field name="liter" />
                     <field name="price_per_liter" invisible="1"/>
                     <field name="amount" sum="Price"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -696,6 +717,7 @@
                     <field name="purchaser_id" />
                     <field name="liter" />
                     <field name="amount" sum="Price"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter name="groupby_vehicle" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                     </group>
@@ -740,6 +762,7 @@
             <field name="arch" type="xml">
                 <form string="Services Logs">
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <group col="2">
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
@@ -791,6 +814,7 @@
                     <field name="inv_ref" />
                     <field name="notes" />
                     <field name="amount" sum="Total"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -814,6 +838,7 @@
                 <search string="Services Logs" >
                     <field name="vehicle_id"/>
                     <field name="cost_subtype_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -874,6 +899,7 @@
                     <field name="vehicle_id"/>
                     <field name="cost_subtype_id"/>
                     <field name="date"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -936,6 +962,7 @@
                     <field name="cost_subtype_id"/>
                     <field name="date"/>
                     <field name="parent_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By">
@@ -957,6 +984,7 @@
             <field name="arch" type="xml">
                 <form string="Vehicle costs">
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <group col="2" string="Cost Details">
                             <group>
                                 <field name="vehicle_id" />

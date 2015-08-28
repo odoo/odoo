@@ -19,6 +19,17 @@
             </field>
         </record>
 
+        <record id="badge_search_view" model="ir.ui.view">
+            <field name="name">Badge Search</field>
+            <field name="model">gamification.badge</field>
+            <field name="arch" type="xml">
+                <search string="Badge List">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
         <record id="badge_list_view" model="ir.ui.view">
             <field name="name">Badge List</field>
             <field name="model">gamification.badge</field>
@@ -29,6 +40,7 @@
                     <field name="stat_this_month"/>
                     <field name="stat_my"/>
                     <field name="rule_auth"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -43,6 +55,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
+                        <field name="active" invisible="1"/>
                         <field name="image" widget='image' class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -108,6 +121,7 @@
                     <field name="stat_my_monthly_sending"/>
                     <field name="remaining_sending" />
                     <field name="rule_max_number" />
+                    <field name="active" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">

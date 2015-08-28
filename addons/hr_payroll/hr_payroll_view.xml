@@ -556,6 +556,7 @@
                     <field name="category_id"/>
                     <field name="sequence" invisible="1"/>
                     <field name="register_id"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -571,6 +572,7 @@
                     <field name="code"/>
                     <field name="category_id" invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -587,9 +589,9 @@
                     <group col="4">
                        <field name="code"/>
                        <field name="sequence" />
-                       <field name="active"/>
                        <field name="appears_on_payslip"/>
                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                       <field name="active" invisible="1"/>
                     </group>
                     <notebook colspan="6">
                         <page string="General">
@@ -640,6 +642,7 @@
                     <field name="name" string="Salary Rules" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
                     <field name="category_id"/>
                     <field name="condition_range_min"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group col="8" colspan="4" expand="0" string="Group By">
                         <filter string="Category" name="head" context="{'group_by':'category_id'}"/>
                     </group>

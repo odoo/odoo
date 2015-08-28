@@ -179,8 +179,7 @@
                             <div name="options" groups="base.group_user">
                                 <field name="landed_cost_ok" readonly="1"/>
                                 <label for="landed_cost_ok"/>
-                                <field name="active"/>
-                                <label for="active"/>
+                                <field name="active" invisible="1"/>
                             </div>
                         </div>
                         <notebook>
@@ -217,6 +216,7 @@
                     <field name="name"/>
                     <field name="split_method"/>
                     <field name="standard_price"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

@@ -64,6 +64,7 @@
                     <field name="is_company" invisible="1"/>
                     <field name="country_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -321,7 +322,7 @@
                             <group name="container_row_1">
                                 <group>
                                     <field name="ref"/>
-                                    <field name="active"/>
+                                    <field name="active" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -349,6 +350,7 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <search string="Search Partner">
+                   <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <field name="name"
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
                    <filter help="My Partners" domain="[('user_id','=',uid)]"/>

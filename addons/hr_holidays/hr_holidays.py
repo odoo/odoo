@@ -174,6 +174,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=64),
+        'active': fields.boolean('Active', track_visibility="onchange"),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
             'Status', readonly=True, track_visibility='onchange', copy=False,
             help='The status is set to \'To Submit\', when a holiday request is created.\
@@ -208,6 +209,7 @@ class hr_holidays(osv.osv):
             type='boolean'),
     }
     _defaults = {
+        'active': True,
         'employee_id': _employee_get,
         'state': 'confirm',
         'type': 'remove',

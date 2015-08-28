@@ -11,6 +11,7 @@
                     <field name="period"/>
                     <field name="manager_id"/>
                     <field name="state"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -54,6 +55,7 @@
                             </button>
                         </div>
 
+                        <field name="active" invisible="1"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>    
@@ -143,6 +145,7 @@
                 <kanban string="Challenges" class="oe_background_grey">
                     <field name="line_ids"/>
                     <field name="user_ids"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_goal oe_kanban_global_click">
@@ -215,6 +218,7 @@
             <field name="model">gamification.challenge</field>
             <field name="arch" type="xml">
                 <search string="Search Challenges">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter name="inprogress" string="Running Challenges"
                         domain="[('state', '=', 'inprogress')]"/>
                     <filter name="hr_challenges" string="HR Challenges"

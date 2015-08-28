@@ -16,6 +16,7 @@ class LunchOrder(models.Model):
     _description = 'Lunch Order'
     _order = 'date desc'
 
+    active = fields.Boolean(default=True)
     user_id = fields.Many2one('res.users', 'User', required=True, readonly=True,
                               states={'new': [('readonly', False)]},
                               default=lambda self: self.env.uid)
@@ -203,6 +204,7 @@ class LunchProduct(models.Model):
     _description = 'lunch product'
 
     name = fields.Char('Product', required=True)
+    active = fields.Boolean(default=True)
     category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
     description = fields.Text('Description')
     price = fields.Float('Price', digits_compute=dp.get_precision('Account'))
@@ -215,6 +217,7 @@ class LunchProductCategory(models.Model):
     _description = 'lunch product category'
 
     name = fields.Char('Category', required=True)
+    active = fields.Boolean(default=True)
 
 
 class LunchCashMove(models.Model):
@@ -243,6 +246,7 @@ class LunchAlert(models.Model):
     _description = 'Lunch Alert'
 
     display = fields.Boolean(compute='_compute_display_get')
+    active = fields.Boolean(default=True)
     message = fields.Text('Message', required=True)
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),

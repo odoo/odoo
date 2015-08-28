@@ -84,6 +84,7 @@
                         icon="fa-thumbs-up"
                         string="Follow-Up"/>
                 </div>
+                <field name="active" invisible="1"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name" class="oe_inline"/></h1>
@@ -116,6 +117,7 @@
                 <field name="mode"/>
                 <field name="fixed_cost"/>
                 <field name="state"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -149,6 +151,7 @@
                 <field name="name" string="Campaign"/>
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
                 <filter string="Running" domain="[('state','=','running')]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <separator/>
                 <filter string="Test Mode" name="test" domain="[('mode','=','test')]"/>
                 <filter string="Manual Mode" domain="[('mode','=','manual')]"/>

@@ -12,6 +12,7 @@ var Widget = require('web.Widget');
 var kanban_widgets = require('web_kanban.widgets');
 
 var QWeb = core.qweb;
+var _t = core._t;
 var fields_registry = kanban_widgets.registry;
 
 var KanbanRecord = Widget.extend({
@@ -32,6 +33,7 @@ var KanbanRecord = Widget.extend({
         this.fields = options.fields;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.active_field_exists = options.active_field_exists;
         this.draggable = options.draggable;
         this.read_only_mode = options.read_only_mode;
         this.model = options.model;
@@ -62,6 +64,13 @@ var KanbanRecord = Widget.extend({
         for (var p in this) {
             if (_.str.startsWith(p, 'kanban_')) {
                 qweb_context[p] = _.bind(this[p], this);
+            }
+        }
+        if (this.active_field_exists) {
+            if (this.values['active'].value) {
+                this.archive_unarchive_label = (_t('Archive'));
+            } else {
+                this.archive_unarchive_label = (_t('Unarchive'));
             }
         }
         this.content = this.qweb.render('kanban-box', qweb_context);
@@ -236,6 +245,9 @@ var KanbanRecord = Widget.extend({
                 break;
             case 'delete':
                 this.trigger_up('kanban_record_delete', {record: this});
+                break;
+            case 'archive_unarchive':
+                this.trigger_up('kanban_record_archive_unarchive', {record: this});
                 break;
             case 'action':
             case 'object':

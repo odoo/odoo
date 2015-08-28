@@ -23,7 +23,7 @@
                         <field name="name"/>
                         <field name="classname"/>
                         <field name="website_published"/>
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                     </group>
                 </form>
             </field>
@@ -37,8 +37,19 @@
                     <field name="name"/>
                     <field name="classname"/>
                     <field name="website_published"/>
-                    <field name="active"/>
+                    <field name="active" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+        <record id="view_partner_tag_search" model="ir.ui.view">
+            <field name="name">Partner Tags Search</field>
+            <field name="model">res.partner.tag</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Partner Tags">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
             </field>
         </record>
 

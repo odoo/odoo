@@ -48,7 +48,7 @@ class crm_claim(osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', track_visibility='onchange'),
         'action_next': fields.char('Next Action'),
         'date_action_next': fields.datetime('Next Action Date'),
         'description': fields.text('Description'),

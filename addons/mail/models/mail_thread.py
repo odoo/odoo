@@ -211,6 +211,8 @@ class MailThread(models.AbstractModel):
             else:
                 track_thread = thread
             tracked_fields = track_thread._get_tracked_fields(values.keys())
+            # Do not track active field at the document creation
+            tracked_fields.pop('active', None)
             if tracked_fields:
                 initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
                 track_thread.message_track(tracked_fields, initial_values)
@@ -382,6 +384,11 @@ class MailThread(models.AbstractModel):
         :type init_values: dict
         :returns: a subtype xml_id or False if no subtype is trigerred
         """
+        self.ensure_one()
+        if 'active' in init_values and not self.active:
+            return 'mail.mt_archived'
+        elif 'active' in init_values and self.active:
+            return 'mail.mt_unarchived'
         return False
 
     @api.multi

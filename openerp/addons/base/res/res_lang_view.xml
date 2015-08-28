@@ -36,7 +36,7 @@
                         <field name="decimal_point"/>
                         <field name="thousands_sep"/>
                         <newline/>
-                        <field name="active" />
+                        <field name="active" invisible="1" />
                         <field name="translatable"/>
                     </group>
                     <separator colspan="4" string="Legends for supported Date and Time Formats"/>
@@ -96,6 +96,7 @@
                         filter_domain="['|', '|', ('name','ilike',self), ('code','ilike',self), ('iso_code','ilike',self)]"
                         string="Language"/>
                     <filter string="Translatable" domain="[('translatable','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="direction"/>
                 </search>
             </field>

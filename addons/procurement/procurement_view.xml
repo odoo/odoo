@@ -245,6 +245,7 @@
             <field name="model">procurement.rule</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
                 </search>
             </field>
@@ -259,6 +260,7 @@
                     <field name="name"/>
                     <field name="action"/>
                     <field name='company_id' groups="base.group_multi_company"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -275,7 +277,7 @@
                     </div>
                     <group name="general">
                         <group>
-                            <field name="active"/>
+                            <field name="active" invisible="1"/>
                             <field name="action"/>
                         </group>
                         <group>

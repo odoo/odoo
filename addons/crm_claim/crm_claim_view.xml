@@ -111,6 +111,7 @@
                     <field name="categ_id" string="Type"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -126,6 +127,7 @@
                 <sheet string="Claims">
                     <group>
                         <field name="name"/>
+                        <field name="active" invisible="1"/>
                         <field name="date"/>
                     </group>
                     <group colspan="4" col="4"  groups="base.group_user">
@@ -211,6 +213,7 @@
                     <field name="name" string="Claims"/>
                     <separator/>
                     <filter string="Unassigned Claims" domain="[('user_id','=', False)]" help="Unassigned Claims" />
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">

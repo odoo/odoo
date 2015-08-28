@@ -148,7 +148,7 @@ class project(osv.osv):
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
 
     _columns = {
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it.", track_visibility="onchange"),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one(
             'account.analytic.account', 'Contract/Analytic',
@@ -218,8 +218,15 @@ class project(osv.osv):
                     return False
         return True
 
+    def _check_state(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            if not record.active and record.state in ('open', 'pending', 'template'):
+                return False
+        return True
+
     _constraints = [
-        (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date'])
+        (_check_dates, 'Error! project start-date must be lower than project end-date.', ['date_start', 'date']),
+        (_check_state, 'You cannot archive project which is in Open, Pending or Template state.', ['active', 'state'])
     ]
 
     def set_template(self, cr, uid, ids, context=None):
@@ -434,8 +441,24 @@ class task(osv.osv):
             res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.mimetype.startswith('image'))[0] or None
         return res
 
+    def _inverse_active(self, cr, uid, id, field_name, value, arg, context=None):
+        task_id = self.browse(cr, uid, id, context=context).id
+        cr.execute('update project_task set active=%s where id=%s ', (value, task_id))
+        return True
+
+    def _get_task_from_project(self, cr, uid, ids, context=None):
+        result = []
+        for project in self.pool.get('project.project').browse(cr, uid, ids, context=context):
+            result += project.task_ids.ids
+        return result
+
     _columns = {
-        'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
+        'active': fields.function(_is_template,
+            store={
+                'project.project': (_get_task_from_project, ['active','state'], 50),
+            },
+            string='Active', type='boolean', fnct_inv=_inverse_active, track_visibility="onchange",
+            help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.html('Description'),
         'priority': fields.selection([('0','Normal'), ('1','High')], 'Priority', select=True),

@@ -229,7 +229,7 @@ class res_partner(osv.Model, format_address):
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Categories'),
         'credit_limit': fields.float(string='Credit Limit'),
         'barcode': fields.char('Barcode', oldname='ean13'),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', track_visibility="onchange"),
         'customer': fields.boolean('Is a Customer', help="Check this box if this contact is a customer."),
         'supplier': fields.boolean('Is a Vendor', help="Check this box if this contact is a vendor. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),

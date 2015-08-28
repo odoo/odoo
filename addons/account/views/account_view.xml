@@ -867,6 +867,7 @@
                     <field name="type_tax_use"/>
                     <field name="description" string="Short Name"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -877,6 +878,7 @@
                 <search string="Search Taxes">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]" groups="base.group_no_one"/>
                     <filter string="Sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" />
                     <group string="Group By">
@@ -979,7 +981,7 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="active" groups="base.group_no_one"/>
+                                    <field name="active" invisible="1"/>
                                 </group>
                                 <group>
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
@@ -1424,7 +1426,18 @@
                 <search string="Payment Term">
                     <field name="name" string="Payment Term"/>
                     <field name="active"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
+            </field>
+        </record>
+        <record id="view_payment_term_tree" model="ir.ui.view">
+            <field name="name">account.payment.term.tree</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Term">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                </tree>
             </field>
         </record>
         <record id="view_payment_term_form" model="ir.ui.view">
@@ -1434,7 +1447,7 @@
                 <form string="Payment Term">
                     <group col="4">
                         <field name="name"/>
-                        <field name="active"/>
+                        <field name="active" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                     </group>
                     <label for="note"/>

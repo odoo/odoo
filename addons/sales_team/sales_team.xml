@@ -12,6 +12,7 @@
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <field name="name"/>
                     <field name="parent_id"/>
@@ -90,7 +91,7 @@
                             </page>
                             <page string="More Info" groups="base.group_no_one">
                                 <group>
-                                    <field name="active"/>
+                                    <field name="active" invisible="1"/>
                                     <group string="Company" groups="base.group_multi_company">
                                         <field name="company_id" options="{'no_create': True}"/>
                                     </group>
@@ -118,6 +119,7 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="user_id"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>

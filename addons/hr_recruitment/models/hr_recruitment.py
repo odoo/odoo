@@ -102,7 +102,7 @@ class Applicant(models.Model):
         return company_id
 
     name = fields.Char("Subject / Application Name", required=True)
-    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
+    active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.", track_visibility="onchange")
     description = fields.Text("Description")
     email_from = fields.Char("Email", size=128, help="These people will receive email.")
     email_cc = fields.Text("Watchers Emails", size=252,
