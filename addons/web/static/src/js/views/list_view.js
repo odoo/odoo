@@ -1117,12 +1117,14 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
-                    var command = value[0];
-                    // 1. an array of m2m commands (usually (6, false, ids))
-                    if (command[0] !== 6) {
-                        throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
-                    }
-                    ids = command[2];
+                    _.each(value, function(command) {
+                        switch (command[0]) {
+                            case 4: ids.push(command[1]); break;
+                            case 5: ids = []; break;
+                            case 6: ids = command[2]; break;
+                            default: throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
+                        }
+                    });
                 } else {
                     // 2. an array of ids
                     ids = value;
