@@ -779,8 +779,12 @@ class mail_message(osv.Model):
             or take the email_from
         """
         model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
-        ctx = dict(context, thread_model=model)
-        return self.pool['mail.thread'].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
+        ctx = context
+        if model:
+            ctx = dict(context, thread_model=model)
+        else:
+            model = 'mail.thread'
+        return self.pool[model].message_get_reply_to(cr, uid, [res_id], default=email_from, context=ctx)[res_id]
 
     def _get_message_id(self, cr, uid, values, context=None):
         if values.get('no_auto_thread', False) is True:
