@@ -555,10 +555,6 @@ class product_template(osv.osv):
         'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
 
-    # TODO : Could be removed?
-    def _price_get_list_price(self, product):
-        return 0.0
-
     def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
@@ -1205,16 +1201,6 @@ class product_supplierinfo(osv.osv):
 
     _order = 'sequence, min_qty desc, price'
 
-
-class pricelist_partnerinfo(osv.osv):
-    _name = 'pricelist.partnerinfo'
-    _columns = {
-        'name': fields.char('Description'),
-        'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
-        'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the vendor Unit of Measure if any or in the default Unit of Measure of the product otherrwise."),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the vendor Unit of Measure if any or the default Unit of Measure of the product otherwise"),
-    }
-    _order = 'min_quantity asc'
 
 class res_currency(osv.osv):
     _inherit = 'res.currency'
