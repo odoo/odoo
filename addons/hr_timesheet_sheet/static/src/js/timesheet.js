@@ -249,13 +249,8 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 name: "account",
                 type: "many2one",
                 domain: [
-                    ['type','in',['normal', 'contract']],
-                    ['state', '<>', 'close'],
                     ['id', 'not in', _.pluck(self.accounts, "account")],
                 ],
-                context: {
-                    default_type: "contract",
-                },
                 modifiers: '{"required": true}',
             },
         });
