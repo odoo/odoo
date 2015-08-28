@@ -26,13 +26,13 @@ class TestPricelist(TransactionCase):
                     'base': 'list_price', # based on public price
                     'price_discount': 10,
                     'product_id': self.usb_adapter_id,
-                    'applied_on': '0',
+                    'applied_on': '0_product_variant',
                 }), (0, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price', # based on public price
                     'price_surcharge': -0.5,
                     'product_id': self.datacard_id,
-                    'applied_on': '0',
+                    'applied_on': '0_product_variant',
                 })]
         }, context=context)
 
@@ -89,7 +89,7 @@ class TestPricelist(TransactionCase):
         self.registry('product.pricelist.item').create(cr, uid, {
                                                        'pricelist_id': self.public_pricelist_id,
                                                        'sequence': 10,
-                                                       'applied_on': '0',
+                                                       'applied_on': '0_product_variant',
                                                        'compute_price': 'formula',
                                                        'base': 'list_price', # based on public price
                                                        'min_quantity': 3, # min = 3 tonnes
