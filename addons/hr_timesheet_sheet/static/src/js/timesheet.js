@@ -135,45 +135,42 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
 
             var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el); });
 
-            return new Model("account.analytic.line").call("multi_on_change_account_id", [[], account_ids,
-                new data.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
-                accounts = _(accounts).chain().map(function(lines, account_id) {
-                    var account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
-                    // group by days
-                    account_id = account_id === "false" ? false :  Number(account_id);
-                    var index = _.groupBy(lines, "date");
-                    var days = _.map(dates, function(date) {
-                        var day = {day: date, lines: index[time.date_to_str(date)] || []};
-                        // add line where we will insert/remove hours
-                        var to_add = _.find(day.lines, function(line) { return line.name === self.description_line; });
-                        if (to_add) {
-                            day.lines = _.without(day.lines, to_add);
-                            day.lines.unshift(to_add);
-                        } else {
-                            day.lines.unshift(_.extend(_.clone(account_defaults), {
-                                name: self.description_line,
-                                unit_amount: 0,
-                                date: time.date_to_str(date),
-                                account_id: account_id,
-                            }));
-                        }
-                        return day;
-                    });
-                    return {account: account_id, days: days, account_defaults: account_defaults};
-                }).value();
-
-                // we need the name_get of the analytic accounts
-                return new Model("account.analytic.account").call("name_get", [_.pluck(accounts, "account"),
-                    new data.CompoundContext()]).then(function(result) {
-                    account_names = {};
-                    _.each(result, function(el) {
-                        account_names[el[0]] = el[1];
-                    });
-                    accounts = _.sortBy(accounts, function(el) {
-                        return account_names[el.account];
-                    });
+            accounts = _(accounts).chain().map(function(lines, account_id) {
+                var account_defaults = _.extend({}, default_get, (accounts[account_id] || {}).value || {});
+                // group by days
+                account_id = account_id === "false" ? false :  Number(account_id);
+                var index = _.groupBy(lines, "date");
+                var days = _.map(dates, function(date) {
+                    var day = {day: date, lines: index[time.date_to_str(date)] || []};
+                    // add line where we will insert/remove hours
+                    var to_add = _.find(day.lines, function(line) { return line.name === self.description_line; });
+                    if (to_add) {
+                        day.lines = _.without(day.lines, to_add);
+                        day.lines.unshift(to_add);
+                    } else {
+                        day.lines.unshift(_.extend(_.clone(account_defaults), {
+                            name: self.description_line,
+                            unit_amount: 0,
+                            date: time.date_to_str(date),
+                            account_id: account_id,
+                        }));
+                    }
+                    return day;
                 });
+                return {account: account_id, days: days, account_defaults: account_defaults};
+            }).value();
+
+        // we need the name_get of the analytic accounts
+        return new Model("account.analytic.account").call("name_get", [_.pluck(accounts, "account"),
+            new data.CompoundContext()]).then(function(result) {
+            account_names = {};
+            _.each(result, function(el) {
+                account_names[el[0]] = el[1];
             });
+            accounts = _.sortBy(accounts, function(el) {
+                return account_names[el.account];
+            });
+        });
         })).then(function(result) {
             // we put all the gathered data in self, then we render
             self.dates = dates;
