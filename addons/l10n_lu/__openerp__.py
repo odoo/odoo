@@ -31,6 +31,7 @@ Notes:
         'account_financial_report_abr.xml',
         'account_chart_template.xml',
         'account.account.template-2011.csv',
+        'account.account.tag.csv',
         'account.tax.template-2015.csv',
         'account.fiscal.position.template-2011.csv',
         'account.fiscal.position.tax.template-2015.csv',
