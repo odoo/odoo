@@ -817,13 +817,13 @@ var BufferedDataSet = DataSetStatic.extend({
         return $.async_when({result: true}).done(callback);
     },
     reset_ids: function(ids, options) {
+        var self = this;
         this.set_ids(ids);
         if (!options || !options.keep_read_data) {
             this.cache = {};
         } else {
             _.each(this.cache, function (cache) {
-                cache.changes = {};
-                cache.to_delete = false;
+                self._update_cache(cache.id, {'changes': {}, 'to_delete': false});
             });
         }
         this.delete_all = false;
