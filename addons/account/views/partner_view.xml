@@ -81,7 +81,7 @@
 
         <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
-            <field name="name">Contracts/Analytic Accounts</field>
+            <field name="name">Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
         </record>
 
@@ -126,7 +126,7 @@
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         icon="fa-book">
-                        <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                        <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
                 </div>
             </field>
