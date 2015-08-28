@@ -4,22 +4,32 @@ define([
   'summernote/module/Button'
 ], function (func, list, Button) {
   /**
+   * @class module.Popover
+   *
    * Popover (http://getbootstrap.com/javascript/#popovers)
+   *
    */
   var Popover = function () {
     var button = new Button();
 
-    this.button = button; // odoo change for overwrite
+    this.button = button; // ODOO: allow access for override
 
     /**
      * returns position from placeholder
+     *
+     * @private
      * @param {Node} placeholder
-     * @param {Boolean} isAirMode
+     * @param {Object} options
+     * @param {Boolean} options.isAirMode
+     * @return {Position}
      */
-    var posFromPlaceholder = function (placeholder, isAirMode) {
+    var posFromPlaceholder = function (placeholder, options) {
+      var isAirMode = options && options.isAirMode;
+      var isLeftTop = options && options.isLeftTop;
+
       var $placeholder = $(placeholder);
       var pos = isAirMode ? $placeholder.offset() : $placeholder.position();
-      var height = $placeholder.outerHeight(true); // include margin
+      var height = isLeftTop ? 0 : $placeholder.outerHeight(true); // include margin
 
       // popover below placeholder.
       return {
@@ -30,6 +40,8 @@ define([
 
     /**
      * show popover
+     *
+     * @private
      * @param {jQuery} popover
      * @param {Position} pos
      */
@@ -56,21 +68,32 @@ define([
       if (styleInfo.anchor) {
         var $anchor = $linkPopover.find('a');
         var href = $(styleInfo.anchor).attr('href');
+        var target = $(styleInfo.anchor).attr('target');
         $anchor.attr('href', href).html(href);
-        showPopover($linkPopover, posFromPlaceholder(styleInfo.anchor, isAirMode));
+        if (!target) {
+          $anchor.removeAttr('target');
+        } else {
+          $anchor.attr('target', '_blank');
+        }
+        showPopover($linkPopover, posFromPlaceholder(styleInfo.anchor, {
+          isAirMode: isAirMode
+        }));
       } else {
         $linkPopover.hide();
       }
 
       var $imagePopover = $popover.find('.note-image-popover');
       if (styleInfo.image) {
-        showPopover($imagePopover, posFromPlaceholder(styleInfo.image, isAirMode));
+        showPopover($imagePopover, posFromPlaceholder(styleInfo.image, {
+          isAirMode: isAirMode,
+          isLeftTop: true
+        }));
       } else {
         $imagePopover.hide();
       }
 
       var $airPopover = $popover.find('.note-air-popover');
-      if (isAirMode && !styleInfo.range.isCollapsed()) {
+      if (isAirMode && styleInfo.range && !styleInfo.range.isCollapsed()) {
         var rect = list.last(styleInfo.range.getClientRects());
         if (rect) {
           var bnd = func.rect2bnd(rect);

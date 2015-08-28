@@ -1,10 +1,12 @@
-define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
+define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) { // ODOO: suggest upstream
   /**
-   * History
-   * @class
+   * @class editing.History
+   *
+   * Editor History
+   *
    */
   var History = function ($editable) {
-    var stack = [], stackOffset = -1, hasUndo = false;
+    var stack = [], stackOffset = -1;
     var editable = $editable[0];
 
     var makeSnapshot = function () {
@@ -14,6 +16,7 @@ define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
       return {
         contents: $editable.html(),
         bookmark: (rng && dom.ancestor(rng.sc, dom.isEditable) ? rng.bookmark(editable) : emptyBookmark)
+        // ODOO: suggest upstream added " && dom.ancestor(rng.sc, dom.isEditable) "
       };
     };
 
@@ -26,21 +29,29 @@ define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
       }
     };
 
+    /**
+     * undo
+     */
     this.undo = function () {
-      if (0 < stackOffset || (stack.length - 1 === stackOffset && hasUndo)) {
-        if (stack.length - 1 === stackOffset) {
-          this.recordUndo();
-        }
+      // Create snap shot if not yet recorded
+      if ($editable.html() !== stack[stackOffset].contents) {
+        this.recordUndo();
+      }
+
+      if (0 < stackOffset) {
         stackOffset--;
         applySnapshot(stack[stackOffset]);
-        hasUndo = !!stackOffset;
       }
     };
 
+    /* ODOO: to suggest upstream */
     this.hasUndo = function () {
-        return 0 < stackOffset || hasUndo;
+        return 0 < stackOffset;
     };
 
+    /**
+     * redo
+     */
     this.redo = function () {
       if (stack.length - 1 > stackOffset) {
         stackOffset++;
@@ -48,12 +59,17 @@ define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
       }
     };
 
+    /* ODOO: to suggest upstream */
     this.hasRedo = function () {
         return stack.length - 1 > stackOffset;
     };
 
-    var last;
+    var last; // ODOO: to suggest upstream (since we may have several editor)
+    /**
+     * recorded undo
+     */
     this.recordUndo = function () {
+      // ODOO: method totally rewritten
       // test event for firefox: remove stack of history because event doesn't exists
       var key = typeof event !== 'undefined' ? event : false;
       if (key && !event.metaKey && !event.ctrlKey && !event.altKey && event.type === "keydown") {
@@ -79,13 +95,14 @@ define(['summernote/core/range', 'summernote/core/dom'], function (range, dom) {
 
       // Create new snapshot and push it to the end
       stack.push(makeSnapshot());
-      return true;
     };
 
+    /* ODOO: to suggest upstream */
     this.splitNext = function () {
         last = false;
     };
 
+    /* ODOO: to suggest upstream */
     this.reset = function () {
         last = false;
         stack = [];

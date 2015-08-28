@@ -144,7 +144,9 @@ var History = function History ($editable) {
     this.recordUndo = function ($editable, event, internal_history) {
         var self = this;
         if (!$editable) {
-            $editable = $(range.create().sc).closest(".o_editable");
+            var rng = range.create();
+            if(!rng) return;
+            $editable = $(rng.sc).closest(".o_editable");
         }
 
         if (aUndo[pos] && (event === "applySnap" || event === "activate")) {
