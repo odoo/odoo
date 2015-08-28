@@ -526,7 +526,7 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
     if (sc.tagName) {
         sc = sc.childNodes[so] || dom.firstChild(ec);
         so = 0;
-        if (!dom.hasContentBefore(sc)) {
+        if (!dom.hasContentBefore(sc) && towrite) {
             sc.parentNode.insertBefore(document.createTextNode('\u00A0'), sc);
         }
     }
@@ -586,18 +586,20 @@ dom.removeBetween = function (sc, so, ec, eo, towrite) {
             so = 0;
         }
 
-        if (before) {
-            var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
-            so -= sc.textContent.length - text.length;
-            sc.textContent = text;
-        }
         if (towrite && !node.firstChild && node.parentNode && !dom.isNotBreakable(node)) {
             var br = $("<br/>")[0];
             node.appendChild(sc);
             sc = br;
             so = 0;
+        } else if (!ancestor.children.length && !ancestor.textContent.match(/\S|\u00A0/)) {
+            sc = $("<br/>")[0];
+            so = 0;
+            $(ancestor).prepend(sc);
+        } else if (before) {
+            var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
+            so -= sc.textContent.length - text.length;
+            sc.textContent = text;
         }
-        dom.autoMerge(sc, false);
 
     } else {
 
@@ -736,7 +738,7 @@ dom.isFont = function (node) {
         (nodeName === "SPAN" && (
             node.className.match(/(^|\s)fa(\s|$)/i) ||
             node.className.match(/(^|\s)(text|bg)-/i) ||
-            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color):/i)))) );
+            (node.attributes.style && node.attributes.style.value.match(/(^|\s)(color|background-color|font-size):/i)))) );
 };
 dom.isVisibleText = function (textNode) {
   return !!textNode.textContent.match(/\S|\u00A0/);
@@ -1204,8 +1206,6 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.ec;
@@ -1331,8 +1331,6 @@ $.summernote.pluginEvents.backspace = function (event, editor, layoutInfo) {
         }
         r = r.deleteContents();
         r.select();
-        event.preventDefault();
-        return false;
     }
 
     var target = r.sc;
