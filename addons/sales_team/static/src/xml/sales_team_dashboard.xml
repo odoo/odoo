@@ -8,7 +8,7 @@
     -->
     <t t-name="sales_team.SalesDashboard">
 
-        <div class="o_sales_dashboard">
+        <div t-if="show_demo or values" class="o_sales_dashboard">
             <div t-attf-class="o_left_panel #{show_demo ? 'o_demo' : ''}">
                 <table border="0" class="table">
                     <tr>

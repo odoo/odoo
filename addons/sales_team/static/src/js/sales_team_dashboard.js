@@ -31,7 +31,7 @@ var SalesTeamDashboardView = KanbanView.extend({
 
         this.fetch_data().then(function(result){
 
-            self.show_demo = !(result && result['nb_opportunities'] > 0);
+            self.show_demo = result && result['nb_opportunities'] == 0;
 
             var sales_dashboard = QWeb.render('sales_team.SalesDashboard', {
                 show_demo: self.show_demo,
