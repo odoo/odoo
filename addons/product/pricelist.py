@@ -113,7 +113,7 @@ class product_pricelist(osv.osv):
 
     def _price_rule_get_multi(self, cr, uid, pricelist, products_by_qty_by_partner, context=None):
         context = context or {}
-        date = 'date' in context and context['date'][0:10] or time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        date = context.get('date') and context['date'][0:10] or time.strftime(DEFAULT_SERVER_DATE_FORMAT)
         products = map(lambda x: x[0], products_by_qty_by_partner)
         product_uom_obj = self.pool.get('product.uom')
 
@@ -155,7 +155,7 @@ class product_pricelist(osv.osv):
         results = {}
         for product, qty, partner in products_by_qty_by_partner:
             results[product.id] = 0.0
-            rule_id = False
+            suitable_rule = False
 
             # Final unit price is computed according to `qty` in the `qty_uom_id` UoM.
             # An intermediary unit price may be computed according to a different UoM, in
@@ -193,35 +193,60 @@ class product_pricelist(osv.osv):
                         continue
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
-                    price = self._price_get_multi(cr, uid, rule.base_pricelist_id, [(product, qty, partner)], context=context)[product.id]
+                    price_tmp = self._price_get_multi(cr, uid, rule.base_pricelist_id, [(product, qty, partner)], context=context)[product.id]
+                    ptype_src = rule.base_pricelist_id.currency_id.id
+                    price = self.pool['res.currency'].compute(cr, uid, ptype_src, pricelist.currency_id.id, price_tmp, round=False, context=context)
                 else:
                     # if base option is public price take sale price else cost price of product
-                    price = product.list_price or 0.0 if rule.base == 'list_price' else product.standard_price or 0.0
+                    # price_get returns the price in the context UoM, i.e. qty_uom_id
+                    price = product._price_get(rule.base, context=context)
+
+                    #TOCHECK
+                    for seller in product.seller_ids:
+                        partner = partner.id if partner and not isinstance(partner, int) else partner
+                        if seller.name.id == partner:
+                            qty_in_seller = qty
+                            seller_uom = seller.product_uom and seller.product_uom.id or False
+                            if qty_uom_id != seller_uom:
+                                qty_in_seller = product_uom_obj._compute_qty(cr, uid, qty_uom_id, qty, to_uom_id=seller_uom)
+                            for line in seller.pricelist_ids:
+                                if line.min_quantity <= qty_in_seller:
+                                    price = line.price
+
                 if price is not False:
                     if rule.compute_price == 'fixed':
                         price = rule.fixed_price
                     elif rule.compute_price == 'percentage':
-                        price = (price - (price * (rule.percent_price/100))) or 0.0
+                        price = (price - (price * (rule.percent_price / 100))) or 0.0
                     else:
+                        #complete formula
                         price_limit = price
-                        price = (price - (price * (rule.price_discount/100))) or 0.0
+                        price = (price - (price * (rule.price_discount / 100))) or 0.0
                         if rule.price_round:
                             price = tools.float_round(price, precision_rounding=rule.price_round)
+
+                        convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
+                                                    cr, uid, product.uom_id.id,
+                                                    price, price_uom_id))
                         if rule.price_surcharge:
-                            price += rule.price_surcharge
+                            price_surcharge = convert_to_price_uom(rule.price_surcharge)
+                            price += price_surcharge
+
                         if rule.price_min_margin:
-                            price = max(price, price_limit + rule.price_min_margin)
+                            price_min_margin = convert_to_price_uom(rule.price_min_margin)
+                            price = max(price, price_limit + price_min_margin)
+
                         if rule.price_max_margin:
-                            price = min(price, price_limit + rule.price_max_margin)
-                    rule_id = rule.id
+                            price_max_margin = convert_to_price_uom(rule.price_max_margin)
+                            price = min(price, price_limit + price_max_margin)
+                    suitable_rule = rule
                 break
-            # Final price conversion into pricelist currency and UoM
-            user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
-            if rule.compute_price != 'fixed':
+            # Final price conversion into pricelist currency
+            if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
+                user_company = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id
                 price = self.pool['res.currency'].compute(cr, uid, user_company.currency_id.id, pricelist.currency_id.id, price, context=context)
 
-            price = product_uom_obj._compute_price(cr, uid, product.uom_id.id, price, price_uom_id)
-            results[product.id] = (price, rule_id)
+            results[product.id] = (price, suitable_rule and suitable_rule.id or False)
         return results
 
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
@@ -234,24 +259,9 @@ class product_pricelist(osv.osv):
         return res
 
 class product_pricelist_item(osv.osv):
-
-    def onchange_apply(self, cr, uid, ids, applied_on, context=None):
-        data = {'1': {'product_id': False, 'categ_id': False},
-                '2': {'product_tmpl_id': False, 'product_id': False},
-                '3': {'categ_id': False, 'product_tmpl_id': False, 'product_id': False},
-                '0': {'product_tmpl_id': False, 'categ_id': False}}
-        return {'value': data[applied_on]}
-
     _name = "product.pricelist.item"
     _description = "Pricelist item"
     _order = "applied_on, min_quantity desc"
-    _defaults = {
-        'base': 'list_price',
-        'min_quantity': lambda *a: 1,
-        'sequence': lambda *a: 5,
-        'price_discount': lambda *a: 0,
-        'applied_on': '3',
-    }
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):
@@ -269,10 +279,11 @@ class product_pricelist_item(osv.osv):
         return True
 
     def _get_pricelist_item_name_price(self, cr, uid, ids, fields, args, context=None):
+        """This function is used to set some fields used for usability purposes only (state explicitly what a rule does)
+        """
         res = {}
         for item in self.browse(cr, uid, ids, context=context):
             res[item.id] = {'name': '', 'price': ''}
-
             if item.categ_id:
                 res[item.id]['name'] = _("Category: %s") % (item.categ_id.name)
             elif item.product_tmpl_id:
@@ -291,7 +302,6 @@ class product_pricelist_item(osv.osv):
         return res
 
     _columns = {
-        'name': fields.function(_get_pricelist_item_name_price, type="char", string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
@@ -300,7 +310,7 @@ class product_pricelist_item(osv.osv):
               "than or equal to the minimum quantity specified in this field.\n"
               "Expressed in the default unit of measure of the product."
             ),
-        'applied_on': fields.selection([('3', 'Global'),('2', ' Product Category'), ('1', 'Product'), ('0', 'Product Variant')], string="Apply On", required=True,
+        'applied_on': fields.selection([('3_global', 'Global'),('2_product_category', ' Product Category'), ('1_product', 'Product'), ('0_product_variant', 'Product Variant')], string="Apply On", required=True,
             help='Pricelist Item applicable on selected option'),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection([('list_price', 'Public Price'), ('standard_price', 'Cost'), ('pricelist', 'Other Pricelist')], string="Based on", required=True,
@@ -329,13 +339,19 @@ class product_pricelist_item(osv.osv):
         'compute_price': fields.selection([('fixed', 'Fix Price'), ('percentage', 'Percentage (discount)'), ('formula', 'Formula')], select=True, default='fixed'),
         'fixed_price': fields.float('Fixed Price'),
         'percent_price': fields.float('Percentage Price'),
+        #functional fields used for usability purposes
+        'name': fields.function(_get_pricelist_item_name_price, type="char", string='Name', multi='item_name_price', help="Explicit rule name for this pricelist line."),
         'price': fields.function(_get_pricelist_item_name_price, type="char", string='Price', multi='item_name_price', help="Explicit rule name for this pricelist line."),
     }
 
+    _defaults = {
+        'base': 'list_price',
+        'min_quantity': 1,
+        'sequence': 5,
+        'price_discount': 0,
+        'applied_on': '3_global',
+    }
     _constraints = [
         (_check_recursion, 'Error! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id']),
         (_check_margin, 'Error! The minimum margin should be lower than the maximum margin.', ['price_min_margin', 'price_max_margin'])
-    ]
-    _sql_constraints = [
-        ('name_uniq', 'unique(categ_id, product_id, product_tmpl_id, min_quantity, date_end, date_start)', 'Pricelist items must be unique!'),
     ]
