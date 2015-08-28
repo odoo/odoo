@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openerp import api, fields, models, _
-from openerp.exceptions import UserError
 
 
 class AccountAnalyticLine(models.Model):
@@ -21,27 +20,17 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
     @api.v8
-    @api.onchange('product_id', 'product_uom_id', 'journal_id', 'unit_amount', 'currency_id')
+    @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
-        journal_id = self.journal_id
-        if not journal_id:
-            journal_id = self.env['account.analytic.journal'].search([('type', '=', 'purchase')], limit=1)
-        if not journal_id or not self.product_id:
+        if not self.product_id:
             return {}
 
         result = 0.0
         prod_accounts = self.product_id._get_product_accounts()
         unit = self.product_uom_id.id
-        if journal_id.type != 'sale':
-            account = prod_accounts['expense']
-            price_type = 'standard_price'
-            if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
-                unit = self.product_id.uom_po_id.id
-        else:
-            account = prod_accounts['income']
-            price_type = 'list_price'
-            if not unit or self.product_id.uom_id.category_id.id != unit.category_id.id:
-                unit = self.product_id.uom_id.id
+        account = prod_accounts['expense']
+        if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
+            unit = self.product_id.uom_po_id.id
 
         ctx = dict(self._context or {})
         if unit:
@@ -50,11 +39,9 @@ class AccountAnalyticLine(models.Model):
             ctx['uom'] = unit
 
         # Compute based on pricetype
-        amount_unit = self.product_id.with_context(ctx).price_get(price_type)[self.product_id.id]
+        amount_unit = self.product_id.with_context(ctx).price_get('standard_price')[self.product_id.id]
         amount = amount_unit * self.unit_amount or 0.0
-        result = round(amount, self.currency_id.decimal_places)
-        if price_type != 'list_price':
-            result *= -1
+        result = round(amount, self.currency_id.decimal_places) * -1
         self.amount = result
         self.general_account_id = account
         self.product_uom_id = unit
