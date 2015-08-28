@@ -184,7 +184,7 @@
                                     <group>
                                         <group>
                                             <field name="product_id"
-                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
+                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                                 attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                                />
                                             <field name="invoice_status" invisible="1"/>
@@ -193,7 +193,7 @@
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
                                                 <field
-                                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True}"
+                                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                     name="product_uom_qty" class="oe_inline"/>
                                                 <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
@@ -234,12 +234,13 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                        />
                                     <field name="name"/>
                                     <field name="product_uom_qty"
                                         string="Ordered Qty"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}"/>
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                    />
                                     <field name="qty_delivered" invisible="not context.get('show_sale')"
                                         attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
                                     <field name="qty_invoiced"
@@ -247,6 +248,7 @@
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
+                                        context="{'company_id': parent.company_id}"
                                         groups="product.group_uom" options='{"no_open": True}'/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>

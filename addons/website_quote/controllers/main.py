@@ -36,7 +36,7 @@ class sale_quote(http.Controller):
             days = (datetime.datetime.strptime(order.validity_date, '%Y-%m-%d') - datetime.datetime.now()).days + 1
         if pdf:
             report_obj = request.registry['report']
-            pdf = report_obj.get_pdf(request.cr, SUPERUSER_ID, [order_id], 'website_quote.report_quote', data=None, context=request.context)
+            pdf = report_obj.get_pdf(request.cr, SUPERUSER_ID, [order_id], 'website_quote.report_quote', data=None, context=dict(request.context, set_viewport_size=True))
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         user = request.registry['res.users'].browse(request.cr, SUPERUSER_ID, request.uid, context=request.context)
@@ -141,7 +141,7 @@ class sale_quote(http.Controller):
         res = request.registry.get('sale.order.line').product_id_change(request.cr, SUPERUSER_ID, order_id,
             False, option.product_id.id, option.quantity, option.uom_id.id, option.quantity, option.uom_id.id,
             option.name, order.partner_id.id, False, True, time.strftime('%Y-%m-%d'),
-            False, order.fiscal_position_id.id, True, request.context)
+            False, order.fiscal_position_id.id, True, dict(request.context or {}, company_id=order.company_id.id))
         vals = res.get('value', {})
         if 'tax_id' in vals:
             vals['tax_id'] = [(6, 0, vals['tax_id'])]

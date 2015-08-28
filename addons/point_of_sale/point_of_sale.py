@@ -521,7 +521,7 @@ class pos_session(osv.osv):
         }) for journal in pos_config.journal_ids]
 
         values.update({
-            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session'),
+            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
             'statement_ids': statements,
             'config_id': config_id
         })

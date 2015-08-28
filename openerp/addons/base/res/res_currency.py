@@ -9,6 +9,7 @@ from openerp import api, fields as fields2
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
+import simplejson as json
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
@@ -252,9 +253,9 @@ class res_currency(osv.osv):
             symbol = row['symbol'] or row['name']
             format_number_str = "openerp.web.format_value(arguments[0], {type: 'float', digits: [69," + str(row['decimal_places']) + "]}, 0.00)"
             if row['position'] == 'after':
-                return_str = "return " + format_number_str + " + '\\xA0" + symbol + "';"
+                return_str = "return " + format_number_str + " + '\\xA0' + " + json.dumps(symbol) + ";"
             else:
-                return_str = "return '" + symbol + "\\xA0' + " + format_number_str + ";"
+                return_str = "return " + json.dumps(symbol) + " + '\\xA0' + " + format_number_str + ";"
             function += "if (arguments[1] === " + str(row['id']) + ") { " + return_str + " }"
             if (row['id'] == company_currency_id):
                 company_currency_format = return_str

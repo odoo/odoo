@@ -29,10 +29,10 @@ var Theme = Widget.extend({
     template: 'website.theme_customize',
     events: {
         'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
-        'click label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
+        'mousedown label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
             var self = this;
             this.time_select = _.defer(function () {
-                self.on_select($(event.target).find('input'));
+                self.on_select($(event.target).find('input'), event);
             });
         },
         'click .close': 'close',
@@ -198,7 +198,7 @@ var Theme = Widget.extend({
 
         if (this.$el.hasClass("loading")) return; // prevent to change selection when css is loading
             
-        var $option = $(event.target),
+        var $option = $(event.target).is('input') ? $(event.target) : $("input", event.target),
             $options = $option,
             checked = $option.prop("checked");
 
@@ -252,13 +252,13 @@ var Theme = Widget.extend({
         clearTimeout(this.timer);
         if (this.flag) {
             this.timer = _.defer(function () {
-                if (!init_mode) self.on_select($options);
+                if (!init_mode) self.on_select($options, event);
                 self.update_style(self.get_xml_ids($enable), self.get_xml_ids($disable), self.reload);
                 self.reload = false;
             });
         } else {
                 this.timer = _.defer(function () {
-                    if (!init_mode) self.on_select($options);
+                    if (!init_mode) self.on_select($options, event);
                     self.reload = false;
                 });
         }
@@ -266,9 +266,8 @@ var Theme = Widget.extend({
     /* Method call when the user change the selection or click on an input
      * @values: all changed inputs
      */
-    on_select: function ($inputs) {
+    on_select: function ($inputs, event) {
         clearTimeout(this.time_select);
-        console.log($inputs.get());
     },
     click: function (event) {
         if (!$(event.target).closest("#theme_customize_modal > *").length) {

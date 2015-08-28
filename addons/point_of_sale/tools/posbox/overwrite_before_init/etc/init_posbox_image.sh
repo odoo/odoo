@@ -12,7 +12,7 @@ __base="$(basename ${__file} .sh)"
 export DEBIAN_FRONTEND=noninteractive
 
 # GUI-related packages
-PKGS_TO_DELETE="xserver-xorg-video-fbdev xserver-xorg xinit gstreamer1.0-x gstreamer1.0-omx gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-alsa gstreamer1.0-libav epiphany-browser lxde lxtask menu-xdg gksu xserver-xorg-video-fbturbo xpdf gtk2-engines alsa-utils netsurf-gtk zenity desktop-base lxpolkit weston omxplayer raspberrypi-artwork lightdm gnome-themes-standard-data gnome-icon-theme qt50-snapshot qt50-quick-particle-examples idle python-pygame python-tk idle3 python-serial python-picamera debian-reference-en dillo x2x scratch nuscratch raspberrypi-ui-mods timidity smartsim penguinspuzzle pistore sonic-pi python-pifacecommon python-pifacedigitalio oracle-java8-jdk minecraft-pi python-minecraftpi wolfram-engine raspi-config libgl1-mesa-dri libicu48 pypy-upstream lxde-icon-theme python3"
+PKGS_TO_DELETE="xserver-xorg-video-fbdev xserver-xorg xinit gstreamer1.0-x gstreamer1.0-omx gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-alsa gstreamer1.0-libav epiphany-browser lxde lxtask menu-xdg gksu xserver-xorg-video-fbturbo xpdf gtk2-engines alsa-utils netsurf-gtk zenity desktop-base lxpolkit weston omxplayer raspberrypi-artwork lightdm gnome-themes-standard-data gnome-icon-theme qt50-snapshot qt50-quick-particle-examples idle python-pygame python-tk idle3 python-serial python-picamera debian-reference-en dillo x2x scratch nuscratch raspberrypi-ui-mods timidity smartsim penguinspuzzle pistore sonic-pi python-pifacecommon python-pifacedigitalio oracle-java8-jdk minecraft-pi python-minecraftpi wolfram-engine raspi-config libgl1-mesa-dri libicu48 pypy-upstream lxde-icon-theme python3 avahi-daemon"
 INSTALLED_PKGS_TO_DELETE=""
 set +o errexit
 for CURRENT_PKG in $(echo $PKGS_TO_DELETE); do
@@ -55,6 +55,12 @@ usermod -a -G lp pi
 sudo -u postgres createuser -s pi
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
+
+# logrotate is very picky when it comes to file permissions
+chown -R root:root /etc/logrotate.d/
+chmod -R 644 /etc/logrotate.d/
+chown root:root /etc/logrotate.conf
+chmod 644 /etc/logrotate.conf
 
 echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 

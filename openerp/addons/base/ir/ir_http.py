@@ -106,6 +106,7 @@ class ir_http(osv.AbstractModel):
             wdate = attach[0]['__last_update']
             datas = attach[0]['datas'] or ''
             name = attach[0]['name']
+            checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
@@ -119,7 +120,7 @@ class ir_http(osv.AbstractModel):
                 # just in case we have a timestamp without microseconds
                 response.last_modified = datetime.datetime.strptime(wdate, server_format)
 
-            response.set_etag(attach[0]['checksum'])
+            response.set_etag(checksum)
             response.make_conditional(request.httprequest)
 
             if response.status_code == 304:

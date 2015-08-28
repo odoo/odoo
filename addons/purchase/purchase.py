@@ -18,6 +18,7 @@ class purchase_order(osv.osv):
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj = self.pool.get('res.currency')
+        line_obj = self.pool['purchase.order.line']
         for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
@@ -27,8 +28,14 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
+                line_price = line_obj._calc_line_base_price(cr, uid, line,
+                                                            context=context)
+                line_qty = line_obj._calc_line_quantity(cr, uid, line,
+                                                        context=context)
+                taxes = line.taxes_id.compute_all(line_price, cur, line_qty,
+                                                  line.product_id, order.partner_id)
                 val1 += line.price_subtotal
-                for c in line.taxes_id.compute_all(line.price_unit, cur, line.product_qty, product=line.product_id, partner=order.partner_id)['taxes']:
+                for c in taxes['taxes']:
                     val += c.get('amount', 0.0)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
@@ -1020,11 +1027,35 @@ class purchase_order(osv.osv):
 
 
 class purchase_order_line(osv.osv):
+    def _calc_line_base_price(self, cr, uid, line, context=None):
+        """Return the base price of the line to be used for tax calculation.
+
+        This function can be extended by other modules to modify this base
+        price (adding a discount, for example).
+        """
+        return line.price_unit
+
+    def _calc_line_quantity(self, cr, uid, line, context=None):
+        """Return the base quantity of the line to be used for the subtotal.
+
+        This function can be extended by other modules to modify this base
+        quantity (adding for example offers 3x2 and so on).
+        """
+        return line.product_qty
+
     def _amount_line(self, cr, uid, ids, prop, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
+            line_price = self._calc_line_base_price(cr, uid, line,
+                                                    context=context)
+            line_qty = self._calc_line_quantity(cr, uid, line,
+                                                context=context)
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = line.taxes_id.compute_all(line.price_unit, cur, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)['total_excluded']
+            taxes = line.taxes_id.compute_all(line_price, cur,
+                                              line_qty, line.product_id,
+                                              line.order_id.partner_id)
+            
+            res[line.id] = taxes['total_excluded']
         return res
 
     def _get_uom_id(self, cr, uid, context=None):
@@ -1220,6 +1251,7 @@ class purchase_order_line(osv.osv):
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
+        price = self.pool['account.tax']._fix_tax_included_price(cr, uid, price, product.supplier_taxes_id, taxes_ids)
         res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
 
         return res

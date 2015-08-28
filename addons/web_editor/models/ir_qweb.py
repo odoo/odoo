@@ -341,7 +341,14 @@ class Image(orm.AbstractModel):
         max_size = '' if max_size is None else '/%s' % max_size
         src = '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field_name, max_size, sha)
 
-        img = '<img class="%s" src="%s" style="%s"/>' % (classes, src, options.get('style', ''))
+        alt = None
+        if options.get('alt-field') and getattr(record, options['alt-field'], None):
+            alt = record[options['alt-field']]
+        elif options.get('alt'):
+            alt = options['alt']
+
+        img = '<img class="%s" src="%s" style="%s"%s/>' % \
+            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '')
         return ir_qweb.HTMLSafe(img)
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
