@@ -1427,8 +1427,15 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         return this.menu_dm.add(this.rpc("/web/action/load", { action_id: options.action_id }))
             .then(function (result) {
+
                 return self.action_mutex.exec(function() {
                     if (options.needaction) {
+                        result.context = JSON.parse(result.context);
+                        _.chain(result.context).keys().each(function(key){
+                            if(_.str.startsWith(key, 'search_default_')){
+                                delete result.context[key];
+                            }
+                        });
                         result.context = new instance.web.CompoundContext(result.context, {
                             search_default_message_unread: true,
                             search_disable_custom_filters: true,
