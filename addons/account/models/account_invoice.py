@@ -332,9 +332,9 @@ class AccountInvoice(models.Model):
                 view_type = 'tree'
             elif view_type == 'form':
                 if partner.supplier and not partner.customer:
-                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form')
+                    view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
                 elif partner.customer and not partner.supplier:
-                    view_id = get_view_id('invoice_form', 'account.invoice.form')
+                    view_id = get_view_id('invoice_form', 'account.invoice.form').id
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
