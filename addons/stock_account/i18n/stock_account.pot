@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 08:59+0000\n"
-"PO-Revision-Date: 2015-08-25 08:59+0000\n"
+"POT-Creation-Date: 2015-08-27 14:00+0000\n"
+"PO-Revision-Date: 2015-08-27 14:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "# of Products"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "- update"
 msgstr ""
 
 #. module: stock_account
@@ -52,7 +47,8 @@ msgid "Allows to configure inventory valuations on products and product categori
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,cost_method:0
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
 msgid "Average Price"
 msgstr ""
 
@@ -92,18 +88,19 @@ msgid "Company"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average price"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cost"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Cost Price"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
 msgstr ""
 
@@ -214,8 +211,13 @@ msgid "If cost price is increased, stock variation account will be debited and s
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_valuation
-#: model:ir.model.fields,help:stock_account.field_product_template_valuation
+#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+msgid "If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'. The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
 msgid "If perpetual valuation is enabled for a product, the system will automatically create journal entries corresponding to stock moves, with product price as specified by the 'Costing Method'The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
 msgstr ""
 
@@ -240,10 +242,11 @@ msgid "Inventory Locations"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
 msgstr ""
 
@@ -356,7 +359,7 @@ msgid "Move line"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:91
+#: code:addons/stock_account/product.py:125
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr ""
@@ -398,7 +401,8 @@ msgid "Operation Date"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,valuation:0
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
 msgstr ""
 
@@ -408,7 +412,8 @@ msgid "Periodic inventory valuation (recommended)"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,valuation:0
+#: selection:product.category,property_valuation:0
+#: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
 msgstr ""
 
@@ -469,7 +474,8 @@ msgid "Quants"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,cost_method:0
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
 msgid "Real Price"
 msgstr ""
 
@@ -500,23 +506,31 @@ msgid "Source"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.template,cost_method:0
+#: selection:product.category,property_cost_method:0
+#: selection:product.template,property_cost_method:0
 msgid "Standard Price"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:112
-#: code:addons/stock_account/product.py:119
+#: code:addons/stock_account/product.py:146
+#: code:addons/stock_account/product.py:153
 #, python-format
 msgid "Standard Price changed"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,help:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+msgid "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
 
 #. module: stock_account
@@ -692,6 +706,10 @@ msgid "stock.history"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking_type_count_picking_invoiced
 msgid "unknown"
 msgstr ""

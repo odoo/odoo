@@ -85,7 +85,7 @@ class stock_picking(osv.osv):
         return {
             'name': picking.carrier_id.name,
             'invoice_id': invoice.id,
-            'uos_id': picking.carrier_id.product_id.uos_id.id,
+            'uom_id': picking.carrier_id.product_id.uom_id.id,
             'product_id': picking.carrier_id.product_id.id,
             'account_id': account_id,
             'price_unit': price,

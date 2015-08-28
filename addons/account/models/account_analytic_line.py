@@ -14,62 +14,11 @@ class AccountAnalyticLine(models.Model):
     general_account_id = fields.Many2one('account.account', string='Financial Account', ondelete='restrict',
                                          related='move_id.account_id', store=True, domain=[('deprecated', '=', False)])
     move_id = fields.Many2one('account.move.line', string='Move Line', ondelete='cascade', index=True)
-    journal_id = fields.Many2one('account.analytic.journal', string='Analytic Journal', required=True, ondelete='restrict', index=True)
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
     amount_currency = fields.Monetary(related='move_id.amount_currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
-
-    # Compute the cost based on the price type define into company
-    # property_valuation_price_type property
-    @api.v7
-    def on_change_unit_amount(self, cr, uid, id, prod_id, quantity, company_id,
-            unit=False, journal_id=False, context=None):
-        if context is None:
-            context = {}
-        if not journal_id:
-            j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type', '=', 'purchase')])
-            journal_id = j_ids and j_ids[0] or False
-        if not journal_id or not prod_id:
-            return {}
-
-        result = 0.0
-        journal = self.env['account.analytic.journal'].browse(cr, uid, journal_id, context=context)
-        product = self.env['product.product'].browse(cr, uid, prod_id, context=context)
-        prod_accounts = product._get_product_accounts()
-        unit_obj = False
-        if unit:
-            unit_obj = self.env['product.uom'].browse(cr, uid, unit, context=context)
-        if journal.type != 'sale':
-            account = prod_accounts['expense']
-            price_type = 'standard_price'
-            if not unit_obj or product.uom_po_id.category_id.id != unit_obj.category_id.id:
-                unit = product.uom_po_id.id
-        else:
-            account = prod_accounts['income']
-            price_type = 'list_price'
-            if not unit_obj or product.uom_id.category_id.id != unit_obj.category_id.id:
-                unit = product.uom_id.id
-
-        ctx = context.copy()
-        if unit:
-            # price_get() will respect a 'uom' in its context, in order
-            # to return a default price for those units
-            ctx['uom'] = unit
-        amount_unit = product.price_get(price_type, context=ctx)[product.id]
-        amount = amount_unit * quantity or 0.0
-        cur_record = self.browse(cr, uid, id, context=context)
-        currency = cur_record.exists() and cur_record.currency_id or product.company_id.currency_id
-        result = round(amount, currency.decimal_places)
-        if price_type != 'list_price':
-            result *= -1
-        return {'value': {
-            'amount': result,
-            'general_account_id': account,
-            'product_uom_id': unit
-            }
-        }
 
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'journal_id', 'unit_amount', 'currency_id')
@@ -102,7 +51,7 @@ class AccountAnalyticLine(models.Model):
 
         # Compute based on pricetype
         amount_unit = self.product_id.with_context(ctx).price_get(price_type)[self.product_id.id]
-        amount = amount_unit * self.unit_amount
+        amount = amount_unit * self.unit_amount or 0.0
         result = round(amount, self.currency_id.decimal_places)
         if price_type != 'list_price':
             result *= -1

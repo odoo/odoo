@@ -939,7 +939,6 @@ class pos_order(osv.osv):
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': order.note or "",
-                    'invoice_state': 'none',
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }, context=context)
@@ -953,11 +952,9 @@ class pos_order(osv.osv):
                 move_list.append(move_obj.create(cr, uid, {
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
-                    'product_uos': line.product_id.uom_id.id,
                     'picking_id': picking_id,
                     'picking_type_id': picking_type.id, 
                     'product_id': line.product_id.id,
-                    'product_uos_qty': abs(line.qty),
                     'product_uom_qty': abs(line.qty),
                     'state': 'draft',
                     'location_id': location_id if line.qty >= 0 else destination_id,

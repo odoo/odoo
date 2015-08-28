@@ -35,7 +35,8 @@
 - 
     Confirm sales order
 - 
-    !workflow {model: sale.order, action: order_confirm, ref: sale_order_drp_shpng}
+    !python {model: sale.order}: |
+        self.action_confirm(cr, uid, ref("sale_order_drp_shpng"), context=context)
 - 
     Check the sales order created a procurement group which has a procurement of 200 pieces
 - 

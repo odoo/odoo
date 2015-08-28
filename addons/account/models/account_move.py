@@ -1064,8 +1064,6 @@ class AccountMoveLine(models.Model):
         """
         for obj_line in self:
             if obj_line.analytic_account_id:
-                if not obj_line.journal_id.analytic_journal_id:
-                    raise UserError(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_line_ids:
                     obj_line.analytic_line_ids.unlink()
                 vals_line = obj_line._prepare_analytic_line()[0]
@@ -1085,7 +1083,6 @@ class AccountMoveLine(models.Model):
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
             'amount': (self.credit or 0.0) - (self.debit or 0.0),
             'general_account_id': self.account_id.id,
-            'journal_id': self.journal_id.analytic_journal_id.id,
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
@@ -1104,6 +1101,8 @@ class AccountMoveLine(models.Model):
         if context.get('date_from'):
             if not context.get('strict_range'):
                 domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
+            elif context.get('initial_bal'):
+                domain += [(date_field, '<', context['date_from'])]
             else:
                 domain += [(date_field, '>=', context['date_from'])]
 

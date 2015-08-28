@@ -14,13 +14,9 @@
                 </field>
                 <field name="active" position="after">
                     <field name="analytic_account_id"
-                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
+                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id)]"
                         on_change='on_change_account_id(analytic_account_id)'/>
                 </field>
-                <xpath expr='//div[@name="project"]' position='after'>
-                    <field name="contract_state" widget="label_selection" attrs="{'invisible': ['|', ('partner_id', '=', False), ('analytic_account_id', '=', False)]}"
-                    options="{'classes': {'template': 'default', 'draft': 'info', 'open': 'success', 'pending': 'warning', 'close': 'danger', 'cancelled': 'warning'}}" readonly="1"/>
-                </xpath>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
                     <page string="Timesheets" groups="project.group_tasks_work_on_tasks,project.group_time_work_estimation_tasks">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id, 'default_is_timesheet':1}"
@@ -30,13 +26,7 @@
                                 <field name="user_id" required="1"/>
                                 <field name="name"/>
                                 <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id, user_id, is_timesheet, context)" options="{'no_open': True, 'no_create': True}" groups="analytic.group_analytic_accounting"/>
-                                <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)" widget="float_time"/>
-                                <field name="to_invoice"  invisible="1"/>
-                                <field name="product_uom_id" invisible="1" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id, context)"/>
-                                <field name="journal_id" invisible="1"/>
-                                <field name="amount"  invisible="1"/>
-                                <field name="general_account_id" invisible="1"/>
-                                <field name="product_id" invisible="1"/>
+                                <field name="unit_amount" string="Duration" widget="float_time"/>
                                 <field name="is_timesheet" invisible="1"/>
                             </tree>
                         </field>

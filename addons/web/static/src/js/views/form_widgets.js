@@ -630,6 +630,29 @@ var FieldBoolean = common.AbstractField.extend({
 });
 
 /**
+    This widget is intended to be used on stat button boolean fields.
+    It is a read-only field that will display a simple string "<label of value>".
+*/
+var FieldBooleanButton = common.AbstractField.extend({
+    template: 'BooleanButton',
+    init: function() {
+        this._super.apply(this, arguments);
+        this.true_string = this.options['true'] || _t('True');
+        this.false_string = this.options['false'] || _t('False');
+    },
+    render_value: function() {
+        this._super();
+        this.$el.toggleClass("is_true", this.get_value());
+        if (this.node.attrs.class) {
+            this.$el.addClass(this.node.attrs.class);
+        }
+    },
+    is_false: function() {
+        return false;
+    },
+});
+
+/**
     The progressbar field expect a float from 0 to 100.
 */
 var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
@@ -1597,6 +1620,7 @@ core.form_widget_registry
     .add('radio', FieldRadio)
     .add('reference', FieldReference)
     .add('boolean', FieldBoolean)
+    .add('boolean_button', FieldBooleanButton)
     .add('toggle_button', FieldToggleBoolean)
     .add('float', FieldFloat)
     .add('percentpie', FieldPercentPie)

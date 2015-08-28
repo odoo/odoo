@@ -80,11 +80,11 @@ class TestPricelist(TransactionCase):
         self.uom.write(cr, uid, tonne, {'rounding': 0.001})
         # setup product stored in 'tonnes', with a discounted pricelist for qty > 3 tonnes
         spam_id = self.product_product.copy(cr, uid, self.usb_adapter_id,
-                                            {'name': '1 tonne of spam',
-                                             'uom_id': self.tonne_id,
-                                             'uos_id': self.tonne_id,
-                                             'uom_po_id': self.tonne_id,
-                                             'list_price': tonne_price,
+                                            { 'name': '1 tonne of spam',
+                                              'uom_id': self.tonne_id,
+                                              'uom_po_id': self.tonne_id,
+                                              'list_price': tonne_price,
+                                              'type': 'consu',
                                             })
         self.registry('product.pricelist.item').create(cr, uid, {
                                                        'pricelist_id': self.public_pricelist_id,

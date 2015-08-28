@@ -152,8 +152,6 @@ class sale_quote(http.Controller):
             'name': option.name,
             'order_id': order.id,
             'product_id' : option.product_id.id,
-            'product_uos_qty': option.quantity,
-            'product_uos': option.uom_id.id,
             'product_uom_qty': option.quantity,
             'product_uom': option.uom_id.id,
             'discount': option.discount,

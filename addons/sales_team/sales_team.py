@@ -55,6 +55,12 @@ class crm_team(osv.Model):
         (osv.osv._check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
     ]
 
+    def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        context['mail_create_nosubscribe'] = True
+        return super(crm_team, self).create(cr, uid, values, context=context)
+
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method"""
         if not isinstance(ids, list):

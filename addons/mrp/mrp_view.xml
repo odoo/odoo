@@ -204,7 +204,6 @@
                                     <field name="costs_hour_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_cycle"/>
                                     <field name="costs_cycle_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="costs_journal_id" attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                     <field name="costs_general_account_id" attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}" groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
@@ -388,8 +387,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name"/>
-                            <field name="code" string="Reference"/>
+                            <field name="code" string="Recipe"/>
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
@@ -452,7 +450,8 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
-                    <field name="name"/>
+                    <field name="display_name"/>
+                    <field name="product_tmpl_id"/>
                     <field name="product_id" groups="product.group_product_variant"/>
                 </tree>
             </field>
@@ -462,7 +461,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <field name="name" string="Bill Of Material" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
+                    <field name="code" string="Recipe"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="product_id" string="Variant"/>
@@ -518,8 +517,6 @@
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="routing_id"/>
@@ -610,11 +607,6 @@
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" states="confirmed" class="oe_edit_only oe_link"/>
-                            </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos" class="o_row">
-                                <field name="product_uos_qty"/>
-                                <field name="product_uos"/>
                             </div>
                             <field name="date_planned"/>
                         </group>
@@ -941,8 +933,6 @@
                         <field name="product_id"/>
                         <field name="product_qty"/>
                         <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
                     </group>
                 </form>
             </field>
@@ -955,8 +945,6 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>

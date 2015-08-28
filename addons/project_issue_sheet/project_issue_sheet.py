@@ -26,7 +26,6 @@ class project_issue(osv.osv):
             }),
         'timesheet_ids': fields.one2many('account.analytic.line', 'issue_id', 'Timesheets'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'), 
-        'contract_state': fields.related('analytic_account_id', 'state', string='Contract Status', type='selection', selection=analytic.ANALYTIC_ACCOUNT_STATE), 
     }
     
     def on_change_project(self, cr, uid, ids, project_id, context=None):
@@ -42,7 +41,6 @@ class project_issue(osv.osv):
         account = project.analytic_account_id
         if account:
             result['value']['analytic_account_id'] = account.id
-            result['value']['contract_state'] = account.state
 
         return result
 

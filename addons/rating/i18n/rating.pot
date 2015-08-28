@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 09:00+0000\n"
-"PO-Revision-Date: 2015-08-25 09:00+0000\n"
+"POT-Creation-Date: 2015-08-27 14:01+0000\n"
+"PO-Revision-Date: 2015-08-27 14:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,11 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_access_token
 msgid "Access token to set the rating of the value"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating_message_id
+msgid "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
 
 #. module: rating
@@ -78,6 +83,34 @@ msgid "Happy"
 msgstr ""
 
 #. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/js/rating_common.js:26
+#, python-format
+msgid "I don't like it"
+msgstr ""
+
+#. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/js/rating_common.js:25
+#, python-format
+msgid "I hate it"
+msgstr ""
+
+#. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/js/rating_common.js:28
+#, python-format
+msgid "I like it"
+msgstr ""
+
+#. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/js/rating_common.js:29
+#, python-format
+msgid "I love it"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_id
 #: model:ir.model.fields,field_description:rating.field_rating_rating_id
 msgid "ID"
@@ -94,6 +127,13 @@ msgid "It was"
 msgstr ""
 
 #. module: rating
+#. openerp-web
+#: code:addons/rating/static/src/js/rating_common.js:27
+#, python-format
+msgid "It's okay"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin___last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating___last_update
 msgid "Last Modified on"
@@ -107,6 +147,11 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating_message_id
+msgid "Linked message"
 msgstr ""
 
 #. module: rating
@@ -230,7 +275,7 @@ msgid "Your vote has been taken into account."
 msgstr ""
 
 #. module: rating
-#: code:addons/rating/models/rating.py:53
+#: code:addons/rating/models/rating.py:55
 #, python-format
 msgid "rated it"
 msgstr ""

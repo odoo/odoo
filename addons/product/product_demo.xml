@@ -33,28 +33,49 @@
     -->
 
 
+        <record id="product_product_0" model="product.product">
+            <field name="name">Prepaid Consulting</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">40</field>
+            <field name="list_price">90</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product_uom_hour"/>
+            <field name="uom_po_id" ref="product_uom_hour"/>
+            <field name="description">Example of product to invoice on order.</field>
+        </record>
+
         <record id="product_product_1" model="product.product">
-            <field name="name">On Site Monitoring</field>
+            <field name="name">GAP Analysis Service</field>
             <field name="categ_id" ref="product_category_3"/>
             <field name="standard_price">20.5</field>
             <field name="list_price">30.75</field>
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
-            <field name="description">This type of service include basic monitoring of products.</field>
-            <field name="description_sale">This type of service include basic monitoring of products.</field>
+            <field name="description">Example of products to invoice based on delivery.</field>
+        </record>
+
+        <record id="product_product_1b" model="product.product">
+            <field name="name">External Audit</field>
+            <field name="categ_id" ref="product_category_3"/>
+            <field name="standard_price">160</field>
+            <field name="list_price">180</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="description">Example of products to invoice based on cost.</field>
         </record>
 
 
         <record id="product_product_2" model="product.product">
-            <field name="name">On Site Assistance</field>
+            <field name="name">Support Services</field>
             <field name="categ_id" ref="product_category_3"/>
             <field name="standard_price">25.5</field>
             <field name="list_price">38.25</field>
             <field name="type">service</field>
             <field name="uom_id" ref="product_uom_hour"/>
             <field name="uom_po_id" ref="product_uom_hour"/>
-            <field name="description">This type of service include assistance for security questions, system configuration requirements, implementation or special needs.</field>
+            <field name="description">Example of product to invoice based on delivery.</field>
         </record>
 
 

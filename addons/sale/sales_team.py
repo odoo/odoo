@@ -25,13 +25,29 @@ class crm_team(osv.Model):
             res[rec['team_id'][0]] = rec['amount_total']
         return res
 
+    def _get_monthly_invoiced(self, cr, uid, ids, field_name, arg, context=None):
+        obj_inv = self.pool['account.invoice']
+        res = dict.fromkeys(ids, 0)
+
+        # Cannot use read_group because amount_untaxed_signed is an unstored computed field
+        for team in ids:
+            domain = [
+                ('state', 'in', ['open', 'paid']),
+                ('team_id', '=', team),
+                ('date', '<=', date.today()),
+                ('date', '>=', date.today().replace(day=1))
+            ]
+            invoices = obj_inv.search_read(cr, uid, domain, ['amount_untaxed_signed'], context=context)
+            res[team] = sum([inv['amount_untaxed_signed'] for inv in invoices])
+        return res
+
     _columns = {
         'use_quotations': fields.boolean('Quotations', help="Check this box to manage quotations in this sales team."),
         'use_invoices': fields.boolean('Invoices', help="Check this box to manage invoices in this sales team."),
-        'invoiced_forecast': fields.integer(string='Invoice Forecast',
-            help="Forecast of the invoice revenue for the current month. This is the amount the sales "
-                    "team should invoice this month. It is used to compute the progression ratio "
-                    "of the current and forecast revenue on the kanban view."),
+        'invoiced': fields.function(_get_monthly_invoiced, type='integer', readonly=True, string='Invoiced This Month',
+            help="Invoice revenue for the current month. This is the amount the sales "
+                    "team has invoiced this month. It is used to compute the progression ratio "
+                    "of the current and target revenue on the kanban view."),
         'invoiced_target': fields.integer(string='Invoice Target',
             help="Target of invoice revenue for the current month. This is the amount the sales "
                     "team estimates to be able to invoice this month."),
@@ -44,5 +60,5 @@ class crm_team(osv.Model):
         'use_quotations': True,
     }
 
-    def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'invoiced_forecast': round(float(value))}, context=context)
+    def update_invoiced_target(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'invoiced_target': round(float(value))}, context=context)

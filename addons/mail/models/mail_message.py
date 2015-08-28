@@ -744,6 +744,11 @@ class Message(models.Model):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
+        group_user = self.env.ref('base.group_user')
+        # have a sudoed copy to manipulate partners (public can go here with 
+        # website modules like forum / blog / ...
+        self_sudo = self.sudo()
+
         # TDE CHECK: add partners / channels as arguments to be able to notify a message with / without computation ??
         self.ensure_one()  # tde: not sure, just for testing, will see
 
@@ -754,17 +759,20 @@ class Message(models.Model):
                 ('res_model', '=', self.model),
                 ('res_id', '=', self.res_id)
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
-            # if self.subtype_id.internal:
-            #     followers.filtered(lambda fol: fol.partner_id.user_ids and fol.partner_id.user_ids[0].has_group('base.group_user'))
-            channels = self.channel_ids | followers.mapped('channel_id')
-            partners = self.partner_ids | followers.mapped('partner_id')
+            if self.subtype_id.internal:
+                followers.filtered(lambda fol: fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id'))
+            channels = self_sudo.channel_ids | followers.mapped('channel_id')
+            partners = self_sudo.partner_ids | followers.mapped('partner_id')
         else:
-            channels = self.channel_ids
-            partners = self.partner_ids
+            channels = self_sudo.channel_ids
+            partners = self_sudo.partner_ids
 
-        # remove me from notified partners
-        if self.author_id:
-            partners = partners - self.author_id
+        # remove author from notified partners
+        if self_sudo.author_id:
+            partners = partners - self_sudo.author_id
+
+        # update message
+        self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
 
         # notify partners
         # TDE TODO: model-dependant ? (like customer -> always email ?)
@@ -773,15 +781,15 @@ class Message(models.Model):
             '|',
             ('id', 'in', partners.ids),
             ('channel_ids', 'in', email_channels.ids),
+            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self.email_from),
             ('notify_email', '!=', 'none')]
-        )._notify(self, force_send=force_send, user_signature=user_signature)  # TDE: clean those parameters
+        )._notify(self, force_send=force_send, user_signature=user_signature)
         # notify partners and channels
         channels._notify(self)
 
-        # An error appear when a user receive a notification without notifying
-        # the parent message -> add a read notification for the parent
+        # Discard cache, because child / parent allow reading and therefore
+        # change access rights.
         if self.parent_id:
-            self.parent_id.invalidate_cache()  # avoid access rights issues, as notifications are used for access
+            self.parent_id.invalidate_cache()
 
-        # update message
-        return self.write({'channel_ids': [(6, 0, channels.ids)], 'needaction_partner_ids': [(6, 0, partners.ids)]})
+        return True

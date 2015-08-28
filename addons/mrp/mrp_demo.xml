@@ -12,13 +12,11 @@
         </record>
 
         <record id="account_assembly_hours" model="account.analytic.account">
-            <field name="type">normal</field>
             <field name="code">ASML - HOUR</field>
             <field name="name">Costing Account For Hours of Assembly.</field>
         </record>
 
         <record id="account_assembly_cycle" model="account.analytic.account">
-            <field name="type">normal</field>
             <field name="code">ASML - Cycle</field>
             <field name="name">Costing Account For Cycle of Assembly.</field>
         </record>
@@ -49,7 +47,6 @@
             <field name="costs_hour_account_id" ref="account_assembly_hours"/>
             <field name="costs_cycle">0.05</field>
             <field name="costs_cycle_account_id" ref="account_assembly_cycle"/>
-            <field name="costs_journal_id" ref="account.exp"/>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
 
@@ -242,7 +239,6 @@
 
 
         <record id="mrp_bom_1" model="mrp.bom">
-            <field name="name">HDD 500GB</field>
             <field name="product_tmpl_id" ref="product.product_product_18_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -260,7 +256,6 @@
         </record>
 
         <record id="mrp_bom_2" model="mrp.bom">
-            <field name="name">HDD 2TB on Demand</field>
             <field name="product_tmpl_id" ref="product.product_product_19_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -278,7 +273,6 @@
         </record>
 
         <record id="mrp_bom_3" model="mrp.bom">
-            <field name="name">HDD on Demand</field>
             <field name="product_tmpl_id" ref="product.product_product_19_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
@@ -295,7 +289,6 @@
         </record>
 
         <record id="mrp_bom_4" model="mrp.bom">
-            <field name="name">Laptop Customized</field>
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -331,7 +324,6 @@
         </record>
 
         <record id="mrp_bom_5" model="mrp.bom">
-            <field name="name">Laptop Customized + Azerty</field>
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
@@ -366,7 +358,6 @@
         </record>
 
         <record id="mrp_bom_6" model="mrp.bom">
-            <field name="name">Computer Case-1</field>
             <field name="product_tmpl_id" ref="product.product_product_16_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -401,7 +392,6 @@
         </record>
 
         <record id="mrp_bom_7" model="mrp.bom">
-            <field name="name">Computer Case-2</field>
             <field name="product_tmpl_id" ref="product.product_product_16_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">10</field>            
@@ -445,7 +435,6 @@
         </record>
 
         <record id="mrp_bom_8" model="mrp.bom">
-            <field name="name">PC Assemble + 2GB RAM</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -453,7 +442,6 @@
         </record>
 
         <record id="mrp_bom_property_0" model="mrp.bom">
-            <field name="name">PC Assemble + DDR 512MB</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>
@@ -462,7 +450,6 @@
         </record>
 
         <record id="mrp_bom_property_line" model="mrp.bom">
-            <field name="name">RAM SR2 PLUS</field>
             <field name="product_id" ref="product.product_product_14"/>
             <field name="product_tmpl_id" ref="product.product_product_14_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -517,7 +504,6 @@
         </record>
 
         <record id="mrp_bom_9" model="mrp.bom">
-            <field name="name">PC Assemble + 512MB RAM</field>
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">4</field>
@@ -571,7 +557,6 @@
         </record>
 
         <record id="mrp_bom_10" model="mrp.bom">
-            <field name="name">PC Assemble + Custom RAM (PC on Demand)</field>
             <field name="product_tmpl_id" ref="product.product_product_5_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">5</field>            
@@ -625,7 +610,6 @@
         </record>
 
         <record id="mrp_bom_11" model="mrp.bom">
-            <field name="name">iPad Retina Display</field>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>            

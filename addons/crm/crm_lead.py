@@ -928,7 +928,7 @@ Update your business card, phone book, social media,... Send an email right now 
             return 'crm.mt_lead_won'
         elif 'active' in init_values and record.probability == 0 and not record.active:
             return 'crm.mt_lead_lost'
-        elif 'stage_id' in init_values and record.probability == 0 and record.stage_id and record.stage_id.sequence <= 1:
+        elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
             return 'crm.mt_lead_create'
         elif 'stage_id' in init_values:
             return 'crm.mt_lead_stage'

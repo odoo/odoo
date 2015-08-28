@@ -111,7 +111,7 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
         var account_names;
         var default_get;
         return this.render_drop.add(new Model("account.analytic.line").call("default_get", [
-            ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount', 'is_timesheet'],
+            ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','amount','unit_amount', 'is_timesheet'],
             new data.CompoundContext({'user_id': self.get('user_id'), 'default_is_timesheet':true})]).then(function(result) {
             default_get = result;
             // calculating dates
@@ -219,11 +219,6 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                             account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                             var product = (account.days[day_count].lines[0].product_id instanceof Array) ? account.days[day_count].lines[0].product_id[0] : account.days[day_count].lines[0].product_id;
                             var journal = (account.days[day_count].lines[0].journal_id instanceof Array) ? account.days[day_count].lines[0].journal_id[0] : account.days[day_count].lines[0].journal_id;
-                            self.defs.push(new Model("account.analytic.line").call("on_change_unit_amount", [[], product, account.days[day_count].lines[0].unit_amount, false, false, journal]).then(function(res) {
-                                account.days[day_count].lines[0]['amount'] = res.value.amount || 0;
-                                self.display_totals();
-                                self.sync();
-                            }));
                             if(!isNaN($(this).val())){
                                 $(this).val(self.sum_box(account, day_count, true));
                             }
@@ -256,11 +251,9 @@ var WeeklyTimesheet = form_common.FormWidget.extend(form_common.ReinitializeWidg
                 domain: [
                     ['type','in',['normal', 'contract']],
                     ['state', '<>', 'close'],
-                    ['invoice_on_timesheets','=',1],
                     ['id', 'not in', _.pluck(self.accounts, "account")],
                 ],
                 context: {
-                    default_invoice_on_timesheets: 1,
                     default_type: "contract",
                 },
                 modifiers: '{"required": true}',

@@ -1436,4 +1436,9 @@
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
 
+<div t-name="BooleanButton" class="o_stat_info is_true">
+    <span class="o_stat_text oe_true text-success"><t t-esc="widget.true_string"/></span>
+    <span class="o_stat_text oe_false text-danger"><t t-esc="widget.false_string"/></span>
+</div>
+
 </templates>
