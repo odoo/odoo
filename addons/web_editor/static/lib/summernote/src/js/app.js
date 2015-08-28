@@ -1,8 +1,8 @@
 require.config({
   baseUrl: 'src/js',
   paths: {
-    jquery: '//code.jquery.com/jquery-1.9.1.min',
-    bootstrap: '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min',
+    jquery: '//code.jquery.com/jquery-1.11.3',
+    bootstrap: '//netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min',
     summernotevideo: '/../../plugin/summernote-ext-video',
     CodeMirror: '//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror',
     CodeMirrorXml: '//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min',
