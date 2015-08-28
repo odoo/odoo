@@ -32,10 +32,17 @@
         .o_mail_chat_messages {
             .o-flex(1, 0, 0);
             overflow: auto;
+            .o-webclient-padding();
+
+            .o_mail_chat_help_message {
+                padding: 25px 0;
+                text-align: justify;
+            }
         }
 
         .o_mail_chat_composer_wrapper {
             .o-flex(0, 0, auto);
+            .o-webclient-padding(@top: 10px, @bottom: 5px);
         }
     }
 }
@@ -113,17 +120,9 @@
     .o_mail_chat_content {
         background-color: white;
 
-        .o_mail_chat_messages {
-            .o_mail_chat_help_message{
-                padding: 25px 0;
-                text-align: justify;
-            }
-        }
-
         .o_mail_chat_composer_wrapper {
             border-top: 1px solid @gray-lighter;
             background-color: @gray-lighter;
-            .o-webclient-padding(@top: 10px, @bottom: 5px);
         }
     }
 }

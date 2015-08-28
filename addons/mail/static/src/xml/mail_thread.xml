@@ -89,7 +89,7 @@
     <t t-name="mail.Thread.messages">
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="widget.get('messages')" t-as="message">
-            <div t-if="current_day != message.date.split(' ')[0]" class="row o_mail_thread_date_separator">
+            <div t-if="current_day != message.date.split(' ')[0]" class="o_mail_thread_date_separator">
                 <div class="o_mail_thread_date_wrapper">
                     <div class="o_mail_thread_date_separator_title">
                         <t t-raw="moment(message.date, 'YYYY-MM-DD hh:mm:ss').format('LL')"/>
@@ -97,14 +97,14 @@
                 </div>
                 <t t-set="current_day" t-value="message.date.split(' ')[0]"/>
             </div>
-            <div class="row o_mail_thread_message" t-att-data-message-id="message.id">
-                <div class="col-md-1 col-sm-1 o_mail_thread_message_avatar">
+            <div class="o_mail_thread_message" t-att-data-message-id="message.id">
+                <div class="o_mail_thread_message_avatar">
                     <img t-if="message.message_type == 'email' &amp;&amp; (!message.author_id || !message.author_id[0]) &amp;&amp; message.email_from" src="/mail/static/src/img/email_icon.png" alt="avatar" class="o_mail_thread_avatar img-rounded"/>
                     <img t-if="message.message_type == 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0]) &amp;&amp; !message.email_from" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="o_mail_thread_avatar img-rounded"/>
                     <img t-if="message.message_type !== 'email' &amp;&amp; (message.author_id &amp;&amp; message.author_id[0])" t-att-src="'/web/image/res.partner/'+message.author_id[0]+'/image_small'" class="o_mail_thread_avatar img-rounded"/>
                     <img t-if="message.message_type !== 'email' &amp;&amp; (!message.author_id || !message.author_id[0])" src="/mail/static/src/img/smiley/avatar.jpg" class="o_mail_thread_avatar img-rounded"/>
                 </div>
-                <div t-att-class="'col-md-11 col-sm-11 o_mail_thread_message_core ' + 'o_mail_thread_message_type_' + message.message_type + ' ' + (message.is_note ? 'o_mail_thread_message_subtype_note' : '')">
+                <div t-att-class="'o_mail_thread_message_core ' + 'o_mail_thread_message_type_' + message.message_type + ' ' + (message.is_note ? 'o_mail_thread_message_subtype_note' : '')">
                     <!-- actions -->
                     <span class="pull-right">
                         <i t-if="message.is_needaction &amp;&amp; widget.options.display_needaction_button" class="fa fa-check o_mail_thread_message_needaction" t-att-data-message-id="message.id" t-att-title="_t('Mark as Done')"/>
