@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Contact Form',
     'category': 'Website',
@@ -15,6 +17,5 @@ Odoo Contact Form
         'data/website_crm_data.xml',
         'views/website_crm_templates.xml',
     ],
-    'installable': True,
     'auto_install': True,
 }
