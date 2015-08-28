@@ -31,66 +31,48 @@ class AccountAnalyticLine(models.Model):
         if not journal_id:
             j_ids = self.pool.get('account.analytic.journal').search(cr, uid, [('type', '=', 'purchase')])
             journal_id = j_ids and j_ids[0] or False
-        if not journal_id:
+        if not journal_id or not prod_id:
             return {}
-        product_obj = self.pool.get('product.product')
-        analytic_journal_obj = self.pool.get('account.analytic.journal')
-        product_uom_obj = self.pool.get('product.uom')
-        j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
-        prod = product_obj.browse(cr, uid, prod_id, context=context)
-        result = 0.0
-        if prod_id:
-            unit_obj = False
-            if unit:
-                unit_obj = product_uom_obj.browse(cr, uid, unit, context=context)
-            if not unit_obj or prod.uom_id.category_id.id != unit_obj.category_id.id:
-                unit = prod.uom_id.id
-            if j_id.type == 'purchase':
-                if not unit_obj or prod.uom_po_id.category_id.id != unit_obj.category_id.id:
-                    unit = prod.uom_po_id.id
-        if j_id.type <> 'sale':
-            a = prod.property_account_expense_id.id
-            if not a:
-                a = prod.categ_id.property_account_expense_categ_id.id
-        else:
-            a = prod.property_account_income_id.id
-            if not a:
-                a = prod.categ_id.property_account_income_categ_id.id
 
-        # Compute based on pricetype
-        if journal_id:
-            journal = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
-            if journal.type == 'sale':
-                price_type = 'list_price'
-            else:
-                price_type = 'standard_price'
-        # Take the company currency as the reference one
+        result = 0.0
+        journal = self.env['account.analytic.journal'].browse(cr, uid, journal_id, context=context)
+        product = self.env['product.product'].browse(cr, uid, prod_id, context=context)
+        prod_accounts = product._get_product_accounts()
+        unit_obj = False
+        if unit:
+            unit_obj = self.env['product.uom'].browse(cr, uid, unit, context=context)
+        if journal.type != 'sale':
+            account = prod_accounts['expense']
+            price_type = 'standard_price'
+            if not unit_obj or product.uom_po_id.category_id.id != unit_obj.category_id.id:
+                unit = product.uom_po_id.id
+        else:
+            account = prod_accounts['income']
+            price_type = 'list_price'
+            if not unit_obj or product.uom_id.category_id.id != unit_obj.category_id.id:
+                unit = product.uom_id.id
+
         ctx = context.copy()
         if unit:
             # price_get() will respect a 'uom' in its context, in order
             # to return a default price for those units
             ctx['uom'] = unit
-        amount_unit = prod.price_get(price_type, context=ctx)
-        if amount_unit:
-            amount_unit = amount_unit[prod.id]
-        else:
-            amount_unit = 0.0
-
+        amount_unit = product.price_get(price_type, context=ctx)[product.id]
         amount = amount_unit * quantity or 0.0
         cur_record = self.browse(cr, uid, id, context=context)
-        currency = cur_record.exists() and cur_record.currency_id or prod.company_id.currency_id
+        currency = cur_record.exists() and cur_record.currency_id or product.company_id.currency_id
         result = round(amount, currency.decimal_places)
-        if price_type and price_type != 'list_price':
+        if price_type != 'list_price':
             result *= -1
         return {'value': {
             'amount': result,
-            'general_account_id': a,
+            'general_account_id': account,
             'product_uom_id': unit
             }
         }
 
     @api.v8
-    @api.onchange('product_id', 'product_uom_id')
+    @api.onchange('product_id', 'product_uom_id', 'journal_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
         journal_id = self.journal_id
         if not journal_id:
@@ -99,26 +81,18 @@ class AccountAnalyticLine(models.Model):
             return {}
 
         result = 0.0
-        unit = False
-        if self.product_id:
-            unit = self.product_uom_id.id
-            if not self.product_uom_id or self.product_id.uom_id.category_id.id != self.product_uom_id.category_id.id:
-                unit = self.product_id.uom_id.id
-            if journal_id.type == 'purchase':
-                if not self.product_uom_id or self.product_id.uom_po_id.category_id.id != self.product_uom_id.category_id.id:
-                    unit = self.product_id.uom_po_id.id
+        prod_accounts = self.product_id._get_product_accounts()
+        unit = self.product_uom_id.id
         if journal_id.type != 'sale':
-            account = self.product_id.property_account_expense_id.id or self.product_id.categ_id.property_account_expense_categ_id.id
-            if not account:
-                raise UserError(_('There is no expense account defined ' \
-                                'for this product: "%s" (id:%d).') % \
-                                (self.product_id.name, self.product_id.id,))
+            account = prod_accounts['expense']
+            price_type = 'standard_price'
+            if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
+                unit = self.product_id.uom_po_id.id
         else:
-            account = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
-            if not account:
-                raise UserError(_('There is no income account defined ' \
-                                'for this product: "%s" (id:%d).') % \
-                                (self.product_id.name, self.product_id.id,))
+            account = prod_accounts['income']
+            price_type = 'list_price'
+            if not unit or self.product_id.uom_id.category_id.id != unit.category_id.id:
+                unit = self.product_id.uom_id.id
 
         ctx = dict(self._context or {})
         if unit:
@@ -127,17 +101,10 @@ class AccountAnalyticLine(models.Model):
             ctx['uom'] = unit
 
         # Compute based on pricetype
-        amount_unit = 0.0
-        if self.product_id:
-            if journal_id.type == 'sale':
-                price_type = 'list_price'
-            else:
-                price_type = 'standard_price'
-            amount_unit = self.product_id.with_context(ctx).price_get(price_type)[self.product_id.id]
-
+        amount_unit = self.product_id.with_context(ctx).price_get(price_type)[self.product_id.id]
         amount = amount_unit * self.unit_amount
         result = round(amount, self.currency_id.decimal_places)
-        if price_type and price_type != 'list_price':
+        if price_type != 'list_price':
             result *= -1
         self.amount = result
         self.general_account_id = account
