@@ -56,31 +56,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <!-- Hide overdue when there is none -->
-                        <td t-if="show_demo or (values and values['activity']['overdue'] != 0)" class="o_warning" title="To Activities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities">
-                                <t t-if="!show_demo">
-                                    <t t-esc="values['activity']['overdue']"/> overdue
-                                </t>
-                                <t t-if="show_demo">
-                                    2
-                                </t>
-                            </a>
-                        </td>
-                        <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_opportunities">
-                                <t t-if="!show_demo">
-                                    <t t-esc="values['closing']['overdue']"/> overdue
-                                </t>
-                                <t t-if="show_demo">
-                                    3
-                                </t>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
                         <td class="o_text">Next 7 days</td>
                         <td class="o_main" title="To Calendar">
                             <a href="#" class="o_dashboard_action" name="calendar.action_calendar_event">
@@ -109,6 +84,31 @@
                                 </t>
                                 <t t-if="show_demo">
                                     17
+                                </t>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <!-- Hide overdue when there is none -->
+                        <td t-if="show_demo or (values and values['activity']['overdue'] != 0)" class="o_warning" title="To Activities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_action_activities">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['activity']['overdue']"/> overdue
+                                </t>
+                                <t t-if="show_demo">
+                                    2
+                                </t>
+                            </a>
+                        </td>
+                        <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
+                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_opportunities">
+                                <t t-if="!show_demo">
+                                    <t t-esc="values['closing']['overdue']"/> overdue
+                                </t>
+                                <t t-if="show_demo">
+                                    3
                                 </t>
                             </a>
                         </td>
