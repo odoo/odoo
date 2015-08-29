@@ -1,0 +1,79 @@
+<openerp>
+    <data>
+        <!-- epay Action-->
+        <record id="ke_epay_action" model="ir.actions.act_window">
+         <field name="name">e-payment Register</field>
+         <field name="res_model">ke.epay</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="ke_menu_epay" parent="hr_payroll.menu_hr_root_payroll" action="ke_epay_action"/>
+
+<!-- epay Form view-->
+         <record id="ke_epay_form" model="ir.ui.view">
+         <field name="name">ke.epay.form</field>
+         <field name="model">ke.epay</field>
+         <field name="arch" type="xml">
+           <form>
+		<header>
+		   <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+		</header>
+                <sheet>
+                        <group>
+                                  <field name="name"/>
+                        </group>
+                        <group>
+                                <group>
+                                  <field name="date_from"/>
+                                </group>
+                                <group>
+                                  <field name="date_to"/>
+                                </group>
+                        </group>
+			<div>
+				  <button string="Compute Register" name="compute_register" type="object"  states="draft" class="oe_highlight"/>
+			</div>
+		   <notebook>
+			<page string="E-Register">
+			  
+			   <field name="slip_ids">
+				<tree>
+				 <field name="slip_no"/>
+				 <field name="employee_name"/>
+				 <field name="employee_no"/>
+				 <field name="pin_no"/>
+				 <field name="id_no"/>
+				 <field name="bank_id"/>
+				 <field name="bank_branch"/>
+				 <field name="bank_acc"/>
+				 <field name="net_pay" sum="True"/>
+				</tree>	
+			   </field>
+		         <group class="oe_subtotal_footer oe_right">
+		          <field name="currency_id" invisible="1"/>
+			  <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		        </group>
+			<group></group>
+			</page>
+		   </notebook>
+                </sheet>
+           </form>
+        </field>
+        </record>
+
+<!-- epay Tree view-->
+        <record id="ke_epay_tree" model="ir.ui.view">
+         <field name="name">ke.epay.tree</field>
+         <field name="model">ke.epay</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="date_from"/>
+                 <field name="date_to"/>
+                 <field name="state"/>
+           </tree>
+         </field>
+        </record>
+
+    </data>
+</openerp>
+

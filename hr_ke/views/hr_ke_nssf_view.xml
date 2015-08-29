@@ -1,0 +1,76 @@
+<openerp>
+    <data>
+        <!-- NSSF Action-->
+        <record id="ke_nssf_action" model="ir.actions.act_window">
+         <field name="name">NSSF Register</field>
+         <field name="res_model">ke.nssf</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="ke_menu_nssf" parent="hr_payroll.menu_hr_root_payroll" action="ke_nssf_action"/>
+
+<!-- NSSF Form view-->
+         <record id="ke_nssf_form" model="ir.ui.view">
+         <field name="name">ke.nssf.form</field>
+         <field name="model">ke.nssf</field>
+         <field name="arch" type="xml">
+           <form>
+		<header>
+		   <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+		</header>
+                <sheet>
+                        <group>
+                                  <field name="name"/>
+                        </group>
+                        <group>
+                                <group>
+                                  <field name="date_from"/>
+                                </group>
+                                <group>
+                                  <field name="date_to"/>
+                                </group>
+                        </group>
+			<div>
+				  <button string="Compute NSSF" name="compute_nssf" type="object"  states="draft" class="oe_highlight"/>
+			</div>
+		   <notebook>
+			<page string="NSSF Register">
+			  
+			   <field name="slip_ids">
+				<tree>
+				 <field name="slip_no"/>
+				 <field name="employee_name"/>
+				 <field name="employee_no"/>
+				 <field name="nssf_no"/>
+				 <field name="id_no"/>
+				 <field name="amount" sum="True"/>
+				</tree>	
+			   </field>
+		         <group class="oe_subtotal_footer oe_right">
+		          <field name="currency_id" invisible="1"/>
+			  <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		        </group>
+			<group></group>
+			</page>
+		   </notebook>
+                </sheet>
+           </form>
+        </field>
+        </record>
+
+<!-- NSSF Tree view-->
+        <record id="ke_nssf_tree" model="ir.ui.view">
+         <field name="name">ke.nssf.tree</field>
+         <field name="model">ke.nssf</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="date_from"/>
+                 <field name="date_to"/>
+                 <field name="state"/>
+           </tree>
+         </field>
+        </record>
+
+    </data>
+</openerp>
+

@@ -39,6 +39,12 @@
 	'views/reports.xml',
 	'views/muster_roll.xml',
 	'views/hr_ke_muster_view.xml',
+	'views/hr_ke_epay_view.xml',
+	'views/hr_ke_nhif_view.xml',
+	'views/hr_ke_nssf_view.xml',
+	'views/epay_register.xml',
+	'views/nhif_register.xml',
+	'views/nssf_register.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

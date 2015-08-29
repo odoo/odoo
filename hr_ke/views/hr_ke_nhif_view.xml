@@ -1,0 +1,76 @@
+<openerp>
+    <data>
+        <!-- NHIF Action-->
+        <record id="ke_nhif_action" model="ir.actions.act_window">
+         <field name="name">NHIF Register</field>
+         <field name="res_model">ke.nhif</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="ke_menu_nhif" parent="hr_payroll.menu_hr_root_payroll" action="ke_nhif_action"/>
+
+<!-- NHIF Form view-->
+         <record id="ke_nhif_form" model="ir.ui.view">
+         <field name="name">ke.nhif.form</field>
+         <field name="model">ke.nhif</field>
+         <field name="arch" type="xml">
+           <form>
+		<header>
+		   <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+		</header>
+                <sheet>
+                        <group>
+                                  <field name="name"/>
+                        </group>
+                        <group>
+                                <group>
+                                  <field name="date_from"/>
+                                </group>
+                                <group>
+                                  <field name="date_to"/>
+                                </group>
+                        </group>
+			<div>
+				  <button string="Compute NHIF" name="compute_nhif" type="object"  states="draft" class="oe_highlight"/>
+			</div>
+		   <notebook>
+			<page string="NHIF Register">
+			  
+			   <field name="slip_ids">
+				<tree>
+				 <field name="slip_no"/>
+				 <field name="employee_name"/>
+				 <field name="employee_no"/>
+				 <field name="nhif_no"/>
+				 <field name="id_no"/>
+				 <field name="amount" sum="True"/>
+				</tree>	
+			   </field>
+		         <group class="oe_subtotal_footer oe_right">
+		          <field name="currency_id" invisible="1"/>
+			  <field name="total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+		        </group>
+			<group></group>
+			</page>
+		   </notebook>
+                </sheet>
+           </form>
+        </field>
+        </record>
+
+<!-- epay Tree view-->
+        <record id="ke_nhif_tree" model="ir.ui.view">
+         <field name="name">ke.nhif.tree</field>
+         <field name="model">ke.nhif</field>
+         <field name="arch" type="xml">
+           <tree>
+                 <field name="name"/>
+                 <field name="date_from"/>
+                 <field name="date_to"/>
+                 <field name="state"/>
+           </tree>
+         </field>
+        </record>
+
+    </data>
+</openerp>
+
