@@ -406,7 +406,7 @@
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
-                                    <field name="property_ids" widget="many2many_tags"/>
+                                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                                 </tree>
                             </field>
                         </page>
@@ -514,7 +514,7 @@
                     <field name="date_stop"/>
                     <field name="routing_id"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="property_ids" widget="many2many_tags"/>
+                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                 </tree>
             </field>
         </record>
@@ -950,7 +950,7 @@
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
-                        <field colspan="4" name="property_ids" widget="many2many_tags"/>
+                        <field colspan="4" name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                     </group>
                 </xpath>
                </data>

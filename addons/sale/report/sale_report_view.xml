@@ -7,8 +7,8 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <pivot string="Sales Analysis" disable_linking="True">
-                 <field name="team_id" type="row"/>
-                 <field name="date" interval="month" type="col"/>
+                 <field name="team_id" type="col"/>
+                 <field name="date" interval="month" type="row"/>
                  <field name="price_total" type="measure"/>
              </pivot>
          </field>
@@ -19,7 +19,7 @@
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
              <graph string="Sales Analysis">
-                 <field name="team_id" type="row"/>
+                 <field name="date" type="row"/>
                  <field name="price_total" type="measure"/>
              </graph>
          </field>
