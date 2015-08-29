@@ -493,9 +493,8 @@ class product_template(osv.osv):
             string='Currency'),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         'lst_price' : fields.related('list_price', type="float", string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost Price', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
-                                                "Expressed in the default unit of measure of the product..", groups="base.group_user", store=True),
+        'standard_price': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Cost', digits_compute=dp.get_precision('Product Price'), 
+                                          help="Cost of the product, in the default unit of measure of the product.", groups="base.group_user", store=True),
         'volume': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Volume', help="The volume in m3.", store=True),
         'weight': fields.function(_compute_product_template_field, fnct_inv=_set_product_template_field, multi='_compute_product_template_field', type='float', string='Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc.", store=True),
         'warranty': fields.float('Warranty'),
@@ -506,7 +505,6 @@ class product_template(osv.osv):
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
-        'uom_rel_id': fields.related('uom_id', type="many2one", relation="product.uom", readonly=True, string='Default UoM'),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         # image: all image fields are base64 encoded and PIL-supported
@@ -569,7 +567,7 @@ class product_template(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
             # standard_price field can only be seen by users in base.group_user
-            # Thus, in order to compute the sale price from the cost price for users not in this group
+            # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
             if ptype != 'standard_price':
                 res[product.id] = product[ptype] or 0.0
@@ -962,9 +960,9 @@ class product_product(osv.osv):
             string="Medium-sized image", type="binary",
             help="Image of the product variant (Medium-sized image of product template if false)."),
         'standard_price': fields.property(type = 'float', digits_compute=dp.get_precision('Product Price'), 
-                                          help="Cost price of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
+                                          help="Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "
                                                "Expressed in the default unit of measure of the product.",
-                                          groups="base.group_user", string="Cost Price"),
+                                          groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The weight of the contents in Kg, not including any packaging, etc."),
     }

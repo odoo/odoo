@@ -96,7 +96,6 @@
                             <page string="General Information">
                                 <group>
                                     <group name="group_general">
-                                        <field name="categ_id" string="Internal Category"/>
                                         <field name="type" on_change="onchange_type(type, context)"/>
                                     </group>
                                     <group name="group_standard_price">
@@ -104,13 +103,11 @@
                                         <field name="list_price"/>
                                         <label for="standard_price" groups="base.group_user"/>
                                         <div name="standard_price_uom" groups="base.group_user">
-                                            <field name="standard_price" class="oe_inline"/>
-                                            <field name="currency_id" readonly="1" class="oe_inline" nolabel="1"/> 
-                                            <label string="/" class="oe_inline" groups="product.group_uom"/>
-                                            <field name="uom_rel_id" class="oe_inline" groups="product.group_uom"/>
+                                            <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                         </div>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="uom_po_id" groups="product.group_uom"/>
+                                        <field name="currency_id" invisible="1"/> 
                                     </group>
                                 </group>
                             </page>
@@ -119,6 +116,7 @@
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
+                                        <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
                                        <field digits="(14, 3)" name="weight" string="Weight"
@@ -231,8 +229,9 @@
                         </group>
                         <group>
                             <group name="pricing" string="Pricing">
-                                <field name="lst_price"/>
-                                <field name="standard_price"/>
+                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" invisible='1'/>
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights">
@@ -449,7 +448,8 @@
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" attrs="{'invisible': [('id', '=', False)], 'required': [('id', '!=', False)]}"/>
                 </field>
                 <field name="standard_price" position="replace">
-                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"/>
+                    <field name="standard_price" attrs="{'invisible':[('product_variant_count','=', 1)]}"
+                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
                 </field>
                 <field name="weight" position="replace">
                     <field digits="(14, 3)" name="volume"
