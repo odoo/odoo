@@ -637,41 +637,41 @@ msgstr "Sản phẩm có sẵn"
 #: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Back Order of"
+msgstr "Phần dở dang của"
 
 #. module: stock
 #: code:addons/stock/stock.py:981
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Back order <em>%s</em> <b>created</b>."
+msgstr "Phần dở dang <em>%s</em> <b>được tạo</b>."
 
 #. module: stock
 #: code:addons/stock/stock.py:4348
 #, python-format
 msgid "Backorder exists"
-msgstr "Backorder exists"
+msgstr "Còn dở dang"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders"
-msgstr "Backorders"
+msgstr "Dở dang"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Backorders (%)"
-msgstr "Backorders (%)"
+msgstr "Dở dang (%)"
 
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Barcode"
-msgstr "Barcode"
+msgstr "Mã vạch"
 
 #. module: stock
 #: view:website:stock.barcode_index
 msgid "Barcode Scanner"
-msgstr "Barcode Scanner"
+msgstr "Máy quét Mã vạch"
 
 #. module: stock
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -693,7 +693,7 @@ msgstr "Bulk Content"
 #: code:addons/stock/stock.py:2038
 #, python-format
 msgid "By changing this quantity here, you accept the new quantity as complete: Odoo will not automatically generate a back order."
-msgstr "By changing this quantity here, you accept the new quantity as complete: Odoo will not automatically generate a back order."
+msgstr "Bằng cách thay đổi số lượng tại đây, bạn chấp thuận rằng số lượng mới bạn nhập vào sẽ được coi là số lượng hoàn thành: Odoo sẽ không tự động ghi nhận là 'Dở dang'."
 
 #. module: stock
 #: help:stock.move,procure_method:0
@@ -1798,7 +1798,7 @@ msgstr "Nếu bỏ chọn, nó sẽ cho phép bạn ẩn quy tắc mà không c�
 #. module: stock
 #: help:stock.inventory,filter:0
 msgid "If you do an entire inventory, you can choose 'All Products' and it will prefill the inventory with the current stock.  If you only do some products  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the system propose for a single product / lot /... "
-msgstr "If you do an entire inventory, you can choose 'All Products' and it will prefill the inventory with the current stock.  If you only do some products  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and the system won't propose anything.  You can also let the system propose for a single product / lot /... "
+msgstr "Nếu bạn thực hiện kiểm kê toàn bộ, bạn có thể lựa chọn 'Tất cả sản phẩm' và phần mềm sẽ tự điền toàn bộ các các sản phẩm có trong kho. Nếu bạn chỉ muốn kiểm kê một phần (vd: Kiểm kê cuốn chiếu - Cycle Counting), bạn có thể chọn 'Chọn sản phẩm thủ công' và phần mềm sẽ không đề xuất gì cả. Bạn có thể để cho hệ thống đề xuất một sản phẩm / lô /... đơn lẻ"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2179,17 +2179,17 @@ msgstr "Last Updated on"
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 #, python-format
 msgid "Late"
-msgstr "Late"
+msgstr "Muộn"
 
 #. module: stock
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Late (%)"
-msgstr "Late (%)"
+msgstr "Muộn (%)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Late Transfers"
+msgstr "Dịch chuyển muộn"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2457,7 +2457,7 @@ msgstr "Manual Operation"
 #: code:addons/stock/stock.py:2640
 #, python-format
 msgid "Manual Selection of Products"
-msgstr "Manual Selection of Products"
+msgstr "Chọn sản phẩm thủ công"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
@@ -3645,7 +3645,7 @@ msgstr "Số lượng có sẵn"
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr "Quantity Multiple"
+msgstr "Bội số làm tròn"
 
 #. module: stock
 #: field:product.product,qty_available:0
@@ -3842,7 +3842,7 @@ msgstr "Tham chiếu"
 #. module: stock
 #: field:stock.picking.type,sequence_id:0
 msgid "Reference Sequence"
-msgstr "Reference Sequence"
+msgstr "Trình tự tham chiếu"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
@@ -4664,7 +4664,7 @@ msgstr "The picking type determines the picking view"
 #. module: stock
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "
-msgstr "The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.  "
+msgstr "Số lượng mua sắm sẽ được làm tròn lên bội số này. Nếu thiết lập là 0, số lượng chính xác sẽ được sử dụng."
 
 #. module: stock
 #: help:stock.move,rule_id:0
