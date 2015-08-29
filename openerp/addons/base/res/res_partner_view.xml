@@ -522,10 +522,10 @@
 
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
-                <form string="Partner Category">
+                <form string="Partner Tag">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -535,72 +535,32 @@
             </field>
         </record>
         <record id="view_partner_category_list" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Partner Categories">
+                <tree string="Partner Tags">
                     <field name="complete_name"/>
                 </tree>
             </field>
         </record>
-        <record id="view_partner_category_tree" model="ir.ui.view">
-            <field name="name">res.partner.category.tree</field>
-            <field name="model">res.partner.category</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree toolbar="1" string="Partner Categories">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <!--
-        <record id="action_partner_category" model="ir.actions.act_window">
-            <field name="name">Partners by Categories</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.category</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_partner_category_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
-        </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
-            groups="base.group_no_one"/>
-        -->
-
-        <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name">Partner Categories</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('category_id','child_of', [active_id])]</field>
-            <field name="context">{'category_id':active_id}</field>
-            <field name="search_view_id" ref="view_res_partner_filter"/>
-        </record>
-
-        <record id="ir_action_partner_by_category" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'res.partner.category'" name="model"/>
-            <field name="name">Open partners</field>
-            <field eval="'ir.actions.act_window,%d'%action_partner_by_category" name="value"/>
-        </record>
-
         <record id="action_partner_category_form" model="ir.actions.act_window">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click to create a new partner category.
+                    Click to create a new partner tag.
                 </p>
                 <p>
-                    Manage the partner categories to better classify them for tracking and analysis purposes.
+                    Manage partner tags to better classify them for tracking and analysis purposes.
                     A partner may have several categories and categories have a hierarchical structure: a partner with a categorie has also the parent categorie.
                 </p>
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Categories" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>
