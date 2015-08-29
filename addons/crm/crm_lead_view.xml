@@ -368,7 +368,8 @@
                             name="type_opportunity"
                             domain="[('type', '=', 'opportunity')]"/>
                     <separator/>
-                    <filter string="My Leads"
+                    <filter string="My Opportunities"
+                            name="assigned_to_me"
                             domain="[('user_id','=',uid)]"
                             help="Leads that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"

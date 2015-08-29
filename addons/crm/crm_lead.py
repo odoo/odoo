@@ -1221,3 +1221,39 @@ class crm_lost_reason(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
     }
+
+
+class crm_team(osv.Model):
+    _inherit = "crm.team"
+    def action_your_pipeline(self, cr, uid, context={}):
+        imd = self.pool.get('ir.actions.act_window')
+        action = imd.for_xml_id(cr, uid, 'crm', "crm_lead_opportunities_tree_view", context=context)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        team_id = user.sale_team_id.id
+        if not team_id:
+            team_id = self.search(cr, uid, [], context=context, limit=1)
+            team_id = team_id and team_id[0]
+            action['help'] = """
+                <p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
+                    Looks like you are not a member of a sales team. You should add yourself
+                    as a member of one of the sales team.
+                </p>"""
+            if team_id:
+                action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
+        newcontext = eval(action['context'], {'uid': uid})
+        if team_id:
+            newcontext.update({
+                    'default_team_id': team_id,
+                    'search_default_team_id': team_id
+                })
+        result = {
+            'name': action['name'],
+            'help': action['help'],
+            'type': action['type'],
+            'views': [[False, 'kanban'], [False, 'tree'], [False, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
+            'target': action['target'],
+            'context': newcontext,
+            'res_model': action['res_model'],
+        }
+        return result
+

@@ -14,12 +14,10 @@
                 <search string="Salesteams Search">
                     <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <field name="name"/>
-                    <field name="parent_id"/>
                     <field name="user_id"/>
                     <field name="code"/>
                     <group expand="0" string="Group By...">
                         <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Parent Sales Teams" domain="[]" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
             </field>
@@ -27,7 +25,7 @@
 
         <!-- Case Teams Action -->
         <record id="crm_team_salesteams_act" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
+            <field name="name">Dashboard</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">sales_team_dashboard</field>

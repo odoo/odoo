@@ -54,18 +54,25 @@
         </field>
     </record>
 
+    <record id="action_your_pipeline" model="ir.actions.server">
+        <field name="name">Your Pipeline</field>
+        <field name="model_id" ref="crm.model_crm_team"/>
+        <field name="state">code</field>
+        <field name="code">action = self.action_your_pipeline(cr, uid, context=context)</field>
+        <field eval="True" name="condition"/>
+    </record>
+
     <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
-        <field name="name">Pipeline</field>
+        <field name="name">Your Pipeline</field>
         <field name="res_model">crm.lead</field>
-        <field name="view_mode">tree,graph,pivot,form,calendar</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
         <field name="domain">[('type','=','opportunity')]</field>
         <field name="context">{
                 'stage_type': 'opportunity',
                 'default_type': 'opportunity',
                 'default_user_id': uid,
                 'search_default_assigned_to_me': 1,
-            }
-        </field>
+}</field>
         <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         <field name="help" type="html">
             <p>
@@ -102,7 +109,7 @@
     <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="5"/>
     <menuitem name="Leads" id="menu_crm_leads" parent="base.menu_sales" sequence="1"
             action="crm_lead_all_leads" groups="crm.group_use_lead"/>
-    <menuitem name="Pipeline" id="menu_crm_opportunities" action="crm_lead_opportunities_tree_view" parent="base.menu_sales" sequence="1"/>
+    <menuitem id="menu_crm_opportunities" action="action_your_pipeline" parent="base.menu_sales" sequence="4"/>
 
     <record id="crm_lead_action_activities" model="ir.actions.act_window">
         <field name="name">Next Activities</field>

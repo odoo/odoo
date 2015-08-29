@@ -548,13 +548,9 @@ Weight: 31 grams</field>
             <field name="price_discount">-0.2000</field>
             <field name="sequence">1</field>
         </record>
-        
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="member_ids" eval="[(4, ref('base.user_root'), ref('base.user_demo'))]"/>
-        </record>
 
     <!-- product.public.category -->
-        
+
         <record id="product.Components" model="product.public.category">
           <field name="name">Components</field>
           <field name="sequence">15</field>
