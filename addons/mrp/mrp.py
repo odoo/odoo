@@ -153,7 +153,7 @@ class mrp_bom(osv.osv):
         return self.pool['mrp.bom'].search(cr, uid, [('product_tmpl_id', 'in', product_template_ids)], context=context)
 
     _columns = {
-        'code': fields.char('Recipe', size=16),
+        'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Manufacture this product'),('phantom','Ship this product as a set of components (kit)')], 'BoM Type', required=True,
                 help= "Set: When processing a sales order for this product, the delivery order will contain the raw materials, instead of the finished product."),

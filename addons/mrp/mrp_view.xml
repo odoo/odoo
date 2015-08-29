@@ -387,7 +387,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="code" string="Recipe"/>
+                            <field name="code"/>
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sales order for this product, the delivery order
@@ -461,7 +461,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <field name="code" string="Recipe"/>
+                    <field name="code"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="product_id" string="Variant"/>
