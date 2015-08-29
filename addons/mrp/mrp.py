@@ -305,15 +305,15 @@ class mrp_bom(osv.osv):
             quantity = _factor(bom_line_id.product_qty * factor, bom_line_id.product_efficiency, bom_line_id.product_rounding)
             bom_id = self._bom_find(cr, uid, product_id=bom_line_id.product_id.id, properties=properties, context=context)
 
-            #If BoM should not behave like PhantoM, just add the product, otherwise explode further
-            if bom_line_id.type != "phantom" and (not bom_id or self.browse(cr, uid, bom_id, context=context).type != "phantom"):
+            #If BoM should not behave like kit, just add the product, otherwise explode further
+            if (not bom_id) or (self.browse(cr, uid, bom_id, context=context).type != "phantom"):
                 result.append({
                     'name': bom_line_id.product_id.name,
                     'product_id': bom_line_id.product_id.id,
                     'product_qty': quantity,
                     'product_uom': bom_line_id.product_uom.id
                 })
-            elif bom_id:
+            else:
                 all_prod = [bom.product_tmpl_id.id] + (previous_products or [])
                 bom2 = self.browse(cr, uid, bom_id, context=context)
                 # We need to convert to units/UoM of chosen BoM
@@ -323,9 +323,6 @@ class mrp_bom(osv.osv):
                     properties=properties, level=level + 10, previous_products=all_prod, master_bom=master_bom, context=context)
                 result = result + res[0]
                 result2 = result2 + res[1]
-            else:
-                raise UserError(_('BoM "%s" contains a phantom BoM line but the product "%s" does not have any BoM defined.') % (master_bom.name,bom_line_id.product_id.name_get()[0][1]))
-
         return result, result2
 
     def copy_data(self, cr, uid, id, default=None, context=None):
@@ -394,10 +391,6 @@ class mrp_bom_line(osv.osv):
         return res
 
     _columns = {
-        'type': fields.selection([('normal', 'Normal'), ('phantom', 'Phantom')], 'BoM Line Type', required=True,
-                help="Phantom: this product line will not appear in the raw materials of manufacturing orders,"
-                     "it will be directly replaced by the raw materials of its own BoM, without triggering"
-                     "an extra manufacturing order."),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Quantity', required=True, digits_compute=dp.get_precision('Product Unit of Measure')),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True,
@@ -422,7 +415,6 @@ class mrp_bom_line(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_efficiency': lambda *a: 1.0,
         'product_rounding': lambda *a: 0.0,
-        'type': lambda *a: 'normal',
         'product_uom': _get_uom_id,
         'sequence': 1,
     }
@@ -1113,8 +1105,6 @@ class mrp_production(osv.osv):
             'group_id': procurement and procurement.group_id.id,
         }
         move_id = stock_move.create(cr, uid, data, context=context)
-        #a phantom bom cannot be used in mrp order so it's ok to assume the list returned by action_confirm
-        #is 1 element long, so we can take the first.
         return stock_move.action_confirm(cr, uid, [move_id], context=context)[0]
 
     def _get_raw_material_procure_method(self, cr, uid, product, location_id=False, location_dest_id=False, context=None):

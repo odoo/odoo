@@ -389,10 +389,6 @@
                         <group>
                             <field name="code"/>
                             <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sales order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
-                            </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
@@ -402,7 +398,6 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
@@ -463,13 +458,11 @@
                     <field name="code"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
-                    <field name="product_id" string="Variant"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string="Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
@@ -509,7 +502,6 @@
                     <field name="sequence" widget="handle"/>
                     <field name="bom_id"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    <field name="type"/>
                     <field name="product_qty"/>
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
@@ -550,7 +542,6 @@
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
