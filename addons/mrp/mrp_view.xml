@@ -372,6 +372,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
+                    <sheet>
                     <group>
                         <group>
                             <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -432,6 +433,7 @@
                             </group>
                         </page>
                     </notebook>
+                    </sheet>
                     <div class="oe_chatter">
                          <field name="message_follower_ids" widget="mail_followers"/>
                          <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
