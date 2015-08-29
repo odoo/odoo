@@ -444,9 +444,11 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
-                    <field name="display_name"/>
                     <field name="product_tmpl_id"/>
+                    <field name="code"/>
                     <field name="product_id" groups="product.group_product_variant"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -523,7 +525,6 @@
                     <field name="sequence" invisible="1"/>
                     <field name="product_id"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="type"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
