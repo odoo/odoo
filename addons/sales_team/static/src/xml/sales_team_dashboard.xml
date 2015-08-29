@@ -8,7 +8,7 @@
     -->
     <t t-name="sales_team.SalesDashboard">
 
-        <div t-if="show_demo or values" class="o_sales_dashboard">
+        <div t-if="show_demo or values" class="o_sales_dashboard mb8">
             <div t-attf-class="o_left_panel #{show_demo ? 'o_demo' : ''}">
                 <table border="0" class="table">
                     <tr>
@@ -145,7 +145,7 @@
                                         78,140.03€
                                     </t>
                                 </span> <br/>
-                                Won in Opportunities
+                                Opportunities Won
                             </a>
                         </td>
                         <td t-if="values['invoiced']" class="o_secondary" title="To Invoice Report">
@@ -232,8 +232,8 @@
                 <div class="o_welcome_content">
                     <h2>Hi there!</h2>
                     <h4>Great sales journeys start with a clean pipeline.</h4>
-                    <h4>Have fun playing with Odoo CRM.</h4>
-                    <a class="btn btn-primary o_dashboard_action" name="crm.crm_lead_opportunities">Your Pipeline</a>
+                    <h4>Create a few opportunities to activate your dashboard.</h4>
+                    <a class="btn btn-primary btn-lg o_dashboard_action" name="crm.crm_lead_opportunities">Your Pipeline</a>
                 </div>
             </div>
         </div>
