@@ -394,7 +394,6 @@
                                 will contain the raw materials, instead of the finished product.
                             </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="categ_id"/>
                         </group>
                     </group>
                     <notebook>
@@ -466,14 +465,12 @@
                     <field name="product_tmpl_id" string="Product"/>
                     <field name="product_id" string="Variant"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="categ_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
-                        <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
+                        <filter string="Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
@@ -621,7 +618,6 @@
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                             <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>
-                            <field name="categ_id"/>
                         </group>
                         <group groups="stock.group_locations">
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
@@ -860,13 +856,11 @@
                     <field name="product_tmpl_id"/>
                     <field name="product_id"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="categ_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
-                        <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
                     </group>
                </search>
             </field>
