@@ -4,12 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Leonardo Germán Chianea <noamixcontenidos@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 14:50+0000\n"
+"PO-Revision-Date: 2015-08-23 18:22+0000\n"
 "Last-Translator: Leonardo Germán Chianea <noamixcontenidos@gmail.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-8/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
@@ -28,17 +29,17 @@ msgid ""
 "                supplier invoice or a customer refund.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPulse para crear una nueva orden de pago.\n</p>\n<p>\nUna orden de pago es una petición de pago de su compañía para pagar una factura de proveedor o una nota de crédito de cliente.\n</p>\n          "
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Contabilidad extracto generar pago"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Contabilidad realizar pago"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -79,7 +80,7 @@ msgstr "Importe en la moneda del partner"
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "¿Está seguro que quiere realizar el pago?"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
@@ -99,12 +100,12 @@ msgstr "Cuenta bancaria"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Diario de banco o caja para el modo de pago."
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Línea extracto bancario"
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -117,7 +118,7 @@ msgstr "Cancelar"
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
 msgid "Cancel Payments"
-msgstr ""
+msgstr "Cancelar pagos"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -161,7 +162,7 @@ msgstr "Moneda de la compañía"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Company Currency:"
-msgstr ""
+msgstr "Moneda de la compañía"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -224,7 +225,7 @@ msgstr "Cuenta de destino"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank Account"
-msgstr ""
+msgstr "Cuenta bancaria destino"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -291,12 +292,12 @@ msgstr "¡Error!"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution Date"
-msgstr ""
+msgstr "Fecha de ejecución"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Execution:"
-msgstr ""
+msgstr "Ejecucción:"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -339,7 +340,7 @@ msgstr "Si no se indica fecha de pago, el banco procesará esta línea de pago d
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
 msgid "Import Lines"
-msgstr ""
+msgstr "Importar líneas"
 
 #. module: account_payment
 #: view:account.bank.statement:account_payment.view_bank_statement_form
@@ -365,7 +366,7 @@ msgstr "Fecha vencimiento de la factura"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Ref. factura"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -502,7 +503,7 @@ msgstr "Orden de pago"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Orden de pago / Pago"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -514,12 +515,12 @@ msgstr "Órdenes de pago"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Extracto generar pago"
 
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Payment Type:"
-msgstr ""
+msgstr "Tipo de pago:"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -545,17 +546,17 @@ msgstr "Órdenes de pago"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Generar pago"
 
 #. module: account_payment
 #: view:account.payment.populate.statement:account_payment.account_payment_populate_statement_view
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Generar pago"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred Date"
-msgstr ""
+msgstr "Fecha preferida"
 
 #. module: account_payment
 #: field:payment.order,reference:0
@@ -634,7 +635,7 @@ msgstr "El mensaje siguiente de comunicación"
 #: code:addons/account_payment/account_move_line.py:57
 #, python-format
 msgid "There is no partner defined on the entry line."
-msgstr ""
+msgstr "No hay empresa definida en el asiento"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -652,7 +653,7 @@ msgstr "Total"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Total (Currency)"
-msgstr ""
+msgstr "Total (moneda)"
 
 #. module: account_payment
 #: view:payment.order:account_payment.view_payment_order_form
@@ -668,7 +669,7 @@ msgstr "Información de la transacción"
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Used Account:"
-msgstr ""
+msgstr "Cuenta usada:"
 
 #. module: account_payment
 #: help:payment.line,communication:0
@@ -680,7 +681,7 @@ msgstr "Se utiliza como mensaje entre la orden del cliente y la compañía actua
 #. module: account_payment
 #: view:website:account_payment.report_paymentorder
 msgid "Value Date"
-msgstr ""
+msgstr "Fecha de validación"
 
 #. module: account_payment
 #: help:payment.order,state:0
@@ -688,7 +689,7 @@ msgid ""
 "When an order is placed the status is 'Draft'.\n"
 " Once the bank is confirmed the status is set to 'Confirmed'.\n"
 " Then the order is paid the status is 'Done'."
-msgstr ""
+msgstr "Al crear una orden su estatus es 'Borrador'.\n Una vez es confirmado el estado se establece a 'Confirmado'\n Cuando la orden se paga su estatus es 'Pagado'."
 
 #. module: account_payment
 #: view:account.payment.make.payment:account_payment.account_payment_make_payment_view
@@ -701,7 +702,7 @@ msgstr "Si"
 msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
-msgstr ""
+msgstr "No puede cancelar una factura que ya ha sido importada en una orden de pago. Bórrela de la siguiente orden de pago: %s."
 
 #. module: account_payment
 #: field:payment.line,name:0
