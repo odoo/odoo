@@ -121,6 +121,10 @@ class SaleOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
     @api.multi
+    def button_dummy(self):
+        return True
+
+    @api.multi
     def unlink(self):
         for order in self:
             if order.state != 'draft':
