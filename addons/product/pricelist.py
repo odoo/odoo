@@ -173,7 +173,7 @@ class product_pricelist(osv.osv):
                     pass
 
             # if Public user try to access standard price from website sale, need to call _price_get.
-            price = product.list_price or 0.0
+            price = self.pool['product.template']._price_get(cr, uid, [product], 'list_price', context=context)[product.id]
 
             price_uom_id = qty_uom_id
             for rule in items:
@@ -201,9 +201,13 @@ class product_pricelist(osv.osv):
                     # price_get returns the price in the context UoM, i.e. qty_uom_id
                     price = self.pool['product.template']._price_get(cr, uid, [product], rule.base, context=context)[product.id]
 
+                convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
+                                            cr, uid, product.uom_id.id,
+                                            price, price_uom_id))
+
                 if price is not False:
                     if rule.compute_price == 'fixed':
-                        price = rule.fixed_price
+                        price = convert_to_price_uom(rule.fixed_price)
                     elif rule.compute_price == 'percentage':
                         price = (price - (price * (rule.percent_price / 100))) or 0.0
                     else:
@@ -213,9 +217,6 @@ class product_pricelist(osv.osv):
                         if rule.price_round:
                             price = tools.float_round(price, precision_rounding=rule.price_round)
 
-                        convert_to_price_uom = (lambda price: product_uom_obj._compute_price(
-                                                    cr, uid, product.uom_id.id,
-                                                    price, price_uom_id))
                         if rule.price_surcharge:
                             price_surcharge = convert_to_price_uom(rule.price_surcharge)
                             price += price_surcharge

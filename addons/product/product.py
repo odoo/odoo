@@ -466,6 +466,23 @@ class product_template(osv.osv):
             return variant.write({name: value})
         return {}        
 
+    def _select_seller(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        partner = context.get('partner')
+        minimal_quantity = context.get('quantity', 0.0)
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = False
+            for seller in product.seller_ids:
+                if partner and seller.name.id != partner:
+                    continue
+                if minimal_quantity and minimal_quantity < seller.qty:
+                    continue
+                res[product.id] = seller
+                break
+        return res
+
     def _get_product_template_type(self, cr, uid, context=None):
         return [('consu', 'Consumable'), ('service', 'Service')]
     _get_product_template_type_wrapper = lambda self, *args, **kwargs: self._get_product_template_type(*args, **kwargs)
@@ -533,21 +550,22 @@ class product_template(osv.osv):
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Vendor'),
-        'seller_delay': fields.related('seller_ids','delay', type='integer', string='Vendor Lead Time',
+        'selected_seller_id': fields.function(_select_seller, type='many2one', relation='product.supplierinfo', string='Selected Seller', help='Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context'),
+        'seller_delay': fields.related('selected_seller_id','delay', type='integer', string='Vendor Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default vendor. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.related('seller_ids','qty', type='float', string='Vendor Quantity',
+        'seller_qty': fields.related('selected_seller_id','qty', type='float', string='Vendor Quantity',
             help="This is minimum quantity to purchase from Main Vendor."),
-        'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Vendor',
+        'seller_id': fields.related('selected_seller_id','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
-        'seller_price': fields.related('seller_ids','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
+        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is a product variant'),
+        'is_product_variant': fields.function(_is_product_variant, type='boolean', string='Is a product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
-        'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
+        'product_variant_count': fields.function(_get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
         'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
