@@ -1320,7 +1320,20 @@ class mail_thread(osv.AbstractModel):
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
-                # 4) Anything else -> attachment
+                # 4) if message/* we will do mostly like text/plain but Python
+                # handles message/* as multipart and thus
+                # get_payload(decode=True) is None.  Letting the "attachment"
+                # catch-all facility to proceed would only result in several
+                # 4-bytes attachments with "None".
+                elif part.get_content_maintype() == 'message':
+                    payload = ''.join(
+                        subpart.as_string() for subpart in part.get_payload()
+                    )
+                    body = tools.append_content_to_html(
+                        body, tools.ustr(payload, encoding, errors='replace'),
+                        preserve=True
+                    )
+                # *) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
         return body, attachments
