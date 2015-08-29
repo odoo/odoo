@@ -540,7 +540,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="domain">[('type','in', ['out_invoice', 'out_refund']), ('state', 'not in', ['draft', 'cancel'])]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
