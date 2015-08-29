@@ -439,6 +439,38 @@
             <field name="property_ids" eval="[(6,0,[ref('mrp_property_0')])]"/>
         </record>
 
+        <record id="mrp_bom_no_property_line" model="mrp.bom">
+            <field name="product_id" ref="product.product_product_14"/>
+            <field name="product_tmpl_id" ref="product.product_product_14_product_template"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">5</field>
+            <field name="code">default</field>
+            <field name="type">phantom</field>
+        </record>
+        <record id="mrp_bom_line_no_prop_1" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_13"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_no_property_line"/>
+        </record>
+        <record id="mrp_bom_line_no_prop_2" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_12"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_no_property_line"/>
+        </record>
+        <record id="mrp_bom_line_no_prop_3" model="mrp.bom.line">
+            <field name="product_id" ref="product.product_product_11"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="bom_id" ref="mrp_bom_no_property_line"/>
+        </record>
+
+
+
         <record id="mrp_bom_property_line" model="mrp.bom">
             <field name="product_id" ref="product.product_product_14"/>
             <field name="product_tmpl_id" ref="product.product_product_14_product_template"/>
