@@ -22,7 +22,7 @@
 
 from openerp.osv import osv
 from openerp.report import report_sxw
-
+from collections import OrderedDict
 
 class payslip_details_report(report_sxw.rml_parse):
 
@@ -46,7 +46,7 @@ class payslip_details_report(report_sxw.rml_parse):
             return rule_categories
 
         res = []
-        result = {}
+        result = OrderedDict()
         ids = []
 
         for id in range(len(obj)):
