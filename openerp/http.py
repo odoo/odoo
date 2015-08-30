@@ -1302,15 +1302,16 @@ class Root(object):
                     path_static = os.path.join(addons_path, module, 'static')
                     if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                         manifest = ast.literal_eval(open(manifest_path).read())
-                        manifest['addons_path'] = addons_path
-                        _logger.debug("Loading %s", module)
-                        if 'openerp.addons' in sys.modules:
-                            m = __import__('openerp.addons.' + module)
-                        else:
-                            m = None
-                        addons_module[module] = m
-                        addons_manifest[module] = manifest
-                        statics['/%s/static' % module] = path_static
+                        if manifest.get('installable', True):
+                            manifest['addons_path'] = addons_path
+                            _logger.debug("Loading %s", module)
+                            if 'openerp.addons' in sys.modules:
+                                m = __import__('openerp.addons.' + module)
+                            else:
+                                m = None
+                            addons_module[module] = m
+                            addons_manifest[module] = manifest
+                            statics['/%s/static' % module] = path_static
 
         if statics:
             _logger.info("HTTP Configuring static files")
