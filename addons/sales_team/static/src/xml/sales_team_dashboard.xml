@@ -12,7 +12,8 @@
             <div t-attf-class="o_left_panel #{show_demo ? 'o_demo' : ''}">
                 <table border="0" class="table">
                     <tr>
-                        <td class="o_highlight o_text">
+                        <td class="o_text">
+                            <div class="o_highlight">To do</div>
                             Today
                         </td>
                         <td class="o_main" title="To Calendar">
@@ -42,7 +43,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_opportunities">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
                                 <span class="o_highlight">
                                     <t t-if="!show_demo">
                                         <t t-esc="values['closing']['today']"/>
@@ -78,7 +79,7 @@
                             </a>
                         </td>
                         <td class="o_main" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_opportunities">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['closing']['next_7_days']"/>
                                 </t>
@@ -103,7 +104,7 @@
                             </a>
                         </td>
                         <td  t-if="show_demo or (values and values['closing']['overdue'] != 0)" class="o_warning" title="To Opportunities">
-                            <a href="#" class="o_dashboard_action" name="crm.crm_lead_opportunities">
+                            <a href="#" class="o_dashboard_action" name="crm.action_your_pipeline">
                                 <t t-if="!show_demo">
                                     <t t-esc="values['closing']['overdue']"/> overdue
                                 </t>
@@ -119,7 +120,8 @@
             <div t-attf-class="o_right_panel #{show_demo ? 'o_demo' : ''}">
                 <table class="table">
                     <tr>
-                        <td class="o_highlight o_text">
+                        <td class="o_text">
+                            <div class="o_highlight">Performance</div>
                             This Month
                         </td>
                         <td class="o_secondary" title="To Activity Report">
@@ -145,7 +147,7 @@
                                         78,140.03€
                                     </t>
                                 </span> <br/>
-                                Opportunities Won
+                                Won in Opportunities
                             </a>
                         </td>
                         <td t-if="values['invoiced']" class="o_secondary" title="To Invoice Report">

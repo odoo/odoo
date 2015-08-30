@@ -101,18 +101,24 @@
                         attrs="{'invisible': [('customer', '=', False)]}"
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
-                            <span class="o_stat_value"><field name="total_invoiced"/></span>
+                            <span class="o_stat_value"><field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/></span>
                             <span class="o_stat_text">Invoiced</span>
                         </div>
                     </button>
-                     <button class="oe_stat_button" type="action"
-                        name="%(base.action_res_partner_bank_account_form)d"
-                        icon="fa-university"
-                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
-                        <field string="Bank Accounts" name="bank_account_count" widget="statinfo"/>
-                    </button>
-                    <field name="currency_id" invisible="1"/>
                 </div>
+                <group name="container_row_2" position="inside">
+                    <group string="Payments" name="banks">
+                        <field name="currency_id" invisible="1"/>
+                        <div>
+                            <button type="action" class="btn-link"
+                                name="%(base.action_res_partner_bank_account_form)d"
+                                context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}">
+                                <field string="Bank account(s)" name="bank_account_count" widget="statinfo"/>
+                            </button>
+                        </div>
+
+                    </group>
+                </group>
             </field>
         </record>
 

@@ -299,15 +299,6 @@
                             <field name="comment" placeholder="Internal note..."/>
                         </page>
                         <page name='sales_purchases' string="Sales &amp; Purchases">
-                            <group name="container_row_1">
-                                <group>
-                                    <field name="ref"/>
-                                    <field name="active"/>
-                                </group>
-                                <group>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                </group>
-                            </group>
                             <group name="container_row_2">
                                 <group string="Sale" name="sale">
                                     <field name="customer"/>
@@ -316,6 +307,11 @@
                                 </group>
                                 <group string="Purchase" name="purchase">
                                     <field name="supplier"/>
+                                </group>
+                                <group string="Misc">
+                                    <field name="ref"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="active"/>
                                 </group>
                             </group>
                         </page>
