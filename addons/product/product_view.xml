@@ -334,10 +334,10 @@
                                         <span t-if="record.default_code.value">[<field name="default_code"/>]</span>
                                         <field name="name"/>
                                     </strong>
-                                    <div>
-                                        <a name="%(product.product_variant_action)d" type="action" groups="product.group_product_variant">
-                                            <t t-esc="record.product_variant_count.value"/> Variant(s)
-                                        </a>
+                                    <div t-if="record.product_variant_count.value &gt; 1">
+                                        <strong>
+                                            <t t-esc="record.product_variant_count.value"/> Variants
+                                        </strong>
                                     </div>
                                     <div name="tags"/>
                                     <ul>
