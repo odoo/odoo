@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-08-22 16:22+0000\n"
+"PO-Revision-Date: 2015-08-26 11:54+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -1288,7 +1288,7 @@ msgstr "通常、マニュアルで作成されたすべての新しい仕訳は
 msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
-msgstr "全ての選択した仕訳帳エントリーは検証され、元帳に記帳されます。このことは、それらの会計範囲はもう変更ができなくなることを意味します。"
+msgstr "全ての選択した仕訳は検証され、元帳に記帳されます。このことは、それらの会計範囲はもう変更ができなくなることを意味します。"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:348
@@ -1639,7 +1639,7 @@ msgstr "本当にエントリーを作成しますか？"
 #. module: account
 #: view:account.journal.select:account.open_journal_button_view
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "仕訳帳エントリーを本当に開きますか？"
+msgstr "仕訳を本当に開きますか？"
 
 #. module: account
 #: view:account.state.open:account.view_account_state_open
@@ -2486,7 +2486,7 @@ msgstr ""
 msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
-msgstr "その仕訳帳エントリーに確信がなく、会計専門家のレビューが必要と付記したい場合はこのボックスをチェックして下さい。"
+msgstr "その仕訳に確信がなく、会計専門家のレビューが必要と付記したい場合はこのボックスをチェックして下さい。"
 
 #. module: account
 #: help:account.tax.code.template,notprintable:0
@@ -5184,7 +5184,7 @@ msgstr ""
 #, python-format
 msgid ""
 "In order to close a period, you must first post related journal entries."
-msgstr "期間を閉じるためには、まず、関連する仕訳帳エントリーを記帳する必要があります。"
+msgstr "期間を閉じるためには、まず、関連する仕訳を記帳する必要があります。"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:436
@@ -5592,7 +5592,7 @@ msgstr "会社の通貨と異なる場合はレポートに通貨欄を追加し
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr "この請求書は既に支払済で、１つあるいは幾つかの支払の仕訳帳エントリーを持ち、請求書が消し込み済みの仕訳帳エントリーであることを示しています。"
+msgstr "この請求書は既に支払済で、１つあるいは幾つかの支払の仕訳を持ち、請求書が消込済の仕訳であることを示しています。"
 
 #. module: account
 #: help:account.invoice,sent:0
@@ -5703,31 +5703,31 @@ msgstr ""
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Journal Entries to Review"
-msgstr "レビューすべき仕訳帳エントリー"
+msgstr "レビューすべき仕訳"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current period"
-msgstr "当期の仕訳帳エントリー"
+msgstr "当期の仕訳"
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
 msgid "Journal Entries with period in current year"
-msgstr "現在年度の期間の仕訳帳エントリー"
+msgstr "現在年度期間の仕訳"
 
 #. module: account
 #: field:account.bank.statement.line,journal_entry_id:0
 #: field:account.invoice,move_id:0 field:account.invoice,move_name:0
 #: field:account.move.line,move_id:0
 msgid "Journal Entry"
-msgstr "仕訳帳入力"
+msgstr "仕訳"
 
 #. module: account
 #: view:account.model:account.view_model_form
 #: view:account.model:account.view_model_search
 #: view:account.model:account.view_model_tree
 msgid "Journal Entry Model"
-msgstr "仕訳帳エントリーのモデル"
+msgstr "仕訳モデル"
 
 #. module: account
 #: view:account.model.line:account.view_model_line_form
@@ -5745,7 +5745,7 @@ msgstr "仕訳番号"
 #. module: account
 #: view:account.move.reconcile:account.view_move_reconcile_form
 msgid "Journal Entry Reconcile"
-msgstr "仕訳帳エントリーの消し込み"
+msgstr "仕訳消込"
 
 #. module: account
 #: view:account.move:account.view_move_form
@@ -7544,7 +7544,7 @@ msgstr "記帳済"
 #. module: account
 #: view:account.move:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "記帳済仕訳帳エントリー"
+msgstr "記帳済仕訳"
 
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
@@ -8714,7 +8714,7 @@ msgid ""
 " 'Balance' will generally be used for cash accounts.\n"
 " 'Detail' will copy each existing journal item of the previous year, even the reconciled ones.\n"
 " 'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."
-msgstr "このタイプの全てのアカウントの年間の仕訳帳エントリーの終わりを生成するのに使用する方法を、ここで設定します。\n\n　\"なし\" は何も行われないことを意味します。\n　\"残高\"は一般的には現金のアカウントのために使用されます。\n　\"詳細\"は消し込みされたものも含む前年のそれぞれの既存仕訳帳項目をコピーします。\n　\"未消し込み\"は未消し込みだった仕訳帳項目のみを新会計年度の初日としてコピーします。"
+msgstr "このタイプの全てのアカウントの年間の仕訳の終わりを生成するのに使用する方法を、ここで設定します。\n\n　\"なし\" は何も行われないことを意味します。\n　\"残高\"は一般的には現金のアカウントのために使用されます。\n　\"詳細\"は消込されたものも含む前年のそれぞれの既存仕訳明細をコピーします。\n　\"未消し込み\"は未消込だった仕訳明細のみを新会計年度の初日としてコピーします。"
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
@@ -9635,7 +9635,7 @@ msgstr "明細入力に使用される通貨"
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
-msgstr "仕訳帳エントリーの日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
+msgstr "仕訳の日付が定義された期間ではありません。日付を変更するか仕訳帳からこの制約を削除する必要があります。"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
@@ -9767,14 +9767,14 @@ msgstr "会社の通貨と等しくない場合は関連するアカウントの
 msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
-msgstr "仕訳帳エントリーの買掛金、または買掛金の残差金額は、その通貨により表されます（会社の通貨と異なることもあります）。"
+msgstr "仕訳の買掛金、または買掛金の残差金額は、その通貨により表されます（会社の通貨と異なることもあります）。"
 
 #. module: account
 #: help:account.move.line,amount_residual:0
 msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
-msgstr "仕訳帳エントリーの売掛金または買掛金の残差金額は会社の通貨で表現されています。"
+msgstr "仕訳の売掛金または買掛金の残差金額は会社の通貨で表現されています。"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -9839,7 +9839,7 @@ msgid ""
 "The validation of journal entries process is also called 'ledger posting' "
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
-msgstr "仕訳帳エントリー過程の検証は、元帳への記帳とも呼ばれ、初期入力した仕訳帳から元帳へ借方と貸方の金額を転記する工程のことです。"
+msgstr "仕訳過程の検証は、元帳への記帳とも呼ばれ、初期入力した仕訳帳から元帳へ借方と貸方の金額を転記する工程のことです。"
 
 #. module: account
 #: code:addons/account/installer.py:114
@@ -10085,7 +10085,7 @@ msgstr "この項目は、カスタムドメイン内に特別な税金を作成
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr "この項目は買掛金と売掛金仕訳帳エントリーのために使用されます。この行の支払のための期限の日付を設定することができます。"
+msgstr "この項目は買掛金と売掛金仕訳のために使用されます。この行の支払のための期限の日付を設定することができます。"
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -10294,7 +10294,7 @@ msgstr "このウィザードは選択した会計年度の最後の仕訳項目
 msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
-msgstr "このウィザードは特定の仕訳帳と期間の全ての仕訳帳エントリーを検証します。ひとたび仕訳帳エントリーが検証された以降は、変更はできません。"
+msgstr "このウィザードは特定の仕訳帳と期間の全ての仕訳を検証します。ひとたび仕訳が検証された以降は、変更はできません。"
 
 #. module: account
 #. openerp-web
