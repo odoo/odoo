@@ -147,7 +147,6 @@
         <record id="crm_team_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by Sales Team</field>
             <field name="res_model">crm.team</field>
-            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
         </record>
