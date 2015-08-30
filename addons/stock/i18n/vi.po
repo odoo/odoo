@@ -273,8 +273,8 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
 "            "
 msgstr "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a reordering rule.\n"
-"              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>\n"
+"                Nhấp chuột để tạo các quy tắc tồn kho.\n"
+"              </p><p>Bạn có thể định nghĩa các quy tắc tồn kho tối thiếu đối với từng sản phẩm, để phần mềm tự động tạo các lệnh sản xuất hoặc yêu cầu chào giá dựa trên mức tồn kho. Mỗi khi mức tồn kho khả dụng của một sản phẩm (= tồn kho thực tế - các đơn hàng đã xác nhận và các đặt trước) ở dưới số lượng tối thiểu, phần mềm sẽ tự động tạo các yêu cầu cung ứng (sản xuất/mua sắm) để tăng mức tồn kho đến số lượng tối đa.</p>\n"
 "            "
 
 #. module: stock
@@ -3251,17 +3251,17 @@ msgstr "Prefered Packaging"
 #. module: stock
 #: field:procurement.order,route_ids:0
 msgid "Preferred Routes"
-msgstr "Preferred Routes"
+msgstr "Các tuyến ưu thích"
 
 #. module: stock
 #: help:stock.move,route_ids:0
 msgid "Preferred route to be followed by the procurement order"
-msgstr "Preferred route to be followed by the procurement order"
+msgstr "Tuyến ưa thích là tuyến được procurement chạy theo"
 
 #. module: stock
 #: help:procurement.order,route_ids:0
 msgid "Preferred route to be followed by the procurement order. Usually copied from the generating document (SO) but could be set up manually."
-msgstr "Preferred route to be followed by the procurement order. Usually copied from the generating document (SO) but could be set up manually."
+msgstr "Tuyến ưa thích là tuyến được procurement chạy theo. Thường được sao chép từ tài liệu mà tạo ra nhu cầu cung ứng này, nhưng có thể thiết lập thủ công."
 
 #. module: stock
 #. openerp-web
@@ -3273,14 +3273,14 @@ msgstr "In"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Print Picking List"
-msgstr "In bảng kê hàng xuất kho"
+msgstr "In bảng kê hàng xuất/nhập kho"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/picking.xml:177
 #, python-format
 msgid "Print package label"
-msgstr "Print package label"
+msgstr "In Nhãn đóng gói"
 
 #. module: stock
 #: field:stock.fixed.putaway.strat,sequence:0
@@ -3314,7 +3314,7 @@ msgstr "Xử lý sau"
 #: selection:stock.location,usage:0
 #: field:stock.move,procurement_id:0
 msgid "Procurement"
-msgstr "Mua sắm"
+msgstr "Nhu cầu cung ứng"
 
 #. module: stock
 #: field:stock.move,group_id:0
@@ -3322,14 +3322,14 @@ msgstr "Mua sắm"
 #: field:stock.picking,group_id:0
 #: field:stock.warehouse.orderpoint,group_id:0
 msgid "Procurement Group"
-msgstr "Nhóm mua sắm"
+msgstr "Nhóm Nhu cầu cung ứng"
 
 #. module: stock
 #: field:procurement.order,location_id:0
 #: field:procurement.rule,location_id:0
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "Địa điểm Thu mua hàng"
+msgstr "Địa điểm Cung ứng"
 
 #. module: stock
 #: view:stock.warehouse.orderpoint:stock.view_warehouse_orderpoint_form
