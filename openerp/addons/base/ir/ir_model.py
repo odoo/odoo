@@ -320,6 +320,11 @@ class ir_model_fields(osv.osv):
             self.ttype = field.type
             self.relation = field.comodel_name
 
+    @api.one
+    @api.constrains('relation_table')
+    def _check_relation_table(self):
+        models.check_pg_name(self.relation_table)
+
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
         """ Return default names for the table and columns of a custom many2many field. """
