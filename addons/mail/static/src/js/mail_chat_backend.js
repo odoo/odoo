@@ -357,13 +357,10 @@ var PartnerInviteDialog = Dialog.extend({
         var self = this;
         var data = this.$partner_invite_input.select2('data');
         if(data.length >= 1){
-            this.ChannelModel.call('channel_invite', [], {"ids" : [this.channel.id], 'partner_ids': _.pluck(data, 'id')}).then(function(){
+            return this.ChannelModel.call('channel_invite', [], {"ids" : [this.channel.id], 'partner_ids': _.pluck(data, 'id')}).then(function(){
                 var names = _.pluck(data, 'text').join(', ');
                 self.do_notify(_t('New people'), _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names));
-                self.close();
             });
-        }else{
-            self.close();
         }
     },
 });
@@ -562,7 +559,7 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     },
     on_click_button_invite: function(){
         new PartnerInviteDialog(this, {
-            title: _.str.sprintf(_t('Invite people to %s.'), this.get_current_channel_name()),
+            title: _.str.sprintf(_t('Invite people to %s'), this.get_current_channel_name()),
             channel: this.channels[this.get('current_channel_id')],
         }).open();
     },
