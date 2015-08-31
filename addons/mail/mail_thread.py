@@ -1333,8 +1333,8 @@ class mail_thread(osv.AbstractModel):
                         body, tools.ustr(payload, encoding, errors='replace'),
                         preserve=True
                     )
-                # *) Anything else -> attachment
-                else:
+                # *) Anything else that it's not multipart -> attachment
+                elif not part.is_multipart():
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
         return body, attachments
 
