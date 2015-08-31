@@ -438,12 +438,12 @@
                                 </div>
                             </button>
                         </div>
+                        <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                        <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
 
-                            <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                            <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
 
                             <h2 class="o_row">
                                 <div>
