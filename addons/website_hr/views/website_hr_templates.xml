@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
 <!-- Page --> 
 <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_hr_assets">
     <xpath expr="." position="inside">
@@ -11,10 +10,10 @@
 <template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
     <xpath expr="//div[@class='oe_structure']" position="after">
         <section class="container" id="team">
-            <div class="col-sm-12 text-center" t-if="len(employee_ids)">
+            <div class="col-sm-12 text-center" t-if="len(employees)">
                 <h2>Our Team</h2>
             </div>
-            <div t-foreach="employee_ids" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center o_avatar_info_container">
+            <div t-foreach="employees" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center o_avatar_info_container">
                 <t t-call="website.publish_management" class="text-center">
                     <t t-set="object" t-value="employee"/>
                     <t t-set="publish_edit" t-value="True"/>
@@ -31,5 +30,4 @@
     </xpath>
 </template>
 
- </data>
-</openerp>
+</odoo>
