@@ -60,6 +60,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+regex_pg_name = re.compile(r'[a-z_][a-z0-9_$]*', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -91,6 +92,13 @@ def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
         raise ValueError(msg)
+
+def check_pg_name(name):
+    """ Check whether the given name is a valid PostgreSQL identifier name. """
+    if not regex_pg_name.match(name):
+        raise ValueError("Invalid characters in table name %r" % name)
+    if len(name) > 63:
+        raise ValueError("Table name %r is too long" % name)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -779,6 +787,8 @@ class BaseModel(object):
         if not hasattr(cls, '_log_access'):
             # If _log_access is not specified, it is the same value as _auto.
             cls._log_access = cls._auto
+
+        check_pg_name(cls._table)
 
         # Transience
         if cls.is_transient():
