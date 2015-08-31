@@ -18,7 +18,10 @@
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-
+                    <div>
+                        <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
+                    </div>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>

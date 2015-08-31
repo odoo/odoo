@@ -218,3 +218,16 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.multi
+    def open_company(self):
+        user = self.env['res.users'].browse(uid)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'My Company',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'res_id': user.company_id.id,
+            'target': 'current',
+        }
