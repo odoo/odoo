@@ -119,8 +119,12 @@
                                         <field name="categ_id" string="Internal Category"/>
                                     </group>
                                     <group name="group_lots_and_weight">
-                                       <field digits="(14, 3)" name="weight" string="Weight"
+                                        <label for="weight"/>
+                                        <div class="o_row">
+                                            <field digits="(14, 3)" name="weight" string="Weight"
                                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
+                                            <span>kg</span>
+                                        </div>
                                     </group>
                                 </group>
                                 <separator string="Vendors"/>
@@ -248,8 +252,16 @@
                             </group>
                             <group name="weight">
                                 <group name="weight" string="Weights">
-                                    <field digits="(14, 3)" name="volume"/>
-                                    <field digits="(14, 3)" name="weight"/>
+                                    <label for="volume"/> 
+                                    <div class="o_row">
+                                        <field digits="(14, 3)" name="volume"/>
+                                        <span>m³</span>
+                                    </div>
+                                    <label for="weight"/>
+                                    <div class="o_row">
+                                        <field digits="(14, 3)" name="weight"/>
+                                        <span>kg</span>
+                                    </div>
                                 </group>
                             </group>
                         </group>
