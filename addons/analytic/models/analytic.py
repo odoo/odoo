@@ -49,7 +49,7 @@ class account_analytic_account(models.Model):
         return self.env.user.id
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
-    code = fields.Char(string='Reference', index=True, track_visibility='onchange', default=lambda s: s.env['ir.sequence'].next_by_code('account.analytic.account'))
+    code = fields.Char(string='Reference', index=True, track_visibility='onchange')
     account_type = fields.Selection([
         ('normal', 'Analytic View')
         ], string='Type of Account', required=True, default='normal')
