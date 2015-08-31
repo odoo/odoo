@@ -60,7 +60,7 @@ class res_partner(osv.Model):
     }
 
 class res_users(osv.Model):
-    _inherit = ['res.users']
+    _inherit = 'res.users'
     _columns = {
         'sale_team_id': fields.many2one('crm.team','Sales Team')
     }

@@ -1180,7 +1180,7 @@ class purchase_order_line(osv.osv):
 
         # - determine name and notes based on product in partner lang.
         context_partner = context.copy()
-        context_partner.update({'partner': partner_id, 'qty': qty})
+        context_partner.update({'partner': partner_id, 'quantity': qty})
         if partner_id:
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update({'lang': lang, 'partner_id': partner_id})
@@ -1420,8 +1420,8 @@ class procurement_order(osv.osv):
                 }
             # calculate price/qty for valid vendor
             qty = self.pool['product.uom']._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, procurement.product_id.uom_po_id.id)
-            new_context.update({'qty': qty})
-            supplier = prod_obj.with_context(new_context).browse(procurement.product_id.id).selected_seller_id
+            new_context.update({'quantity': qty})
+            supplier = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context).selected_seller_id
             price = 0.0
             if supplier:
                 price = supplier.price
