@@ -1260,7 +1260,7 @@ class crm_team(osv.Model):
             'name': action['name'],
             'help': action['help'],
             'type': action['type'],
-            'views': [[view_kanban, 'kanban'], [view_tree, 'tree'], [view_form, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
+            'views': [[view_tree, 'tree'], [view_kanban, 'kanban'], [view_form, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
             'target': action['target'],
             'context': newcontext,
             'res_model': action['res_model'],
