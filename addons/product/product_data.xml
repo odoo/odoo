@@ -182,48 +182,20 @@ parameter) will see those record just disappear.
             <field name="object">product.product</field>
         </record>
 
-        <!--
-    Resource: product.price.type
-    -->
-        <record id="list_price" model="product.price.type">
-            <field name="name">Public Price</field>
-            <field name="field">list_price</field>
-        </record>
-        <record id="standard_price" model="product.price.type">
-            <field name="name">Vendor Section on Product or Cost Price</field>
-            <field name="field">standard_price</field>
-        </record>
+        <!-- Price list -->
 
-
-
-
-        <!--
-    Price list type
-    -->
-        <record id="pricelist_type_sale" model="product.pricelist.type">
-            <field name="name">Sale Pricelist</field>
-            <field name="key">sale</field>
-        </record>
-
-
-        <!--
-    Price list
-    -->
         <record id="list0" model="product.pricelist">
             <field name="name">Public Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver0" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list0"/>
-            <field name="name">Default Public Pricelist Version</field>
-        </record>
-        <record id="item0" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver0"/>
-            <field name="base" ref="list_price"/>
-            <field name="sequence">1000</field>
-            <field name="name">Default Public Pricelist Line</field>
         </record>
 
+        <!-- Price list item -->
+
+        <record id="item0" model="product.pricelist.item">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="sequence">1000</field>
+        </record>
         <!--
         Property
         -->

@@ -703,7 +703,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id == 1:
-            for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
+            for reference in ['product.list_price', 'product.standard_price', 'product.list0']:
                 try:
                     tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
                 except ValueError:

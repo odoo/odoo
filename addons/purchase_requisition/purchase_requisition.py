@@ -115,13 +115,11 @@ class purchase_requisition(osv.osv):
         return res
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
-        supplier_pricelist = supplier.property_product_pricelist_purchase
         return {
             'origin': requisition.name,
             'date_order': requisition.date_end or fields.datetime.now(),
             'partner_id': supplier.id,
-            'pricelist_id': supplier_pricelist.id,
-            'currency_id': supplier_pricelist and supplier_pricelist.currency_id.id or requisition.company_id.currency_id.id,
+            'currency_id': requisition.company_id and requisition.company_id.currency_id.id,
             'location_id': requisition.procurement_id and requisition.procurement_id.location_id.id or requisition.picking_type_id.default_location_dest_id.id,
             'company_id': requisition.company_id.id,
             'fiscal_position_id': supplier.property_account_position_id and supplier.property_account_position_id.id or False,
@@ -141,9 +139,8 @@ class purchase_requisition(osv.osv):
         ctx['tz'] = requisition.user_id.tz
         date_order = requisition.ordering_date and fields.date.date_to_datetime(self, cr, uid, requisition.ordering_date, context=ctx) or fields.datetime.now()
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
-        supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         vals = po_line_obj.onchange_product_id(
-            cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
+            cr, uid, [], product.id, qty, default_uom_po_id,
             supplier.id, date_order=date_order,
             fiscal_position_id=supplier.property_account_position_id.id,
             date_planned=requisition_line.schedule_date,

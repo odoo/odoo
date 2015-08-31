@@ -541,11 +541,12 @@ Weight: 31 grams</field>
         </record>
 
         <record id="item1" model="product.pricelist.item">
-            <field name="price_version_id" ref="product.ver0"/>
-            <field name="base" ref="product.list_price"/>
+            <field name="base">list_price</field>
+            <field name="applied_on">1_product</field>
+            <field name="pricelist_id" ref="product.list0"/>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
-            <field name="name">Demo Discount</field>
-            <field name="price_discount">-0.2000</field>
+            <field name="price_discount">20</field>
+            <field name="compute_price">formula</field>
             <field name="sequence">1</field>
         </record>
 
@@ -784,34 +785,24 @@ Weight: 31 grams</field>
 
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_christmas" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_christmas"/>
-            <field name="name">Christmas Pricelist Version</field>
         </record>
         <record id="item_christmas" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_christmas"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.2</field>
+            <field name="pricelist_id" ref="list_christmas"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">20</field>
             <field name="sequence">10</field>
-            <field name="name">Christmas Pricelist Line</field>
         </record>
 
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_benelux" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_benelux"/>
-            <field name="name">Benelux Pricelist Version</field>
         </record>
         <record id="item_benelux" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_benelux"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.1</field>
+            <field name="pricelist_id" ref="list_benelux"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">10</field>
             <field name="sequence">10</field>
-            <field name="name">Benelux Pricelist Line</field>
         </record>
 
         <record id="benelux" model="res.country.group">

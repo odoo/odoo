@@ -7,7 +7,7 @@ import time
 from openerp import api, tools, SUPERUSER_ID
 from openerp.osv import osv, fields, expression
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 import psycopg2
 
 import openerp.addons.decimal_precision as dp
@@ -400,7 +400,7 @@ class product_template(osv.osv):
                 products = self.browse(cr, uid, ids, context=context)
                 qtys = map(lambda x: (x, quantity, partner), products)
                 pl = plobj.browse(cr, uid, pricelist, context=context)
-                price = plobj._price_get_multi(cr,uid, pl, qtys, context=context)
+                price = plobj._price_get_multi(cr, uid, pl, qtys, context=context)
                 for id in ids:
                     res[id] = price.get(id, 0.0)
         for id in ids:
@@ -465,6 +465,28 @@ class product_template(osv.osv):
             variant = self.pool['product.product'].browse(cr, uid, template.product_variant_ids.id, context=context)
             return variant.write({name: value})
         return {}        
+
+    def _select_seller(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        partner = context.get('partner')
+        minimal_quantity = context.get('quantity', 0.0)
+        date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
+        for product in self.browse(cr, uid, ids, context=context):
+            res[product.id] = False
+            for seller in product.seller_ids:
+                if seller.date_start and seller.date_start > date:
+                    continue
+                if seller.date_end and seller.date_end < date:
+                    continue
+                if partner and seller.name.id != partner:
+                    continue
+                if minimal_quantity and minimal_quantity < seller.qty:
+                    continue
+                res[product.id] = seller
+                break
+        return res
 
     def _get_product_template_type(self, cr, uid, context=None):
         return [('consu', 'Consumable'), ('service', 'Service')]
@@ -531,38 +553,35 @@ class product_template(osv.osv):
             help="Gives the different ways to package the same product. This has no impact on "
                  "the picking order and is mainly used if you use the EDI module."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_tmpl_id', 'Vendor'),
-        'seller_delay': fields.related('seller_ids','delay', type='integer', string='Vendor Lead Time',
+        'selected_seller_id': fields.function(_select_seller, type='many2one', relation='product.supplierinfo', string='Selected Seller', help='Technical field that selects a seller based on priority (sequence) and an optional partner and/or a minimal quantity in the context'),
+        'seller_delay': fields.related('selected_seller_id','delay', type='integer', string='Vendor Lead Time',
             help="This is the average delay in days between the purchase order confirmation and the receipts for this product and for the default vendor. It is used by the scheduler to order requests based on reordering delays."),
-        'seller_qty': fields.related('seller_ids','qty', type='float', string='Vendor Quantity',
+        'seller_qty': fields.related('selected_seller_id','qty', type='float', string='Vendor Quantity',
             help="This is minimum quantity to purchase from Main Vendor."),
-        'seller_id': fields.related('seller_ids','name', type='many2one', relation='res.partner', string='Main Vendor',
+        'seller_id': fields.related('selected_seller_id','name', type='many2one', relation='res.partner', string='Main Vendor',
             help="Main vendor who has highest priority in vendor list."),
+        'seller_price': fields.related('selected_seller_id','price', type='float', string='Vendor Price', help="Purchase price from from Main Vendor."),
 
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'color': fields.integer('Color Index'),
-        'is_product_variant': fields.function( _is_product_variant, type='boolean', string='Is a product variant'),
+        'is_product_variant': fields.function(_is_product_variant, type='boolean', string='Is a product variant'),
 
         'attribute_line_ids': fields.one2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes'),
         'product_variant_ids': fields.one2many('product.product', 'product_tmpl_id', 'Products', required=True),
-        'product_variant_count': fields.function( _get_product_variant_count, type='integer', string='# of Product Variants'),
+        'product_variant_count': fields.function(_get_product_variant_count, type='integer', string='# of Product Variants'),
 
         # related to display product product information if is_product_variant
         'barcode': fields.related('product_variant_ids', 'barcode', type='char', string='Barcode', oldname='ean13'),
         'default_code': fields.related('product_variant_ids', 'default_code', type='char', string='Internal Reference'),
+        'item_ids': fields.one2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items'),
     }
-
-    def _price_get_list_price(self, product):
-        return 0.0
 
     def _price_get(self, cr, uid, products, ptype='list_price', context=None):
         if context is None:
             context = {}
 
         if 'currency_id' in context:
-            pricetype_obj = self.pool.get('product.price.type')
-            price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
-            price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
-
+            currency_id = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
         res = {}
         product_uom_obj = self.pool.get('product.uom')
         for product in products:
@@ -581,13 +600,12 @@ class product_template(osv.osv):
                 uom = product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, res[product.id], context['uom'])
-            # Convert from price_type currency to asked one
+            # Convert from current user company currency to asked one
             if 'currency_id' in context:
-                # Take the price_type currency from the product field
+                # Take current user company currency.
                 # This is right cause a field cannot be in more than one currency
-                res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
-                    context['currency_id'], res[product.id],context=context)
-
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, currency_id,
+                    context['currency_id'], res[product.id], context=context)
         return res
 
     def _get_uom_id(self, cr, uid, *args):
@@ -1173,6 +1191,8 @@ class product_packaging(osv.osv):
 class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
+    _order = 'sequence, min_qty desc, price'
+
     def _calc_qty(self, cr, uid, ids, fields, arg, context=None):
         result = {}
         for supplier_info in self.browse(cr, uid, ids, context=context):
@@ -1183,37 +1203,30 @@ class product_supplierinfo(osv.osv):
         return result
 
     _columns = {
-        'name' : fields.many2one('res.partner', 'Vendor', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Vendor of this product"),
+        'name': fields.many2one('res.partner', 'Vendor', required=True, domain=[('supplier', '=', True)], ondelete='cascade', help="Vendor of this product"),
         'product_name': fields.char('Vendor Product Name', help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Vendor Product Code', help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
-        'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product vendor."),
+        'sequence': fields.integer('Sequence', help="Assigns the priority to the list of product vendor."),
         'product_uom': fields.related('product_tmpl_id', 'uom_po_id', type='many2one', relation='product.uom', string="Vendor Unit of Measure", readonly="1", help="This comes from the product form."),
-        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this vendor, expressed in the vendor Product Unit of Measure if not empty, in the default unit of measure of the product otherwise."),
+        'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase from this vendor, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Unit of Measure."),
-        'product_tmpl_id' : fields.many2one('product.template', 'Product Template', required=True, ondelete='cascade', select=True, oldname='product_id'),
-        'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
-        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Vendor Pricelist', copy=True),
-        'company_id':fields.many2one('res.company', string='Company',select=1),
+        'price': fields.float('Price', required=True, digits_compute=dp.get_precision('Product Price'), help="The price to purchase a product"),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True),
+        'date_start': fields.date('Start Date', help="Start date for this vendor price"),
+        'date_end': fields.date('End Date', help="End date for this vendor price"),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', select=True, oldname='product_id'),
+        'delay': fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
+        'company_id': fields.many2one('res.company', string='Company', select=1),
     }
     _defaults = {
         'min_qty': 0.0,
         'sequence': 1,
         'delay': 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'price': 0.0,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'currency_id': lambda self, cr, uid, context: self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
     }
 
-    _order = 'sequence'
-
-
-class pricelist_partnerinfo(osv.osv):
-    _name = 'pricelist.partnerinfo'
-    _columns = {
-        'name': fields.char('Description'),
-        'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
-        'min_quantity': fields.float('Quantity', required=True, help="The minimal quantity to trigger this rule, expressed in the vendor Unit of Measure if any or in the default Unit of Measure of the product otherrwise."),
-        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Product Price'), help="This price will be considered as a price for the vendor Unit of Measure if any or the default Unit of Measure of the product otherwise"),
-    }
-    _order = 'min_quantity asc'
 
 class res_currency(osv.osv):
     _inherit = 'res.currency'

@@ -179,7 +179,7 @@ class pos_config(osv.osv):
         return res and res[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):
-        res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
+        res = self.pool.get('product.pricelist').search(cr, uid, [], limit=1, context=context)
         return res and res[0] or False
 
     def _get_default_location(self, cr, uid, context=None):

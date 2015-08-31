@@ -39,7 +39,7 @@ class TestOnchangeProductId(TransactionCase):
                                                             tax_src_id=tax_include_id,
                                                             tax_dest_id=tax_exclude_id))
         # import pudb; pudb.set_trace()
-        res = self.so_line_model.onchange_product_id(cr, uid, [], pricelist, product_id, 1.0, uom_id, partner_id,
+        res = self.so_line_model.onchange_product_id(cr, uid, [], product_id, 1.0, uom_id, partner_id,
                                                      fiscal_position_id=fp_id)
 
         self.assertEquals(100, res['value']['price_unit'], "The included tax must be subtracted to the price")

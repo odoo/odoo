@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from openerp import api, fields, models, _
-from openerp.exceptions import UserError
 
 
 class AccountAnalyticLine(models.Model):
@@ -21,17 +20,17 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True)
 
     @api.v8
-    @api.onchange('product_id', 'product_uom_id')
+    @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
-        product_price_type_obj = self.env['product.price.type']
+        if not self.product_id:
+            return {}
+
         result = 0.0
-        unit = False
-        if self.product_id:
-            unit = self.product_uom_id.id
-            if not self.product_uom_id or self.product_id.uom_id.category_id.id != self.product_uom_id.category_id.id:
-                unit = self.product_id.uom_id.id
-        account = self.product_id.property_account_income_id.id or self.product_id.categ_id.property_account_income_categ_id.id
-        if not account: account = False
+        prod_accounts = self.product_id.product_tmpl_id._get_product_accounts()
+        unit = self.product_uom_id.id
+        account = prod_accounts['expense']
+        if not unit or self.product_id.uom_po_id.category_id.id != unit.category_id.id:
+            unit = self.product_id.uom_po_id.id
 
         ctx = dict(self._context or {})
         if unit:
@@ -39,16 +38,10 @@ class AccountAnalyticLine(models.Model):
             # to return a default price for those units
             ctx['uom'] = unit
 
-        pricetype = False
-        amount_unit = 0.0
-        if self.product_id:
-            # Compute based on pricetype
-            pricetype = product_price_type_obj.search([('field', '=', 'list_price')], limit=1)
-            amount_unit = self.product_id.with_context(ctx).price_get(pricetype.field)[self.product_id.id]
+        # Compute based on pricetype
+        amount_unit = self.product_id.with_context(ctx).price_get('standard_price')[self.product_id.id]
         amount = amount_unit * self.unit_amount or 0.0
-        result = round(amount, self.currency_id.decimal_places)
-        if pricetype and pricetype.field != 'list_price':
-            result *= -1
+        result = round(amount, self.currency_id.decimal_places) * -1
         self.amount = result
         self.general_account_id = account
         self.product_uom_id = unit

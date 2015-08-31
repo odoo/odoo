@@ -133,6 +133,19 @@
                                 </group>
                             </page>
                             <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
+                                <div name="pricelist_item" groups="product.group_product_pricelist">
+                                    <separator string="Pricing"/>
+                                    <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1'}">
+                                        <tree string="Pricelist Items" editable="bottom">
+                                            <field name="pricelist_id" string="Pricelist" required='1'/>
+                                            <field name="fixed_price" string="Price" required='1'/>
+                                            <field name="min_quantity"/>
+                                            <field name="date_start"/>
+                                            <field name="date_end"/>
+                                            <field name="applied_on" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
                                 <group name="sale">
                                     <group name="sale_condition" string="Sale Conditions">
                                         <label for="warranty"/>
@@ -760,30 +773,33 @@
             <field name="arch" type="xml">
                 <form string="Vendor Information">
                     <group>
-                        <group>
+                        <group string="Vendor">
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
-                            <field name="min_qty"/>
-                            <field name="product_uom" groups="product.group_uom"/>
-                            <field name="delay"/>
-                        </group><group>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
+                            <label for="delay"/>
+                            <div>
+                                <field name="delay" class="oe_inline"/> days
+                            </div>
+                        </group>
+                        <group string="Price List">
+                            <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
+                            <label for="min_qty"/>
+                            <div>
+                                <field name="min_qty" class="oe_inline"/>
+                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                            </div>
+                            <label for="price"/>
+                            <div>
+                                <field name="price" class="oe_inline"/><field name="currency_id" class="oe_inline" groups="base.group_multi_currency"/>
+                            </div>
+                            <label for="date_start" string="Validity"/>
+                            <div><field name="date_start" class="oe_inline"/> to <field name="date_end" class="oe_inline"/></div>
+                        </group>
+                        <group string="Other Information" groups="base.group_multi_company">
+                            <field name="company_id" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <p groups="product.group_purchase_pricelist" class="oe_grey">The prices below will only be taken into account when your pricelist is set as based on vendor prices.</p>
-                    <field groups="product.group_purchase_pricelist" name="pricelist_ids">
-                        <tree editable="bottom" string="Pricelist">
-                            <field name="min_quantity"/>
-                            <field name="price"/>
-                        </tree>
-                        <form>
-                            <group>
-                                <field name="min_quantity"/>
-                                <field name="price"/>
-                            </group>
-                        </form>
-                    </field>
                 </form>
             </field>
         </record>
@@ -794,12 +810,23 @@
                 <tree string="Vendor Information">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="delay"/>
+                    <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="min_qty"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="price" string="Price"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
                 </tree>
             </field>
         </record>
+
+    <record id="product_supplierinfo_type_action" model="ir.actions.act_window">
+        <field name="name">Supplier Pricelist</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.supplierinfo</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'visible_product_tmpl_id':False}</field>
+    </record>
 
     </data>
 </openerp>

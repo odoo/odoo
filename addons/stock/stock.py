@@ -549,7 +549,6 @@ class stock_quant(osv.osv):
             'owner_id': owner_id,
             'package_id': dest_package_id,
         }
-
         if move.location_id.usage == 'internal':
             #if we were trying to move something from an internal location and reach here (quant creation),
             #it means that a negative quant has to be created as well.
