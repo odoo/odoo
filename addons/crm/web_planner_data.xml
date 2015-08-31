@@ -246,13 +246,11 @@
                             <div class="well well-lg">
                                 <strong>Recommended actions:</strong>
                                 <li>
-                                    <a t-att-href="prepare_backend_url(
-                                        'crm.crm_lead_opportunities', 'kanban')">
+                                    <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">
                                         Configure the stages of your sales pipeline</a> with your work above
                                 </li>
                                 <li>
-                                    <a t-att-href="prepare_backend_url(
-                                        'crm.crm_lead_opportunities', 'kanban')">
+                                    <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">
                                         Create the three firsts opportunities</a> as an exercise
                                 </li>
                             </div>
@@ -377,9 +375,9 @@
                                         <h4><strong>Quote template</strong> <span class="small">(packaged services)</span></h4>
                                         <span>
                                             <li>Read the <a href="https://www.odoo.com/blog/business-hacks-1/post/how-to-build-your-quotes-for-success-173" target="_blank">blog post on the Quote Builder</a></li>
-                                            <li>Activate quotation templates in <a t-att-href="prepare_backend_url(
+                                            <li>Activate the 'Send online quotations based on templates' option in <a t-att-href="prepare_backend_url(
                                             'base_setup.action_sale_config')">Sales Settings</a></li>
-                                        <li>Create your templates of offers</li>
+                                            <li>Create your templates of offers</li>
                                         </span>
                                     </div>
                                 </div>
@@ -394,8 +392,11 @@
                                         </span>
                                     </div>
                                     <div class="panel-body">
-                                        <t t-if="not is_module_installed('account_analytic_analysis')"><span class="text-muted">To activate the Contracts, check 'Use contracts management' <a t-att-href="prepare_backend_url(
-                                                'base_setup.action_sale_config')">in the Sales Settings.</a> </span></t>
+                                        <t t-if="not is_module_installed('website_contract')">
+                                            <span class="text-muted">To activate the Contracts, install the
+                                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_contract')">Subscription Management</a> app.
+                                            </span>
+                                        </t>
                                         <h4><strong>Fixed price</strong> <span class="small">(ex: monthly subscription)</span></h4>
                                         <span>
                                             <li>Create contracts template</li>
@@ -403,7 +404,7 @@
                                         <br/>
                                         <h4><strong>Time &amp; material</strong> <span class="small">(ex: consulting mission)</span></h4>
                                         <span>
-                                            <li><a t-att-href="prepare_backend_url('account_analytic_analysis.action_account_analytic_overdue_all', 'list', 'sale')">Create your contracts</a> and configure your prices</li>
+                                            <li><a t-att-href="prepare_backend_url('sale_contract.sale_subscription_action', 'list', 'sale_contract')">Create your contracts</a> and configure your prices</li>
                                         </span>
                                     </div>
                                 </div>
@@ -436,7 +437,7 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Your Customers'"/>
                     <p class="text-muted">
-                        Unless you are starting a new business, you probably have a list of Customers and Suppliers you'd like to import.
+                        Unless you are starting a new business, you probably have a list of Customers and Vendors you'd like to import.
                     </p>
                     <div class="container-fluid">
                         <div class="row">
@@ -453,8 +454,10 @@
                                         <span>
                                             <a t-att-href="prepare_backend_url(
                                                 'base.action_partner_form','list')"><li>Create Customers</li></a>
-                                            <a t-att-href="prepare_backend_url(
-                                                'base.action_partner_form','list')"><li>Create Suppliers</li></a>
+                                            <li>
+                                                <a t-att-href="prepare_backend_url(
+                                                'base.action_partner_form','list')">Create Vendors</a>, if accounting or purchase is installed
+                                            </li>
                                         </span>
                                     </div>
                                 </div>
@@ -621,10 +624,16 @@
                             <div class="col-md-12">
                                 <div class="well well-lg">
                                     <span><strong>Next Action:</strong><br/>
-                                    Select the option your prefer in your <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">Sales Settings</a>.
+                                    If you don't want to use unique prices, activate the 'Use pricelists to adapt your price per customers' option in your  <a t-att-href="prepare_backend_url('base_setup.action_sale_config')">Sales Settings</a>.
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="alert alert-info info_icon" role="alert">
+                            <span class="fa fa-lightbulb-o fa-lg"/>
+                            <p>
+                                You can change the Price options at anytime, so we recommend you to select the easiest option that suits your needs for now.
+                            </p>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -635,12 +644,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-info info_icon" role="alert">
-                        <span class="fa fa-lightbulb-o fa-lg"/>
-                        <p>
-                            You can change the Price options at anytime, so we recommend you to select the easiest option that suits your needs for now.
-                        </p>
-                    </div>
+                    
                 </t>
             </t>
             <t t-call="web_planner.category">
@@ -721,7 +725,7 @@
                                             <strong>Exercise:</strong> Try to get the number of leads per salesperson and by creation date
                                         </p>
                                         <p>
-                                            <a t-att-href="prepare_backend_url('crm.action_report_crm_lead', 'graph')">Leads analysis</a>
+                                            <a t-att-href="prepare_backend_url('crm.crm_opportunity_report_action_lead', 'graph')">Leads Analysis</a> (if leads are activated)
                                         </p>
                                     </div>
                                 </div>
@@ -736,7 +740,7 @@
                                         <p>
                                             A sales manager will mostly use these two reports:
                                             <li>
-                                                <a t-att-href="prepare_backend_url('crm.action_report_crm_opportunity', 'graph')">Opportunities Analysis</a>
+                                                <a t-att-href="prepare_backend_url('crm.crm_opportunity_report_action', 'graph')">Opportunities Analysis</a>
                                             </li>
                                             <li>
                                                 <a t-att-href="prepare_backend_url('account.action_account_invoice_report_all', 'graph', 'account')">Invoice Analysis</a>
@@ -761,14 +765,14 @@
                                         <p>Every salesperson can analyze their own pipe by clicking on the 'switch view to graph' icon.</p>
                                         <p><strong>Exercise: </strong>Try to switch the kanban to graph view</p>
                                         <p>
-                                            <a t-att-href="prepare_backend_url('crm.crm_lead_opportunities', 'kanban')">Opportunities pipeline</a>
+                                            <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">Opportunities pipeline</a>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div class="alert alert-info info_icon" role="alert">
                                     <span class="fa fa-lightbulb-o fa-2x"></span>
                                     <strong>Tips:</strong>
@@ -776,7 +780,7 @@
                                     <li>Save filters or add any report to your dashboard with the Favorites menu.</li>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <div class="well well-lg">
                                     <strong>Want to know more?</strong><br/>
                                     <a href="https://www.odoo.com/slides/odoo-9-training-5/tag/crm-8-59" target="_blank"><span class="fa fa-video-camera"/> Watch our training videos</a><br/>

@@ -204,6 +204,7 @@
                 <t t-set="menu_categoryclasses" t-value="'fa-recycle'"/>
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Adapt Reordering Rules'"/>
+                    <t t-set="page_menutitle" t-value="'Reordering Rules'"/>
                     <p>
                         A good inventory management aims to optimize stock levels: not too low (or
                         you may find yourself out of stock) and not too high (your products occupy
@@ -219,6 +220,7 @@
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Resolve Procurement Exceptions'"/>
+                    <t t-set="page_menutitle" t-value="'Procurement Exceptions'"/>
                     <p>
                         If you configured automatic procurement, Odoo will automatically generate
                         Procurements Orders. You usually don't need to worry about them, but
@@ -292,6 +294,7 @@
 
                 <t t-call="web_planner.page">
                     <t t-set="page_title" t-value="'Real-Time Inventory Valuation'"/>
+                    <t t-set="page_menutitle" t-value="'Inventory Valuation'"/>
                     <p>
                         Imagine the following situation: you ask your accountant for an inventory
                         valuation or the value added by production, he will give you a figure. If

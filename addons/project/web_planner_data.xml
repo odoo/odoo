@@ -134,7 +134,7 @@
                                         <p>During a meeting, a customer asks a manager for a few modifications to a project.
                                         </p>
                                         <p>Back at the office, the manager splits the customer's demands into several tasks and delegates them to several employees.</p>
-                                        <p>Each employee will have their own simple task, while the manager will be able to follow the global advancement through the principal task.</p>
+                                        <p>Each employee will have their own simple task, while the manager will be able to follow the global advancement from the Kanban view of the project.</p>
                                         <p>Tasks are the main mechanism in Odoo and are activated by default.</p>
                                     </div>
                                 </div>
@@ -154,11 +154,7 @@
                                         <strong>A problem or request from a customer</strong> that needs to be identified, solved and followed up asap.</p>
                                         <p><strong>Example: </strong></p>
                                         <p>A customer sends a complaint to support@yourcompany.com: an Issue is automatically created into a 'Support level 1' project based on the original email from the customer.</p><br/>
-                                        <p><strong>Escalation: </strong></p>
-                                        <p>Issues have a specific mechanism called escalation. For example, if the  'Support' team can't solve an issue, they can escalate it to a 'Support level 2' project.</p>
-                                        <p>To use Issues, activate 'Track issues and bugs' in your
-                                        <a t-att-href="prepare_backend_url(
-                                                       'project.action_config_settings')">Project Settings.</a>
+                                        <p>To use Issues, install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'project_issue')">Issue Tracking app.</a>
                                         </p>
                                     </div>
                                 </div>
@@ -182,9 +178,9 @@
                                         <li> <strong>Invoicing your customers</strong> on Time &amp; Material projects</li></p>
                                         <p>To use Timesheets, go to your <a t-att-href="prepare_backend_url(
                                         'project.action_config_settings')">Project Settings</a> and activate:</p>
-                                        <p><li>for Tasks: 'Record timesheet lines per tasks'</li>
-                                        <li>for Issues: 'Invoice working time on issues</li></p>
-                                        <p>You can learn more about Timesheets in the <a href="#planner_page7">Timesheets section</a> of this planner.</p>
+                                        <p><li>for Tasks: 'Log work activities on tasks'</li>
+                                        <li>for Issues: 'Activate timesheets on issues'</li></p>
+                                        <p>You can learn more about Timesheets in the Timesheets section of this planner.</p>
                                     </div>
                                 </div>
                             </div>
@@ -367,14 +363,9 @@
                     <section>
                         <div class="o_planner_paragraphs">
                             <div class="row">
-                                <div class="col-sm-offset-2 col-md-offset-2 col-sm-10 col-md-10">
-                                    <img src="/project/static/src/img/web_planner_task.png" />
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe02c;" /></div>
                                 <div class="col-sm-10 col-md-10">
-                                    <p><strong>1. Define a Naming Convention</strong><br/>
+                                    <p><strong>Define a Naming Convention</strong><br/>
                                     Add keywords in the 'Task title' field, for example [Customer name] or [Website].This will help you navigate and search through the dozens of tasks in your project.
                                     </p>
                                 </div>
@@ -382,7 +373,7 @@
                             <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe075;" /></div>
                                 <div class="col-sm-11 col-md-10">
-                                    <p><strong>2. Add a Deadline</strong><br/>
+                                    <p><strong>Add a Deadline</strong><br/>
                                     The deadline will help you determine if a task or issue is progressing as expected, and to anticipate its next update.
                                     </p>
                                 </div>
@@ -390,7 +381,7 @@
                             <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe055;" /></div>
                                 <div class="col-sm-11 col-md-10">
-                                    <p><strong>3. Use Tags</strong><br/>
+                                    <p><strong>Use Tags</strong><br/>
                                     Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks or Issues to manage. Also, it becomes very easy to find Tasks or Issues by typing  the Tag into the main Search bar.
                                     </p>
                                 </div>
@@ -398,7 +389,7 @@
                             <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe007;" /></div>
                                 <div class="col-sm-11 col-md-10">
-                                    <p><strong>4. Use Status Indicator</strong><br/>
+                                    <p><strong>Use Status Indicator</strong><br/>
                                     The Status indicator helps you manage Tasks and Issues by attributing them one of 3 different colour: Grey, Green or Red. The meaning of these Status can be freely configured, for example:
                                     <li>Grey: the Task is in progress (someone is working on it)</li>
                                     <li>Green: the Task is ready for next stage (the job for this stage is complete)</li>
@@ -409,7 +400,7 @@
                             <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe017;" /></div>
                                 <div class="col-sm-11 col-md-10">
-                                    <p><strong>5. Set Priorities</strong><br/>
+                                    <p><strong>Set Priorities</strong><br/>
                                     The <i class="fa fa-star"/> is used to indicate priority: in Kanban view, priority Tasks or Issues will be displayed on top. This is especially useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab.
                                     </p>
                                 </div>
@@ -417,7 +408,7 @@
                             <div class="row">
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe001;" /></div>
                                 <div class="col-sm-11 col-md-10">
-                                    <p><strong>6. Have Clear Responsibilities</strong><br/>
+                                    <p><strong>Have Clear Responsibilities</strong><br/>
                                     The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, responsibility for a task can change depending on its stage.
                                     </p>
                                 </div>
@@ -472,9 +463,12 @@
                                         </span>
                                     </div>
                                     <div class="panel-body">
-                                        <li>For employees, the <a t-att-href="prepare_backend_url('hr_timesheet_sheet.ir_actions_server_timsheet_sheet', 'form', 'hr_timesheet_sheet')">Current Timesheet </a> view of the HR module is the main tool to check, modify and confirm Timesheets.</li><br/>
+                                        <li>For employees, the
+                                            <a t-if="is_module_installed('hr_timesheet_sheet')" t-attf-href="web#view_type=form&amp;model=hr_timesheet_sheet.sheet&amp;menu_id=#{timesheet_menu and timesheet_menu.id}">Current Timesheet</a>
+                                            <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Current Timesheet</a>
+                                            view of the HR module is the main tool to check, modify and confirm Timesheets.</li><br/>
                                         <li>Alternatively, Timesheets can be added directly from Tasks by activating <strong>'Log work activities on tasks'</strong> in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li><br/>
-                                        <li>Or, if you are using Issues, by activating 'Invoice working time on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li>
+                                        <li>Or, if you are using Issues, by activating 'Activate timesheets on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li>
                                     </div>
                                 </div>
                             </div>
@@ -494,7 +488,7 @@
                                         <li> View statistics for the week</li>
                                         <li> Get full synchronization with Odoo</li><br/>
                                         <a href="https://chrome.google.com/webstore" target="_blank">
-                                            <img src="/project/static/src/img/web_planner_chrome.png"/>
+                                            <img width="100%" src="/project/static/src/img/web_planner_chrome.png"/>
                                         </a>
                                     </div>
                                 </div>
@@ -520,15 +514,22 @@
                         <h3><strong>Approve your Timesheets</strong> (every week)</h3>
                         <div class="row">
                             <div class="col-md-12">
-                                At the end of the week, each employee should review their entries for the week and makes sure the entries are correctly encoded. This can be done from the <a t-att-href="prepare_backend_url('hr_timesheet_sheet.ir_actions_server_timsheet_sheet', 'form', 'hr_timesheet_sheet')">Current Timesheet</a> view of the Human Resources module.<br/>
-                                Once a Timesheet is confirmed by an employee, it needs to be Approved by a manager in the <a t-att-href="prepare_backend_url('hr_timesheet_sheet.act_hr_timesheet_sheet_form', 'form', 'hr_timesheet_sheet')">Timesheets to Approve</a> view.
+                                At the end of the week, each employee should review their entries for the week and makes sure the entries are correctly encoded. This can be done from the
+                                <a t-if="is_module_installed('hr_timesheet_sheet')" t-attf-href="web#view_type=form&amp;model=hr_timesheet_sheet.sheet&amp;menu_id=#{timesheet_menu and timesheet_menu.id}">Current Timesheet</a>
+                                <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Current Timesheet</a>
+                                view of the Human Resources module.<br/>
+                                Once a Timesheet is confirmed by an employee, it needs to be Approved by a manager in the
+                                <a t-if="is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('hr_timesheet_sheet.act_hr_timesheet_sheet_form')">Timesheets to Approve</a>
+                                <a t-if="not is_module_installed('hr_timesheet_sheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet_sheet')">Timesheets to Approve</a>
+                                view.
                             </div>
                         </div>
                         <h3><strong>Invoice your customers</strong> (every month)</h3>
                         <div class="row">
                             <div class="col-md-12">
                                 If you work on a Time &amp; Material project, you'll probably want to extract a Timesheet of the tasks and issues to invoice directly to the customer. To do that:<br/>
-                                <li> Activate 'Allow invoicing based on timesheets' from the <a t-att-href="prepare_backend_url('hr.action_human_resources_configuration', 'form', 'hr')">Human Resources Settings</a>.</li>
+                                <li> Activate 'Allow invoicing based on timesheets' from the <i>Human Resources Settings</i>.
+                                </li>
                                 <li> This will add an Invoice Tasks menu in the Project module, that can be used to select the Timesheet to invoice.</li>
                             </div>
                         </div>
@@ -697,8 +698,14 @@
                                     <input type="text" id="input_element_stage_0_user" value="Ideas" readonly="readonly"/>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
-                                    <i class="fa fa-user"/>
-                                    <input id="input_element_resp0" type="text"/>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <i class="fa fa-user"/>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <input id="input_element_resp0" type="text"/>
+                                        </div>
+                                    </div>
                                 </div>
                                 </li>
                                 <li class="row">
@@ -707,8 +714,14 @@
                                         <input type="text" id="input_element_stage_1_user" value="To Do" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp1" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp1" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="row">
@@ -717,8 +730,14 @@
                                         <input type="text" id="input_element_stage_2_user" value="Done" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp2" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp2" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="row">
@@ -727,8 +746,14 @@
                                         <input type="text" id="input_element_stage_3_user" value="Cancelled" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp3" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp3" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="row">
@@ -737,8 +762,14 @@
                                         <input type="text" id="input_element_stage_4_user" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp4" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp4" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="row">
@@ -747,8 +778,14 @@
                                         <input type="text" id="input_element_stage_5_user" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp5" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp5" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <li class="row">
@@ -757,8 +794,14 @@
                                         <input type="text" id="input_element_stage_6_user" readonly="readonly"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6">
-                                        <i class="fa fa-user"/>
-                                        <input id="input_element_resp6" type="text"/>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <i class="fa fa-user"/>
+                                            </div>
+                                            <div class="col-md-10">
+                                                <input id="input_element_resp6" type="text"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </li>
                                 <div class="o_planner_notebook_line_separator"></div>
