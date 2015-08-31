@@ -4,7 +4,6 @@
         <record model="web.tip" id="hr_tip_1">
             <field name="title"></field>
             <field name="description">Get all applications related to this job position.</field>
-            <field name="action_id" ref="hr.action_hr_job"/>
             <field name="model">hr.job</field>
             <field name="mode">form</field>
             <field name="trigger_selector">.o_form_buttons_view:visible,div.oe_button_box > button</field>
@@ -14,13 +13,12 @@
 
         <record model="web.tip" id="hr_tip_2">
             <field name="title"></field>
-            <field name="description">Use the breadcrumb to easily go back to preceeding screens.</field>
-            <field name="model">hr.applicant</field>
-            <field name="mode">form</field>
-            <field name="trigger_selector">.o_form_buttons_view:visible, ol.breadcrumb:visible</field>
-            <field name="highlight_selector">ol.breadcrumb a:nth-child(1)</field>
+            <field name="description">Click here to change the recruitment target !</field>
+            <field name="model">hr.job</field>
+            <field name="mode">kanban</field>
+            <field name="trigger_selector">.o_progressbar_value</field>
+            <field name="highlight_selector">.o_progressbar_value:eq(0)</field>
             <field name="placement">bottom</field>
         </record>
-
     </data>
 </openerp>
