@@ -916,8 +916,8 @@ class stock_picking(models.Model):
                 ('waiting', 'Waiting Another Operation'),
                 ('confirmed', 'Waiting Availability'),
                 ('partially_available', 'Partially Available'),
-                ('assigned', 'Ready to Transfer'),
-                ('done', 'Transferred'),
+                ('assigned', 'Available'),
+                ('done', 'Done'),
                 ], string='Status', readonly=True, select=True, track_visibility='onchange',
             help="""
                 * Draft: not confirmed yet and will not be scheduled until confirmed\n
@@ -4308,8 +4308,8 @@ class stock_pack_operation(osv.osv):
                 ('waiting', 'Waiting Another Operation'),
                 ('confirmed', 'Waiting Availability'),
                 ('partially_available', 'Partially Available'),
-                ('assigned', 'Ready to Transfer'),
-                ('done', 'Transferred'),
+                ('assigned', 'Available'),
+                ('done', 'Done'),
                 ]),
     }
 
