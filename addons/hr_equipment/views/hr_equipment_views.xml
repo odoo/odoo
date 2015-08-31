@@ -570,4 +570,16 @@
         groups="base.group_no_one"
         sequence="2" />
 
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_equipment_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_equipment_title')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_equipment_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
 </odoo>
