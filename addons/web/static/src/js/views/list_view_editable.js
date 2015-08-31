@@ -48,9 +48,10 @@ var Editor = Widget.extend({
             $pager: $(),
         });
 
-        this.on('warning', this, function(e) {
-            e.stop_propagation();
-        });
+        // FIXME
+        // this.on('warning', this, function(e) {
+        //     e.stop_propagation();
+        // });
     },
     start: function () {
         var self = this;
