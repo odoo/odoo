@@ -1233,7 +1233,11 @@ class crm_team(osv.Model):
     _inherit = "crm.team"
     def action_your_pipeline(self, cr, uid, context={}):
         imd = self.pool.get('ir.actions.act_window')
+        imd2 = self.pool.get('ir.model.data')
         action = imd.for_xml_id(cr, uid, 'crm', "crm_lead_opportunities_tree_view", context=context)
+        view_form = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_form_view_oppor')[2]
+        view_tree = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_tree_view_oppor')[2]
+        view_kanban = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_kanban_view_leads')[2]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         team_id = user.sale_team_id.id
         if not team_id:
@@ -1256,7 +1260,7 @@ class crm_team(osv.Model):
             'name': action['name'],
             'help': action['help'],
             'type': action['type'],
-            'views': [[False, 'kanban'], [False, 'tree'], [False, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
+            'views': [[view_kanban, 'kanban'], [view_tree, 'tree'], [view_form, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
             'target': action['target'],
             'context': newcontext,
             'res_model': action['res_model'],
