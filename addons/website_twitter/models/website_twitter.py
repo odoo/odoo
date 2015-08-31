@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-
-from urllib2 import urlopen, Request, HTTPError
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import json
 import logging
 import werkzeug
-
-from openerp.osv import fields, osv
+from urllib2 import urlopen, Request, HTTPError
+from odoo import api, fields, models
 
 API_ENDPOINT = 'https://api.twitter.com'
 API_VERSION = '1.1'
@@ -17,15 +16,15 @@ URLOPEN_TIMEOUT = 10
 
 _logger = logging.getLogger(__name__)
 
-class TwitterClient(osv.osv):
-    _inherit = "website"
 
-    _columns = {
-        'twitter_api_key': fields.char('Twitter API key', help="Twitter API Key"),
-        'twitter_api_secret': fields.char('Twitter API secret', help="Twitter API Secret"),
-        'twitter_screen_name': fields.char('Get favorites from this screen name'),
-    }
+class WebsiteTwitter(models.Model):
+    _inherit = 'website'
 
+    twitter_api_key = fields.Char(string='Twitter API key', help='Twitter API Key')
+    twitter_api_secret = fields.Char(string='Twitter API secret', help='Twitter API Secret')
+    twitter_screen_name = fields.Char(string='Get favorites from this screen name')
+
+    @api.model
     def _request(self, website, url, params=None):
         """Send an authenticated request to the Twitter API."""
         access_token = self._get_access_token(website)
@@ -41,50 +40,44 @@ class TwitterClient(osv.osv):
                           e.code, e.msg, e.fp.read())
             raise
 
-    def _refresh_favorite_tweets(self, cr, uid, context=None):
+    @api.model
+    def _refresh_favorite_tweets(self):
         ''' called by cron job '''
-        website = self.pool['website']
-        ids = self.pool['website'].search(cr, uid, [('twitter_api_key', '!=', False),
-                                                    ('twitter_api_secret', '!=', False),
-                                                    ('twitter_screen_name', '!=', False)],
-                                          context=context)
-        _logger.debug("Refreshing tweets for website IDs: %r", ids)
-        website.fetch_favorite_tweets(cr, uid, ids, context=context)
+        website = self.env['website'].search([('twitter_api_key', '!=', False),
+                                          ('twitter_api_secret', '!=', False),
+                                          ('twitter_screen_name', '!=', False)])
+        _logger.debug("Refreshing tweets for website IDs: %r", website.ids)
+        website.fetch_favorite_tweets()
 
-    def fetch_favorite_tweets(self, cr, uid, ids, context=None):
-        website_tweets = self.pool['website.twitter.tweet']
+    @api.multi
+    def fetch_favorite_tweets(self):
+        WebsiteTweets = self.env['website.twitter.tweet']
         tweet_ids = []
-        for website in self.browse(cr, uid, ids, context=context):
-            if not all((website.twitter_api_key, website.twitter_api_secret,
-                       website.twitter_screen_name)):
-                _logger.debug("Skip fetching favorite tweets for unconfigured website %s",
-                              website) 
+        for website in self:
+            if not all((website.twitter_api_key, website.twitter_api_secret, website.twitter_screen_name)):
+                _logger.debug("Skip fetching favorite tweets for unconfigured website %s", website)
                 continue
             params = {'screen_name': website.twitter_screen_name}
-            last_tweet = website_tweets.search_read(
-                    cr, uid, [('website_id', '=', website.id),
-                              ('screen_name', '=', website.twitter_screen_name)],
-                    ['tweet_id'],
-                    limit=1, order='tweet_id desc', context=context)
+            last_tweet = WebsiteTweets.search([('website_id', '=', website.id),
+                                                     ('screen_name', '=', website.twitter_screen_name)],
+                                                     limit=1, order='tweet_id desc')
             if last_tweet:
-                params['since_id'] = int(last_tweet[0]['tweet_id'])
+                params['since_id'] = int(last_tweet.tweet_id)
             _logger.debug("Fetching favorite tweets using params %r", params)
             response = self._request(website, REQUEST_FAVORITE_LIST_URL, params=params)
             for tweet_dict in response:
-                tweet_id = tweet_dict['id'] # unsigned 64-bit snowflake ID
-                tweet_ids = website_tweets.search(cr, uid, [('tweet_id', '=', tweet_id)])
+                tweet_id = tweet_dict['id']  # unsigned 64-bit snowflake ID
+                tweet_ids = WebsiteTweets.search([('tweet_id', '=', tweet_id)]).ids
                 if not tweet_ids:
-                    new_tweet = website_tweets.create(
-                            cr, uid,
+                    new_tweet = WebsiteTweets.create(
                             {
                               'website_id': website.id,
                               'tweet': json.dumps(tweet_dict),
-                              'tweet_id': tweet_id, # stored in NUMERIC PG field 
+                              'tweet_id': tweet_id,  # stored in NUMERIC PG field
                               'screen_name': website.twitter_screen_name,
-                            },
-                            context=context)
+                            })
                     _logger.debug("Found new favorite: %r, %r", tweet_id, tweet_dict)
-                    tweet_ids.append(new_tweet)
+                    tweet_ids.append(new_tweet.id)
         return tweet_ids
 
     def _get_access_token(self, website):

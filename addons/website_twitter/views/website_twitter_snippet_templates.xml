@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-     <template id="website_twitter_snippet" name="Twitter snippet" inherit_id="website.snippets">
+<odoo>
+
+     <template id="website_twitter_snippet" inherit_id="website.snippets" name="Twitter snippet">
         <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']" position="inside">
             <div>
                 <div class="oe_snippet_thumbnail">
@@ -14,7 +14,7 @@
             </div>
         </xpath>
     </template>
-    <template id="website_twitter_options" name="Twitter Options" inherit_id="website.snippet_options">
+    <template id="website_twitter_options" inherit_id="website.snippet_options" name="Twitter Options">
         <xpath expr="//div" position="after">
             <div data-js='twitter'
                 data-selector=".twitter"
@@ -33,5 +33,5 @@
             <script type="text/javascript" src="/website_twitter/static/src/js/website.twitter.editor.js"/>
         </xpath>
     </template>
-</data>
-</openerp>
+
+</odoo>

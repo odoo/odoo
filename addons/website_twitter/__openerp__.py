@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 {
     'name': 'Twitter Roller',
     'category': 'Website',
@@ -16,7 +19,5 @@ Display best tweets
         'views/website_twitter_settings_views.xml',
         'views/website_twitter_snippet_templates.xml'
     ],
-    'demo': [],
-    'qweb': [],
     'installable': True,
 }
