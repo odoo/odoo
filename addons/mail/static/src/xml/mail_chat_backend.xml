@@ -109,7 +109,7 @@
                     <a href="#">
                         <i t-att-class="'fa ' + (partner.im_status == 'online' ? 'fa-circle' : 'fa-circle-o')"/>
                         <t t-esc="partner.name"/>
-                        <span class="fa fa-times pull-right o_mail_chat_partner_unpin" t-att-title="_t('Untoggle')" t-att-data-partner-id="partner.id"/>
+                        <span class="fa fa-times pull-right o_mail_chat_partner_unpin" t-att-title="_t('Close')" t-att-data-partner-id="partner.id"/>
                     </a>
                 </li>
             </t>
