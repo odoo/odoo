@@ -14,7 +14,7 @@ class WebsiteResPartner(models.Model):
     website_short_description = fields.Text('Website Partner Short Description')
     website_published = fields.Boolean(default=True)
     # hack to allow using plain browse record in qweb views
-    self = fields.Many2one('res.partner', compute='_compute_get_ids')
+    partner_id = fields.Many2one('res.partner', compute='_compute_get_ids', oldname='self')
 
     @api.multi
     def _compute_get_ids(self):
