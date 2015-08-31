@@ -23,7 +23,7 @@
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
             <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
-            <field name="image" eval="False"/>
+            <field name="image" type="base64" file="base/static/img/main_partner-image.png"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
             <field name="street"></field>
