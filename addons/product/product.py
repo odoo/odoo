@@ -472,9 +472,14 @@ class product_template(osv.osv):
         res = {}
         partner = context.get('partner')
         minimal_quantity = context.get('quantity', 0.0)
+        date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = False
             for seller in product.seller_ids:
+                if seller.date_start and seller.date_start > date:
+                    continue
+                if seller.date_end and seller.date_end < date:
+                    continue
                 if partner and seller.name.id != partner:
                     continue
                 if minimal_quantity and minimal_quantity < seller.qty:
@@ -1182,6 +1187,7 @@ class product_packaging(osv.osv):
 class product_supplierinfo(osv.osv):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
+    _order = 'sequence, min_qty desc, price'
 
     def _calc_qty(self, cr, uid, ids, fields, arg, context=None):
         result = {}
@@ -1216,8 +1222,6 @@ class product_supplierinfo(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
         'currency_id': lambda self, cr, uid, context: self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
     }
-
-    _order = 'sequence, min_qty desc, price'
 
 
 class res_currency(osv.osv):

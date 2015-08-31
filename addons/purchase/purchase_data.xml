@@ -18,11 +18,6 @@
             <field name="object">purchase.order</field>
         </record>
 
-        <record forcecreate="True" id="property_purchase_currency" model="ir.property">
-            <field name="name">property_purchase_currency_id</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_purchase_currency_id')]"/><field ref="base.EUR" name="value"/>
-        </record>
-
         <!-- Purchase-related subtypes for messaging / Chatter -->
         <record id="mt_rfq_confirmed" model="mail.message.subtype">
             <field name="name">RFQ Confirmed</field>

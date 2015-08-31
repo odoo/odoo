@@ -1093,19 +1093,19 @@ class purchase_order_line(osv.osv):
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
             name=name, price_unit=price_unit, state=state, replace=False, currency_id=currency_id, context=context)
 
-    def _get_date_planned(self, cr, uid, supplier_info, date_order_str, context=None):
+    def _get_date_planned(self, cr, uid, product, date_order_str, context=None):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
            PO Lines that correspond to the given product.supplierinfo,
            when ordered at `date_order_str`.
 
-           :param browse_record | False supplier_info: product.supplierinfo, used to
-               determine delivery delay (if False, default delay = 0)
+           :param browse_record | False product: product.product, used to
+               determine delivery delay thanks to the selected seller field (if False, default delay = 0)
            :param str date_order_str: date of order field, as a string in
                DEFAULT_SERVER_DATETIME_FORMAT
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
-        supplier_delay = int(supplier_info.delay) if supplier_info else 0
+        supplier_delay = int(product.seller_delay) if product else 0
         return datetime.strptime(date_order_str, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=supplier_delay)
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -1149,11 +1149,14 @@ class purchase_order_line(osv.osv):
 
         # - determine name and notes based on product in partner lang.
         context_partner = context.copy()
+        context_partner.update({'partner': partner_id, 'qty': qty})
         if partner_id:
             lang = res_partner.browse(cr, uid, partner_id).lang
-            context_partner.update( {'lang': lang, 'partner_id': partner_id} )
+            context_partner.update({'lang': lang, 'partner_id': partner_id})
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        price = product.standard_price
+        price = product.seller_price
+        if product.seller_currency_id != currency_id:
+            price = self.pool['res.currency'].compute(cr, uid, product.selected_seller_id.currency_id, currency_id, price, context=dict(context or {}, date=date_order))
         if replace:
             #call name_get() with partner in the context to eventually match name and description in the seller_ids field
             dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
@@ -1169,7 +1172,8 @@ class purchase_order_line(osv.osv):
         if not uom_id:
             uom_id = product_uom_po_id
 
-        if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
+        uom = product_uom.browse(cr, uid, uom_id, context=context)
+        if product.uom_id.category_id.id != uom.category_id.id:
             if context.get('purchase_uom_check') and self._check_product_uom_group(cr, uid, context=context):
                 res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
@@ -1179,30 +1183,7 @@ class purchase_order_line(osv.osv):
         # - determine product_qty and date_planned based on seller info
         if not date_order:
             date_order = fields.datetime.now()
-        date = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        supplierinfo = False
-        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Unit of Measure')
-        cr.execute("SELECT s.id \
-                    FROM product_supplierinfo AS s \
-                    WHERE (s.name = %s) AND (s.product_tmpl_id = %s) \
-                    AND ((s.date_start IS NULL OR s.date_start<=%s) AND (s.date_end IS NULL OR s.date_end>=%s)) ORDER BY s.min_qty,s.price asc", (partner_id, product.product_tmpl_id.id, date, date))
-        supp_ids = [x[0] for x in cr.fetchall()]
-        suppliers = self.pool['product.supplierinfo'].browse(cr, uid, supp_ids, context=context)
-        supplier_find = suppliers.filtered(lambda x: x.min_qty == qty) or suppliers
-        if supplier_find:
-            supplierinfo = supplier_find and supplier_find[0]
-            if supplierinfo.product_uom.id != uom_id:
-                res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name}
-            min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
-            price = supplierinfo.price
-            if float_compare(min_qty, qty, precision_digits=precision) == 1: # If the supplier quantity is greater than entered from user, set minimal.
-                if qty:
-                    res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
-                qty = min_qty
-            supplier_currency = supplierinfo.currency_id.id
-            if currency_id != supplier_currency:
-                price = self.pool['res.currency'].compute(cr, uid, supplier_currency, currency_id, price, context=dict(context or {}, date=date_order))
-        dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        dt = self._get_date_planned(cr, uid, product, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         qty = qty or 1.0
         res['value'].update({'date_planned': date_planned or dt})
         if qty:
@@ -1215,7 +1196,7 @@ class purchase_order_line(osv.osv):
         return res
 
     product_id_change = onchange_product_id
-    product_uom_change = onchange_product_uom 
+    product_uom_change = onchange_product_uom
 
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
@@ -1239,7 +1220,6 @@ class procurement_order(osv.osv):
     def propagate_cancels(self, cr, uid, ids, context=None):
         purchase_line_obj = self.pool.get('purchase.order.line')
         lines_to_cancel = []
-        uom_obj = self.pool.get("product.uom")
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.rule_id.action == 'buy' and procurement.purchase_line_id:
                 if procurement.purchase_line_id.state not in ('draft', 'cancel'):
@@ -1374,24 +1354,6 @@ class procurement_order(osv.osv):
             return supplierinfo.browse(cr, uid, company_supplier[0], context=context).name
         return procurement.product_id.seller_id
 
-    def _get_best_supplier(self, cr, uid, procurement, context=None):
-        ''' returns best validate vendor of the procurement's product '''
-        result = {}
-        date = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        price = procurement.product_id.standard_price
-        qty = self.pool['product.uom']._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, procurement.product_id.uom_po_id.id)
-        for supplier in procurement.product_id.seller_ids:
-            result = {'qty': qty, 'price': price}
-            if ((supplier.date_start is False) or (supplier.date_start <= date)) and ((supplier.date_end is False) or (supplier.date_end >= date)):
-                seller_qty = supplier.min_qty if procurement.location_id.usage != 'customer' else 0.0
-                if seller_qty:
-                    result['qty'] = max(qty, seller_qty)
-                price = supplier.price if seller_qty else procurement.product_id.standard_price
-                purchase_currency = supplier.name.property_purchase_currency_id
-                result['price'] = self.pool['res.currency'].compute(cr, uid, supplier.currency_id.id, purchase_currency.id, price, context=dict(context or {}, date=date))
-                break
-        return result
-
     def _get_po_line_values_from_procs(self, cr, uid, procurements, partner, schedule_date, context=None):
         res = {}
         if context is None:
@@ -1415,17 +1377,25 @@ class procurement_order(osv.osv):
             name = names_dict[procurement.product_id.id]
             if procurement.product_id.description_purchase:
                 name += '\n' + procurement.product_id.description_purchase
+            date = schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             values = {
                 'name': name,
                 'product_id': procurement.product_id.id,
                 'product_uom': procurement.product_id.uom_po_id.id,
-                'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                'date_planned': date,
                 'taxes_id': [(6, 0, taxes)],
                 'procurement_ids': [(4, procurement.id)]
                 }
             # calculate price/qty for valid vendor
-            supplier = self._get_best_supplier(cr, uid, procurement, context=context)
-            values.update({'product_qty': supplier['qty'], 'price_unit': supplier['price'] or 0.0})
+            qty = self.pool['product.uom']._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, procurement.product_id.uom_po_id.id)
+            new_context.update({'qty': qty})
+            supplier = prod_obj.with_context(new_context).browse(procurement.product_id.id).selected_seller_id
+            price = 0.0
+            if supplier:
+                price = supplier.price
+                purchase_currency = supplier.name.property_purchase_currency_id
+                price = self.pool['res.currency'].compute(cr, uid, supplier.currency_id.id, purchase_currency.id, price, context=dict(context or {}, date=date))
+            values.update({'product_qty': qty, 'price_unit': price})
             res[procurement.id] = values
         return res
 
@@ -1447,8 +1417,9 @@ class procurement_order(osv.osv):
             else:
                 supplierinfo_obj = self.pool.get('product.supplierinfo')
                 supplierinfo_ids = supplierinfo_obj.search(cr, uid, [('name', '=', po_line.order_id.partner_id.id), ('product_tmpl_id', '=', po_line.product_id.product_tmpl_id.id)])
-                supplierinfo = supplierinfo_obj.browse(cr, uid, supplierinfo_ids)
-                supplierinfo_min_qty = sorted(supplierinfo, key=lambda x: x['min_qty'])[0].min_qty
+                if supplierinfo_ids:
+                    supplierinfo = supplierinfo_obj.browse(cr, uid, supplierinfo_ids)
+                    supplierinfo_min_qty = sorted(supplierinfo, key=lambda x: x['min_qty'])[0].min_qty
         if supplierinfo_min_qty == 0.0:
             qty += po_line.product_qty
         else:
@@ -1469,7 +1440,7 @@ class procurement_order(osv.osv):
 
     def _get_grouping_dicts(self, cr, uid, ids, context=None):
         """
-        It will group the procurements according to the pos they should go into.  That way, lines going to the same
+        It will group the procurements according to the pos they should go into. That way, lines going to the same
         po, can be processed at once.
         Returns two dictionaries:
         add_purchase_dicts: key: po value: procs to add to the po
@@ -1564,8 +1535,6 @@ class procurement_order(osv.osv):
                         lines_to_update[po_line] = [(proc, qty)]
                 else:
                     procs_to_create.append(proc)
-
-            procs = []
 
             # FIXME: these are not real tracking values, it should be fixed if tracking values for one2many 
             # are managed
