@@ -474,6 +474,8 @@ class account_bank_statement_line(osv.osv):
                 reconciliation_data['reconciliation_proposition'] = reconciliation_proposition
             else:
                 reconciliation_data['reconciliation_proposition'] = []
+            reconciliation_data['additional_account_domain'] = st_line\
+                .statement_id.journal_id._get_account_domain()
             st_line = self.get_statement_line_for_reconciliation(cr, uid, st_line, context=context)
             reconciliation_data['st_line'] = st_line
             ret.append(reconciliation_data)
@@ -534,6 +536,8 @@ class account_bank_statement_line(osv.osv):
                   ('id', 'not in', excluded_ids),]
         if st_line.partner_id:
             domain.append(('partner_id', '=', st_line.partner_id.id))
+        domain.extend(
+            st_line.statement_id.journal_id._get_account_domain('account_id'))
         return domain
 
     def get_reconciliation_proposition(self, cr, uid, st_line, excluded_ids=None, context=None):
@@ -625,6 +629,8 @@ class account_bank_statement_line(osv.osv):
             ('state', '=', 'valid'),
             ('account_id.reconcile', '=', True)
         ]
+        domain.extend(
+            st_line.statement_id.journal_id._get_account_domain('account_id'))
         if st_line.partner_id.id:
             domain += [('partner_id', '=', st_line.partner_id.id)]
         if excluded_ids:

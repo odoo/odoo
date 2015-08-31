@@ -871,6 +871,28 @@ class account_journal(osv.osv):
         ids = self.search(cr, user, expression.AND([domain, args]), limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
+    @api.multi
+    def _get_account_domain(self, field_path=''):
+        """return a domain on account.account that reflects account_control_ids
+        and type_control_ids"""
+
+        def get_path(field):
+            if not field_path:
+                return field
+            if field == 'id':
+                return field_path
+            return '%s.%s' % (field_path, field)
+
+        self.ensure_one()
+        domain = []
+        if self.type_control_ids:
+            domain.append(
+                (get_path('user_type'), 'in', self.type_control_ids.ids))
+        if self.account_control_ids:
+            domain.append(
+                (get_path('id'), 'in', self.account_control_ids.ids))
+        return domain
+
 
 class account_fiscalyear(osv.osv):
     _name = "account.fiscalyear"
