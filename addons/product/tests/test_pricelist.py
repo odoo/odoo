@@ -11,8 +11,8 @@ class TestPricelist(TransactionCase):
         self.product_pricelist = self.registry('product.pricelist')
         self.uom = self.registry('product.uom')
 
-        self.usb_adapter_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_54')[1]
-        self.datacard_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_55')[1]
+        self.usb_adapter_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_48')[1]
+        self.datacard_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_product_46')[1]
         self.unit_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_uom_unit')[1]
         self.dozen_id = self.ir_model_data.get_object_reference(cr, uid, 'product', 'product_uom_dozen')[1]
         self.tonne_id = self.ir_model_data.xmlid_to_res_id(cr, uid, 'product.product_uom_ton')
