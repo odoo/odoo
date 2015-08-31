@@ -86,7 +86,7 @@ class sale_quote(http.Controller):
         if order.require_payment:
             return request.website.render('website.404')
         attachments=sign and [('signature.png', sign.decode('base64'))] or []
-        order_obj.action_button_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
+        order_obj.action_confirm(request.cr, SUPERUSER_ID, [order_id], context=request.context)
         message = _('Order signed by %s') % (signer,)
         _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))
         return True
@@ -138,25 +138,18 @@ class sale_quote(http.Controller):
         option_obj = request.registry.get('sale.order.option')
         option = option_obj.browse(request.cr, SUPERUSER_ID, option_id)
 
-        res = request.registry.get('sale.order.line').product_id_change(request.cr, SUPERUSER_ID, order_id,
-            False, option.product_id.id, option.quantity, option.uom_id.id, option.quantity, option.uom_id.id,
-            option.name, order.partner_id.id, False, True, time.strftime('%Y-%m-%d'),
-            False, order.fiscal_position_id.id, True, dict(request.context or {}, company_id=order.company_id.id))
-        vals = res.get('value', {})
-        if 'tax_id' in vals:
-            vals['tax_id'] = [(6, 0, vals['tax_id'])]
-
-        vals.update({
+        vals = {
             'price_unit': option.price_unit,
             'website_description': option.website_description,
             'name': option.name,
             'order_id': order.id,
-            'product_id' : option.product_id.id,
+            'product_id': option.product_id.id,
             'product_uom_qty': option.quantity,
             'product_uom': option.uom_id.id,
             'discount': option.discount,
-        })
+        }
         line = request.registry.get('sale.order.line').create(request.cr, SUPERUSER_ID, vals, context=request.context)
+        request.registry.get('sale.order.line')._compute_tax_id(request.cr, SUPERUSER_ID, [line], context=request.context)
         option_obj.write(request.cr, SUPERUSER_ID, [option.id], {'line_id': line}, context=request.context)
         return werkzeug.utils.redirect("/quote/%s/%s#pricing" % (order.id, token))
 
