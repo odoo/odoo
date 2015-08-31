@@ -383,7 +383,7 @@ class purchase_order(osv.osv):
             return {'value': {
                 'fiscal_position_id': False,
                 'payment_term_id': False,
-                'currency_id': False
+                'currency_id': self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
                 }}
 
         company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
@@ -394,7 +394,7 @@ class purchase_order(osv.osv):
         return {'value': {
             'fiscal_position_id': fp or supplier.property_account_position_id and supplier.property_account_position_id.id or False,
             'payment_term_id': supplier.property_supplier_payment_term_id.id or False,
-            'currency_id': supplier.property_purchase_currency_id.id or False
+            'currency_id': supplier.property_purchase_currency_id.id or self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id
             }}
 
     def invoice_open(self, cr, uid, ids, context=None):
@@ -1601,7 +1601,7 @@ class procurement_order(osv.osv):
                 'picking_type_id': procurement.rule_id.picking_type_id.id,
                 'date_order': purchase_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 'company_id': procurement.company_id.id,
-                'currency_id': partner.property_purchase_currency_id.id,
+                'currency_id': partner.property_purchase_currency_id.id or self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id.id,
                 'fiscal_position_id': fp,
                 'payment_term_id': partner.property_supplier_payment_term_id.id,
                 'dest_address_id': procurement.partner_dest_id.id,
