@@ -12,12 +12,6 @@
                     </header>
                     <group string="Recruitment">
                         <field name="module_document" widget="radio"/>
-
-                        <label string="Default job email address" for="alias_prefix" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
-                            @<field name="alias_domain" class="oe_inline" readonly="1"/>
-                        </div>
                     </group>
                 </form>
             </field>
