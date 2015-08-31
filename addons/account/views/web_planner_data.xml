@@ -106,7 +106,7 @@
                             </div>
                             <div class="col-md-4 text-center">
                                 <a t-attf-href="#{prepare_backend_url('base.action_res_company_form', 'form')}&amp;id=#{company_id.id}">
-                                    <img width="150" height="90" t-attf-src="data:image/gif;base64, #{company_id.logo}"/>
+                                    <img width="150" height="90" alt="set company logo" t-attf-src="data:image/gif;base64, #{company_id.logo}"/>
                                     <p>Your Company's Logo</p>
                                 </a>
                             </div>
@@ -122,11 +122,11 @@
                     <t t-set="page_title" t-value="'Your Bank Accounts'"/>
                     <ol>
                         <p><li>Start by creating each bank account manually:</li></p>
-                        <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.action_bank_tree')">Create Bank Accounts</a>
+                        <a class="btn btn-sm odoo_purple" t-att-href="prepare_backend_url('account.action_account_bank_journal_form')">Create Bank Accounts</a>
                         <p><li>Then, register your statements:</li></p>
                         <ul>
                             <li>By <a t-att-href="prepare_backend_url('account_bank_statement_import.action_account_bank_statement_import')">importing a statement file </a>(QIF, OFX, CODA or CSV format)</li>
-                            <li>By <a>connecting to your Bank </a>(US, Canada, NZ only)</li>
+                            <li>By <a t-att-href="prepare_backend_url('account_online_sync.action_config_online_sync_journal_form')">connecting to your Bank </a>(US, Canada, NZ only)</li>
                             <li>Manually, using our <a t-att-href="prepare_backend_url('account.action_bank_statement_tree')">fast recording interface</a></li>
                         </ul>
                     </ol>
@@ -358,7 +358,7 @@
                                 <h3><strong>Assets Management</strong></h3>
                                 <p>Manage your properties like buildings, machinery, materials, cars etc. and calculate their depreciations over time.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')" class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
                                 </a>
                             </div>
                             <div class="text-center col-md-4">
@@ -367,7 +367,7 @@
                                 <p>Use in combination with Contracts to calculate monthly revenues for multi-months Contracts.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_asset')"
                                     class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
                                 </a>
                             </div>
                             <div class="text-center col-md-4">
@@ -376,16 +376,18 @@
                                 <p>Simplify your cash, checks, or credit cards deposits with an integrated batch payment function.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_batch_deposit')"
                                     class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
-                                </a><br/><br/><br/>
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
+                                </a>
                             </div>
+                        </div>
+                        <div class="row o_planner_row_apps">
                             <div class="text-center col-md-4">
                                 <span class="fa fa-money fa-4x"></span>
                                 <h3><strong>Expenses</strong></h3>
                                 <p>Manage your employees expenses, from encoding to payment and reporting.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_expense')"
                                     class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
                                 </a>
                             </div>
                             <div class="text-center col-md-4">
@@ -394,7 +396,7 @@
                                 <p>Validate purchase orders and control vendor bills by departments.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'purchase')"
                                     class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
                                 </a>
                             </div>
                             <div class="text-center col-md-4">
@@ -403,7 +405,7 @@
                                 <p>Manage time &amp; material contracts or fixed-price recurring subscriptions.</p>
                                 <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'account_analytic_analysis')"
                                     class="btn odoo_purple">
-                                    <span class="fa fa-arrow-circle-o-down"/> Active Now
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Now
                                 </a>
                             </div>
                         </div>
@@ -468,7 +470,7 @@
                             <div class="col-md-4">
                                 <strong>Next action:</strong><br/>
                                 <a t-att-href="prepare_backend_url('base.action_res_users')" class="btn odoo_purple">
-                                    <span class="fa"/> Invite Your User
+                                    <span class="fa"/> Invite Your Users
                                 </a>
                             </div>
                             <div class="col-md-8">
@@ -537,12 +539,12 @@
                                      <div class="panel-body">
                                         <ol>
                                             <li><strong>Reconcile Bank Statements</strong></li>
-                                            <li><strong>Check unpaid invoices</strong></li><span>Run an <a t-att-href="prepare_backend_url('account_reports.action_account_report_ar')">Aged Receivable report</a> and check which customers still owe you money.</span>
+                                            <li><strong>Check unpaid invoices</strong></li><span>Run an <i>Aged Receivable report</i> and check which customers still owe you money.</span>
                                             <li><strong>Send follow-up letters</strong></li>
                                         </ol>
                                         <div class="alert alert-info info_icon" role="alert">
                                             <span class="fa fa-lightbulb-o fa-lg"/>
-                                            <p>You can setup Odoo to automatically sent by regular mail an Aged Receivable report to you customers, thanks to <a t-att-href="prepare_backend_url('print.print_provider_action','form','Docsaway')">DocsAway integration</a>.</p>
+                                            <p>You can setup Odoo to automatically sent by regular mail an Aged Receivable report to you customers, thanks to <a t-att-href="prepare_backend_url('base.open_module_tree','form','print_docsaway')">DocsAway integration</a>.</p>
                                         </div>
                                     </div>
                                 </div>
