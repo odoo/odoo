@@ -1155,8 +1155,8 @@ class purchase_order_line(osv.osv):
             context_partner.update({'lang': lang, 'partner_id': partner_id})
         product = product_product.browse(cr, uid, product_id, context=context_partner)
         price = product.seller_price
-        if product.seller_currency_id != currency_id:
-            price = self.pool['res.currency'].compute(cr, uid, product.selected_seller_id.currency_id, currency_id, price, context=dict(context or {}, date=date_order))
+        if product.selected_seller_id.currency_id.id != currency_id:
+            price = self.pool['res.currency'].compute(cr, uid, product.selected_seller_id.currency_id.id, currency_id, price, context=dict(context or {}, date=date_order))
         if replace:
             #call name_get() with partner in the context to eventually match name and description in the seller_ids field
             dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
