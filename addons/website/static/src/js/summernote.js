@@ -1817,7 +1817,6 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                 font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
             }
         }
-        event.preventDefault();
         return false;
     };
 
