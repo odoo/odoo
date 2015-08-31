@@ -122,7 +122,7 @@
                       (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_activity')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}), 
                       (0, 0, {'view_mode': 'kanban'})]"/>
-        <field name="domain">[('type','=','opportunity'), ('date_action','!=',False)]</field>
+        <field name="domain">[('type','=','opportunity')]</field>
         <field name="context">{
                 'default_type': 'opportunity',
                 'default_user_id': uid,
