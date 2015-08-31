@@ -170,12 +170,9 @@ var DashboardPlanner = Widget.extend({
     },
     on_planner_clicked: function(e){
 
-        // TODO: fix planner
-        debugger;
-
         var menu_id = $(e.currentTarget).attr('data-menu-id');
         if (this.planner && this.planner.menu_id[0] == menu_id) {
-             this.dialog.do_show();
+             this.dialog.$el.modal('show');
         }
         else {
             this.setup_planner(menu_id);
@@ -193,7 +190,7 @@ var DashboardPlanner = Widget.extend({
             self.update_planner_progress();
         });
         this.dialog.appendTo(webclient.$el).then(function() {
-            self.dialog.do_show();
+            self.dialog.$el.modal('show');
         });
     }
 });
