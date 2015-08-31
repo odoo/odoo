@@ -273,4 +273,9 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
     }
 };
 
+
+if ($("#editable_area").html().indexOf('on_change_model_and_list') !== -1) {
+    $("#editable_area").empty();
+}
+
 });
