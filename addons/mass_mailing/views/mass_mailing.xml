@@ -17,6 +17,17 @@
         <menuitem name="Configuration" id="mass_mailing_configuration"
             parent="mass_mailing_menu_root" sequence="100" groups="base.group_configuration"/>
 
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_mass_mailing_menu" model="ir.actions.client">
+            <field name="name">Open Mass Mailing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('mass_mailing_menu_root')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_mass_mailing_menu"/>
+            <field name="state">open</field>
+        </record>
+
         <!--  MAIL MAIL STATISTICS !-->
         <record model="ir.ui.view" id="view_mail_mail_statistics_search">
             <field name="name">mail.mail.statistics.search</field>
