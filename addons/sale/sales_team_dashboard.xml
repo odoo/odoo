@@ -30,12 +30,12 @@
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
                 <div class="row" t-if="record.use_invoices.raw_value">
-                    <div class="col-xs-9">
+                    <div class="col-xs-8">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
                             Sales to Invoice
                         </a>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4 text-right">
                         <!-- TODO: use monetary widget when available on kanban view -->
                         <t t-esc="record.sales_to_invoice_amount.raw_value or 0"/>
                         <field name="currency_id"/>

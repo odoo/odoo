@@ -154,7 +154,6 @@
                 padding: 0;
             }
         }
-
     }
 
     &.o_kanban_grouped {
@@ -282,6 +281,7 @@
         }
         .o_progressbar {
             .o-flex-display();
+            height: 20px;
 
             .o_progressbar_title {
                 .o-flex(0, 0, auto);
@@ -292,23 +292,31 @@
             }
             .o_progressbar_value {
                 .o-flex(0, 0, auto);
-                width: auto;
                 text-align: right;
+                width: auto;
+                height: 100%;
+            }
+            input.o_progressbar_value {
+                width: 15%;
+                margin-left: 8px;
             }
         }
 
         .oe_kanban_colorpicker {
-            li {
-                float: left;
-                &:first-child a {
-                    border: 1px solid #ccc;
+            margin: 0;
+
+            > li {
+                display: inline-block;
+                margin-right: 1px;
+
+                > a {
+                    width: 15px;
+                    height: 15px;
+                    display: block;
                 }
 
-                a {
-                    width: 15px;
-                    height: 16px;
-                    display: inline-block;
-                    border: 1px solid white;
+                &:first-child > a {
+                    border: 1px solid #ccc;
                 }
             }
         }

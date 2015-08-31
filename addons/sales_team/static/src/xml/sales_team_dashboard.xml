@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <templates>
-
     <!--
         This template is the ribbon at the top of the salesteam dashboard that adds
         some figures to it. We call this rubbon the "SalesDashboard".
     -->
     <t t-name="sales_team.SalesDashboard">
-
-        <div t-if="show_demo or values" class="o_sales_dashboard mb8">
-            <div t-attf-class="o_left_panel #{show_demo ? 'o_demo' : ''}">
-                <table border="0" class="table">
+        <div t-if="show_demo or values" class="o_sales_dashboard">
+            <div t-attf-class="#{show_demo ? 'o_demo' : ''}">
+                <table class="table table-condensed">
                     <tr>
                         <td class="o_text">
                             <div class="o_highlight">To do</div>
@@ -115,10 +112,8 @@
                         </td>
                     </tr>
                 </table>
-            </div>
-
-            <div t-attf-class="o_right_panel #{show_demo ? 'o_demo' : ''}">
-                <table class="table">
+            </div><div t-attf-class="#{show_demo ? 'o_demo' : ''}">
+                <table class="hidden-xs table table-condensed">
                     <tr>
                         <td class="o_text">
                             <div class="o_highlight">Performance</div>
@@ -240,5 +235,4 @@
             </div>
         </div>
     </t>
-
 </templates>

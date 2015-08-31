@@ -7,9 +7,10 @@
 
     .o_project_kanban_main {
         .o-flex(1, 0, 0);
+        padding: @odoo-horizontal-padding;
 
         // give space for manage section at the bottom
-        margin-bottom: 40px;
+        margin-bottom: @odoo-horizontal-padding/2 + 19px;
 
         .o_kanban_card_content {
             font-size: 12px;
@@ -19,20 +20,11 @@
         }
 
         .o_project_kanban_manage {
-            visibility: visible;
-            position: absolute;
-            bottom: 0;
-            margin-left: 16px;
-            margin-bottom: 10px;
+            .o-position-absolute(@bottom: 0, @left: 0);
+            padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
         }
-        .o_project_kanban_colorpicker {
-            padding: 8px;
-        }
-        .o_kanban_card_manage_pane {
-
-            .o_kanban_card_manage_title {
-                margin: 0;
-            }
+        .o_kanban_card_manage_pane .o_kanban_card_manage_title {
+            margin: 0;
         }
     }
 

@@ -30,7 +30,6 @@ var SalesTeamDashboardView = KanbanView.extend({
         var self = this;
 
         this.fetch_data().then(function(result){
-
             self.show_demo = result && result['nb_opportunities'] == 0;
 
             var sales_dashboard = QWeb.render('sales_team.SalesDashboard', {
@@ -68,13 +67,12 @@ var SalesTeamDashboardView = KanbanView.extend({
     },
 
     on_change_input_target: function(e) {
-
         var self = this;
         var $input = $(e.target);
         var target_name = $input.attr('name');
         var target_value = $input.val();
 
-        if(isNaN($input.val())) {
+        if(isNaN(target_value)) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
             this.modify_target(target_name, target_value).then(function() {
@@ -90,7 +88,6 @@ var SalesTeamDashboardView = KanbanView.extend({
     },
 
     on_dashboard_target_clicked: function(ev){
-
         if (this.show_demo) {
             // The user is not allowed to modify the targets in demo mode
             return;
@@ -101,7 +98,7 @@ var SalesTeamDashboardView = KanbanView.extend({
         var target_name = $target.attr('name');
         var target_value = $target.attr('value');
 
-        var $input = $('<input/>');
+        var $input = $('<input/>', {type: "text"});
         $input.attr('name', target_name);
         if (target_value) {
             $input.attr('value', target_value);
