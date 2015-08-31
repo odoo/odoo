@@ -946,8 +946,7 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
     options.keyMap.mac['SHIFT+TAB'] = 'untab';
 
     options.keyMap.mac['BACKSPACE'] = 'backspace';
-    options.keyMap.mac['CMD+BACKSPACE'] = 'delete';
-    options.keyMap.mac['SHIFT+BACKSPACE'] = 'delete';
+    options.keyMap.mac['DELETE'] = 'delete';
     options.keyMap.mac['ENTER'] = 'enter';
     options.keyMap.mac['ESCAPE'] = 'cancel';
     
