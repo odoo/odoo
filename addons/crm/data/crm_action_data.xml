@@ -4,14 +4,17 @@
 
         <record id="crm_activity_data_email" model="crm.activity">
             <field name="name">Email</field>
+            <field name="days">1</field>
         </record>
         <record id="crm_activity_data_call" model="crm.activity">
-            <field name="name">Call</field>
+            <field name="name">Call 5d</field>
+            <field name="days">15</field>
+            <field name="description">Follow-up call</field>
             <field name="activity_1_id" ref="crm_activity_data_email"/>
         </record>
         <record id="crm_activity_data_meeting" model="crm.activity">
             <field name="name">Task</field>
-            <field name="days">3</field>
+            <field name="days">5</field>
             <field name="activity_1_id" ref="crm_activity_data_call"/>
             <field name="activity_2_id" ref="crm_activity_data_email"/>
         </record>
