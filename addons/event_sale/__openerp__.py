@@ -29,7 +29,6 @@ this event.
         'wizard/event_edit_registration.xml',
     ],
     'demo': ['data/event_demo.xml'],
-    'test': ['test/confirm.yml'],
     'installable': True,
     'auto_install': True
 }

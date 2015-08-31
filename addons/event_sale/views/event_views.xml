@@ -1,9 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
-        <record model="ir.ui.view" id="view_event_registration_ticket_search">
-            <field name="name">event.registration.ticket.search</field>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_event_registration_ticket_search" model="ir.ui.view">
+            <field name="name">event.registration.search.inherit</field>
             <field name="model">event.registration</field>
             <field name="inherit_id" ref="event.view_registration_search" />
             <field name="arch" type="xml">
@@ -13,8 +11,8 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_event_registration_ticket_tree">
-            <field name="name">event.registration.ticket.tree</field>
+        <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+            <field name="name">event.registration.tree.inherit</field>
             <field name="model">event.registration</field>
             <field name="inherit_id" ref="event.view_event_registration_tree" />
             <field name="arch" type="xml">
@@ -25,8 +23,8 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_event_registration_ticket_form">
-            <field name="name">event.registration.ticket.form</field>
+        <record id="view_event_registration_ticket_form" model="ir.ui.view">
+            <field name="name">event.registration.form.inherit</field>
             <field name="model">event.registration</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
@@ -42,13 +40,12 @@
                 </group>
             </field>
         </record>
-        
-        <record model="ir.ui.view" id="view_event_form_inherit_ticket">
-            <field name="name">view_event_form_inherit_tichet</field>
+
+        <record id="view_event_form_inherit_ticket" model="ir.ui.view">
+            <field name="name">event.form.inherit</field>
             <field name="model">event.event</field>
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
-                <data>
                     <xpath expr="//page[@name='registrations']" position="replace">
                         <page string="Tickets">
                             <group>
@@ -72,11 +69,10 @@
                             </field>
                         </page>
                     </xpath>
-               </data>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="event_ticket_form_view">
+        <record id="event_ticket_form_view" model="ir.ui.view">
             <field name="name">event.event.ticket.form</field>
             <field name="model">event.event.ticket</field>
             <field name="arch" type="xml">
@@ -106,5 +102,5 @@
                 </form>
             </field>
         </record>
-    </data>
-</openerp>
+
+</odoo>

@@ -46,13 +46,13 @@ class SaleOrderEventRegistration(models.TransientModel):
 
     @api.multi
     def action_make_registration(self):
-        Registration = self.env['event.registration']
-        for wizard in self:
-            for wiz_registration in wizard.event_registration_ids:
-                if wiz_registration.registration_id:
-                    wiz_registration.registration_id.write(wiz_registration.get_registration_data()[0])
-                else:
-                    Registration.create(wiz_registration.get_registration_data()[0])
+        self.ensure_one()
+        for registration_line in self.event_registration_ids:
+            values = registration_line.get_registration_data()
+            if registration_line.registration_id:
+                registration_line.registration_id.write(values)
+            else:
+                self.env['event.registration'].create(values)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -69,8 +69,9 @@ class RegistrationEditorLine(models.TransientModel):
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Name', select=True)
 
-    @api.one
+    @api.multi
     def get_registration_data(self):
+        self.ensure_one()
         return {
             'event_id': self.event_id.id,
             'event_ticket_id': self.event_ticket_id.id,
