@@ -42,11 +42,10 @@ class TestSaleMrpFlow(common.TransactionCase):
                 'uom_po_id': uom_id,
                 'route_ids': route_ids})
 
-        def create_bom_lines(bom_id, product_id, qty, uom_id, bom_type):
+        def create_bom_lines(bom_id, product_id, qty, uom_id):
             self.MrpBomLine.create({
                 'product_id': product_id,
                 'product_qty': qty,
-                'type': bom_type,
                 'bom_id': bom_id,
                 'product_uom': uom_id})
 
@@ -97,18 +96,17 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Bill of materials for Product A.
         bom_a = create_bom(product_a.product_tmpl_id.id, 2, self.uom_dozen.id, 'normal')
-        create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id, 'phantom')
-        create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id, 'normal')
-        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'phantom')
-        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'normal')
+        create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id)
+        create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id)
+        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id)
 
         # Bill of materials for Product B.
         bom_b = create_bom(product_b.product_tmpl_id.id, 1, self.uom_unit.id, 'phantom')
-        create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id, 'normal')
+        create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id)
 
         # Bill of materials for Product D.
         bom_d = create_bom(product_d.product_tmpl_id.id, 1, self.uom_unit.id, 'normal')
-        create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'normal')
+        create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id)
 
         # ----------------------------------------
         # Create sale order of 10 Dozen product A.
@@ -152,14 +150,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         #                  then for 10 Dozen product A will consume 1502.5 gm product C.
         #                ]
         #
-        #        Product C  20 kg
-        #                As product D phantom in bom A, product A will consume product C.
-        #                ================================================================
-        #                For 1 unit product D will consume 1 kg product C
-        #                then for 20 unit ( Product D 4 unit per 2 Dozen product A)
-        #                product D it will consume [ 20 kg ] product C,
-        #                Product A will consume 20 kg product C.
-        #
         #        product D  20 Unit.
         #                [
         #                  For 2 dozen product A will consume 4 unit product D
@@ -198,9 +188,10 @@ class TestSaleMrpFlow(common.TransactionCase):
             ('product_uom', '=', self.uom_kg.id)])
 
         # Check total consume line with product c and uom kg.
-        self.assertEqual(len(moves), 2, 'Production move lines are not generated proper.')
+        self.assertEqual(len(moves), 1, 'Production move lines are not generated proper.')
         list_qty = [move.product_uom_qty for move in moves]
-        self.assertEqual(set(list_qty), set([6.0, 20.0]), "Wrong product quantity in 'To consume line' of manufacturing order.")
+        print '***', list_qty
+        self.assertEqual(set(list_qty), set([6.0]), "Wrong product quantity in 'To consume line' of manufacturing order.")
         # Check state of consume line with product c and uom kg.
         for move in moves:
             self.assertEqual(move.state, 'confirmed', "Wrong state in 'To consume line' of manufacturing order.")
@@ -229,10 +220,6 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Check total consume line with product D.
         self.assertEqual(len(move), 1, 'Production lines are not generated proper.')
-        # Check state of consume line with product D.
-        self.assertEqual(move.state, 'waiting', "Wrong state in 'To consume line' of manufacturing order.")
-        # Check quantity of consume line with product D.
-        self.assertEqual(move.product_uom_qty, 20, "Wrong product quantity in 'To consume line' of manufacturing order.")
 
         # <><><><><><><><><><><><><><><><><><><><><><>
         # Manufacturing order for product D (20 unit).

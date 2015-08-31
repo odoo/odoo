@@ -237,9 +237,8 @@ class ir_attachment(osv.osv):
         """ compute the checksum for the given datas
             :param bin_data : datas in its binary form
         """
-        if bin_data:
-            return hashlib.sha1(bin_data).hexdigest()
-        return False
+        # an empty file has a checksum too (for caching)
+        return hashlib.sha1(bin_data or '').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values

@@ -404,7 +404,7 @@ class AccountTaxTemplate(models.Model):
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
 
     @api.multi

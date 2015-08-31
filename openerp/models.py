@@ -60,6 +60,7 @@ _unlink = logging.getLogger(__name__ + '.unlink')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+regex_pg_name = re.compile(r'[a-z_][a-z0-9_$]*', re.I)
 onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
@@ -91,6 +92,13 @@ def raise_on_invalid_object_name(name):
     if not check_object_name(name):
         msg = "The _name attribute %s is not valid." % name
         raise ValueError(msg)
+
+def check_pg_name(name):
+    """ Check whether the given name is a valid PostgreSQL identifier name. """
+    if not regex_pg_name.match(name):
+        raise ValueError("Invalid characters in table name %r" % name)
+    if len(name) > 63:
+        raise ValueError("Table name %r is too long" % name)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -780,6 +788,8 @@ class BaseModel(object):
             # If _log_access is not specified, it is the same value as _auto.
             cls._log_access = cls._auto
 
+        check_pg_name(cls._table)
+
         # Transience
         if cls.is_transient():
             cls._transient_check_count = 0
@@ -1339,8 +1349,17 @@ class BaseModel(object):
            :return: True if the current user is a member of one of the
                     given groups
         """
-        return any(self.pool['res.users'].has_group(cr, uid, group_ext_id)
-                   for group_ext_id in groups.split(','))
+        from openerp.http import request
+        Users = self.pool['res.users']
+        for group_ext_id in groups.split(','):
+            if group_ext_id == 'base.group_no_one':
+                # check: the group_no_one is effective in debug mode only
+                if Users.has_group(cr, uid, group_ext_id) and request and request.debug:
+                    return True
+            else:
+                if Users.has_group(cr, uid, group_ext_id):
+                    return True
+        return False
 
     def _get_default_form_view(self, cr, user, context=None):
         """ Generates a default single-line form view using all fields
@@ -2758,8 +2777,8 @@ class BaseModel(object):
             if not cr.fetchall():
                 self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
 
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col1))
+            cr.execute('CREATE INDEX ON "%s" ("%s")' % (m2m_tbl, col2))
             cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
             _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
@@ -5184,6 +5203,12 @@ class BaseModel(object):
         # reorder read
         index = dict((r['id'], r) for r in result)
         return [index[x] for x in record_ids if x in index]
+
+    @api.multi
+    def toggle_active(self):
+        """ Inverse the value of the field ``active`` on the records in ``self``. """
+        for record in self:
+            record.active = not record.active
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """

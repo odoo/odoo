@@ -46,6 +46,18 @@ var AbstractField = Widget.extend(FieldInterface, {
     },
 });
 
+var FormatChar = AbstractField.extend({
+    tagName: 'span',
+    init: function(parent, field, $node) {
+        this._super.apply(this, arguments);
+        this.format_descriptor = _.extend({}, this.field, {'widget': this.$node.attr('widget')});
+    },
+    renderElement: function() {
+        this.$el.text(instance.web.format_value(this.field.raw_value, this.format_descriptor));
+    }
+});
+
+
 var KanbanPriority = AbstractField.extend({
     init: function(parent, field, $node) {
         this._super.apply(this, arguments);
@@ -233,7 +245,9 @@ fields_registry
     .add('priority', KanbanPriority)
     .add('kanban_state_selection', KanbanSelection)
     .add("attachment_image", KanbanAttachmentImage)
-    .add('progress', KanbanProgressBar);
+    .add('progress', KanbanProgressBar)
+    .add('float_time', FormatChar)
+    ;
 
 return {
     AbstractField: AbstractField,

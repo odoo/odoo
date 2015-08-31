@@ -129,10 +129,12 @@ var MediaDialog = Dialog.extend({
         this.imageDialog.appendTo(this.$("#editor-media-image"));
         this.documentDialog = new ImageDialog(this, this.media, _.extend({'document': true}, this.options));
         this.documentDialog.appendTo(this.$("#editor-media-document"));
-        this.iconDialog = new fontIconsDialog(this, this.media, this.options);
-        this.iconDialog.appendTo(this.$("#editor-media-icon"));
-        this.videoDialog = new VideoDialog(this, this.media, this.options);
-        this.videoDialog.appendTo(this.$("#editor-media-video"));
+        if (!this.only_images) {
+            this.iconDialog = new fontIconsDialog(this, this.media, this.options);
+            this.iconDialog.appendTo(this.$("#editor-media-icon"));
+            this.videoDialog = new VideoDialog(this, this.media, this.options);
+            this.videoDialog.appendTo(this.$("#editor-media-video"));
+        }
 
         this.active = this.imageDialog;
 
@@ -175,10 +177,11 @@ var MediaDialog = Dialog.extend({
             if (this.active !== this.documentDialog) {
                 this.documentDialog.clear();
             }
-            if (this.active !== this.iconDialog) {
+            // if not mode only_images
+            if (this.iconDialog && this.active !== this.iconDialog) {
                 this.iconDialog.clear();
             }
-            if (this.active !== this.videoDialog) {
+            if (this.videoDialog && this.active !== this.videoDialog) {
                 this.videoDialog.clear();
             }
         } else {
@@ -574,7 +577,7 @@ var getCssSelectors = function(filter) {
     }
     return cacheCssSelectors[filter] = css;
 };
-function computeFonts() {
+var computeFonts = _.once(function() {
     _.each(fontIcons, function (data) {
         data.cssData = getCssSelectors(data.parser);
         data.alias = [];
@@ -583,7 +586,7 @@ function computeFonts() {
             return css[2];
         });
     });
-}
+});
 
 rte.Class.include({
     init: function (EditorBar) {
@@ -632,9 +635,7 @@ var fontIconsDialog = Widget.extend({
         this._super();
         this.parent = parent;
         this.media = media;
-        if (_.find(fontIcons, function (data) {return !data.icons;})) {
-            computeFonts();
-        }
+        computeFonts();
     },
     start: function () {
         return this._super().then(this.proxy('load_data'));

@@ -27,20 +27,6 @@
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <div class="o_row">
-                                <div>
-                                    <label for="work_email" class="oe_edit_only"/>
-                                    <field name="work_email" widget="email"/>
-                                </div>
-                                <div>
-                                    <label for="work_phone" class="oe_edit_only"/>
-                                    <field name="work_phone"/>
-                                </div>
-                                <div groups="base.group_hr_user">
-                                    <label for="category_ids" class="oe_edit_only"/>
-                                    <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
-                                </div>
-                            </div>
                         </div>
                         <notebook>
                             <page name="public" string="Public Information">
@@ -51,6 +37,9 @@
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
@@ -414,6 +403,15 @@
                 "search_default_department_id": [active_id],
                 "default_department_id": active_id}
             </field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
         </record>
 
         <!-- hr.department -->
@@ -465,7 +463,7 @@
             <field name="name">Departments</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

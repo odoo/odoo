@@ -51,7 +51,7 @@
             </field>
         </record>
         <record id="action_module_open_categ" model="ir.actions.act_window">
-            <field name="name">Modules</field>
+            <field name="name">Apps</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
@@ -60,7 +60,7 @@
         <record id="ir_action_module_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'ir.module.category'" name="model"/>
-            <field name="name">Categorized Modules</field>
+            <field name="name">Categorized Apps</field>
             <field eval="'ir.actions.act_window,%d'%action_module_open_categ" name="value"/>
         </record>
 
@@ -140,7 +140,7 @@
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state=='to upgrade' or state=='to install'" decoration-danger="state=='uninstalled'" decoration-muted="state=='uninstallable'" create="false" string="Modules">
+                <tree decoration-info="state=='to upgrade' or state=='to install'" decoration-danger="state=='uninstalled'" decoration-muted="state=='uninstallable'" create="false" string="Apps">
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>
@@ -151,7 +151,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="module_view_kanban">
-            <field name="name">Modules Kanban</field>
+            <field name="name">Apps Kanban</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <kanban create="false">
@@ -180,7 +180,7 @@
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Modules</field>
+            <field name="name">Apps</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -191,7 +191,7 @@
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="menu_management" name="Modules" sequence="5" action="open_module_tree" />
+        <menuitem id="menu_module_tree" parent="menu_management" name="Apps" sequence="5" action="open_module_tree" />
 
 
         <!-- Apps modules -->
@@ -199,7 +199,7 @@
             <field name="name">Apps</field>
             <field name="tag">apps</field>
         </record>
-        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl"/>
+        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl" groups="base.group_no_one"/>
 
         <record model="ir.actions.client" id="modules_updates_act_cl">
             <field name="name">Updates</field>

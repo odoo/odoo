@@ -11,17 +11,6 @@
         <field name="placement">bottom</field>
     </record>
     
-    <record model="web.tip" id="project_tip_2">
-        <field name="description">You can drag and drop tasks from one stage to another.</field>
-        <field name="action_id" ref="action_view_task"/> 
-        <field name="model">project.task</field>
-        <field name="mode">kanban</field>
-        <field name="trigger_selector">.oe_kanban_content:visible</field>
-        <field name="highlight_selector">.oe_kanban_content:visible</field>
-        <field name="end_event">mousedown</field>
-        <field name="placement">top</field>
-    </record>
-    
     <record model="web.tip" id="project_tip_3">
         <field name="description">Every event on a task is logged in this section. Send a new message to notify followers or log an internal note to store information without notifying the followers.</field>
         <field name="action_id" ref="action_view_task"/>

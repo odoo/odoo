@@ -426,13 +426,21 @@ var RTE = Widget.extend({
             if (this.__saved[key]) return true;
             this.__saved[key] = true;
         }
+        // escape text nodes for xml saving
+        var escaped_el = $el.clone();
+        escaped_el.find('*').addBack().not('script,style').contents().each(function(){
+            if(this.nodeType == 3) {
+                this.nodeValue = _.escape(this.nodeValue);
+            }
+        });
+        var markup = escaped_el.prop('outerHTML');
 
         return ajax.jsonRpc('/web/dataset/call', 'call', {
             model: 'ir.ui.view',
             method: 'save',
             args: [
                 $el.data('oe-id'),
-                $el.prop('outerHTML'),
+                markup,
                 $el.data('oe-xpath') || null,
                 context || base.get_context()
             ],

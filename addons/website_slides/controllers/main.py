@@ -173,7 +173,6 @@ class website_slides(http.Controller):
         right partner. Their comments are not published by default. Logged
         users can post as usual. """
         # TDE TODO :
-        # - fix _find_partner_from_emails -> is an api.one + strange results + should work as public user
         # - subscribe partner instead of user writing the message ?
         # - public user -> cannot create mail.message ?
         if not post.get('comment'):
@@ -187,7 +186,7 @@ class website_slides(http.Controller):
             # be investigated - using SUPERUSER_ID meanwhile
             contextual_slide = slide.sudo().with_context(mail_create_nosubcribe=True)
             # TDE FIXME: check in mail_thread, find partner from emails should maybe work as public user
-            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0][0]
+            partner_id = slide.sudo()._find_partner_from_emails([post.get('email')])[0]
             if partner_id:
                 partner = request.env['res.partner'].sudo().browse(partner_id)
             else:

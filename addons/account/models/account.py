@@ -500,7 +500,7 @@ class AccountTax(models.Model):
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
 
     @api.one
@@ -661,6 +661,14 @@ class AccountTax(models.Model):
         recs = self.browse(cr, uid, ids, context=context)
         return recs.compute_all(price_unit, currency, quantity, product, partner)
 
+    @api.model
+    def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
+        """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
+        # FIXME get currency in param?
+        incl_tax = prod_taxes.filtered(lambda tax: tax.id not in line_taxes and tax.price_include)
+        if incl_tax:
+            return incl_tax.compute_all(price)['total_excluded']
+        return price
 
 class AccountOperationTemplate(models.Model):
     _name = "account.operation.template"

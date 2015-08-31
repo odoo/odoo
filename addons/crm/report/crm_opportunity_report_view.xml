@@ -102,6 +102,9 @@
                     <filter string="Current" name="current"
                             domain="[('active', '=', True)]"/>
                     <separator/>
+                    <filter string="My Opportunities" name="my"
+                            domain="[('user_id', '=', uid)]"/>
+                    <separator/>
                     <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
                     <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
                     <separator/>
@@ -151,7 +154,7 @@
              <field name="res_model">crm.opportunity.report</field>
              <field name="view_type">form</field>
              <field name="view_mode">pivot,graph</field>
-             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True}</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
             <field name="view_ids" 
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),

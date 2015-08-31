@@ -455,7 +455,8 @@ class MailTemplate(models.Model):
                 for res_id, field_value in generated_field_values.iteritems():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
-            results = template.generate_recipients(results, template_res_ids)
+            if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
+                results = template.generate_recipients(results, template_res_ids)
             # update values for all res_ids
             for res_id in template_res_ids:
                 values = results[res_id]

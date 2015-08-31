@@ -316,6 +316,38 @@ class project_issue(osv.Model):
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle project users and officers
+        recipients. Indeed those will have specific action in their notification
+        emails: creating tasks, assigning it. """
+        group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_project_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(project_issue, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(project_issue, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project_issue.project_issue_categ_act0')
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_id=new_action_id)
+
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('New Issue')})
+
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
+
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """

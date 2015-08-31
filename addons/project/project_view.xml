@@ -111,7 +111,8 @@
                                 <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Customer"/>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"
-                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
+                                        context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"
+                                        groups="base.group_no_one"/>
                                 <field name="privacy_visibility" widget="radio"/>
                             </group>
                             <group name="misc">
@@ -121,7 +122,6 @@
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                 </group>
                             </group>
                         </page>
@@ -196,9 +196,26 @@
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current': 1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a new project.
+                </p><p>
+                    Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
+                </p>
+            </field>
+        </record>
+
+        <record id="open_view_project_all_config" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[]</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Create a new project.
@@ -575,6 +592,8 @@
         <menuitem action="open_task_type_form" id="base.menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="group_project_manager"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="base.menu_main_pm" sequence="1"/>
+        <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
+
 
         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>

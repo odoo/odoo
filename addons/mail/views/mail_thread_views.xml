@@ -23,14 +23,5 @@
 
     <menuitem id="mail.mail_inbox" name="Inbox" action="mail_message_action_inbox"
               parent="mail.mail_thread_menu_root" groups="base.group_user" sequence="1"/>
-    
-    <record id="action_mail_redirect" model="ir.actions.server">
-        <field name="name">Mail Redirection (Document / Inbox)</field>
-        <field name="condition">True</field>
-        <field name="model_id" ref="model_mail_thread"/>
-        <field name="code">action = pool.get('mail.thread').message_redirect_action(cr, uid, context)</field>
-        <field name="state">code</field>
-        <field name="type">ir.actions.server</field>
-    </record>
 
 </odoo>

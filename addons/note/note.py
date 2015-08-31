@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import SUPERUSER_ID
+from openerp import _, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools import html2plaintext
 
@@ -155,6 +155,13 @@ class note_note(osv.osv):
         else:
             return super(note_note, self).read_group(cr, uid, domain, fields, groupby,
                 offset=offset, limit=limit, context=context, orderby=orderby,lazy=lazy)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(note_note, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+        res['user'] = {
+            'actions': [{'url': self._notification_link_helper(cr, uid, ids, 'new', context=context), 'title': _('New Note')}]
+        }
+        return res
 
 
 class res_users(osv.Model):

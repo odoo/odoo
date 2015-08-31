@@ -5,6 +5,7 @@ from openerp.tools import mute_logger
 
 
 class TestMailFeatures(TestMail):
+    # TDE TODO: tests on the redirection controller
 
     def test_alias_setup(self):
         Users = self.env['res.users'].with_context({'no_reset_password': True})
@@ -23,120 +24,6 @@ class TestMailFeatures(TestMail):
             'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com',
             'login': 'b4r+_#_R3wl$$', 'alias_name': 'b4r+_#_R3wl$$'})
         self.assertEqual(user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
-
-    def test_mail_notification_url_no_partner(self):
-        mail = self.env['mail.mail'].create({'state': 'exception'})
-        url = mail._get_partner_access_link()
-        self.assertEqual(url, None)
-
-    def test_mail_notification_url_partner(self):
-        mail = self.env['mail.mail'].create({'state': 'exception'})
-        url = mail._get_partner_access_link(self.partner_1)
-        self.assertEqual(url, None)
-
-    def test_mail_notification_url_user_signin(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        mail = self.env['mail.mail'].create({'state': 'exception'})
-        url = mail._get_partner_access_link(self.user_employee.partner_id)
-        self.assertIn(base_url, url)
-        self.assertIn('db=%s' % self.env.cr.dbname, url,
-                      'notification email: link should contain database name')
-        self.assertIn('action=mail.action_mail_redirect', url,
-                      'notification email: link should contain the redirect action')
-        self.assertIn('login=%s' % self.user_employee.login, url,
-                      'notification email: link should contain the user login')
-
-    def test_mail_notification_url_user_document(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        mail = self.env['mail.mail'].create({'state': 'exception', 'model': 'mail.channel', 'res_id': self.group_pigs.id})
-        url = mail._get_partner_access_link(self.user_employee.partner_id)
-        self.assertIn(base_url, url)
-        self.assertIn('db=%s' % self.env.cr.dbname, url,
-                      'notification email: link should contain database name')
-        self.assertIn('action=mail.action_mail_redirect', url,
-                      'notification email: link should contain the redirect action')
-        self.assertIn('login=%s' % self.user_employee.login, url,
-                      'notification email: link should contain the user login')
-        self.assertIn('model=mail.channel', url,
-                      'notification email: link should contain the model when having not notification email on a record')
-        self.assertIn('res_id=%s' % self.group_pigs.id, url,
-                      'notification email: link should contain the res_id when having not notification email on a record')
-
-    def test_inbox_redirection_basic(self):
-        """ Inbox redirection: no params, Inbox """
-        inbox_act_id = self.ref('mail.mail_message_action_inbox')
-        action = self.env['mail.thread'].with_context({'params': {}}).sudo(self.user_employee).message_redirect_action()
-        self.assertEqual(
-            action.get('type'), 'ir.actions.act_window',
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
-        self.assertEqual(
-            action.get('id'), inbox_act_id,
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
-
-    def test_inbox_redirection_document(self):
-        """ Inbox redirection: document + read access: Doc """
-        action = self.env['mail.thread'].with_context({
-            'params': {'model': 'mail.channel', 'res_id': self.group_pigs.id}
-        }).sudo(self.user_employee).message_redirect_action()
-        self.assertEqual(
-            action.get('type'), 'ir.actions.act_window',
-            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
-        )
-        self.assertEqual(
-            action.get('res_id'), self.group_pigs.id,
-            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
-        )
-
-    @mute_logger('openerp.addons.mail.models.mail_mail')
-    def test_inbox_redirection_message_document(self):
-        """ Inbox redirection: message + read access: Doc """
-        message = self.group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id], message_type='comment', subtype='mail.mt_comment')
-        action = self.env['mail.thread'].with_context({
-            'params': {'message_id': message.id}
-        }).sudo(self.user_employee).message_redirect_action()
-        self.assertEqual(
-            action.get('type'), 'ir.actions.act_window',
-            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
-        )
-        self.assertEqual(
-            action.get('res_id'), self.group_pigs.id,
-            'URL redirection: action with message_id for read-accredited user should redirect to Pigs'
-        )
-
-    @mute_logger('openerp.addons.mail.models.mail_mail', 'openerp.models')
-    def test_inbox_redirection_message_inbox(self):
-        """ Inbox redirection: message without read access: Inbox """
-        message = self.group_pigs.message_post(body='My body', partner_ids=[self.user_employee.partner_id.id], message_type='comment', subtype='mail.mt_comment')
-        inbox_act_id = self.ref('mail.mail_message_action_inbox')
-        action = self.env['mail.thread'].with_context({
-            'params': {'message_id': message.id}
-        }).sudo(self.user_public).message_redirect_action()
-        self.assertEqual(
-            action.get('type'), 'ir.actions.act_window',
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
-        self.assertEqual(
-            action.get('id'), inbox_act_id,
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
-
-    @mute_logger('openerp.models')
-    def test_inbox_redirection_document_inbox(self):
-        """ Inbox redirection: document without read access: Inbox """
-        inbox_act_id = self.ref('mail.mail_message_action_inbox')
-        action = self.env['mail.thread'].with_context({
-            'params': {'model': 'mail.channel', 'res_id': self.group_pigs.id}
-        }).sudo(self.user_public).message_redirect_action()
-        self.assertEqual(
-            action.get('type'), 'ir.actions.act_window',
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
-        self.assertEqual(
-            action.get('id'), inbox_act_id,
-            'URL redirection: action without parameters should redirect to action act window Inbox'
-        )
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_needaction(self):

@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
+from werkzeug import url_encode
 
-import openerp
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
@@ -199,10 +200,11 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
+        'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
         'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
-        'next_activity_1': fields.related("next_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
-        'next_activity_2': fields.related("next_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
-        'next_activity_3': fields.related("next_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
+        'next_activity_1': fields.related("last_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
+        'next_activity_2': fields.related("last_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
+        'next_activity_3': fields.related("last_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Activity Date', select=True),
         'title_action': fields.char('Next Activity Summary'),
 
@@ -357,13 +359,29 @@ class crm_lead(format_address, osv.osv):
     case_mark_won = action_set_won
 
     def log_next_activity_1(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_1_id', context=context)
 
     def log_next_activity_2(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_2_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_2_id', context=context)
 
     def log_next_activity_3(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+
+    def set_next_activity(self, cr, uid, ids, next_activity_name, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.last_activity_id:
+                continue
+            next_activity = next_activity_name and getattr(lead.last_activity_id, next_activity_name, False) or False
+            if next_activity:
+                date_action = False
+                if next_activity.days:
+                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+                lead.write({
+                    'next_activity_id': next_activity.id,
+                    'date_action': date_action,
+                    'title_action': next_activity.description,
+                })
+        return True
 
     def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
         to_clear_ids = []
@@ -376,20 +394,8 @@ class crm_lead(format_address, osv.osv):
 %endif"""
             body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
             msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
-            # update subtype after posting NOT SURE
-
-            next_activity = next_activity_name and getattr(lead.next_activity_id, next_activity_name, False) or False
-            if next_activity:
-                date_action = False
-                if next_activity.days:
-                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-                lead.write({
-                    'next_activity_id': next_activity.id,
-                    'date_action': date_action,
-                    'title_action': next_activity.description,
-                })
-            else:
-                to_clear_ids.append(lead.id)
+            to_clear_ids.append(lead.id)
+            self.write(cr, uid, [lead.id], {'last_activity_id': lead.next_activity_id.id}, context=context)
 
         if to_clear_ids:
             self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
@@ -421,6 +427,7 @@ class crm_lead(format_address, osv.osv):
             'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
             'title_action': activity.description,
             'date_action': date_action,
+            'last_activity_id': False,
         }}
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
@@ -934,6 +941,38 @@ Update your business card, phone book, social media,... Send an email right now 
             return 'crm.mt_lead_stage'
         return super(crm_lead, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle salesman recipients.
+        Indeed those will have specific action in their notification emails. """
+        group_sale_salesman = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_sale_salesman')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_sale_salesman in recipient.user_ids[0].groups_id.ids:
+                group_data['group_sale_salesman'] |= recipient
+                done_ids.add(recipient.id)
+        return super(crm_lead, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
+        lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
+        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
+
+        lead = self.browse(cr, uid, ids[0], context=context)
+        if lead.type == 'lead':
+            res['group_sale_salesman'] = {
+                'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
+            }
+        else:
+            res['group_sale_salesman'] = {
+                'actions': [
+                    {'url': won_action, 'title': 'Won'},
+                    {'url': lost_action, 'title': 'Lost'}]
+            }
+        return res
+
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
@@ -1036,6 +1075,140 @@ Update your business card, phone book, social media,... Send an email right now 
                     break
         return res
 
+    def retrieve_sales_dashboard(self, cr, uid, context=None):
+
+        res = {
+            'meeting': {
+                'today': 0,
+                'next_7_days': 0,
+            },
+            'activity': {
+                'today': 0,
+                'overdue': 0,
+                'next_7_days': 0,
+            },
+            'closing': {
+                'today': 0,
+                'overdue': 0,
+                'next_7_days': 0,
+            },
+            'done': {
+                'this_month': 0,
+                'last_month': 0,
+            },
+            'won': {
+                'this_month': 0,
+                'last_month': 0,
+            },
+            'nb_opportunities': 0,
+        }
+
+        opportunities = self.search_read(
+            cr, uid,
+            [('type', '=', 'opportunity'), ('user_id', '=', uid)],
+            ['date_deadline', 'next_activity_id', 'date_action', 'date_closed', 'planned_revenue'], context=context)
+
+        for opp in opportunities:
+
+            # Expected closing
+            if opp['date_deadline']:
+                date_deadline = datetime.strptime(opp['date_deadline'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+
+                if date_deadline == date.today():
+                    res['closing']['today'] += 1
+                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                    res['closing']['next_7_days'] += 1
+                if date_deadline < date.today():
+                    res['closing']['overdue'] += 1
+
+            # Next activities
+            if opp['next_activity_id'] and opp['date_action']:
+                date_action = datetime.strptime(opp['date_action'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+
+                if date_action == date.today():
+                    res['activity']['today'] += 1
+                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                    res['activity']['next_7_days'] += 1
+                if date_action < date.today():
+                    res['activity']['overdue'] += 1
+
+            # Won in Opportunities
+            if opp['date_closed']:
+                date_closed = datetime.strptime(opp['date_closed'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+
+                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
+                    if opp['planned_revenue']:
+                        res['won']['this_month'] += opp['planned_revenue']
+                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
+                    if opp['planned_revenue']:
+                        res['won']['last_month'] += opp['planned_revenue']
+
+        # crm.activity is a very messy model so we need to do that in order to retrieve the actions done.
+        cr.execute("""
+            SELECT
+                m.id,
+                m.subtype_id,
+                m.date,
+                l.user_id,
+                l.type
+            FROM
+                "mail_message" m
+            LEFT JOIN
+                "crm_lead" l
+            ON
+                (m.res_id = l.id)
+            INNER JOIN
+                "crm_activity" a
+            ON
+                (m.subtype_id = a.subtype_id)
+            WHERE
+                (m.model = 'crm.lead') AND (l.user_id = %s) AND (l.type = 'opportunity')
+        """, (uid,))
+        activites_done = cr.dictfetchall()
+
+        for act in activites_done:
+            if act['date']:
+                date_act = datetime.strptime(act['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                        res['done']['this_month'] += 1
+                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                    res['done']['last_month'] += 1
+
+        # Meetings
+        min_date = datetime.now().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        max_date = (datetime.now() + timedelta(days=8)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        meetings_domain = [
+            ('start', '>=', min_date),
+            ('start', '<=', max_date)
+        ]
+        # We need to add 'mymeetings' in the context for the search to be correct.
+        meetings = self.pool.get('calendar.event').search_read(cr, uid, meetings_domain, ['start'], context=context.update({'mymeetings': 1}) if context else {'mymeetings': 1})
+        for meeting in meetings:
+            if meeting['start']:
+                start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
+
+                if start == date.today():
+                    res['meeting']['today'] += 1
+                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                    res['meeting']['next_7_days'] += 1
+
+        res['nb_opportunities'] = len(opportunities)
+
+        user = self.pool('res.users').browse(cr, uid, uid, context=context)
+        res['done']['target'] = user.target_sales_done
+        res['won']['target'] = user.target_sales_won
+
+        return res
+
+    def modify_target_sales_dashboard(self, cr, uid, target_name, target_value, context=None):
+
+        if target_name in ['won', 'done', 'invoiced']:
+            # bypass rights (with superuser_id)
+            self.pool('res.users').write(cr, SUPERUSER_ID, [uid], {'target_sales_' + target_name: target_value}, context=context)
+        else:
+            raise UserError(_('This target does not exist.'))
+
+
 class crm_lead_tag(osv.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
@@ -1054,3 +1227,43 @@ class crm_lost_reason(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
     }
+
+
+class crm_team(osv.Model):
+    _inherit = "crm.team"
+    def action_your_pipeline(self, cr, uid, context={}):
+        imd = self.pool.get('ir.actions.act_window')
+        imd2 = self.pool.get('ir.model.data')
+        action = imd.for_xml_id(cr, uid, 'crm', "crm_lead_opportunities_tree_view", context=context)
+        view_form = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_form_view_oppor')[2]
+        view_tree = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_tree_view_oppor')[2]
+        view_kanban = imd2.xmlid_lookup(cr, uid, 'crm.crm_case_kanban_view_leads')[2]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        team_id = user.sale_team_id.id
+        if not team_id:
+            team_id = self.search(cr, uid, [], context=context, limit=1)
+            team_id = team_id and team_id[0]
+            action['help'] = """
+                <p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
+                    Looks like you are not a member of a sales team. You should add yourself
+                    as a member of one of the sales team.
+                </p>"""
+            if team_id:
+                action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
+        newcontext = eval(action['context'], {'uid': uid})
+        if team_id:
+            newcontext.update({
+                    'default_team_id': team_id,
+                    'search_default_team_id': team_id
+                })
+        result = {
+            'name': action['name'],
+            'help': action['help'],
+            'type': action['type'],
+            'views': [[view_kanban, 'kanban'], [view_tree, 'tree'], [view_form, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']],
+            'target': action['target'],
+            'context': newcontext,
+            'res_model': action['res_model'],
+        }
+        return result
+

@@ -121,6 +121,10 @@ class SaleOrder(models.Model):
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
     @api.multi
+    def button_dummy(self):
+        return True
+
+    @api.multi
     def unlink(self):
         for order in self:
             if order.state != 'draft':
@@ -769,5 +773,6 @@ class ProductTemplate(models.Model):
     invoice_policy = fields.Selection(
         [('order', 'Ordered quantities'),
          ('delivery', 'Delivered quantities'),
-         ('cost', 'Invoice at cost (time and material, expenses)')],
+         ('cost', 'Invoice based on time and material')],
         string='Invoicing Policy', default='order')
+

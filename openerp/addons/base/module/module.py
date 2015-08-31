@@ -83,7 +83,7 @@ class module_category(osv.osv):
         'name': fields.char("Name", required=True, translate=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
-        'module_nr': fields.function(_module_nbr, string='Number of Modules', type='integer'),
+        'module_nr': fields.function(_module_nbr, string='Number of Apps', type='integer'),
         'module_ids': fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description': fields.text("Description", translate=True),
         'sequence': fields.integer('Sequence'),

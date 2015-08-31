@@ -262,7 +262,8 @@ if(!$('.website_forum').length) {
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']]
+                ['table', ['table']],
+                ['history', ['undo', 'redo']],
             ];
         if (parseInt($("#karma").val()) >= editor_karma) {
             toolbar.push(['insert', ['link', 'picture']]);

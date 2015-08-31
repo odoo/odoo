@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.tests import common
+from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 
 
-class TestSale(common.TransactionCase):
+class TestSale(AccountingTestCase):
     def setUp(self):
         super(TestSale, self).setUp()
         # some users

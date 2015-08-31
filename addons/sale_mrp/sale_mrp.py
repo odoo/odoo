@@ -20,8 +20,8 @@ class MrpProduction(models.Model):
         for production in self:
             if production.move_prod_id:
                 move = get_parent_move(production.move_prod_id)
-            production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
-            production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
+                production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
+                production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
 
 
 class SaleOrderLine(models.Model):

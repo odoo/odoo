@@ -1887,6 +1887,9 @@ class Many2many(_RelationalMulti):
             column = self.to_column()
             if isinstance(column, fields.many2many):
                 self.relation, self.column1, self.column2 = column._sql_names(model)
+        elif self.store:
+            # check validity of table name
+            check_pg_name(self.relation)
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)
@@ -1942,5 +1945,5 @@ class Id(Field):
 # imported here to avoid dependency cycle issues
 from openerp import SUPERUSER_ID, registry
 from .exceptions import Warning, AccessError, MissingError
-from .models import BaseModel, MAGIC_COLUMNS
+from .models import check_pg_name, BaseModel, MAGIC_COLUMNS
 from .osv import fields

@@ -39,9 +39,6 @@ The validation can be configured in the company:
         'views/hr_timesheet_sheet.xml',
         'hr_dashboard.xml',
     ],
-    'demo': [
-        'hr_timesheet_sheet_demo.xml',
-    ],
     'test':['../account/test/account_minimal_test.xml', 'test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,

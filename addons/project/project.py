@@ -752,6 +752,37 @@ class task(osv.osv):
             return 'project.mt_task_stage'
         return super(task, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle project users and officers
+        recipients. Indeed those will have specific action in their notification
+        emails: creating tasks, assigning it. """
+        group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_project_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(task, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(task, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_xmlid='project.action_view_task')
+
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('New Task')})
+
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
+
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
         """ Override to get the reply_to of the parent project. """
@@ -775,7 +806,7 @@ class task(osv.osv):
         new_task = self.browse(cr, uid, res, context=context)
         if new_task.project_id and new_task.project_id.alias_name:  # check left-part is not already an alias
             email_list = filter(lambda x: x.split('@')[0] != new_task.project_id.alias_name, email_list)
-        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, email_list, check_followers=False))
+        partner_ids = filter(lambda x: x, self._find_partner_from_emails(cr, uid, [], email_list, check_followers=False))
         self.message_subscribe(cr, uid, [res], partner_ids, context=context)
         return res
 

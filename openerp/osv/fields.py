@@ -935,6 +935,7 @@ class many2many(_column):
                                                'is not possible when source and destination models are '\
                                                'the same'
                 tbl = '%s_%s_rel' % tables
+                openerp.models.check_pg_name(tbl)
             if not col1:
                 col1 = '%s_id' % source_model._table
             if not col2:

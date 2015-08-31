@@ -372,6 +372,7 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
+                    <sheet>
                     <group>
                         <group>
                             <field name="product_tmpl_id" on_change="onchange_product_tmpl_id(product_tmpl_id, product_qty, context)"/>
@@ -387,14 +388,9 @@
                             </div>
                         </group>
                         <group>
-                            <field name="code" string="Recipe"/>
+                            <field name="code"/>
                             <field name="type" widget="radio"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sales order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
-                            </p>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="categ_id"/>
                         </group>
                     </group>
                     <notebook>
@@ -403,7 +399,6 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" on_change="onchange_product_id(product_id, product_qty)"/>
-                                    <field name="type"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" options="{'no_open':True,'no_create':True}" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="product_rounding" groups="mrp.group_rounding_efficiency"/>
@@ -411,7 +406,7 @@
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
                                     <field name="attribute_value_ids" widget="many2many_tags" domain="[('product_ids.product_tmpl_id', '=', parent.product_tmpl_id)]" groups="product.group_product_variant"/>
-                                    <field name="property_ids" widget="many2many_tags"/>
+                                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                                 </tree>
                             </field>
                         </page>
@@ -438,6 +433,7 @@
                             </group>
                         </page>
                     </notebook>
+                    </sheet>
                     <div class="oe_chatter">
                          <field name="message_follower_ids" widget="mail_followers"/>
                          <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
@@ -450,9 +446,11 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <tree string="Bill of Materials">
-                    <field name="display_name"/>
                     <field name="product_tmpl_id"/>
+                    <field name="code"/>
                     <field name="product_id" groups="product.group_product_variant"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -461,19 +459,15 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <field name="code" string="Recipe"/>
+                    <field name="code"/>
                     <field name="bom_line_ids" string="Components"/>
                     <field name="product_tmpl_id" string="Product"/>
-                    <field name="product_id" string="Variant"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="categ_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_tmpl_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
-                        <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
-                        <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
+                        <filter string="Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
             </field>
@@ -512,7 +506,6 @@
                     <field name="sequence" widget="handle"/>
                     <field name="bom_id"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    <field name="type"/>
                     <field name="product_qty"/>
                     <field name="product_rounding"/>
                     <field name="product_efficiency"/>
@@ -521,7 +514,7 @@
                     <field name="date_stop"/>
                     <field name="routing_id"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
-                    <field name="property_ids" widget="many2many_tags"/>
+                    <field name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                 </tree>
             </field>
         </record>
@@ -534,7 +527,6 @@
                     <field name="sequence" invisible="1"/>
                     <field name="product_id"/>
                     <field name="product_uom" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
-                    <field name="type"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -553,7 +545,6 @@
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string='Default Unit of Measure' domain="[]" context="{'group_by' : 'product_uom'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string='Type' domain="[]" context="{'group_by' : 'type'}"/>
                         <filter string=" Valid From Month" domain="[]" context="{'group_by':'date_start'}" help="Valid From Date by Month"/>
                    </group>
                 </search>
@@ -621,7 +612,6 @@
                             <field name="routing_id" groups="mrp.group_mrp_routings"/>
                             <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'mrp.group_mrp_user']}"/>
                             <field name="origin"/>
-                            <field name="categ_id"/>
                         </group>
                         <group groups="stock.group_locations">
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
@@ -860,13 +850,11 @@
                     <field name="product_tmpl_id"/>
                     <field name="product_id"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="categ_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Work Order Operations" domain="[]" context="{'group_by':'routing_id'}"/>
                         <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
-                        <filter string="Product Category" domain="[]" context="{'group_by':'categ_id'}"/>
                     </group>
                </search>
             </field>
@@ -962,7 +950,7 @@
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
-                        <field colspan="4" name="property_ids" widget="many2many_tags"/>
+                        <field colspan="4" name="property_ids" widget="many2many_tags" groups="product.group_mrp_properties"/>
                     </group>
                 </xpath>
                </data>
