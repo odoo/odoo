@@ -83,7 +83,7 @@ class ir_model(osv.osv):
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type', readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'transient': fields.boolean(string="Transient Model"),
-        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the object is defined or inherited'),
+        'modules': fields.function(_in_modules, type='char', string='In Apps', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
 
@@ -236,7 +236,7 @@ class ir_model_fields(osv.osv):
             "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'selectable': fields.boolean('Selectable'),
-        'modules': fields.function(_in_modules, type='char', string='In Modules', help='List of modules in which the field is defined'),
+        'modules': fields.function(_in_modules, type='char', string='In Apps', help='List of modules in which the field is defined'),
         'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
                                                   ondelete='cascade', help="If set, this field will be stored in the sparse "
                                                                            "structure of the serialization field, instead "

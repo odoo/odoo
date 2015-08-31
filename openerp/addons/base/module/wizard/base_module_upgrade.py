@@ -13,7 +13,7 @@ class base_module_upgrade(osv.osv_memory):
     _description = "Module Upgrade"
 
     _columns = {
-        'module_info': fields.text('Modules to Update',readonly=True),
+        'module_info': fields.text('Apps to Update',readonly=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
