@@ -5204,6 +5204,12 @@ class BaseModel(object):
         index = dict((r['id'], r) for r in result)
         return [index[x] for x in record_ids if x in index]
 
+    @api.multi
+    def toggle_active(self):
+        """ Inverse the value of the field ``active`` on the records in ``self``. """
+        for record in self:
+            record.active = not record.active
+
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
