@@ -330,6 +330,9 @@ class Report(osv.Model):
         :param save_in_attachment: dict of reports to save/load in/from the db
         :returns: Content of the pdf as a string
         """
+        if not save_in_attachment:
+            save_in_attachment = {}
+
         command_args = []
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
