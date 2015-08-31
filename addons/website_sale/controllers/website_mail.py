@@ -14,7 +14,7 @@ class WebsiteMailController(WebsiteMail):
     @http.route(['/website_mail/post/json'], type='json', auth='public', website=True)
     def chatter_json(self, res_model='', res_id=None, message='', **kw):
         params = kw.copy()
-        params.pop('rating')
+        params.pop('rating', False)
         message_data = super(WebsiteMailController, self).chatter_json(res_model=res_model, res_id=res_id, message=message, **params)
         if message_data and kw.get('rating') and res_model == 'product.template':  # restrict rating only for product template
             rating = request.env['rating.rating'].create({
