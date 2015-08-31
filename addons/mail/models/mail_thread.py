@@ -1392,16 +1392,18 @@ class MailThread(models.AbstractModel):
         return result
 
     @api.multi
-    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True):
+    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False):
         """ Utility method to find partners from email addresses. The rules are :
             1 - check in document (model | self, id) followers
             2 - try to find a matching partner that is also an user
             3 - try to find a matching partner
+            4 - create a new one if force_create = True
 
             :param list emails: list of email addresses
             :param string model: model to fetch related record; by default self
                 is used.
             :param boolean check_followers: check in document followers
+            :param boolean force_create: create a new partner if not found
         """
         if res_model is None:
             res_model = self._name
@@ -1449,6 +1451,8 @@ class MailThread(models.AbstractModel):
                     partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
                 if partners:
                     partner_id = partners[0].id
+            if not partner_id and force_create:
+                partner_id = self.env['res.partner'].name_create(contact)[0]
             partner_ids.append(partner_id)
         return partner_ids
 
