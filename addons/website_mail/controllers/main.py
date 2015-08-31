@@ -54,7 +54,9 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         if request.env.user == request.env['ir.model.data'].xmlid_to_object('base.public_user'):
             author_id = (res.partner_id and res.partner_id.id) if hasattr(res, 'partner_id') else author_id
         else:
-            raise NotFound()
+            author_id = request.env.user.partner_id and request.env.user.partner_id.id
+            if not author_id:
+                raise NotFound()
     elif sha_in:
         timestamp = int(sha_time)
         secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
