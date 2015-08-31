@@ -617,7 +617,7 @@ var fontIconsDialog = Widget.extend({
 
             this.$('#fa-icon').val(e.target.getAttribute('data-id'));
             $(".font-icons-icon").removeClass("font-icons-selected");
-            $(event.target).addClass("font-icons-selected");
+            $(e.target).addClass("font-icons-selected");
         },
         'keydown.dismiss.bs.modal': function(){},
     }),
