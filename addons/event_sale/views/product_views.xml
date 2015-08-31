@@ -1,13 +1,13 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="event_sale_product_template_form">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="event_sale_product_template_form" model="ir.ui.view">
+             <field name="name">product.template.form.inherit</field>
              <field name="model">product.template</field>
              <field name="inherit_id" ref="product.product_template_form_view" />
              <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <div>
-                        <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
+                        <field name="event_ok" />
                         <label for="event_ok"/>
                     </div>
                 </div>
@@ -16,5 +16,4 @@
                 </field>
              </field>
         </record>
-    </data>
-</openerp>
+</odoo>
