@@ -231,7 +231,13 @@ snippets_editor.Class.include({
 });
 
 var _set_value = window.top.odoo[callback+"_updown"];
+var odoo_top = window.top.odoo;
 window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
+    if (!window) {
+        delete odoo_top[callback+"_updown"];
+        return;
+    }
+
     var $editable = $("#editable_area");
     var _val = $editable.prop("innerHTML");
     var editor_enable = $('body').hasClass('editor_enable');
@@ -262,7 +268,7 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
     if (fields_values.mailing_model && web_editor.editor_bar) {
         web_editor.editor_bar.get_snippet_template(fields_values.mailing_model);
         if (value.indexOf('on_change_model_and_list') !== -1) {
-            window.top.odoo[callback+"_downup"](_val);
+            odoo_top[callback+"_downup"](_val);
         }
     }
 };
