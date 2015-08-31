@@ -7,7 +7,8 @@
     'version': '1.0',
     'sequence': 200,
     'category': 'Manufacturing',
-    'description': """
+    'description': """,
+    'summary': 'Repair broken or damaged products',
 The aim is to have a complete module to manage all products repairs.
 ====================================================================
 
