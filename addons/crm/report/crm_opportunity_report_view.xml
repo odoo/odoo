@@ -33,7 +33,7 @@
             <field name="arch" type="xml">
                 <graph string="Pipeline Analysis" stacked="True">
                     <field name="stage_name" type="row"/>
-                    <field name="create_date" interval="month" type="col"/>
+                    <field name="date_deadline" type="row" interval="month"/>
                     <field name="expected_revenue" type="measure"/>
                 </graph>
             </field>
@@ -167,6 +167,23 @@ teams of the sales pipeline.</field>
         </record>
         <menuitem id="crm_opportunity_report_menu" name="Pipeline"
             parent="base.menu_sale_report" action="crm_opportunity_report_action" sequence="5"/>
+
+        <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
+             <field name="name">Pipeline Analysis</field>
+             <field name="res_model">crm.opportunity.report</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">graph,pivot</field>
+             <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True}</field>
+            <field name="view_ids" 
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
+             <field name="help">Pipeline Analysis gives you an instant access to
+your opportunities with information such as the expected revenue, planned cost,
+µmissed deadlines or the number of interactions per opportunity. This report is
+mainly used by the sales manager in order to do the periodic review with the
+teams of the sales pipeline.</field>
+        </record>
 
         <record id="crm_opportunity_report_action_lead" model="ir.actions.act_window">
             <field name="name">Leads Analysis</field>
