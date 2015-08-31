@@ -4233,7 +4233,9 @@ class stock_pack_operation(osv.osv):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         if product_id and not product_uom_id or uom_obj.browse(cr, uid, product_uom_id, context=context).category_id.id != product.uom_id.category_id.id:
             res['value']['product_uom_id'] = product.uom_id.id
-        res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
+        if product:
+            res['value']['lots_visible'] = (product.tracking != 'none')
+            res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
         return res
 
     def on_change_tests(self, cr, uid, ids, product_id, product_uom_id, product_qty, context=None):
@@ -4327,8 +4329,8 @@ class stock_pack_operation(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
         'picking_source_location_id': fields.related('picking_id', 'location_id', type='many2one', relation='stock.location'),
         'picking_destination_location_id': fields.related('picking_id', 'location_dest_id', type='many2one', relation='stock.location'),
-        'from_loc': fields.function(_compute_location_description, type='char', string='From', multi='loc', readonly=True),
-        'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc', readonly=True),
+        'from_loc': fields.function(_compute_location_description, type='char', string='From', multi='loc'),
+        'to_loc': fields.function(_compute_location_description, type='char', string='To', multi='loc'),
         'fresh_record': fields.boolean('Newly created pack operation'),
         'lots_visible': fields.function(_compute_lots_visible, type='boolean'),
         'state': fields.related('picking_id', 'state', type='selection', selection=[
