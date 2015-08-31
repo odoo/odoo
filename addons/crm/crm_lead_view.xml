@@ -125,12 +125,11 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
+                    <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                    <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Lead"/>
                         <h1><field name="name" placeholder="Describe the lead..."/></h1>
-
-                        <span class="label label-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</span>
-                        <span class="label label-success" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</span>
                     </div>
                     <group>
                         <group>
@@ -477,17 +476,12 @@
                             <group>
                                 <label for="next_activity_id"/>
                                 <div>
+                                    <field name="last_activity_id" invisible="1"/>
                                     <field name="next_activity_id"
                                         class="oe_inline" options="{'no_create': True, 'no_open': True}"
                                         domain="['|',('team_id','=',False),('team_id','=',team_id)]"
                                         on_change="onchange_next_activity_id(next_activity_id)"/>
-                                    <span class="oe_form_field oe_read_only oe_inline"
-                                        attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
-                                    <field name="date_action" nolabel="1" attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
-                                    <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
-                                        attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
-                                    <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
-                                        <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
+                                    <span attrs="{'invisible': ['|', ('last_activity_id','=',False), ('next_activity_id', '&lt;&gt;', False)]}">
                                         <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
                                             <field name="next_activity_1" class="oe_inline" readonly="1"/>
                                         </button>
@@ -497,6 +491,14 @@
                                         <button name="log_next_activity_3" type="object" class="btn-link" attrs="{'invisible': [('next_activity_3','=',False)]}">
                                             <field name="next_activity_3" class="oe_inline" readonly="1"/>
                                         </button>
+                                    </span>
+                                    <span class="oe_form_field oe_read_only oe_inline"
+                                        attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
+                                    <field name="date_action" nolabel="1" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..."/>
+                                    <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
+                                        attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
+                                        <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
                                         <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
                                     </div>
                                 </div>

@@ -200,10 +200,11 @@ class crm_lead(format_address, osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         # CRM Actions
+        'last_activity_id': fields.many2one("crm.activity", "Last Activity", select=True),
         'next_activity_id': fields.many2one("crm.activity", "Next Activity", select=True),
-        'next_activity_1': fields.related("next_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
-        'next_activity_2': fields.related("next_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
-        'next_activity_3': fields.related("next_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
+        'next_activity_1': fields.related("last_activity_id", "activity_1_id", "name", type="char", string="Next Activity 1"),
+        'next_activity_2': fields.related("last_activity_id", "activity_2_id", "name", type="char", string="Next Activity 2"),
+        'next_activity_3': fields.related("last_activity_id", "activity_3_id", "name", type="char", string="Next Activity 3"),
         'date_action': fields.date('Next Activity Date', select=True),
         'title_action': fields.char('Next Activity Summary'),
 
@@ -358,13 +359,29 @@ class crm_lead(format_address, osv.osv):
     case_mark_won = action_set_won
 
     def log_next_activity_1(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_1_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_1_id', context=context)
 
     def log_next_activity_2(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_2_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_2_id', context=context)
 
     def log_next_activity_3(self, cr, uid, ids, context=None):
-        return self.log_next_activity_done(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+        return self.set_next_activity(cr, uid, ids, next_activity_name='activity_3_id', context=context)
+
+    def set_next_activity(self, cr, uid, ids, next_activity_name, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.last_activity_id:
+                continue
+            next_activity = next_activity_name and getattr(lead.last_activity_id, next_activity_name, False) or False
+            if next_activity:
+                date_action = False
+                if next_activity.days:
+                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
+                lead.write({
+                    'next_activity_id': next_activity.id,
+                    'date_action': date_action,
+                    'title_action': next_activity.description,
+                })
+        return True
 
     def log_next_activity_done(self, cr, uid, ids, context=None, next_activity_name=False):
         to_clear_ids = []
@@ -377,20 +394,8 @@ class crm_lead(format_address, osv.osv):
 %endif"""
             body_html = self.pool['mail.template'].render_template(cr, uid, body_html, 'crm.lead', lead.id, context=context)
             msg_id = lead.message_post(body_html, subtype_id=lead.next_activity_id.subtype_id.id)
-            # update subtype after posting NOT SURE
-
-            next_activity = next_activity_name and getattr(lead.next_activity_id, next_activity_name, False) or False
-            if next_activity:
-                date_action = False
-                if next_activity.days:
-                    date_action = (datetime.now() + timedelta(days=next_activity.days)).strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-                lead.write({
-                    'next_activity_id': next_activity.id,
-                    'date_action': date_action,
-                    'title_action': next_activity.description,
-                })
-            else:
-                to_clear_ids.append(lead.id)
+            to_clear_ids.append(lead.id)
+            self.write(cr, uid, [lead.id], {'last_activity_id': lead.next_activity_id.id}, context=context)
 
         if to_clear_ids:
             self.cancel_next_activity(cr, uid, to_clear_ids, context=context)
@@ -422,6 +427,7 @@ class crm_lead(format_address, osv.osv):
             'next_activity_3': activity.activity_3_id and activity.activity_3_id.name or False,
             'title_action': activity.description,
             'date_action': date_action,
+            'last_activity_id': False,
         }}
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
