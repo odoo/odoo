@@ -94,10 +94,17 @@ def get_view_arch_from_file(filename, xmlid):
 
     doc = etree.parse(filename)
     node = None
-    for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
+    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
         if n.tag in ('template', 'record'):
             node = n
             break
+    if node is None:  
+        # fallback search on template with implicit module name
+        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
+            if n.tag in ('template', 'record'):
+                node = n
+                break
+
     if node is not None:
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')

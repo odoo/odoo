@@ -343,7 +343,7 @@ var BuildingBlock = Widget.extend({
 
         $html.find('.o_not_editable').attr("contentEditable", false);
 
-        $left_bar.append($html);
+        $left_bar.html($html);
 
         // animate for list of snippet blocks
         $left_bar.on('click', '.scroll-link', function (event) {

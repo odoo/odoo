@@ -946,8 +946,7 @@ options.keyMap.pc['ESCAPE'] = 'cancel';
 options.keyMap.mac['SHIFT+TAB'] = 'untab';
 
 options.keyMap.mac['BACKSPACE'] = 'backspace';
-options.keyMap.mac['CMD+BACKSPACE'] = 'delete';
-options.keyMap.mac['SHIFT+BACKSPACE'] = 'delete';
+options.keyMap.mac['DELETE'] = 'delete';
 options.keyMap.mac['ENTER'] = 'enter';
 options.keyMap.mac['ESCAPE'] = 'cancel';
 
@@ -1816,7 +1815,6 @@ eventHandler.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue)
             font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
         }
     }
-    event.preventDefault();
     return false;
 };
 
