@@ -140,7 +140,7 @@ var BuildingBlock = Widget.extend({
     _get_snippet_url: function () {
         return '/web_editor/snippets';
     },
-    _add_check_selector : function (selector, no_check) {
+    _add_check_selector : function (selector, no_check, is_children) {
         var self = this;
         var selector = selector.split(/\s*,/).join(":not(.o_snippet_not_selectable), ") + ":not(.o_snippet_not_selectable)";
 
@@ -173,7 +173,7 @@ var BuildingBlock = Widget.extend({
                     });
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    return $from ? $from.find(selector) : self.$editable[is_children ? 'find' : 'filter'](selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -237,7 +237,7 @@ var BuildingBlock = Widget.extend({
                 'base_selector': $style.data('selector'),
                 'selector': self._add_check_selector($style.data('selector'), no_check),
                 '$el': $style,
-                'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check),
+                'drop-near': $style.data('drop-near') && self._add_check_selector($style.data('drop-near'), no_check, true),
                 'drop-in': $style.data('drop-in') && self._add_check_selector($style.data('drop-in'), no_check),
                 'data': $style.data()
             };
