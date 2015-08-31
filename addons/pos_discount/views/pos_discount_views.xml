@@ -1,9 +1,7 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
         <record model="ir.ui.view" id="view_pos_config_form">
-            <field name="name">pos.config.form.view</field>
+            <field name="name">pos.config.form.inherit</field>
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
             <field name="arch" type="xml">
@@ -17,6 +15,4 @@
                 </xpath>
             </field>
         </record>
-
-    </data>
-</openerp>
+</odoo>

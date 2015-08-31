@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
+from odoo import fields, models
 
-import openerp
 
-from openerp import tools
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+class PosConfig(models.Model):
+    _inherit = 'pos.config'
 
-class pos_config(osv.osv):
-    _inherit = 'pos.config' 
-    _columns = {
-        'iface_discount': fields.boolean('Order Discounts', help='Allow the cashier to give discounts on the whole order.'),
-        'discount_pc': fields.float('Discount Percentage', help='The default discount percentage.'),
-        'discount_product_id': fields.many2one('product.product','Discount Product',  domain="[('available_in_pos', '=', True)]",
-                                               help='The product used to record the discount. The ability to discount on the whole order will be disabled if this field is empty.'),
-    }
-    _defaults = {
-        'discount_pc': 10,
-    }
+    iface_discount = fields.Boolean(string='Order Discounts', help='Allow the cashier to give discounts on the whole order.')
+    discount_pc = fields.Float(string='Discount Percentage', default=10, help='The default discount percentage')
+    discount_product_id = fields.Many2one('product.product', string='Discount Product', domain="[('available_in_pos', '=', True)]", help='The product used to model the discount')
