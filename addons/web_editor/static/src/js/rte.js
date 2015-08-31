@@ -25,7 +25,7 @@ var History = function History ($editable) {
 
     this.makeSnap = function (event, rng) {
         rng = rng || range.create();
-        var elEditable = $(rng.sc).closest('.o_editable')[0];
+        var elEditable = $(rng && rng.sc).closest('.o_editable')[0];
         if (!elEditable) {
             return false;
         }

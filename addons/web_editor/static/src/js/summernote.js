@@ -1195,9 +1195,11 @@ function remove_table_content(sc, ec) {
 $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     var $editable = layoutInfo.editable();
     $editable.data('NoteHistory').recordUndo($editable, "delete");
-    
+
     var r = range.create();
+    if (!r) return;
     if (!r.isContentEditable()) {
+        event.preventDefault();
         return false;
     }
     if (!r.isCollapsed()) {
@@ -1234,6 +1236,7 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
     if (dom.isImg(node) || (!contentAfter && dom.isImg(dom.hasContentAfter(node)))) {
         var parent;
         var index;
+        var rng;
         if (!dom.isImg(node)) {
             node = dom.hasContentAfter(node);
         }
@@ -1242,13 +1245,16 @@ $.summernote.pluginEvents.delete = function (event, editor, layoutInfo) {
             index = dom.position(node);
             if (index>0) {
                 var next = node.previousSibling;
-                range.create(next,next.textContent.length).select();
+                rng = range.create(next, next.textContent.length);
+            } else {
+                rng = range.create(parent, 0);
             }
             if (!dom.hasContentAfter(node) && !dom.hasContentBefore(node)) {
                 parent.appendChild($('<br/>')[0]);
             }
             parent.removeChild(node);
             node = parent;
+            rng.select();
         }
     }
     // empty tag
