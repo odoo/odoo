@@ -45,27 +45,28 @@ class sale_order_line(osv.osv):
     @api.onchange('product_id')
     def product_id_change(self):
         res = super(sale_order_line, self).product_id_change()
-        context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id)
-        if self.product_id and self.order_id.pricelist_id and self.env.user.has_group('sale.group_discount_per_so_line'):
-            pricelist_context = dict(context_partner, uom=self.product_uom.id, date=self.order_id.date_order)
-            list_price = self.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(self.product_id.id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        for line in self:
+            context_partner = dict(self.env.context, partner_id=line.order_id.partner_id.id)
+            if line.product_id and line.order_id.pricelist_id and self.env.user.has_group('sale.group_discount_per_so_line'):
+                pricelist_context = dict(context_partner, uom=line.product_uom.id, date=line.order_id.date_order)
+                list_price = line.order_id.pricelist_id.with_context(pricelist_context).price_rule_get(line.product_id.id, line.product_uom_qty or 1.0, line.order_id.partner_id)
 
-            new_list_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id.id, list_price, self.product_uom_qty, self.product_uom.id, self.order_id.pricelist_id.id)
-            if self.order_id.pricelist_id.discount_policy == 'without_discount' and list_price[self.order_id.pricelist_id.id][0] != 0 and new_list_price != 0:
-                if self.product_id.company_id and self.order_id.pricelist_id.currency_id.id != self.product_id.company_id.currency_id.id:
-                    # new_list_price is in company's currency while price in pricelist currency
-                    ctx = dict(context_partner, date=self.order_id.date_order)
-                    new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, self.order_id.pricelist_id.currency_id.id)
-                discount = (new_list_price - self.price_unit) / new_list_price * 100
-                if discount > 0:
-                    self.price_unit = new_list_price
-                    self.discount = discount
+                new_list_price, currency_id = line.with_context(context_partner)._get_real_price_currency(line.product_id.id, list_price, line.product_uom_qty, line.product_uom.id, line.order_id.pricelist_id.id)
+                if line.order_id.pricelist_id.discount_policy == 'without_discount' and list_price[line.order_id.pricelist_id.id][0] != 0 and new_list_price != 0:
+                    if line.product_id.company_id and line.order_id.pricelist_id.currency_id.id != line.product_id.company_id.currency_id.id:
+                        # new_list_price is in company's currency while price in pricelist currency
+                        ctx = dict(context_partner, date=self.order_id.date_order)
+                        new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, line.order_id.pricelist_id.currency_id.id)
+                    discount = (new_list_price - line.price_unit) / new_list_price * 100
+                    if discount > 0:
+                        line.price_unit = new_list_price
+                        line.discount = discount
+                    else:
+                        line.discount = 0.0
                 else:
-                    self.discount = 0.0
+                    line.discount = 0.0
             else:
-                self.discount = 0.0
-        else:
-            self.discount = 0.0
+                line.discount = 0.0
         return res
 
     @api.onchange('product_uom')
