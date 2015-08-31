@@ -443,12 +443,12 @@
                                         placeholder="Select mailing lists..." class="oe_inline"
                                         on_change="on_change_model_and_list(mailing_model, contact_list_ids)"/>
                                 </div>
+                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
                             </div>
                         </group>
                         <notebook>
                             <page string="Mail Body">
                                 <field name="body_html" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
-                                <field name="attachment_ids"  widget="many2many_binary" string="Attach a file"/>
                             </page>
                             <page string="Options">
                                 <group>
