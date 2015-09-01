@@ -22,8 +22,10 @@ class SaleOrderLine(models.Model):
             line = self.browse(d['so_line'][0])
             lines.setdefault(line, 0.0)
             uom = self.env['product.uom'].browse(d['product_uom_id'][0])
-
-            qty = self.env['product.uom']._compute_qty_obj(uom, d['unit_amount'], line.product_uom)
+            if line.product_uom.category_id == uom.category_id:
+                qty = self.env['product.uom']._compute_qty_obj(uom, d['unit_amount'], line.product_uom)
+            else:
+                qty = d['unit_amount']
             lines[line] += qty
 
         for line, qty in lines.items():
