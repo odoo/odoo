@@ -126,10 +126,12 @@ class HrEquipment(models.Model):
     maintenance_ids = fields.One2many('hr.equipment.request', 'equipment_id', domain=[('stage_id.fold', '=', False)])
     maintenance_count = fields.Integer(compute='_compute_maintenance_count', string="Maintenance")
 
-    @api.one
-    @api.depends('maintenance_ids')
+    @api.multi
     def _compute_maintenance_count(self):
-        self.maintenance_count = len(self.maintenance_ids)
+        equip_data = self.env['hr.equipment.request'].read_group([('equipment_id', 'in', self.ids)], ['equipment_id'], ['equipment_id'])
+        mapped_data = dict([(m['equipment_id'][0], m['equipment_id_count']) for m in equip_data])
+        for equipment in self:
+            equipment.maintenance_count = mapped_data.get(equipment.id, 0)
 
     @api.onchange('equipment_assign_to')
     def _onchange_equipment_assign_to(self):

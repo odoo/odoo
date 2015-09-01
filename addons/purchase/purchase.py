@@ -1751,6 +1751,22 @@ class account_invoice(osv.Model):
                                         help="Purchases linked to this invoice")
     }
 
+    def action_view_purchase_order(self, cr, uid, ids, context=None):
+        ModelData = self.pool['ir.model.data']
+        pur_ids = []
+        result = self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'purchase', 'purchase_form_action', context=context)
+        for invoice in self.browse(cr, uid, ids, context=context):
+            pur_ids = map(lambda x: x.id, invoice.purchase_ids)
+        if not pur_ids:
+            raise UserError(_('No Purchase Order referenced for this invoice.'))
+        if len(pur_ids) > 1:
+            result['domain'] = [('id', 'in', pur_ids)]
+        else:
+            res = ModelData.xmlid_to_res_id(cr, uid, 'purchase.purchase_order_form')
+            result['views'] = [(res, 'form')]
+            result['res_id'] = pur_ids and pur_ids[0] or False
+        return result
+
     def invoice_validate(self, cr, uid, ids, context=None):
         res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
         purchase_order_obj = self.pool.get('purchase.order')
