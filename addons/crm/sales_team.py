@@ -20,6 +20,22 @@ class crm_team(osv.Model):
                 'type': 'both',
             }),
             (0, 0, {
+                'name': _('Qualified'),
+                'sequence': 2,
+                'probability': 30.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
+                'name': _('Proposition'),
+                'sequence': 3,
+                'probability': 70.0,
+                'on_change': True,
+                'fold': False,
+                'type': 'opportunity',
+            }),
+            (0, 0, {
                 'name': _('Won'),
                 'sequence': 50,
                 'probability': 100.0,
