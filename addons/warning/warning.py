@@ -60,7 +60,7 @@ class sale_order(osv.Model):
                     'title': title,
                     'message': message,
             }
-            if self.partner_id.sale_warn == 'block':
+            if partner.sale_warn == 'block':
                 self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
                 return {'warning': warning}
 
