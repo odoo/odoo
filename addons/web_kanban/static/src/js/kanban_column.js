@@ -24,6 +24,8 @@ var KanbanColumn = Widget.extend({
         },
         'click .o_column_edit': 'edit_column',
         'click .o_column_delete': 'delete_column',
+        'click .o_column_archive': 'archive_records',
+        'click .o_column_unarchive': 'unarchive_records',
         'click .o_kanban_quick_add': 'add_quick_create',
         'click .o_kanban_load_more': 'load_more',
     },
@@ -49,6 +51,7 @@ var KanbanColumn = Widget.extend({
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.has_active_field = options.has_active_field;
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
@@ -173,6 +176,16 @@ var KanbanColumn = Widget.extend({
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget:this}))
         }
+    },
+
+    archive_records: function(event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_archive_records', {archive: true});
+    },
+
+    unarchive_records: function(event) {
+        event.preventDefault();
+        this.trigger_up('kanban_column_archive_records', {archive: false});
     },
 
     delete_column: function (event) {

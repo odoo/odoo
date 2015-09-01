@@ -43,6 +43,7 @@ var KanbanView = View.extend({
         'kanban_record_update': 'update_record',
         'kanban_column_add_record': 'add_record_to_column',
         'kanban_column_delete': 'delete_column',
+        'kanban_column_archive_records': 'archive_records',
         'column_add_record': 'column_add_record',
         'quick_create_add_column': 'add_new_column',
         'kanban_load_more': 'load_more',
@@ -271,6 +272,9 @@ var KanbanView = View.extend({
         }
         return this._super(action);
     },
+    has_active_field: function() {
+        return this.fields_view.fields.active;
+    },
     _is_quick_create_enabled: function() {
         if (!this.quick_creatable || !this.is_action_enabled('create'))
             return false;
@@ -394,6 +398,7 @@ var KanbanView = View.extend({
         return {
             editable: this.is_action_enabled('group_edit'),
             deletable: this.is_action_enabled('group_delete'),
+            has_active_field: this.has_active_field(),
             grouped_by_m2o: this.grouped_by_m2o,
             relation: this.relation,
             qweb: this.qweb,
@@ -572,6 +577,23 @@ var KanbanView = View.extend({
                 self.do_reload();
             }
         });
+    },
+
+    archive_records: function(event) {
+        if (!this.has_active_field()) {
+            return;
+        }
+        var active_value = !event.data.archive;
+        var record_ids = [];
+        _.each(event.target.records, function(kanban_record) {
+            if (kanban_record.record.active.value != active_value) {
+                record_ids.push(kanban_record.id);
+            }
+        });
+        if (record_ids.length) {
+            this.dataset.call('write', [record_ids, {active: active_value}])
+                        .done(this.do_reload);
+        }
     },
 
     reload_record: function (record) {

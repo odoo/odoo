@@ -305,6 +305,8 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             }
             this.sidebar.add_items('other', _.compact([
                 { label: _t("Export"), callback: this.on_sidebar_export },
+                this.fields_view.fields.active && {label: _t("Archive"), callback: this.do_archive_selected},
+                this.fields_view.fields.active && {label: _t("Unarchive"), callback: this.do_unarchive_selected},
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
             ]));
 
@@ -752,6 +754,30 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             this.do_delete(this.groups.get_selection().ids);
         } else {
             this.do_warn(_t("Warning"), _t("You must select at least one record."));
+        }
+    },
+    /**
+     * Handles archiving/unarchiving of selected lines
+     */
+    do_archive_selected: function () {
+        var records = this.groups.get_selection().records;
+        this.do_archive(records, true);
+    },
+    do_unarchive_selected: function () {
+        var records = this.groups.get_selection().records;
+        this.do_archive(records, false);
+    },
+    do_archive: function (records, archive) {
+        var active_value = !archive;
+        var record_ids = [];
+        _.each(records, function(record) {
+            if (record.active != active_value) {
+                record_ids.push(record.id);
+            }
+        });
+        if (record_ids.length) {
+            this.dataset.call('write', [record_ids, {active: active_value}])
+                        .done(_.bind(this.reload, this));
         }
     },
     /**
