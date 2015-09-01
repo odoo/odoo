@@ -870,6 +870,7 @@ class account_analytic_account(osv.osv):
         if context is None: context = {}
         return vals.get('use_tasks') and not 'project_creation_in_progress' in context
 
+    @api.cr_uid_id_context
     def project_create(self, cr, uid, analytic_account_id, vals, context=None):
         '''
         This function is called at the time of analytic account creation and is used to create a project automatically linked to it if the conditions are meet.
@@ -880,7 +881,7 @@ class account_analytic_account(osv.osv):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': analytic_account_id,
-                'type': vals.get('type','contract'),
+                'use_tasks': True,
             }
             return project_pool.create(cr, uid, project_values, context=context)
         return False
