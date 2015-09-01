@@ -111,12 +111,12 @@
                                         domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
                                     <field name="tax_amount" nolabel="1"/>
                                     <div class="oe_subtotal_footer_separator">
-                                        <label for="amount"/>
+                                        <h4><label for="amount"/></h4>
                                         <button type="object" class="oe_link oe_edit_only"
                                             name="compute_tax" string="(update)"
                                             attrs="{'invisible': [('state','!=','draft')]}"/>
 			                        </div>
-                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
+                                    <h4><field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/></h4>
                                 </group>                                    
 			                </group>
                         </page>
