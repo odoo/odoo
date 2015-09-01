@@ -515,9 +515,9 @@ class Post(models.Model):
         })
         return True
 
-    @api.multi
+    @api.one
     def validate(self):
-        if any(not post.can_moderate for post in self):
+        if not self.can_moderate:
             raise KarmaError('Not enough karma to validate a post')
 
         # if state == pending, no karma previously added for the new question
@@ -533,17 +533,17 @@ class Post(models.Model):
         })
         return True
 
-    @api.multi
+    @api.one
     def refuse(self):
-        if any(not post.can_moderate for post in self):
+        if not self.can_moderate:
             raise KarmaError('Not enough karma to refuse a post')
 
         self.validator_id = self.env.user
         return True
 
-    @api.multi
+    @api.one
     def flag(self):
-        if any(not post.can_flag for post in self):
+        if not self.can_flag:
             raise KarmaError('Not enough karma to flag a post')
 
         if(self.env.user in self.flags_uid):
@@ -559,9 +559,9 @@ class Post(models.Model):
         })
         return {'flags_count': len(self.flags_uid)}
 
-    @api.multi
+    @api.one
     def mark_as_offensive(self, reason_id):
-        if any(not post.can_moderate for post in self):
+        if not self.can_moderate:
             raise KarmaError('Not enough karma to mark a post as offensive')
 
         # remove some karma
