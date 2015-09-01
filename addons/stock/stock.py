@@ -128,7 +128,7 @@ class stock_location(osv.osv):
         'return_location': fields.boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.'),
         'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
         'putaway_strategy_id': fields.many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here."),
-        'barcode': fields.char('Barcode', oldname='loc_barcode'),
+        'barcode': fields.char('Barcode', copy=False, oldname='loc_barcode'),
     }
     _defaults = {
         'active': True,

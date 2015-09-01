@@ -956,7 +956,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Internal Reference', select=True),
         'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade", select=True, auto_join=True),
-        'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13'),
+        'barcode': fields.char('Barcode', help="International Article Number used for product identification.", oldname='ean13', copy=False),
         'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', store={
             'product.template': (_get_name_template_ids, ['name'], 10),
             'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
