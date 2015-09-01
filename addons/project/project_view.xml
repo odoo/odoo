@@ -53,7 +53,7 @@
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="context">{
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
@@ -299,15 +299,6 @@
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
                                 </group>
                             </group>
-                            <group groups="project.group_time_work_estimation_tasks">
-                                <group string="Gantt View">
-                                    <p class="oe_grey" colspan='2'>
-                                        Assign dates to make this task appear in the gantt chart ( <i class="fa fa-tasks"> </i> icon on the top right)
-                                    </p>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
-                                </group>
-                            </group>
                         </page>
                     </notebook>
                     </sheet>
@@ -421,16 +412,6 @@
             </field>
         </record>
 
-        <record id="view_task_gantt" model="ir.ui.view">
-            <field name="name">project.task.gantt</field>
-            <field name="model">project.task</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <gantt date_start="date_start" date_stop="date_end" progress="progress" string="Tasks" default_group_by="project_id">
-                </gantt>
-            </field>
-        </record>
-
         <record id="view_project_task_pivot" model="ir.ui.view">
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
@@ -469,7 +450,7 @@
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
-            <field name="view_mode">kanban,tree,form,calendar,gantt,pivot,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p>
@@ -505,7 +486,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt,kanban</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
             <field name="context">{'project_id':active_id, 'active_test':False}</field>
         </record>
@@ -624,7 +605,7 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+                    res_model="project.task" src_model="res.users" view_mode="tree,form,calendar,graph" view_type="form"/>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">

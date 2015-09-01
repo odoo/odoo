@@ -272,16 +272,6 @@
         </field>
     </record>
 
-    <!-- CRM Meeting Gantt  -->
-
-    <record id="view_calendar_event_gantt" model="ir.ui.view">
-        <field name="name">CRM - Meetings Gantt</field>
-        <field name="model">calendar.event</field>
-        <field name="arch" type="xml">
-            <gantt date_delay="duration" date_start="start" string="Meetings"/>
-        </field>
-    </record>
-
     <!-- CRM Meeting Search View  -->
     <record id="view_calendar_event_search" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
@@ -310,7 +300,7 @@
     <record id="action_calendar_event" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">calendar,tree,form,gantt</field>
+        <field name="view_mode">calendar,tree,form</field>
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
@@ -341,12 +331,6 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_view_calendar_event_gantt">
-        <field name="act_window_id" ref="action_calendar_event"/>
-        <field name="sequence" eval="4"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="view_calendar_event_gantt"/>
-    </record>
 
 
 
@@ -359,7 +343,7 @@
     <record id="action_calendar_event_notify" model="ir.actions.act_window">
         <field name="name">Meetings</field>
         <field name="res_model">calendar.event</field>
-        <field name="view_mode">form,calendar,tree,gantt</field>
+        <field name="view_mode">form,calendar,tree</field>
         <field name="view_id" ref="view_calendar_event_form"/>
     </record>
        
