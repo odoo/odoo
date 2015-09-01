@@ -259,9 +259,10 @@ class google_calendar(osv.AbstractModel):
 
         if not self.get_need_synchro_attendee(cr, uid, context=context):
             data.pop("attendees")
-        other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
-        if other_google_ids:
-            data["id"] = other_google_ids[0]
+        if isCreating:
+            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
+            if other_google_ids:
+                data["id"] = other_google_ids[0]
         return data
 
     def create_an_event(self, cr, uid, event, context=None):
