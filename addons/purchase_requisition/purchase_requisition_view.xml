@@ -35,6 +35,8 @@
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
                 <button name="generate_po" states="open" string="Done" type="object" class="oe_highlight"/>
+                <button name="%(action_purchase_requisition_partner)d" type="action" string="Request a Quotation"
+                    attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                 <button name="cancel_requisition" states="draft,in_progress" string="Cancel Call"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
@@ -42,11 +44,10 @@
                 <div class="oe_button_box" name="button_box">
                     <button name="open_product_line" type="object" string="Product Lines" class="oe_stat_button" icon="fa-list"
                         attrs="{'invisible': ['|', ('state', 'not in', ('open','done')), ('exclusive', '=', 'exclusive')]}" groups="purchase.group_advance_bidding"/>
-                    <button name="open_rfq" type="object" string="RFQs/Bids" class="oe_stat_button" icon="fa-list-alt"
-                        attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                    <button name="%(action_purchase_requisition_partner)d" type="action"
-                        string="Request a Quotation" icon="gtk-execute"
-                        attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
+                    <button name="open_rfq" type="object"  class="oe_stat_button" icon="fa-list-alt"
+                        attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <field name="rfq_count" string="RFQs/Bids" widget="statinfo"/>
+                    </button>
                 </div>
                 <div class="pull-left">
                     <label for="name" class="oe_edit_only oe_inline"/>
