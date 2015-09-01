@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <template id="mpesa_acquirer_button">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+                <t t-if="tx_values.get('return_url')">
+                    <input type='hidden' name='return_url' t-att-value='tx_values["return_url"]'/>
+                </t>
+                <t t-if="acquirer.mpesa_option == 'send_money' or acquirer.mpesa_option == 'lipa_na_mpesa'">
+	             <t t-if="acquirer.mpesa_option == 'send_money'">
+			<span>Send &#160;<span class="badge" t-esc="amount" t-options='{"widget": "monetary"}'/>&#160;
+                        <t t-esc="currency.symbol"/> &#160;to&#160;
+                        <span class="badge"><t t-esc="acquirer.rcpt_msisdn"/></span></span>
+		     </t>
+		     <t t-if="acquirer.mpesa_option == 'lipa_na_mpesa'">
+                        <span>Send &#160;<span class="badge"><t t-esc="amount"/></span>&#160;<t t-esc="currency.symbol"/>&#160; to Till No:
+                        <span class="badge"><t t-esc="acquirer.till_number"/></span></span>
+                     </t>
+		 <p/>M-PESA Transaction No.<input type='text' required="True" size='9' name='confirm_code' maxlength='9'/><p/>
+                </t>
+		<t t-if="acquirer.mpesa_option == 'paybill'">
+		   <p/><span>Pay Bill No.&#160;<span class="badge"><t t-esc="acquirer.paybill_number"/></span></span><br/>
+                   <span>Account No.&#160;<span class="badge"><t t-esc="reference"/></span></span><br/>
+                   <span>Amount:&#160;<span class="badge"><t t-esc="amount"/> <t t-esc="currency.symbol"/></span></span><p/>
+		</t>
+		<p>Once you have finished making M-PESA payment, please click the button below to confirm your payment. 
+                    You will receive SMS notification within few minutes</p>
+                <input type='hidden' name='reference' t-att-value='reference'/>
+		<input type='hidden' name='mpesa_option' t-att-value='acquirer.mpesa_option'/>
+                <input type='hidden' name='amount' t-att-value='amount or "0.0"'/>
+                <input type='hidden' name='currency' t-att-value='currency.name'/>
+                <!-- submit -->
+                <p/><button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_mpesa/static/src/img/mpesa_icon.png"/>
+                    <span t-if="submit_txt">Confirm Payment <span class="fa fa-long-arrow-right"/></span>
+                </button><p/>
+            </form>
+        </template>
+
+    </data>
+</openerp>
+

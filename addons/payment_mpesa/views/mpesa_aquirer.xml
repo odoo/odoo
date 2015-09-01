@@ -1,0 +1,27 @@
+<openerp>
+    <data>
+        <record id="acquirer_form_mpesa" model="ir.ui.view">
+            <field name="name">acquirer.form.mpesa</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'mpesa')]}">
+                            <group>
+                                <field name="mpesa_option" attrs="{'required': [('provider', '=', 'mpesa')]}"/>
+                            </group>
+			    <group>
+                                <field name="rcpt_msisdn" attrs="{'invisible': [('mpesa_option', '!=', 'send_money')], 
+                                      'required': [('mpesa_option', '=', 'send_money')]}"/>
+                                <field name="till_number" attrs="{'invisible': [('mpesa_option', '!=', 'lipa_na_mpesa')],
+                                      'required': [('mpesa_option', '=', 'lipa_na_mpesa')]}"/>
+                                <field name="paybill_number" attrs="{'invisible': [('mpesa_option', '!=', 'paybill')],
+                                      'required': ['&amp;',('mpesa_option', '=', 'paybill'), ('provider', '=', 'mpesa')]}"/>
+                            </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
