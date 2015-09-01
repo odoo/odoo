@@ -21,12 +21,12 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     init: function() {
         mixins.PropertiesMixin.init.call(this);
         // Keep a reference of the handler functions to use when adding and removing event listeners
-        this.__keydown_handler = this.keydown_handler.bind(this);
-        this.__keyup_handler = this.keyup_handler.bind(this);
-        this.__handler = this.handler.bind(this);
+        this.__keydown_handler = _.bind(this.keydown_handler, this);
+        this.__keyup_handler = _.bind(this.keyup_handler, this);
+        this.__handler = _.bind(this.handler, this);
         // Bind event handler once the DOM is loaded
         // TODO: find a way to be active only when there are listeners on the bus
-        $(this.start.bind(this, false));
+        $(_.bind(this.start, this, false));
     },
 
     handle_buffered_keys: function() {
@@ -145,7 +145,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         if (String.fromCharCode(e.which).match(this.suffix)) {
             this.handle_buffered_keys();
         } else {
-            this.timeout = setTimeout(this.handle_buffered_keys.bind(this), this.max_time_between_keys_in_ms);
+            this.timeout = setTimeout(_.bind(this.handle_buffered_keys, this), this.max_time_between_keys_in_ms);
         }
     },
 
