@@ -695,6 +695,16 @@ class AccountInvoice(models.Model):
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team)
 
     @api.multi
+    def action_view_sale_order(self):
+        self.ensure_one()
+        result = self.env['ir.actions.act_window'].for_xml_id('sale', 'action_orders')
+        sale_order_id = self.invoice_line_ids.mapped('sale_line_ids').mapped('order_id').id
+        form_view_id = self.env.ref('sale.view_order_form').id
+        result['views'] = [(form_view_id, 'form')]
+        result['res_id'] = sale_order_id
+        return result
+
+    @api.multi
     def confirm_paid(self):
         res = super(AccountInvoice, self).confirm_paid()
         todo = set()
