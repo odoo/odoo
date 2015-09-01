@@ -9,13 +9,12 @@
     'description': """Base module holding website-related stuff for partner model""",
     'depends': ['website'],
     'data': [
-        'views/res_partner_view.xml',
-        'views/website_partner_view.xml',
-        'data/website_data.xml',
+        'views/res_partner_views.xml',
+        'views/website_partner_templates.xml',
+        'data/res_partner_data.xml',
     ],
-    'demo': ['data/demo.xml'],
+    'demo': ['data/res_partner_demo.xml'],
     'qweb': [
     ],
     'installable': True,
-    'auto_install': False,
 }
