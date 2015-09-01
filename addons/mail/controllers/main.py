@@ -205,3 +205,16 @@ class MailController(http.Controller):
         except:
             return self._redirect_to_messaging()
         return werkzeug.utils.redirect('/mail/view?%s' % url_encode({'model': model, 'res_id': res_id}))
+
+    @http.route('/mail/needaction', type='json', auth='user')
+    def needaction(self):
+        return request.env['res.partner'].get_needaction_count()
+
+    @http.route('/mail/client_action', type='json', auth='user')
+    def mail_client_action(self):
+        values = {
+            'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
+            'chatter_needaction_auto': request.env.user.chatter_needaction_auto,
+            'channel_slots': request.env['mail.channel'].channel_fetch_slot()
+        }
+        return values

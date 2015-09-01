@@ -20,6 +20,9 @@ class BusController(openerp.http.Controller):
 
     # override to add channels
     def _poll(self, dbname, channels, last, options):
+        # update the user presence
+        if request.session.uid and 'im_presence' in options:
+            request.env['bus.presence'].update(options.get('im_presence'))
         request.cr.close()
         request._cr = None
         return dispatch.poll(dbname, channels, last)

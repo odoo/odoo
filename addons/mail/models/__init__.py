@@ -9,6 +9,7 @@ import mail_mail
 import mail_thread
 import mail_channel
 import mail_template
+import mail_shortcode
 import res_partner
 import res_users
 import res_config
