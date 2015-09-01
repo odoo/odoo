@@ -909,8 +909,9 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
     },
     message_receive: function(message){
         var self = this;
+        var in_current_channel = _.contains(message.channel_ids, this.get('current_channel_id'));
         // if current channel should reveice message, give it to it
-        if(_.contains(message.channel_ids, this.get('current_channel_id'))){
+        if(in_current_channel){
             this.message_insert([message]);
         }
         // for other message channel, get the channel if not loaded yet, and bolded them
@@ -936,8 +937,10 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
             _.each(other_message_channel_ids, function(channel_id){
                 self._toggle_unread_message(channel_id, true);
             });
-            // auto scroll to bottom
-            self._scroll();
+            // auto scroll to bottom if the message arrived in the current channel
+            if(in_current_channel){
+                self._scroll();
+            }
         });
         // if needaction, then increment the label
         if(message.needaction_partner_ids && _.contains(message.needaction_partner_ids, session.partner_id)){
