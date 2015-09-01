@@ -537,7 +537,7 @@ odoo.define('website_form_editor.tour', function(require) {
                     element:        ".o_website_form_send"
                 },
                 {
-                    title:          "Check if required fields was detected and check a product",
+                    title:          "Check if required fields was detected and check a product. If this fails, you probably broke the clean_for_save.",
                     waitFor:        "form:has(#o_website_form_result.text-danger)" +
                                     ":has(.form-field:has(label:contains('Name')):not(.has-error))" +
                                     ":has(.form-field:has(label:contains('Your Message')):not(.has-error))" +
