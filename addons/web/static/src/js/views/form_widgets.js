@@ -15,9 +15,6 @@ var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
-var ace_call = require('web.ace_call');
-var ace_mode_xml = require('web.ace_mode_xml');
-var ace_mode_python = require('web.ace_mode_python');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -1625,9 +1622,10 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     init: function() {
         this._super.apply(this, arguments);
         var mode = this.options.mode || 'xml';
-        var mode_to_load = mode == 'xml' ? ace_mode_xml : ace_mode_python;
-        ace_call.load();
-        mode_to_load.load();
+        var mode_to_load = mode == 'xml' ? 'mode_xml' : 'mode_python';
+        if (!window.ace) {
+            $(QWeb.render("LoadAce", {'mode': mode_to_load})).appendTo($("head"));
+        }
     },
     initialize_content: function () {
         if (! this.get("effective_readonly")) {

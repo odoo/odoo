@@ -6,8 +6,6 @@ var Class = require('web.Class');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
-var ace_call = require('web.ace_call');
-var ace_mode_xml = require('web.ace_mode_xml');
 var website = require('website.website');
 
 var _t = core._t;
@@ -22,8 +20,9 @@ var Ace = Widget.extend({
         'click a[data-action=ace]': 'launchAce',
     },
     launchAce: function (e) {
-        ace_call.load();
-        ace_mode_xml.load();
+        if (!window.ace) {
+            $(qweb.render("LoadAce")).appendTo($("head"));
+        }
 
         if (e) {
             e.preventDefault();
