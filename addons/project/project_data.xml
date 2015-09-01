@@ -249,6 +249,10 @@
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_8_attach')])]"/>
         </record>
 
+        <record id="project_task_data_8" model="project.task">
+            <field name="displayed_image_id" ref="msg_task_data_8_attach"/>
+        </record>
+
         <record id="project_task_data_7" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -301,6 +305,10 @@
             <field name="body"><![CDATA[Look at this beautiful bird !]]></field>
             <field name="message_type">comment</field>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_14_attach')])]"/>
+        </record>
+
+        <record id="project_task_data_14" model="project.task">
+            <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
         </record>
 
 

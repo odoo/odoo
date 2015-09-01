@@ -411,12 +411,6 @@ class task(osv.osv):
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _compute_displayed_image(self, cr, uid, ids, prop, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.attachment_ids and line.attachment_ids.filtered(lambda x: x.mimetype.startswith('image'))[0] or None
-        return res
-
     _columns = {
         'active': fields.boolean('Active'),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
@@ -454,7 +448,8 @@ class task(osv.osv):
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'attachment_ids': fields.one2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments'),
-        'displayed_image_id': fields.function(_compute_displayed_image, relation='ir.attachment', type="many2one", string='Attachment'),
+        # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
+        'displayed_image_id': fields.many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image'),
         }
     _defaults = {
         'stage_id': _get_default_stage_id,

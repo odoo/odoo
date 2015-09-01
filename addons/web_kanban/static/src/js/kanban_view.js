@@ -751,7 +751,7 @@ function transform_qweb_template (node, fvg, many2manys) {
         case 'button':
         case 'a':
             var type = node.attrs.type || '';
-            if (_.indexOf('action,object,edit,open,delete,url'.split(','), type) !== -1) {
+            if (_.indexOf('action,object,edit,open,delete,url,set_cover'.split(','), type) !== -1) {
                 _.each(node.attrs, function(v, k) {
                     if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                         node.attrs['data-' + k] = v;

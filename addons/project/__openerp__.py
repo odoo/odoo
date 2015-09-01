@@ -47,6 +47,7 @@ Dashboard / Reports for Project Management will include:
         'project_dashboard.xml',
         'web_planner_data.xml',
     ],
+    'qweb': ['static/src/xml/project.xml'],
     'demo': ['project_demo.xml'],
     'test': [
     ],
