@@ -25,5 +25,17 @@
             <field name="placement">bottom</field>
         </record>
 
+        <!-- Generic tip on kanban add a new column -->
+        <record model="web.tip" id="web_tip_3">
+            <field name="title">You want to add a stage? Add a new column !</field>
+            <field name="description"><![CDATA[The name depends on the process. For example, in a customer service process, a stage name may be 'Backlog', 'Waiting Customer Feedback' or 'Done'..]]></field>
+            <field name="model"></field>
+            <field name="mode">kanban</field>
+            <field name="trigger_selector">.o_kanban_view .o_kanban_add_column:visible</field>
+            <field name="highlight_selector">.o_kanban_view .o_kanban_add_column:visible</field>
+            <field name="end_event">mousedown</field>
+            <field name="placement">bottom</field>
+        </record>
+
     </data>
 </openerp>
