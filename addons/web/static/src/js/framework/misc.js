@@ -358,12 +358,28 @@ function prepend ($target, content, trigger) {
     }
 }
 
+/**
+ * Returns the distance between a DOM element and the top-left corner of the window
+ * @param {element} [e] the DOM element
+ * @return {Object} the left and top distances in pixels
+ */
+function getPosition(e) {
+    var position = {left: 0, top: 0};
+    while (e) {
+        position.left += e.offsetLeft;
+        position.top += e.offsetTop;
+        e = e.offsetParent;
+    }
+    return position;
+}
+
 return {
     blockUI: blockUI,
     unblockUI: unblockUI,
     redirect: redirect,
     append: append,
     prepend: prepend,
+    getPosition: getPosition,
 };
 
 });
