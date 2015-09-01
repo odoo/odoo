@@ -172,8 +172,10 @@ var BuildingBlock = Widget.extend({
                         return false;
                     });
                 },
-                all: function ($from) {
-                    return $from ? $from.find(selector) : self.$editable[is_children ? 'find' : 'filter'](selector);
+                all: is_children ? function ($from) {
+                    return ($from || self.$editable).find(selector);
+                } : function ($from) {
+                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
