@@ -300,7 +300,7 @@ def exp_db_exist(db_name):
     return bool(openerp.sql_db.db_connect(db_name))
 
 def list_dbs(force=False):
-    if not openerp.tools.config['list_db'] and not document:
+    if not openerp.tools.config['list_db'] and not force:
         raise openerp.exceptions.AccessDenied()
     chosen_template = openerp.tools.config['db_template']
     templates_list = tuple(set(['postgres', chosen_template]))
