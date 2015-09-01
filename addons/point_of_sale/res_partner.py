@@ -3,7 +3,7 @@ import math
 
 from openerp.osv import osv, fields
 
-import openerp.addons.product.product
+# import openerp.addons.product.product
 
 
 class res_users(osv.osv):

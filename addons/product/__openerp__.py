@@ -8,8 +8,8 @@
     'category': 'Sales Management',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
     'demo': [
-        'product_demo.xml',
-        'product_image_demo.xml',
+        'data/product_demo.xml',
+        'data/product_image_demo.xml',
     ],
     'description': """
 This is the base module for managing products and pricelists in OpenERP.
@@ -35,12 +35,12 @@ Print product labels with barcode.
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'wizard/product_price_view.xml',
-        'res_config_view.xml',
-        'product_data.xml',
-        'product_report.xml',
-        'product_view.xml',
-        'pricelist_view.xml',
-        'partner_view.xml',
+        'views/res_config_view.xml',
+        'data/product_data.xml',
+        'report/product_report.xml',
+        'views/product_view.xml',
+        'views/pricelist_view.xml',
+        'views/partner_view.xml',
         'views/report_pricelist.xml',
         'views/report_productlabel.xml'
     ],
