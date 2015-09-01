@@ -183,16 +183,11 @@ class Post(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
+
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
-
-    @api.one
-    @api.depends('content')
-    def _get_plain_content(self):
-        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
-
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
@@ -219,6 +214,63 @@ class Post(models.Model):
     write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
+    # vote
+    vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
+    user_vote = fields.Integer('My Vote', compute='_get_user_vote')
+    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
+
+    # favorite
+    favourite_ids = fields.Many2many('res.users', string='Favourite')
+    user_favourite = fields.Boolean('Is Favourite', compute='_get_user_favourite')
+    favourite_count = fields.Integer('Favorite Count', compute='_get_favorite_count', store=True)
+
+    # hierarchy
+    is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
+    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade')
+    self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
+    child_count = fields.Integer('Number of answers', compute='_get_child_count', store=True)
+    uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
+    has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
+
+    # offensive moderation tools
+    flag_user_id = fields.Many2one('res.users', string='Flagged by')
+    moderator_id = fields.Many2one('res.users', string='Reviewed by', readonly=True)
+
+    # closing
+    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
+    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_date = fields.Datetime('Closed on', readonly=True)
+
+    # karma calculation and access
+    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights')
+    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights')
+    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights')
+    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
+    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
+    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
+    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights')
+    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
+    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
+    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
+    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights')
+    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights')
+    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights')
+    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights')
+    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
+    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
+    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
+    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
+    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
+    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
+    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
+    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
+
+    @api.one
+    @api.depends('content')
+    def _get_plain_content(self):
+        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
+
     @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
@@ -228,21 +280,6 @@ class Post(models.Model):
         else:
             self.relevancy = 0
 
-    @api.one
-    @api.depends('flags_uid')
-    def _get_flags_count(self):
-        self.flags_count = len(self.flags_uid)
-
-    # moderation tools
-    validator_id = fields.Many2one('res.users', string='Reviewed by', select=True, readonly=True)
-    flag_moderator_id = fields.Many2one('res.users', string='Marked as offensive by', select=True, readonly=True)
-    flags_uid = fields.Many2many('res.users', relation='forum_post_flags_users_rel', string='Flagged by')
-    flags_count = fields.Integer('Number of flags', compute='_get_flags_count', store=True)
-
-    # vote
-    vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
-    user_vote = fields.Integer('My Vote', compute='_get_user_vote')
-    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
 
     @api.multi
     def _get_user_vote(self):
@@ -261,11 +298,6 @@ class Post(models.Model):
         for post in self:
             post.vote_count = result[post.id]
 
-    # favorite
-    favourite_ids = fields.Many2many('res.users', string='Favourite')
-    user_favourite = fields.Boolean('Is Favourite', compute='_get_user_favourite')
-    favourite_count = fields.Integer('Favorite Count', compute='_get_favorite_count', store=True)
-
     @api.one
     def _get_user_favourite(self):
         self.user_favourite = self._uid in self.favourite_ids.ids
@@ -274,15 +306,6 @@ class Post(models.Model):
     @api.depends('favourite_ids')
     def _get_favorite_count(self):
         self.favourite_count = len(self.favourite_ids)
-
-    # hierarchy
-    is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
-    parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade')
-    self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Answers')
-    child_count = fields.Integer('Number of answers', compute='_get_child_count', store=True)
-    uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
-    has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
 
     @api.one
     @api.depends('create_uid', 'parent_id')
@@ -308,33 +331,6 @@ class Post(models.Model):
     def _get_has_validated_answer(self):
         self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
 
-    # closing
-    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
-    closed_date = fields.Datetime('Closed on', readonly=True)
-    # karma calculation and access
-    karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights')
-    karma_edit = fields.Integer('Karma to edit', compute='_get_post_karma_rights')
-    karma_close = fields.Integer('Karma to close', compute='_get_post_karma_rights')
-    karma_unlink = fields.Integer('Karma to unlink', compute='_get_post_karma_rights')
-    karma_comment = fields.Integer('Karma to comment', compute='_get_post_karma_rights')
-    karma_comment_convert = fields.Integer('Karma to convert comment to answer', compute='_get_post_karma_rights')
-    karma_flag = fields.Integer('Flag a post as offensive', compute='_get_post_karma_rights')
-    can_ask = fields.Boolean('Can Ask', compute='_get_post_karma_rights')
-    can_answer = fields.Boolean('Can Answer', compute='_get_post_karma_rights')
-    can_accept = fields.Boolean('Can Accept', compute='_get_post_karma_rights')
-    can_edit = fields.Boolean('Can Edit', compute='_get_post_karma_rights')
-    can_close = fields.Boolean('Can Close', compute='_get_post_karma_rights')
-    can_unlink = fields.Boolean('Can Unlink', compute='_get_post_karma_rights')
-    can_upvote = fields.Boolean('Can Upvote', compute='_get_post_karma_rights')
-    can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
-    can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
-    can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
-    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
-    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
-    can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
-    can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
-    can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
 
     @api.multi
     def _get_post_karma_rights(self):
