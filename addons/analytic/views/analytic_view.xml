@@ -30,7 +30,32 @@
                 No activity yet on this account.
               </p><p>
                 In Odoo, sale orders and projects are implemented using
-                analytic account. You can track costs and revenues to analyse
+                analytic accounts. You can track costs and revenues to analyse
+                your margins easily.
+              </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+              </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sale orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
+            <field name="name">Analytic Entries</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">tree,form,graph,pivot</field>
+            <field name="view_id" ref="view_account_analytic_line_tree"/>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p>
+                No activity yet.
+              </p><p>
+                In Odoo, sale orders and projects are implemented using
+                analytic accounts. You can track costs and revenues to analyse
                 your margins easily.
               </p><p>
                 Costs will be created automatically when you register supplier
