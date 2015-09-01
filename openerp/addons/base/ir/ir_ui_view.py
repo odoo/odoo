@@ -529,11 +529,19 @@ class view(osv.osv):
                         node.getparent().remove(node)
                 elif pos == 'attributes':
                     for child in spec.getiterator('attribute'):
-                        attribute = (child.get('name'), child.text or None)
-                        if attribute[1]:
-                            node.set(attribute[0], attribute[1])
-                        elif attribute[0] in node.attrib:
-                            del node.attrib[attribute[0]]
+                        attribute = child.get('name')
+                        value = child.text or ''
+                        if child.get('add') or child.get('remove'):
+                            assert not child.text
+                            separator = child.get('separator', None)
+                            to_add = map(str.strip, child.get('add', '').split(separator))
+                            to_remove = map(str.strip, child.get('remove', '').split(separator))
+                            values = map(str.strip, node.get(attribute, '').split(separator))
+                            value = (separator or ' ').join(filter(lambda s: s not in to_remove, values) + to_add)
+                        if value:
+                            node.set(attribute, value)
+                        elif attribute in node.attrib:
+                            del node.attrib[attribute]
                 else:
                     sib = node.getnext()
                     for child in spec:
