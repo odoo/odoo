@@ -34,15 +34,15 @@ Print product labels with barcode.
     'data': [
         'security/product_security.xml',
         'security/ir.model.access.csv',
-        'wizard/product_price_view.xml',
-        'views/res_config_view.xml',
+        'wizard/product_price_views.xml',
+        'views/res_config_views.xml',
         'data/product_data.xml',
         'report/product_report.xml',
-        'views/product_view.xml',
-        'views/pricelist_view.xml',
-        'views/partner_view.xml',
-        'views/report_pricelist.xml',
-        'views/report_productlabel.xml'
+        'views/product_views.xml',
+        'views/pricelist_views.xml',
+        'views/partner_views.xml',
+        'views/pricelist_report.xml',
+        'views/productlabel_report.xml'
     ],
     'test': [
         'product_pricelist_demo.yml',
