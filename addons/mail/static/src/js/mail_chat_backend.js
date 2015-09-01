@@ -3,6 +3,7 @@ odoo.define('mail.chat_backend', function (require) {
 
 var core = require('web.core');
 var data = require('web.data');
+var framework = require('web.framework');
 var Model = require('web.Model');
 var pyeval = require('web.pyeval');
 var SystrayMenu = require('web.SystrayMenu');
@@ -374,6 +375,7 @@ var PartnerInviteDialog = Dialog.extend({
 var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixin, {
     template: 'mail.chat.ChatMailThread',
     events: {
+        "click .o_mail_thread_show_more > button": "message_load_history",
         // events from MailThreadMixin
         "click .o_mail_redirect": "on_click_redirect",
         "click .o_mail_thread_message_star": "on_message_star",
@@ -390,7 +392,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.help_message = action.help || '';
         this.context = action.context;
         this.action = action;
-        this.loading_history = false;
         this.chatter_needaction_auto = false;
         this.options = this.action.params;
         // mail thread mixin
@@ -438,6 +439,8 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         var self = this;
         this._super.apply(this, arguments);
 
+        this.$messages = this.$('.o_mail_chat_messages');
+
         mail_thread.MailThreadMixin.start.call(this);
         // channel business events
         this.on("change:current_channel_id", this, this.channel_change);
@@ -469,18 +472,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         this.group_search_widget.insertAfter(this.$('.o_mail_chat_channel_slot_channel_private_group'));
         this.group_search_widget.on('item_create', this, function(name){
             self.channel_create(name, 'private');
-        });
-
-        // bind event to load history when scrolling near top
-        this.$messages = this.$('.o_mail_chat_messages');
-        this.$messages.scroll(function() {
-            if ($(this).scrollTop() <= 50 && self.loading_history) { // at 50px of the top, load history
-                self.message_load_history().then(function(messages){
-                    if(messages.length < mail_thread.LIMIT_MESSAGE){
-                        self.loading_history = false;
-                    }
-                });
-            }
         });
 
         // needaction inbox counter
@@ -818,8 +809,6 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
 
         // fetch the messages
         return this.message_load_new().then(function(){
-            // allow loading history
-            self.loading_history = true;
             // if normal channel, update last message id, and unbold
             var def = $.Deferred().resolve();
             if(_.isNumber(current_channel_id)){
@@ -1036,6 +1025,18 @@ var ChatMailThread = Widget.extend(mail_thread.MailThreadMixin, ControlPanelMixi
         // add search domain
         domain = domain.concat(this.search_domain);
         return domain;
+    },
+    /**
+     * Extend message_load_history to keep scroll position at last seen message
+     */
+    message_load_history: function() {
+        var self = this;
+        var oldest_msg_selector = '.o_mail_thread_message[data-message-id="' + this.get('messages')[0].id + '"]';
+        var offset = -framework.getPosition(document.querySelector(oldest_msg_selector)).top;
+        mail_thread.MailThreadMixin.message_load_history.call(this).then(function() {
+            offset += framework.getPosition(document.querySelector(oldest_msg_selector)).top;
+            self.$messages.scrollTop(offset);
+        });
     },
 });
 

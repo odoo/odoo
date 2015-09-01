@@ -158,6 +158,12 @@
         </t>
     </t>
 
+    <t t-name="mail.Thread.load_more">
+        <div t-if="!widget.all_messages_loaded" class="o_mail_thread_show_more">
+            <button class="btn btn-sm btn-link">-------- Show more messages --------</button>
+        </div>
+    </t>
+
     <t t-name="mail.Thread.tracking_message">
         <div>
             <ul class="o_mail_thread_message_tracking">

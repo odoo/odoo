@@ -116,6 +116,7 @@
     -->
     <t t-name="mail.chat.ChatMailThread.content">
         <t t-if="widget.get('messages').length">
+            <t t-call="mail.Thread.load_more"/>
             <t t-call="mail.Thread.messages"/>
         </t>
         <t t-if="!widget.get('messages').length">

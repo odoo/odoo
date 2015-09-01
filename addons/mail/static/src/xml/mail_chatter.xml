@@ -67,16 +67,13 @@
             <div class="o_mail_chatter_compose_message"/>
             <!-- Message list -->
             <div class="o_mail_chatter_messages"/>
-
-            <div t-if="widget.options.display_show_more_message" class="o_mail_chatter_show_more_message text-muted">
-                ----------- Show more messages -----------
-            </div>
         </div>
     </t>
 
     <t t-name="mail.chatter.ChatterMailThread.messages">
         <t t-if="widget.get('messages').length">
             <t t-call="mail.Thread.messages"/>
+            <t t-call="mail.Thread.load_more"/>
         </t>
         <t t-if="!widget.get('messages').length">
             No Messages.

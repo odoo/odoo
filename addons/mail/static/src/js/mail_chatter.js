@@ -272,7 +272,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
         "click .o_mail_redirect": "on_click_redirect",
         "click .o_mail_thread_message_star": "on_message_star",
         "click .o_mail_thread_message_needaction": "on_message_needaction",
-        "click .o_mail_chatter_show_more_message": "on_message_show_more",
+        "click .o_mail_thread_show_more": "message_load_history",
         // toggle message composer (!! declaration order is important !!)
         "click .o_mail_chatter_button_new_message": "on_open_composer",
         "click .o_mail_chatter_button_log_note": "on_open_composer",
@@ -306,14 +306,6 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
         mail_thread.MailThreadMixin.start.call(this);
         return this._super.apply(this, arguments);
     },
-    on_message_show_more: function(){
-        var self = this;
-        this.message_load_history().then(function(messages){
-            if(messages.length < mail_thread.LIMIT_MESSAGE){
-                self.$('.o_mail_chatter_show_more_message').hide();
-            }
-        });
-    },
     /**
      * When a message is correctly posted, fetch its data to render it
      * @param {Number} message_id : the identifier of the new posted message
@@ -335,7 +327,7 @@ var ChatterMailThread = form_common.AbstractField.extend(mail_thread.MailThreadM
     render_value: function(){
         var self = this;
         // re-rendering for mail composer message
-        this.options.display_show_more_message = this.get_value().length > mail_thread.LIMIT_MESSAGE;
+        this.all_messages_loaded = this.get_value().length <= mail_thread.LIMIT_MESSAGE;
         this.renderElement();
         // reset dataset
         this.ThreadDataset = this.view.dataset;

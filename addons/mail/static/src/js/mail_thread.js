@@ -696,6 +696,9 @@ var MailThreadMixin = {
     message_load_history: function(){
         var self = this;
         return this.message_fetch(this.get_message_domain_history()).then(function(raw_messages){
+            if (raw_messages.length < LIMIT_MESSAGE) {
+                self.all_messages_loaded = true;
+            }
             self.message_insert(raw_messages);
             return raw_messages;
         });
@@ -709,6 +712,7 @@ var MailThreadMixin = {
     message_load_new: function(){
         var self = this;
         return this.message_fetch(this.get_message_domain()).then(function(raw_messages){
+            self.all_messages_loaded = raw_messages.length < LIMIT_MESSAGE;
             self._message_replace(self._message_preprocess(raw_messages));
             return raw_messages;
         });
