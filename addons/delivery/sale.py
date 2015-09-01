@@ -77,7 +77,7 @@ class sale_order(osv.Model):
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
-            taxes = grid.carrier_id.product_id.taxes_id
+            taxes = grid.carrier_id.product_id.taxes_id.filtered(lambda t: t.company_id.id == order.company_id.id)
             fpos = order.fiscal_position or False
             taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
             price_unit = grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context)
