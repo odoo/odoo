@@ -787,7 +787,7 @@ class res_partner(osv.osv):
         partner = self.browse(cr, uid, ids[0], context=context)
         params = {
             'q': '%s, %s %s, %s' % (partner.street or '', partner.city  or '', partner.zip or '', partner.country_id and partner.country_id.name_get()[0][1] or ''),
-            'z': 10
+            'z': zoom,
         }
         return urlplus('https://maps.google.com/maps' , params)
 
