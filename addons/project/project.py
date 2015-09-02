@@ -177,8 +177,7 @@ class project(osv.osv):
                     "- Employees Only: employees see all tasks or issues\n"
                     "- Followers Only: employees see only the followed tasks or issues; if portal\n"
                     "   is activated, portal users see the followed tasks or issues."),
-        'state': fields.selection([('template', 'Template'),
-                                   ('draft','New'),
+        'state': fields.selection([('draft','New'),
                                    ('open','In Progress'),
                                    ('cancelled', 'Cancelled'),
                                    ('pending','Pending'),
@@ -296,16 +295,10 @@ class project(osv.osv):
                 'search_view_id': search_view['res_id'],
             }
 
-    # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, ids, value=True, context=None):
-        task_obj = self.pool.get('project.task')
-        for proj in self.browse(cr, uid, ids, context=None):
-            self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
-            cr.execute('select id from project_task where project_id=%s', (proj.id,))
-            tasks_id = [x[0] for x in cr.fetchall()]
-            if tasks_id:
-                task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
-        return True
+    @api.multi
+    def setActive(self, value=True):
+        """ Set a project as active/inactive, and its tasks as well. """
+        self.write({'active': value})
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -330,7 +323,13 @@ class project(osv.osv):
         if vals.get('alias_model'):
             model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', vals.get('alias_model', 'project.task'))])
             vals.update(alias_model_id=model_ids[0])
-        return super(project, self).write(cr, uid, ids, vals, context=context)
+        res = super(project, self).write(cr, uid, ids, vals, context=context)
+        if 'active' in vals:
+            # archiving/unarchiving a project does it on its tasks, too
+            projects = self.browse(cr, uid, ids, context)
+            tasks = projects.with_context(active_test=False).mapped('tasks')
+            tasks.write({'active': vals['active']})
+        return res
 
 
 class task(osv.osv):
@@ -419,15 +418,6 @@ class task(osv.osv):
             default['name'] = _("%s (copy)") % current.name
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _is_template(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = True
-            if task.project_id:
-                if task.project_id.active == False or task.project_id.state == 'template':
-                    res[task.id] = False
-        return res
-
     def _compute_displayed_image(self, cr, uid, ids, prop, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -435,7 +425,7 @@ class task(osv.osv):
         return res
 
     _columns = {
-        'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
+        'active': fields.boolean('Active'),
         'name': fields.char('Task Title', track_visibility='onchange', size=128, required=True, select=True),
         'description': fields.html('Description'),
         'priority': fields.selection([('0','Normal'), ('1','High')], 'Priority', select=True),

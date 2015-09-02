@@ -439,6 +439,15 @@ class project(osv.Model):
                                     domain=[('stage_id.fold', '=', False)]),
     }
 
+    @api.multi
+    def write(self, vals):
+        res = super(project, self).write(vals)
+        if 'active' in vals:
+            # archiving/unarchiving a project does it on its issues, too
+            issues = self.with_context(active_test=False).mapped('issue_ids')
+            issues.write({'active': vals['active']})
+        return res
+
 
 class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'

@@ -34,26 +34,11 @@ Integrator at Agrolait"""
 
 class TestProjectFlow(TestProjectBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
-    def test_project_process_project_user(self):
-        self.assertRaises(AccessError, self.project_pigs.sudo(self.user_projectuser).set_template)
-
-    def test_project_process_project_manager_set_template(self):
-        pigs = self.project_pigs.sudo(self.user_projectmanager)
-        pigs.set_template()
-        self.assertEqual(pigs.state, 'template')
-        self.assertEqual(len(pigs.tasks), 0, 'project: set_template: project tasks should have been set inactive')
-
-        # pigs.reset_project()
-        # self.assertEqual(pigs.state, 'open')
-        # self.assertEqual(len(pigs.tasks), 2, 'project: reset_project: project tasks should have been set active')
-
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
-        new_template_act = pigs.duplicate_template()
-        new_project = self.env['project.project'].sudo(self.user_projectmanager).browse(new_template_act['res_id'])
-        self.assertEqual(new_project.state, 'open')
-        self.assertEqual(len(new_project.tasks), 2, 'project: duplicating a project template should duplicate its tasks')
+        dogs = pigs.copy()
+        self.assertEqual(dogs.state, 'open')
+        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
     def test_project_process_project_manager_state(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
@@ -67,11 +52,9 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(pigs.state, 'close')
         # Re-open
         pigs.state = 'open'
-        # Re-convert into a template
-        pigs.set_template()
         # Copy the project
-        new_project = pigs.copy()
-        self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
+        dogs = pigs.copy()
+        self.assertEqual(len(dogs.tasks), 2, 'project: copied project should have copied task')
         # Cancel the project
         pigs.state = 'cancelled'
         self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
