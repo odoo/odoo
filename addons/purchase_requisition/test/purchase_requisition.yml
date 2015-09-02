@@ -52,7 +52,7 @@
     self.tender_in_progress(cr, uid, [ref("requisition1")], context=context)
     self.tender_open(cr, uid, [ref("requisition1")], context=context)
 - 
-  Supplier send one RFQ so I create requisition request of that supplier.
+  Vendor send one RFQ so I create requisition request of that supplier.
 -
   !python {model: purchase.requisition.partner}: |
     context.update({"active_model": "purchase.requisition","active_ids": [ref("requisition1")],"active_id": ref("requisition1")})

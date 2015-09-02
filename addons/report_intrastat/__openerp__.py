@@ -11,11 +11,10 @@ A module that adds intrastat reports.
 
 This module gives the details of the goods traded between the countries of
 European Union.""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
+    'depends': ['base', 'product', 'delivery', 'stock', 'sale', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
+        'security/report_intrastat_security.xml',
         'report_intrastat_view.xml',
         'intrastat_report.xml',
         'report_intrastat_data.xml',

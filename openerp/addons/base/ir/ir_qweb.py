@@ -21,6 +21,7 @@ import babel.dates
 import werkzeug
 from lxml import etree, html
 from PIL import Image
+import psycopg2
 
 import openerp.http
 import openerp.tools
@@ -592,7 +593,7 @@ class FieldConverter(osv.AbstractModel):
             ('data-oe-type', field_type),
             ('data-oe-expression', t_att['field']),
         ]
-        if record._fields[field_name].readonly:
+        if field.readonly:
             data.append(('data-oe-readonly', 1))
         return data
 
@@ -645,7 +646,8 @@ class FieldConverter(osv.AbstractModel):
                 _build_attribute(name, value)
                 for name, value in self.attributes(
                     cr, uid, field_name, record, options,
-                    source_element, g_att, t_att, qweb_context)
+                    source_element, g_att, t_att, qweb_context,
+                    context=context)
             )
 
         return self.render_element(cr, uid, source_element, t_att, g_att,
@@ -678,6 +680,17 @@ class FieldConverter(osv.AbstractModel):
         Lang = self.pool['res.lang']
 
         return Lang.browse(cr, uid, Lang._lang_get(cr, uid, lang_code), context=context)
+
+class IntegerConverter(osv.AbstractModel):
+    _name = 'ir.qweb.field.integer'
+    _inherit = 'ir.qweb.field'
+
+    def value_to_html(self, cr, uid, value, field, options=None, context=None):
+        if context is None:
+            context = {}
+
+        lang_code = context.get('lang') or 'en_US'
+        return self.pool['res.lang'].format(cr, uid, [lang_code], '%d', value, grouping=True)
 
 class FloatConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.float'
@@ -1284,14 +1297,18 @@ class AssetsBundle(object):
 
     def set_cache(self, type, content):
         ira = self.registry['ir.attachment']
-        ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
         url = '/web/%s/%s/%s' % (type, self.xmlid, self.version)
-        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+        try:
+            with self.cr.savepoint():
+                ira.invalidate_bundle(self.cr, openerp.SUPERUSER_ID, type=type, xmlid=self.xmlid)
+                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
                     datas=content.encode('utf8').encode('base64'),
                     type='binary',
                     name=url,
                     url=url,
                 ), context=self.context)
+        except psycopg2.Error:
+            pass
 
     def css_message(self, message):
         # '\A' == css content carriage return
@@ -1548,22 +1565,27 @@ class PreprocessedCSS(StylesheetAsset):
 
     def to_html(self):
         if self.url:
-            ira = self.registry['ir.attachment']
-            url = self.html_url % self.url
-            domain = [('type', '=', 'binary'), ('url', '=', url)]
-            ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
-            datas = self.content.encode('utf8').encode('base64')
-            if ira_id:
-                # TODO: update only if needed
-                ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas}, context=self.context)
-            else:
-                ira.create(self.cr, openerp.SUPERUSER_ID, dict(
-                    datas=datas,
-                    mimetype='text/css',
-                    type='binary',
-                    name=url,
-                    url=url,
-                ), context=self.context)
+            try:
+                ira = self.registry['ir.attachment']
+                url = self.html_url % self.url
+                domain = [('type', '=', 'binary'), ('url', '=', url)]
+                with self.cr.savepoint():
+                    ira_id = ira.search(self.cr, openerp.SUPERUSER_ID, domain, context=self.context)
+                    datas = self.content.encode('utf8').encode('base64')
+                    if ira_id:
+                        # TODO: update only if needed
+                        ira.write(self.cr, openerp.SUPERUSER_ID, ira_id, {'datas': datas},
+                                  context=self.context)
+                    else:
+                        ira.create(self.cr, openerp.SUPERUSER_ID, dict(
+                            datas=datas,
+                            mimetype='text/css',
+                            type='binary',
+                            name=url,
+                            url=url,
+                        ), context=self.context)
+            except psycopg2.Error:
+                pass
         return super(PreprocessedCSS, self).to_html()
 
     def get_source(self):

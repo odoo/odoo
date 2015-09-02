@@ -26,13 +26,12 @@
                     </field>
                     <notebook colspan="4" groups="base.group_no_one">
                         <page string="Email Template">
-                            <field name="body" readonly="1"/>
+                            <field name="body" readonly="1" options="{'style-inline': true}"/>
                         </page>
                     </notebook>
                     <footer>
-                        <button name="action_forward" string="Send" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" special="cancel" class="oe_link"/>
+                        <button name="action_forward" string="Send" type="object" class="btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn-default"/>
                     </footer>
                 </form>
             </field>

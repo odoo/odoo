@@ -21,7 +21,7 @@
         <function name="install_lang" model="res.lang"/>
 
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
             <field name="image" eval="False"/>
             <field name="customer" eval="False"/>
@@ -36,9 +36,9 @@
 
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
-            <field name="name">Your Company</field>
+            <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Your Company Tagline</field>
+            <field name="rml_header1">My Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -66,25 +66,6 @@ Administrator</span>]]></field>
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>
             <field eval="10" name="sequence"/>
-        </record>
-
-        <!--
-            A group dedicated to the portal users, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_portal" model="res.groups">
-            <field name="name">Portal</field>
-            <field name="comment">Portal members have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual Odoo groups.</field>
-        </record>
-        <!--
-            A group dedicated to the public user only, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_public" model="res.groups">
-            <field name="name">Public</field>
-            <field name="comment">Public users have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual Odoo groups.</field>
         </record>
 
         <!-- Basic fonts family included in PDF standart, will always be in the font list -->
@@ -117,7 +98,7 @@ Administrator</span>]]></field>
             <field name="login">public</field>
             <field name="password"></field>
             <!-- Avoid auto-including this demo user in any default group -->
-            <field name="groups_id" eval="[(6,0,[ref('base.group_public')])]"/>
+            <field name="groups_id" eval="[(6,0,[])]"/>
             <field name="image" type="base64" file="base/static/img/public_user-image.png"/>
             <field name="partner_id" ref="public_partner"/>
             <field name="active" eval="False"/>

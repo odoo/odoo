@@ -49,7 +49,7 @@
             <field name="inherit_id" ref="event.view_event_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Registrations']" position="replace">
+                    <xpath expr="//page[@name='registrations']" position="replace">
                         <page string="Tickets">
                             <group>
                                 <group>
@@ -62,7 +62,7 @@
                             <field name="event_ticket_ids" context="{'default_name': name}">
                                 <tree string="Tickets" editable="bottom">
                                     <field name="name"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" context="{'default_event_ok':1}"/>
                                     <field name="deadline"/>
                                     <field name="price"/>
                                     <field name="seats_max"/>

@@ -61,6 +61,13 @@ class Start(Command):
         if '--db-filter' not in cmdargs:
             cmdargs.append('--db-filter=^%s$' % args.db_name)
 
+        # Remove --path /-p options from the command arguments
+        def to_remove(i, l):
+            return l[i] == '-p' or l[i].startswith('--path') or \
+                (i > 0 and l[i-1] in ['-p', '--path'])
+        cmdargs = [v for i, v in enumerate(cmdargs)
+                   if not to_remove(i, cmdargs)]
+
         main(cmdargs)
 
 def die(message, code=1):

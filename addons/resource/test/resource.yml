@@ -9,14 +9,6 @@
 -
   I had Project of OpenERP Integration of 50 Hours with three human resource assigned on it. I have started project from this week start.
 -
-  First, I  generate the resource detail and check the resource Efficiency assigned.
--
-  !python {model: resource.resource}: |
-    from openerp.tools import float_compare
-    resources = self.generate_resources(cr, uid, [ref('base.user_root'),ref('base.user_demo')], ref('timesheet_group1'), context)
-    for resource in resources.values():
-        assert float_compare(resource.get('efficiency', 0.0), 1.0, precision_digits=2) == 0, 'Invalid resource generated.'
--
   I check per day work hour availability of the Resource based on Working Calendar Assigned to each resource, for first day of the week.
 -
   !python {model: resource.resource}: |

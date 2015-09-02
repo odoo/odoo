@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Crm stages -->
+        <record model="crm.stage" id="stage_lead2">
+            <field name="name">Qualification</field>
+            <field name="probability">20</field>
+            <field name="on_change">1</field>
+            <field name="sequence">40</field>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.stage" id="stage_lead3">
+            <field name="name">Proposition</field>
+            <field name="probability">40</field>
+            <field name="on_change">1</field>
+            <field name="sequence">50</field>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.stage" id="stage_lead4">
+            <field name="name">Negotiation</field>
+            <field name="probability">60</field>
+            <field name="on_change">1</field>
+            <field name="sequence">60</field>
+            <field name="type">opportunity</field>
+        </record>
+
+        <record model="crm.stage" id="crm_stage_2_1">
+            <field name="name">New</field>
+            <field name="probability">10</field>
+            <field name="on_change">1</field>
+            <field name="sequence">1</field>
+            <field name="type">both</field>
+        </record>
+        <record model="crm.stage" id="crm_stage_2_2">
+            <field name="name">Qualification</field>
+            <field name="probability">20</field>
+            <field name="on_change">1</field>
+            <field name="sequence">40</field>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.stage" id="crm_stage_2_3">
+            <field name="name">Negotiation</field>
+            <field name="probability">60</field>
+            <field name="on_change">1</field>
+            <field name="sequence">60</field>
+            <field name="type">opportunity</field>
+        </record>
+        <record model="crm.stage" id="crm_stage_2_4">
+            <field name="name">Won</field>
+            <field name="fold" eval="True"/>
+            <field name="probability">100</field>
+            <field name="on_change">1</field>
+            <field name="sequence">70</field>
+            <field name="type">opportunity</field>
+        </record>
+
+        <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="stage_ids" eval="[(4, ref('stage_lead2')), (4, ref('stage_lead3')),
+                                           (4, ref('stage_lead4'))]"/>
+        </record>
+        <record model="crm.team" id="sales_team.crm_team_1">
+            <field name="stage_ids" eval="[(4, ref('crm_stage_2_1')),
+                                           (4, ref('crm_stage_2_2')),
+                                           (4, ref('crm_stage_2_3')),
+                                           (4, ref('crm_stage_2_4'))]"/>
+        </record>
+
+    </data>
+</odoo>

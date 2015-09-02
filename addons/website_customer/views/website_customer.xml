@@ -115,8 +115,8 @@
 
         <h3 t-if="len(tags)">References by Tag</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
-            <a t-attf-class="" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }">
-                <span class="fa fa-1x fa-tags"/> All </a>&amp;nbsp;
+            <a class="mr8" t-attf-href="/customers/#{ current_country and 'country/%s' % slug(current_country) or '' }#{ search_path }">
+                <span class="fa fa-1x fa-tags"/> All </a>
             <t t-foreach="tags" t-as="o_tag">
                 <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ 'tag/%s/' % slug(o_tag) }#{ current_country and 'country/%s' % slug(current_country)  or '' }#{ search_path }"/>

@@ -22,11 +22,5 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-
-    <!-- multi salesteam mode -->
-    <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('base.group_multi_salesteams'))]"/>
-    </record>
-
 </data>
 </openerp>

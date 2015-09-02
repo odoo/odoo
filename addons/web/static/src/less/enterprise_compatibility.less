@@ -16,43 +16,40 @@
 @odoo-horizontal-padding: 16px;
 @odoo-list-grey: #e2e2e0;  // FIXME: listview thead background color
 @odoo-main-color-muted: #a8a8a8;
-@odoo-main-text-color: #666666;
-@odoo-webclient-background-color: @odoo-brand-secondary;
+@odoo-main-text-color: #555555;
+@odoo-webclient-background-color: #F0EEEE;
 @odoo-view-background-color: white;
 @odoo-shadow-color: #303030;
 @brand-primary: @odoo-brand-primary;
 
 .oe-view-manager {
-    background-color: #f0eeee !important;
+    background-color: @odoo-webclient-background-color !important;
 }
 
 .o_kanban_view {
-    background-color: #f0eeee;
-    .o_kanban_header {
-        color: black !important;
-    }
+    background-color: @odoo-webclient-background-color;
 
     .o_kanban_config i, .o_kanban_quick_add i {
-        color: #555 !important;
+        color: @odoo-main-text-color !important;
         &:hover {
-            background-color: darken(#f0eeee, 10%) !important;
+            background-color: darken(@odoo-webclient-background-color, 10%) !important;
         }
+    }
+    .o_column_title, .o_kanban_title, .o_kanban_add_column, .o_column_unfold {
+        color: @odoo-main-text-color !important;
     }
 
     .o_column_folded {
-        background-color: #f0eeee !important;
-        border: none !important;
-        span.o_column_title, span.o_column_unfold {
-            // color: white !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 5%) !important;
+        border-color: darken(@odoo-webclient-background-color, 10%) !important;
     }
 
     .o_column_quick_create {
-        background-color: #f0eeee !important;
-        .o_kanban_add_column, .o_kanban_title {
-            color: black !important;
-        }
+        background-color: darken(@odoo-webclient-background-color, 10%) !important;
+    }
 
+    &.o_kanban_grouped .o_kanban_group .o_kanban_header {
+        margin-bottom: 2px; // For the buttons not to overlap first record's box shaddow on hover
     }
 }
 
@@ -60,8 +57,30 @@
     background-color: white !important;
 }
 
+// Buttons and links
+@link-hover-decoration: none;
+.btn, .btn-group > .btn {
+    &:hover, &:active, &:focus, &:active:focus {
+        outline: none;
+    }
+}
 .btn-icon {
     .btn-default;
+}
+.oe_button {
+    .btn-default;
+    &.oe_highlight, &.btn-primary {
+        .btn-primary;
+    }
+    &.oe_link, &.btn-link {
+        .btn-link;
+    }
+}
+.oe_highlight {
+    .btn-primary;
+}
+.oe_link {
+    .btn-link;
 }
 
 .openerp .oe_avatar {
@@ -72,12 +91,6 @@
     float: right;
 }
 
-@grid-gutter-width: 0;
-
-.oe-control-panel .row {
-    margin-left: 15px;
-    margin-right: 15px;
-}
 
 // Pager input (to edit pager values)
 .o_pager_value > input {
@@ -88,7 +101,7 @@
     }
 }
 
-.oe_form_field_one2many {
+.oe_form_field_one2many, .oe_form_field_many2many {
     .oe-view-manager {
         background-color: white;
 
@@ -115,17 +128,31 @@
     display: inline-block;
     padding: 0;
     margin: 0;
-    > a {
+    vertical-align: middle;
+    > .o_priority_star {
         display: inline-block;
-    }
-    .o_star_on, .o_star_off {
-        color: @odoo-main-color-muted !important;
-        &:hover {
+        font-size: 1.35em;
+        &:hover, &:focus {
             text-decoration: none;
+            outline: none;
+        }
+
+        + .o_priority_star {
+            padding-left: 5px;
+        }
+
+        &.fa-star-o {
+            color: @odoo-main-color-muted;
+        }
+        &.fa-star {
+            color: gold;
         }
     }
-    .o_star_on {
-        color: gold !important;
+}
+
+.oe_title {
+    .o_priority > .o_priority_star {
+        font-size: inherit;
     }
 }
 
@@ -138,42 +165,33 @@
     vertical-align: top; // To update display context changed by overflow:hidden
 }
 
-.oe-o2m-control-panel {
+.oe-x2m-control-panel {
     background-color: white;
+}
+
+div.o_checkbox {
+    display: inline-block;
+    vertical-align: sub;
+    > input + span {
+        display: none;
+    }
 }
 
 .openerp .oe_formview {
    .oe_button_box {
         .oe_stat_button {
-            .stat_button_icon {
-                display: inline-block;
-            }
-
-            // padding: @odoo-statbutton-vpadding @odoo-statbutton-spacing @odoo-statbutton-vpadding 0px;
             text-align: left;
 
             .o_button_icon {
-                // margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
+                width: 30%;
                 display: inline-block;
                 vertical-align: middle;
-                &:before {
-                    font-size: x-large;
-                    vertical-align: middle;
-                }
-
-                width: 30%;
             }
-
-            // .o_form_field_percent_pie {
-            //     margin-left: @odoo-statbutton-spacing; // To create the button padding left (firefox bug)
-            // }
 
             .o_stat_info { // contains the value and text
                 display: inline-block;
                 vertical-align: middle;
-
                 max-width: 70%;
-                // padding-right: @odoo-statbutton-spacing;
                 line-height: 1.2;
 
                 .o_stat_value {
@@ -199,33 +217,48 @@
             }
         }
 
-        + .oe_title {
-            width: 400px;
-        }
-
-        + .oe_avatar {
-            > img {
-                max-width: 90px;
-                max-height: 90px;
-            }
-
+        &, & + .oe_avatar {
             + .oe_title {
                 width: 400px;
-                padding-left: 95px;
             }
         }
     }
 
-    .o_row > * {
-        width: auto!important; // oe_inline
+    .oe_avatar {
+        > img {
+            max-width: 90px;
+            max-height: 90px;
+        }
 
-        &.oe_form_field_many2one, &.o_form_field_many2manytags {
-            width: 100%!important;
+        + .oe_title {
+            padding-left: 95px;
+        }
+    }
+
+    .o_row {
+        > * {
+            width: auto!important; // oe_inline
+        }
+        > div {
+            display: inline-block;
+            + div  {
+                margin-left: 5px;
+            }
+        }
+    }
+
+    .oe_form label {
+        font-size: 13px;
+    }
+
+    .oe_form_group td:last-child {
+        .oe_form_label_help, .oe_form_label {
+            font-weight: normal;
         }
     }
 
     .o_form_field_many2manytags {
-        .o-flex-display();
+        .o-inline-flex-display();
         .o-flex-flow(row, wrap);
         .o-align-items(flex-start);
 
@@ -246,6 +279,10 @@
     &.oe_form_editable .o_form_field_many2manytags {
         border: 1px solid #CCC;
         border-radius: 3px;
+
+        &.o_form_field_empty {
+            display: none;
+        }
 
         > .oe_form_field {
             .o-flex(1, 0, 100px);
@@ -288,3 +325,49 @@
         }
     }
 }
+
+// Search options dropdowns
+.o-search-options-dropdown-custom-li() {
+    margin: 3px 25px;
+    width: auto;
+    max-width: 250px;
+
+}
+// Open and closed carets in dropdowns
+.o_closed_menu {
+    position: relative;
+    a:before {
+        .o-caret-right;
+        .o-position-absolute(@top: 50%, @left: 12px);
+        margin-top: (-@caret-width-base);
+    }
+}
+.o_open_menu {
+    position: relative;
+    a:before {
+        .o-caret-down;
+        .o-position-absolute(@top: 50%, @left: 9px);
+        margin-top: (-@caret-width-base);
+    }
+}
+
+// Favorites Menu -> Add to my dashboard
+.o_favorites_menu {
+    .o_add_to_dashboard_input {
+        .form-control();
+    }
+    .o_add_to_dashboard_button {
+        .btn();
+        .btn-default();
+    }
+}
+
+// Because the `web_planner` module has to work with Odoo community and enterprise without
+// code duplication, fine-tune the display of it in the community webclient here
+#PlannerDialog {
+    top: 35px;
+    -webkit-box-shadow: 0 3px 9px #666666;
+    box-shadow: 0 3px 9px #666666;
+    padding-bottom: 44px;
+}
+

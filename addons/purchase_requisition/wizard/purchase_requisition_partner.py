@@ -9,7 +9,7 @@ class purchase_requisition_partner(osv.osv_memory):
     _name = "purchase.requisition.partner"
     _description = "Purchase Requisition Partner"
     _columns = {
-        'partner_ids': fields.many2many('res.partner', 'purchase_requisition_supplier_rel', 'requisition_id', 'partner_id', string='Suppliers', required=True, domain=[('supplier', '=', True)])
+        'partner_ids': fields.many2many('res.partner', 'purchase_requisition_supplier_rel', 'requisition_id', 'partner_id', string='Vendors', required=True, domain=[('supplier', '=', True)])
     }
 
     def view_init(self, cr, uid, fields_list, context=None):

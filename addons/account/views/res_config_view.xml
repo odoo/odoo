@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="open_account_charts_modules" model="ir.actions.act_window">
             <field name="name">Chart Templates</field>
             <field name="res_model">ir.module.module</field>
@@ -17,15 +16,16 @@
                 <form string="Configure Accounting" class="oe_form_configuration">
                     <header>
                         <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-
+                    <div>
+                        <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
+                        <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
+                    </div>
                     <field name="has_default_company" invisible="1" />
                     <field name="has_chart_of_accounts" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <separator string="Company" groups="base.group_multi_company"/>
-                    <group groups="base.group_multi_company">
+                    <group string="Company" groups="base.group_multi_company">
                         <label for="id" string="Company"/>
                         <div>
                             <div attrs="{'invisible': [('has_default_company', '=', True)]}">
@@ -39,8 +39,7 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}"/>
-                    <group attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
+                    <group string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
                         <label for="id" string="Chart of Account"/>
                         <div>
                             <div>
@@ -82,15 +81,12 @@
                         </div>
                     </group>
                     <group string="Fiscal Year">
-                        <label for="id" string="Financial Year End"/>
+                        <label for="id" string="Fiscal Year Last Day"/>
                         <div>
-                            <div>
-                                <label for="fiscalyear_last_day" string="Last Day"/>
-                                <field name="fiscalyear_last_day" class="oe_inline"/>
-                                <field name="fiscalyear_last_month" class="oe_inline"/>
-                            </div>
+                            <field name="fiscalyear_last_day" class="oe_inline"/>
+                            <field name="fiscalyear_last_month" class="oe_inline"/>
                         </div>
-                        <label for="id" string="Lock Dates"/>
+                        <label for="id" string="Lock Entries"/>
                         <div>
                             <div>
                                 <label for="period_lock_date"/>
@@ -102,8 +98,7 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Accounting &amp; Finance"/>
-                    <group>
+                    <group string="Accounting &amp; Finance">
                         <label for="id" string="Options"/>
                         <div name="account_config">
                             <div>
@@ -123,10 +118,6 @@
                                     <group>
                                     </group>
                                 </group>
-                            </div>
-                            <div>
-                                <field name="module_account_accountant" class="oe_inline"/>
-                                <label for="module_account_accountant"/>
                             </div>
                             <div>
                                 <field name="group_analytic_accounting" class="oe_inline"/>
@@ -149,7 +140,7 @@
                     <separator string="eInvoicing &amp; Payments"/>
                     <group>
                         <label for="id" string="Customer"/>
-                        <div>
+                        <div name="customer_payments">
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_sale_tax_id"/>
                                 <field name="default_sale_tax_id"
@@ -160,14 +151,10 @@
                                 <field name="group_proforma_invoices" class="oe_inline"/>
                                 <label for="group_proforma_invoices"/>
                             </div>
-                            <div>
-                                <field name="module_product_email_template" class="oe_inline"/>
-                                <label for="module_product_email_template"/>
-                            </div>
                         </div>
                     </group>
                     <group>
-                        <label for="id" string="Supplier"/>
+                        <label for="id" string="Vendor"/>
                         <div name="other_cofing">
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                                 <label for="default_purchase_tax_id"/>
@@ -175,25 +162,14 @@
                                     domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
                                     class="oe_inline"/>
                             </div>
-                            <div>
-                                <field name="module_account_check_writing" class="oe_inline"/>
-                                <label for="module_account_check_writing"/>
-                            </div>
-                            <div>
-                                <field name="group_check_supplier_invoice_total" class="oe_inline"/>
-                                <label for="group_check_supplier_invoice_total"/>
-                            </div>
                         </div>
                     </group>
                     <separator string="Bank &amp; Cash"/>
                     <group name="bank_cash">
                         <label for="id" string="Configuration"/>
-                        <div>
+                        <div name="bank_options">
                             <div name='company_footer'>
                                 <label for="company_footer"/>
-                                <button name="open_company_form" type="object"
-                                    string="Configure your company bank accounts" icon="gtk-go-forward"
-                                    class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>
                             <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
@@ -205,30 +181,14 @@
                                 <field name="paypal_account" placeholder="e.g. sales@odoo.com" class="oe_inline"/>
                             </div>
                         </div>
-                        <label for="id" string="Bank Statements"/>
-                        <div>
-                            <div>
-                                <field name="module_account_bank_statement_import_ofx" class="oe_inline"/>
-                                <label for="module_account_bank_statement_import_ofx"/>
-                            </div>
-                            <div>
-                                <field name="module_account_bank_statement_import_qif" class="oe_inline"/>
-                                <label for="module_account_bank_statement_import_qif"/>
-                            </div>
-                            <div name="plaid_credentials">
-                                <field name="module_account_plaid" class="oe_inline"/>
-                                <label for="module_account_plaid"/>
-                            </div>
-                        </div>
                     </group>
+                    <!-- Invisible section which is inherited in other modules -->
                     <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
                     <group name="analytic_account_sale" invisible="1">
                         <label for="id" string="Sale"/>
-                        <div/>
                     </group>
                     <group name="analytic_account_purchase" invisible="1">
                         <label for="id" string="Purchase"/>
-                        <div/>
                     </group>
                 </form>
             </field>
@@ -244,6 +204,5 @@
 
         <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
             sequence="0" action="action_account_config" groups="base.group_configuration"/>
-
     </data>
 </openerp>

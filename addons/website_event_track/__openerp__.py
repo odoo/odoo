@@ -18,12 +18,12 @@ Adds support for:
 - agenda
 - call for proposals
         """,
-    'author': 'OpenERP SA',
     'depends': ['website_event', 'website_blog'],
     'data': [
         'data/event_data.xml',
         'views/website_event.xml',
         'views/event_backend.xml',
+        'data/event_track_tip_data.xml',
         'security/ir.model.access.csv',
         'security/event.xml',
     ],

@@ -31,7 +31,8 @@
                                     context="{'template_id':active_id}"/>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" required="1"/></h1>
                             <group>
                                 <field name="model_id" required="1" options="{'no_create': True}"/>
                                 <field name="model" invisible="1"/>
@@ -41,7 +42,7 @@
                             <page string="Content">
                                 <label for="subject"/>
                                 <h2 style="display: inline-block;"><field name="subject" placeholder="Subject (placeholders may be used here)"/></h2>
-                                <field name="body_html"/>
+                                <field name="body_html" widget="html" options="{'style-inline': true}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                             <page string="Email Configuration">
@@ -114,8 +115,8 @@
                     <field name="lang"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group by...">
-                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}" icon="terp-folder-orange"/>
-                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
+                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                </search>
            </field>

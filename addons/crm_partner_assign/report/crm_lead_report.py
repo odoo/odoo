@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
-from openerp.addons.crm import crm
+from openerp.addons.crm import crm_stage
 
 
 class crm_lead_report_assign(osv.osv):
@@ -33,7 +33,7 @@ class crm_lead_report_assign(osv.osv):
         'date_closed': fields.datetime('Close Date', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),  # TDE FIXME master: rename into nbr_cases
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity')

@@ -2,9 +2,10 @@ odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
 var Tour = require('web.Tour');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.ready().done(function () {
+base.ready().done(function () {
     Tour.register({
         id:   'event_buy_tickets',
         name: "Buy tickets for the Conference on Business Apps",
@@ -80,6 +81,10 @@ website.ready().done(function () {
                     $("input[name='zip']").val("123");
                     $("select[name='country_id']").val("21");
                 },
+            },
+            {
+                title:     "Check that the subtotal is 5500.0", 
+                element:   '#order_total_untaxed .oe_currency_value:contains("5500.0")',
             },
             {
                 title:     "Select `Wire Transfer` payment method",

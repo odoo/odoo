@@ -64,10 +64,15 @@ class AccountMove(models.Model):
     def _compute_currency(self):
         self.currency_id = self.company_id.currency_id or self.env.user.company_id.currency_id
 
+    @api.multi
+    def _get_default_journal(self):
+        if self.env.context.get('default_journal_type'):
+            return self.env['account.journal'].search([('type', '=', self.env.context['default_journal_type'])], limit=1).id
+
     name = fields.Char(string='Number', required=True, copy=False, default='/')
-    ref = fields.Char(string='Partner Reference', copy=False)
+    ref = fields.Char(string='Reference', copy=False)
     date = fields.Date(required=True, states={'posted': [('readonly', True)]}, index=True, default=fields.Date.context_today)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]})
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'posted': [('readonly', True)]}, default=_get_default_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', store=True)
     rate_diff_partial_rec_id = fields.Many2one('account.partial.reconcile', string='Exchange Rate Entry of', help="Technical field used to keep track of the origin of journal entries created in case of fluctuation of the currency exchange rate. This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     state = fields.Selection([('draft', 'Unposted'), ('posted', 'Posted')], string='Status',
@@ -86,7 +91,6 @@ class AccountMove(models.Model):
         default=lambda self: self.env.user.company_id)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     statement_line_id = fields.Many2one('account.bank.statement.line', string='Bank statement line reconciled with this entry', copy=False, readonly=True)
-    to_check = fields.Boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.')
 
     @api.model
     def create(self, vals):
@@ -114,7 +118,7 @@ class AccountMove(models.Model):
                 new_name = False
                 journal = move.journal_id
 
-                if invoice and invoice.move_name:
+                if invoice and invoice.move_name != '/':
                     new_name = invoice.move_name
                 else:
                     if journal.sequence_id:
@@ -173,13 +177,15 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
+        prec = self.env['decimal.precision'].precision_get('Account')
+
         self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
             WHERE       move_id in %s
             GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > 0.00001
-            """, (tuple(self.ids),))
+            HAVING      abs(sum(debit) - sum(credit)) > %s
+            """, (tuple(self.ids), 10 ** (-max(5, prec))))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
@@ -187,6 +193,7 @@ class AccountMove(models.Model):
     @api.multi
     def reverse_moves(self, date=None, journal_id=None):
         date = date or fields.Date.today()
+        reversed_moves = self.env['account.move']
         for ac_move in self:
             reversed_move = ac_move.copy(default={'date': date,
                 'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
@@ -197,8 +204,11 @@ class AccountMove(models.Model):
                     'credit': acm_line.debit,
                     'amount_currency': -acm_line.amount_currency
                     })
-            reversed_move._post_validate()
-            reversed_move.post()
+            reversed_moves |= reversed_move
+        if reversed_moves:
+            reversed_moves._post_validate()
+            reversed_moves.post()
+            return [x.id for x in reversed_moves]
         return True
 
 
@@ -233,7 +243,7 @@ class AccountMoveLine(models.Model):
             #we can only check the amount in company currency
             reconciled = False
             digits_rounding_precision = line.company_id.currency_id.rounding
-            if float_is_zero(amount, digits_rounding_precision):
+            if float_is_zero(amount, digits_rounding_precision) and (line.debit or line.credit):
                 reconciled = True
             line.reconciled = reconciled
 
@@ -397,8 +407,8 @@ class AccountMoveLine(models.Model):
             :param res_type: either 'partner' or 'account'
             :param res_ids: ids of the partners/accounts to reconcile, use None to fetch data indiscriminately
                 of the id, use [] to prevent from fetching any data at all.
-            :param account_type: if a partner is both customer and supplier, you can use 'payable' to reconcile
-                the supplier-related journal entries and 'receivable' for the customer-related entries.
+            :param account_type: if a partner is both customer and vendor, you can use 'payable' to reconcile
+                the vendor-related journal entries and 'receivable' for the customer-related entries.
         """
         if res_ids != None and len(res_ids) == 0:
             # Note : this short-circuiting is better for performances, but also required
@@ -1054,8 +1064,6 @@ class AccountMoveLine(models.Model):
         """
         for obj_line in self:
             if obj_line.analytic_account_id:
-                if not obj_line.journal_id.analytic_journal_id:
-                    raise UserError(_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
                 if obj_line.analytic_line_ids:
                     obj_line.analytic_line_ids.unlink()
                 vals_line = obj_line._prepare_analytic_line()[0]
@@ -1075,10 +1083,9 @@ class AccountMoveLine(models.Model):
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
             'amount': (self.credit or 0.0) - (self.debit or 0.0),
             'general_account_id': self.account_id.id,
-            'journal_id': self.journal_id.analytic_journal_id.id,
             'ref': self.ref,
             'move_id': self.id,
-            'user_id': self._uid,
+            'user_id': self.invoice_id.user_id.id or self._uid,
         }
 
     @api.model
@@ -1094,6 +1101,8 @@ class AccountMoveLine(models.Model):
         if context.get('date_from'):
             if not context.get('strict_range'):
                 domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
+            elif context.get('initial_bal'):
+                domain += [(date_field, '<', context['date_from'])]
             else:
                 domain += [(date_field, '>=', context['date_from'])]
 
@@ -1112,10 +1121,11 @@ class AccountMoveLine(models.Model):
 
         where_clause = ""
         where_clause_params = []
+        tables = ''
         if domain:
             query = self._where_calc(domain)
-            dummy, where_clause, where_clause_params = query.get_sql()
-        return where_clause, where_clause_params
+            tables, where_clause, where_clause_params = query.get_sql()
+        return tables, where_clause, where_clause_params
 
 
 class AccountPartialReconcile(models.Model):

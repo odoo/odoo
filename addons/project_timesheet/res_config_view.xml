@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_config_settings" model="ir.ui.view">
+            <field name="name">project settings</field>
+            <field name="model">project.config.settings</field>
+            <field name="inherit_id" ref="project.view_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='project_management']" position="inside">
+                    <field name="group_tasks_work_on_tasks" widget="radio"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

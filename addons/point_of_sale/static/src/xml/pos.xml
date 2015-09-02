@@ -764,10 +764,10 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach='receipt.paymentlines' t-as='line'>
+            <t t-foreach='paymentlines' t-as='line'>
                 <line>
-                    <left><t t-esc='line.journal' /></left>
-                    <right><value><t t-esc='line.amount'/></value></right>
+                    <left><t t-esc='line.name' /></left>
+                    <right><value><t t-esc='line.get_amount()'/></value></right>
                 </line>
             </t>
             <br/> 
@@ -1232,7 +1232,6 @@
                         </span>
                     </t>
                 </t>
-            
             </span>
             <span class="order-button square neworder-button">
                 <i class='fa fa-plus' />
@@ -1319,14 +1318,16 @@
             </table>
             <br />
             <table class='receipt-paymentlines'>
-                <tr t-foreach="paymentlines" t-as="line">
-                    <td>
-                        <t t-esc="line.name"/>
-                    </td>
-                    <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(line.get_amount())"/>
-                    </td>
-                </tr>
+                <t t-foreach="paymentlines" t-as="line">
+                  <tr>
+                      <td>
+                          <t t-esc="line.name"/>
+                      </td>
+                      <td class="pos-right-align">
+                          <t t-esc="widget.format_currency(line.get_amount())"/>
+                      </td>
+                  </tr>
+                </t>
             </table>
             <br />
             <table class='receipt-change'>

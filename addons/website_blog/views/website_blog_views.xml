@@ -71,7 +71,7 @@
                             <field name="ranking" invisible="1"/>
                         </group>
                         <group string="Technical" groups="base.group_no_one">
-                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_website_designer']}"/>
                             <field name="write_date"/>
                         </group>
                     </sheet>
@@ -154,7 +154,7 @@
             <field name="name">Blog Tags</field>
             <field name="res_model">blog.tag</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 

@@ -8,7 +8,7 @@ from openerp.osv import fields, osv
 class account_budget_crossvered_report(osv.osv_memory):
 
     _name = "account.budget.crossvered.report"
-    _description = "Account Budget crossvered report"
+    _description = "Account Budget crossovered report"
     _columns = {
         'date_from': fields.date('Start of period', required=True),
         'date_to': fields.date('End of period', required=True),

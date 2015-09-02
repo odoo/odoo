@@ -20,7 +20,7 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool['payment.acquirer']
         for this in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            if this.state not in ('draft', 'cancel') and not this.invoiced:
+            if this.state not in ('draft', 'cancel', 'done'):
                 result[this.id] = payment_acquirer.render_payment_block(
                     cr, uid, this.name, this.amount_total, this.pricelist_id.currency_id.id,
                     partner_id=this.partner_id.id, company_id=this.company_id.id, context=context)
@@ -44,7 +44,7 @@ class sale_order(osv.Model):
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
-        if partner not in document.message_follower_ids:
+        if partner not in document.message_partner_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
         return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
 
@@ -103,7 +103,7 @@ class account_invoice(osv.Model):
         # fetch the partner's id and subscribe the partner to the invoice
         for invoice in self.browse(cr, uid, ids, context=context):
             partner = invoice.partner_id
-            if partner not in invoice.message_follower_ids:
+            if partner not in invoice.message_partner_ids:
                 self.message_subscribe(cr, uid, [invoice.id], [partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
 
@@ -121,21 +121,3 @@ class account_invoice(osv.Model):
         if user.share:
             return self.pool['ir.actions.act_window'].for_xml_id(cr, uid, 'portal_sale', 'portal_action_invoices', context=context)
         return super(account_invoice, self).get_formview_action(cr, uid, id, context=context)
-
-
-class mail_mail(osv.osv):
-    _inherit = 'mail.mail'
-
-    def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
-        if mail_sent and mail.model == 'sale.order':
-            so_obj = self.pool.get('sale.order')
-            order = so_obj.browse(cr, uid, mail.res_id, context=context)
-            partner = order.partner_id
-            # Add the customer in the SO as follower
-            if partner not in order.message_follower_ids:
-                so_obj.message_subscribe(cr, uid, [mail.res_id], [partner.id], context=context)
-            # Add all recipients of the email as followers
-            for p in mail.partner_ids:
-                if p not in order.message_follower_ids:
-                    so_obj.message_subscribe(cr, uid, [mail.res_id], [p.id], context=context)
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context, mail_sent=mail_sent)

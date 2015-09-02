@@ -14,14 +14,14 @@
                 <field name="employee_id"/>
                 <field name="stage_id"/>
                 <separator/>
-                <filter string="My Requests" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="My Requests" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Users' icon="terp-personal" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'category_id'}"/>
-                    <filter string='Stages' icon="terp-mrp" domain="[]" context="{'group_by' : 'stage_id'}"/>
-                    <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
+                    <filter string='Stages' domain="[]" context="{'group_by' : 'stage_id'}"/>
+                    <filter string='Employee' domain="[]" context="{'group_by': 'employee_id'}"/>
                 </group>
             </search>
         </field>
@@ -33,6 +33,8 @@
         <field name="arch" type="xml">
             <form string="Maintenance Request">
                 <header>
+                    <button string="Cancel" name="archive_equipment_request" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button string="Reset Request" name="reset_equipment_request" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="stage_id" widget="statusbar" clickable="true" readonly="1"/>
                 </header>
                 <sheet>
@@ -52,6 +54,7 @@
                             <field name="category_id" groups="base.group_hr_manager"/>
                             <field name="request_date" groups="base.group_no_one"/>
                             <field name="close_date" groups="base.group_no_one"/>
+                            <field name="active" invisible="1"/>
                         </group>
                         <group>
                             <field name="user_id" string="Repair Responsible"/>
@@ -79,7 +82,7 @@
                 <field name="user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
-                <field name="message_summary"/>
+                <field name="message_needaction_counter"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -108,7 +111,9 @@
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new' title='Important Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                    </t>
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -131,8 +136,8 @@
         <field name="name">hr.equipment.request.tree</field>
         <field name="model">hr.equipment.request</field>
         <field name="arch" type="xml">
-            <tree string="maintenance Request" fonts="bold:message_unread==True">
-                <field name="message_unread" invisible="1"/>
+            <tree string="maintenance Request" decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
                 <field name="employee_id"/>
@@ -254,7 +259,6 @@
                 <field name="category_id"/>
                 <field name="serial_no"/>
                 <field name="model"/>
-                <field name="message_summary"/>
                 <field name="maintenance_ids"/>
                 <templates>
                     <t t-name="kanban-tooltip">
@@ -277,24 +281,20 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                <div><b><field name="name"/><span t-if="record.category_id.raw_value">(<field name="category_id"/>)</span></b></div>
-                                <div>
-                                    <span t-if="record.employee_id.raw_value"><field name="employee_id"/><br/></span>
-                                    <span t-if="record.department_id.raw_value"><field name="department_id"/><br/></span>
-                                    <a t-if="record.maintenance_ids.raw_value"  type="action" name="%(hr_equipment_request_action_from_equipment)d" style="margin-right: 5px">
-                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
-                                    </a>
-                                    <div class="oe_kanban_footer_left" style="margin-top:2px;">
-                                        <span t-if="record.serial_no.raw_value"><field name="serial_no"/><br/></span>
-                                        <span t-if="!record.employee_id.raw_value and !record.department_id.raw_value">Unassigned<br/></span>
-                                    </div>
+                                <div><b><field name="name"/><span t-if="record.model.raw_value"> (<field name="model"/>)</span></b></div>
+                                <div class="mt4">
+                                    <div t-if="record.serial_no.raw_value"><field name="serial_no"/></div>
+                                    <div t-if="!record.employee_id.raw_value and !record.department_id.raw_value">Unassigned</div>
+                                    <div t-if="record.employee_id.raw_value"><field name="employee_id"/></div>
+                                    <div t-if="record.department_id.raw_value"><field name="department_id"/></div>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
-                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <t t-raw="record.message_summary.raw_value"/>
-                                    <span t-if="record.model.raw_value"><field name="model"/></span>
+                                <div class="oe_kanban_footer_left mt4">
+                                    <a t-if="record.maintenance_ids.raw_value" type="action" name="%(hr_equipment_request_action_from_equipment)d">
+                                        <t t-raw="record.maintenance_ids.raw_value.length"/> Maintenance Request
+                                    </a>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -309,8 +309,8 @@
         <field name="name">hr.equipment.tree</field>
         <field name="model">hr.equipment</field>
         <field name="arch" type="xml">
-            <tree string="Assign To Employee"  fonts="bold:message_unread==True">
-                <field name="message_unread" invisible="1"/>
+            <tree string="Assign To Employee"  decoration-bf="message_needaction==True">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="employee_id" string="Employee"/>
                 <field name="department_id" string="Department"/>
@@ -334,20 +334,20 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="model"/>
-                <filter string="New" help="Unassigned" icon="terp-accessories-archiver" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
-                <filter string="To Do" help="Under Maintenance" icon="terp-accessories-archiver" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
-                <filter string="Assigned" icon="terp-accessories-archiver" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
+                <filter string="New" help="Unassigned" domain="[('employee_id', '=', False), ('department_id', '=', False)]"/>
+                <filter string="To Do" help="Under Maintenance" domain="[('maintenance_ids', '!=', False), ('maintenance_ids.stage_id.fold', '=', False)]"/>
+                <filter string="Assigned" domain="['|', ('employee_id', '!=', False), ('department_id', '!=', False)]"/>
                 <separator/>
-                <filter string="My Equipments" icon="terp-accessories-archiver" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
+                <filter string="My Equipments" domain="['|', ('employee_id.user_id', '=', uid), ('department_id.manager_id.user_id', '=', uid)]"/>
                 <separator/>
-                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Users' icon="terp-personal" domain="[]" context="{'group_by': 'user_id'}"/>
-                    <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'category_id'}"/>
-                    <filter string='Assigned to' help="Assigned to Employees and Departments" icon="terp-personal" domain="[]" context="{'group_by': 'equipment_assign_to'}"/>
-                    <filter string='Department' help="Assigned to Departments" icon="terp-personal" domain="[]" context="{'group_by': 'department_id'}"/>
-                    <filter string='Employee' help="Assigned to Employees" icon="terp-personal" domain="[]" context="{'group_by': 'employee_id'}"/>
-                    <filter string='Supplier' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string='Users' domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter string='Assigned to' help="Assigned to Employees and Departments" domain="[]" context="{'group_by': 'equipment_assign_to'}"/>
+                    <filter string='Department' help="Assigned to Departments" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string='Employee' help="Assigned to Employees" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string='Vendor' domain="[]" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
         </field>
@@ -460,7 +460,7 @@
             <search string="Search">
                 <field name="name" string="Category Name" filter_domain="[('name','ilike',self)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Responsible' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string='Responsible' domain="[]" context="{'group_by' : 'user_id'}"/>
                 </group>
             </search>
         </field>
@@ -570,4 +570,16 @@
         groups="base.group_no_one"
         sequence="2" />
 
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_hr_equipment_menu" model="ir.actions.client">
+            <field name="name">Open HR Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('menu_equipment_title')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_hr_equipment_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
 </odoo>

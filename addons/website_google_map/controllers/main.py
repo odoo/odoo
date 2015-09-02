@@ -4,6 +4,7 @@ import json
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
 from openerp.addons.web.http import request
+from openerp.tools import html_escape as escape
 
 
 class google_map(http.Controller):
@@ -48,12 +49,13 @@ class google_map(http.Controller):
         }
         request.context.update({'show_address': True})
         for partner in partner_obj.browse(cr, SUPERUSER_ID, partners_ids, context=context):
+            # TODO in master, do not use `escape` but `t-esc` in the qweb template.
             partner_data["partners"].append({
                 'id': partner.id,
-                'name': partner.name,
-                'address': '\n'.join(partner.name_get()[0][1].split('\n')[1:]),
-                'latitude': partner.partner_latitude,
-                'longitude': partner.partner_longitude,
+                'name': escape(partner.name),
+                'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
+                'latitude': escape(str(partner.partner_latitude)),
+                'longitude': escape(str(partner.partner_longitude)),
                 })
 
         # generate the map

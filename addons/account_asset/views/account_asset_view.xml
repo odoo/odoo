@@ -10,12 +10,17 @@
         <field name="arch" type="xml">
             <form string="Asset category">
                 <group>
+                    <div class="oe_title oe_inline">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
                         <field name="type" attrs="{'invisible': 1}"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     </group>
-                    <group>
+                    <group string="Journal Entries">
                         <field name="journal_id"/>
                         <div>
                             <label for="account_asset_id" string="Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
@@ -27,9 +32,9 @@
                             <label for="account_depreciation_id" string="Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
+                        <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                     </group>
-                    <group>
-                        <separator string="Periodicity" colspan="2"/>
+                    <group string="Periodicity">
                         <field name="method_time" string="Time Method Based On" widget="radio" attrs="{'invisible': [('type','!=','purchase')]}"/>
                         <field name="method_number" string="Number of Entries" attrs="{'invisible':['|',('method_time','!=','number'),'&amp;',('type','=', False)], 'required':[('method_time','=','number')]}"/>
                         <label for="method_period" string="Every"/>
@@ -40,18 +45,12 @@
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','!=','end')]}"/>
                         <field name="open_asset"/>
                     </group>
-                    <group attrs="{'invisible': [('type','=','sale')]}">
-                        <separator string="Depreciation Method" colspan="2"/>
+                    <group attrs="{'invisible': [('type','=','sale')]}" string="Depreciation Method">
                         <field name="method" widget="radio"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata"/>
                     </group>
-                    <group groups="analytic.group_analytic_accounting" string="Analytic Information">
-                        <field name="account_analytic_id"/>
-                    </group>
                 </group>
-                <separator string="Notes"/>
-                <field name="note"/>
             </form>
         </field>
     </record>
@@ -93,7 +92,7 @@
                 <header>
                     <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button type="object" name="compute_depreciation_board" string="Compute Depreciation" states="draft"/>
-                    <button name="set_to_close" states="open" string="Set to Close" type="object" class="oe_highlight"/>
+                    <button name="set_to_close" states="open" string="Sell or Dispose" type="object" class="oe_highlight"/>
                     <button name="set_to_draft" states="open" string="Set to Draft" type="object" />
                     <button name="%(action_asset_modify)d" states="open" string="Modify Depreciation" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
@@ -112,7 +111,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" domain="[('type', '=', default_category_id_type)]" context="{'default_type': default_category_id_type}" help="Category of asset"/>
+                            <field name="category_id" domain="[('type', '=', 'purchase')]" context="{'default_type': 'purchase'}" help="Category of asset"/>
                             <field name="code"/>
                             <field name="date" help="Date of asset"/>
                             <field name="type" invisible="1"/>
@@ -125,7 +124,7 @@
                             <field name="value_residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <div>
                                 <label for="partner_id" string="Customer" attrs="{'invisible': [('type','==','purchase')]}"/>
-                                <label for="partner_id" string="Supplier" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                                <label for="partner_id" string="Vendor" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             </div>
                             <field name="partner_id" string="Partner" nolabel="1"/>
                             <field name="invoice_id" string="Invoice"/>
@@ -179,9 +178,6 @@
                                 <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                             </group>
                         </page>
-                        <page string="History">
-                            <field name="history_ids" readonly="1"/>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -192,8 +188,6 @@
         </field>
     </record>
 
-    <!-- We need to have 2 tree views to display different labels according to the asset type -->
-    <!-- Purchase -->
     <record model="ir.ui.view" id="view_account_asset_asset_purchase_tree">
         <field name="name">account.asset.asset.purchase.tree</field>
         <field name="model">account.asset.asset</field>
@@ -202,25 +196,7 @@
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="date"/>
-                <field name="partner_id" string="Supplier"/>
-                <field name="value"/>
-                <field name="value_residual" widget="monetary"/>
-                <field name="currency_id" groups="base.group_multi_currency"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-    <!-- Sale -->
-    <record model="ir.ui.view" id="view_account_asset_asset_sale_tree">
-        <field name="name">account.asset.asset.sale.tree</field>
-        <field name="model">account.asset.asset</field>
-        <field name="arch" type="xml">
-            <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
-                <field name="name" string="Revenue Name"/>
-                <field name="category_id"/>
-                <field name="date"/>
-                <field name="partner_id" string="Customer"/>
+                <field name="partner_id" string="Vendor"/>
                 <field name="value"/>
                 <field name="value_residual" widget="monetary"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
@@ -253,78 +229,38 @@
     <record id="view_product_template_form_inherit" model="ir.ui.view">
         <field name="name">Product Template (form)</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="inherit_id" ref="account.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='properties']" position="before">
-                <group name="asset types">
-                    <field name="asset_category_id" domain="[('type','=','purchase')]" context="{'default_type':'purchase'}"/>
-                    <field name="deferred_revenue_category_id" domain="[('type','=','sale')]" context="{'default_type':'sale'}"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-
-    <!--
-        Asset History
-     -->
-
-    <record model="ir.ui.view" id="view_account_asset_history_form">
-        <field name="name">account.asset.history.form</field>
-        <field name="model">account.asset.history</field>
-        <field name="arch" type="xml">
-            <form string="Asset History">
-                <group>
-                    <group>
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="user_id"/>
-                    </group>
-                    <group>
-                        <field name="method_time"/>
-                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
-                        <field name="method_period"/>
-                        <field name="method_end" attrs="{'invisible':[('method_time','=','number')]}"/>
-                    </group>
-                </group>
-                <separator string="Notes"/>
-                <field name="note"/>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_account_asset_history_tree">
-        <field name="name">account.asset.history.tree</field>
-        <field name="model">account.asset.history</field>
-        <field name="arch" type="xml">
-            <tree string="Asset history">
-                <field name="date"/>
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="method_time"/>
-                <field name="method_number"/>
-                <field name="method_period"/>
-                <field name="method_end"/>
-            </tree>
+            <field name="property_account_expense_id" position="before">
+                <field name="asset_category_id"
+                    domain="[('type', '=', 'purchase')]"
+                    context="{'default_type': 'purchase'}"/>
+            </field>
+            <field name="property_account_income_id" position="before">
+                <field name="deferred_revenue_category_id"
+                    domain="[('type', '=', 'sale')]"
+                    context="{'default_type': 'sale'}"/>
+            </field>
         </field>
     </record>
     
-    <record id="view_account_move_line_form_inherit" model="ir.ui.view">
-        <field name="name">Journal Items (form)</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_form"/>
+    <record id="view_account_move_form_asset_inherit" model="ir.ui.view">
+        <field name="name">Journal Entries (form)</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <field name="statement_id" position="after">
+            <field name="partner_id" position="after">
                 <field name="asset_id"/>
             </field>
         </field>
     </record>
 
-    <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
-        <field name="name">Journal Items (Search)</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+    <record id="view_account_move_filter_asset_inherit" model="ir.ui.view">
+        <field name="name">Journal Entries (Search)</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
         <field name="arch" type="xml">
-            <field name="account_id" position="after">
+            <field name="journal_id" position="after">
                 <field name="asset_id"/>
             </field>
         </field>
@@ -336,21 +272,8 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_account_asset_asset_purchase_tree"/>
         <field name="domain">[('category_id.type', '=', 'purchase')]</field>
-        <field name="context">{'default_type': 'purchase', 'default_category_id_type': 'purchase'}</field>
     </record>
 
-    <!-- Deferred Revenues Action -->
-
-    <record model="ir.actions.act_window" id="action_account_revenue_form">
-        <field name="name">Deferred Revenues</field>
-        <field name="res_model">account.asset.asset</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="view_account_asset_asset_sale_tree"/>
-        <field name="domain">[('category_id.type', '=', 'sale')]</field>
-        <field name="context">{'default_type': 'sale', 'default_category_id_type': 'sale'}</field>
-    </record>
-
-    <menuitem parent="account.menu_finance_entries" id="menu_action_account_revenue_recognition" action="action_account_revenue_form" sequence="102" groups="account.group_account_user"/>
     <menuitem parent="account.menu_finance_entries" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form" sequence="101" groups="account.group_account_user"/>
 
 
@@ -358,7 +281,7 @@
 
     <menuitem id="menu_finance_config_assets" name="Assets and Revenues" parent="account.menu_finance_configuration" sequence="25"/>
 
-    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_sale">
+    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_purchase">
         <field name="name">Asset Types</field>
         <field name="res_model">account.asset.category</field>
         <field name="domain">[('type', '=', 'purchase')]</field>
@@ -366,16 +289,7 @@
         <field name="view_mode">tree,form</field>
         <field name="context">{'default_type': 'purchase'}</field>
     </record>
-    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_purchase">
-        <field name="name">Deferred Revenues Types</field>
-        <field name="res_model">account.asset.category</field>
-        <field name="domain">[('type', '=', 'sale')]</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="context">{'default_type': 'sale'}</field>
-    </record>
 
-    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_sale" action="action_account_asset_asset_list_normal_sale" sequence="1"/>
-    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="2"/>
+    <menuitem parent="account.account_management_menu" id="menu_action_account_asset_asset_list_normal_purchase" action="action_account_asset_asset_list_normal_purchase" sequence="1"/>
 
 </odoo>

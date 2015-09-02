@@ -3,15 +3,27 @@
 <odoo>
 
 <!-- Account Types -->
-                
+    <data noupdate="1">
+
+        <record id="action_client_l10n_ar_menu" model="ir.actions.client">
+            <field name="name">Open Account Dashboard Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_board_journal_1')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_l10n_ar_menu"/>
+            <field name="state">open</field>
+        </record>
+
+    </data>                
 
     <record id="account_account_type_NCLASIFICADO" model="account.account.type">
         <field name="name">Cuentas No Clasificadas</field>
     </record>
 
     <record id="transfer_account_id" model="account.account.template">
-        <field name="name">cuenta de Transferencia</field>
-        <field name="code">1</field>
+        <field name="name">Cuenta de Transferencia</field>
+        <field name="code">13</field>
         <field name="reconcile" eval="True"/>
         <field ref="account.data_account_type_current_assets" name="user_type_id"/>
     </record>
@@ -19,7 +31,8 @@
     <record id="ar_chart_template" model="account.chart.template">
       <field name="name">Argentina - Plan de Cuentas</field>
       <field name="code_digits">6</field>
-       <field name="bank_account_code_char">11</field>
+      <field name="bank_account_code_prefix">11</field>
+      <field name="cash_account_code_prefix">12</field>
       <field name="currency_id" ref="base.ARS"/>
       <field name="transfer_account_id" ref="transfer_account_id"/>
     </record>   
@@ -719,6 +732,14 @@
         <field name="chart_template_id" ref="ar_chart_template"/>
     </record>
 
+    <record id="426" model="account.account.template">
+        <field name="name">Diferencial cambiario</field>
+        <field name="code">426</field>
+        <field name="reconcile" eval="False"/>
+        <field ref="account.data_account_type_revenue" name="user_type_id"/>
+        <field name="chart_template_id" ref="ar_chart_template"/>
+    </record>
+
     <record id="511_01" model="account.account.template">
         <field name="name">Costo de Mercaderías Vendidas - Categoria de productos 01</field>
         <field name="code">511.01</field>
@@ -813,6 +834,14 @@
         <field name="chart_template_id" ref="ar_chart_template"/>
     </record>
 
+    <record id="524" model="account.account.template">
+        <field name="name">Diferencial cambiario</field>
+        <field name="code">524</field>
+        <field name="reconcile" eval="False"/>
+        <field ref="account.data_account_type_expenses" name="user_type_id"/>
+        <field name="chart_template_id" ref="ar_chart_template"/>
+    </record>
+
     <record id="61_01" model="account.account.template">
         <field name="name">Compras - Categoria de productos 01</field>
         <field name="code">61.01</field>
@@ -850,8 +879,8 @@
         <field name="property_account_payable_id" ref="211"/>
         <field name="property_account_expense_categ_id" ref="61_01"/>
         <field name="property_account_income_categ_id" ref="411_01"/>
-        <field name="expense_currency_exchange_account_id" ref="61_01"/>
-        <field name="income_currency_exchange_account_id" ref="411_01"/>
+        <field name="expense_currency_exchange_account_id" ref="524"/>
+        <field name="income_currency_exchange_account_id" ref="426"/>
     </record>   
 
 

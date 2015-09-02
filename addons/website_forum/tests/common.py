@@ -84,7 +84,7 @@ class TestForumCommon(common.SavepointCase):
             'name': 'TestQuestion',
             'content': 'I am not a bird.',
             'forum_id': cls.forum.id,
-            'tag_ids': [(0, 0, {'name': 'Tag0', 'forum_id': cls.forum.id})]
+            'tag_ids': [(0, 0, {'name': 'Tag2', 'forum_id': cls.forum.id})]
         })
         cls.answer = Post.create({
             'name': 'TestAnswer',

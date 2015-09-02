@@ -23,7 +23,7 @@ ClientAction (ir.actions.client)
 
 .. code-block:: xml
 
-     <record id="action_mail_inbox_feeds" model="ir.actions.client">
+     <record id="mail_message_action_inbox" model="ir.actions.client">
          <field name="name">Inbox</field>
          <field name="tag">mail.wall</field>
          <field name="res_model">mail.message</field>

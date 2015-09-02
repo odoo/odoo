@@ -4,7 +4,8 @@
 
 
 .jumbotron {
-  padding: @jumbotron-padding (@jumbotron-padding / 2);
+  padding-top:    @jumbotron-padding;
+  padding-bottom: @jumbotron-padding;
   margin-bottom: @jumbotron-padding;
   color: @jumbotron-color;
   background-color: @jumbotron-bg;
@@ -44,7 +45,7 @@
 
     h1,
     .h1 {
-      font-size: (@font-size-base * 4.5);
+      font-size: @jumbotron-heading-font-size;
     }
   }
 }

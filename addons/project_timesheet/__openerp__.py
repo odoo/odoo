@@ -13,16 +13,15 @@ This module lets you transfer the entries under tasks defined for Project
 Management to the Timesheet line entries for particular date and particular user
 with the effect of creating, editing and deleting either ways.
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
     'images': ['images/invoice_task_work.jpeg', 'images/my_timesheet.jpeg', 'images/working_hour.jpeg'],
-    'depends': ['resource', 'project', 'account_analytic_analysis', 'procurement'],
+    'depends': ['resource', 'project', 'sale_timesheet'],
     'data': [
         'security/ir.model.access.csv',
         'security/project_timesheet_security.xml',
         'report/project_report_view.xml',
         'project_timesheet_view.xml',
-        'project_dashboard.xml',
+        'res_config_view.xml',
     ],
     'demo': ['project_timesheet_demo.xml'],
     'test': [

@@ -2,6 +2,7 @@
 {
     'name': 'Website Builder',
     'category': 'Website',
+    'sequence': 50,
     'summary': 'Build Your Enterprise Website',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
@@ -10,8 +11,7 @@ OpenERP Website CMS
 ===================
 
         """,
-    'author': 'OpenERP SA',
-    'depends': ['web', 'share', 'mail', 'web_planner'],
+    'depends': ['web', 'web_editor', 'web_planner'],
     'installable': True,
     'data': [
         'data/data.xml',

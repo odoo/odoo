@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ast
 import base64
 import csv
 import functools
@@ -24,6 +23,8 @@ from cStringIO import StringIO
 import babel.messages.pofile
 import werkzeug.utils
 import werkzeug.wrappers
+from openerp.api import Environment
+
 try:
     import xlwt
 except ImportError:
@@ -37,8 +38,8 @@ from openerp.tools import topological_sort
 from openerp.tools.translate import _
 from openerp.tools import ustr
 from openerp import http
-
-from openerp.http import request, serialize_exception as _serialize_exception
+import mimetypes
+from openerp.http import request, serialize_exception as _serialize_exception, STATIC_CACHE
 from openerp.exceptions import AccessError
 
 _logger = logging.getLogger(__name__)
@@ -145,47 +146,31 @@ def ensure_db(redirect='/web/database/selector'):
 
     request.session.db = db
 
-def module_installed():
+def module_installed(environment):
     # Candidates module the current heuristic is the /static dir
     loadable = http.addons_manifest.keys()
-    modules = {}
 
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = request.session.model('ir.module.module')
+    Modules = environment['ir.module.module']
     domain = [('state','=','installed'), ('name','in', loadable)]
-    for module in Modules.search_read(domain, ['name', 'dependencies_id']):
-        modules[module['name']] = []
-        deps = module.get('dependencies_id')
-        if deps:
-            deps_read = request.session.model('ir.module.module.dependency').read(deps, ['name'])
-            dependencies = [i['name'] for i in deps_read]
-            modules[module['name']] = dependencies
+    modules = {
+        module.name: module.dependencies_id.mapped('name')
+        for module in Modules.search(domain)
+    }
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
 
 def module_installed_bypass_session(dbname):
-    loadable = http.addons_manifest.keys()
-    modules = {}
     try:
         registry = openerp.modules.registry.RegistryManager.get(dbname)
         with registry.cursor() as cr:
-            m = registry.get('ir.module.module')
-            # TODO The following code should move to ir.module.module.list_installed_modules()
-            domain = [('state','=','installed'), ('name','in', loadable)]
-            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
-            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
-                modules[module['name']] = []
-                deps = module.get('dependencies_id')
-                if deps:
-                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
-                    dependencies = [i['name'] for i in deps_read]
-                    modules[module['name']] = dependencies
-    except Exception,e:
+            return module_installed(
+                environment=Environment(cr, openerp.SUPERUSER_ID, {}))
+    except Exception:
         pass
-    sorted_modules = topological_sort(modules)
-    return sorted_modules
+    return {}
 
 def module_boot(db=None):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
@@ -309,15 +294,6 @@ def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
-
-def login_redirect():
-    url = '/web/login?'
-    # built the redirect url, keeping all the query parameters of the url
-    redirect_url = '%s?%s' % (request.httprequest.base_url, werkzeug.urls.url_encode(request.params))
-    return """<html><head><script>
-        window.location = '%sredirect=' + encodeURIComponent("%s");
-    </script></head></html>
-    """ % (url, redirect_url)
 
 def load_actions_from_ir_values(key, key2, models, meta):
     Values = request.session.model('ir.values')
@@ -456,6 +432,82 @@ def content_disposition(filename):
     else:
         return "attachment; filename*=UTF-8''%s" % escaped
 
+def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+    """ Get file, attachment or downloadable content
+
+    If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
+    binary field (via ``default_get``), otherwise fetches the field for
+    that precise record.
+
+    :param str xmlid: xmlid of the record
+    :param str model: name of the model to fetch the binary from
+    :param int id: id of the record from which to fetch the binary
+    :param str field: binary field
+    :param bool unique: add a max-age for the cache control
+    :param str filename: choose a filename
+    :param str filename_field: if not create an filename with model-id-field
+    :param bool download: apply headers to download the file
+    :param str mimetype: mintype of the field (for headers)
+    :param str default_mimetype: default mintype if no mintype found
+    :param Environment env: by default use request.env
+    :returns: (status, headers, content)
+    """
+    env = env or request.env
+    # get object and content
+    obj = None
+    if xmlid:
+        obj = env.ref(xmlid, False)
+    elif id and model in env.registry:
+        obj = env[model].browse(int(id))
+
+    # obj exists
+    if not obj or not obj.exists() or field not in obj:
+        return (404, [], None)
+
+    # check read access
+    try:
+        last_update = obj['__last_update']
+    except AccessError:
+        return (403, [], None)
+    status = 200
+
+    # filename
+    if not filename:
+        if filename_field in obj:
+            filename = obj[filename_field]
+        else:
+            filename = "%s-%s-%s" % (obj._model._name, obj.id, field)
+
+    # mimetype
+    if not mimetype:
+        if 'mimetype' in obj and obj.mimetype:
+            mimetype = obj.mimetype
+        elif filename:
+            mimetype = mimetypes.guess_type(filename)[0]
+        if not mimetype:
+            mimetype = default_mimetype
+    headers = [('Content-Type', mimetype)]
+
+    # cache
+    etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
+    retag = hashlib.md5(last_update).hexdigest()
+    if etag == retag:
+        status = 304
+    headers.append(('ETag', retag))
+
+    if unique:
+        headers.append(('Cache-Control', 'max-age=%s' % STATIC_CACHE))
+    else:
+        headers.append(('Cache-Control', 'max-age=0'))
+
+    # content-disposition default name
+    if download:
+        headers.append(('Content-Disposition', content_disposition(filename)))
+
+    # get content after cache control
+    content = obj[field] or ''
+
+    return (status, headers, content)
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -466,19 +518,18 @@ class Home(http.Controller):
     def index(self, s_action=None, db=None, **kw):
         return http.local_redirect('/web', query=request.params, keep_hash=True)
 
+    # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
-        if request.session.uid:
-            if kw.get('redirect'):
-                return werkzeug.utils.redirect(kw.get('redirect'), 303)
-            if not request.uid:
-                request.uid = request.session.uid
+        if not request.session.uid:
+            return werkzeug.utils.redirect('/web/login', 303)
+        if kw.get('redirect'):
+            return werkzeug.utils.redirect(kw.get('redirect'), 303)
 
-            menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, context=request.context)
-            return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
-        else:
-            return login_redirect()
+        request.uid = request.session.uid
+        menu_data = request.registry['ir.ui.menu'].load_menus(request.cr, request.uid, request.debug, context=request.context)
+        return request.render('web.webclient_bootstrap', qcontext={'menu_data': menu_data})
 
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
@@ -511,13 +562,7 @@ class Home(http.Controller):
                 return http.redirect_with_hash(redirect)
             request.uid = old_uid
             values['error'] = "Wrong login/password"
-        if request.env.ref('web.login', False):
-            return request.render('web.login', values)
-        else:
-            # probably not an odoo compatible database
-            error = 'Unable to login on database %s' % request.session.db
-            return werkzeug.utils.redirect('/web/database/selector?error=%s' % error, 303)
-
+        return request.render('web.login', values)
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
@@ -677,120 +722,110 @@ class Proxy(http.Controller):
         base_url = request.httprequest.base_url
         return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
 
+    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
+    def post(self, path):
+        """Effectively execute a POST request that was hooked through user login"""
+        with request.session.load_request_data() as data:
+            if not data:
+                raise werkzeug.exceptions.BadRequest()
+            from werkzeug.test import Client
+            from werkzeug.wrappers import BaseResponse
+            base_url = request.httprequest.base_url
+            query_string = request.httprequest.query_string
+            client = Client(request.httprequest.app, BaseResponse)
+            headers = {'X-Openerp-Session-Id': request.session.sid}
+            return client.post('/' + path, base_url=base_url, query_string=query_string,
+                               headers=headers, data=data)
+
 class Database(http.Controller):
 
-    @http.route('/web/database/selector', type='http', auth="none")
-    def selector(self, **kw):
+    def _render_template(self, **d):
+        d.setdefault('manage',True)
+        d['insecure'] = openerp.tools.config['admin_passwd'] == 'admin'
+        d['list_db'] = openerp.tools.config['list_db']
+        d['langs'] = openerp.service.db.exp_list_lang()
+        # databases list
+        d['databases'] = []
         try:
-            dbs = http.db_list()
-            if not dbs:
-                return http.local_redirect('/web/database/manager')
-        except openerp.exceptions.AccessDenied:
-            dbs = False
-        return env.get_template("database_selector.html").render({
-            'databases': dbs,
-            'debug': request.debug,
-            'error': kw.get('error')
-        })
-
-    @http.route('/web/database/manager', type='http', auth="none")
-    def manager(self, **kw):
-        # TODO: migrate the webclient's database manager to server side views
-        request.session.logout()
-        return env.get_template("database_manager.html").render({
-            'modules': simplejson.dumps(module_boot()),
-        })
-
-    @http.route('/web/database/get_list', type='json', auth="none")
-    def get_list(self):
-        # TODO change js to avoid calling this method if in monodb mode
-        try:
-            return http.db_list()
+            d['databases'] = http.db_list()
         except openerp.exceptions.AccessDenied:
             monodb = db_monodb()
             if monodb:
-                return [monodb]
-            raise
+                d['databases'] = [monodb]
+        return env.get_template("database_manager.html").render(d)
 
-    @http.route('/web/database/create', type='json', auth="none")
-    def create(self, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
-        db_created = request.session.proxy("db").create_database(
-            params['super_admin_pwd'],
-            params['db_name'],
-            bool(params.get('demo_data')),
-            params['db_lang'],
-            params['create_admin_pwd'])
-        if db_created:
-            request.session.authenticate(params['db_name'], 'admin', params['create_admin_pwd'])
-        return db_created
+    @http.route('/web/database/selector', type='http', auth="none")
+    def selector(self, **kw):
+        return self._render_template(manage=False)
 
-    @http.route('/web/database/duplicate', type='json', auth="none")
-    def duplicate(self, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
-        duplicate_attrs = (
-            params['super_admin_pwd'],
-            params['db_original_name'],
-            params['db_name'],
-        )
+    @http.route('/web/database/manager', type='http', auth="none")
+    def manager(self, **kw):
+        return self._render_template()
 
-        return request.session.proxy("db").duplicate_database(*duplicate_attrs)
-
-    @http.route('/web/database/drop', type='json', auth="none")
-    def drop(self, fields):
-        password, db = operator.itemgetter(
-            'drop_pwd', 'drop_db')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
-
+    @http.route('/web/database/create', type='http', auth="none")
+    def create(self, master_pwd, name, lang, password, **post):
         try:
-            if request.session.proxy("db").drop(password, db):
-                return True
-            else:
-                return False
-        except openerp.exceptions.AccessDenied:
-            return {'error': 'AccessDenied', 'title': 'Drop Database'}
-        except Exception:
-            return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
+            request.session.proxy("db").create_database(master_pwd, name, bool(post.get('demo')), lang,  password)
+            request.session.authenticate(name, 'admin', password)
+            return http.local_redirect('/web/')
+        except Exception, e:
+            error = "Database creation error: %s" % e
+        return self._render_template(error=error)
+
+    @http.route('/web/database/duplicate', type='http', auth="none")
+    def duplicate(self, master_pwd, name, new_name):
+        try:
+            request.session.proxy("db").duplicate_database(master_pwd, name, new_name)
+            return http.local_redirect('/web/database/manager')
+        except Exception, e:
+            error = "Database duplication error: %s" % e
+            return self._render_template(error=error)
+
+    @http.route('/web/database/drop', type='http', auth="none")
+    def drop(self, master_pwd, name):
+        try:
+            request.session.proxy("db").drop(master_pwd, name)
+            return http.local_redirect('/web/database/manager')
+        except Exception, e:
+            error = "Database deletion error: %s" % e
+            return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none")
-    def backup(self, backup_db, backup_pwd, token, backup_format='zip'):
+    def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
-            openerp.service.security.check_super(backup_pwd)
+            openerp.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = "%s_%s.%s" % (backup_db, ts, backup_format)
+            filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = openerp.service.db.dump_db(backup_db, None, backup_format)
+            dump_stream = openerp.service.db.dump_db(name, None, backup_format)
             response = werkzeug.wrappers.Response(dump_stream, headers=headers, direct_passthrough=True)
-            response.set_cookie('fileToken', token)
             return response
         except Exception, e:
             _logger.exception('Database.backup')
-            return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
+            error = "Database backup error: %s" % e
+            return self._render_template(error=error)
 
     @http.route('/web/database/restore', type='http', auth="none")
-    def restore(self, db_file, restore_pwd, new_db, mode):
+    def restore(self, master_pwd, backup_file, name, copy=False):
         try:
-            copy = mode == 'copy'
-            data = base64.b64encode(db_file.read())
-            request.session.proxy("db").restore(restore_pwd, new_db, data, copy)
-            return ''
-        except openerp.exceptions.AccessDenied, e:
-            raise Exception("AccessDenied")
+            data = base64.b64encode(backup_file.read())
+            request.session.proxy("db").restore(master_pwd, name, data, copy)
+            return http.local_redirect('/web/database/manager')
+        except Exception, e:
+            error = "Database restore error: %s" % e
+            return self._render_template(error=error)
 
-    @http.route('/web/database/change_password', type='json', auth="none")
-    def change_password(self, fields):
-        old_password, new_password = operator.itemgetter(
-            'old_pwd', 'new_pwd')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
+    @http.route('/web/database/change_password', type='http', auth="none")
+    def change_password(self, master_pwd, master_pwd_new):
         try:
-            return request.session.proxy("db").change_admin_password(old_password, new_password)
-        except openerp.exceptions.AccessDenied:
-            return {'error': 'AccessDenied', 'title': _('Change Password')}
-        except Exception:
-            return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
+            request.session.proxy("db").change_admin_password(master_pwd, master_pwd_new)
+            return http.local_redirect('/web/database/manager')
+        except Exception, e:
+            error = "Master password update error: %s" % e
+            return self._render_template(error=error)
 
 class Session(http.Controller):
 
@@ -843,7 +878,7 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return module_installed()
+        return module_installed(environment=request.env(user=openerp.SUPERUSER_ID))
 
     @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
@@ -1019,138 +1054,74 @@ class TreeView(View):
 
 class Binary(http.Controller):
 
-    @http.route('/web/binary/image', type='http', auth="public")
-    def image(self, model, id, field, **kw):
-        last_update = '__last_update'
-        Model = request.registry[model]
-        cr, uid, context = request.cr, request.uid, request.context
-        headers = [('Content-Type', 'image/png')]
-        etag = request.httprequest.headers.get('If-None-Match')
-        hashed_session = hashlib.md5(request.session_id).hexdigest()
-        retag = hashed_session
-        id = None if not id else simplejson.loads(id)
-        if type(id) is list:
-            id = id[0] # m2o
-        try:
-            if etag:
-                if not id and hashed_session == etag:
-                    return werkzeug.wrappers.Response(status=304)
-                else:
-                    date = Model.read(cr, uid, [id], [last_update], context)[0].get(last_update)
-                    if hashlib.md5(date).hexdigest() == etag:
-                        return werkzeug.wrappers.Response(status=304)
-
-            if not id:
-                res = Model.default_get(cr, uid, [field], context).get(field)
-                image_base64 = res
-            else:
-                res = Model.read(cr, uid, [id], [last_update, field], context)[0]
-                retag = hashlib.md5(res.get(last_update)).hexdigest()
-                image_base64 = res.get(field)
-
-            if kw.get('resize'):
-                resize = kw.get('resize').split(',')
-                if len(resize) == 2 and int(resize[0]) and int(resize[1]):
-                    width = int(resize[0])
-                    height = int(resize[1])
-                    # resize maximum 500*500
-                    if width > 500: width = 500
-                    if height > 500: height = 500
-                    image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
-
-            image_data = base64.b64decode(image_base64)
-
-        except Exception:
-            image_data = self.placeholder()
-        headers.append(('ETag', retag))
-        headers.append(('Content-Length', len(image_data)))
-        try:
-            ncache = int(kw.get('cache'))
-            headers.append(('Cache-Control', 'no-cache' if ncache == 0 else 'max-age=%s' % (ncache)))
-        except:
-            pass
-        return request.make_response(image_data, headers)
-
     def placeholder(self, image='placeholder.png'):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    @http.route('/web/binary/saveas', type='http', auth="public")
-    @serialize_exception
-    def saveas(self, model, field, id=None, filename_field=None, **kw):
-        """ Download link for files stored as binary fields.
-
-        If the ``id`` parameter is omitted, fetches the default value for the
-        binary field (via ``default_get``), otherwise fetches the field for
-        that precise record.
-
-        :param str model: name of the model to fetch the binary from
-        :param str field: binary field
-        :param str id: id of the record from which to fetch the binary
-        :param str filename_field: field holding the file's name, if any
-        :returns: :class:`werkzeug.wrappers.Response`
-        """
-        Model = request.registry[model]
-        cr, uid, context = request.cr, request.uid, request.context
-        fields = [field]
-        content_type = 'application/octet-stream'
-        if filename_field:
-            fields.append(filename_field)
-        if id:
-            fields.append('file_type')
-            res = Model.read(cr, uid, [int(id)], fields, context)[0]
-            if res.get('file_type'):
-                content_type = res['file_type']
+    @http.route(['/web/content',
+        '/web/content/<string:xmlid>',
+        '/web/content/<string:xmlid>/<string:filename>',
+        '/web/content/<int:id>',
+        '/web/content/<int:id>/<string:filename>',
+        '/web/content/<string:model>/<int:id>/<string:field>',
+        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
+        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
+        if status == 304:
+            response = werkzeug.wrappers.Response(status=status, headers=headers)
+        elif status != 200:
+            response = request.not_found()
         else:
-            res = Model.default_get(cr, uid, fields, context)
-        filecontent = base64.b64decode(res.get(field) or '')
-        if not filecontent:
+            content_base64 = base64.b64decode(content)
+            headers.append(('Content-Length', len(content_base64)))
+            response = request.make_response(content_base64, headers)
+        if token:
+            response.set_cookie('fileToken', token)
+        return response
+
+    @http.route(['/web/image',
+        '/web/image/<string:xmlid>',
+        '/web/image/<string:xmlid>/<string:filename>',
+        '/web/image/<string:xmlid>/<int:width>x<int:height>',
+        '/web/image/<string:xmlid>/<int:width>x<int:height>/<string:filename>',
+        '/web/image/<int:id>',
+        '/web/image/<int:id>/<string:filename>',
+        '/web/image/<string:model>/<int:id>/<string:field>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<string:filename>',
+        '/web/image/<int:id>/<int:width>x<int:height>',
+        '/web/image/<int:id>/<int:width>x<int:height>/<string:filename>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>',
+        '/web/image/<string:model>/<int:id>/<string:field>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0):
+        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304, headers=headers)
+        elif status != 200 and download:
             return request.not_found()
-        else:
-            filename = '%s_%s' % (model.replace('.', '_'), id)
-            if filename_field:
-                filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                [('Content-Type', content_type),
-                 ('Content-Disposition', content_disposition(filename))])
 
-    @http.route('/web/binary/saveas_ajax', type='http', auth="public")
-    @serialize_exception
-    def saveas_ajax(self, data, token):
-        jdata = simplejson.loads(data)
-        model = jdata['model']
-        field = jdata['field']
-        data = jdata['data']
-        id = jdata.get('id', None)
-        filename_field = jdata.get('filename_field', None)
-        context = jdata.get('context', {})
-        content_type = 'application/octet-stream'
+        if content and width and height:
+            # resize maximum 500*500
+            if width > 500:
+                width = 500
+            if height > 500:
+                height = 500
+            content = openerp.tools.image_resize_image(base64_source=content, size=(width, height), encoding='base64', filetype='PNG')
 
-        Model = request.session.model(model)
-        fields = [field]
-        if filename_field:
-            fields.append(filename_field)
-        if data:
-            res = {field: data, filename_field: jdata.get('filename', None)}
-        elif id:
-            fields.append('file_type')
-            res = Model.read([int(id)], fields, context)[0]
-            if res.get('file_type'):
-                content_type = res['file_type']
-        else:
-            res = Model.default_get(fields, context)
-        filecontent = base64.b64decode(res.get(field) or '')
-        if not filecontent:
-            raise ValueError(_("No content found for field '%s' on '%s:%s'") %
-                (field, model, id))
-        else:
-            filename = '%s_%s' % (model.replace('.', '_'), id)
-            if filename_field:
-                filename = res.get(filename_field, '') or filename
-            return request.make_response(filecontent,
-                headers=[('Content-Type', content_type),
-                        ('Content-Disposition', content_disposition(filename))],
-                cookies={'fileToken': token})
+        image_base64 = content and base64.b64decode(content) or self.placeholder()
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
+
+    # backward compatibility
+    @http.route(['/web/binary/image'], type='http', auth="public")
+    def content_image_backward_compatibility(self, model, id, field, resize=None, **kw):
+        width = None
+        height = None
+        if resize:
+            width, height = resize.split(",")
+        return self.content_image(model=model, id=id, field=field, width=width, height=height)
+
 
     @http.route('/web/binary/upload', type='http', auth="user")
     @serialize_exception
@@ -1186,6 +1157,7 @@ class Binary(http.Controller):
             }, request.context)
             args = {
                 'filename': ufile.filename,
+                'mimetype': ufile.content_type,
                 'id':  attachment_id
             }
         except Exception:

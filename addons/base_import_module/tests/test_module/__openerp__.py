@@ -9,7 +9,6 @@
     'description': """
         Test
         """,
-    'author': 'OpenERP SA',
     'depends': ['website'],
     'data': [
         'test.xml',

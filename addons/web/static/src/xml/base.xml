@@ -1,41 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="EmptyComponent">
-    <div></div>
-</t>
-<t t-name="Loading">
-    <div class="oe_loading">
-        Loading...
-    </div>
-</t>
+
+<div t-name="EmptyComponent"/>
+<div t-name="Loading" class="oe_loading">Loading...</div>
 <t t-name="Notification">
-    <div class="oe_notification" t-translation="off">
-        <div id="oe_notification_default">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <h1>#{title}</h1>
-            <p>#{text}</p>
+    <div class="o_notification" t-translation="off">
+        <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
+        <div class="o_notification_title">
+            <span class="o_icon fa fa-3x fa-lightbulb-o"/>
+            <t t-raw="widget.title"/>
         </div>
-        <div id="oe_notification_alert" class="ui-state-error">
-            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
-            <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
-            <h1>#{title}</h1>
-            <p>#{text}</p>
-        </div>
+        <div class="o_notification_content"><t t-raw="widget.text"/></div>
     </div>
 </t>
-<t t-name="Dialog">
-    <div class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content openerp">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted"><t t-esc="subtitle"/></span></h4>
-                </div>
-                <div class="modal-body"/>
-                <div class="modal-footer"/>
-            </div>
-        </div>
-    </div>
+<t t-name="Warning" t-extend="Notification">
+    <t t-jquery=".o_notification">$(this).addClass('o_error');</t>
+    <t t-jquery=".o_icon" t-operation="replace">
+        <span class="o_icon fa fa-3x fa-exclamation"/>
+    </t>
 </t>
 <t t-name="CrashManager.warning">
     <div class="o_dialog_warning">
@@ -51,283 +33,6 @@
         <pre><t t-esc="error.message"/></pre>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>
-</t>
-
-<t t-name="DatabaseManager">
-    <div class="oe_view_manager_view_form">
-        <div class="oe_form">
-            <form id="db_create" name="create_db_form" style="display: block;">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Create a New Database</span>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <p class="oe_grey" style="margin: 10px">
-                    Fill in this form to create an Odoo database. You can
-                    create databases for different companies or for different
-                    goals (testing, production). Once the database is created,
-                    you will be able to install your first application.
-                </p>
-                <p class="oe_grey" style="margin: 10px">
-                    By default, the master password is 'admin'. This password
-                    is required to create, delete, dump or restore databases.
-                </p>
-                <table class="db_option_table" style="margin: 10px">
-                    <tr>
-                        <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td>
-                            <input type="password" name="super_admin_pwd" class="required" value="admin"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_name">Select a database name:</label></td>
-                        <td>
-                            <input type="text" name="db_name" class="required" matches="^[a-zA-Z0-9][a-zA-Z0-9_-]+$" autofocus="true" placeholder="e.g. mycompany"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="demo_data">Load demonstration data:</label></td>
-                        <td class="oe_form_group_cell">
-                            <span class="oe_form_field oe_form_field_boolean oe_grey" >
-                                <input type="checkbox" name="demo_data" />
-                                Check this box to evaluate Odoo.
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_lang">Default language:</label></td>
-                        <td class="oe_form_field oe_form_field_selection">
-                            <select name="db_lang" t-if="widget.lang_list" class="oe_inline">
-                                <t t-foreach="widget.lang_list" t-as="lang">
-                                    <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
-                                        <t t-esc="lang[1]" />
-                                    </option>
-                                </t>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="create_admin_pwd">Choose a password:</label></td>
-                        <td><input type="password" name="create_admin_pwd" class="required" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="create_confirm_pwd">Confirm password:</label></td>
-                        <td><input type="password" name="create_confirm_pwd" class="required" equalTo="input[name=create_admin_pwd]"/></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><button type="submit" class="oe_button oe_highlight db_create">Create Database</button></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_duplicate" name="duplicate_db_form" style="display: none;">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Duplicate Database</span>
-                            </h2>
-                            <button type="submit" class="oe_button oe_highlight db_duplicate">Duplicate</button>
-                        </div>
-                    </div>
-                </div>
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <td><label for="super_admin_pwd">Master password:</label></td>
-                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_original_name">Original database name:</label></td>
-                        <td><input type="text" name="db_original_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" /></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_drop" name="drop_db_form" style="display: none; ">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Drop Database</span>
-                            </h2>
-                            <button type="submit" class="oe_button oe_highlight db_drop">Drop</button>
-                        </div>
-                    </div>
-                </div>
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <td><label for="drop_db">Database:</label></td>
-                        <td class="oe_form_field oe_form_field_selection">
-                            <select t-if="widget.db_list" name="drop_db" autofocus="autofocus">
-                                <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db">
-                                        <t t-esc="db" />
-                                    </option>
-                                </t>
-                            </select>
-                            <input t-if="!widget.db_list" name="drop_db" class="required" type="text" autofocus="autofocus"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="drop_password">Master Password:</label></td>
-                        <td><input type="password" name="drop_pwd" class="required" /></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_backup" name="backup_db_form" target="backup-target" action="/web/database/backup" style="display: none;">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Backup Database</span>
-                            </h2>
-                            <button type="submit" class="oe_button oe_highlight db_backup">Backup</button>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" name="token" />
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <td><label for="backup_db">Database:</label></td>
-                        <td class="oe_form_field oe_form_field_selection ">
-                            <select t-if="widget.db_list" name="backup_db" autofocus="autofocus">
-                                <t t-foreach="widget.db_list" t-as="db">
-                                    <option t-att-value="db">
-                                        <t t-esc="db" />
-                                    </option>
-                                </t>
-                            </select>
-                            <input t-if="!widget.db_list" name="backup_db" class="required" type="text" autofocus="autofocus"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="backup_format">Backup format:</label></td>
-                        <td class="oe_form_field oe_form_field_selection">
-                            <select name="backup_format">
-                                <option value="zip">zip (includes filestore)</option>
-                                <option value="dump">pg_dump custom format (without filestore)</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="password" name="backup_pwd" class="required" /></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_restore" name="restore_db_form" style="display: none; ">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Restore Database</span>
-                            </h2>
-                            <button type="submit" class="oe_button oe_highlight db_restore">Restore</button>
-                        </div>
-                    </div>
-                </div>
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <td><label for="restore_pwd">Master Password:</label></td>
-                        <td><input type="password" name="restore_pwd" class="required" autofocus="autofocus"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="restore_db">File:</label></td>
-                        <td><input type="file" name="db_file" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="new_db">New database name:</label></td>
-                        <td><input type="text" name="new_db" class="required"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="mode">Mode:</label></td>
-                        <td><select name="mode" class="required">
-                            <option value="restore">Backup Restore</option>
-                            <option value="copy">Copy of an existing database</option>
-                        </select></td>
-                    </tr>
-                </table>
-            </form>
-            <form id="db_change_password" name="change_pwd_form" style="display: none;">
-                <div class="oe_view_manager oe_view_manager_current">
-                    <div class="oe-control-panel" style="padding: 8px;">
-                        <div class="oe_header_row">
-                            <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title">Change Master Password</span>
-                            </h2>
-                            <button type="submit" class="oe_button oe_highlight db-change-password">Change Password</button>
-                        </div>
-                    </div>
-                </div>
-                <table align="center" class="db_option_table">
-                    <tr>
-                        <td><label for="old_pwd">Master password:</label></td>
-                        <td><input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="new_pwd">New master password:</label></td>
-                        <td><input type="password" name="new_pwd" class="required" minlength="1"/></td>
-                    </tr>
-                    <tr>
-                        <td><label for="confirm_pwd">Confirm new master password:</label></td>
-                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1"/> </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-    </div>
-</t>
-<t t-name="DatabaseManager.user_menu">
-    <li>
-         <a id="back-to-login" href="#">Back to Login</a>
-    </li>
-</t>
-<t t-name="DatabaseManager.menu">
-    <div class="oe_secondary_menu_section">Database Management</div>
-    <ul class="oe_secondary_submenu nav nav-pills nav-stacked">
-        <li><a href="#db_create">Create</a></li>
-        <li><a href="#db_duplicate">Duplicate</a></li>
-        <li><a href="#db_drop">Drop</a></li>
-        <li><a href="#db_backup">Backup</a></li>
-        <li><a href="#db_restore">Restore</a></li>
-        <li><a href="#db_change_password">Password</a></li>
-    </ul>
-</t>
-
-<t t-name="ChangePassword">
-    <form name="change_password_form" method="POST">
-      <div class="oe_form">
-        <table align="center">
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
-                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
-            </tr>
-            <tr>
-            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
-            <td class="oe_form_group_cell"><input type="password" name="new_password"
-                       minlength="1"/></td>
-            </tr>
-            <tr>
-                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
-                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right">
-                    <button class='oe_button oe_form_button'>Change Password</button>
-                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
-                </td>
-            </tr>
-        </table>
-      </div>
-    </form>
 </t>
 
 <t t-name="Menu.needaction_counter">
@@ -367,60 +72,21 @@
                     </div>
                     <div class="user-info-block">
                         <div class="user-heading">
-                            <br/><span class="help-block">(Formerly OpenERP)</span>
                             <h3>Version <t t-esc="version_info.server_version"/></h3>
                         </div>
-
-                        <ul class="list-inline text-center navigation">
-                            <li class="active">
-                                <a data-toggle="tab" href="#settings">
-                                    <span class="glyphicon glyphicon-cog"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#email">
-                                    <span class="glyphicon glyphicon-envelope"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#events">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </a>
-                            </li>
-                             <li>
-                                <a data-toggle="tab" href="#social">
-                                    <span class="glyphicon glyphicon-share"></span>
-                                </a>
-                            </li>
-                        </ul>
                         <div class="user-body">
                             <div class="tab-content">
                                 <div id="settings" class="tab-pane active">
-                                    <h4>Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.</h4>
-                                    <p>Odoo is a trademark of the <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A. Company</a>.</p>
+                                    <h4>Copyright © 2004-2015 Odoo S.A.</h4>
+                                    <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
                                     <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
                                     <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                </div>
-                                <div id="email" class="tab-pane">
-                                    <h4>Odoo S.A.</h4>
                                     <p>
-                                        Chaussée de Namur 40<br/>
-                                        1367 Grand-Rosière <br/>
-                                        Belgium
+                                      <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
+                                      <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
+                                      <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+                                      <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
                                     </p>
-                                    <!-- TODO - ALIAS contactus -->
-                                    <a class='btn btn-link' href='https://www.odoo.com/web/about/contactus'>Our website</a>
-                                </div>
-                                <div id="events" class="tab-pane">
-                                    <h4>Discover Events of Odoo around the world...</h4>
-                                    <a class='btn btn-link' href='https://www.odoo.com/web/about/event'> Our next Events</a>
-                                </div>
-                                <div id="social" class="tab-pane">
-                                    <h4>Follow Us...</h4>
-                                    <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                    <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                    <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                    <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -470,8 +136,8 @@
     </div>
 </t>
 
-<t t-name="One2ManyControlPanel">
-    <div class="oe-o2m-control-panel container-fluid">
+<t t-name="X2ManyControlPanel">
+    <div class="oe-x2m-control-panel container-fluid">
         <div class="oe-cp-buttons pull-left"/>
         <div class="oe-cp-pager pull-right"/>
     </div>
@@ -480,13 +146,15 @@
 <div t-name="ViewManager" class="oe-view-manager">
     <div class="oe-view-manager-content">
         <t t-foreach="widget.views" t-as="view">
-            <div t-attf-class="oe-view-manager-view-#{view} fade"/>
+            <div t-attf-class="oe-view-manager-view-#{view}"/>
         </t>
     </div>
 </div>
 <t t-name="ViewManager.switch-buttons">
     <t t-foreach="views" t-as="view">
-        <button type="button" t-attf-class="btn btn-default fa oe-cp-switch-#{view.type}" t-att-data-view-type="view.type" t-att-title="view.label"/>
+        <button type="button" t-att-accesskey="view.accesskey"
+            t-attf-class="btn btn-default fa #{view.icon} oe-cp-switch-#{view.type}" 
+            t-att-data-view-type="view.type" t-att-title="view.label"/>
     </t>
 </t>
 
@@ -704,7 +372,7 @@
 <t t-name="ListView.buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
     <div class="oe_list_buttons">
-        <button type="button" class="oe_list_add btn btn-primary btn-sm">
+        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
             <t t-esc="widget.options.addable"/>
         </button>
     </div>
@@ -740,17 +408,17 @@
             ><t t-raw="render_cell(record, column)"/></td>
     </t>
     <td t-if="options.deletable" class='oe_list_record_delete' width="13px">
-        <button type="button" name="delete" class="oe_i">d</button>
+        <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="button.oe_list_add" t-operation="after">
-        <button class="oe_button oe_list_save oe_highlight"
-                type="button">Save</button>
-        <span class="oe_alternative">
-            <span class="oe_fade">or</span>
-            <a href="#" class="oe_bold oe_list_discard">Discard</a>
-        </span>
+    <t t-jquery="button.o_list_button_add" t-operation="after">
+        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
+            Save
+        </button>
+        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
+            Discard
+        </button>
     </t>
 </t>
 <button t-name="ListView.row.text_button" type="button"
@@ -783,7 +451,7 @@
 </t>
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
-        <div class="oe_form_buttons_view">
+        <div class="o_form_buttons_view">
             <button t-if="widget.is_action_enabled('edit')"
                     type="button"
                     class="oe_form_button_edit btn btn-default btn-sm" accesskey="E">
@@ -795,10 +463,9 @@
                 Create
             </button>
         </div>
-        <span class="oe_form_buttons_edit">
+        <span class="o_form_buttons_edit">
             <button type="button" class="oe_form_button_save btn btn-primary btn-sm" accesskey="S">Save</button>
-            <span class="oe_fade">or</span>
-            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
+            <button type="button" class="oe_form_button_cancel btn btn-sm btn-default" accesskey="D">Discard</button>
         </span>
     </t>
 </div>
@@ -995,68 +662,6 @@
     Unhandled widget
     <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
 </t>
-<t t-name="WidgetLabel.tooltip">
-    <div class="oe_tooltip_string" t-if="widget.string">
-        <t t-esc="widget.node.attrs.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
-    </div>
-    <p t-if="widget.node.attrs.help or (widget.field and widget.field.help)" class="oe_tooltip_help"><t t-esc="widget.node.attrs.help || widget.field.help"/></p>
-    <ul t-if="debug" class="oe_tooltip_technical">
-        <li data-item="field" t-if="widget.name">
-            <span class="oe_tooltip_technical_title">Field:</span>
-            <t t-esc="widget.name"/>
-        </li>
-        <li data-item="object" t-if="widget.view and widget.view.fields_view">
-            <span class="oe_tooltip_technical_title">Object:</span>
-            <t t-esc="widget.view.fields_view.model"/>
-        </li>
-        <li data-item="type" t-if="widget.field">
-            <span class="oe_tooltip_technical_title">Type:</span>
-            <t t-esc="widget.field.type"/>
-        </li>
-        <li t-if="widget.node.attrs.widget" data-item="widget">
-            <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.node.attrs.widget"/>
-        </li>
-        <li t-if="widget.node.attrs.size || (widget.field and widget.field.size)" data-item="size">
-            <span class="oe_tooltip_technical_title">Size:</span>
-            <t t-esc="widget.node.attrs.size || widget.field.size"/>
-        </li>
-        <li t-if="widget.node.attrs.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.node.attrs.context"/>
-        </li>
-        <li t-if="widget.node.attrs.domain" data-item="domain">
-            <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.node.attrs.domain"/>
-        </li>
-        <li t-if="widget.node.attrs.modifiers and widget.node.attrs.modifiers != '{}'" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.node.attrs.modifiers"/>
-        </li>
-        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span class="oe_tooltip_technical_title">Change default:</span>
-            Yes
-        </li>
-        <li t-if="widget.node.attrs.on_change" data-item="on_change">
-            <span class="oe_tooltip_technical_title">On change:</span>
-            <t t-esc="widget.node.attrs.on_change"/>
-        </li>
-        <li t-if="widget.field and widget.field.relation" data-item="relation">
-            <span class="oe_tooltip_technical_title">Relation:</span>
-            <t t-esc="widget.field.relation"/>
-        </li>
-        <li t-if="widget.field and widget.field.selection" data-item="selection">
-            <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul class="oe_tooltip_technical">
-                <li t-foreach="widget.field.selection" t-as="option">
-                    [<t t-esc="option[0]"/>]
-                    <t t-if="option[1]"> - </t>
-                    <t t-esc="option[1]"/>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</t>
 <t t-name="FieldChar">
     <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
         <t t-if="!widget.get('effective_readonly')">
@@ -1095,26 +700,10 @@
         </ul>
     </div>
 </t>
-<t t-name="FormPriority">
-    <ul style="list-style: none; padding-left: 2px; display: inline-block;">
-        <t t-foreach="widget.priorities" t-as="rec" >
-            <li t-att-data-value="rec.click_value" style="display: inline-block;">
-                <a t-if="!widget.get('readonly')" href="#" t-att-title="rec.name">
-                    <i t-att-class="widget.get('value') gte rec.value and 'fa fa-star oe_star_on' or 'fa fa-star oe_star_off'"/>
-                </a>
-                <span t-if="widget.get('readonly')" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'oe_e oe_star_on' or 'oe_e oe_star_off'">7</span>
-            </li>
-        </t>
-    </ul>
-</t>
-<t t-name="Priority">
-    <div class="o_priority">
-        <t t-foreach="widget.priorities" t-as="rec" >
-            <a t-if="!widget.get('readonly')" href="#" t-att-data-value="rec.click_value" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'fa fa-star o_star_on' or 'fa fa-star o_star_off'"/>
-            <span t-if="widget.get('readonly')" t-att-data-value="rec.click_value" t-att-title="rec.name" t-att-class="widget.get('value') gte rec.value and 'fa fa-star o_star_on' or 'fa fa-star o_star_off'"/>
-        </t>
-    </div>
-</t>
+<div t-name="Priority" class="o_priority">
+    <a t-if="!widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" href="#" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
+    <span t-if="widget.readonly" t-foreach="widget.values.slice(1)" t-as="v" t-att-data-value="v[0]" t-att-title="v[1]" class="o_priority_star fa"/>
+</div>
 <t t-name="FieldEmail">
     <span class="oe_form_field oe_form_field_email" t-att-style="widget.node.attrs.style">
         <a t-if="widget.get('effective_readonly')" href="#" class="oe_form_uri" target="_blank"/>
@@ -1210,29 +799,13 @@
 <t t-name="FieldRadio">
     <span t-attf-class="oe_form_field oe_form_field_radio #{widget.options.horizontal ? 'oe_horizontal' : 'oe_vertical'}" t-att-style="widget.node.attrs.style">
         <span t-if="!widget.get('effective_readonly')">
-            <t t-if="widget.options.horizontal">
-                <t t-set="width" t-value="Math.floor(100 / widget.selection.length)"/>
-                <t t-if="!widget.options.no_radiolabel">
-                    <t t-foreach="widget.selection" t-as="selection">
-                        <label t-att-for="widget.uniqueId + '_' + selection[0]" t-att-style="'width: ' + width + '%;'"><t t-esc="selection[1]"/></label>
-                    </t>
-                    <br/>
-                </t>
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div t-att-style="'width: ' + width + '%;'">
-                        <span class="oe_radio_input"><input type="radio" t-att-name="widget.uniqueId" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-value="selection[0]"/></span>
-                    </div>
-                </t>
-            </t>
-            <t t-if="!widget.options.horizontal">
-                <t t-foreach="widget.selection" t-as="selection">
-                    <div>
-                        <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
-                    </div>
-                </t>
+            <t t-foreach="widget.selection" t-as="selection">
+                <div>
+                    <span class="oe_radio_input"><input type="radio" t-att-id="widget.uniqueId + '_' + selection[0]" t-att-name="widget.uniqueId" t-att-value="selection[0]"/></span><label t-if="!widget.options.no_radiolabel" t-att-for="widget.uniqueId + '_' + selection[0]"><t t-esc="selection[1]"/></label>
+                </div>
             </t>
         </span>
-        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"><t t-esc="widget.get('value')[1]"/></span>
+        <span t-if="widget.get('effective_readonly')" class="oe_radio_readonly"/>
     </span>
 </t>
 <t t-name="FieldMany2One">
@@ -1440,11 +1013,14 @@
                         <span class="oe_fileuploader_in_process">...Upload in progress...</span>
                         <t t-raw="file.name || file.filename"/>
                     </span>
-                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                        <t t-raw="file.name || file.filename"/>
-                    </a>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <i class="oe_right oe_delete fa fa-times-circle" title="Delete this file" t-attf-data-id="#{file.id}"/>
+                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                            <t t-raw="file.name || file.filename"/>
+                        </a>
+                        <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
+                            <i class="fa fa-circle fa-stack-1x fa-inverse"></i>
+                            <i class="fa fa-times-circle fa-stack-1x"></i>
+                        </span>
                     </t>
                 </div>
             </t>
@@ -1478,50 +1054,6 @@
         </div>
     </div>
 </t>
-<t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm oe_button #{widget.node.attrs.class or ''}"
-        t-att-style="widget.node.attrs.style"
-        t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-accesskey="widget.node.attrs.accesskey">
-        <img t-if="!widget.is_stat_button and widget.node.attrs.icon " t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
-        <div t-if="widget.is_stat_button and widget.icon_class" t-att-class="widget.icon_class"></div>
-        <span t-if="widget.string and !widget.is_stat_button"><t t-esc="widget.string"/></span>
-        <div t-if="widget.string and widget.is_stat_button" class="o_stat_info"><t t-esc="widget.string"/></div>
-    </button>
-</t>
-<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
-    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
-        <div class="oe_tooltip_string" t-if="debug || widget.string">
-            <t t-if="debug">
-                Button
-                <t t-if="widget.string">: </t>
-                <t t-if="!widget.string"> (no string)</t>
-            </t>
-            <t t-esc="widget.string"/>
-        </div>
-    </t>
-    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
-        <li t-if="widget.node.attrs.special" data-item="special">
-            <span class="oe_tooltip_technical_title">Special:</span>
-            <t t-esc="widget.node.attrs.special"/>
-        </li>
-        <t t-set="button_type" t-value="widget.node.attrs.type"/>
-        <li t-if="button_type" data-item="button_type">
-            <span class="oe_tooltip_technical_title">Button Type:</span>
-            <t t-esc="button_type"/>
-        </li>
-        <li t-if="button_type === 'object'" data-item="button_method">
-            <span class="oe_tooltip_technical_title">Method:</span>
-            <t t-esc="widget.node.attrs.name"/>
-        </li>
-        <li t-if="button_type === 'action'" data-item="button_action">
-            <span class="oe_tooltip_technical_title">Action ID:</span>
-            <t t-esc="widget.node.attrs.name"/>
-        </li>
-    </t>
-</t>
-
 
 <t t-name="One2Many.formview" t-extend="FormView">
     <t t-jquery=".oe_form_buttons" t-operation="inner">
@@ -1638,7 +1170,7 @@
         <span class="fa fa-filter"/> Filters <span class="caret"/>
     </button>
     <ul class="dropdown-menu filters-menu" role="menu">
-        <li class="oe-add-filter closed-menu"><a>Add Custom Filter</a></li>
+        <li class="oe-add-filter o_closed_menu"><a>Add Custom Filter</a></li>
         <li class="oe-add-filter-menu"><button type="button" class="btn btn-default oe-apply-filter">Apply</button><a class="oe-add-condition"><span class="fa fa-plus-circle"/> Add a condition</a></li>
     </ul>
 </div>
@@ -1649,14 +1181,14 @@
     </button>
     <ul class="dropdown-menu group-by-menu" role="menu">
         <li class="divider"/>
-        <li class="add-custom-group closed-menu"><a>Add custom group</a></li>
+        <li class="add-custom-group o_closed_menu"><a>Add custom group</a></li>
     </ul>
 </div>
 
 <t t-name="GroupByMenuSelector">
     <li><select class="form-control oe-add-group oe-group-selector">
         <t t-foreach="groupable_fields" t-as="field">
-            <option t-att-data-name="field"><t t-esc="groupable_fields[field].string"/></option>
+            <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>
     </select></li>
     <li><button type="button" class="btn btn-default oe-add-group oe-select-group">Apply</button></li>
@@ -1665,9 +1197,9 @@
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         <span class="fa fa-star"/> Favorites <span class="caret"/>
     </button>
-    <ul class="dropdown-menu favorites-menu" role="menu">
+    <ul class="dropdown-menu o_favorites_menu" role="menu">
         <li class="divider"/>
-        <li class="oe-save-search closed-menu"><a>Save current search</a></li>
+        <li class="oe-save-search o_closed_menu"><a>Save current search</a></li>
         <li class="oe-save-name"><input type="text" class="form-control"></input></li>
         <li class="oe-save-name">
             <span><input type="checkbox"/>Use by default</span>
@@ -1851,11 +1383,6 @@
         Name: <input class="oe_form_m2o_input_name" type="text"/>
     </div>
 </t>
-<t t-name="M2ODialog.buttons">
-    <button class="oe_form_m2o_qc_button oe_button oe_highlight">Create</button>
-    <button class="oe_form_m2o_sc_button oe_button">Create and edit</button> or
-    <button class="oe_form_m2o_cancel_button oe_button oe_link"><span>Cancel</span></button>
-</t>
 <t t-name="FieldMonetary" t-extend="FieldChar">
     <t t-jquery="t:first" t-operation="before">
         <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'before'">
@@ -1908,5 +1435,16 @@
     t-att-title="widget.string" class="oe_toggle_button">
     <img t-attf-src="#{_s}/web/static/src/img/icons/#{widget.icon}" t-att-alt="widget.string"/>
 </button>
+
+<t t-name="BooleanButton">
+    <t t-if="widget.get_value()">
+        <span class="o_stat_text text-success"><t t-esc="widget.string_true"/></span>
+        <span class="o_stat_text o_hover text-danger"><t t-esc="widget.hover_true"/></span>
+    </t>
+    <t t-if="!widget.get_value()">
+        <span class="o_stat_text text-danger"><t t-esc="widget.string_false"/></span>
+        <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
+    </t>
+</t>
 
 </templates>

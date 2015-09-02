@@ -1,0 +1,166 @@
+/* ----- EDITOR ----- */
+.css_non_editable_mode_hidden {
+  display: none !important;
+}
+
+/* ----- Editor (for public user, like forum) ----- */
+.note-toolbar {
+  margin-left: 0 !important;
+}
+
+.note-popover .popover > .arrow {
+  display: none;
+}
+
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+.hidden {
+  display: none !important;
+}
+
+/* table */
+#wrapwrap table.table, .o_editable table.table {
+  table-layout: fixed;
+}
+#wrapwrap table.table td, .o_editable table.table td {
+  min-width: 20px;
+}
+
+/* Media */
+img.shadow {
+  -moz-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
+  padding: 4px;
+}
+img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
+  padding: 8px;
+}
+img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
+  padding: 16px;
+}
+img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
+  padding: 32px;
+}
+
+div.media_iframe_video.padding-small iframe {
+  padding: 4px;
+}
+div.media_iframe_video.padding-medium iframe {
+  padding: 8px;
+}
+div.media_iframe_video.padding-large iframe {
+  padding: 16px;
+}
+div.media_iframe_video.padding-xl iframe {
+  padding: 32px;
+}
+
+/* font awsome */
+.fa-6x {
+  font-size: 6em;
+}
+
+.fa-7x {
+  font-size: 7em;
+}
+
+.fa-8x {
+  font-size: 8em;
+}
+
+.fa-9x {
+  font-size: 9em;
+}
+
+.fa-10x {
+  font-size: 10em;
+}
+
+.fa.center-block {
+  text-align: center;
+}
+
+/* video */
+div.media_iframe_video {
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+div.media_iframe_video iframe {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  position: absolute;
+  margin: 0 auto;
+  margin-left: -50%;
+}
+div.media_iframe_video .media_iframe_video_size {
+  padding-bottom: 66.5%;
+  position: relative;
+  width: 100%;
+  height: 0;
+}
+div.media_iframe_video .css_editable_mode_display {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 2;
+}
+
+html[data-browser^="msie"] div.media_iframe_video iframe {
+  margin-left: 0;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  img:not(.cke_iframe), .media_iframe_video, span.fa, i.fa {
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    -o-transform: none !important;
+    transform: none !important;
+  }
+}
+/* ---- fields --- */
+address .fa.fa-mobile-phone {
+  margin: 0 3px 0 2px;
+}
+address .fa.fa-file-text-o {
+  margin-right: 1px;
+}
+
+span[data-oe-type="monetary"] {
+  white-space: nowrap;
+}
+
+/* ---- MENU ---- {{{ */
+div.oe_menu_buttons {
+  top: -8px;
+  right: -8px;
+}
+
+ul.oe_menu_editor .fa-home {
+  display: none;
+}
+ul.oe_menu_editor > li:first-child > div > span > .fa-home {
+  display: block;
+}
+ul.oe_menu_editor .oe_menu_placeholder {
+  outline: 1px dashed #4183C4;
+}
+ul.oe_menu_editor ul {
+  list-style: none;
+}
+ul.oe_menu_editor li div {
+  cursor: move;
+}
+ul.oe_menu_editor .disclose {
+  cursor: pointer;
+  width: 10px;
+  display: none;
+}

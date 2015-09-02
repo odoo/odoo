@@ -157,7 +157,8 @@ class ir_http(orm.AbstractModel):
                 elif url_lang:
                     path.pop(1)
                     return self.reroute('/'.join(path) or '/')
-
+            if path[1] == request.website.default_lang_code:
+                request.context['edit_translations'] = False
             if not request.context.get('tz'):
                 request.context['tz'] = request.session['geoip'].get('time_zone')
             # bind modified context

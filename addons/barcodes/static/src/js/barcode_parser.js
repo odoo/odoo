@@ -2,7 +2,7 @@ odoo.define('barcodes.BarcodeParser', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 // The BarcodeParser is used to detect what is the category
 // of a barcode (product, partner, ...) and extract an encoded value
@@ -118,7 +118,7 @@ var BarcodeParser = Class.extend({
     // - value: the numerical value encoded in the barcode (0 if no value encoded)
     // - base_code: the barcode in which numerical content is replaced by 0's
     // - match: boolean
-    match_pattern: function (barcode, pattern){
+    match_pattern: function (barcode, pattern, encoding){
         var match = {
             value: 0,
             base_code: barcode,
@@ -156,13 +156,20 @@ var BarcodeParser = Class.extend({
                 .replace("\{", "{")
                 .replace("\}","}")
                 .replace("\.",".");
+
+            var base_code = match.base_code.split('')
+            if (encoding === 'ean13') {
+                base_code[12] = '' + this.ean_checksum(match.base_code);
+            } else if (encoding === 'ean8') {
+                base_code[7]  = '' + this.ean8_checksum(match.base_code);
+            } else if (encoding === 'upca') {
+                base_code[11] = '' + this.ean_checksum('0' + match.base_code);
+            }
+            match.base_code = base_code.join('')
         }
 
         if (base_pattern[0] !== '^') {
             base_pattern = "^" + base_pattern;
-        }
-        if (base_pattern[base_pattern.length -1] !== '$') {
-            base_pattern = base_pattern + ".*$";
         }
         match.match = match.base_code.match(base_pattern);
 
@@ -211,7 +218,7 @@ var BarcodeParser = Class.extend({
                 continue;
             }
 
-            var match = this.match_pattern(cur_barcode,rules[i].pattern);
+            var match = this.match_pattern(cur_barcode, rules[i].pattern, rule.encoding);
             if (match.match) {
                 if(rules[i].type === 'alias') {
                     barcode = rules[i].alias;

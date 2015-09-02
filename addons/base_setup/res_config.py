@@ -10,15 +10,15 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_multi_company': fields.boolean('Manage multiple companies',
-            help='Work in multi-company environments, with appropriate security access between companies.\n'
-                 '-This installs the module multi_company.'),
+        'group_light_multi_company': fields.boolean('Manage multiple companies',
+            help='Work in multi-company environments, with appropriate security access between companies.',
+            implied_group='base.group_light_multi_company'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of Odoo."""),
         'module_portal': fields.boolean('Activate the customer portal',
             help="""Give your customers access to their documents."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with Google...'),
-        'module_base_import': fields.boolean("Allow users to import data from CSV files"),
+        'module_base_import': fields.boolean("Allow users to import data from CSV/XLS/XLSX/ODS files"),
         'module_google_drive': fields.boolean('Attach Google documents to any record',
                                               help="""This installs the module google_docs."""),
         'module_google_calendar': fields.boolean('Allow the users to synchronize their calendar  with Google Calendar',
@@ -41,7 +41,7 @@ class base_config_settings(osv.osv_memory):
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Your Company',
+            'name': 'My Company',
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'res.company',
@@ -80,12 +80,10 @@ class base_config_settings(osv.osv_memory):
             self.pool['ir.rule'].write(cr, uid, [partner_rule.id], {'active': not bool(wizard.company_share_partner)}, context=context)
 
 
-# Preferences wizard for Sales & CRM.
-# It is defined here because it is inherited independently in modules sale, crm.
+# Empty class but required since it's overrided by sale & crm
 class sale_config_settings(osv.osv_memory):
     _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_crm': fields.boolean('CRM'),
-        'module_sale' : fields.boolean('SALE'),
     }
+

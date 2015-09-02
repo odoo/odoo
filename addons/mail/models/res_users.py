@@ -10,6 +10,8 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
+        - if adding groups to an user, check mail.channels linked to this user
+          group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -18,7 +20,7 @@ class Users(models.Model):
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    display_groups_suggestions = fields.Boolean("Display Groups Suggestions", default=True)
+    chatter_needaction_auto = fields.Boolean('Automatically set needaction as Read')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -28,17 +30,15 @@ class Users(models.Model):
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['notify_email', 'display_groups_suggestions'])
+        self.SELF_WRITEABLE_FIELDS.extend(['notify_email'])
         # duplicate list to avoid modifying the original reference
         self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
+        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
         return init_res
 
     def _auto_init(self, cr, context=None):
-        """ Installation hook: aliases, partner following themselves """
-        # create aliases for all users and avoid constraint errors
-        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init,
-            self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+        """ Installation hook: aliases """
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(Users, self)._auto_init, self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
 
     @api.model
     def create(self, values):
@@ -56,6 +56,16 @@ class Users(models.Model):
         # create a welcome message
         user._create_welcome_message()
         return user
+
+    @api.multi
+    def write(self, vals):
+        write_res = super(Users, self).write(vals)
+        if vals.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
+            self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
+        return write_res
 
     def copy_data(self, *args, **kwargs):
         data = super(Users, self).copy_data(*args, **kwargs)
@@ -112,7 +122,7 @@ class Users(models.Model):
     def message_update(self, msg_dict, update_vals=None):
         return True
 
-    def message_subscribe(self, partner_ids, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
     @api.cr_uid_context
@@ -123,32 +133,10 @@ class Users(models.Model):
     def message_get_suggested_recipients(self):
         return dict((res_id, list()) for res_id in self._ids)
 
-    def stop_showing_groups_suggestions(self):
-        self.write({"display_groups_suggestions": False})
 
-
-class res_users_mail_group(models.Model):
-    """ Update of res.users class
-        - if adding groups to an user, check mail.groups linked to this user
-          group, and the user. This is done by overriding the write method.
-    """
-    _name = 'res.users'
-    _inherit = ['res.users']
-
-    @api.multi
-    def write(self, vals):
-        write_res = super(res_users_mail_group, self).write(vals)
-        if vals.get('groups_id'):
-            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
-            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
-            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
-            self.env['mail.group'].search([('group_ids', 'in', user_group_ids)]).message_subscribe_users(self._ids)
-        return write_res
-
-
-class res_groups_mail_group(models.Model):
+class res_groups_mail_channel(models.Model):
     """ Update of res.groups class
-        - if adding users from a group, check mail.groups linked to this user
+        - if adding users from a group, check mail.channels linked to this user
           group and subscribe them. This is done by overriding the write method.
     """
     _name = 'res.groups'
@@ -156,10 +144,10 @@ class res_groups_mail_group(models.Model):
 
     @api.multi
     def write(self, vals, context=None):
-        write_res = super(res_groups_mail_group, self).write(vals)
+        write_res = super(res_groups_mail_channel, self).write(vals)
         if vals.get('users'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_ids = [command[1] for command in vals['users'] if command[0] == 4]
             user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
-            self.env['mail.group'].search([('group_ids', 'in', self._ids)]).message_subscribe_users(user_ids)
+            self.env['mail.channel'].search([('group_ids', 'in', self._ids)])._subscribe_users()
         return write_res

@@ -31,18 +31,18 @@ class account_abstract_payment(models.AbstractModel):
     _description = "Contains the logic shared between models which allows to register payments"
 
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method', required=True, oldname="payment_method")
+    payment_method_id = fields.Many2one('account.payment.method', string='Payment Type', required=True, oldname="payment_method")
     payment_method_code = fields.Char(related='payment_method_id.code',
-        help="Technical field used to adapt the interface to the payment method selected.")
+        help="Technical field used to adapt the interface to the payment type selected.")
 
-    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Supplier')])
+    partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
 
     amount = fields.Monetary(string='Payment Amount', required=True)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     communication = fields.Char(string='Memo')
-    journal_id = fields.Many2one('account.journal', string='Payment Mode', required=True, domain=[('type', 'in', ('bank', 'cash'))])
+    journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
@@ -84,7 +84,7 @@ class account_abstract_payment(models.AbstractModel):
         total = 0
         payment_currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id
         for inv in self._get_invoices():
-            total += inv.residual_signed
+            total += inv.residual_company_signed
         if self.company_id and self.company_id.currency_id != payment_currency:
             total = self.company_id.currency_id.with_context(date=self.payment_date).compute(total, payment_currency)
         return abs(total)
@@ -123,7 +123,7 @@ class account_register_payments(models.TransientModel):
         if any(inv.partner_id != invoices[0].partner_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must belong to the same partner."))
         if any(MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type] for inv in invoices):
-            raise UserError(_("You cannot mix customer and supplier invoices in a single payment."))
+            raise UserError(_("You cannot mix customer invoices and vendor bills in a single payment."))
         if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
@@ -193,8 +193,8 @@ class account_payment(models.Model):
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usablity purposes")
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Partial payment'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
-    writeoff_account_id = fields.Many2one('account.account', string="Counterpart Account", domain=[('deprecated', '=', False)], copy=False)
+    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
+    writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
@@ -218,17 +218,16 @@ class account_payment(models.Model):
     def _onchange_partner_type(self):
         # Set partner_id domain
         if self.partner_type:
-            if getattr(self.partner_id, self.partner_type) is False:
-                self.partner_id = False
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
 
     @api.onchange('payment_type')
     def _onchange_payment_type(self):
-        # Set default partner type for the payment type
-        if self.payment_type == 'inbound':
-            self.partner_type = 'customer'
-        elif self.payment_type == 'outbound':
-            self.partner_type = 'supplier'
+        if not self.invoice_ids:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            elif self.payment_type == 'outbound':
+                self.partner_type = 'supplier'
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
@@ -240,15 +239,15 @@ class account_payment(models.Model):
     @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
-        invoice_ids = rec.get('invoice_ids') and rec['invoice_ids'][0][2] or None
-        if invoice_ids and len(invoice_ids) == 1:
-            invoice = self.env['account.invoice'].browse(invoice_ids)
-            rec['communication'] = invoice.reference
-            rec['currency_id'] = invoice.currency_id.id
-            rec['payment_type'] = invoice.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
-            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice.type]
-            rec['partner_id'] = invoice.partner_id.id
-            rec['amount'] = invoice.residual_signed
+        invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
+        if invoice_defaults and len(invoice_defaults) == 1:
+            invoice = invoice_defaults[0]
+            rec['communication'] = invoice['reference']
+            rec['currency_id'] = invoice['currency_id'][0]
+            rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
+            rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
+            rec['partner_id'] = invoice['partner_id'][0]
+            rec['amount'] = invoice['residual']
         return rec
 
     def _get_invoices(self):
@@ -375,7 +374,7 @@ class account_payment(models.Model):
 
         #Reconcile with the invoices
         if self.payment_difference_handling == 'reconcile':
-            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account, self.journal_id)
+            self.invoice_ids.register_payment(counterpart_aml, self.writeoff_account_id, self.journal_id)
         else:
             self.invoice_ids.register_payment(counterpart_aml)
 
@@ -461,9 +460,9 @@ class account_payment(models.Model):
                     name += _("Customer Refund")
             elif self.partner_type == 'supplier':
                 if self.payment_type == 'inbound':
-                    name += _("Supplier Refund")
+                    name += _("Vendor Refund")
                 elif self.payment_type == 'outbound':
-                    name += _("Supplier Payment")
+                    name += _("Vendor Payment")
             if invoice:
                 name += ': '
                 for inv in invoice:

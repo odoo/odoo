@@ -6,8 +6,6 @@
 {
     'name': 'France - Accounting',
     'version': '1.1',
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
     'category': 'Localization/Account Charts',
     'description': """
 This is the module to manage the accounting chart for France in OpenERP.
@@ -33,22 +31,14 @@ configuration of their taxes and fiscal positions manually.
 """,
     'depends': ['base_iban', 'account', 'base_vat'],
     'data': [
-        'views/report_l10nfrbilan.xml',
-        'views/report_l10nfrresultat.xml',
-        'l10n_fr_reports.xml',
-        'fr_report.xml',
+        'fr_pcg_taxes.xml',
         'plan_comptable_general.xml',
         'l10n_fr_view.xml',
-        'l10n_fr_wizard.xml',
-        'fr_pcg_taxes.xml',
         'fr_tax.xml',
+        'account_chart_template.yml',
         'fr_fiscal_templates.xml',
-        'security/ir.model.access.csv',
-        'wizard/fr_report_bilan_view.xml',
-        'wizard/fr_report_compute_resultant_view.xml',
     ],
-    'test': ['test/l10n_fr_report.yml'],
     'demo': [],
     'auto_install': False,
-    'installable': False,
+    'installable': True,
 }

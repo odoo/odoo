@@ -26,9 +26,6 @@
 <div t-name="TimelineWall" t-attf-class="o_timeline #{widget.options.view_inbox ? 'o_timeline_inbox' : 'o_timeline_chatter'}">
     <div class="o_timeline_buttons"/>
     <div class="o_timeline-placeholder"></div>
-    <t t-if="widget.options.view_inbox">
-        <aside class="o_timeline_inbox_aside"></aside>
-    </t>
 </div>
 
 <t t-name="ComposeMessage">
@@ -37,10 +34,18 @@
         <div class="o_timeline_msg o_timeline_msg_composer">
             <div class="o_timeline_msg_center">
                 <div class="o_timeline_msg_content">
-                    <button class="oe_full" title="Open the full mail composer">
+                    <button t-if="! widget.is_log" class="oe_full" title="Open the full mail composer">
                         <i class='fa fa-pencil-square-o'/>
                     </button>
                     <t t-call="ThreadListRecipients"/>
+                    <t t-if="widget.is_log and widget.options.internal_subtypes.length > 1">
+                        <label>Activity</label>
+                        <select class="">
+                            <t t-foreach="widget.options.internal_subtypes" t-as="subtype">
+                                <option t-att-value="subtype['id']"><t t-raw="subtype['name']"/></option>
+                            </t>
+                        </select>
+                    </t>
                     <textarea class="field_text"></textarea>
                 </div>
                 <div class="o_timeline_msg_footer">
@@ -186,60 +191,31 @@
     -->
 <t t-name="ThreadMessageAttachments">
     <t t-foreach='widget.format_attachments(record)' t-as='attachment'>
-        <t t-if="attachment.file_type_icon !== 'webimage'">
-            <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type_icon + '.png'"></img>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
-                </a>
-                <div class='oe_delete oe_e'>
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
+        <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
+            <a class="o_image" t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80">
+                <div class='oe_name'><t t-raw='attachment.name'/></div>
+            </a>
+            <div class='oe_delete oe_e'>
+                <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
             </div>
-        </t>
-        <t t-if="attachment.file_type_icon === 'webimage'">
-            <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                <a t-att-href='attachment.url' target="_blank">
-                    <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
-                    <div class='oe_name'><t t-raw='attachment.name'/></div>
-                </a>
-                <div class='oe_delete oe_e'>
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class='oe_progress_bar'>
-                    uploading
-                </div>
+            <div class='oe_progress_bar'>
+                uploading
             </div>
-        </t>
+        </div>
     </t>
 </t>
 
 <t t-name="MessageReadUnread">
-    <i t-if="record.options.show_read" title="Done" 
+    <i t-if="record.options.show_read" title="Done"
        class="oe_read fa fa-check" t-att-data-id="record.id"/>
-    <i t-if="record.is_favorite and record.options.show_unread" title="Set back to Todo" 
+    <i t-if="record.is_favorite and record.options.show_unread" title="Set back to Todo"
        class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
-    <i t-if="!record.is_favorite and record.options.show_unread" title="Move to Inbox" 
+    <i t-if="!record.is_favorite and record.options.show_unread" title="Move to Inbox"
        class="oe_unread fa fa-inbox" t-att-data-id="record.id"/>
-</t>
-
-<t t-name="MessageVote">
-    <span class="o_timeline_vote_count" t-att-data-id="record.id" t-if='record.vote_nb > 0'>
-        <t t-esc='record.vote_nb'/><i class="fa fa-thumbs-o-up" t-att-data-id="record.id"></i>
-    </span>
-    <t t-if="!record.has_voted">Like</t>
-    <t t-if="record.has_voted">Unlike</t>
 </t>
 
 <t t-name="NoMessage">
     <div class="oe_view_nocontent">No message.</div>
-</t>
-
-<t t-name="TimelineSidebar">
-    <div class="o_timeline_sidebar"></div>
 </t>
 
 <!--

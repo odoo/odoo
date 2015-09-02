@@ -14,5 +14,14 @@
             <field name="name">Gold</field>
             <field name="sequence">1</field>
         </record>
+
+        <!-- Event-related subtypes for new track / Chatter -->
+        <record id="mt_event_track" model="mail.message.subtype">
+            <field name="name">New Track</field>
+            <field name="res_model">event.event</field>
+            <field name="description">New Track Created</field>
+            <field name="default" eval="False"/>
+        </record>
+
     </data>
 </openerp>

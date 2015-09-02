@@ -12,7 +12,7 @@
 
 <t t-name="KanbanView.Group">
     <div class="o_kanban_group" t-att-data-id="widget.id">
-        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'">
+        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'" data-delay="500">
             <span class="o_column_title"><t t-esc="widget.title"/></span>
             <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
             <span class="o_kanban_config dropdown">
@@ -47,8 +47,8 @@
         </div>
         <div class="o_kanban_quick_create">
             <input type="text" placeholder="Add"/>
-            <button class="btn btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-default o_kanban_cancel">Cancel</button>
+            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
         </div>
     </div>
 </t>
@@ -60,8 +60,8 @@
 <t t-name="KanbanView.QuickCreate">
     <div class="o_kanban_quick_create">
         <input type="text" placeholder="Add"/>
-        <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-default o_kanban_cancel">Cancel</button>
+        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
     </div>
 </t>
 
@@ -70,15 +70,6 @@
         <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
     </li>
 </t>
-<div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
-    <input/>
-    <t t-if="widget._buttons">
-        <div class="oe_kanban_quick_create_buttons">
-            <button class="oe_kanban_quick_create_add">Add</button>
-            or <a href="#" class="oe_kanban_quick_create_close">Cancel</a>
-        </div>
-    </t>
-</div>
 <t t-name="KanbanView.nocontent">
     <div class="oe_view_nocontent">
         <t t-raw="content"/>
@@ -86,7 +77,7 @@
 </t>
 <t t-name="KanbanAttachmentImage">
     <div class="o_kanban_attachment_image">
-        <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + widget.field.raw_value[0]"/>
+        <img t-att-src="'/web/image/' + widget.field.raw_value[0] + '?unique=1'"/>
     </div>
 </t>
 </template>

@@ -16,7 +16,6 @@ The case is then closed and linked to the generated sales order.
 We suggest you to install this module, if you installed both the sale and the crm
 modules.
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale', 'crm', 'web_kanban_gauge'],
     'data': [

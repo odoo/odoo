@@ -13,21 +13,20 @@
                         Compute all procurements in the background.
                     </p>
                     <footer>
-                        <button name="procure_calculation" string="Run Schedulers" type="object"  class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="procure_calculation" string="Run Schedulers" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
-         <act_window name="Run Schedulers"
-            res_model="procurement.order.compute.all"
-            src_model="procurement.order"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            id="action_compute_schedulers"/>
+         <record id="action_compute_schedulers" model="ir.actions.act_window">
+            <field name="name">Run Schedulers</field>
+            <field name="res_model">procurement.order.compute.all</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+         </record>
 
     </data>
 </openerp>

@@ -59,7 +59,7 @@ then cloning it for each new child.
 
 */
 var abstractReconciliation = Widget.extend(ControlPanelMixin, {
-    className: 'oe_reconciliation',
+    className: 'o_reconciliation',
 
     events: {
         "click *[rel='do_action']": "doActionClickHandler",
@@ -97,7 +97,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "account_id", // a account.move.line field name
                 label: _t("Account"),
                 required: true,
-                tabindex: 10,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.account",
@@ -112,7 +111,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "label",
                 label: _t("Label"),
                 required: true,
-                tabindex: 15,
                 constructor: FieldChar,
                 field_properties: {
                     string: _t("Label"),
@@ -125,7 +123,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "tax_id",
                 label: _t("Tax"),
                 required: false,
-                tabindex: 20,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.tax",
@@ -140,7 +137,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "amount",
                 label: _t("Amount"),
                 required: true,
-                tabindex: 25,
                 constructor: FieldFloat,
                 field_properties: {
                     string: _t("Amount"),
@@ -153,7 +149,6 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
                 corresponding_property: "analytic_account_id",
                 label: _t("Analytic Acc."),
                 required: false,
-                tabindex: 30,
                 group:"analytic.group_analytic_accounting",
                 constructor: FieldMany2One,
                 field_properties: {
@@ -268,6 +263,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     },
 
     doActionClickHandler: function(e) {
+        e.preventDefault();
         var name = e.currentTarget.dataset.action_nam;
         var model = e.currentTarget.dataset.model;
         var ids = e.currentTarget.dataset.ids.split(",").map(Number);
@@ -282,40 +278,22 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    presetConfigCreateClickHandler: function() {
+    presetConfigCreateClickHandler: function(e) {
+        e.preventDefault();
         var self = this;
-        // Fetch the ID of an action that will be pushed in the URL
-        // If the page is reloaded, this action will be loaded
-        new Model("ir.model.data")
-            .call("get_object_reference", ['account', 'action_account_operation_template'])
-            .then(function (result) {
-                self.action_manager.do_action({
-                    name: _t("Operation Templates"),
-                    res_model: "account.operation.template",
-                    views: [[false, 'form']],
-                    type: 'ir.actions.act_window',
-                    view_type: "form",
-                    view_mode: "form",
-                    action: result[1]
-                });
-            });
+        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+            result.views = [[false, "form"], [false, "list"]];
+            return self.do_action(result);
+        });
     },
 
-    presetConfigEditClickHandler: function() {
+    presetConfigEditClickHandler: function(e) {
+        e.preventDefault();
         var self = this;
-        new Model("ir.model.data")
-            .call("get_object_reference", ['account', 'action_account_operation_template'])
-            .then(function (result) {
-                self.action_manager.do_action({
-                    name: _t("Operation Templates"),
-                    res_model: "account.operation.template",
-                    views: [[false, 'list'], [false, 'form']],
-                    type: 'ir.actions.act_window',
-                    view_type: "list",
-                    view_mode: "list",
-                    action: result[1]
-                });
-            });
+        return self.rpc("/web/action/load", {action_id: "account.action_account_operation_template"}).then(function(result) {
+            result.views = [[false, "list"], [false, "form"]];
+            return self.do_action(result);
+        });
     },
 
     displayNotifications: function(notifications, speed) {
@@ -365,7 +343,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
     keyboardShortcutsHandler: function(e) {
         var self = this;
         if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-            self.processReconciliations(_.filter(self.getChildren(), function(o) { return o.is_valid; }));
+            self.processReconciliations(_.filter(self.getChildren(), function(o) { return o.get("balance").toFixed(3) === "0.000"; }));
         }
     },
 
@@ -394,7 +372,7 @@ var abstractReconciliation = Widget.extend(ControlPanelMixin, {
 });
 
 var abstractReconciliationLine = Widget.extend({
-    className: 'oe_reconciliation_line',
+    className: 'o_reconciliation_line',
 
     events: {
         "click .mv_line": "moveLineClickHandler",
@@ -507,13 +485,13 @@ var abstractReconciliationLine = Widget.extend({
         for (var key in create_form_fields)
             if (create_form_fields.hasOwnProperty(key))
                 create_form_fields_arr.push(create_form_fields[key]);
-        create_form_fields_arr.sort(function(a, b){ return b.index - a.index });
+        create_form_fields_arr.sort(function(a, b){ return a.index - b.index });
 
         // field_manager
         var dataset = new data.DataSet(this, "account.account", self.context);
         dataset.ids = [];
         dataset.arch = {
-            attrs: { string: "Stéphanie de Monaco", version: "7.0", class: "oe_form_container" },
+            attrs: { string: "Stéphanie de Monaco", version: "7.0", class: "oe_form_container o_form_container" },
             children: [],
             tag: "form"
         };
@@ -560,7 +538,7 @@ var abstractReconciliationLine = Widget.extend({
         // Returns a function that serves as a xhr response handler
         var hideGroupResponseClosureFactory = function(field_widget, $container, obj_key){
             return function(has_group){
-                if (has_group) $container.show();
+                if (has_group) $container[0].style.removeProperty('display');
                 else {
                     field_widget.destroy();
                     $container.remove();
@@ -587,17 +565,18 @@ var abstractReconciliationLine = Widget.extend({
 
             // append to DOM
             var $field_container = $(QWeb.render("form_create_field", {id: field_data.id, label: field_data.label}));
-            field.appendTo($field_container.find("td"));
-            self.$(".create_form").prepend($field_container);
+            field.appendTo($field_container.find(".o_td_field"));
+            self.$(".create_group_" + (i%2 === 0 ? "left" : "right")).append($field_container);
 
-            // now that widget's dom has been created (appendTo does that), bind events and adds tabindex
-            if (field_data.field_properties.type != "many2one") {
-                // Triggers change:value TODO : moche bind ?
-                field.$el.find("input").keyup(function(e, field){ field.commit_value(); }.bind(null, null, field));
+            // Change field value on keypress instead of blur
+            if (field_data.field_properties.type !== "many2one") {
+                field.$el.find('input').andSelf().filter('input').keyup(function() {
+                    this.store_dom_value();
+                }.bind(field));
             }
-            field.$el.find("input").attr("tabindex", field_data.tabindex);
 
             // Hide the field if group not OK
+            // TODO: avoid this RPC that could break fields order if the only field with a group wasn't the last one.
             if (field_data.group !== undefined) {
                 var target = $field_container;
                 target.hide();
@@ -1116,7 +1095,7 @@ var abstractReconciliationLine = Widget.extend({
 });
 
 var bankStatementReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_bank_statement_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_bank_statement_reconciliation',
 
     events: _.defaults({
         "click .statement_name span": "statementNameClickHandler",
@@ -1542,7 +1521,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         // Render it
         self.$(".protip").hide();
         self.updateShowMoreButton();
-        self.$(".oe_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
+        self.$(".oe_form_sheet, o_form_sheet").append(QWeb.render("bank_statement_reconciliation_done_message", {
             title: title,
             all_was_auto_reconciled: all_was_auto_reconciled,
             time_taken: time_taken,
@@ -1604,7 +1583,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
 });
 
 var bankStatementReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_bank_statement_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_bank_statement_reconciliation_line',
 
     events: _.defaults({
         "click .change_partner": "changePartnerClickHandler",
@@ -1853,11 +1832,13 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 
     changePartnerClickHandler: function() {
         var self = this;
+        var partner_name = self.st_line.partner_name;
         $.when(self.changePartner(false)).then(function(){
             self.$(".change_partner_container").show();
             self.$(".partner_name").hide();
-            self.change_partner_field.$drop_down.trigger("click");
-        })
+            self.$(".change_partner_container").find("input").attr("placeholder", partner_name);
+            self.change_partner_field.$dropdown.trigger("click");
+        });
     },
 
 
@@ -1889,7 +1870,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
                 if (self.st_line.has_no_partner) {
                     createOpenBalance(_t("Choose counterpart"));
                 } else {
-                    displayValidState(false, _t("Register Payment"));
+                    displayValidState(false, _t("Validate"));
                     createOpenBalance(_t("Open balance"));
                 }
             }
@@ -2108,7 +2089,7 @@ var bankStatementReconciliationLine = abstractReconciliationLine.extend({
 });
 
 var manualReconciliation = abstractReconciliation.extend({
-    className: abstractReconciliation.prototype.className + ' oe_manual_reconciliation',
+    className: abstractReconciliation.prototype.className + ' o_manual_reconciliation',
 
     events: _.defaults({
         "change input[name='modeselektor']": "modeSelektorHandler",
@@ -2161,7 +2142,6 @@ var manualReconciliation = abstractReconciliation.extend({
                 corresponding_property: "journal_id", // a account.move field name
                 label: _t("Journal"),
                 required: true,
-                tabindex: 11,
                 constructor: FieldMany2One,
                 field_properties: {
                     relation: "account.journal",
@@ -2336,7 +2316,7 @@ var manualReconciliation = abstractReconciliation.extend({
     },
 
     showDoneMessage: function() {
-        this.$(".oe_form_sheet").append(QWeb.render("manual_reconciliation_done_message"));
+        this.$(".oe_form_sheet, .o_form_sheet").append(QWeb.render("manual_reconciliation_done_message"));
         var container = $("<div style='overflow: hidden;' />");
         this.$(".done_message").wrap(container).css("opacity", 0).css("position", "relative").css("left", "-50%");
         this.$(".done_message").animate({opacity: 1, left: 0}, this.aestetic_animation_speed*2, "easeOutCubic");
@@ -2364,7 +2344,7 @@ var manualReconciliation = abstractReconciliation.extend({
 });
 
 var manualReconciliationLine = abstractReconciliationLine.extend({
-    className: abstractReconciliationLine.prototype.className + ' oe_manual_reconciliation_line',
+    className: abstractReconciliationLine.prototype.className + ' o_manual_reconciliation_line',
 
     events: _.defaults({
         "click .accounting_view thead": "headerClickHandler",

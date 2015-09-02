@@ -6,7 +6,7 @@ odoo.define('im_chat.im_chat', function (require) {
 var bus = require('bus.bus');
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
@@ -235,7 +235,7 @@ var InstantMessaging = Widget.extend({
             self.widgets = {};
             self.users = [];
             _.each(result, function(user) {
-                user.image_url = session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user.id});
+                user.image_url = session.url('/web/image', {model:'res.users', field: 'image_small', id: user.id});
                 var widget = new UserWidget(self, user);
                 widget.appendTo(self.$(".oe_im_users"));
                 widget.on("user_clicked", self, self.user_clicked);

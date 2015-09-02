@@ -3,6 +3,7 @@
 <data>
 <template id="report_intrastatinvoice_document">
     <t t-call="report.external_layout">
+        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
         <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
@@ -18,8 +19,8 @@
                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
                 <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Supplier Refund</span>
-                <span t-if="o.type == 'in_invoice'">Supplier Bill</span>
+                <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 <span t-field="o.number"/>
             </h2>
 
@@ -62,7 +63,7 @@
                         <td class="text-right"><span t-esc="l.product_id.intrastat_id.name"/></td>
                         <td class="text-right"><span t-esc="l.product_id.weight"/></td>
                         <td class="text-right"><span t-field="l.quantity"/></td>
-                        <td groups="product.group_uom"><span t-field="l.uos_id"/></td>
+                        <td groups="product.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td class="text-right">
@@ -143,8 +144,8 @@
 
 <template id="report_intrastatinvoice">
     <t t-call="report.html_container">
-        <t t-foreach="doc_ids" t-as="doc_id">
-            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'report_intrastat.report_intrastatinvoice_document')"/>
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report_intrastat.report_intrastatinvoice_document" t-lang="o.partner_id.lang"/>
         </t>
     </t>
 </template>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="bank_statement_reconciliation" t-extend="reconciliation">
+        <t t-jquery="h1" t-operation="replace">
+            <t t-if="single_statement">
+                <h1 class="statement_name">
+                    <span><t t-esc="title"/></span>
+                    <table class="change_statement_name_container oe_form o_form"><tr>
+                        <td><input class="change_statement_name_field" type="text"/></td>
+                        <td><button class="change_statement_name_button btn btn-primary btn-sm">OK</button></td>
+                    </tr></table>
+                </h1>
+            </t>
+            <t t-if="!single_statement">
+                <h1><t t-esc="title"/></h1>
+            </t>
+        </t>
+    </t>
+
+</templates>

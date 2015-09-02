@@ -11,8 +11,6 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         })
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'test account',
-            'state': 'open',
-            'type': 'normal',
         })
 
         # Should be changed by automatic on_change later
@@ -35,7 +33,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         })
 
         # check that Initially supplier bill state is "Draft"
-        self.assertTrue((invoice.state == 'draft'), "Initially supplier bill state is Draft")
+        self.assertTrue((invoice.state == 'draft'), "Initially vendor bill state is Draft")
 
         #change the state of invoice to open by clicking Validate button
         invoice.signal_workflow('invoice_open')

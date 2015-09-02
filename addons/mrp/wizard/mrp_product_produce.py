@@ -14,7 +14,6 @@ class mrp_product_produce_line(osv.osv_memory):
         'product_qty': fields.float('Quantity (in default UoM)', digits_compute=dp.get_precision('Product Unit of Measure')),
         'lot_id': fields.many2one('stock.production.lot', string='Lot'),
         'produce_id': fields.many2one('mrp.product.produce', string="Produce"),
-        'track_production': fields.related('product_id', 'track_production', type='boolean', string="Track Production"),
     }
 
 class mrp_product_produce(osv.osv_memory):
@@ -31,7 +30,8 @@ class mrp_product_produce(osv.osv_memory):
                                         "and it will finish the production order when total ordered quantities are produced."),
         'lot_id': fields.many2one('stock.production.lot', 'Lot'), #Should only be visible when it is consume and produce mode
         'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
-        'track_production': fields.boolean('Track production'),
+        'tracking': fields.related('product_id', 'tracking', type='selection',
+                                   selection=[('serial', 'By Unique Serial Number'), ('lot', 'By Lots'), ('none', 'No Tracking')]),
     }
 
     def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
@@ -88,13 +88,13 @@ class mrp_product_produce(osv.osv_memory):
     def _get_track(self, cr, uid, context=None):
         prod = self._get_product_id(cr, uid, context=context)
         prod_obj = self.pool.get("product.product")
-        return prod and prod_obj.browse(cr, uid, prod, context=context).track_production or False
+        return prod and prod_obj.browse(cr, uid, prod, context=context).tracking or 'none'
 
     _defaults = {
          'product_qty': _get_product_qty,
          'mode': lambda *x: 'consume_produce',
          'product_id': _get_product_id,
-         'track_production': _get_track, 
+         'tracking': _get_track,
     }
 
     def do_produce(self, cr, uid, ids, context=None):

@@ -4,16 +4,14 @@
 {
     'name': 'Project Management',
     'version': '1.1',
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/project-management',
     'category': 'Project Management',
-    'sequence': 8,
+    'sequence': 10,
     'summary': 'Projects, Tasks',
     'depends': [
         'base_setup',
         'product',
         'analytic',
-        'board',
         'mail',
         'resource',
         'web_kanban',
@@ -37,7 +35,6 @@ Dashboard / Reports for Project Management will include:
     """,
     'data': [
         'security/project_security.xml',
-        'wizard/project_task_delegate_view.xml',
         'security/ir.model.access.csv',
         'project_data.xml',
         'project_view.xml',

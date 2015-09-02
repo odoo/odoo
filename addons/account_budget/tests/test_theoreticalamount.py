@@ -15,7 +15,6 @@ class TestTheoreticalAmount(TransactionCase):
         cr, uid, = self.cr, self.uid
         crossovered_budget_id = self.registry('crossovered.budget').create(cr, uid, {
             'name': 'test budget name',
-            'code': 'test budget code',
             'date_from': '2014-01-01',
             'date_to': '2014-12-31',
         })
@@ -25,7 +24,6 @@ class TestTheoreticalAmount(TransactionCase):
         account_rev_id = self.registry('account.account').create(cr, uid, {'code': 'X2020', 'name': 'Budget - Test Revenue Account', 'user_type_id': user_type_id, 'tag_ids': [(4, tag_id, 0)]})
         buget_post = self.registry('account.budget.post').create(cr, uid, {
             'name': 'Sales',
-            'code': 'SAL',
             'account_ids': [(4, account_rev_id, 0)],
         })
         crossovered_budget_line_id = crossovered_budget_line_obj.create(cr, uid, {

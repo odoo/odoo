@@ -2,34 +2,15 @@
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
-            <div class="oe_view_manager oe_view_manager_current">
-                <div class="oe-control-panel oe_padding">
-                    <h2>
-                        Import a CSV File
-                    </h2>
-                    <input type="hidden" name="session_id"
-                       t-att-value="widget.session.session_id"/>
-                    <input type="hidden" name="import_id"/>
-                    <button type="button" disabled="disabled"
-                            class="oe_button oe_import_button oe_import_validate oe_highlight"
-                        >Validate</button>
-                    <button type="button" disabled="disabled"
-                            class="oe_button oe_import_button oe_import_import"
-                        >Import</button>
-                    <span class="oe_fade">or</span>
-                    <a class="oe_import_cancel" href="#">Cancel</a>
-                </div>
-            </div>
-
-            <p>Select the <a
-                    href="http://en.wikipedia.org/wiki/Comma-separated_values"
-                    class="oe_import_csv" target="_blank">.CSV</a>
-            file to import. If you need a sample importable file, you
+            <input type="hidden" name="session_id"
+               t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
+            <p>Select the file to import. If you need a sample importable file, you
             can use the export tool to generate one.</p>
             <div class="oe_import_box">
-                <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+                <label t-attf-for="file_#{_id}" autofocus="autofocus">File:</label>
                 <input type="file" id-attf-id="file_#{_id}"
-                       name="file" class="oe_import_file"/>
+                       name="file" class="oe_import_file" accept=".csv, .xls, .xlsx, .ods"/>
                 <button type="button" class="oe_import_file_reload"
                         disabled="disabled"
                         title="Reload data to check changes.">
@@ -37,7 +18,7 @@
                 </button>
                 <div class="oe_import_with_file">
                     <a href="#" class="oe_import_toggle">
-                        File Format Options…</a>
+                        CSV Format Options…</a>
                     <div class="oe_import_toggled oe_import_options">
                         <p t-foreach="widget.opts" t-as="option">
                             <!-- no @name, avoid submission when file_update called -->
@@ -72,7 +53,7 @@
                 simpler especially when the file has many columns.</p>
 
                 <div class="oe_import_error_report"></div>
-                <table class="oe_import_grid" />
+                <table class="table-striped table-bordered oe_import_grid" />
             </div>
             <div class="oe_padding">
                 <h2>Frequently Asked Questions</h2>
@@ -349,27 +330,41 @@
         </form>
     </t>
 
+    <t t-name="ImportView.buttons">
+        <button type="button" class="btn btn-sm btn-primary o_import_button o_import_validate"
+                disabled="disabled">Validate</button>
+        <button type="button" class="btn btn-sm btn-default o_import_button o_import_import"
+                disabled="disabled">Import</button>
+        <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
+    </t>
+
     <t t-name="ImportView.preview">
-        <tr t-if="headers" class="oe_import_grid-header">
-            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
-                ><t t-esc="header"/></td>
-        </tr>
-        <tr class="oe_import_fields">
-            <!-- Iterate on first row to ensure we have all columns -->
-            <td t-foreach="preview[0]" t-as="column">
-                <input class="oe_import_match_field"/>
-            </td>
-        </tr>
-        <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
-            <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
-                ><t t-esc="cell"/></td>
-        </tr>
+        <thead>
+            <tr t-if="headers" class="oe_import_grid-header">
+                <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                    ><t t-esc="header"/></td>
+            </tr>
+            <tr class="oe_import_fields">
+                <!-- Iterate on first row to ensure we have all columns -->
+                <td t-foreach="preview[0]" t-as="column">
+                    <input class="oe_import_match_field"/>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+                <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                    ><t t-esc="cell"/></td>
+            </tr>
+        </tbody>
     </t>
     <t t-name="ImportView.preview.error">
-        <p>Import preview failed due to: <t t-esc="error"/>. The issue is
-            usually an incorrect file encoding.</p>
-        <p>Here is the start of the file we could not import:</p>
-        <pre><t t-esc="preview"/></pre>
+        <div class="oe_import_report oe_import_report_error">
+            <p>Import preview failed due to: <t t-esc="error"/>.</p>
+            <p>For CSV files, the issue could be an incorrect encoding.</p>
+            <p t-if="preview">Here is the start of the file we could not import:</p>
+        </div>
+        <pre t-if="preview"><t t-esc="preview"/></pre>
     </t>
     <ul t-name="ImportView.error">
         <li t-foreach="errors" t-as="error"
@@ -398,11 +393,10 @@
         <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
     </t>
     <t t-extend="ListView.buttons">
-        <t t-jquery="span.oe_alternative">
-            this.attr('t-if', 'widget.options.import_enabled');
-        </t>
-        <t t-jquery="span.oe_alternative" t-operation="append">
-            <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        <t t-if='widget.options.import_enabled' t-jquery="button.o_list_button_add" t-operation="after">
+            <button type="button" class="btn btn-sm btn-default o_list_button_import">
+                Import
+            </button>
         </t>
     </t>
 </templates>

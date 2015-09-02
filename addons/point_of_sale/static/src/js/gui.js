@@ -7,8 +7,7 @@ odoo.define('point_of_sale.gui', function (require) {
 // it is available to all pos objects trough the '.gui' field.
 
 var core = require('web.core');
-var Model = require('web.Model');
-var cordova = require('web.cordova');
+var Model = require('web.DataModel');
 
 var _t = core._t;
 
@@ -27,7 +26,6 @@ var Gui = core.Class.extend({
         this.current_screen = null; 
 
         this.chrome.ready.then(function(){
-            cordova.posready();
             self.close_other_tabs();
             var order = self.pos.get_order();
             if (order) {
@@ -160,7 +158,7 @@ var Gui = core.Class.extend({
             this.close_popup();
         }
         this.current_popup = this.popup_instances[name];
-        this.current_popup.show(options);
+        return this.current_popup.show(options);
     },
 
     // close the current popup.
@@ -335,7 +333,6 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            cordova.poslogout();
             return new Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id'])
             .pipe(function(res) {
                 window.location = '/web#action=' + res[0]['res_id'];

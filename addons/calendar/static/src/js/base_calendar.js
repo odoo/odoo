@@ -2,18 +2,19 @@ odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
 var core = require('web.core');
-var data = require('web.data');
-var form_common = require('web.form_common');
-var Model = require('web.Model');
-var WebClient = require('web.WebClient');
 var CalendarView = require('web_calendar.CalendarView');
+var data = require('web.data');
+var Dialog = require('web.Dialog');
+var form_common = require('web.form_common');
+var Model = require('web.DataModel');
+var Notification = require('web.notification').Notification;
+var WebClient = require('web.WebClient');
 var widgets = require('web_calendar.widgets');
 
 var FieldMany2ManyTags = core.form_widget_registry.get('many2many_tags');
 var _t = core._t;
 var _lt = core._lt;
 var QWeb = core.qweb;
-
 
 function reload_favorite_list(result) {
     var self = result;
@@ -23,7 +24,7 @@ function reload_favorite_list(result) {
     }
     new Model("res.users")
     .query(["partner_id"])
-    .filter([["id", "=",self.dataset.context.uid]])
+    .filter([["id", "=", self.dataset.context.uid]])
     .first()
     .done(function(result) {
         var sidebar_items = {};
@@ -36,8 +37,8 @@ function reload_favorite_list(result) {
             is_checked: true,
             is_remove: false,
         };
-
-        sidebar_items[0] = filter_item ;
+        sidebar_items[filter_value] = filter_item ;
+        
         filter_item = {
                 value: -1,
                 label: _lt("Everybody's calendars"),
@@ -64,8 +65,7 @@ function reload_favorite_list(result) {
             
             self.sidebar.filter.events_loaded(self.all_filters);
             self.sidebar.filter.set_filters();
-            self.sidebar.filter.set_distroy_filters();
-            self.sidebar.filter.addInputBox();
+            self.sidebar.filter.add_favorite_calendar();
             self.sidebar.filter.destroy_filter();
         }).done(function () {
             self.$calendar.fullCalendar('refetchEvents');
@@ -77,28 +77,33 @@ function reload_favorite_list(result) {
 }
 
 CalendarView.include({
-    extraSideBar: function(){
+    extraSideBar: function() {
         this._super();
-        if (this.useContacts){
-            new reload_favorite_list(this);
+        if (this.useContacts) {
+            reload_favorite_list(this);
         }
     }
 });
 
 widgets.SidebarFilter.include({
-    set_distroy_filters: function() {
-        var self = this;
-        // When mouse-enter the favorite list it will show the 'X' for removing partner from the favorite list.
-        if (self.view.useContacts){
-            self.$('.oe_calendar_all_responsibles').on('mouseenter mouseleave', function(e) {
-                self.$('.oe_remove_follower').toggleClass('hidden', e.type == 'mouseleave');
-            });
-        }
+    events_loaded: function() {
+        this._super.apply(this, arguments);
+        this.reinitialize_m2o();
     },
-    addInputBox: function() {
-        var self = this;
+    add_favorite_calendar: function() {
         if (this.dfm)
             return;
+        this.initialize_m2o();
+    },
+    reinitialize_m2o: function() {
+        if (this.dfm) {
+            this.dfm.destroy();
+            this.dfm = undefined;
+        }
+        this.initialize_m2o();
+    },
+    initialize_m2o: function() {
+        var self = this;
         this.dfm = new form_common.DefaultFieldManager(self);
         this.dfm.extend_field_desc({
             partner_id: {
@@ -108,20 +113,21 @@ widgets.SidebarFilter.include({
         var FieldMany2One = core.form_widget_registry.get('many2one');
         this.ir_model_m2o = new FieldMany2One(self.dfm, {
             attrs: {
-                class: 'oe_add_input_box',
+                class: 'o_add_favorite_calendar',
                 name: "partner_id",
                 type: "many2one",
                 options: '{"no_open": True}',
                 placeholder: _t("Add Favorite Calendar"),
             },
         });
-        this.ir_model_m2o.insertAfter($('div.oe_calendar_filter'));
+        this.ir_model_m2o.appendTo(this.$el);
         this.ir_model_m2o.on('change:value', self, function() { 
             self.add_filter();
         });
     },
     add_filter: function() {
         var self = this;
+        var defs = [];
         new Model("res.users")
         .query(["partner_id"])
         .filter([["id", "=",this.view.dataset.context.uid]])
@@ -130,70 +136,80 @@ widgets.SidebarFilter.include({
             $.map(self.ir_model_m2o.display_value, function(element,index) {
                 if (result.partner_id[0] != index){
                     self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-                    self.ds_message.call("create", [{'partner_id': index}]);
+                    defs.push(self.ds_message.call("create", [{'partner_id': index}]));
                 }
             });
         });
-        new reload_favorite_list(this);
+        $.when.apply(null, defs).done(function() {
+            reload_favorite_list(self);
+        });
     },
     destroy_filter: function(e) {
-        var self= this;
+        var self = this;
         this.$(".oe_remove_follower").on('click', function(e) {
             self.ds_message = new data.DataSetSearch(self, 'calendar.contacts');
-            if (! confirm(_t("Do you really want to delete this filter from favorite?"))) { return false; }
             var id = $(e.currentTarget)[0].dataset.id;
-            self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record){
-                return self.ds_message.unlink(record);
-            }).done(function() {
-                new reload_favorite_list(self);
+
+            Dialog.confirm(self, _t("Do you really want to delete this filter from favorite?"), {
+                confirm_callback: function() {
+                    self.ds_message.call('search', [[['partner_id', '=', parseInt(id)]]]).then(function(record) {
+                        return self.ds_message.unlink(record);
+                    }).done(function() {
+                        reload_favorite_list(self);
+                    });
+                },
             });
         });
     },
 });
 
-WebClient.include({
-    get_notif_box: function(me) {
-        return $(me).closest(".ui-notify-message-style");
+var CalendarNotification = Notification.extend({
+    template: "CalendarNotification",
+    events: {
+        'click .link2event': function() {
+            var self = this;
+
+            this.rpc("/web/action/load", {
+                action_id: "calendar.action_calendar_event_notify",
+            }).then(function(r) {
+                r.res_id = self.eid;
+                return self.do_action(r);
+            });
+        },
+
+        'click .link2recall': function() {
+            this.destroy(true);
+        },
+
+        'click .link2showed': function() {
+            this.destroy(true);
+            this.rpc("/calendar/notify_ack");
+        },
     },
+
+    init: function(parent, title, text, eid) {
+        this._super(parent, title, text, true);
+        this.eid = eid;
+    },
+});
+
+WebClient.include({
     get_next_notif: function() {
-        var self= this;
+        var self = this;
+
         this.rpc("/calendar/notify")
-        .done(
-            function(result) {
-                _.each(result,  function(res) {
-                    setTimeout(function() {
-                        //If notification not already displayed, we add button and action on it
-                        if (!($.find(".eid_"+res.event_id)).length) {
-                            res.title = QWeb.render('notify_title', {'title': res.title, 'id' : res.event_id});
-                            res.message += QWeb.render("notify_footer");
-                            var a = self.do_notify(res.title,res.message,true);
-                            
-                            $(".link2event").on('click', function() {
-                                self.rpc("/web/action/load", {
-                                    action_id: "calendar.action_calendar_event_notify",
-                                }).then( function(r) {
-                                    r.res_id = res.event_id;
-                                    return self.action_manager.do_action(r);
-                                });
-                            });
-                            a.element.find(".link2recall").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                            });
-                            a.element.find(".link2showed").on('click',function() {
-                                self.get_notif_box(this).find('.ui-notify-close').trigger("click");
-                                self.rpc("/calendar/notify_ack");
-                            });
-                        }
-                        //If notification already displayed in the past, we remove the css attribute which hide this notification
-                        else if (self.get_notif_box($.find(".eid_"+res.event_id)).attr("style") !== ""){
-                            self.get_notif_box($.find(".eid_"+res.event_id)).attr("style","");
-                        }
-                    },res.timer * 1000);
-                });
-            }
-        )
-        .fail(function (err, ev) {
-            if (err.code === -32098) {
+        .done(function(result) {
+            _.each(result, function(res) {
+                setTimeout(function() {
+                    // If notification not already displayed, we create and display it (FIXME is this check usefull?)
+                    if(self.$(".eid_" + res.event_id).length === 0) {
+                        self.notification_manager.display(new CalendarNotification(self.notification_manager, res.title, res.message, res.event_id));
+                    }
+                }, res.timer * 1000);
+            });
+        })
+        .fail(function(err, ev) {
+            if(err.code === -32098) {
                 // Prevent the CrashManager to display an error
                 // in case of an xhr error not due to a server error
                 ev.preventDefault();
@@ -201,13 +217,12 @@ WebClient.include({
         });
     },
     check_notifications: function() {
-        var self= this;
-        self.get_next_notif();
-        self.intervalNotif = setInterval(function(){
+        var self = this;
+        this.get_next_notif();
+        this.intervalNotif = setInterval(function() {
             self.get_next_notif();
-        }, 5 * 60 * 1000 );
+        }, 5 * 60 * 1000);
     },
-    
     //Override the show_application of addons/web/static/src/js/chrome.js       
     show_application: function() {
         this._super();

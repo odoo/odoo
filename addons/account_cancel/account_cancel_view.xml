@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="group_invoice_lines" position="after">
-                    <field name="update_posted"/>
+                    <field name="update_posted" groups="base.group_no_one"/>
                 </field>
             </field>
         </record>
@@ -30,6 +30,17 @@
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='invoice_cancel']" position="replace">
                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="bank_statement_draft_form_inherit" model="ir.ui.view">
+            <field name="name">bank.statement.draft.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="button_draft" states="confirm" string="Reset to New" type="object"/>
                 </xpath>
             </field>
         </record>

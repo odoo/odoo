@@ -7,9 +7,12 @@
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
             <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
             <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+            <script type="text/javascript" src="/web/static/lib/autosize/autosize.js"></script>
 
             <!-- jQuery stuff -->
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
@@ -31,47 +34,26 @@
             <script type="text/javascript" src="/web/static/src/js/framework/session.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/model.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/utils.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/barcode_events.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/core.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
             <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
             <script type="text/javascript" src="/web/static/test/menu.js"></script>
+            <script type="text/javascript" src="/web/static/test/x2many.js"></script>
 
             <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
-            <link rel="stylesheet" href="/web/static/src/font/lato/stylesheet.css" />
+            <link rel="stylesheet" href="/web/static/src/fonts/lato/stylesheet.css" />
 
             <!-- Datetime Picker -->
             <link rel="stylesheet" href="/web/static/lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css"/>
             <script type="text/javascript" src="/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
-        </template>
 
-        <template id="jqueryui_conflict" name="jquery.ui.conflict">
-            <!-- TODO: get rid of this hack once jQuery.ui is removed -->
-            <script type="text/javascript" charset="utf-8">
-                $.fn.bstooltip = $.fn.tooltip;
-                $.fn.bsbutton = $.fn.button;
-            </script>
-            <t t-raw="0"/>
-            <script type="text/javascript" charset="utf-8">
-                $.fn.tooltip = $.fn.bstooltip;
-                $.fn.button = $.fn.bsbutton;
-            </script>
-        </template>
-
-        <template id="web.assets_backend">
-            <!-- jQuery addons -->
-            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
-            <script type="text/javascript" src="/web/static/lib/autosize/autosize.js"></script>
-            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
-
-            <link rel="stylesheet" href="/web/static/lib/cleditor/jquery.cleditor.css"/>
-            <script type="text/javascript" src="/web/static/lib/cleditor/jquery.cleditor.js"></script>
-
-            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
-            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
-
+            <!-- Select 2 -->
             <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+            <link rel="stylesheet" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
             <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        </template>
 
+        <template id="web.bootstrap">
             <script src="/web/static/lib/bootstrap/js/affix.js"></script>
             <script src="/web/static/lib/bootstrap/js/alert.js"></script>
             <script src="/web/static/lib/bootstrap/js/button.js"></script>
@@ -84,13 +66,17 @@
             <script src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
             <script src="/web/static/lib/bootstrap/js/tab.js"></script>
             <script src="/web/static/lib/bootstrap/js/transition.js"></script>
+        </template>
 
-            <!-- jQuery ui -->
-            <link rel="stylesheet" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+        <template id="web.assets_backend">
+            <!-- jQuery addons -->
+            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
 
-            <t t-call="web.jqueryui_conflict">
-                <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
-            </t>
+            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
+
+            <t t-call="web.bootstrap"/>
 
             <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
             <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
@@ -108,6 +94,7 @@
                 odoo._modules = <t t-raw="get_modules_order()"/>;
             </script>
             <link rel="stylesheet" href="/web/static/src/css/base.css"/>
+            <link rel="stylesheet" href="/web/static/src/css/mimetypes.css"/>
             <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
             <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
 
@@ -115,12 +102,14 @@
             <link rel="stylesheet" href="/web/static/src/less/enterprise_compatibility.less"/>
             <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
             <link rel="stylesheet" href="/web/static/src/less/modal.less"/>
+            <link rel="stylesheet" href="/web/static/src/less/notification.less"/>
 
             <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
 
             <!-- Special case: core.js declares $.browser needed by ba-bbq -->
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
 
+            <script type="text/javascript" src="/web/static/src/js/framework/data_model.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/formats.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/view.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/pyeval.js"></script>
@@ -133,20 +122,18 @@
             <script type="text/javascript" src="/web/static/src/js/framework/misc.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
             <script type="text/javascript" src="/web/static/src/js/framework/crash_manager.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/cordova.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/widgets/database_manager.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/debug_manager.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/loading.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/sidebar.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/widgets/priority.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/progress_bar.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/pager.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/systray_menu.js"></script>
             <script type="text/javascript" src="/web/static/src/js/widgets/user_menu.js"></script>
-            <script type="text/javascript" src="/web/static/src/js/framework/dialog.js"></script>
             <script type="text/javascript" src="/web/static/src/js/menu.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/list_common.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/list_view.js"></script>
@@ -163,18 +150,8 @@
             <script type="text/javascript" src="/web/static/src/js/views/search_inputs.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/search_menus.js"></script>
             <script type="text/javascript" src="/web/static/src/js/views/tree_view.js"></script>
-            <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
 
-        </template>
-
-        <template id="web.assets_webclient_manifest">
-            <!-- This bundle can be used for module manifest asset declaration backward compatibility -->
-            <t t-foreach="manifest_list('css')" t-as="css_file">
-                <link rel="stylesheet" t-att-href="css_file"/>
-            </t>
-            <t t-foreach="manifest_list('js')" t-as="js_file">
-                <script type="text/javascript" t-att-src="js_file"></script>
-            </t>
         </template>
 
         <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
@@ -191,6 +168,73 @@
                     <t t-raw="0"/>
                 </body>
             </html>
+        </template>
+
+        <template id="web.login_layout" name="Login Layout">
+            <t t-call="web.layout">
+                <t t-set="head">
+                  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+                  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+                  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"/>
+                </t>
+                <t t-set="body_classname" t-value="'container'"/>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 o_database_list">
+                    <div class="text-center">
+                      <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                    </div>
+                    <t t-raw="0"/>
+                    <div class="text-center" t-if="not disable_footer">
+                        <t t-if="not disable_database_manager">
+                            <a class="" href="/web/database/manager">Manage Databases</a> |
+                        </t>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
+                    </div>
+
+                  </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="web.login" name="Login">
+            <t t-call="web.login_layout">
+
+                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+
+                    <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                        <label for="db" class="control-label">Database</label>
+                        <div class="input-group">
+                            <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
+                            <span class="input-group-btn">
+                              <a href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database"></i></a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Email</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
+                    </div>
+
+                    <div class="form-group field-password">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+                    </div>
+
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <p class="alert alert-success" t-if="message">
+                        <t t-esc="message"/>
+                    </p>
+
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="clearfix oe_login_buttons">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+
+                </form>
+            </t>
         </template>
 
         <template id="web.menu">
@@ -269,7 +313,6 @@
                                     web_client.start();
                                     return web_client;
                                 });
-                                odoo.init();
                             </t>
                         });
                     </script>
@@ -295,82 +338,6 @@
             </t>
         </template>
 
-        <template id="web.login_layout" name="Login Layout">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link href="/web/static/src/css/base.css" rel="stylesheet"/>
-                    <link rel="stylesheet" href='/website/static/src/less/import_bootstrap.less'/>
-                </t>
-                <t t-set="body_classname" t-value="'oe_single_form'"/>
-                <div class="oe_single_form_container modal-content">
-                    <div class="oe_single_form_logo">
-                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
-                    </div>
-                    <hr/>
-                    <t t-raw="0"/>
-
-                    <div class="oe_single_form_footer" t-if="not disable_footer">
-                        <t t-if="not disable_database_manager">
-                            <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
-                            <span class="oe_footer_seperator"> | </span>
-                        </t>
-                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
-                    </div>
-                </div>
-            </t>
-        </template>
-
-        <template id="web.database_select" name="Database select widget">
-            <script type="text/javascript">
-                function dbchanged(db) {
-                    document.location = "/web/login?<t t-if="debug">debug&amp;</t>db=" + db;
-                }
-            </script>
-            <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
-                <label for="db" class="control-label">Database</label>
-                <select name="db" id="db" class="form-control" required="required" t-att-autofocus="'autofocus' if request.db not in databases else None" onchange="dbchanged(this.value)">
-                    <option></option>
-                    <t t-foreach="databases" t-as="db">
-                        <option t-att-selected="'selected' if db == request.db else None">
-                            <t t-esc="db"/>
-                        </option>
-                    </t>
-                </select>
-            </div>
-        </template>
-
-        <template id="web.login" name="Login">
-            <t t-call="web.login_layout">
-                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
-
-                    <t t-call="web.database_select"/>
-
-                    <div class="form-group field-login">
-                        <label for="login" class="control-label">Email</label>
-                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
-                    </div>
-
-                    <div class="form-group field-password">
-                        <label for="password" class="control-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
-                    </div>
-
-                    <p class="alert alert-danger" t-if="error">
-                        <t t-esc="error"/>
-                    </p>
-                    <p class="alert alert-success" t-if="message">
-                        <t t-esc="message"/>
-                    </p>
-
-                    <input type="hidden" name="redirect" t-att-value="redirect"/>
-                    <div class="clearfix oe_login_buttons">
-                        <button type="submit" class="btn btn-primary">Log in</button>
-                    </div>
-
-                </form>
-            </t>
-        </template>
-
         <template id="web.qunit_suite">
             &lt;!DOCTYPE html&gt;
             <html style="height: 100%">
@@ -385,6 +352,17 @@
 
                     <t t-call="web.assets_common"/>
                     <t t-call="web.assets_backend"/>
+                    <script type="text/javascript">
+                        $(function() {
+                            odoo.define('web.web_client', function (require) {
+                                var WebClient = require('web.WebClient');
+                                var web_client = new WebClient();
+                                web_client.setElement($(document.body));
+                                web_client.start();
+                                return web_client;
+                            });
+                        });
+                    </script>
 
                     <style>
                         body { overflow: auto !important; }

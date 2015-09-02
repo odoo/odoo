@@ -67,9 +67,8 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(pigs.state, 'close')
         # Re-open
         pigs.state = 'open'
-        # Re-convert into a template and schedule tasks
+        # Re-convert into a template
         pigs.set_template()
-        pigs.schedule_tasks()
         # Copy the project
         new_project = pigs.copy()
         self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
@@ -89,7 +88,7 @@ class TestProjectFlow(TestProjectBase):
         # Test: one task created by mailgateway administrator
         self.assertEqual(len(task), 1, 'project: message_process: a new project.task should have been created')
         # Test: check partner in message followers
-        self.assertIn(self.partner_2, task.message_follower_ids, "Partner in message cc is not added as a task followers.")
+        self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
         self.assertEqual(len(task.message_ids), 2,
                          'project: message_process: newly created task should have 2 messages: creation and email')
@@ -103,12 +102,3 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, 'project_task: should have a stage with sequence=1')
-        # Open the delegation wizard
-        self.env['project.task.delegate'].with_context({
-            'active_id': task.id}).sudo(self.user_projectuser).create({
-                'user_id': self.user_projectuser.id,
-                'planned_hours': 12.0,
-                'planned_hours_me': 2.0,
-            }).with_context({'active_id': task.id}).delegate()
-        # Check delegation details
-        self.assertEqual(task.planned_hours, 2, 'project_task_delegate: planned hours is not correct after delegation')

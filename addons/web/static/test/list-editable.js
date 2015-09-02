@@ -133,17 +133,19 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
         assert.expect(2);
 
         var warnings = 0;
-        core.bus.on('display_notification_warning', null, function () {
-            warnings++;
-        });
-
+        
         var e = new ListEditor({
             dataset: new data.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([
                     field('a', {required: true}), field('b'), field('c') ]);
-            }
+            },
+            _trigger_up: function (event) {
+                if (event.name === 'warning') {
+                    warnings++;
+                }
+            },
         });
         var counter = 0;
         var $fix = $( "#qunit-fixture");

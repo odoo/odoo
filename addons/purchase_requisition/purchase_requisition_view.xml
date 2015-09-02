@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='approved']" position="after">
-                <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
+                <filter string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -56,7 +56,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'purchase_requisition.group_purchase_requisition_user', 'purchase.group_purchase_user', 'account.group_account_invoice']}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'purchase.group_purchase_user', 'account.group_account_invoice']}" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="exclusive" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                         <field name="multiple_rfq_per_supplier" attrs="{'readonly': [('state','not in',('draft'))]}"/>
@@ -105,7 +105,7 @@
                                 <field name="state"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
                                 <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
-                                <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
+                                <button name="purchase_approve" states="confirmed" string="Approved by Vendor" icon="gtk-ok"/>
                                 <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" icon="gtk-network"/>
                             </tree>
                         </field>
@@ -125,8 +125,8 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree decoration-bf="message_unread==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
-                <field name="message_unread" invisible="1"/>
+            <tree decoration-bf="message_needaction==True" decoration-muted="state == 'cancel'" decoration-danger="date_end and date_end&lt;current_date" string="Call for Tenders">
+                <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="ordering_date"/>
                 <field name="user_id"/>
@@ -145,18 +145,18 @@
                 <search string="Search Call for Tenders">
                     <field name="name" string="Call for Tenders"/>
                     <field name="exclusive" />
-                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
-                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
-                    <filter icon="terp-dialog-close" string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
+                    <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Call for Tenders"/>
+                    <filter string="Confirmed" domain="[('state','=','in_progress')]" help="Call for Tenders in negotiation"/>
+                    <filter string="Closed Tenders" domain="[('state','=','open')]" help="Call for Tenders where tenders are closed"/>
                     <separator/>
-                    <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <filter string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
                     <group expand="0" string="Group By">
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Ordering Date" icon="terp-go-month" domain="[]" context="{'group_by':'ordering_date'}"/>
-                        <filter string="End Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_end'}"/>
+                        <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Source" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Ordering Date" domain="[]" context="{'group_by':'ordering_date'}"/>
+                        <filter string="End Month" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -178,7 +178,7 @@
             A Call for Tenders is a procedure for generating competing offers from
             different bidders. In the call for tenders, you can record the
             products you need to buy and generate the creation of RfQs to
-            suppliers. Once the tenders have been registered, you can review and
+            vendors. Once the tenders have been registered, you can review and
             compare them and you can validate some and cancel others.
           </p>
         </field>
@@ -196,7 +196,7 @@
         <field name="inherit_id" ref="stock.view_template_property_form"/>
         <field name="arch" type="xml">
             <field name="route_ids" position="after">
-                <field name="purchase_requisition"/>
+                <field name="purchase_requisition" widget="radio"/>
             </field>
         </field>
     </record>
@@ -227,7 +227,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order Lines" create="false" decoration-info="state == 'confirmed'" decoration-muted="state == 'cancel'">
                     <field name="name"/>
-                    <field name="partner_id" string="Supplier" />
+                    <field name="partner_id" string="Vendor"/>
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>

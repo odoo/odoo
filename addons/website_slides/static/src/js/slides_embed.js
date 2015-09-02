@@ -26,7 +26,7 @@ $(document).ready(function () {
             });
         };
         EmbeddedViewer.prototype.__proto__ = {
-            // jquery inside the object (like openerp.Widget)
+            // jquery inside the object (like Widget)
             $: function(selector){
                 return this.viewer.find($(selector));
             },
@@ -170,7 +170,7 @@ $(document).ready(function () {
             embedded_viewer.$('.slide_embed_code').val(new_code);
         });
 
-        // To avoid create a dependancy to openerpframework.js, we use JQuery AJAX to post data instead of openerp.jsonRpc
+        // To avoid create a dependancy to openerpframework.js, we use JQuery AJAX to post data instead of ajax.jsonRpc
         $('.oe_slide_js_share_email button').on('click', function () {
             var widget = $('.oe_slide_js_share_email');
             var input = widget.find('input');

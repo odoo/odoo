@@ -18,11 +18,10 @@ Greek accounting chart and localization.
     'depends': ['base', 'account', 'base_iban', 'base_vat'],
     'demo': [],
     'data': [ 'account_types.xml',
-               'account_chart.xml',
                'account_full_chart.xml',
                'account_tax.xml',
                'account_tax_vat.xml',
-               'l10n_gr_wizard.xml'
+               'account_chart_template.yml'
     ],
-    'installable': False,
+    'installable': True,
 }

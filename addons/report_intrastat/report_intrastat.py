@@ -53,6 +53,7 @@ class report_intrastat(osv.osv):
         'value': fields.float('Value', readonly=True, digits=0),
         'type': fields.selection([('import', 'Import'), ('export', 'Export')], 'Type'),
         'currency_id': fields.many2one('res.currency', "Currency", readonly=True),
+        'company_id': fields.many2one('res.company', "Company", readonly=True),
     }
     def init(self, cr):
         drop_view_if_exists(cr, 'report_intrastat')
@@ -69,8 +70,8 @@ class report_intrastat(osv.osv):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then (pt.weight_net * inv_line.quantity)
-                        else (pt.weight_net * inv_line.quantity * uom.factor) end
+                        case when uom.category_id != puom.category_id then (pt.weight * inv_line.quantity)
+                        else (pt.weight * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
@@ -82,14 +83,15 @@ class report_intrastat(osv.osv):
                     case when inv.type in ('out_invoice','in_refund')
                         then 'export'
                         else 'import'
-                        end as type
+                        end as type,
+                    inv.company_id as company_id
                 from
                     account_invoice inv
                     left join account_invoice_line inv_line on inv_line.invoice_id=inv.id
                     left join (product_template pt
                         left join product_product pp on (pp.product_tmpl_id = pt.id))
                     on (inv_line.product_id = pp.id)
-                    left join product_uom uom on uom.id=inv_line.uos_id
+                    left join product_uom uom on uom.id=inv_line.uom_id
                     left join product_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
                     left join (res_partner inv_address
@@ -99,5 +101,5 @@ class report_intrastat(osv.osv):
                     inv.state in ('open','paid')
                     and inv_line.product_id is not null
                     and inv_country.intrastat=true
-                group by to_char(inv.create_date, 'YYYY'), to_char(inv.create_date, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id
+                group by to_char(inv.create_date, 'YYYY'), to_char(inv.create_date, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id, inv.company_id
             )""")

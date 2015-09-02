@@ -125,6 +125,7 @@ class Forum(models.Model):
     karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
                                   default=30, oldname='karma_editor_link_files')
+    karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
 
     @api.one
     @api.constrains('allow_question', 'allow_discussion', 'allow_link', 'default_post_type')
@@ -316,6 +317,7 @@ class Post(models.Model):
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
     can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
+    can_display_biography = fields.Boolean('Can userbiography of the author be viewed', compute='_get_post_karma_rights')
 
     @api.multi
     def _get_post_karma_rights(self):
@@ -344,6 +346,7 @@ class Post(models.Model):
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
             post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
+            post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
 
     @api.one
     @api.constrains('post_type', 'forum_id')
@@ -612,11 +615,27 @@ class Post(models.Model):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.model
-    def _get_access_link(self, mail, partner):
-        post = self.browse(mail.res_id)
-        res_id = post.parent_id and "%s#answer-%s" % (post.parent_id.id, post.id) or post.id
-        return "/forum/%s/question/%s" % (post.forum_id.id, res_id)
+    @api.one
+    def get_access_action(self):
+        """ Override method that generated the link to access the document. Instead
+        of the classic form view, redirect to the post on the website directly """
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
+            'target': 'self',
+            'res_id': self.id,
+        }
+
+    @api.multi
+    def _notification_get_recipient_groups(self, message, recipients):
+        """ Override to set the access button: everyone can see an access button
+        on their notification email. It will lead on the website view of the
+        post. """
+        res = super(Post, self)._notification_get_recipient_groups(message, recipients)
+        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
+        for category, data in res.iteritems():
+            res[category]['button_access'] = {'url': access_action, 'title': '%s %s' % (_('View'), self.post_type)}
+        return res
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):
@@ -716,6 +735,10 @@ class Tags(models.Model):
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     post_ids = fields.Many2many('forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id', string='Posts')
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
+
+    _sql_constraints = [
+            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+    ]
 
     @api.multi
     @api.depends("post_ids.tag_ids")

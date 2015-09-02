@@ -112,8 +112,6 @@ def dispatch_rpc(service_name, method, params):
             dispatch = openerp.service.model.dispatch
         elif service_name == 'report':
             dispatch = openerp.service.report.dispatch
-        else:
-            dispatch = openerp.service.wsgi_server.rpc_handlers.get(service_name)
         result = dispatch(method, params)
 
         if rpc_request_flag or rpc_response_flag:
@@ -316,7 +314,10 @@ class WebRequest(object):
     def debug(self):
         """ Indicates whether the current request is in "debug" mode
         """
-        return 'debug' in self.httprequest.args
+        debug = 'debug' in self.httprequest.args
+        if not debug and self.httprequest.referrer:
+            debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
+        return debug
 
     @contextlib.contextmanager
     def registry_cr(self):
@@ -676,9 +677,16 @@ class HttpRequest(WebRequest):
         try:
             return super(HttpRequest, self)._handle_exception(exception)
         except SessionExpiredException:
-            if not request.params.get('noredirect'):
+            redirect = None
+            req = request.httprequest
+            if req.method == 'POST':
+                request.session.save_request_data()
+                redirect = '/web/proxy/post{r.path}?{r.query_string}'.format(r=req)
+            elif not request.params.get('noredirect'):
+                redirect = req.url
+            if redirect:
                 query = werkzeug.urls.url_encode({
-                    'redirect': request.httprequest.url,
+                    'redirect': redirect,
                 })
                 return werkzeug.utils.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException, e:
@@ -1172,6 +1180,46 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         saved_actions = self.get('saved_actions', {})
         return saved_actions.get("actions", {}).get(key)
 
+    def save_request_data(self):
+        import uuid
+        req = request.httprequest
+        files = werkzeug.datastructures.MultiDict()
+        # NOTE we do not store files in the session itself to avoid loading them in memory.
+        #      By storing them in the session store, we ensure every worker (even ones on other
+        #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
+        for f in req.files.values():
+            storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
+            path = os.path.join(root.session_store.path, storename)
+            with open(path, 'w') as fp:
+                f.save(fp)
+            files.add(f.name, (storename, f.filename, f.content_type))
+        self['serialized_request_data'] = {
+            'form': req.form,
+            'files': files,
+        }
+
+    @contextlib.contextmanager
+    def load_request_data(self):
+        data = self.pop('serialized_request_data', None)
+        files = werkzeug.datastructures.MultiDict()
+        try:
+            if data:
+                # regenerate files filenames with the current session store
+                for name, (storename, filename, content_type) in data['files'].iteritems():
+                    path = os.path.join(root.session_store.path, storename)
+                    files.add(name, (path, filename, content_type))
+                yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
+            else:
+                yield None
+        finally:
+            # cleanup files
+            for f, _, _ in files.values():
+                try:
+                    os.unlink(f)
+                except IOError:
+                    pass
+
+
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
@@ -1446,13 +1494,19 @@ class Root(object):
                     try:
                         with openerp.tools.mute_logger('openerp.sql_db'):
                             ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError):
+                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
                         # psycopg2 error or attribute error while constructing
-                        # the registry. That means the database probably does
-                        # not exists anymore or the code doesnt match the db.
+                        # the registry. That means either
+                        # - the database probably does not exists anymore
+                        # - the database is corrupted
+                        # - the database version doesnt match the server version
                         # Log the user out and fall back to nodb
                         request.session.logout()
-                        result = _dispatch_nodb()
+                        # If requesting /web this will loop
+                        if request.httprequest.path == '/web':
+                            result = werkzeug.utils.redirect('/web/database/selector')
+                        else:
+                            result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
                         openerp.modules.registry.RegistryManager.signal_caches_change(db)
@@ -1471,7 +1525,7 @@ class Root(object):
         return request.registry['ir.http'].routing_map()
 
 def db_list(force=False, httprequest=None):
-    dbs = dispatch_rpc("db", "list", [force])
+    dbs = openerp.service.db.list_dbs(force)
     return db_filter(dbs, httprequest=httprequest)
 
 def db_filter(dbs, httprequest=None):
@@ -1621,6 +1675,5 @@ class CommonController(Controller):
         nsession = root.session_store.new()
         return nsession.sid
 
-# register main wsgi handler
+#  main wsgi handler
 root = Root()
-openerp.service.wsgi_server.register_wsgi_handler(root)

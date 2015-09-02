@@ -7,8 +7,8 @@ var Session = require('web.Session');
 var _t = core._t;
 
 // the JobQueue schedules a sequence of 'jobs'. each job is
-// a function returning a deferred. the queue waits for each job to finish 
-// before launching the next. Each job can also be scheduled with a delay. 
+// a function returning a deferred. the queue waits for each job to finish
+// before launching the next. Each job can also be scheduled with a delay.
 // the  is used to prevent parallel requests to the proxy.
 
 var JobQueue = function(){
@@ -35,13 +35,13 @@ var JobQueue = function(){
 
             // we run the job and put in def when it finishes
             var def = job.fun() || (new $.Deferred()).resolve();
-            
-            // we don't care if a job fails ... 
+
+            // we don't care if a job fails ...
             def.always(function(){
                 // we run the next job after the scheduled_end_time, even if it finishes before
                 setTimeout(function(){
                     run();
-                }, Math.max(0, scheduled_end_time - (new Date()).getTime()) ); 
+                }, Math.max(0, scheduled_end_time - (new Date()).getTime()) );
             });
         }else{
             running = false;
@@ -49,7 +49,7 @@ var JobQueue = function(){
             end_of_queue.resolve();
         }
     };
-    
+
     // adds a job to the schedule.
     // opts : {
     //    duration    : the job is guaranteed to finish no quicker than this (milisec)
@@ -65,15 +65,15 @@ var JobQueue = function(){
 
     // remove all jobs from the schedule (except the ones marked as important)
     this.clear = function(){
-        queue = _.filter(queue,function(job){return job.opts.important === true;}); 
+        queue = _.filter(queue,function(job){return job.opts.important === true;});
     };
 
     // end the repetition of the current job
     this.stoprepeat = function(){
         stoprepeat = true;
     };
-    
-    // returns a deferred that resolves when all scheduled 
+
+    // returns a deferred that resolves when all scheduled
     // jobs have been run.
     // ( jobs added after the call to this method are considered as well )
     this.finished = function(){
@@ -85,7 +85,7 @@ var JobQueue = function(){
 
 // this object interfaces with the local proxy to communicate to the various hardware devices
 // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
-// methods are used both to signal an event, and to fetch information. 
+// methods are used both to signal an event, and to fetch information.
 
 var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
     init: function(parent,options){
@@ -94,7 +94,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         options = options || {};
 
         this.pos = parent;
-        
+
         this.weighting = false;
         this.debug_weight = 0;
         this.use_debug_weight = false;
@@ -106,7 +106,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             payment_method: undefined,
             receipt_client: undefined,
             receipt_shop:   undefined,
-        };    
+        };
         this.custom_payment_status = this.default_payment_status;
 
         this.receipt_queue = [];
@@ -114,7 +114,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         this.notifications = {};
         this.bypass_proxy = false;
 
-        this.connection = null; 
+        this.connection = null;
         this.host       = '';
         this.keptalive  = false;
 
@@ -169,9 +169,9 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
     },
 
     // find a proxy and connects to it. for options see find_proxy
-    //   - force_ip : only try to connect to the specified ip. 
+    //   - force_ip : only try to connect to the specified ip.
     //   - port: what port to listen to (default 8069)
-    //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
+    //   - progress(fac) : callback for search progress ( fac in [0,1] )
     autoconnect: function(options){
         var self = this;
         this.set_connection_status('connecting',{});
@@ -208,7 +208,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         var self = this;
 
         function status(){
-            self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})       
+            self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})
                 .then(function(driver_status){
                     self.set_connection_status('connected',driver_status);
                 },function(){
@@ -232,7 +232,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             callbacks[i](params);
         }
         if(this.get('status').status !== 'disconnected'){
-            return this.connection.rpc('/hw_proxy/' + name, params || {});       
+            return this.connection.rpc('/hw_proxy/' + name, params || {});
         }else{
             return (new $.Deferred()).reject();
         }
@@ -282,7 +282,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
     // returns as a deferred a valid host url that can be used as proxy.
     // options:
     //   - port: what port to listen to (default 8069)
-    //   - progress(fac) : callback for search progress ( fac in [0,1] ) 
+    //   - progress(fac) : callback for search progress ( fac in [0,1] )
     find_proxy: function(options){
         options = options || {};
         var self  = this;
@@ -302,7 +302,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             urls.push('http://10.0.0.'+i+port);
         }
 
-        var prog_inc = 1/urls.length; 
+        var prog_inc = 1/urls.length;
 
         function update_progress(){
             progress = found ? 1 : progress + prog_inc;
@@ -316,7 +316,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
 
             done = done || new $.Deferred();
 
-            if( !url || found || !self.searching_for_proxy ){ 
+            if( !url || found || !self.searching_for_proxy ){
                 done.resolve();
                 return done;
             }
@@ -324,7 +324,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
             $.ajax({
                     url: url + '/hw_proxy/hello',
                     method: 'GET',
-                    timeout: 400, 
+                    timeout: 400,
                 }).done(function(){
                     found = true;
                     update_progress();
@@ -344,7 +344,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         for(i = 0; i < len; i++){
             threads.push(thread());
         }
-        
+
         $.when.apply($,threads).then(function(){
             var urls = [];
             for(var i = 0; i < arguments.length; i++){
@@ -363,7 +363,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         this.set_connection_status('disconnected');
     },
 
-    // this allows the client to be notified when a proxy call is made. The notification 
+    // this allows the client to be notified when a proxy call is made. The notification
     // callback will be executed with the same arguments as the proxy call
     add_notification: function(name, callback){
         if(!this.notifications[name]){
@@ -371,8 +371,8 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         }
         this.notifications[name].push(callback);
     },
-    
-    // returns the weight on the scale. 
+
+    // returns the weight on the scale.
     scale_read: function(){
         var self = this;
         var ret = new $.Deferred();
@@ -388,7 +388,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         return ret;
     },
 
-    // sets a custom weight, ignoring the proxy returned value. 
+    // sets a custom weight, ignoring the proxy returned value.
     debug_set_weight: function(kg){
         this.use_debug_weight = true;
         this.debug_weight = kg;
@@ -405,7 +405,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
         return this.message('open_cashbox');
     },
 
-    /* 
+    /*
      * ask the printer to print a receipt
      */
     print_receipt: function(receipt){
@@ -442,7 +442,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
 });
 
 // this module interfaces with the barcode reader. It assumes the barcode reader
-// is set-up to act like  a keyboard. Use connect() and disconnect() to activate 
+// is set-up to act like  a keyboard. Use connect() and disconnect() to activate
 // and deactivate the barcode reader. Use set_action_callbacks to tell it
 // what to do when it reads a barcode.
 var BarcodeReader = core.Class.extend({
@@ -462,6 +462,10 @@ var BarcodeReader = core.Class.extend({
         this.barcode_parser = attributes.barcode_parser;
 
         this.action_callback_stack = [];
+
+        core.bus.on('barcode_scanned', this, function (barcode) {
+            this.scan(barcode);
+        });
     },
 
     set_barcode_parser: function(barcode_parser) {
@@ -482,17 +486,17 @@ var BarcodeReader = core.Class.extend({
             this.action_callback = callbacks;
         }
     },
-   
+
     // when a barcode is scanned and parsed, the callback corresponding
-    // to its type is called with the parsed_barcode as a parameter. 
-    // (parsed_barcode is the result of parse_barcode(barcode)) 
-    // 
+    // to its type is called with the parsed_barcode as a parameter.
+    // (parsed_barcode is the result of parse_barcode(barcode))
+    //
     // callbacks is a Map of 'actions' : callback(parsed_barcode)
     // that sets the callback for each action. if a callback for the
-    // specified action already exists, it is replaced. 
-    // 
-    // possible actions include : 
-    // 'product' | 'cashier' | 'client' | 'discount' 
+    // specified action already exists, it is replaced.
+    //
+    // possible actions include :
+    // 'product' | 'cashier' | 'client' | 'discount'
     set_action_callback: function(action, callback){
         if(arguments.length == 2){
             this.action_callback[action] = callback;
@@ -504,7 +508,7 @@ var BarcodeReader = core.Class.extend({
         }
     },
 
-    //remove all action callbacks 
+    //remove all action callbacks
     reset_action_callbacks: function(){
         for(var action in this.action_callback){
             this.action_callback[action] = undefined;
@@ -516,70 +520,18 @@ var BarcodeReader = core.Class.extend({
             return;
         }
         var parsed_result = this.barcode_parser.parse_barcode(code);
-        
-        if(parsed_result.type in {'product':'', 'weight':'', 'price':''}){    //barcode is associated to a product
-            if(this.action_callback.product){
-                this.action_callback.product(parsed_result);
-            }
-        }
-        else if (parsed_result.type in {'cashier':'', 'client':'', 'discount':''}){ 
-            if(this.action_callback[parsed_result.type]){
-                this.action_callback[parsed_result.type](parsed_result);
-            }
-        }
-        else{
+        if (this.action_callback[parsed_result.type]) {
+            this.action_callback[parsed_result.type](parsed_result);
+        } else if (this.action_callback.error) {
             this.action_callback.error(parsed_result);
+        } else {
+            console.warn("Ignored Barcode Scan:", parsed_result);
         }
     },
 
-    // starts catching keyboard events and tries to interpret codebar 
-    // calling the callbacks when needed.
-    connect: function(){
-
-        var self = this;
-        var code = "";
-        var timeStamp  = 0;
-        var timeout = null;
-
-        this.handler = function(e){
-
-            if(e.which === 13){ //ignore returns
-                e.preventDefault();
-                return;
-            }
-
-            if(timeStamp + 50 < new Date().getTime()){
-                code = "";
-            }
-
-            timeStamp = new Date().getTime();
-            clearTimeout(timeout);
-
-            code += String.fromCharCode(e.which);
-
-            // we wait for a while after the last input to be sure that we are not mistakingly
-            // returning a code which is a prefix of a bigger one :
-            // Internal Ref 5449 vs EAN13 5449000...
-
-            timeout = setTimeout(function(){
-                if(code.length >= 3){
-                    self.scan(code);
-                }
-                code = "";
-            },100);
-        };
-
-        $('body').on('keypress', this.handler);
-    },
-
-    // stops catching keyboard events 
-    disconnect: function(){
-        $('body').off('keypress', this.handler);
-    },
-
-    // the barcode scanner will listen on the hw_proxy/scanner interface for 
+    // the barcode scanner will listen on the hw_proxy/scanner interface for
     // scan events until disconnect_from_proxy is called
-    connect_to_proxy: function(){ 
+    connect_to_proxy: function(){
         var self = this;
         this.remote_scanning = true;
         if(this.remote_active >= 1){
@@ -590,9 +542,9 @@ var BarcodeReader = core.Class.extend({
         function waitforbarcode(){
             return self.proxy.connection.rpc('/hw_proxy/scanner',{},{timeout:7500})
                 .then(function(barcode){
-                    if(!self.remote_scanning){ 
+                    if(!self.remote_scanning){
                         self.remote_active = 0;
-                        return; 
+                        return;
                     }
                     self.scan(barcode);
                     waitforbarcode();

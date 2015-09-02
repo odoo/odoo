@@ -7,7 +7,7 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FavoriteMenu = require('web.FavoriteMenu');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 
@@ -33,7 +33,7 @@ var DashBoard = form_common.FormWidget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$el.addClass('o-dashboard');
+        this.$el.addClass('o_dashboard');
 
         this.$('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
@@ -341,14 +341,15 @@ FavoriteMenu.include({
         if (am && am.get_inner_widget() instanceof ViewManager) {
             this.view_manager = am.get_inner_widget();
             this.add_to_dashboard_available = true;
-            this.$('.favorites-menu').append(QWeb.render('SearchView.addtodashboard'));
-            var $add_to_dashboard = this.$('.add-to-dashboard');
-            this.$add_dashboard_btn = $add_to_dashboard.eq(2).find('button');
-            this.$add_dashboard_input = $add_to_dashboard.eq(1).find('input');
-            this.$add_dashboard_link = $add_to_dashboard.first();
+            this.$('.o_favorites_menu').append(QWeb.render('SearchView.addtodashboard'));
+            this.$add_to_dashboard = this.$('.o_add_to_dashboard');
+            this.$add_dashboard_btn = this.$add_to_dashboard.eq(1).find('button');
+            this.$add_dashboard_input = this.$add_to_dashboard.eq(0).find('input');
+            this.$add_dashboard_link = this.$('.o_add_to_dashboard_link');
             var title = this.searchview.get_title();
             this.$add_dashboard_input.val(title);
-            this.$add_dashboard_link.click(function () {
+            this.$add_dashboard_link.click(function (e) {
+                e.preventDefault();
                 self.toggle_dashboard_menu();
             });
             this.$add_dashboard_btn.click(this.proxy('add_dashboard'));
@@ -356,11 +357,10 @@ FavoriteMenu.include({
     },
     toggle_dashboard_menu: function (is_open) {
         this.$add_dashboard_link
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
-        this.$add_dashboard_btn.toggle(is_open);
-        this.$add_dashboard_input.toggle(is_open);
-        if (this.$add_dashboard_link.hasClass('open-menu')) {
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
+        this.$add_to_dashboard.toggle(is_open);
+        if (this.$add_dashboard_link.hasClass('o_open_menu')) {
             this.$add_dashboard_input.focus();
         }
     },
@@ -395,23 +395,19 @@ FavoriteMenu.include({
             board = new Model('board.board'),
             name = self.$add_dashboard_input.val();
         
-        board.call('list', [board.context()])
-            .then(function (board_list) {
-                return self.rpc('/board/add_to_dashboard', {
-                    menu_id: board_list[0].id,                    
-                    action_id: self.action_id,
-                    context_to_save: c,
-                    domain: d,
-                    view_mode: self.view_manager.active_view.type,
-                    name: name,
-                });
-            }).then(function (r) {
-                if (r) {
-                    self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
-                } else {
-                    self.do_warn(_t("Could not add filter to dashboard"));
-                }
-            });
+        return self.rpc('/board/add_to_dashboard', {
+            action_id: self.action_id,
+            context_to_save: c,
+            domain: d,
+            view_mode: self.view_manager.active_view.type,
+            name: name,
+        }).then(function (r) {
+            if (r) {
+                self.do_notify(_.str.sprintf(_t("'%s' added to dashboard"), name), '');
+            } else {
+                self.do_warn(_t("Could not add filter to dashboard"));
+            }
+        });
     },
 });
 

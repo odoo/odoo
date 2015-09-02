@@ -41,7 +41,7 @@
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <kanban default_group_by="stage_id" class="oe_notes oe_kanban_quickcreate_textarea">
+        <kanban default_group_by="stage_id" class="oe_notes oe_kanban_quickcreate_textarea o_kanban_small_column">
           <field name="color"/>
           <field name="sequence"/>
           <field name="name"/>
@@ -67,7 +67,7 @@
                 </div>
                   <span>
                     <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-check"/></a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
@@ -133,30 +133,9 @@
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By">
-            <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
-      </field>
-    </record>
-
-
-    <!-- general settings -->
-    <record model="ir.ui.view" id="view_general_settings_note_form">
-      <field name="name">note.view.general_settings.form</field>
-      <field name="model">base.config.settings</field>
-      <field name="inherit_id" ref="base_setup.view_general_configuration"/>
-      <field name="arch" type="xml">
-        <xpath expr="//label[@string='Authentication']/.." position="after">
-          <group>
-              <label for="id" string="Notes"/>
-              <div name="note">
-                  <div>
-                      <field name="module_note_pad" class="oe_inline"/>
-                      <label for="module_note_pad"/>
-                  </div>
-              </div>
-          </group>
-        </xpath>
       </field>
     </record>
 
@@ -185,7 +164,7 @@
     </record>
 
     <menuitem name="Notes" id="menu_note_notes" sequence="3" action="note.action_note_note" web_icon="note,static/description/icon.png"/>
-    <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_configuration"/>
+    <menuitem name="Configuration" id="menu_note_configuration" sequence="100" parent="menu_note_notes" groups="base.group_no_one"/>
     <menuitem name="Stages" id="menu_notes_stage" parent="menu_note_configuration" action="note.action_note_stage" sequence="21" />
 
   </data>

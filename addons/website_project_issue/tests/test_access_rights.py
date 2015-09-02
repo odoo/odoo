@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.portal_project.tests.test_access_rights import TestPortalProjectBase
+from openerp.addons.project.tests.test_access_rights import TestPortalProjectBase
 from openerp.exceptions import AccessError
 from openerp.tools import mute_logger
 
@@ -33,52 +33,14 @@ class TestPortalIssue(TestPortalProjectBase):
         Issue = self.env['project.issue']
 
         # ----------------------------------------
-        # CASE1: public project
-        # ----------------------------------------
-
-        # Do: Alfred reads project -> ok (employee ok public)
-        # Test: all project issues visible
-        issues = Issue.sudo(self.user_projectuser.id).search([('project_id', '=', pigs_id)])
-        test_issue_ids = set([self.issue_1.id, self.issue_2.id, self.issue_3.id, self.issue_4.id, self.issue_5.id, self.issue_6.id])
-        self.assertEqual(set(issues.ids), test_issue_ids,
-                         'access rights: project user cannot see all issues of a public project')
-        # Test: all project issues readable
-        issues.read(['name'])
-        # Test: all project issues writable
-        issues.sudo(self.user_projectuser.id).write({'description': 'TestDescription'})
-
-        # Do: Bert reads project -> crash, no group
-        # Test: no project issue visible
-        self.assertRaises(AccessError, Issue.sudo(self.user_noone.id).search, [('project_id', '=', pigs_id)])
-        # Test: no project issue readable
-        self.assertRaises(AccessError, issues.sudo(self.user_noone.id).read, ['name'])
-        # Test: no project issue writable
-        self.assertRaises(AccessError, issues.sudo(self.user_noone.id).write, {'description': 'TestDescription'})
-
-        # Do: Chell reads project -> ok (portal ok public)
-        # Test: all project issues visible
-        issues = Issue.sudo(self.user_portal.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), test_issue_ids,
-                         'access rights: project user cannot see all issues of a public project')
-        # Test: all project issues readable
-        issues.sudo(self.user_portal.id).read(['name'])
-        # Test: no project issue writable
-        self.assertRaises(AccessError, issues.sudo(self.user_portal.id).write, {'description': 'TestDescription'})
-
-        # Do: Donovan reads project -> ok (public ok public)
-        # Test: all project issues visible
-        issues = Issue.sudo(self.user_public.id).search([('project_id', '=', pigs_id)])
-        self.assertEqual(set(issues.ids), test_issue_ids,
-                         'access rights: project user cannot see all issues of a public project')
-
-        # ----------------------------------------
-        # CASE2: portal project
+        # CASE1: portal project
         # ----------------------------------------
         self.project_pigs.write({'privacy_visibility': 'portal'})
 
         # Do: Alfred reads project -> ok (employee ok public)
         # Test: all project issues visible
         issues = Issue.sudo(self.user_projectuser.id).search([('project_id', '=', pigs_id)])
+        test_issue_ids = set([self.issue_1.id, self.issue_2.id, self.issue_3.id, self.issue_4.id, self.issue_5.id, self.issue_6.id])
         self.assertEqual(set(issues.ids), test_issue_ids,
                          'access rights: project user cannot see all issues of a portal project')
 
@@ -101,7 +63,7 @@ class TestPortalIssue(TestPortalProjectBase):
         self.issue_3.sudo(self.user_projectuser.id).message_unsubscribe_users(user_ids=[self.user_portal.id])
 
         # ----------------------------------------
-        # CASE3: employee project
+        # CASE2: employee project
         # ----------------------------------------
         self.project_pigs.write({'privacy_visibility': 'employees'})
 
@@ -118,7 +80,7 @@ class TestPortalIssue(TestPortalProjectBase):
         self.assertFalse(issues.ids, 'access rights: portal user should not see issues of an employees project, even if assigned')
 
         # ----------------------------------------
-        # CASE4: followers project
+        # CASE3: followers project
         # ----------------------------------------
         self.project_pigs.write({'privacy_visibility': 'followers'})
 

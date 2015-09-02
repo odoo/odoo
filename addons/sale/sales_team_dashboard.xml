@@ -22,13 +22,14 @@
         <data>
             <xpath expr="//templates" position="before">
                 <field name="use_quotations"/>
-                <field name="invoiced_forecast"/>
+                <field name="use_invoices"/>
+                <field name="invoiced"/>
                 <field name="invoiced_target"/>
                 <field name="sales_to_invoice_amount"/>
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
-                <div class="row">
+                <div class="row" t-if="record.use_invoices.raw_value">
                     <div class="col-xs-9">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
                             Sales to Invoice
@@ -37,33 +38,40 @@
                     <div class="col-xs-3">
                         <!-- TODO: use monetary widget when available on kanban view -->
                         <t t-esc="record.sales_to_invoice_amount.raw_value or 0"/>
+                        <field name="currency_id"/>
                     </div>
                 </div>
             </xpath>
 
+            <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
+                <button class="btn btn-primary" name="%(sale.action_quotations_salesteams)d" type="action">Quotations</button>
+            </xpath>
+
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
-                <div class="col-xs-12 o_kanban_primary_bottom" t-if="record.invoiced_target.raw_value">
-                    <field name="invoiced_forecast" widget="progress" options="{'title': 'Forecast', 'current_value': 'invoiced_forecast', 'max_value': 'invoiced_target', 'editable': true, 'on_change': 'action_forecast'}"/>
+                <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
+                    <field name="invoiced" widget="progress" options="{'title': 'Invoicing', 'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                 </div>
-                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
-                    Define an invoicing target in the sales team settings to see the period's achievement and forecast at a glance.
+                <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center">
+                    <a href="#" class="sales_team_target_definition o_inline_link">Click to define a team target</a> 
                 </div>
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
-                <div t-if="record.use_quotations.raw_value">
-                    <a name="%(action_quotations_salesteams)d" type="action">Quotations</a>
-                </div>
-                <div >
-                    <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
-                </div>
-                <div groups="account.group_account_invoice">
+                <t t-if="record.use_quotations.raw_value">
+                    <div>
+                        <a name="%(action_quotations_salesteams)d" type="action">Quotations</a>
+                    </div>
+                    <div >
+                        <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
+                    </div>
+                </t>
+                <div t-if="record.use_invoices.raw_value" groups="account.group_account_invoice">
                     <a name="%(action_invoice_salesteams)d" type="action">Invoices</a>
                 </div>
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
-                <div>
+                <div t-if="record.use_quotations.raw_value">
                     <a name="%(action_quotation_form)d" type="action">
                         Quotation
                     </a>
@@ -71,17 +79,19 @@
             </xpath>
 
             <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                <div>
-                    <a name="%(action_order_report_quotation_salesteam)d" type="action">
-                        Quotation
-                    </a>
-                </div>
-                <div>
-                    <a name="%(action_order_report_so_salesteam)d" type="action">
-                        Sales
-                    </a>
-                </div>
-                <div>
+                <t t-if="record.use_quotations.raw_value">
+                    <div>
+                        <a name="%(action_order_report_quotation_salesteam)d" type="action">
+                            Quotation
+                        </a>
+                    </div>
+                    <div>
+                        <a name="%(action_order_report_so_salesteam)d" type="action">
+                            Sales
+                        </a>
+                    </div>
+                </t>
+                <div t-if="record.use_invoices.raw_value">
                     <a name="%(action_account_invoice_report_salesteam)d" type="action">
                         Invoices
                     </a>

@@ -8,7 +8,7 @@
             <field name="model">crm.lead.report.assign</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <field name="team_id" context="{'invisible_team': False}" groups="base.group_multi_salesteams"/>
+                    <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="grade_id"/>
                     <field name="user_id"/>
                     <field name="partner_assigned_id"/>
@@ -24,8 +24,7 @@
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" context="{'group_by':'team_id'}"
-                                groups="base.group_multi_salesteams"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
                         <filter string="Country" context="{'group_by':'country_id'}" />
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" context="{'group_by':'company_id'}" />

@@ -7,7 +7,7 @@ odoo.define('web_calendar.CalendarView', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var time = require('web.time');
 var View = require('web.View');
 var widgets = require('web_calendar.widgets');
@@ -19,7 +19,6 @@ var _lt = core._lt;
 var QWeb = core.qweb;
 
 function get_fc_defaultOptions() {
-    var shortTimeformat = moment._locale._longDateFormat.LT;
     var dateFormat = time.strftime_to_moment_format(_t.database.parameters.date_format);
 
     // adapt format for fullcalendar v1.
@@ -38,13 +37,6 @@ function get_fc_defaultOptions() {
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
         weekNumbers: true,
-        axisFormat : shortTimeformat.replace(/:mm/,'(:mm)'),
-        timeFormat : {
-           // for agendaWeek and agendaDay               
-           agenda: shortTimeformat + '{ - ' + shortTimeformat + '}', // 5:00 - 6:30
-            // for all other views
-            '': shortTimeformat.replace(/:mm/,'(:mm)')  // 7pm
-        },
         titleFormat: {
             month: 'MMMM yyyy',
             week: "W",
@@ -56,7 +48,6 @@ function get_fc_defaultOptions() {
             day: 'dddd ' + dateFormat,
         },
         weekMode : 'liquid',
-        aspectRatio: 1.8,
         snapMinutes: 15,
     };
 }
@@ -72,6 +63,7 @@ function isNullOrUndef(value) {
 var CalendarView = View.extend({
     template: "CalendarView",
     display_name: _lt('Calendar'),
+    icon: 'fa-calendar',
     quick_create_instance: widgets.QuickCreate,
 
     init: function (parent, dataset, view_id, options) {
@@ -135,8 +127,7 @@ var CalendarView = View.extend({
         this.attendee_people = attrs.attendee;
 
         // Check whether the date field is editable (i.e. if the events can be dragged and dropped)
-        var main_date_field = this.date_start || this.date_end || this.date_delay;
-        this.editable = !this.options.read_only_mode && !this.fields_view.fields[main_date_field].readonly;
+        this.editable = !this.options.read_only_mode && !this.fields_view.fields[this.date_start].readonly;
 
         //if quick_add = False, we don't allow quick_add
         //if quick_add = not specified in view, we use the default quick_create_instance
@@ -155,14 +146,14 @@ var CalendarView = View.extend({
             this.open_popup_action = attrs.event_open_popup;
         }
         // If this field is set to true, we will use the calendar_friends model as filter and not the color field.
-        this.useContacts = (!isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts)) && (!isNullOrUndef(self.options.$sidebar));
+        this.useContacts = !isNullOrUndef(attrs.use_contacts) && _.str.toBool(attrs.use_contacts);
 
         // If this field is set ot true, we don't add itself as an attendee when we use attendee_people to add each attendee icon on an event
         // The color is the color of the attendee, so don't need to show again that it will be present
-        this.colorIsAttendee = (!(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true))) && (!isNullOrUndef(self.options.$sidebar));
+        this.colorIsAttendee = !(isNullOrUndef(attrs.color_is_attendee) || !_.str.toBoolElse(attrs.color_is_attendee, true));
 
         // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-        if (isNullOrUndef(self.options.$sidebar)) {
+        if (isNullOrUndef(self.options.sidebar)) {
             this.useContacts = false;
             this.colorIsAttendee = false;
             this.attendee_people = undefined;
@@ -276,8 +267,7 @@ var CalendarView = View.extend({
     get_fc_init_options: function () {
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var self = this;
-        return  $.extend({}, get_fc_defaultOptions(), {
-            
+        return $.extend({}, get_fc_defaultOptions(), {
             defaultView: (this.mode == "month")? "month" : ((this.mode == "week")? "agendaWeek" : ((this.mode == "day")? "agendaDay" : "agendaWeek")),
             header: false,
             selectable: !this.options.read_only_mode && this.create_right,
@@ -286,7 +276,6 @@ var CalendarView = View.extend({
             droppable: true,
 
             // callbacks
-
             viewRender: function(view) {
                 var mode = (view.name == "month")? "month" : ((view.name == "agendaWeek") ? "week" : "day");
                 if(self.$buttons !== undefined) {
@@ -296,6 +285,8 @@ var CalendarView = View.extend({
 
                 var title = self.title + ' (' + ((mode === "week")? _t("Week ") : "") + view.title + ")"; 
                 self.set({'title': title});
+
+                self.$calendar.fullCalendar('option', 'height', parseInt(self.$('.o_calendar_view').height()));
             },
             eventDrop: function (event, _day_delta, _minute_delta, _all_day, _revertFunc) {
                 var data = self.get_event_data(event);
@@ -348,16 +339,14 @@ var CalendarView = View.extend({
     },
 
     init_calendar: function() {
-        var self = this;
-
         if (!this.sidebar) {
             var translate = get_fc_defaultOptions();
             this.sidebar = new widgets.Sidebar(this);
             this.sidebar.appendTo(this.$('.o_calendar_sidebar_container'));
 
-            this.$small_calendar = self.$(".o_calendar_mini");
+            this.$small_calendar = this.$(".o_calendar_mini");
             this.$small_calendar.datepicker({ 
-                onSelect: self.calendarMiniChanged(self),
+                onSelect: this.calendarMiniChanged(this),
                 dayNamesMin : translate.dayNamesShort,
                 monthNames: translate.monthNamesShort,
                 firstDay: translate.firstDay,
@@ -365,12 +354,11 @@ var CalendarView = View.extend({
 
             this.extraSideBar();                
         }
-        self.$calendar.fullCalendar(self.get_fc_init_options());
-        
+        this.$calendar.fullCalendar(this.get_fc_init_options());
+
         return $.when();
     },
-    extraSideBar: function() {
-    },
+    extraSideBar: function() {},
 
     get_quick_create_class: function () {
         return widgets.QuickCreate;
@@ -509,8 +497,7 @@ var CalendarView = View.extend({
         if (!all_day) {
             date_start = time.auto_str_to_date(evt[this.date_start]);
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop]) : null;
-        }
-        else {
+        } else {
             date_start = time.auto_str_to_date(evt[this.date_start].split(' ')[0],'start');
             date_stop = this.date_stop ? time.auto_str_to_date(evt[this.date_stop].split(' ')[0],'start') : null;
         }
@@ -577,20 +564,20 @@ var CalendarView = View.extend({
                         attendee_showed += 1;
                         if (attendee_showed<= MAX_ATTENDEES) {
                             if (self.avatar_model !== null) {
-                                   the_title_avatar += '<img title="' + self.all_attendees[the_attendee_people] + '" class="o_attendee_head"  \
-                                                        src="/web/binary/image?model=' + self.avatar_model + '&field=image_small&id=' + the_attendee_people + '"></img>';
+                                       the_title_avatar += '<img title="' + _.escape(self.all_attendees[the_attendee_people]) + '" class="o_attendee_head"  \
+                                                        src="/web/image/' + self.avatar_model + '/' + the_attendee_people + '/image_small"></img>';
                             }
                             else {
                                 if (!self.colorIsAttendee || the_attendee_people != temp_ret[self.color_field]) {
                                         var tempColor = (self.all_filters[the_attendee_people] !== undefined) 
                                                     ? self.all_filters[the_attendee_people].color
                                                     : (self.all_filters[-1] ? self.all_filters[-1].color : 1);
-                                    the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + self.all_attendees[the_attendee_people] + '" ></i>';
+                                        the_title_avatar += '<i class="fa fa-user o_attendee_head o_underline_color_'+tempColor+'" title="' + _.escape(self.all_attendees[the_attendee_people]) + '" ></i>';
                                 }//else don't add myself
                             }
                         }
                         else {
-                            attendee_other += self.all_attendees[the_attendee_people] +", ";
+                                attendee_other += _.escape(self.all_attendees[the_attendee_people]) +", ";
                         }
                     }
                 );
@@ -613,17 +600,17 @@ var CalendarView = View.extend({
             'id': evt.id,
             'attendees':attendees
         };
-        if (!self.useContacts || self.all_filters[evt[this.color_field]] !== undefined) {
-            if (this.color_field && evt[this.color_field]) {
-                var color_key = evt[this.color_field];
+
+        var color_key = evt[this.color_field];
+        if (!self.useContacts || self.all_filters[color_key] !== undefined) {
+            if (color_key) {
                 if (typeof color_key === "object") {
                     color_key = color_key[0];
                 }
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
-        }
-        else  { // if form all, get color -1
-              r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+        } else { // if form all, get color -1
+            r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
         }
         return r;
     },
@@ -736,9 +723,9 @@ var CalendarView = View.extend({
                         var color_field = self.fields[self.color_field];
                         _.each(events, function (e) {
                             var key,val = null;
-                            if (self.fields[self.color_field].type == "selection") {
+                            if (color_field.type == "selection") {
                                 key = e[self.color_field];
-                                val = _.find( self.fields[self.color_field].selection, function(name){ return name[0] === key;});
+                                val = _.find(color_field.selection, function(name){ return name[0] === key;});
                             } else {
                                 key = e[self.color_field][0];
                                 val = e[self.color_field];
@@ -763,7 +750,7 @@ var CalendarView = View.extend({
                             self.sidebar.filter.set_filters();
 
                             events = $.map(events, function (e) {
-                                var key = self.fields[self.color_field].type == "selection" ? e[self.color_field] : e[self.color_field][0];
+                                var key = color_field.type == "selection" ? e[self.color_field] : e[self.color_field][0];
                                 if (_.contains(self.now_filter_ids, key) &&  self.all_filters[key].is_checked) {
                                     return e;
                                 }

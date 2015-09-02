@@ -4,6 +4,7 @@ odoo.define('website.theme', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 
 var QWeb = core.qweb;
@@ -11,7 +12,7 @@ var QWeb = core.qweb;
 ajax.jsonRpc('/web/dataset/call', 'call', {
         'model': 'ir.ui.view',
         'method': 'read_template',
-        'args': ['website.theme_customize', website.get_context()]
+        'args': ['website.theme_customize', base.get_context()]
     }).done(function (data) {
     QWeb.add_template(data);
 });
@@ -19,7 +20,7 @@ ajax.jsonRpc('/web/dataset/call', 'call', {
 ajax.jsonRpc('/web/dataset/call', 'call', {
         'model': 'ir.ui.view',
         'method': 'read_template',
-        'args': ['website.colorpicker', website.get_context()]
+        'args': ['web_editor.colorpicker', base.get_context()]
     }).done(function (data) {
     QWeb.add_template(data);
 });
@@ -28,6 +29,12 @@ var Theme = Widget.extend({
     template: 'website.theme_customize',
     events: {
         'change input[data-xmlid],input[data-enable],input[data-disable]': 'change_selection',
+        'mousedown label:has(input[data-xmlid],input[data-enable],input[data-disable])': function (event) {
+            var self = this;
+            this.time_select = _.defer(function () {
+                self.on_select($(event.target).find('input'), event);
+            });
+        },
         'click .close': 'close',
         'click': 'click',
     },
@@ -38,7 +45,7 @@ var Theme = Widget.extend({
         this.flag = false;
         this.$el.addClass("theme_customize_modal");
         this.active_select_tags();
-        this.$inputs = $("input[data-xmlid],input[data-enable],input[data-disable]");
+        this.$inputs = this.$("input[data-xmlid],input[data-enable],input[data-disable]");
         setTimeout(function () {self.$el.addClass('in');}, 0);
         this.keydown_escape = function (event) {
             if (event.keyCode === 27) {
@@ -91,10 +98,10 @@ var Theme = Widget.extend({
                 self.$inputs.filter('[data-xmlid=""]').prop("checked", true).change();
                 self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])').each(function () {
                     if (!_.difference(self.get_xml_ids($(this)), data[1]).length) {
-                        $(this).prop("checked", false).change();
+                        $(this).prop("checked", false).trigger("change", true);
                     }
                     if (!_.difference(self.get_xml_ids($(this)), data[0]).length) {
-                        $(this).prop("checked", true).change();
+                        $(this).prop("checked", true).trigger("change", true);
                     }
                 });
             }).fail(function (d, error) {
@@ -173,9 +180,8 @@ var Theme = Widget.extend({
             return $.Deferred();
         }
     },
-    enable_disable: function (data, enable) {
-        if (!data) return;
-        this.$('#'+data.split(",").join(", #")).each(function () {
+    enable_disable: function ($inputs, enable) {
+        $inputs.each(function () {
             var check = $(this).prop("checked");
             var $label = $(this).closest("label");
             $(this).prop("checked", enable);
@@ -186,21 +192,31 @@ var Theme = Widget.extend({
             }
         });
     },
-    change_selection: function (event) {
+    change_selection: function (event, init_mode) {
         var self = this;
-        if (this.$el.hasClass("loading")) return;
+        clearTimeout(this.time_select);
 
-        var $option = $(event.target),
+        if (this.$el.hasClass("loading")) return; // prevent to change selection when css is loading
+            
+        var $option = $(event.target).is('input') ? $(event.target) : $("input", event.target),
+            $options = $option,
             checked = $option.prop("checked");
 
         if (checked) {
-            this.enable_disable($option.data('enable'), true);
-            this.enable_disable($option.data('disable'), false);
+            if($option.data('enable')) {
+                var $inputs = this.get_inputs($option.data('enable'));
+                $options = $options.add($inputs.filter(':not(:checked)'));
+                this.enable_disable($inputs, true);
+            }
+            if($option.data('disable')) {
+                var $inputs = this.get_inputs($option.data('disable'));
+                $options = $options.add($inputs.filter(':checked'));
+                this.enable_disable($inputs, false);
+            }
             $option.closest("label").addClass("checked");
         } else {
             $option.closest("label").removeClass("checked");
         }
-        $option.prop("checked", checked);
 
         var $enable = this.$inputs.filter('[data-xmlid]:checked');
         $enable.closest("label").addClass("checked");
@@ -235,13 +251,23 @@ var Theme = Widget.extend({
 
         clearTimeout(this.timer);
         if (this.flag) {
-            this.timer = setTimeout(function () {
+            this.timer = _.defer(function () {
+                if (!init_mode) self.on_select($options, event);
                 self.update_style(self.get_xml_ids($enable), self.get_xml_ids($disable), self.reload);
                 self.reload = false;
-            },0);
+            });
         } else {
-            this.timer = setTimeout(function () { self.reload = false; },0);
+                this.timer = _.defer(function () {
+                    if (!init_mode) self.on_select($options, event);
+                    self.reload = false;
+                });
         }
+    },
+    /* Method call when the user change the selection or click on an input
+     * @values: all changed inputs
+     */
+    on_select: function ($inputs, event) {
+        clearTimeout(this.time_select);
     },
     click: function (event) {
         if (!$(event.target).closest("#theme_customize_modal > *").length) {
@@ -276,22 +302,25 @@ function themeError(message) {
     });
 }
 
-
-website.ready().done(function() {
-    function theme_customize() {
-        if (Theme.open && !Theme.open.isDestroyed()) return;
-        Theme.open = new Theme();
-        Theme.open.appendTo("body");
-        
-        var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
-        if (error && error !== 'none') {
-            themeError(eval(error));
-        }
+function theme_customize() {
+    if (Theme.open && !Theme.open.isDestroyed()) return;
+    Theme.open = new Theme();
+    Theme.open.appendTo("body");
+    
+    var error = window.getComputedStyle(document.body, ':before').getPropertyValue('content');
+    if (error && error !== 'none') {
+        themeError(eval(error));
     }
-    $(document).on('click', "#theme_customize a",theme_customize);
-    if ((window.location.hash || "").indexOf("theme=true") !== -1) {
-        theme_customize();
-        window.location.hash = "";
+}
+
+website.TopBar.include({
+    start: function () {
+        this.$el.on('click', "#theme_customize a", theme_customize);
+        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+            theme_customize();
+            window.location.hash = "";
+        }
+        return this._super();
     }
 });
 

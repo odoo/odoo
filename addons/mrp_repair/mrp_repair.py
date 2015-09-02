@@ -85,7 +85,7 @@ class mrp_repair(osv.osv):
         for data in self.browse(cr, uid, ids, context=context):
             adr_id = False
             if data.partner_id:
-                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['default'])['default']
+                adr_id = partner_obj.address_get(cr, uid, [data.partner_id.id], ['contact'])['contact']
             res[data.id] = adr_id
         return res
 
@@ -173,7 +173,7 @@ class mrp_repair(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
-        'pricelist_id': lambda self, cr, uid, context: self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')])[0],
+        'pricelist_id': lambda self, cr, uid, context: self.pool['product.pricelist'].search(cr, uid, [], limit=1)[0],
         'product_qty': 1.0,
         'location_id': _default_stock_location,
     }
@@ -229,14 +229,14 @@ class mrp_repair(osv.osv):
             return {'value': {
                         'address_id': False,
                         'partner_invoice_id': False,
-                        'pricelist_id': pricelist_obj.search(cr, uid, [('type', '=', 'sale')])[0]
+                        'pricelist_id': pricelist_obj.search(cr, uid, [], limit=1)[0]
                     }
             }
-        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'default'])
+        addr = part_obj.address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         partner = part_obj.browse(cr, uid, part)
         pricelist = partner.property_product_pricelist and partner.property_product_pricelist.id or False
         return {'value': {
-                    'address_id': addr['delivery'] or addr['default'],
+                    'address_id': addr['delivery'] or addr['contact'],
                     'partner_invoice_id': addr['invoice'],
                     'pricelist_id': pricelist
                 }
@@ -268,7 +268,7 @@ class mrp_repair(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
                 for line in o.operations:
-                    if line.product_id.track_production:
+                    if line.product_id.tracking != 'none' and not line.lot_id:
                         raise UserError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
                 mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
         return True
@@ -356,7 +356,7 @@ class mrp_repair(osv.osv):
                             'account_id': account_id,
                             'quantity': operation.product_uom_qty,
                             'invoice_line_tax_ids': [(6, 0, [x.id for x in operation.tax_id])],
-                            'uos_id': operation.product_uom.id,
+                            'uom_id': operation.product_uom.id,
                             'price_unit': operation.price_unit,
                             'price_subtotal': operation.product_uom_qty * operation.price_unit,
                             'product_id': operation.product_id and operation.product_id.id or False
@@ -385,7 +385,7 @@ class mrp_repair(osv.osv):
                             'account_id': account_id,
                             'quantity': fee.product_uom_qty,
                             'invoice_line_tax_ids': [(6, 0, [x.id for x in fee.tax_id])],
-                            'uos_id': fee.product_uom.id,
+                            'uom_id': fee.product_uom.id,
                             'product_id': fee.product_id and fee.product_id.id or False,
                             'price_unit': fee.price_unit,
                             'price_subtotal': fee.product_uom_qty * fee.price_unit

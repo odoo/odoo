@@ -9,7 +9,10 @@ var _t = core._t;
 
 var lastsearch;
 
-website.if_dom_contains('.website_forum', function () {
+if(!$('.website_forum').length) {
+    return $.Deferred().reject("DOM doesn't contain '.website_forum'");
+}
+
     $("[data-toggle='popover']").popover();
     $('.karma_required').on('click', function (ev) {
         var karma = $(ev.currentTarget).data('karma');
@@ -24,6 +27,23 @@ website.if_dom_contains('.website_forum', function () {
             }
         }
     });
+
+    // Extended user biography toogle
+    $('.o_forum_user_info').hover(
+        function () {
+           $(this).parent().find('.o_forum_user_bio_expand').delay(500).toggle('fast');
+        },
+        function () {
+            $(this).parent().find('.o_forum_user_bio_expand').clearQueue();
+        }
+    );
+
+    $('.o_forum_user_bio_expand').hover(
+        function () {},
+        function () {
+            $(this).fadeOut('fast');
+        }
+    );
 
     $('.vote_up,.vote_down').not('.karma_required').on('click', function (ev) {
         ev.preventDefault();
@@ -242,7 +262,8 @@ website.if_dom_contains('.website_forum', function () {
                 ['style', ['style']],
                 ['font', ['bold', 'italic', 'underline', 'clear']],
                 ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']]
+                ['table', ['table']],
+                ['history', ['undo', 'redo']],
             ];
         if (parseInt($("#karma").val()) >= editor_karma) {
             toolbar.push(['insert', ['link', 'picture']]);
@@ -256,6 +277,5 @@ website.if_dom_contains('.website_forum', function () {
             $textarea.html($form.find('.note-editable').code());
         });
     });
-});
 
 });

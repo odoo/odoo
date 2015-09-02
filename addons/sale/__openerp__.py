@@ -5,7 +5,7 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    'sequence': 14,
+    'sequence': 15,
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
 Manage sales quotations and orders
@@ -38,16 +38,12 @@ The Dashboard for the Sales Manager will include
 * My Quotations
 * Monthly Turnover (Graph)
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['sales_team','account', 'procurement', 'report'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
-        'wizard/sale_line_invoice.xml',
-        'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_report.xml',
         'sale_data.xml',
@@ -60,17 +56,11 @@ The Dashboard for the Sales Manager will include
         'views/report_saleorder.xml',
         'views/sale.xml',
         'sales_team_dashboard.xml',
+        'sale_tip_data.xml',
     ],
-    'demo': ['sale_demo.xml'],
-    'test': [
-        '../account/test/account_minimal_test.xml',
-        'test/create_sale_users.yml',
-        'test/sale_order_demo.yml',
-        'test/manual_order_policy.yml',
-        'test/cancel_order.yml',
-        'test/delete_order.yml',
-        'test/canceled_lines_order.yml',
-    ],
+    'demo': ['sale_demo.xml',
+             'sale_product_demo.xml',
+             ],
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,

@@ -8,7 +8,6 @@ class HrEquipmentConfigSettings(models.TransientModel):
     _name = 'hr.equipment.config.settings'
     _inherit = 'res.config.settings'
 
-    alias_manage = fields.Boolean('Alias Manage')
     equipment_alias_prefix = fields.Char('Use the following alias to report internal equipment issue')
     alias_domain = fields.Char("Alias Domain")
 
@@ -41,7 +40,3 @@ class HrEquipmentConfigSettings(models.TransientModel):
                 pass
         return {'alias_domain': alias_domain}
 
-    @api.multi
-    def set_default_alias_manage(self):
-        config_value = self.alias_manage
-        self.env['ir.values'].set_default('hr.config.settings', 'alias_manage', config_value)

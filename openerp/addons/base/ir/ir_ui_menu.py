@@ -9,6 +9,7 @@ import threading
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp import api, tools
+from openerp.http import request
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -22,20 +23,16 @@ class ir_ui_menu(osv.osv):
         super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool['ir.model.access'].register_cache_clearing_method(self._name, 'clear_caches')
 
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        self.clear_caches()
-
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)')
-    def _visible_menu_ids(self):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
+    def _visible_menu_ids(self, debug=False):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
         menus = self.with_context(context).search([])
 
+        groups = self.env.user.groups_id if debug else self.env.user.groups_id - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
-        groups = self.env.user.groups_id
         menus = menus.filtered(
             lambda menu: not menu.groups_id or menu.groups_id & groups)
 
@@ -72,7 +69,7 @@ class ir_ui_menu(osv.osv):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids()
+        visible_ids = self._visible_menu_ids(request.debug if request else False)
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -152,7 +149,6 @@ class ir_ui_menu(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
-        ir_values_obj = self.pool.get('ir.values')
         res = super(ir_ui_menu, self).copy(cr, uid, id, default=default, context=context)
         datas=self.read(cr,uid,[res],['name'])[0]
         rex=re.compile('\([0-9]+\)')
@@ -163,66 +159,7 @@ class ir_ui_menu(osv.osv):
         else:
             datas['name'] += '(1)'
         self.write(cr,uid,[res],{'name':datas['name']})
-        ids = ir_values_obj.search(cr, uid, [
-            ('model', '=', 'ir.ui.menu'),
-            ('res_id', '=', id),
-            ])
-        for iv in ir_values_obj.browse(cr, uid, ids):
-            ir_values_obj.copy(cr, uid, iv.id, default={'res_id': res},
-                               context=context)
         return res
-
-    def _action(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        ir_values_obj = self.pool.get('ir.values')
-        value_ids = ir_values_obj.search(cursor, user, [
-            ('model', '=', self._name), ('key', '=', 'action'),
-            ('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
-            context=context)
-        values_action = {}
-        for value in ir_values_obj.browse(cursor, user, value_ids, context=context):
-            values_action[value.res_id] = value.value
-        for menu_id in ids:
-            res[menu_id] = values_action.get(menu_id, False)
-        return res
-
-    def _action_inv(self, cursor, user, menu_id, name, value, arg, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        if self.CONCURRENCY_CHECK_FIELD in ctx:
-            del ctx[self.CONCURRENCY_CHECK_FIELD]
-        ir_values_obj = self.pool.get('ir.values')
-        values_ids = ir_values_obj.search(cursor, user, [
-            ('model', '=', self._name), ('key', '=', 'action'),
-            ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
-            context=context)
-        if value and values_ids:
-            ir_values_obj.write(cursor, user, values_ids, {'value': value}, context=ctx)
-        elif value:
-            # no values_ids, create binding
-            ir_values_obj.create(cursor, user, {
-                'name': 'Menuitem',
-                'model': self._name,
-                'value': value,
-                'key': 'action',
-                'key2': 'tree_but_open',
-                'res_id': menu_id,
-                }, context=ctx)
-        elif values_ids:
-            # value is False, remove existing binding
-            ir_values_obj.unlink(cursor, user, values_ids, context=ctx)
-
-    def _get_icon_pict(self, cr, uid, ids, name, args, context):
-        res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
-        return res
-
-    def onchange_icon(self, cr, uid, ids, icon):
-        if not icon:
-            return {}
-        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
     def read_image(self, path):
         if not path:
@@ -245,7 +182,6 @@ class ir_ui_menu(osv.osv):
             for fn in names:
                 fn_src = fn[:-5]    # remove _data
                 r[fn] = self.read_image(menu[fn_src])
-
         return res
 
     def _get_needaction_enabled(self, cr, uid, ids, field_names, args, context=None):
@@ -324,7 +260,7 @@ class ir_ui_menu(osv.osv):
     @api.cr_uid_context
     @tools.ormcache_context('uid', keys=('lang',))
     def load_menus_root(self, cr, uid, context=None):
-        fields = ['name', 'sequence', 'parent_id', 'action', 'icon']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         return {
@@ -335,16 +271,15 @@ class ir_ui_menu(osv.osv):
             'all_menu_ids': menu_root_ids,
         }
 
-
     @api.cr_uid_context
-    @tools.ormcache_context('uid', keys=('lang',))
-    def load_menus(self, cr, uid, context=None):
+    @tools.ormcache_context('uid', 'debug', keys=('lang',))
+    def load_menus(self, cr, uid, debug, context=None):
         """ Loads all menu items (all applications and their sub-menus).
 
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'icon', 'web_icon_data']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_root_ids = self.get_user_roots(cr, uid, context=context)
         menu_roots = self.read(cr, uid, menu_root_ids, fields, context=context) if menu_root_ids else []
         menu_root = {
@@ -396,39 +331,28 @@ class ir_ui_menu(osv.osv):
         'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel',
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, Odoo will compute visibility based on the related object's read access."),
-        'complete_name': fields.function(_get_full_name,
-            string='Full Path', type='char', size=128),
-        'icon': fields.char('Icon', size=64),
-        'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
+        'complete_name': fields.function(_get_full_name, string='Full Path', type='char'),
         'web_icon': fields.char('Web Icon File'),
-        'web_icon_hover': fields.char('Web Icon File (hover)'),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
-        'web_icon_hover_data': fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction_enabled,
             type='boolean',
             store=True,
             string='Target model uses the need action mechanism',
             help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
-        'action': fields.function(_action, fnct_inv=_action_inv,
-            type='reference', string='Action', size=21,
-            selection=[
+        'action': fields.reference('Action', selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),
-            ]),
+        ]),
     }
 
-    def _rec_message(self, cr, uid, ids, context=None):
-        return _('Error ! You can not create recursive Menu.')
-
     _constraints = [
-        (osv.osv._check_recursion, _rec_message, ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You can not create recursive Menu.', ['parent_id'])
     ]
     _defaults = {
-        'icon_pict': ('stock', ('STOCK_OPEN', 'ICON_SIZE_MENU')),
         'sequence': 10,
     }
     _order = "sequence,id"

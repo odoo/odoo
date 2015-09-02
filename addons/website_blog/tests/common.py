@@ -8,7 +8,7 @@ class TestWebsiteBlogCommon(common.TransactionCase):
 
         Users = self.env['res.users']
 
-        group_blog_manager_id = self.ref('base.group_document_user')
+        group_blog_manager_id = self.ref('base.group_website_designer')
         group_employee_id = self.ref('base.group_user')
         group_public_id = self.ref('base.group_public')
 

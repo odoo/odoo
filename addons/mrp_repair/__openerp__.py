@@ -5,6 +5,7 @@
 {
     'name': 'Repairs Management',
     'version': '1.0',
+    'sequence': 200,
     'category': 'Manufacturing',
     'description': """
 The aim is to have a complete module to manage all products repairs.
@@ -19,8 +20,7 @@ The following topics should be covered by this module:
     * Repair quotation report
     * Notes for the technician and for the final customer
 """,
-    'author': 'OpenERP SA',
-    'depends': ['mrp', 'sale', 'account'],
+    'depends': ['stock', 'sale', 'account'],
     'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
@@ -35,7 +35,8 @@ The following topics should be covered by this module:
         'views/report_mrprepairorder.xml',
     ],
     'demo': ['mrp_repair_demo.yml'],
-    'test': ['test/mrp_repair_users.yml',
+    'test': ['../account/test/account_minimal_test.xml',
+             'test/mrp_repair_users.yml',
              'test/test_mrp_repair_noneinv.yml',
              'test/test_mrp_repair_b4inv.yml',
              'test/test_mrp_repair_afterinv.yml',
@@ -44,4 +45,5 @@ The following topics should be covered by this module:
     ],
     'installable': True,
     'auto_install': False,
+    'application': True,
 }

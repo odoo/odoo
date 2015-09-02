@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
 LANG_CODE_MAPPING = {
@@ -84,3 +84,20 @@ class ir_translation(osv.Model):
                  """
         params += ('machine', 'standard', 'ultra', 'pro',)
         return (query, params)
+
+    @api.model
+    def _get_terms_query(self, field, records):
+        query, params = super(ir_translation, self)._get_terms_query(field, records)
+        # order translations from worst to best
+        query += """
+                    ORDER BY
+                        CASE
+                            WHEN gengo_translation=%s then 10
+                            WHEN gengo_translation=%s then 20
+                            WHEN gengo_translation=%s then 30
+                            WHEN gengo_translation=%s then 40
+                            ELSE 0
+                        END ASC
+                 """
+        params += ('machine', 'standard', 'ultra', 'pro')
+        return query, params

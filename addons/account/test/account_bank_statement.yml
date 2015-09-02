@@ -2,13 +2,6 @@
   !context
     journal_type: 'bank'
 -
-  We create a new bank with the company as partner in order to be sure to have at least one bank journal
--
-  !record {model: res.partner.bank, id: test_bank}:
-    acc_number: BE123456789
-    bank_name: BNP Test bank
-    partner_id: base.main_partner
--
   In order to test Bank Statement feature of account I create a bank statement line and confirm it and check it's move created
 -
   I select the period and journal for the bank statement
@@ -38,6 +31,18 @@
         'statement_id': ref('account_bank_statement_0'),
     }
     self.create(cr, uid, vals)
+-
+  I process the bank statement line
+-
+  !python {model: account.bank.statement}: |
+    account_id = self.pool.get('account.account').create(cr, uid, {'name': 'toto', 'code': 'bidule', 'user_type_id': self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'account.data_account_type_fixed_assets')})
+    statement = self.browse(cr, uid, [ref("account_bank_statement_0")])
+    statement.line_ids[0].process_reconciliation(new_aml_dicts=[{
+        'credit': 1000,
+        'debit': 0,
+        'name': 'toto',
+        'account_id': account_id,
+    }])
 -
   I modify the bank statement and set the Closing Balance.
 -

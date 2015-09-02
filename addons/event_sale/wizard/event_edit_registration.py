@@ -35,11 +35,11 @@ class SaleOrderEventRegistration(models.TransientModel):
                     'sale_order_line_id': so_line.id,
                 })
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                attendee_list.append({
+                attendee_list.append([0, 0, {
                     'event_id': so_line.event_id.id,
                     'event_ticket_id': so_line.event_ticket_id.id,
                     'sale_order_line_id': so_line.id,
-                })
+                }])
         res['event_registration_ids'] = attendee_list
         return res
 

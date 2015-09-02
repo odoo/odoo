@@ -12,7 +12,8 @@
         <record id="configurable_chart_template" model="account.chart.template">
             <field name="name">Configurable Account Chart Template</field>
             <field name="code_digits">6</field>
-            <field name="bank_account_code_char">1014</field>
+            <field name="bank_account_code_prefix">1014</field>
+            <field name="cash_account_code_prefix">1015</field>
             <field name="transfer_account_id" ref="transfer_account_id"/>
             <field name="currency_id" ref="base.USD"/>
         </record>
@@ -26,7 +27,7 @@
         <record id="conf_xfa" model="account.account.template">
             <field name="code">1000</field>
             <field name="name">Fixed Asset Account</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>
 
@@ -183,7 +184,7 @@
         <record id="a_expense_invest" model="account.account.template">
             <field name="code">2122</field>
             <field name="name">Purchase of Equipments</field>
-            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_investing')])]"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
         </record>

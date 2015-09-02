@@ -11,7 +11,6 @@
 This module adds claim menu and features to your portal if claim and portal are installed.
 ==========================================================================================
     """,
-    'author': 'OpenERP SA',
     'depends': ['crm_claim','portal', 'website'],
     'data': [
         'portal_claim_view.xml',

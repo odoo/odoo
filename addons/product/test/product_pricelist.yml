@@ -51,9 +51,9 @@
 -
   !python {model: product.product}: |
     from openerp.tools import float_compare
-    context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4'), 'pricelist': ref("supplier_pricelist")})
+    context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4')})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert float_compare(product.price, 792, precision_digits=2) == 0, "Wrong cost price: LCD Monitor."
+    assert float_compare(product.seller_price, 790, precision_digits=2) == 0, "Wrong cost price: LCD Monitor."
 -
   I check cost price of LCD Monitor if more than 3 Unit.
 -
@@ -61,7 +61,7 @@
     from openerp.tools import float_compare
     context.update({'quantity':3})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert float_compare(product.price, 787, precision_digits=2) == 0, "Wrong cost price: LCD Monitor if more than 3 Unit."
+    assert float_compare(product.seller_price, 785, precision_digits=2) == 0, "Wrong cost price: LCD Monitor if more than 3 Unit."
 -
  I print the sale prices report.
 -

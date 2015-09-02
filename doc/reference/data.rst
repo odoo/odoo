@@ -1,3 +1,5 @@
+:banner: banners/data_files.jpg
+
 .. _reference/data:
 
 ==========

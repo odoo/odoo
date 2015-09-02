@@ -3,7 +3,7 @@ from openerp.addons.account.tests.account_test_classes import AccountingTestCase
 class TestFiscalPosition(AccountingTestCase):
     """Tests for fiscal positions in auto apply (account.fiscal.position).
     If a partner has a vat number, the fiscal positions with "vat_required=True"
-    are prefered.
+    are preferred.
     """
 
     def setUp(self):

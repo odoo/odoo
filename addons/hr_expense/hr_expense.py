@@ -154,6 +154,38 @@ class hr_expense_expense(osv.osv):
             return 'hr_expense.mt_expense_refused'
         return super(hr_expense_expense, self)._track_subtype(cr, uid, ids, init_values, context=context)
 
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override because HR users / officers can approve / refuse expenses
+        directly form their notification email. """
+        group_hr_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'base.group_hr_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_hr_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_hr_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(hr_expense_expense, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        """ Override because HR users / officers can approve / refuse expenses
+        directly form their notification email. """
+        res = super(hr_expense_expense, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        app_action = self._notification_link_helper(cr, uid, ids, 'workflow', context=context, signal='validate')
+        ref_action = self._notification_link_helper(cr, uid, ids, 'workflow', context=context, signal='refuse')
+
+        expense = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if expense.state == 'confirm':
+            actions.append({'url': app_action, 'title': _('Approve')})
+        if expense.state in ['confirm', 'accepted']:
+            actions.append({'url': ref_action, 'title': _('Refuse')})
+
+        res['group_hr_user'] = {
+            'actions': actions
+        }
+        return res
+
     def account_move_get(self, cr, uid, expense_id, context=None):
         '''
         This method prepare the creation of the account move related to the given expense.
@@ -199,7 +231,7 @@ class hr_expense_expense(osv.osv):
             'ref': x.get('ref', False),
             'quantity': x.get('quantity',1.00),
             'product_id': x.get('product_id', False),
-            'product_uom_id': x.get('uos_id', False),
+            'product_uom_id': x.get('uom_id', False),
             'analytic_account_id': x.get('account_analytic_id', False),
         }
 
@@ -342,7 +374,7 @@ class hr_expense_expense(osv.osv):
             'price':line.total_amount,
             'account_id':acc.id,
             'product_id':line.product_id.id,
-            'uos_id':line.uom_id.id,
+            'uom_id':line.uom_id.id,
             'account_analytic_id':line.analytic_account.id,
         }
 
@@ -399,7 +431,7 @@ class hr_expense_line(osv.osv):
         'total_amount': fields.function(_amount, string='Total', digits=0),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Product Price')),
         'unit_quantity': fields.float('Quantities', digits_compute= dp.get_precision('Product Unit of Measure')),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)], required=True),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),

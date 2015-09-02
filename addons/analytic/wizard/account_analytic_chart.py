@@ -17,7 +17,7 @@ class account_analytic_chart(osv.osv_memory):
         result_context = {}
         if context is None:
             context = {}
-        result = mod_obj.get_object_reference(cr, uid, 'analytic', 'action_account_analytic_account_tree2')
+        result = mod_obj.get_object_reference(cr, uid, 'analytic', 'action_analytic_account_form')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         data = self.read(cr, uid, ids, [])[0]

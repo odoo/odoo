@@ -2,9 +2,7 @@
 {
     'name' : 'Products Expiry Date',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
     'category' : 'Specific Industry Applications',
-    'website': 'https://www.odoo.com',
     'depends' : ['stock'],
     'demo' : ['product_expiry_demo.xml'],
     'description': """

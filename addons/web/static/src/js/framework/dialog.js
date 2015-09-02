@@ -145,26 +145,47 @@ var Dialog = Widget.extend({
     }
 });
 
-
-// static method to open simple confirm dialog
-Dialog.confirm = function (owner, message, confirm_callback) {
-    var buttons = [
-        {
-            text: _t("Ok"),
-            classes: 'btn-primary',
-            close: true,
-            click: confirm_callback
-        },
-        {text: _t("Cancel"), close: true}
-    ];
-    return new Dialog(owner, {
+// static method to open simple alert dialog
+Dialog.alert = function (owner, message, options) {
+    var buttons = [{
+        text: _t("Ok"),
+        close: true,
+        click: options && options.confirm_callback,
+    }];
+    return new Dialog(owner, _.extend({
         size: 'medium',
         buttons: buttons,
         $content: $('<div>', {
             text: message,
         }),
-    }).open();
-}
+        title: _t("Alert"),
+    }, options)).open();
+};
+
+// static method to open simple confirm dialog
+Dialog.confirm = function (owner, message, options) {
+    var buttons = [
+        {
+            text: _t("Ok"),
+            classes: 'btn-primary',
+            close: true,
+            click: options && options.confirm_callback
+        },
+        {
+            text: _t("Cancel"),
+            close: true,
+            click: options && options.cancel_callback
+        }
+    ];
+    return new Dialog(owner, _.extend({
+        size: 'medium',
+        buttons: buttons,
+        $content: $('<div>', {
+            text: message,
+        }),
+        title: _t("Confirmation"),
+    }, options)).open();
+};
 
 return Dialog;
 

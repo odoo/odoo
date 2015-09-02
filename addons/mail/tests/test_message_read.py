@@ -9,6 +9,7 @@ class TestMessageRead(TestMail):
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def setUp(self):
         super(TestMessageRead, self).setUp()
+        self.user_employee.write({'notify_email': 'none'})
         self.group_pigs.message_subscribe_users([self.user_employee.id])
         self.msg_0 = self.group_pigs.message_post(body='0', subtype='mt_comment')
         self.msg_1 = self.group_pigs.message_post(body='1', subtype='mt_comment')
@@ -34,23 +35,24 @@ class TestMessageRead(TestMail):
         self.assertEqual(msg_ids, self.msg_ids[2:4], 'message_read with direct ids should read only the requested ids')
 
     def test_message_read_domain(self):
-        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], limit=200, child_limit=200)
+        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)], limit=200, child_limit=200)
         read_msg_list = [msg for thread in messages['threads'] for msg in thread]
         read_msg_ids = [msg.get('id') for msg in read_msg_list]
         self.assertEqual(read_msg_ids, self.msg_ids, 'message_read flat with domain on Pigs should equal all messages of Pigs')
 
     def test_message_read_domain_thread(self):
-        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], thread_level=1, limit=200, child_limit=200)
+        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)], thread_level=1, limit=200, child_limit=200)
         read_msg_list = [msg for thread in messages['threads'] for msg in thread]
         read_msg_ids = [msg.get('id') for msg in read_msg_list]
         self.assertEqual(read_msg_ids, self.ordered_msg_ids, 'message_read threaded with domain on Pigs should equal all messages of Pigs, and sort them with newer thread first, last message last in thread')
 
     def test_message_read_expandable(self):
-        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], thread_level=1, limit=1, child_limit=1)
+        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)], thread_level=1, limit=1, child_limit=1)
         read_msg_list = [msg for thread in messages['threads'] for msg in thread] 
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('message_type') != 'expandable']
         read_ancestor_ids = [msg.get('parent_id') if msg.get('parent_id') != 0 else msg.get('id') for msg in read_msg_list if msg.get('message_type') != 'expandable']
         type_list = [msg.get('message_type') for msg in read_msg_list]
+
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
         self.assertEqual(len(type_list), 4, 'message_read on last Pigs message should return 2 messages and 2 expandables')
         self.assertEqual(set([self.msg_2.id, self.msg_10.id]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
@@ -88,7 +90,7 @@ class TestMessageRead(TestMail):
         self.assertIsNotNone(new_threads_exp, 'message_read on last Pigs message should have returned a new threads expandable')
         domain = new_threads_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        for condition in [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)]:
+        for condition in [('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)]:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
         self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an parent_id')
         # Do: message_read with domain, thread_level=1 (should be imposed by JS)
@@ -125,7 +127,7 @@ class TestMessageRead(TestMail):
         self.assertIsNotNone(new_threads_exp, 'message_read should have returned a new threads expandable')
         domain = new_threads_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        for condition in [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)]:
+        for condition in [('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)]:
             self.assertIn(condition, domain, 'general expandable domain should contain the message_read domain parameter')
         # Do: message_read with domain, thread_level=1 (should be imposed by JS)
         messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=domain, thread_level=1, limit=1, child_limit=1)
@@ -141,7 +143,7 @@ class TestMessageRead(TestMail):
         # ----------------------------------------
 
         # Do: read 2 lasts message, flat
-        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)], thread_level=0, limit=2)
+        messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=[('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)], thread_level=0, limit=2)
         read_msg_list = [msg for thread in messages['threads'] for msg in thread]
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('message_type') != 'expandable']
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is not set, 1 expandable
@@ -158,7 +160,7 @@ class TestMessageRead(TestMail):
         self.assertIsNotNone(new_msg_exp, 'message_read flat on the 2 last Pigs messages should have returns a new threads expandable')
         domain = new_msg_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        for condition in [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs.id)]:
+        for condition in [('model', '=', 'mail.channel'), ('res_id', '=', self.group_pigs.id)]:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
         # Do: message_read with domain, thread_level=0 (should be imposed by JS)
         messages = self.env['mail.message'].sudo(self.user_employee).message_read(domain=domain, thread_level=0, limit=20)

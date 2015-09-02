@@ -47,15 +47,11 @@ class project_issue(osv.Model):
         # lame hack to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
-        # retrieve team_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
-        search_domain = []
+        # retrieve team_id from the context, add them to already fetched columns (ids)
         if 'default_project_id' in context:
-            search_domain += ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
+            search_domain = ['|', ('project_ids', '=', context['default_project_id']), ('id', 'in', ids)]
         else:
-            search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+            search_domain = [('id', 'in', ids)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -123,14 +119,6 @@ class project_issue(osv.Model):
 
         return res
 
-    def _can_escalate(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
-            esc_proj = issue.project_id.project_escalation_id
-            if esc_proj and esc_proj.analytic_account_id.type == 'contract':
-                res[issue.id] = True
-        return res
-
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
@@ -196,14 +184,13 @@ class project_issue(osv.Model):
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'can_escalate': fields.function(_can_escalate, type='boolean', string='Can Escalate'),
     }
 
     _defaults = {
         'active': 1,
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, uid, context=c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool['res.users']._get_company(cr, uid, context=c),
         'priority': '0',
         'kanban_state': 'normal',
         'date_last_stage_update': fields.datetime.now,
@@ -311,22 +298,6 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
-        for issue in self.browse(cr, uid, ids, context=context):
-            data = {}
-            esc_proj = issue.project_id.project_escalation_id
-            if not esc_proj:
-                raise UserError(_('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-
-            data['project_id'] = esc_proj.id
-            if esc_proj.user_id:
-                data['user_id'] = esc_proj.user_id.id
-            issue.write(data)
-
-            if issue.task_id:
-                issue.task_id.write({'project_id': esc_proj.id, 'user_id': False})
-        return True
-
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
@@ -344,6 +315,38 @@ class project_issue(osv.Model):
         elif 'stage_id' in init_values:
             return 'project_issue.mt_issue_stage'
         return super(project_issue, self)._track_subtype(cr, uid, ids, init_values, context=context)
+
+    def _notification_group_recipients(self, cr, uid, ids, message, recipients, done_ids, group_data, context=None):
+        """ Override the mail.thread method to handle project users and officers
+        recipients. Indeed those will have specific action in their notification
+        emails: creating tasks, assigning it. """
+        group_project_user = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project.group_project_user')
+        for recipient in recipients:
+            if recipient.id in done_ids:
+                continue
+            if recipient.user_ids and group_project_user in recipient.user_ids[0].groups_id.ids:
+                group_data['group_project_user'] |= recipient
+                done_ids.add(recipient.id)
+        return super(project_issue, self)._notification_group_recipients(cr, uid, ids, message, recipients, done_ids, group_data, context=context)
+
+    def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
+        res = super(project_issue, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
+
+        new_action_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'project_issue.project_issue_categ_act0')
+        take_action = self._notification_link_helper(cr, uid, ids, 'assign', context=context)
+        new_action = self._notification_link_helper(cr, uid, ids, 'new', context=context, view_id=new_action_id)
+
+        task_record = self.browse(cr, uid, ids[0], context=context)
+        actions = []
+        if not task_record.user_id:
+            actions.append({'url': take_action, 'title': _('I take it')})
+        else:
+            actions.append({'url': new_action, 'title': _('New Issue')})
+
+        res['group_project_user'] = {
+            'actions': actions
+        }
+        return res
 
     @api.cr_uid_context
     def message_get_reply_to(self, cr, uid, ids, default=None, context=None):
@@ -365,6 +368,13 @@ class project_issue(osv.Model):
             pass
         return recipients
 
+    def email_split(self, cr, uid, ids, msg, context=None):
+        email_list = tools.email_split((msg.get('to') or '') + ',' + (msg.get('cc') or ''))
+        # check left-part is not already an alias
+        issue_ids = self.browse(cr, uid, ids, context=context)
+        aliases = [issue.project_id.alias_name for issue in issue_ids if issue.project_id]
+        return filter(lambda x: x.split('@')[0] not in aliases, email_list)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -381,10 +391,23 @@ class project_issue(osv.Model):
             'user_id': False,
         }
         defaults.update(custom_values)
+
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        email_list = self.email_split(cr, uid, [res_id], msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, [res_id], email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, [res_id], partner_ids, context=context)
         return res_id
 
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override to update the issue according to the email. """
+
+        email_list = self.email_split(cr, uid, ids, msg, context=context)
+        partner_ids = self._find_partner_from_emails(cr, uid, ids, email_list, force_create=True, context=context)
+        self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
     @api.cr_uid_ids_context
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, cr, uid, thread_id, subtype=None, context=None, **kwargs):
         """ Overrides mail_thread message_post so that we can set the date of last action field when
             a new message is posted on the issue.
@@ -411,24 +434,10 @@ class project(osv.Model):
         }
 
     _columns = {
-        'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
-            help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
-            states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Issues",),
         'issue_ids': fields.one2many('project.issue', 'project_id', string="Issues",
                                     domain=[('stage_id.fold', '=', False)]),
     }
-
-    def _check_escalation(self, cr, uid, ids, context=None):
-        project_obj = self.browse(cr, uid, ids[0], context=context)
-        if project_obj.project_escalation_id:
-            if project_obj.project_escalation_id.id == project_obj.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
-    ]
 
 
 class account_analytic_account(osv.Model):

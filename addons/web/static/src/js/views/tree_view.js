@@ -16,6 +16,7 @@ var QWeb = core.qweb;
 
 var TreeView = View.extend(/** @lends instance.web.TreeView# */{
     display_name: _lt('Tree'),
+    icon: 'fa-align-left',
     view_type: 'tree',
     /**
      * Indicates that this view is not searchable, and thus that no search
@@ -260,13 +261,7 @@ var TreeView = View.extend(/** @lends instance.web.TreeView# */{
         }, this);
     },
 
-    do_show: function () {
-        this.$el.show();
-        this._super();
-    },
-
     do_hide: function () {
-        this.$el.hide();
         this.hidden = true;
         this._super();
     }

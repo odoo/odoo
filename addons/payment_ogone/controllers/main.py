@@ -31,7 +31,7 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public')
     def ogone_s2s_create_json(self, **kwargs):
-        data = kwargs['params']
+        data = kwargs
         acquirer_id = int(data.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         new_id = acquirer.s2s_process(data)
@@ -44,7 +44,7 @@ class OgoneController(http.Controller):
         acquirer.s2s_process(post)
         return werkzeug.utils.redirect(post.get('return_url', '/'))
 
-    @http.route(['/payment/ogone/s2s/feedback'])
+    @http.route(['/payment/ogone/s2s/feedback'], auth='none')
     def feedback(self, **kwargs):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         payment = request.registry.get('payment.transaction')

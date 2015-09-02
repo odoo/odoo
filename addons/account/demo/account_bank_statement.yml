@@ -47,7 +47,7 @@
               'journal_id': journal_id,
               'amount': 650.0,
               'date': time.strftime('%Y')+'-01-01',
-              'partner_id': ref('base.res_partner_9'),
+              'partner_id': ref('base.res_partner_12'),
           }
           self._update(cr, uid, 'account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_3')
           vals = {
@@ -59,7 +59,7 @@
               'journal_id': journal_id,
               'amount': 2000.0,
               'date': time.strftime('%Y')+'-01-01',
-              'partner_id': ref('base.res_partner_9'),
+              'partner_id': ref('base.res_partner_12'),
           }
           self._update(cr, uid, 'account.bank.statement.line', 'account', vals, 'demo_bank_statement_line_4')
           vals = {

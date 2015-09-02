@@ -4,7 +4,7 @@ odoo.define('web.UserMenu', function (require) {
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -47,7 +47,7 @@ var SystrayMenu = Widget.extend({
                 if (!session.debug) {
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
                 }
-                var avatar_src = session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: session.uid});
+                var avatar_src = session.url('/web/image', {model:'res.users', field: 'image_small', id: session.uid});
                 $avatar.attr('src', avatar_src);
 
                 core.bus.trigger('resize');  // Re-trigger the reflow logic
@@ -63,15 +63,15 @@ var SystrayMenu = Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        if (!this.getParent().has_uncommitted_changes()) {
+        this.getParent().clear_uncommitted_changes().then(function() {
             self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }).done(function(result) {
                 result.res_id = session.uid;
                 self.getParent().action_manager.do_action(result);
             });
-        }
+        });
     },
     on_menu_account: function() {
-        if (!this.getParent().has_uncommitted_changes()) {
+        this.getParent().clear_uncommitted_changes().then(function() {
             var P = new Model('ir.config_parameter');
             P.call('get_param', ['database.uuid']).then(function(dbuuid) {
                 var state = {
@@ -89,7 +89,7 @@ var SystrayMenu = Widget.extend({
                 ev.preventDefault();
                 framework.redirect('https://accounts.odoo.com/account');
             });
-        }
+        });
     },
     on_menu_about: function() {
         var self = this;

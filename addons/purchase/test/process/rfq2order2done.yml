@@ -25,7 +25,7 @@
     assert len(purchase_order.invoice_ids) >= 1, "Invoice is not generated more or less than one"
     for invoice in purchase_order.invoice_ids:
       assert invoice.state == "draft", "Invoice state should be draft"
-      assert invoice.partner_id.id == purchase_order.partner_id.id, "Supplier is not correspond with purchase order"
+      assert invoice.partner_id.id == purchase_order.partner_id.id, "Vendor is not correspond with purchase order"
       assert invoice.reference == purchase_order.partner_ref or purchase_order.name,"Invoice reference is not correspond with purchase order"
       assert invoice.type == 'in_invoice',"Invoice type is not correspond with purchase order"
       assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"

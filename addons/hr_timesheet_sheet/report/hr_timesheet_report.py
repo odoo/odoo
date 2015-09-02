@@ -7,7 +7,6 @@ from openerp.osv import fields,osv
 class hr_timesheet_report(osv.osv):
     _inherit = "hr.timesheet.report"
     _columns = {
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing',readonly=True),
         'nbr': fields.integer('# Nbr Timesheet',readonly=True),
         'total_diff': fields.float('# Total Diff',readonly=True),
         'total_timesheet': fields.float('# Total Timesheet',readonly=True),
@@ -50,12 +49,11 @@ class hr_timesheet_report(osv.osv):
                         sum(t.total_diff) as total_diff,
                         sum(t.total_timesheet) as total_timesheet,
                         sum(t.total_attendance) as total_attendance,
-                        aal.to_invoice,
                         htss.department_id,
                         htss.state"""
 
     def _from(self):
-        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (aal.sheet_id=htss.id) join totals as t on (t.sheet_id = aal.sheet_id and t.date = aal.date)"
+        return super(hr_timesheet_report, self)._from() + "left join hr_timesheet_sheet_sheet as htss ON (aal.sheet_id=htss.id) left join totals as t on (t.sheet_id = aal.sheet_id and t.date = aal.date)"
 
     def _group_by(self):
         return super(hr_timesheet_report, self)._group_by() + """,
@@ -63,7 +61,6 @@ class hr_timesheet_report(osv.osv):
                         htss.date_to,
                         aal.unit_amount,
                         aal.amount,
-                        aal.to_invoice,
                         htss.name,
                         htss.state,
                         htss.id,

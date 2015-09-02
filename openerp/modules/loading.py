@@ -122,7 +122,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         migrations.migrate_module(package, 'pre')
         load_openerp_module(package.name)
 
-        new_install = package.installed_version is None
+        new_install = package.state == 'to install'
         if new_install:
             py_module = sys.modules['openerp.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
@@ -366,27 +366,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
 
-        # STEP 5: Cleanup menus 
-        # Remove menu items that are not referenced by any of other
-        # (child) menu item, ir_values, or ir_model_data.
-        # TODO: This code could be a method of ir_ui_menu. Remove menu without actions of children
-        if update_module:
-            while True:
-                cr.execute('''delete from
-                        ir_ui_menu
-                    where
-                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
-                    and
-                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
-                    and
-                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
-                cr.commit()
-                if not cr.rowcount:
-                    break
-                else:
-                    _logger.info('removed %d unused menus', cr.rowcount)
-
-        # STEP 6: Uninstall modules to remove
+        # STEP 5: Uninstall modules to remove
         if update_module:
             # Remove records referenced from ir_model_data for modules to be
             # removed (and removed the references from ir_model_data).
@@ -408,7 +388,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 openerp.api.Environment.reset()
                 return openerp.modules.registry.RegistryManager.new(cr.dbname, force_demo, status, update_module)
 
-        # STEP 7: verify custom views on every model
+        # STEP 6: verify custom views on every model
         if update_module:
             Views = registry['ir.ui.view']
             custom_view_test = True

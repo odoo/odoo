@@ -45,9 +45,9 @@
                        <t t-set="classname">pull-left</t>
                     </t>
                     <form action="" method="get" class="navbar-search pull-right pagination form-inline">
-                        <div class="form-group">
-                            <input type="text" name="name" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="post.get('name', '')"/>
-                        </div>
+                        <t t-call="website.website_search_box">
+                            <t t-set="search" t-value="post.get('search', '')"/>
+                        </t>
                     </form>
                 </div>
                 <div>

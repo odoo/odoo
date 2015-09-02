@@ -4,20 +4,18 @@
 
 {
     'name': 'Products & Pricelists',
-    'version': '1.1',
-    'author': 'OpenERP SA',
+    'version': '1.2',
     'category': 'Sales Management',
     'depends': ['base', 'decimal_precision', 'mail', 'report'],
     'demo': [
         'product_demo.xml',
         'product_image_demo.xml',
     ],
-    'website': 'https://www.odoo.com',
     'description': """
 This is the base module for managing products and pricelists in OpenERP.
 ========================================================================
 
-Products support variants, different pricing methods, suppliers information,
+Products support variants, different pricing methods, vendors information,
 make to stock/order, different unit of measures, packaging and properties.
 
 Pricelists support:
@@ -27,7 +25,7 @@ Pricelists support:
         * Other pricelist
         * Cost price
         * List price
-        * Supplier price
+        * Vendor price
 
 Pricelists preferences by product and/or partners.
 

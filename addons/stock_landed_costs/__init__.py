@@ -3,3 +3,4 @@
 
 import product
 import stock_landed_costs
+import purchase_config_settings

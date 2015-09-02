@@ -137,7 +137,7 @@ var LiveSupport = Widget.extend({
 });
 
 var ChatButton = Widget.extend({
-    className: "openerp_style oe_chat_button",
+    className: "openerp_style oe_chat_button hidden-print",
     events: {
         "click": "click"
     },

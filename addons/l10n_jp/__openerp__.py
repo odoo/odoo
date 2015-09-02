@@ -30,13 +30,12 @@ need to use these at all under normal circumstances.
     'website': 'http://www.openerp-asia.net/',
     'depends': ['account'],
     'data': [
+        'data/account_chart_template.xml',
         'data/account.account.template.csv',
-        'data/account.tax.code.template.csv',
-        'data/account.chart.template.csv',
         'data/account.tax.template.csv',
+        'data/account_chart_template_after.xml',
+        'data/account_chart_template.yml',
         'data/account.fiscal.position.template.csv',
     ],
-    'installable': False,
+    'installable': True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

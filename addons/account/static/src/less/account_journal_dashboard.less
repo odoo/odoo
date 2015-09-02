@@ -1,7 +1,14 @@
 .o_kanban_view.o_kanban_dashboard.o_account_kanban {
     .o_kanban_record {
-        min-width: 500px;
-        max-width: 650px;
+        min-width: 450px;
+
+        @media (max-width: @grid-float-breakpoint) {
+            min-width: inherit;
+        }
+
+        button {
+            margin-bottom: 5px;
+        }
 
         .o_kanban_card_settings {
             padding: 8px;
@@ -10,12 +17,113 @@
             border-top-style: solid;
             border-top-width: 1px;
         }
-        .o_kanban_graph_section {
-            padding: 16px;
-        }
         .o_dashboard_star {
             font-size: 12px;
             margin-left: 5px;
+
+            &.fa-star-o {
+                color: @odoo-main-color-muted;
+                &:hover {
+                    color: gold;
+                }
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
+
+        .o_kanban_card_content {
+            // give space for graph section at the bottom
+            margin-bottom: 75px;
+            min-height: 120px;
+        }
+
+        .o_kanban_graph_section {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            .nvtooltip {
+                padding: 0 8px 0 8px;
+                .o_tooltip_content {
+                    color: @odoo-brand-primary;
+                    font-weight: bold;
+                }
+            }
+            .o_graph_linechart {
+
+                svg {
+                    height: 75px;
+
+                    // X axis
+                    g.nv-x.nv-axis {
+                        transform: translateY(50px);
+
+                        // Remove max and min labels
+                        g.nv-axisMaxMin {
+                            display: none;
+                        }
+                        g.tick.major {
+                            // Don't know why, but leads to strange bold text
+                            // stroke: @odoo-brand-primary;
+
+                            line {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    // !important are needed because nvd3 uses inline style on elements
+
+                    // Remove strokes
+                    g.nv-linesWrap {
+                        g.nv-group.nv-series-0 {
+                            fill-opacity: 0.3 !important;
+                            fill: @odoo-brand-primary !important;
+                            stroke: @odoo-brand-primary !important;
+
+                            .nv-point {
+                                visibility: hidden;
+                                r: 3;
+                                stroke: @odoo-brand-primary !important;
+                                fill: white;
+                                stroke-width: 2;
+                            }
+                            .nv-point:nth-child(5n+1) {
+                                visibility: visible;
+                                fill-opacity: .95 !important;
+                                stroke-opacity: .95 !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .o_graph_barchart {
+
+                svg {
+                    height: 75px;
+                    overflow: visible;
+                    g.nv-barsWrap {
+                        g.nv-group.nv-series-0 {
+                            g.past {
+                                opacity: 0.5;
+                                fill: @odoo-brand-primary !important;
+                            }
+                            g.future {
+                                opacity: 0.5;
+                                fill: @odoo-brand-optional !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_kanban_record {
+            min-width: inherit;
         }
     }
 }

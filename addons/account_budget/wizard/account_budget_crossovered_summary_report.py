@@ -10,7 +10,7 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
     This wizard provides the crossovered budget summary report'
     """
     _name = 'account.budget.crossvered.summary.report'
-    _description = 'Account Budget  crossvered summary report'
+    _description = 'Account Budget crossovered summary report'
     _columns = {
         'date_from': fields.date('Start of period', required=True),
         'date_to': fields.date('End of period', required=True),

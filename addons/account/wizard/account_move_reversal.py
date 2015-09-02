@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-
+from openerp.tools.translate import _
 
 class AccountMoveReversal(models.TransientModel):
     """
@@ -14,5 +14,14 @@ class AccountMoveReversal(models.TransientModel):
     @api.multi
     def reverse_moves(self):
         ac_move_ids = self._context.get('active_ids', False)
-        self.env['account.move'].browse(ac_move_ids).reverse_moves(self.date, self.journal_id or False)
+        res = self.env['account.move'].browse(ac_move_ids).reverse_moves(self.date, self.journal_id or False)
+        if res:
+            return {
+                'name': _('Reverse Moves'),
+                'type': 'ir.actions.act_window',
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.move',
+                'domain': [('id', 'in', res)],
+            }
         return {'type': 'ir.actions.act_window_close'}

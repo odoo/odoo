@@ -1,5 +1,7 @@
 
-from openerp import models, fields, api, _
+from openerp import models, fields, api, _, tools
+from datetime import datetime, date
+from dateutil.relativedelta import relativedelta
 import openerp.addons.decimal_precision as dp
 
 class crm_lead(models.Model):
@@ -21,3 +23,29 @@ class crm_lead(models.Model):
     sale_amount_total= fields.Float(compute='_get_sale_amount_total', string="Sum of Orders", readonly=True, digits=0)
     sale_number = fields.Integer(compute='_get_sale_amount_total', string="Number of Quotations", readonly=True)
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
+
+    def retrieve_sales_dashboard(self, cr, uid, context=None):
+        res = super(crm_lead, self).retrieve_sales_dashboard(cr, uid, context=None)
+
+        res['invoiced'] = {
+            'this_month': 0,
+            'last_month': 0,
+        }
+        account_invoice_domain = [
+            ('state', 'in', ['open', 'paid']),
+            ('user_id', '=', uid),
+            ('date', '>=', date.today().replace(day=1) - relativedelta(months=+1))
+        ]
+
+        invoice_ids = self.pool.get('account.invoice').search_read(cr, uid, account_invoice_domain, ['date', 'amount_untaxed_signed'], context=context)
+        for inv in invoice_ids:
+            if inv['date']:
+                inv_date = datetime.strptime(inv['date'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
+                if inv_date <= date.today() and inv_date >= date.today().replace(day=1):
+                    res['invoiced']['this_month'] += inv['amount_untaxed_signed']
+                elif inv_date < date.today().replace(day=1) and inv_date >= date.today().replace(day=1) - relativedelta(months=+1):
+                    res['invoiced']['last_month'] += inv['amount_untaxed_signed']
+
+        res['invoiced']['target'] = self.pool('res.users').browse(cr, uid, uid, context=context).target_sales_invoiced
+
+        return res

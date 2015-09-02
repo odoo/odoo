@@ -7,7 +7,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
 
-    def _opportunity_meeting_phonecall_count(self, cr, uid, ids, field_name, arg, context=None):
+    def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
         # the user may not have access rights for opportunities or meetings
         try:
@@ -23,8 +23,6 @@ class res_partner(osv.osv):
                 }
         except:
             pass
-        for partner in self.browse(cr, uid, ids, context):
-            res[partner.id]['phonecall_count'] = len(partner.phonecall_ids)
         return res
 
     _columns = {
@@ -33,11 +31,8 @@ class res_partner(osv.osv):
             'Opportunities', domain=[('type', '=', 'opportunity')]),
         'meeting_ids': fields.many2many('calendar.event', 'calendar_event_res_partner_rel','res_partner_id', 'calendar_event_id',
             'Meetings'),
-        'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
-            'Phonecalls'),
-        'opportunity_count': fields.function(_opportunity_meeting_phonecall_count, string="Opportunity", type='integer', multi='opp_meet'),
-        'meeting_count': fields.function(_opportunity_meeting_phonecall_count, string="# Meetings", type='integer', multi='opp_meet'),
-        'phonecall_count': fields.function(_opportunity_meeting_phonecall_count, string="Phonecalls", type="integer", multi='opp_meet'),
+        'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
+        'meeting_count': fields.function(_opportunity_meeting_count, string="# Meetings", type='integer', multi='opp_meet'),
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):

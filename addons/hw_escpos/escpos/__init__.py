@@ -1,1 +1,1 @@
-__all__ = ["constants","escpos","exceptions","printer","supported_devices"]
+__all__ = ["constants","escpos","exceptions","printer"]

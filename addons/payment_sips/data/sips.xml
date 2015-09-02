@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="payment_acquirer_sips" model="payment.acquirer">
+            <field name="name">Sips</field>
+            <field name="provider">sips</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="payment_sips.sips_acquirer_button"/>
+            <field name="environment">test</field>
+            <field name="pre_msg"><![CDATA[
+<p>You will be redirected to the Sips website after clicking on payment button.</p>]]></field>
+        </record>
+
+    </data>
+</openerp>

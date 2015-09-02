@@ -10,17 +10,17 @@
         <!-- Resource: stock.location -->
 
         <record id="stock_location_3" model="stock.location">
-            <field name="name">IT Suppliers</field>
+            <field name="name">IT Vendors</field>
             <field name="location_id" ref="stock_location_suppliers"/>
             <field name="usage">supplier</field>
         </record>
         <record id="stock_location_4" model="stock.location">
-            <field name="name">Big Suppliers</field>
+            <field name="name">Big Vendors</field>
             <field name="location_id" ref="stock_location_3"/>
             <field name="usage">supplier</field>
         </record>
         <record id="stock_location_5" model="stock.location">
-            <field name="name">Generic IT Suppliers</field>
+            <field name="name">Generic IT Vendors</field>
             <field name="location_id" ref="stock_location_3"/>
             <field name="usage">supplier</field>
         </record>
@@ -160,7 +160,7 @@
 
         <!--        Child Company 1-->
         <record id="res_partner_company_1" model="res.partner">
-            <field name="name">Your Company, Chicago</field>
+            <field name="name">My Company, Chicago</field>
             <field eval="1" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -178,14 +178,13 @@
         <record id="res_partner_address_41" model="res.partner">
             <field name="name">Steven Hamilton</field>
             <field name="parent_id" ref="res_partner_company_1"/>
-            <field name="use_parent_address" eval="1"/>
         </record>
 
         <record id="res_company_1" model="res.company">
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">Your Company, Chicago</field>
+            <field name="name">My Company, Chicago</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">

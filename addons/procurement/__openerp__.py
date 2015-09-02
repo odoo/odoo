@@ -5,7 +5,6 @@
 {
     'name' : 'Procurements',
     'version' : '1.0',
-    'author' : 'OpenERP SA',
     'website': 'https://www.odoo.com/page/manufacturing',
     'category' : 'Hidden/Dependency',
     'depends' : ['base', 'product'],
@@ -37,6 +36,7 @@ Procurements in exception should be checked manually and can be re-run.
         'wizard/schedulers_all_view.xml',
         'procurement_view.xml',
         'company_view.xml',
+        'product_product_view.xml',
     ],
     'demo': [],
     'test': ['test/procurement.yml'],

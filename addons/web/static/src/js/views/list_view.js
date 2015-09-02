@@ -7,7 +7,7 @@ var data = require('web.data');
 var DataExport = require('web.DataExport');
 var formats = require('web.formats');
 var common = require('web.list_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Sidebar = require('web.Sidebar');
@@ -34,6 +34,8 @@ var row_decoration = [
 
 var ListView = View.extend( /** @lends instance.web.ListView# */ {
     _template: 'ListView',
+    accesskey: 'L',
+    icon: 'fa-list-ul',
     display_name: _lt('List'),
     defaults: {
         // records can be selected one by one
@@ -174,7 +176,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$el.addClass('oe_list');
+        this.$el.addClass('oe_list o_list_view');
         return this._super();
     },
     /**
@@ -225,6 +227,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+        this._limit = parseInt(this.fields_view.arch.attrs.limit, 10) || this._limit;
 
         // Retrieve the decoration defined on the model's list view
         this.decoration = _.pick(this.fields_view.arch.attrs, function(value, key) {
@@ -277,7 +280,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget': this}));
 
-            this.$buttons.find('.oe_list_add').click(this.proxy('do_add_record'));
+            this.$buttons.find('.o_list_button_add').click(this.proxy('do_add_record'));
 
             $node = $node || this.options.$buttons;
             if ($node) {
@@ -549,7 +552,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                     return r.tag === 'field';
                 }), 'name'),
             {check_access_rule: true}
-        ).done(function (records) {
+        ).then(function (records) {
             var values = records[0];
             if (!values) {
                 self.records.remove(record);
@@ -561,6 +564,15 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 record.set(key, value, {silent: true});            
             });
             record.trigger('change', record);
+
+            /* When a record is reloaded, there is a rendering lag because of the addition/suppression of 
+            a table row. Since the list view editable need to wait for the end of this rendering lag before
+            computing the position of the editable fields, a 100ms delay is added. */
+            var def = $.Deferred();
+            setTimeout(function() {
+                def.resolve(records);
+            }, 100);
+            return def;
         });
     },
 
@@ -1023,7 +1035,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                 $(self).trigger(
                         'selected', [selection.ids, selection.records, ! checked]);
             })
-            .delegate('td.oe_list_record_delete button', 'click', function (e) {
+            .delegate('td.oe_list_record_delete', 'click', function (e) {
                 e.stopPropagation();
                 var $row = $(e.target).closest('tr');
                 $(self).trigger('deleted', [[self.row_id($row)]]);
@@ -1114,12 +1126,14 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
-                    var command = value[0];
-                    // 1. an array of m2m commands (usually (6, false, ids))
-                    if (command[0] !== 6) {
-                        throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
-                    }
-                    ids = command[2];
+                    _.each(value, function(command) {
+                        switch (command[0]) {
+                            case 4: ids.push(command[1]); break;
+                            case 5: ids = []; break;
+                            case 6: ids = command[2]; break;
+                            default: throw new Error(_.str.sprintf( _t("Unknown m2m command %s"), command[0]));
+                        }
+                    });
                 } else {
                     // 2. an array of ids
                     ids = value;
@@ -1142,7 +1156,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
     },
     render: function () {
         var self = this;
-        this.$current.empty().append(
+        this.$current.html(
             QWeb.render('ListView.rows', _.extend({
                     render_cell: function () {
                         return self.render_cell.apply(self, arguments); }
@@ -1165,7 +1179,7 @@ ListView.List = Class.extend( /** @lends instance.web.ListView.List# */{
             cells.push('<td title="' + column.string + '">&nbsp;</td>');
         });
         if (this.options.deletable) {
-            cells.push('<td class="oe_list_record_delete"><button type="button" style="visibility: hidden"> </button></td>');
+            cells.push('<td class="oe_list_record_delete"></td>');
         }
         cells.unshift('<tr>');
         cells.push('</tr>');
@@ -1898,7 +1912,7 @@ var ColumnBinary = Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        var text = _t("Download");
+        var text = _t("Download"), filename=_t('Binary file');
         var value = row_data[this.id].value;
         if (!value) {
             return options.value_if_empty || '';
@@ -1908,7 +1922,7 @@ var ColumnBinary = Column.extend({
         if (value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = session.url('/web/content', {model: options.model, field: this.id, id: options.id, download: true});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }
@@ -1916,11 +1930,13 @@ var ColumnBinary = Column.extend({
         if (this.filename && row_data[this.filename]) {
             text = _.str.sprintf(_t("Download \"%s\""), formats.format_value(
                     row_data[this.filename].value, {type: 'char'}));
+            filename = row_data[this.filename].value;
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)')({
+        return _.template('<a download="<%-download%>" href="<%-href%>"><%-text%></a> (<%-size%>)')({
             text: text,
             href: download_url,
             size: utils.binary_to_binsize(value),
+            download: filename,
         });
     }
 });

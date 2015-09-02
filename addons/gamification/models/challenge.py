@@ -164,7 +164,7 @@ class gamification_challenge(osv.Model):
                 ('yearly', 'Yearly')
             ],
             string="Report Frequency", required=True),
-        'report_message_group_id': fields.many2one('mail.group',
+        'report_message_group_id': fields.many2one('mail.channel',
             string='Send a copy to',
             help='Group that will receive a copy of the report in addition to the user'),
         'report_template_id': fields.many2one('mail.template', string="Report Template", required=True),
@@ -363,6 +363,9 @@ class gamification_challenge(osv.Model):
 
         Create goals that haven't been created yet (eg: if added users)
         Recompute the current value for each goal related"""
+        goal_obj = self.pool['gamification.goal']
+        goal_ids = goal_obj.search(cr, uid, [('challenge_id', 'in', ids), ('state', '=', 'inprogress')], context=context)
+        goal_obj.unlink(cr, uid, goal_ids, context=context)
         return self._update_all(cr, uid, ids=ids, context=context)
 
     def action_report_progress(self, cr, uid, ids, context=None):
@@ -626,7 +629,7 @@ class gamification_challenge(osv.Model):
                 context=context,
                 subtype='mail.mt_comment')
             if challenge.report_message_group_id:
-                self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
+                self.pool.get('mail.channel').message_post(cr, uid, challenge.report_message_group_id.id,
                     body=body_html,
                     context=context,
                     subtype='mail.mt_comment')
@@ -648,7 +651,7 @@ class gamification_challenge(osv.Model):
                                   context=context,
                                   subtype='mail.mt_comment')
                 if challenge.report_message_group_id:
-                    self.pool.get('mail.group').message_post(cr, uid, challenge.report_message_group_id.id,
+                    self.pool.get('mail.channel').message_post(cr, uid, challenge.report_message_group_id.id,
                                                              body=body_html,
                                                              context=context,
                                                              subtype='mail.mt_comment')

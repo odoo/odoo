@@ -22,7 +22,7 @@ class AccountAccountTemplate(models.Model):
     _order = "code"
 
     name = fields.Char(required=True, index=True)
-    currency_id = fields.Many2one('res.currency', string='Secondary Currency', help="Forces all moves for this account to have this secondary currency.")
+    currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
@@ -69,7 +69,8 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_char = fields.Char(string='Code of the main bank account')
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts')
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account', required=True,
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
@@ -99,7 +100,8 @@ class AccountChartTemplate(models.Model):
                 'code_digits': self.code_digits,
                 'transfer_account_id': self.transfer_account_id.id,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_char': self.bank_account_code_char,
+                'bank_account_code_prefix': self.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix,
             })
             wizard.onchange_chart_template_id()
             wizard.execute()
@@ -115,19 +117,6 @@ class AccountChartTemplate(models.Model):
         return True
 
     @api.model
-    def check_created_journals(self, vals_journal, company):
-        """
-        This method used for checking journals already created or not. If not then create new journal.
-        """
-        JournalObj = self.env['account.journal']
-        rec_list = JournalObj.search([('name', '=', vals_journal['name']), ('company_id', '=', company.id)], limit=1)
-        if not rec_list:
-            journal = JournalObj.create(vals_journal)
-            if vals_journal['type'] == 'general' and not company.currency_exchange_journal_id.id:
-                company.write({'currency_exchange_journal_id': journal.id})
-        return True
-
-    @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
         """
         This method is used for creating journals.
@@ -137,26 +126,15 @@ class AccountChartTemplate(models.Model):
         :param company_id: company_id selected from wizard.multi.charts.accounts.
         :returns: True
         """
+        JournalObj = self.env['account.journal']
         for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
-            self.check_created_journals(vals_journal, company)
+            journal = JournalObj.create(vals_journal)
+            if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
+                company.write({'currency_exchange_journal_id': journal.id})
         return True
 
     @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
-        def _get_analytic_journal(journal_type):
-            # Get the analytic journal
-            data = False
-            try:
-                if journal['type'] == 'sale':
-                    data = self.env.ref('account.analytic_journal_sale')
-                elif journal['type'] == 'purchase':
-                    data = self.env.ref('account.exp')
-                elif journal['type'] == 'general':
-                    pass
-            except ValueError:
-                pass
-            return data and data.id or False
-
         def _get_default_account(journal_vals, type='debit'):
             # Get the default accounts
             default_account = False
@@ -164,17 +142,17 @@ class AccountChartTemplate(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['name'] == _('Exchange Rate Journal'):
+            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
                 if type=='credit':
                     default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
                 else:
                     default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
             return default_account
 
-        journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True},
-                    {'name': _('Supplier Bills'), 'type': 'purchase', 'code': _('EXJ'), 'favorite': True},
-                    {'name': _('Exchange Rate Journal'), 'type': 'general', 'code': _('EXCH'), 'favorite': False},
-                    {'name': _('Miscellaneous Journal'), 'type': 'general', 'code': _('MISC'), 'favorite': False},]
+        journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5},
+                    {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('EXJ'), 'favorite': True, 'sequence': 6},
+                    {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
+                    {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},]
         if journals_dict != None:
             journals.extend(journals_dict)
 
@@ -186,7 +164,6 @@ class AccountChartTemplate(models.Model):
                 'name': journal['name'],
                 'code': journal['code'],
                 'company_id': company.id,
-                'analytic_journal_id': _get_analytic_journal(journal),
                 'default_credit_account_id': _get_default_account(journal, 'credit'),
                 'default_debit_account_id': _get_default_account(journal, 'debit'),
                 'refund_sequence': True,
@@ -403,7 +380,7 @@ class AccountTaxTemplate(models.Model):
 
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
-    name = fields.Char(string='Tax Name', required=True, translate=True)
+    name = fields.Char(string='Tax Name', required=True)
     type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
@@ -413,7 +390,7 @@ class AccountTaxTemplate(models.Model):
     children_tax_ids = fields.Many2many('account.tax.template', 'account_tax_template_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 3))
+    amount = fields.Float(required=True, digits=(16, 4))
     account_id = fields.Many2one('account.account.template', string='Tax Account', ondelete='restrict',
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
     refund_account_id = fields.Many2one('account.account.template', string='Tax Account on Refunds', ondelete='restrict',
@@ -427,7 +404,7 @@ class AccountTaxTemplate(models.Model):
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
 
     @api.multi
@@ -551,7 +528,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
-    bank_account_code_char = fields.Char('Bank Accounts Code')
+    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char('Cash Accounts Prefix')
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
     sale_tax_id = fields.Many2one('account.tax.template', string='Default Sales Tax', oldname="sale_tax")
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
@@ -608,8 +586,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 self.transfer_account_id = self.chart_template_id.transfer_account_id.id
             if self.chart_template_id.code_digits:
                 self.code_digits = self.chart_template_id.code_digits
-            if self.chart_template_id.bank_account_code_char:
-                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
+            if self.chart_template_id.bank_account_code_prefix:
+                self.bank_account_code_prefix = self.chart_template_id.bank_account_code_prefix
+            if self.chart_template_id.cash_account_code_prefix:
+                self.cash_account_code_prefix = self.chart_template_id.cash_account_code_prefix
         return res
 
     @api.model
@@ -707,19 +687,23 @@ class WizardMultiChartsAccounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if self._uid != self.sudo()._uid and not self.env.user.has_group('base.group_erp_manager'):
+        if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
         company = self.company_id
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
                                'anglo_saxon_accounting': self.use_anglo_saxon,
-                               'bank_account_code_char': self.bank_account_code_char,
+                               'bank_account_code_prefix': self.bank_account_code_prefix,
+                               'cash_account_code_prefix': self.cash_account_code_prefix,
                                'chart_template_id': self.chart_template_id.id})
+
+        #set the coa currency to active
+        self.currency_id.write({'active': True})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id == 1:
-            for reference in ['product.list_price', 'product.standard_price', 'product.list0', 'purchase.list0']:
+            for reference in ['product.list_price', 'product.standard_price', 'product.list0']:
                 try:
                     tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
                 except ValueError:
@@ -742,7 +726,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # Create the current year earning account (outside of the CoA)
         self.env['account.account'].create({
-            'code': '0',
+            'code': '9999',
             'name': _('Undistributed Profits/Losses'),
             'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
             'company_id': company.id,})
@@ -752,46 +736,21 @@ class WizardMultiChartsAccounts(models.TransientModel):
     def _create_bank_journals_from_o2m(self, company, acc_template_ref):
         '''
         This function creates bank journals and its accounts for each line encoded in the field bank_account_ids of the
-        wizard.
+        wizard (which is currently only used to create a default bank and cash journal when the CoA is installed).
 
-        :param company_id: the id of the company for which the wizard is running.
+        :param company: the company for which the wizard is running.
         :param acc_template_ref: the dictionary containing the mapping between the ids of account templates and the ids
             of the accounts that have been generated from them.
-        :return: True
         '''
         self.ensure_one()
-        # Build a list with all the data to process
-        journal_data = []
-        if self.bank_account_ids:
-            for acc in self.bank_account_ids:
-                vals = {
-                    'acc_name': acc.acc_name,
-                    'account_type': acc.account_type,
-                    'currency_id': acc.currency_id.id,
-                }
-                journal_data.append(vals)
-        ref_acc_bank = self.bank_account_code_char
-        if journal_data and not ref_acc_bank:
-            raise UserError(_('You have to set a code for the bank account defined on the selected chart of accounts.'))
-        company.write({'bank_account_code_char': ref_acc_bank})
-
-        for line in journal_data:
-            if line['account_type'] == 'bank':
-                #create the bank account that will trigger the journal and account.account creation
-                res_partner_bank_vals = {
-                    'acc_number': line['acc_name'],
-                    'currency_id': line['currency_id'],
-                    'company_id': company.id,
-                    'owner_name': company.partner_id.name,
-                    'partner_id': company.partner_id.id,
-                    'footer': True
-                }
-                self.env['res.partner.bank'].create(res_partner_bank_vals)
-            else:
-                #create the cash journal that will trigger the account.account creation
-                vals_journal = self.env['account.journal']._prepare_bank_journal(company, line)
-                self.env['account.journal'].create(vals_journal)
-        return True
+        # Create the journals that will trigger the account.account creation
+        for acc in self.bank_account_ids:
+            self.env['account.journal'].create({
+                'name': acc.acc_name,
+                'type': acc.account_type,
+                'company_id': company.id,
+                'currency_id': acc.currency_id.id,
+            })
 
 
 class AccountBankAccountsWizard(models.TransientModel):
@@ -799,6 +758,6 @@ class AccountBankAccountsWizard(models.TransientModel):
 
     acc_name = fields.Char(string='Account Name.', required=True)
     bank_account_id = fields.Many2one('wizard.multi.charts.accounts', string='Bank Account', required=True, ondelete='cascade')
-    currency_id = fields.Many2one('res.currency', string='Secondary Currency',
+    currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this secondary currency.")
     account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])

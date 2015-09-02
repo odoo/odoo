@@ -2,13 +2,16 @@ odoo.define('website_links.charts', function (require) {
 'use strict';
 
 var Widget = require('web.Widget');
+var base = require('web_editor.base');
 var website = require('website.website');
 var Model = require('web.Model');
 
 var exports = {};
 
-website.if_dom_contains('div.o_website_links_chart', function() {
-    
+if(!$('.o_website_links_chart').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_links_chart'");
+}
+
     var BarChart = Widget.extend({
         init: function($element, begin_date, end_date, dates) {
             this.$element = $element;
@@ -119,7 +122,7 @@ website.if_dom_contains('div.o_website_links_chart', function() {
         },
     });
 
-    website.ready().done(function() {
+    base.ready().done(function() {
         // Resize the chart when a tab is opened, because NVD3 automatically reduce the size
         // of the chart to 5px width when the bootstrap tab is closed.
         $(".graph-tabs li a").click(function (e) {
@@ -131,7 +134,7 @@ website.if_dom_contains('div.o_website_links_chart', function() {
         // Get the code of the link
         var link_id = $('#link_id').val();
 
-        var clicks = new Model('website.links.click');
+        var clicks = new Model('link.tracker.click');
         var links_domain = ['link_id', '=', parseInt(link_id)];
 
         var total_clicks = function() {
@@ -244,7 +247,6 @@ website.if_dom_contains('div.o_website_links_chart', function() {
 
     exports.BarChart = BarChart;
     exports.PieChart = PieChart;
-});
 
 return exports;
 });

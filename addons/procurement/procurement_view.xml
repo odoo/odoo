@@ -47,11 +47,6 @@
                                     <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                                 </div>
                             </div>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos">
-                                <field name="product_uos_qty" class="oe_inline"/>
-                                <field name="product_uos" class="oe_inline"/>
-                            </div>
                         </group>
                         <group name="scheduling" string="Scheduling">
                             <field name="date_planned"/>
@@ -117,20 +112,45 @@
                 <search string="Search Procurement">
                     <field name="origin" string="Procurement"/>
                     <field name="date_planned"/>
-                    <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <filter string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                     <separator/>
-                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', '=', 'confirmed')]" help="Procurement started late" />
+                    <filter string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', '=', 'confirmed')]" help="Procurement started late" />
                     <field name="product_id" />
                     <field name="state" />
                     <group expand="0" string="Group By">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Scheduled Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
         </record>
         
+        <record id="procurement_order_action_exceptions" model="ir.actions.act_window">
+            <field name="name">Procurement Exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_exceptions':1}</field>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click to create a Procurement order in exception state, or remove the filter on the search bar to display all the procurements.
+              </p>
+              <p>
+                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
+              </p>
+              <p>
+                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
+                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
+              </p>
+              <p>
+                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+              </p>
+            </field>
+        </record>
+
         <record id="procurement_action" model="ir.actions.act_window">
             <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -156,28 +176,55 @@
               </p>
             </field>
         </record>
-        
-        <record id="procurement_exceptions" model="ir.actions.act_window">
-            <field name="name">Procurement Exceptions</field>
+
+        <record id="procurement_order_action_product_template_stat" model="ir.actions.act_window">
+            <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="context">{'search_default_current':1}</field>
+            <field name="domain">[('product_id.product_tmpl_id.id', '=', active_id)]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                 Click to create a Procurement Exception, or remove the filter on the search bar to display all the procurements.
+                 Click to create a procurement order.  
               </p>
               <p>
-                <b>Procurement Orders</b> represent the need for a certain quantity of products, at a given time, in a given location.
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
               </p>
               <p>
-                <b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). 
-                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc...
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="procurement_order_action_product_product_stat" model="ir.actions.act_window">
+            <field name="name">Procurement Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">procurement.order</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_procurement_filter"/>
+            <field name="context">{'search_default_current':1, 'default_product_id': active_id}</field>
+            <field name="domain">[('product_id.id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                 Click to create a procurement order.  
               </p>
               <p>
-                A <b>Procurement Exception</b> occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message in the chatter).
+                A <b>procurement order</b> is used to record a need for a specific
+                product at a specific location. Procurement orders are usually
+                created automatically from <i>sales orders, pull logistic rules or
+                minimum stock rules.</i>
+              </p>
+              <p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
               </p>
             </field>
         </record>
@@ -226,19 +273,40 @@
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                     </div>
-                    <group>
-                        <group string="General Information">
-                            <field name="action"/>
-                            <field name="sequence"/>
+                    <group name="general">
+                        <group>
                             <field name="active"/>
+                            <field name="action"/>
                         </group>
-                        <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
-                            <field name="group_propagation_option"/>
-                            <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
+                        <group>
+                            <field name="sequence"/>
                         </group>
+                    </group>
+                    <group name="propagation_group" string="Propagation Options" groups="base.group_no_one">
+                        <field name="group_propagation_option"/>
+                        <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
                     </group>
                 </form>
             </field>
         </record>
+
+        <record id="procurement_order_server_action" model="ir.actions.server">
+            <field name="name">Run Procurements</field>
+            <field name="model_id" ref="model_procurement_order"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'procurement.order' and context.get('active_ids'):
+                    self.run(cr, uid, context['active_ids'], context=context)</field>
+        </record>
+
+        <record id="run_procurement_order_action" model="ir.values">
+            <field name="model_id" ref="procurement.model_procurement_order" />
+            <field name="name">Run Procurements</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">procurement.order</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('procurement_order_server_action'))" />
+        </record>
+
     </data>
 </openerp>

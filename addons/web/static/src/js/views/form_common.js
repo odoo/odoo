@@ -333,7 +333,7 @@ var InvisibilityChangerMixin = {
         this._check_visibility();
     },
     _check_visibility: function() {
-        this.$el.toggleClass('oe_form_invisible', this.get("effective_invisible"));
+        this.$el.toggleClass('o_form_invisible', this.get("effective_invisible"));
     },
 };
 
@@ -362,7 +362,7 @@ var NotebookInvisibilityChanger = InvisibilityChanger.extend({
             // Remove this element as active and set a visible sibling active (if there is one)
             if (this.$el.hasClass('active')) {
                 this.$el.removeClass('active');
-                var visible_siblings = this.$el.siblings(':not(.oe_form_invisible)');
+                var visible_siblings = this.$el.siblings(':not(.o_form_invisible)');
                 if (visible_siblings.length) {
                     $(visible_siblings[0]).addClass('active');
                 }
@@ -372,7 +372,7 @@ var NotebookInvisibilityChanger = InvisibilityChanger.extend({
             // If there is no visible active sibling, set this element as active,
             // otherwise if that sibling hasn't autofocus and if we are in edit mode,
             //    remove that sibling as active and set this element as active
-            var visible_active_sibling = this.$el.siblings(':not(.oe_form_invisible).active');
+            var visible_active_sibling = this.$el.siblings(':not(.o_form_invisible).active');
             if (!(visible_active_sibling.length)) {
                 this.$el.addClass('active');
             } else if (!$(visible_active_sibling[0]).data('autofocus') && this._ic_field_manager.get('actual_mode') === "edit") {
@@ -461,7 +461,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         widget = widget || this;
         trigger = trigger || this.$el;
         options = _.extend({
-                delay: { show: 500, hide: 0 },
+                delay: { show: 1000, hide: 0 },
                 title: function() {
                     var template = widget.template + '.tooltip';
                     if (!QWeb.has_template(template)) {
@@ -630,6 +630,12 @@ var FieldInterface = {
         the field to save its value before reading it using get_value(). Must return a promise.
     */
     commit_value: function() {},
+    /*
+        The form view call before_save before save data and if before_save return a deferred, 
+        the form view wait that all deferred are resolve or fail.
+        If the deferred is rejected, the field is invalidate
+    */
+    before_save: function() {},
 };
 
 /**
@@ -692,10 +698,20 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     start: function() {
         this._super();
         this.on("change:value", this, function() {
-            if (! this.no_rerender)
+            if (!this.no_rerender) {
                 this.render_value();
+            }
+            this._toggle_label();
+        });
+        this.on("change:effective_readonly", this, function() {
+            this._toggle_label();
         });
         this.render_value();
+        this._toggle_label();
+    },
+    _toggle_label: function() {
+        var empty = this.get('effective_readonly') && this.is_false();
+        this.$el.toggleClass('o_form_field_empty', empty);
     },
     /**
      * Private. Do not use.
@@ -740,11 +756,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
         if (this.field.translate) {
             this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
-        if (!this.disable_utility_classes) {
-            if (this.field_manager.get('display_invalid_fields')) {
-                this.$el.toggleClass('oe_form_invalid', !this.is_valid());
-            }
-        }
+        this.$el.toggleClass('oe_form_invalid', !this.disable_utility_classes && !!this.field_manager.get('display_invalid_fields') && !this.is_valid());
     },
     focus: function() {
         return false;
@@ -841,8 +853,8 @@ var FormViewDialog = ViewDialog.extend({
     init: function(parent, options) {
         var self = this;
 
-        var multi_select = options.res_id === null && ! options.disable_multiple_selection;
-        var readonly = options.res_id !== null && options.readonly;
+        var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
+        var readonly = _.isNumber(options.res_id) && options.readonly;
 
         if(!options || !options.buttons) {
             options = options || {};
@@ -902,11 +914,11 @@ var FormViewDialog = ViewDialog.extend({
             self.view_form.set_embedded_view(self.options.alternative_form_view);
         }
 
-        self.$el.hide();
+        self.do_hide();
         self.view_form.appendTo(self.$el);
         self.view_form.on("form_view_loaded", self, function() {
             self.view_form.do_show().then(function() {
-                self.$el.show();
+                self.do_show();
             });
         });
 

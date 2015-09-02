@@ -11,8 +11,8 @@
     'version': '1.8',
     'category': 'Localization/Account Charts',
     'author': 'www.openerp-china.org',
-    'maintainer':'jeff@osbzr.com',
-    'website':'http://openerp-china.org',
+    'maintainer': 'jeff@osbzr.com',
+    'website': 'http://openerp-china.org',
     'description': """
 
     科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
@@ -20,17 +20,17 @@
     添加中文省份数据
 
     增加小企业会计科目表
-    
+
     """,
-    'depends': ['base','account'],
+    'depends': ['base', 'account'],
     'demo': [],
     'data': [
         'account_chart_type.xml',
         'account_chart_template.xml',
-        'account_chart_small_business_template.xml',
-        'l10n_chart_cn_wizard.xml',
+        'account_chart_template.yml',
         'base_data.xml',
     ],
+    'license': 'GPL-3',
     'auto_install': False,
-    'installable': False,
+    'installable': True,
 }

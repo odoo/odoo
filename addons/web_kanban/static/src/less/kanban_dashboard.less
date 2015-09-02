@@ -1,54 +1,48 @@
 .o_kanban_view {
 
-    &.o_kanban_mobile {
-        .o_kanban_record {
-            width: 400px;
-        }
-        span {
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            display: block;
-        }
+    .o_visible {
+        width: 100%;
+
+        /* This is a hack ; without this, a scrollbar appears
+         * to scroll horizontally because of inline-block and width: 100%,
+         * but they are both necessary.
+        */
+        overflow: hidden;
     }
 
-    &.o_kanban_dashboard {
+    /* This is a hack but this is the least ugly way to do it:
+     * We want two blocks (a visible one and an invisible one)
+     * to be overlap but both height should be equal to the
+     * height of the biggest block. Solution : put 0 width for
+     * the invisible on. The 0 padding and margin is mandatory for
+     * the elements to use the same space in both state (visible
+     * and invisible).
+    */
+    .o_invisible {
+        width: 0;
+        visibility: hidden;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        overflow: hidden;
 
-        .o_visible {
-            width: 100%;
-        }
-
-        /* This is a hack but this is the least ugly way to do it:
-         * We want two blocks (a visible one and an invisible one)
-         * to be overlap but both height should be equal to the
-         * height of the biggest block. Solution : put 0 width for
-         * the invisible on. The 0 padding and margin is mandatory for
-         * the elements to use the same space in both state (visible
-         * and invisible).
-        */
-        .o_invisible {
-            width: 0;
-            visibility: hidden;
+        * {
             padding-left: 0px !important;
             padding-right: 0px !important;
             margin-left: 0px !important;
             margin-right: 0px !important;
-            
-            * {
-                padding-left: 0px !important;
-                padding-right: 0px !important;
-                margin-left: 0px !important;
-                margin-right: 0px !important;
-            }
+        }
 
+        .oe_kanban_colorpicker {
 
-            .oe_kanban_colorpicker {
-
-                li {
-                    height: 0px;
-                }
+            li {
+                height: 0px;
             }
         }
+    }
+
+    &.o_kanban_dashboard.o_kanban_ungrouped, &.o_kanban_dashboard.o_kanban_grouped {
 
         // If invisible, elem will no take more than its original height
         a, span {
@@ -59,10 +53,16 @@
             display: block;
         }
 
+        a.o_inline_link {
+            display: inline;
+        }
+
         .o_kanban_record {
             padding: 0;
             position: relative;
-            margin: 4px 8px;
+            @media (max-width: @grid-float-breakpoint) {
+                margin-bottom: 10px;
+            }
         }
 
         a {
@@ -108,7 +108,7 @@
                 padding: 16px;
             }
             .o_kanban_primary_bottom {
-                background-color: lightgrey;
+                background-color: rgba(0,0,0,0.07);
                 position: absolute;
                 bottom: 0;
                 padding: 15px;
@@ -122,7 +122,8 @@
         }
 
         .o_kanban_card_manage_section {
-            padding: 8px;
+            padding-top: 8px;
+            padding-bottom: 8px;
         }
 
         .o_kanban_card_manage_title {
@@ -141,6 +142,10 @@
             border-color: lightgrey;
             border-top-style: solid;
             border-top-width: 1px;
+        }
+
+        .oe_kanban_colorpicker {
+            height: 20px;
         }
     }
 }

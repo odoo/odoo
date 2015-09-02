@@ -24,20 +24,20 @@
 
         <record id="menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
-            <field name="url">/page/website.contactus</field>
+            <field name="url">/page/contactus</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="default_website"/>
         </record>
 
         <record id="base.group_website_publisher" model="res.groups">
-            <field name="name">Display Editor Bar on Website</field>
+            <field name="name">Editor</field>
             <field name="category_id" ref="base.module_category_website"/>
         </record>
 
         <!-- Access rules to edit ir.ui.view with qWeb type -->
         <record id="base.group_website_designer" model="res.groups">
-            <field name="name">Manage Website and qWeb view</field>
+            <field name="name">Editor and Designer</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
             <field name="implied_ids" eval="[(4, ref('base.group_website_publisher'))]"/>
             <field name="category_id" ref="base.module_category_website"/>
@@ -79,13 +79,12 @@
         </record>
         <record id="action_website_homepage" model="ir.actions.act_url">
             <field name="name">Website Homepage</field>
-            <field name="url">/page/website.homepage</field>
+            <field name="url">/page/homepage</field>
             <field name="target">self</field>
         </record>
 
         <record id="menu_website" model="ir.ui.menu">
             <field name="name">Website</field>
-            <field name="icon">fa-home</field>
             <field name="sequence" eval="200"/>
             <field name="web_icon">website,static/description/icon.png</field>
             <field name="action" ref="action_website"/>

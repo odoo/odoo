@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+from openerp.exceptions import AccessError
+
+##############################################################################
+#
+#    OLD API
+#
+##############################################################################
 from openerp.osv import osv, fields
+
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
@@ -22,6 +31,48 @@ class res_partner(osv.Model):
     }
 
 
+class TestFunctionCounter(osv.Model):
+    _name = 'test_old_api.function_counter'
+
+    def _compute_cnt(self, cr, uid, ids, fname, arg, context=None):
+        res = {}
+        for cnt in self.browse(cr, uid, ids, context=context):
+            res[cnt.id] = cnt.access and cnt.cnt + 1 or 0
+        return res
+
+    _columns = {
+        'access': fields.datetime('Datetime Field'),
+        'cnt': fields.function(
+            _compute_cnt, type='integer', string='Function Field', store=True),
+    }
+
+
+class TestFunctionNoInfiniteRecursion(osv.Model):
+    _name = 'test_old_api.function_noinfiniterecursion'
+
+    def _compute_f1(self, cr, uid, ids, fname, arg, context=None):
+        res = {}
+        for tf in self.browse(cr, uid, ids, context=context):
+            res[tf.id] = 'create' in tf.f0 and 'create' or 'write'
+        cntobj = self.pool['test_old_api.function_counter']
+        cnt_id = self.pool['ir.model.data'].xmlid_to_res_id(
+            cr, uid, 'test_new_api.c1')
+        cntobj.write(
+            cr, uid, cnt_id, {'access': datetime.datetime.now()},
+            context=context)
+        return res
+
+    _columns = {
+        'f0': fields.char('Char Field'),
+        'f1': fields.function(
+            _compute_f1, type='char', string='Function Field', store=True),
+    }
+
+##############################################################################
+#
+#    NEW API
+#
+##############################################################################
 from openerp import models, fields, api, _
 
 
@@ -31,6 +82,9 @@ class Category(models.Model):
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.category')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
+    dummy = fields.Char(store=False)
+    discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
+                                   'category', 'discussion')
 
     @api.one
     @api.depends('name', 'parent.display_name')     # this definition is recursive
@@ -56,6 +110,11 @@ class Category(models.Model):
         # assign name of last category, and reassign display_name (to normalize it)
         self.name = names[-1].strip()
 
+    @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        if self.search_count([('id', 'in', self._ids), ('name', '=', 'NOACCESS')]):
+            raise AccessError('Sorry')
+        return super(Category, self).read(fields=fields, load=load)
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'

@@ -48,7 +48,7 @@
           <field name="color">Red</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver_id" ref="base.res_partner_address_19" />
+          <field name="driver_id" ref="base.res_partner_address_25" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="state_id" ref="vehicle_state_inactive"/>
           <field name="odometer_unit">kilometers</field>
@@ -646,7 +646,7 @@
         <field name="date">2012-09-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4586</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">Usual vehicle repairing</field>
       </record>
 
@@ -681,7 +681,7 @@
         <field name="date">2012-11-02</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">4814</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">After crash repairing</field>
       </record>
 
@@ -716,7 +716,7 @@
         <field name="date">2012-10-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">124</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">Maintenance</field>
       </record>
 
@@ -727,7 +727,7 @@
         <field name="date">2012-10-08</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">20984</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">Maintenance</field>
       </record>
 
@@ -738,7 +738,7 @@
         <field name="date">2012-09-25</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">241</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">Maintenance</field>
       </record>
 
@@ -749,7 +749,7 @@
         <field name="date">2012-09-15</field>
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="inv_ref">22513</field>
-        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="vendor_id" ref="base.res_partner_2" />
         <field name="notes">Maintenance</field>
       </record>
 
@@ -763,7 +763,7 @@
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(5)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Daily leasing contract</field>
       </record>
 
@@ -801,7 +801,7 @@
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Weekly leasing contract</field>
       </record>
 
@@ -839,7 +839,7 @@
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Monthly leasing contract</field>
       </record>
 
@@ -877,7 +877,7 @@
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Yearly leasing contract</field>
       </record>
 
@@ -915,7 +915,7 @@
         <field name="start_date" eval="time.strftime('2012-01-01')" />
         <field name="expiration_date" eval="time.strftime('2016-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
-        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Unique leasing contract</field>
       </record>
 

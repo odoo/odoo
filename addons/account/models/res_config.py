@@ -52,7 +52,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    bank_account_code_char = fields.Char(string='Bank Accounts Code', related='company_id.bank_account_code_char', help='Define the code for the bank account')
+    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
+    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
@@ -65,12 +66,9 @@ class AccountConfigSettings(models.TransientModel):
 
     fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
-    period_lock_date = fields.Date(related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date")
-    fiscalyear_lock_date = fields.Date(string="Fiscal Year lock date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date")
+    period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
+    fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
-    module_account_check_writing = fields.Boolean(string='Pay your suppliers by check',
-        help='This allows you to check writing and printing.\n'
-             '-This installs the module account_check_writing.')
     module_account_accountant = fields.Boolean(string='Full accounting features: journals, legal statements, chart of accounts, etc.',
         help="""If you do not check this box, you will be able to do invoicing & payments,
              but not accounting (Journal Items, Chart of  Accounts, ...)""")
@@ -86,33 +84,19 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_product_email_template = fields.Boolean(string='Send products tools and information at the invoice confirmation',
-        help='With this module, link your products to a template to send complete information and tools to your customer.\n'
-             'For instance when invoicing a training, the training agenda and materials will automatically be send to your customers.')
-    module_account_bank_statement_import_ofx = fields.Boolean(string='Import of Bank Statements in .OFX Format',
-        help='Get your bank statements from you bank and import them in Odoo in .OFX format.\n'
-            '-that installs the module account_bank_statement_import.')
-    module_account_bank_statement_import_qif = fields.Boolean(string='Import of Bank Statements in .QIF Format.',
-        help='Get your bank statements from you bank and import them in Odoo in .QIF format.\n'
-            '-that installs the module account_bank_statement_import_qif.')
-    module_account_plaid = fields.Boolean(string="Import of Bank Statements from Plaid.",
-                                          help='Get your bank statements grom you bank and import them through plaid.com.\n'
-                                          '-that installs the module account_plaid.')
     module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
                                         help='Generate tax cash basis entrie when reconciliating entries')
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
-    default_sale_tax_id = fields.Many2one('account.tax', help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
-    default_purchase_tax_id = fields.Many2one('account.tax', help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
+    default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
+    default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
         implied_group='base.group_multi_currency',
         help="Allows you multi currency environment")
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
-    group_check_supplier_invoice_total = fields.Boolean(string='Check the total of supplier bills',
-        implied_group="account.group_supplier_inv_check_total")
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
@@ -137,7 +121,8 @@ class AccountConfigSettings(models.TransientModel):
             self.paypal_account = company.paypal_account
             self.company_footer = company.rml_footer
             self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
-            self.bank_account_code_char = company.bank_account_code_char
+            self.bank_account_code_prefix = company.bank_account_code_prefix
+            self.cash_account_code_prefix = company.cash_account_code_prefix
             self.code_digits = company.accounts_code_digits
 
             # update taxes
@@ -171,8 +156,10 @@ class AccountConfigSettings(models.TransientModel):
                 self.code_digits = self.chart_template_id.code_digits
             if self.chart_template_id.transfer_account_id:
                 self.template_transfer_account_id = self.chart_template_id.transfer_account_id.id
-            if self.chart_template_id.bank_account_code_char:
-                self.bank_account_code_char = self.chart_template_id.bank_account_code_char
+            if self.chart_template_id.bank_account_code_prefix:
+                self.bank_account_code_prefix = self.chart_template_id.bank_account_code_prefix
+            if self.chart_template_id.cash_account_code_prefix:
+                self.cash_account_code_prefix = self.chart_template_id.cash_account_code_prefix
         return {}
 
     @api.onchange('sale_tax_rate')
@@ -189,14 +176,9 @@ class AccountConfigSettings(models.TransientModel):
         return True
 
     @api.multi
-    def open_company_form(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Configure your Company',
-            'res_model': 'res.company',
-            'res_id': self.company_id.id,
-            'view_mode': 'form',
-        }
+    def open_bank_accounts(self):
+        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_bank_journal_form')
+        return action_rec.read([])[0]
 
     @api.multi
     def set_transfer_account(self):
@@ -229,7 +211,8 @@ class AccountConfigSettings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_char': self.bank_account_code_char,
+                'bank_account_code_prefix': self.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix,
             })
             wizard.execute()
 
@@ -237,3 +220,16 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.multi
+    def open_company(self):
+        user = self.env['res.users'].browse(uid)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'My Company',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'res.company',
+            'res_id': user.company_id.id,
+            'target': 'current',
+        }

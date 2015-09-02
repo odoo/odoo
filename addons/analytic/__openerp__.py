@@ -4,7 +4,6 @@
 {
     'name' : 'Analytic Accounting',
     'version': '1.1',
-    'author' : 'OpenERP SA',
     'website' : 'https://www.odoo.com/page/accounting',
     'category': 'Hidden/Dependency',
     'depends' : ['base', 'decimal_precision', 'mail'],
@@ -19,20 +18,9 @@ that have no counterpart in the general financial accounts.
     'data': [
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
-        'data/analytic_sequence.xml',
         'views/analytic_view.xml',
         'data/analytic_data.xml',
-        'analytic_report.xml',
-        'wizard/account_analytic_balance_report_view.xml',
-        'wizard/account_analytic_cost_ledger_view.xml',
-        'wizard/account_analytic_inverted_balance_report.xml',
-        'wizard/account_analytic_cost_ledger_for_journal_report_view.xml',
         'wizard/account_analytic_chart_view.xml',
-        'views/report_analyticbalance.xml',
-        'views/report_analyticjournal.xml',
-        'views/report_analyticcostledgerquantity.xml',
-        'views/report_analyticcostledger.xml',
-        'views/report_invertedanalyticbalance.xml',
     ],
     'demo': [
         'data/analytic_demo.xml',

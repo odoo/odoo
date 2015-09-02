@@ -7,7 +7,7 @@
   !record {model: crm.lead, id: test_crm_opp_1}:
     type: 'opportunity'
     name: 'Test opportunity 1'
-    partner_id: base.res_partner_5
+    partner_id: base.res_partner_3
     stage_id: stage_lead1
     description: This is the description of the test opp 1.
 -
@@ -39,7 +39,7 @@
   I check for the resulting merged opp (based on name and partner).
 -
   !python {model: crm.lead}: |
-    merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 1'), ('partner_id','=', ref("base.res_partner_5"))])
+    merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 1'), ('partner_id','=', ref("base.res_partner_3"))])
     
     assert merge_id, 'Fail to create merge opportunity wizard'
     merge_result = self.browse(cr, uid, merge_id)[0]
@@ -96,13 +96,13 @@
   !record {model: crm.lead, id: test_crm_opp_02}:
     type: 'opportunity'
     name: 'Test opportunity 2'
-    partner_id: base.res_partner_5
+    partner_id: base.res_partner_3
     stage_id: stage_lead1
 -
   !record {model: crm.lead, id: test_crm_opp_03}:
     type: 'opportunity'
     name: 'Test opportunity 3'
-    partner_id: base.res_partner_5
+    partner_id: base.res_partner_3
     stage_id: stage_lead1
 -
   !python {model: crm.lead}: |
@@ -119,10 +119,10 @@
   I check for the resulting merged opp (based on name and partner).
 -
   !python {model: crm.lead}: |
-    merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 2'), ('partner_id','=', ref("base.res_partner_5"))])
+    merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 2'), ('partner_id','=', ref("base.res_partner_3"))])
     assert merge_id, 'Fail to create merge opportunity wizard'
     merge_result = self.browse(cr, uid, merge_id)[0]
-    assert merge_result.partner_id.id == ref("base.res_partner_5"), 'Partner mismatch'
+    assert merge_result.partner_id.id == ref("base.res_partner_3"), 'Partner mismatch'
     assert merge_result.type == 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merge_result.type
     tailing_opp = self.search(cr, uid, [('id', '=', ref('test_crm_opp_03'))])
     assert not tailing_opp, 'This tailing opp (id %s) should not exist anymore' % ref('test_crm_opp_03')

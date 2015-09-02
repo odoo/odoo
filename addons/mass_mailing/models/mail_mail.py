@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import urllib
 import urlparse
+import re
+import werkzeug.urls
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
+
+
+URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
 
 
 class MailMail(osv.Model):
@@ -37,7 +41,7 @@ class MailMail(osv.Model):
         track_url = urlparse.urljoin(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
                 'mail_id': mail.id,
-                'params': urllib.urlencode({'db': cr.dbname})
+                'params': werkzeug.url_encode({'db': cr.dbname})
             }
         )
         return '<img src="%s" alt=""/>' % track_url
@@ -47,16 +51,29 @@ class MailMail(osv.Model):
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': mail.mailing_id.id,
-                'params': urllib.urlencode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
+                'params': werkzeug.url_encode({'db': cr.dbname, 'res_id': mail.res_id, 'email': email_to})
             }
         )
         return url
 
     def send_get_mail_body(self, cr, uid, ids, partner=None, context=None):
-        """ Override to add the tracking URL to the body. """
+        """ Override to add the tracking URL to the body and to add
+        Statistic_id in shorted urls """
         # TDE: temporary addition (mail was parameter) due to semi-new-API
         body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
         mail = self.browse(cr, uid, ids[0], context=context)
+
+        links_blacklist = ['/unsubscribe_from_list']
+
+        if mail.mailing_id and body and mail.statistics_ids:
+            for match in re.findall(URL_REGEX, self.body_html):
+
+                href = match[0]
+                url = match[1]
+
+                if not [s for s in links_blacklist if s in href]:
+                    new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
+                    body = body.replace(href, new_href)
 
         # prepend <base> tag for images using absolute urls
         domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)

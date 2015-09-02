@@ -74,14 +74,14 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
 
     @api.multi
     def trans_rec_addendum(self):
-        model_data_id = self.env['ir.model.data'].search([('model', '=', 'ir.ui.view'), ('name', '=', 'account_move_line_reconcile_writeoff')], limit=1)
+        view = self.env.ref('account.account_move_line_reconcile_writeoff')
         return {
             'name': _('Reconcile Writeoff'),
             'context': self._context,
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move.line.reconcile.writeoff',
-            'views': [(model_data_id.res_id, 'form')],
+            'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
         }

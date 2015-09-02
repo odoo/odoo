@@ -385,7 +385,7 @@ odoo.define_section('eval.edc', ['web.pyeval', 'web.session'], function (test, m
             });
     });
 
-    test('empty, context altered', ['web.Model'], function (assert, pyeval, session, Model) {
+    test('empty, context altered', ['web.DataModel'], function (assert, pyeval, session, Model) {
         assert.expect(3);
         var lang = new Model('res.lang');
         var users = new Model('res.users');
@@ -784,7 +784,7 @@ odoo.define_section('eval.contexts', ['web.pyeval'], function (test) {
                     "product_id": 4,
                     "name": "[PC1] Basic PC",
                     "quantity": 1,
-                    "uos_id": 1,
+                    "uom_id": 1,
                     "price_unit": 100,
                     "account_id": 853,
                     "discount": 0,

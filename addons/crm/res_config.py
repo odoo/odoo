@@ -10,24 +10,20 @@ class crm_configuration(osv.TransientModel):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'group_fund_raising': fields.boolean("Manage Fund Raising",
-            implied_group='crm.group_fund_raising',
-            help="""Allows you to trace and manage your activities for fund raising."""),
-        'module_crm_claim': fields.boolean("Manage Customer Claims",
-            help='Allows you to track your customers/suppliers claims and grievances.\n'
-                 '-This installs the module crm_claim.'),
-        'module_crm_helpdesk': fields.boolean("Manage Helpdesk and Support",
-            help='Allows you to communicate with Customer, process Customer query, and provide better help and support.\n'
-                 '-This installs the module crm_helpdesk.'),
+        'generate_sales_team_alias': fields.boolean(
+            "Automatically generate an email alias at the sales team creation",
+            help="Odoo will generate an email alias based on the sales team name"),
         'alias_prefix': fields.char('Default Alias Name for Leads'),
         'alias_domain' : fields.char('Alias Domain'),
-        'group_scheduled_calls': fields.boolean("Schedule calls to manage call center",
-            implied_group='crm.group_scheduled_calls',
-            help="""This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'""")
+        'group_use_lead': fields.selection([
+            (0, "Each mail sent to the alias creates a new opportunity"),
+            (1, "Use leads if you need a qualification step before creating an opportunity or a customer")
+            ], "Leads", 
+            implied_group='crm.group_use_lead')
     }
 
     _defaults = {
-        'alias_domain': lambda self, cr, uid, context: self.pool["ir.config_parameter"].get_param(cr, uid, "mail.catchall.domain", context),
+        'alias_domain': lambda self, cr, uid, context: self.pool["ir.config_parameter"].get_param(cr, uid, "mail.catchall.domain", context=context),
     }
 
     def _find_default_lead_alias_id(self, cr, uid, context=None):
@@ -43,6 +39,14 @@ class crm_configuration(osv.TransientModel):
                 ], context=context)
             alias_id = alias_ids and alias_ids[0] or False
         return alias_id
+
+    def get_default_generate_sales_team_alias(self, cr, uid, ids, context=None):
+        return {'generate_sales_team_alias': self.pool['ir.values'].get_default(
+            cr, uid, 'sales.config.settings', 'generate_sales_team_alias')}
+
+    def set_default_generate_sales_team_alias(self, cr, uid, ids, context=None):
+        config_value = self.browse(cr, uid, ids, context=context).generate_sales_team_alias
+        self.pool['ir.values'].set_default(cr, uid, 'sales.config.settings', 'generate_sales_team_alias', config_value)
 
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
         alias_name = False

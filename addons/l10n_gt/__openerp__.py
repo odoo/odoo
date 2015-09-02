@@ -32,10 +32,10 @@ taxes and the Quetzal currency.""",
     'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account'],
     'data': [
-        'account_types.xml',
         'account_chart.xml',
         'l10n_gt_base.xml',
+        'account_chart_template.yml',
     ],
     'demo': [],
-    'installable': False,
+    'installable': True,
 }

@@ -5,7 +5,6 @@
     'sequence': '19',
     'category': 'Project Management',
     'complexity': 'easy',
-    'author': 'OpenERP SA',
     'description': """
 Lead to Issues
 ==============

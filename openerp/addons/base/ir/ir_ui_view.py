@@ -3,11 +3,11 @@
 import collections
 import copy
 import datetime
-import dateutil
 from dateutil.relativedelta import relativedelta
 import fnmatch
 import logging
 import os
+import re
 import time
 from operator import itemgetter
 
@@ -18,6 +18,7 @@ from lxml import etree
 
 import openerp
 from openerp import tools, api
+from openerp.exceptions import ValidationError
 from openerp.http import request
 from openerp.modules.module import get_resource_path, get_resource_from_path
 from openerp.osv import fields, osv, orm
@@ -27,7 +28,7 @@ from openerp.tools.parse_version import parse_version
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.view_validation import valid_view
 from openerp.tools import misc
-from openerp.tools.translate import _
+from openerp.tools.translate import TRANSLATED_ATTRS, encode, xml_translate, _
 
 _logger = logging.getLogger(__name__)
 
@@ -93,10 +94,17 @@ def get_view_arch_from_file(filename, xmlid):
 
     doc = etree.parse(filename)
     node = None
-    for n in doc.xpath('//*[@id="%s"] | //*[@id="%s"]' % (xmlid, xmlid.split('.')[1])):
+    for n in doc.xpath('//*[@id="%s"]' % (xmlid)):
         if n.tag in ('template', 'record'):
             node = n
             break
+    if node is None:  
+        # fallback search on template with implicit module name
+        for n in doc.xpath('//*[@id="%s"]' % (xmlid.split('.')[1])):
+            if n.tag in ('template', 'record'):
+                node = n
+                break
+
     if node is not None:
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
@@ -118,6 +126,22 @@ def get_view_arch_from_file(filename, xmlid):
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
+TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
+
+def valid_inheritance(arch):
+    """ Check whether view inheritance is based on translated attribute. """
+    for node in arch.xpath('//*[@position]'):
+        # inheritance may not use a translated attribute as selector
+        if node.tag == 'xpath':
+            match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
+            if match:
+                raise ValidationError("View inheritance may not use attribute %r as a selector." % match.group(1))
+        else:
+            for attr in TRANSLATED_ATTRS:
+                if node.get(attr):
+                    raise ValidationError("View inheritance may not use attribute %r as a selector." % attr)
+    return True
+
 class view(osv.osv):
     _name = 'ir.ui.view'
 
@@ -135,7 +159,6 @@ class view(osv.osv):
 
     def _arch_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
-
         for view in self.browse(cr, uid, ids, context=context):
             arch_fs = None
             if config['dev_mode'] and view.arch_fs and view.xml_id:
@@ -164,6 +187,16 @@ class view(osv.osv):
 
         return True
 
+    @api.multi
+    def _arch_base_get(self, name, arg):
+        """ Return the field 'arch' without translation. """
+        return self.with_context(lang=None)._arch_get(name, arg)
+
+    @api.multi
+    def _arch_base_set(self, name, value, arg):
+        """ Assign the field 'arch' without translation. """
+        return self.with_context(lang=None)._arch_set(name, value, arg)
+
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', select=True),
@@ -179,10 +212,12 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
+            ('sales_team_dashboard', 'Sales Team Dashboard'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, string='View Architecture', type="text", nodrop=True),
-        'arch_db': fields.text('Arch Blob', oldname='arch'),
+        'arch_base': fields.function(_arch_base_get, fnct_inv=_arch_base_set, string='View Architecture', type="text"),
+        'arch_db': fields.text('Arch Blob', translate=xml_translate, oldname='arch'),
         'arch_fs': fields.char('Arch Filename'),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='restrict', select=True),
         'inherit_children_ids': fields.one2many('ir.ui.view','inherit_id', 'Inherit Views'),
@@ -249,7 +284,10 @@ class view(osv.osv):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self.browse(cr, uid, ids, context):
-            view_def = self.read_combined(cr, uid, view.id, None, context=context)
+            view_arch = etree.fromstring(encode(view.arch))
+            if not valid_inheritance(view_arch):
+                return False
+            view_def = self.read_combined(cr, uid, view.id, ['arch'], context=context)
             view_arch_utf8 = view_def['arch']
             if view.type != 'qweb':
                 view_doc = etree.fromstring(view_arch_utf8)
@@ -278,7 +316,7 @@ class view(osv.osv):
          " extend an other view"),
     ]
     _constraints = [
-        (_check_xml, 'Invalid view definition', ['arch']),
+        (_check_xml, 'Invalid view definition', ['arch', 'arch_base']),
     ]
 
     def _auto_init(self, cr, context=None):
@@ -462,7 +500,6 @@ class view(osv.osv):
                 self.inherit_branding(node, view_id, root_id)
             else:
                 node.set('data-oe-id', str(view_id))
-                node.set('data-oe-source-id', str(root_id))
                 node.set('data-oe-xpath', xpath)
                 node.set('data-oe-model', 'ir.ui.view')
                 node.set('data-oe-field', 'arch')
@@ -578,7 +615,7 @@ class view(osv.osv):
 
         # arch and model fields are always returned
         if fields:
-            fields = list(set(fields) | set(['arch', 'model']))
+            fields = list({'arch', 'model'}.union(fields))
 
         # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
@@ -717,7 +754,7 @@ class view(osv.osv):
                     orm.transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag in ('form', 'tree'):
-            result = Model.view_header_get(cr, user, False, node.tag, context)
+            result = Model.view_header_get(cr, user, False, node.tag, context=context)
             if result:
                 node.set('string', result)
             in_tree_view = node.tag == 'tree'
@@ -734,46 +771,6 @@ class view(osv.osv):
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
         orm.transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
-
-        # TODO remove attrs counterpart in modifiers when invisible is true ?
-
-        # translate view
-        if 'lang' in context:
-            Translations = self.pool['ir.translation']
-            if node.text and node.text.strip():
-                term = node.text.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.text = node.text.replace(term, trans)
-            if node.tail and node.tail.strip():
-                term = node.tail.strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans:
-                    node.tail =  node.tail.replace(term, trans)
-
-            if node.get('string') and node.get('string').strip() and not result:
-                term = node.get('string').strip()
-                trans = Translations._get_source(cr, user, model, 'view', context['lang'], term)
-                if trans == term:
-                    if 'base_model_name' in context:
-                        # If translation is same as source, perhaps we'd have more luck with the alternative model name
-                        # (in case we are in a mixed situation, such as an inherited view where parent_view.model != model
-                        trans = Translations._get_source(cr, user, context['base_model_name'], 'view', context['lang'], term)
-                    else:
-                        inherit_model = self.browse(cr, user, view_id, context=context).inherit_id.model or model
-                        if inherit_model != model:
-                            # parent view has a different model, if the terms belongs to the parent view, the translation
-                            # should be checked on the parent model as well
-                            trans = Translations._get_source(cr, user, inherit_model, 'view', context['lang'], term)
-                if trans:
-                    node.set('string', trans)
-
-            for attr_name in ('confirm', 'sum', 'avg', 'help', 'placeholder'):
-                attr_value = node.get(attr_name)
-                if attr_value and attr_value.strip():
-                    trans = Translations._get_source(cr, user, model, 'view', context['lang'], attr_value.strip())
-                    if trans:
-                        node.set(attr_name, trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
@@ -856,17 +853,17 @@ class view(osv.osv):
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.pool[node.getchildren()[0].get('object')]
-                node_fields = node_model.fields_get(cr, user, None, context)
+                node_fields = node_model.fields_get(cr, user, None, context=context)
                 fields.update(node_fields)
                 if not node.get("create") and \
                    not node_model.check_access_rights(cr, user, 'create', raise_exception=False) or \
                    not context.get("create", True):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
+                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context=context)
                 fields.update(arrow_fields)
         else:
-            fields = Model.fields_get(cr, user, None, context)
+            fields = Model.fields_get(cr, user, None, context=context)
 
         node = self.add_on_change(cr, user, model, node)
         fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
@@ -894,10 +891,7 @@ class view(osv.osv):
             if k not in fields_def:
                 del fields[k]
         for field in fields_def:
-            if field == 'id':
-                # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
-                fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
-            elif field in fields:
+            if field in fields:
                 fields[field].update(fields_def[field])
             else:
                 message = _("Field `%(field_name)s` does not exist") % \
@@ -912,7 +906,7 @@ class view(osv.osv):
     # apply ormcache_context decorator unless in dev mode...
     @tools.conditional(not config['dev_mode'],
         tools.ormcache_context('uid', 'view_id',
-            keys=('lang', 'inherit_branding', 'editable', 'translatable')))
+            keys=('lang', 'inherit_branding', 'editable', 'translatable', 'edit_translations')))
     def _read_template(self, cr, uid, view_id, context=None):
         arch = self.read_combined(cr, uid, view_id, fields=['arch'], context=context)['arch']
         arch_tree = etree.fromstring(arch)
@@ -1020,7 +1014,7 @@ class view(osv.osv):
         def get_trans(text):
             if not text or not text.strip():
                 return None
-            text = h.unescape(text.strip())
+            text = text.strip()
             if len(text) < 2 or (text.startswith('<!') and text.endswith('>')):
                 return None
             return translate_func(text)
@@ -1103,6 +1097,11 @@ class view(osv.osv):
     #------------------------------------------------------
     # Misc
     #------------------------------------------------------
+
+    @api.multi
+    def open_translations(self):
+        """ Open a view for editing the translations of field 'arch_db'. """
+        return self.env['ir.translation'].translate_fields('ir.ui.view', self.id, 'arch_db')
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         nodes=[]

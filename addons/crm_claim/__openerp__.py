@@ -10,13 +10,11 @@
 
 Manage Customer Claims.
 =======================
-This application allows you to track your customers/suppliers claims and grievances.
+This application allows you to track your customers/vendors claims and grievances.
 
 It is fully integrated with the email gateway so that you can create
 automatically new claims based on incoming emails.
     """,
-    'author': 'OpenERP SA',
-    'website': 'https://www.odoo.com',
     'depends': ['crm'],
     'data': [
         'crm_claim_view.xml',

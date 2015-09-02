@@ -14,10 +14,9 @@ except ImportError:
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp.tools.misc import ustr
 from openerp.tools.translate import _
-from openerp.exceptions import UserError
 
 _ref_vat = {
     'at': 'ATU12345675',
@@ -95,12 +94,6 @@ class res_partner(osv.osv):
             # with VIES if any of these arise, including the first one (it means invalid
             # country code or empty VAT number), so we fall back to the simple check.
             return self.simple_vat_check(cr, uid, country_code, vat_number, context=context)
-
-    def button_check_vat(self, cr, uid, ids, context=None):
-        if not self.check_vat(cr, uid, ids, context=context):
-            msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise UserError(msg)
-        return True
 
     def check_vat(self, cr, uid, ids, context=None):
         user_company = self.pool.get('res.users').browse(cr, uid, uid).company_id

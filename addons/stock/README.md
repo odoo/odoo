@@ -74,7 +74,7 @@ Manage your own internal and external locations, customers, suppliers or
 manufacturing inventories with the Odoo multi-warehouse management system based
 on a hierarchical location structure.
 
-Odoo's Warehouse Management is designed to scale from a few thousands
+Odoo's Inventory Management is designed to scale from a few thousands
 operations to several millions of transactions.
 
 Reporting and Dashboards

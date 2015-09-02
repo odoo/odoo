@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from openerp import api
 from openerp.osv import osv, fields
 import uuid
 import time
 import datetime
 
 import openerp.addons.decimal_precision as dp
+from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
+
 
 class sale_quote_template(osv.osv):
     _name = "sale.quote.template"
@@ -18,7 +22,10 @@ class sale_quote_template(osv.osv):
         'note': fields.text('Terms and conditions'),
         'options': fields.one2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True),
         'number_of_days': fields.integer('Quotation Duration', help='Number of days for the validity date computation of the quotation'),
-        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'require_payment': fields.selection([
+            (0, 'Not mandatory on website quote validation'),
+            (1, 'Immediate after website order validation')
+            ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
     def open_template(self, cr, uid, quote_id, context=None):
         return {
@@ -142,7 +149,10 @@ class sale_order(osv.osv):
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
-        'require_payment': fields.boolean('Immediate Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
+        'require_payment': fields.selection([
+            (0, 'Not mandatory on website quote validation'),
+            (1, 'Immediate after website order validation')
+            ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote"),
     }
 
     def _get_template_id(self, cr, uid, context=None):
@@ -185,7 +195,9 @@ class sale_order(osv.osv):
                 False, fiscal_position_id, True, context)
             data = res.get('value', {})
             if pricelist_id:
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=context)[pricelist_id]
+                uom_context = context.copy()
+                uom_context['uom'] = line.product_uom_id.id
+                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
             else:
                 price = line.price_unit
 
@@ -268,6 +280,19 @@ class sale_order(osv.osv):
 
         return action
 
+    def _confirm_online_quote(self, cr, uid, order_id, tx, context=None):
+        """ Payment callback: validate the order and write tx details in chatter """
+        order = self.browse(cr, uid, order_id, context=context)
+
+        # create draft invoice if transaction is ok
+        if tx and tx.state == 'done':
+            if order.state in ['draft', 'sent']:
+                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+            message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
+            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            return True
+        return False
+
 
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
@@ -333,6 +358,8 @@ class sale_order_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
+
+    # TODO master: to remove, replaced by onchange of the new api
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
         vals, domain = {}, []
         if not product:
@@ -361,6 +388,17 @@ class sale_order_option(osv.osv):
         if not uom_id:
             return {'value': {'price_unit': 0.0, 'uom_id': False}}
         return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+        self.price_unit = product.list_price
+        self.website_description = product.quote_description or product.website_description
+        self.name = product.name
+        if product.description_sale:
+            self.name += '\n' + product.description_sale
+        self.uom_id = product.product_tmpl_id.uom_id
+
 
 class product_template(osv.Model):
     _inherit = "product.template"

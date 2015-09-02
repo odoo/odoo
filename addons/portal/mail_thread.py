@@ -20,6 +20,6 @@ class mail_thread(osv.AbstractModel):
         cur_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         # if uid is a portal user -> action is different
         if any(group.is_portal for group in cur_user.groups_id):
-            return 'portal.action_mail_inbox_feeds_portal'
+            return 'portal.mail_message_action_inbox_portal'
         else:
             return super(mail_thread, self)._get_inbox_action_xml_id(cr, uid, context=context)

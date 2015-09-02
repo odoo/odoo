@@ -92,7 +92,7 @@ class base_gengo_translations(osv.osv_memory):
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
             if wizard.sync_limit > 200 or wizard.sync_limit < 1:
-                raise UserError(_('Sync limit should between 1 to 200 for Gengo translation services.'))
+                raise UserError(_('The number of terms to sync should be between 1 to 200 to work with Gengo translation services.'))
             if wizard.sync_type in ['send', 'both']:
                 self._sync_request(cr, uid, wizard.sync_limit, context=ctx)
             if wizard.sync_type in ['receive', 'both']:

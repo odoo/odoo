@@ -11,7 +11,7 @@
             <field name="website_published" eval="True"/>
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
-            <field name="website_sequence">5</field>
+            <field name="website_sequence">3</field>
             <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
             <field name="website_description" type="html">
                 <section class="mt16 mb16 oe_dark">
@@ -171,7 +171,7 @@
 Capacity: 16GB
 Connectivity: Wifi
 Beautiful 7.9-inch display
-Over 375,000 apps3
+Over 375,000 apps
 Ultrafast wireless
 iOS7
             </field>
@@ -284,7 +284,7 @@ Impedance: 23 ohms
 Sensitivity: 109 dB SPL/mW
 Drivers: two-way balanced armature
 Cable length: 1065 mm
-Weight: 0.4 ounce
+Weight: 10.2 grams
             </field>
             <field name="website_description" type="html">
                 <section class="mt32">
@@ -339,7 +339,7 @@ Weight: 0.4 ounce
             <field name="description_sale">2.7GHz quad-core Intel Core i5
                 Turbo Boost up to 3.2GHz
                 8GB (two 4GB) memory
-                1TB hard drive1
+                1TB hard drive
                 Intel Iris Pro graphics
             </field>
             <field name="website_description" type="html">
@@ -437,10 +437,10 @@ Weight: 0.4 ounce
 
         <record id="product.product_product_11" model="product.product">
             <field name="website_published" eval="True"/>
-            <field name="description_sale">Height: 3.01 inches
-Width:  1.56 inches
-Depth:  0.21 inch
-Weight: 1.1 ounces</field>
+            <field name="description_sale">Height: 76.5 mm
+Width:  39.6 mm
+Depth:  5.4 mm
+Weight: 31 grams</field>
             <field name="website_description" type="html">
                 <section class="mt16 mb16">
                     <div class="container">
@@ -541,20 +541,17 @@ Weight: 1.1 ounces</field>
         </record>
 
         <record id="item1" model="product.pricelist.item">
-            <field name="price_version_id" ref="product.ver0"/>
-            <field name="base" ref="product.list_price"/>
+            <field name="base">list_price</field>
+            <field name="applied_on">1_product</field>
+            <field name="pricelist_id" ref="product.list0"/>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
-            <field name="name">Demo Discount</field>
-            <field name="price_discount">-0.2000</field>
+            <field name="price_discount">20</field>
+            <field name="compute_price">formula</field>
             <field name="sequence">1</field>
-        </record>
-        
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="member_ids" eval="[(4, ref('base.user_root'), ref('base.user_demo'))]"/>
         </record>
 
     <!-- product.public.category -->
-        
+
         <record id="product.Components" model="product.public.category">
           <field name="name">Components</field>
           <field name="sequence">15</field>
@@ -788,34 +785,24 @@ Weight: 1.1 ounces</field>
 
         <record id="list_christmas" model="product.pricelist">
             <field name="name">Christmas Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_christmas" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_christmas"/>
-            <field name="name">Christmas Pricelist Version</field>
         </record>
         <record id="item_christmas" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_christmas"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.2</field>
+            <field name="pricelist_id" ref="list_christmas"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">20</field>
             <field name="sequence">10</field>
-            <field name="name">Christmas Pricelist Line</field>
         </record>
 
         <record id="list_benelux" model="product.pricelist">
             <field name="name">Benelux Pricelist</field>
-            <field name="type">sale</field>
-        </record>
-        <record id="ver_benelux" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_benelux"/>
-            <field name="name">Benelux Pricelist Version</field>
         </record>
         <record id="item_benelux" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_benelux"/>
-            <field name="base" ref="product.list_price"/>
-            <field name="price_discount">-0.1</field>
+            <field name="pricelist_id" ref="list_benelux"/>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">10</field>
             <field name="sequence">10</field>
-            <field name="name">Benelux Pricelist Line</field>
         </record>
 
         <record id="benelux" model="res.country.group">

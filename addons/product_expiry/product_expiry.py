@@ -71,11 +71,12 @@ class stock_quant(osv.osv):
             }),
     }
 
-    def apply_removal_strategy(self, cr, uid, location, product, qty, domain, removal_strategy, context=None):
+    def apply_removal_strategy(self, cr, uid, qty, move, ops=False, domain=None, removal_strategy='fifo', context=None):
         if removal_strategy == 'fefo':
             order = 'removal_date, in_date, id'
-            return self._quants_get_order(cr, uid, location, product, qty, domain, order, context=context)
-        return super(stock_quant, self).apply_removal_strategy(cr, uid, location, product, qty, domain, removal_strategy, context=context)
+            return self._quants_get_order(cr, uid, qty, move, ops=ops, domain=domain, orderby=order, context=context)
+        return super(stock_quant, self).apply_removal_strategy(cr, uid, qty, move, ops=ops, domain=domain,
+                                                               removal_strategy=removal_strategy, context=context)
 
 
 class product_product(osv.osv):

@@ -4,7 +4,7 @@ odoo.define('web.search_inputs', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var formats = require('web.formats');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var time = require('web.time');
 var utils = require('web.utils');

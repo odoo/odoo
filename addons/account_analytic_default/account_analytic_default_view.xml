@@ -50,11 +50,11 @@
                     <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By">
-                        <filter string="User" icon="terp-personal" context="{'group_by':'user_id'}" help="User"/>
-                        <filter string="Partner" icon="terp-partner"  context="{'group_by':'partner_id'}" help="Partner"/>
-                        <filter string="Product" icon="terp-accessories-archiver"  context="{'group_by':'product_id'}" help="Product" />
-                        <filter string="Analytic Account" icon="terp-folder-green"  context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
-                        <filter string="Company" icon="terp-go-home"  context="{'group_by':'company_id'}" groups="base.group_multi_company" />
+                        <filter string="User" context="{'group_by':'user_id'}" help="User"/>
+                        <filter string="Partner" context="{'group_by':'partner_id'}" help="Partner"/>
+                        <filter string="Product" context="{'group_by':'product_id'}" help="Product" />
+                        <filter string="Analytic Account" context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company" />
                     </group>
                 </search>
             </field>
@@ -81,7 +81,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name= "%(action_product_default_list)d" type="action" 
-                        groups="analytic.group_analytic_accounting" icon="fa-xing">
+                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
                         <field string="Analytic Rules" name="rules_count" widget="statinfo" />
                     </button>
                 </div>
@@ -95,7 +95,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name= "action_view_rules" type="object" 
-                        groups="analytic.group_analytic_accounting" icon="fa-xing">
+                        groups="analytic.group_analytic_accounting" icon="fa-bookmark-o">
                         <field string="Analytic Rules" name="rules_count" widget="statinfo" />
                     </button>
                 </div>

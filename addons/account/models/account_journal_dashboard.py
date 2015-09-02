@@ -87,16 +87,13 @@ class account_journal(models.Model):
                 short_name = format_date(show_date, 'd MMM', locale=locale)
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
 
-        return [{'values': data, 'color': '#ff7f0e', 'area': True}]
+        return [{'values': data, 'area': True}]
 
     @api.multi
     def get_bar_graph_datas(self):
         data = []
-        title = _('Invoices owed to you')
-        if self.type == 'purchase':
-            title = _('Bills you need to pay')
         today = datetime.strptime(fields.Date.context_today(self), DF)
-        data.append({'label': _('Past'), 'value':0.0, 'color': '#ff0000'})
+        data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang', 'en_US')))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         for i in range(-1,4):
@@ -111,10 +108,10 @@ class account_journal(models.Model):
                     label = str(start_week.day) + '-' +str(end_week.day)+ ' ' + format_date(end_week, 'MMM', locale=self._context.get('lang', 'en_US'))
                 else:
                     label = format_date(start_week, 'd MMM', locale=self._context.get('lang', 'en_US'))+'-'+format_date(end_week, 'd MMM', locale=self._context.get('lang', 'en_US'))
-            data.append({'label':label,'value':0.0, 'color': '#ff0000' if i<0 else '#ff7f0e'})
+            data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = """SELECT sum(residual_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
+        select_sql_clause = """SELECT sum(residual_company_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
@@ -132,15 +129,14 @@ class account_journal(models.Model):
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
-            else:
-                data[index]['color'] = '#ffffff'
 
-        return [{'values': data, 'title': title}]
+        return [{'values': data}]
 
     @api.multi
     def get_journal_dashboard_datas(self):
         number_to_reconcile = last_balance = account_sum = 0
         ac_bnk_stmt = []
+        title = ''
         number_draft = number_waiting = number_late = sum_draft = sum_waiting = sum_late = 0
         if self.type in ['bank', 'cash']:
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
@@ -160,6 +156,7 @@ class account_journal(models.Model):
                     account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
+            title = _('Bills you need to pay') if self.type == 'purchase' else _('Invoices owed to you')
             # optimization to find total and sum of invoice that are in draft, open state
             query = """SELECT state, count(id) AS count, sum(amount_total) AS total FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel') GROUP BY state;"""
             self.env.cr.execute(query, (self.id,))
@@ -190,7 +187,8 @@ class account_journal(models.Model):
             'sum_waiting': formatLang(self.env, sum_waiting or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
-            'show_import': True if self.type in ['bank', 'cash'] and len(ac_bnk_stmt) == 0 and last_balance == 0 else False,
+            'bank_statements_source': self.bank_statements_source,
+            'title': title, 
         }
 
     @api.multi
@@ -222,7 +220,7 @@ class account_journal(models.Model):
         }
 
     @api.multi
-    def create_cash_bank(self):
+    def create_cash_statement(self):
         ctx = self._context.copy()
         ctx.update({'journal_id': self.id, 'default_journal_id': self.id, 'default_journal_type': 'cash'})
         return {
@@ -319,6 +317,7 @@ class account_journal(models.Model):
         if action_rec:
             action = action_rec.read([])[0]
             action['context'] = ctx
+            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
             return action
 
     @api.multi
@@ -339,13 +338,12 @@ class account_journal(models.Model):
         return action
 
     @api.multi
-    def import_statement(self):
-        """return action to import bank/cash statements. This button should be called only on journals with type =='bank'"""
-        model = 'account.bank.statement'
-        action_name = 'action_account_bank_statement_import'
-        ir_model_obj = self.pool['ir.model.data']
-        model, action_id = ir_model_obj.get_object_reference(self._cr, self._uid, 'account_bank_statement_import', action_name)
-        action = self.pool[model].read(self._cr, self._uid, action_id, context=self.env.context)
-        # Note: this drops action['context'], which is a dict stored as a string, which is not easy to update
-        action.update({'context': (u"{'journal_id': " + str(self.id) + u"}")})
+    def create_bank_statement(self):
+        """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
+        self.bank_statements_source = 'manual'
+        action = self.env.ref('account.action_bank_statement_tree').read()[0]
+        action.update({
+            'views': [[False, 'form']],
+            'context': "{'default_journal_id': " + str(self.id) + "}",
+        })
         return action

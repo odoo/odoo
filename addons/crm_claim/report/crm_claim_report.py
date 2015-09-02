@@ -26,7 +26,7 @@ class crm_claim_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'claim_date': fields.datetime('Claim Date', readonly=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True,domain="[('team_ids','=',team_id)]"),
+        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', readonly=True,domain="[('team_ids','=',team_id)]"),
         'categ_id': fields.many2one('crm.claim.category', 'Category',readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),

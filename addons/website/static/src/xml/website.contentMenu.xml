@@ -23,7 +23,7 @@
     </li>
 </t>
 <t t-name="website.contentMenu.dialog.select">
-    <t t-call="website.editor.dialog">
+    <t t-call="web_editor.dialog">
         <t t-set="title">Select a Menu</t>
         <t t-set="button">Continue</t>
         <select class="form-control mb16" t-if="widget.roots">
@@ -34,7 +34,7 @@
     </t>
 </t>
 <t t-name="website.contentMenu.dialog.edit">
-    <t t-call="website.editor.dialog">
+    <t t-call="web_editor.dialog">
         <t t-set="title">Edit Menu</t>
         <select class="form-control mb16" t-if="widget.roots">
             <t t-foreach="widget.roots" t-as="root">
@@ -58,7 +58,7 @@
         </div>
     </t>
 </t>
-<t t-name="website.contentMenu.dialog.add" t-extend="website.editor.dialog.link">
+<t t-name="website.contentMenu.dialog.add" t-extend="web_editor.dialog.link">
     <t t-jquery="t[t-set='title']" t-operation="inner">
         <t t-if="!widget.update_mode">Add Menu Entry</t>
         <t t-if="widget.update_mode">Edit Menu Entry</t>

@@ -14,7 +14,7 @@ class product_style(osv.Model):
 class product_pricelist(osv.Model):
     _inherit = "product.pricelist"
     _columns = {
-        'code': fields.char('Promotional Code'),
+        'code': fields.char('E-commerce Promotional Code'),
     }
 
 
@@ -84,7 +84,7 @@ class product_public_category(osv.osv):
     }
 
 class product_template(osv.Model):
-    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin']
+    _inherit = ["product.template", "website.seo.metadata", 'website.published.mixin', 'rating.mixin']
     _order = 'website_published desc, website_sequence desc, name'
     _name = 'product.template'
     _mail_post_access = 'read'
@@ -105,7 +105,7 @@ class product_template(osv.Model):
             string='Website Comments',
         ),
         'website_description': fields.html('Description for the website', translate=True),
-        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Alternative Products', help='Appear on the product page'),
+        'alternative_product_ids': fields.many2many('product.template','product_alternative_rel','src_id','dest_id', string='Suggested Products', help='Appear on the product page'),
         'accessory_product_ids': fields.many2many('product.product','product_accessory_rel','src_id','dest_id', string='Accessory Products', help='Appear on the shopping cart'),
         'website_size_x': fields.integer('Size X'),
         'website_size_y': fields.integer('Size Y'),
@@ -115,8 +115,8 @@ class product_template(osv.Model):
     }
 
     def _defaults_website_sequence(self, cr, uid, *l, **kwargs):
-        cr.execute('SELECT MAX(website_sequence)+1 FROM product_template')
-        next_sequence = cr.fetchone()[0] or 0
+        cr.execute('SELECT MIN(website_sequence)-1 FROM product_template')
+        next_sequence = cr.fetchone()[0] or 10
         return next_sequence
 
     _defaults = {
@@ -161,11 +161,18 @@ class product_template(osv.Model):
 class product_product(osv.Model):
     _inherit = "product.product"
 
-    # Wrapper for call_kw with inherits
+    # Wrappers for call_kw with inherits
     def open_website_url(self, cr, uid, ids, context=None):
         template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
         return self.pool['product.template'].open_website_url(cr, uid, [template_id], context=context)
 
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
+
+    def website_publish_button(self, cr, uid, ids, context=None):
+        template_id = self.browse(cr, uid, ids, context=context).product_tmpl_id.id
+        return self.pool['product.template'].website_publish_button(cr, uid, [template_id], context=context)
 
 class product_attribute(osv.Model):
     _inherit = "product.attribute"

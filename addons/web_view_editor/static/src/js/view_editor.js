@@ -543,6 +543,8 @@ var ViewEditor = Widget.extend({
         var tr = self.get_object_by_id(this.one_object.clicked_tr_id, this.one_object.main_object, [])[0].att_list[0];
         var parent_tr = ($(side).prevAll("tr[level=" + String(this.one_object.clicked_tr_level - 1) + "]"))[0];
         var field_dataset = new data.DataSetSearch(this, this.model, null, null);
+        if(_.isUndefined(parent_tr))
+            return;
         parent_tr = self.get_object_by_id(parseInt($(parent_tr).attr('id').replace(/[^0-9]+/g, '')), this.one_object.main_object, [])[0].att_list[0];
         _.each([tr, parent_tr],function(element) {
             var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false;
@@ -1019,7 +1021,7 @@ var ViewEditor = Widget.extend({
             type_widget.set_value(node.value);
             self.add_widget.push(type_widget);
         });
-        table_selector.find("td[id^=]").attr("width","100px");
+        table_selector.find("td[id^='']").attr("width","100px");
         self.add_node_dialog.$el.find('#new_field').click(function() {
             var model_data = new data.DataSetSearch(self,'ir.model', null, null);
             model_data.read_slice([], {domain: [['model','=', self.model]]}).done(function(result) {

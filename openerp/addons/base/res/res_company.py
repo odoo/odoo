@@ -4,53 +4,12 @@
 import os
 import re
 import openerp
-from openerp import SUPERUSER_ID, tools
+from openerp import SUPERUSER_ID, tools, api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
   
-class multi_company_default(osv.osv):
-    """
-    Manage multi company default value
-    """
-    _name = 'multi_company.default'
-    _description = 'Default multi company'
-    _order = 'company_id,sequence,id'
-
-    _columns = {
-        'sequence': fields.integer('Sequence'),
-        'name': fields.char('Name', required=True, help='Name it to easily find a record'),
-        'company_id': fields.many2one('res.company', 'Main Company', required=True,
-            help='Company where the user is connected'),
-        'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
-            help='Company to store the current record'),
-        'object_id': fields.many2one('ir.model', 'Object', required=True,
-            help='Object affected by this rule'),
-        'expression': fields.char('Expression', required=True,
-            help='Expression, must be True to match\nuse context.get or user (browse)'),
-        'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
-    }
-
-    _defaults = {
-        'expression': 'True',
-        'sequence': 100,
-    }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        """
-        Add (copy) in the name when duplicate record
-        """
-        if not context:
-            context = {}
-        if not default:
-            default = {}
-        company = self.browse(cr, uid, id, context=context)
-        default = default.copy()
-        default['name'] = company.name + _(' (copy)')
-        return super(multi_company_default, self).copy(cr, uid, id, default, context=context)
-
-multi_company_default()
 
 class res_company(osv.osv):
     _name = "res.company"
@@ -64,9 +23,9 @@ class res_company(osv.osv):
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
-                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
-                if address_data['default']:
-                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['default']], field_names, context=context)[0]
+                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['contact'])
+                if address_data['contact']:
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, [address_data['contact']], field_names, context=context)[0]
                     for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
@@ -76,8 +35,8 @@ class res_company(osv.osv):
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
-            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
-            address = address_data['default']
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['contact'])
+            address = address_data['contact']
             if address:
                 part_obj.write(cr, uid, [address], {name: value or False}, context=context)
             else:
@@ -121,7 +80,6 @@ class res_company(osv.osv):
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
         'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
-        'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.related('partner_id', 'email', size=64, type='char', string="Email", store=True),
         'phone': fields.related('partner_id', 'phone', size=64, type='char', string="Phone", store=True),
@@ -135,28 +93,20 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def onchange_footer(self, cr, uid, ids, custom_footer, phone, fax, email, website, vat, company_registry, bank_ids, context=None):
-        if custom_footer:
-            return {}
-
-        # first line (notice that missing elements are filtered out before the join)
-        res = ' | '.join(filter(bool, [
-            phone            and '%s: %s' % (_('Phone'), phone),
-            fax              and '%s: %s' % (_('Fax'), fax),
-            email            and '%s: %s' % (_('Email'), email),
-            website          and '%s: %s' % (_('Website'), website),
-            vat              and '%s: %s' % (_('TIN'), vat),
-            company_registry and '%s: %s' % (_('Reg'), company_registry),
-        ]))
-        # second line: bank accounts
-        res_partner_bank = self.pool.get('res.partner.bank')
-        account_data = self.resolve_2many_commands(cr, uid, 'bank_ids', bank_ids, context=context)
-        account_names = res_partner_bank._prepare_name_get(cr, uid, account_data, context=context)
-        if account_names:
-            title = _('Bank Accounts') if len(account_names) > 1 else _('Bank Account')
-            res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
-
-        return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
+    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
+    def onchange_footer(self):
+        if not self.custom_footer:
+            # first line (notice that missing elements are filtered out before the join)
+            res = ' | '.join(filter(bool, [
+                self.phone            and '%s: %s' % (_('Phone'), self.phone),
+                self.fax              and '%s: %s' % (_('Fax'), self.fax),
+                self.email            and '%s: %s' % (_('Email'), self.email),
+                self.website          and '%s: %s' % (_('Website'), self.website),
+                self.vat              and '%s: %s' % (_('TIN'), self.vat),
+                self.company_registry and '%s: %s' % (_('Reg'), self.company_registry),
+            ]))
+            self.rml_footer_readonly = res
+            self.rml_footer = res
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
@@ -203,24 +153,14 @@ class res_company(osv.osv):
             args = (args or []) + [('id', 'in', cmp_ids)]
         return super(res_company, self).name_search(cr, uid, name=name, args=args, operator=operator, context=context, limit=limit)
 
+    @api.returns('self')
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """
-        Check if the object for this company have a default value
+        Returns the default company (the user's company)
+        The 'object' and 'field' arguments are ignored but left here for
+        backward compatibility and potential override.
         """
-        if not context:
-            context = {}
-        proxy = self.pool.get('multi_company.default')
-        args = [
-            ('object_id.model', '=', object),
-            ('field_id', '=', field),
-        ]
-
-        ids = proxy.search(cr, uid, args, context=context)
-        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        for rule in proxy.browse(cr, uid, ids, context):
-            if eval(rule.expression, {'context': context, 'user': user}):
-                return rule.company_dest_id.id
-        return user.company_id.id
+        return self.pool['res.users']._get_company(cr, uid, context=context)
 
     @tools.ormcache('uid', 'company')
     def _get_company_children(self, cr, uid=None, company=None):

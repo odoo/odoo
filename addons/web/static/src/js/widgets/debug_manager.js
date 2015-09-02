@@ -83,22 +83,17 @@ if (core.debug) {
             }
         },
         get_metadata: function() {
-            var self = this;
-            var ids = this.view.get_selected_ids();
-            if (ids.length === 1) {
-                self.dataset.call('get_metadata', [ids]).done(function(result) {
-                    new Dialog(this, {
-                        title: _.str.sprintf(_t("Metadata (%s)"), self.dataset.model),
-                        size: 'medium',
-                        buttons: {
-                            Ok: function() { this.parents('.modal').modal('hide');}
-                        },
-                    }, QWeb.render('WebClient.DebugViewLog', {
+            var ds = this.dataset;
+            ds.call('get_metadata', [this.view.get_selected_ids()]).done(function(result) {
+                new Dialog(this, {
+                    title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
+                    size: 'medium',
+                    $content: QWeb.render('WebClient.DebugViewLog', {
                         perm : result[0],
                         format : formats.format_value
-                    })).open();
-                });
-            }
+                    })
+                }).open();
+            });
         },
         toggle_layout_outline: function() {
             this.view.rendering_engine.toggle_layout_debugging();

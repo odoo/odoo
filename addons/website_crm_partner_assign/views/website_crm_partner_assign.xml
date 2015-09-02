@@ -39,7 +39,7 @@
             <div class="col-md-3 mb32" id="partner_left">
 
                 <ul id="reseller_grades" class="nav nav-pills nav-stacked mt16">
-                    <li class="nav-header"><h3>Filter by Grade</h3></li>
+                    <li class="nav-header"><h3>Filter by Level</h3></li>
                     <t t-foreach="grades" t-as="grade">
                         <li t-att-class="grade['active'] and 'active' or ''">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }">

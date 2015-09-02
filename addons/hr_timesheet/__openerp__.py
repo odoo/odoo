@@ -20,7 +20,6 @@ Lots of reporting on time and employee tracking are provided.
 It is completely integrated with the cost accounting module. It allows you to set
 up a management by affair.
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['account', 'hr', 'base', 'hr_attendance'],
     'data': [
@@ -28,16 +27,13 @@ up a management by affair.
         'hr_timesheet_view.xml',
         'report/hr_timesheet_report_view.xml',
         'hr_timesheet_installer.xml',
-        'hr_timesheet_data.xml',
         'hr_dashboard.xml',
     ],
     'demo': [
-        'hr_timesheet_demo.xml',
         'hr_timesheet_demo.yml',
     ],
     'test': [
         '../account/test/account_minimal_test.xml',
-        'test/hr_timesheet_data.xml',
         'test/hr_timesheet_users.yml',
     ],
     'installable': True,

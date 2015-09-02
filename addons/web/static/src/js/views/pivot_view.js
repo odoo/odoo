@@ -8,7 +8,7 @@ var core = require('web.core');
 var crash_manager = require('web.crash_manager');
 var formats = require('web.formats');
 var framework = require('web.framework');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Sidebar = require('web.Sidebar');
 var utils = require('web.utils');
@@ -21,6 +21,7 @@ var total = _t("Total");
 
 var PivotView = View.extend({
     template: 'PivotView',
+    icon: 'fa-table',
     display_name: _lt('Pivot'),
     view_type: 'pivot',
     events: {
@@ -209,7 +210,6 @@ var PivotView = View.extend({
         this.do_push_state({});
         this.data_loaded.done(function () {
             self.display_table(); 
-            self.$el.show();
         });
         return this._super();
     },

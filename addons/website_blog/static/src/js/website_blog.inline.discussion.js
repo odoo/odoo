@@ -5,35 +5,30 @@ odoo.define('website_blog.InlineDiscussion', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
-var website = require('website.website');
-
+var base = require('web_editor.base');
 
 var qweb = core.qweb;
 
+ajax.loadXML('/website_blog/static/src/xml/website_blog.inline.discussion.xml', qweb);
+
+
 var InlineDiscussion = core.Class.extend({
     init: function(options) {
-        var self = this ;
-        self.discus_identifier;
         var defaults = {
             position: 'right',
             post_id: $('#blog_post_name').attr('data-blog-id'),
             content : false,
             public_user: false,
         };
-        self.settings = $.extend({}, defaults, options);
-
-        // TODO: bundlify qweb templates
-        website.add_template_file('/website_blog/static/src/xml/website_blog.inline.discussion.xml').then(function () {
-            self.do_render(self);
-        });
+        this.settings = $.extend({}, defaults, options);
     },
-    do_render: function() {
+    start: function() {
         var self = this;
-        if ($('#discussions_wrapper').length === 0 && self.settings.content.length > 0) {
+        if ($('#discussions_wrapper').length === 0 && this.settings.content.length > 0) {
             $('<div id="discussions_wrapper"></div>').insertAfter($('#blog_content'));
         }
         // Attach a discussion to each paragraph.
-        self.discussions_handler(self.settings.content);
+        this.discussions_handler(this.settings.content);
 
         // Hide the discussion.
         $('html').click(function(event) {
@@ -133,13 +128,14 @@ var InlineDiscussion = core.Class.extend({
         self.hide_discussion();
         self.discus_identifier = identifier;
         var elt = $('a[data-discus-identifier="'+identifier+'"]');
+        self.settings.current_url = window.location;
         elt.append(qweb.render("website.blog_discussion.popover", {'identifier': identifier , 'options': self.settings}));
         var comment = '';
         self.prepare_data(identifier,false).then(function(data){
             _.each(data, function(res){
                 comment += qweb.render("website.blog_discussion.comment", {'res': res});
             });
-            $('.discussion_history').html('<ul class="media-list">'+comment+'</ul>');
+            $('.discussion_history').html('<ul class="media-list mt8">' + comment + '</ul>');
             self.create_popover(elt, identifier);
             // Add 'active' class.
             $('a.discussion-link, a.main-discussion-link').removeClass('active').filter(source).addClass('active');
@@ -162,36 +158,13 @@ var InlineDiscussion = core.Class.extend({
     },
     validate : function(public_user){
         var comment = $(".popover textarea#inline_comment").val();
-        if (public_user){
-            var author_name = $('.popover input#author_name').val();
-            var author_email = $('.popover input#author_email').val();
-            if(!comment || !author_name || !author_email){
-                if (!author_name)
-                    $('div#author_name').addClass('has-error');
-                else
-                    $('div#author_name').removeClass('has-error');
-                if (!author_email)
-                    $('div#author_email').addClass('has-error');
-                else
-                    $('div#author_email').removeClass('has-error');
-                if(!comment)
-                    $('div#inline_comment').addClass('has-error');
-                else
-                    $('div#inline_comment').removeClass('has-error');
-                return false;
-            }
-        }
-        else if(!comment) {
+        if(!comment) {
             $('div#inline_comment').addClass('has-error');
             return false;
         }
         $("div#inline_comment").removeClass('has-error');
-        $('div#author_name').removeClass('has-error');
-        $('div#author_email').removeClass('has-error');
         $(".popover textarea#inline_comment").val('');
-        $('.popover input#author_name').val('');
-        $('.popover input#author_email').val('');
-        return [comment, author_name, author_email];
+        return [comment];
     },
     post_discussion : function() {
         var self = this;
@@ -201,8 +174,6 @@ var InlineDiscussion = core.Class.extend({
             'blog_post_id': self.settings.post_id,
             'path': self.discus_identifier,
             'comment': val[0],
-            'name' : val[1],
-            'email': val[2],
         }).then(function(res){
             $(".popover ul.media-list").prepend(qweb.render("website.blog_discussion.comment", {'res': res[0]}));
             var ele = $('a[data-discus-identifier="'+ self.discus_identifier +'"]');

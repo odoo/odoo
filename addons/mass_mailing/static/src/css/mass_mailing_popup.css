@@ -1,7 +1,7 @@
 /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
 .editor_enable [data-oe-placeholder]:empty:not(:focus):before {
-  content: attr(data-oe-placeholder);
-  opacity: 0.3;
+  content: " \00a0 " attr(data-oe-placeholder);
+  opacity: 0.4;
 }
 .o_popup_animated {
   -webkit-animation-duration: 1s;

@@ -20,8 +20,8 @@
                     <filter name="today" string="Today" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
-                        <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
-                        <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Supplier Order by Month"/>
+                        <filter name="group_by_supplier" string="By Vendor" context="{'group_by':'supplier'}"/>
+                        <filter name="group_by_date" string="Order Month" context="{'group_by':'date'}" help="Vendor Orders by Month"/>
                     </group>
                 </search>
             </field>
@@ -172,18 +172,19 @@
               </p>
             </field>
         </record>
+
         <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_menu_form" action="lunch_cashmove_action_account" sequence="3"/>
 
         <!--Action for Administrate Orders group by supplier-->
         <record id="lunch_order_line_action_by_supplier" model="ir.actions.act_window">
-            <field name="name">Orders by Supplier</field>
+            <field name="name">Orders by Vendor</field>
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see today's orders grouped by suppliers.
+                Here you can see today's orders grouped by vendors.
               </p>
               <p>
                 - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
@@ -194,16 +195,16 @@
         </record>
         <menuitem name="Today's Orders" parent="menu_lunch_admin" id="lunch_order_line_menu_by_supplier" action="lunch_order_line_action_by_supplier" />
 
-        <!--Action for control Supplier-->
+        <!--Action for control Vendor -->
         <record id="lunch_order_line_action_control_suppliers" model="ir.actions.act_window">
-            <field name="name">Control Suppliers</field>
+            <field name="name">Control Vendors</field>
             <field name="res_model">lunch.order.line</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see every orders grouped by suppliers and by date.
+                Here you can see every orders grouped by vendors and by date.
               </p>
               <p>
                 - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
@@ -212,7 +213,7 @@
               </p>
             </field>
         </record>
-        <menuitem name="Orders by Supplier" parent="menu_lunch_admin" id="lunch_order_line_menu_control_suppliers" action="lunch_order_line_action_control_suppliers" />
+        <menuitem name="Orders by Vendor" parent="menu_lunch_admin" id="lunch_order_line_menu_control_suppliers" action="lunch_order_line_action_control_suppliers" />
 
         <!--Action for Control Accounts-->
         <record id="lunch_cashmove_action_control_accounts" model="ir.actions.act_window">
@@ -264,7 +265,7 @@
                 Click to create a product for lunch.
             </p>
               <p>
-                A product is defined by its name, category, price and supplier.
+                A product is defined by its name, category, price and vendor.
               </p>
             </field>
         </record>
@@ -364,16 +365,33 @@
             <field name="arch" type="xml">
                 <form string='Orders Form' class="o_lunch">
                     <header>
+                        <button name="%(action_lunch_order_line_lucky)d" type="action" string="Feeling Lucky" class="oe_highlight"/>
                         <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
                     <sheet>
+                        <field name="balance_visible" invisible="1"/>
+                        <div class="alert alert-warning" role="alert" attrs="{'invisible': ['|',('cash_move_balance', '&gt;', 0),('balance_visible', '=', False)]}">
+                            Warning : Your balance is insufficient.
+                        </div>
                         <group>
                             <group>
                                 <field name='user_id'
                                 context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'lunch.group_lunch_user']}"/>
+                                <field name='date'/>
                             </group>
                             <group>
-                                <field name='date'/>
+                                <div class="oe_button_box" name="button_box">
+                                    <button class="oe_stat_button"
+                                        attrs="{'invisible': [('balance_visible', '=', False)]}"
+                                        name="%(lunch_cashmove_action_account)d"
+                                        icon="fa-money"
+                                        type="action">
+                                        <div class="o_form_field o_stat_info">
+                                            <span class="o_stat_value"><field name="cash_move_balance" widget="monetary"/></span>
+                                            <span class="o_stat_text">Balance</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </group>
                         </group>
                         <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=',False)]}" class="oe_inline alert alert-danger"/>

@@ -10,7 +10,8 @@ var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var formats = require('web.formats');
 var framework = require('web.framework');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
+var Priority = require('web.Priority');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -22,8 +23,6 @@ var WidgetButton = common.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
         node.attrs.type = node.attrs['data-button-type'];
-        this.is_stat_button = /\boe_stat_button\b/.test(node.attrs['class']);
-        this.icon_class = node.attrs.icon && "stat_button_icon fa " + node.attrs.icon + " fa-fw";
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -31,8 +30,12 @@ var WidgetButton = common.FormWidget.extend({
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
         }
-        if (this.node.attrs.icon && (! /\//.test(this.node.attrs.icon))) {
-            this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+        if (this.node.attrs.icon) {
+            // if the icon isn't a font-awesome one, find it in the icons folder
+            this.fa_icon = this.node.attrs.icon.indexOf('fa-') === 0;
+            if (!this.fa_icon && (! /\//.test(this.node.attrs.icon))) {
+                this.node.attrs.icon = '/web/static/src/img/icons/' + this.node.attrs.icon + '.png';
+            }
         }
     },
     start: function() {
@@ -59,21 +62,8 @@ var WidgetButton = common.FormWidget.extend({
         var exec_action = function() {
             if (self.node.attrs.confirm) {
                 var def = $.Deferred();
-                var dialog = new Dialog(this, {
-                    title: _t('Confirm'),
-                    buttons: [
-                        {text: _t("Cancel"), close: true},
-                        {text: _t("Ok"), click: function() {
-                                var self2 = this;
-                                self.on_confirmed().always(function() {
-                                    self2.parents('.modal').modal('hide');
-                                });
-                            }
-                        }
-                    ],
-                    $content: $('<div/>').text(self.node.attrs.confirm)
-                }).open();
-                dialog.on("closed", null, function() {def.resolve();});
+                Dialog.confirm(self, self.node.attrs.confirm, { confirm_callback: self.on_confirmed })
+                      .on("closed", null, function() { def.resolve(); });
                 return def.promise();
             } else {
                 return self.on_confirmed();
@@ -261,60 +251,54 @@ var KanbanSelection = FieldChar.extend({
     },
 });
 
-var Priority = FieldChar.extend({
-    init: function (field_manager, node) {
-        this._super(field_manager, node);
+var FieldPriority = common.AbstractField.extend({
+    events: {
+        'mouseup': function(e) {
+            e.stopPropagation();
+        },
     },
-    prepare_priority: function() {
-        var self = this;
-        var selection = this.field.selection || [];
-        var init_value = selection && selection[0][0] || 0;
-        var data = _.map(selection.slice(1), function(element, index) {
-            var value = {
-                'value': element[0],
-                'name': element[1],
-                'click_value': element[0],
-            };
-            if (index === 0 && self.get('value') === element[0]) {
-                value['click_value'] = init_value;
-            }
-            return value;
+    start: function() {
+        this.priority = new Priority(this, {
+            readonly: this.get('readonly'),
+            value: this.get('value'),
+            values: this.field.selection || [],
         });
-        return data;
+
+        this.priority.on('update', this, function(update) {
+            /* setting the value: in view mode, perform an asynchronous call and reload
+            the form view; in edit mode, use set_value to save the new value that will
+            be written when saving the record. */
+            var view = this.view;
+            if(view.get('actual_mode') === 'view') {
+                var write_values = {};
+                write_values[this.name] = update.value;
+                view.dataset._model.call('write', [
+                    [view.datarecord.id],
+                    write_values,
+                    view.dataset.get_context()
+                ]).done(function() {
+                    view.reload();
+                });
+            } else {
+                this.set_value(update.value);
+            }
+        });
+
+        this.on('change:readonly', this, function() {
+            this.priority.readonly = this.get('readonly');
+            var $div = $('<div/>').insertAfter(this.$el);
+            this.priority.replace($div);
+            this.setElement(this.priority.$el);
+        });
+
+        var self = this;
+        return $.when(this._super(), this.priority.appendTo('<div>').then(function() {
+            self.priority.$el.addClass(self.$el.attr('class'));
+            self.replaceElement(self.priority.$el);
+        }));
     },
     render_value: function() {
-        this.priorities = this.prepare_priority();
-        this.$el.html(QWeb.render("FormPriority", {'widget': this}));
-        if (!this.get('readonly')){
-            this.$el.find('li').on('click', this.set_priority.bind(this));
-        }
-    },
-    /* setting the value: in view mode, perform an asynchronous call and reload
-    the form view; in edit mode, use set_value to save the new value that will
-    be written when saving the record. */
-    set_priority: function (ev) {
-        var self = this;
-        var li = $(ev.target).closest('li');
-        if (li.length) {
-            var value = String(li.data('value'));
-            if (this.view.get('actual_mode') == 'view') {
-                var write_values = {};
-                write_values[self.name] = value;
-                return this.view.dataset._model.call(
-                    'write', [
-                        [this.view.datarecord.id],
-                        write_values,
-                        self.view.dataset.get_context()
-                    ]).done(self.reload_record.bind(self));
-            }
-            else {
-                return this.set_value(value);
-            }
-        }
-
-    },
-    reload_record: function() {
-        this.view.reload();
+        this.priority.set_value(this.get('value'));
     },
 });
 
@@ -612,61 +596,6 @@ var FieldText = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
 });
 
-/**
- * FieldTextHtml Widget
- * Intended for FieldText widgets meant to display HTML content. This
- * widget will instantiate the CLEditor (see cleditor in static/src/lib)
- * To find more information about CLEditor configutation: go to
- * http://premiumsoftware.net/cleditor/docs/GettingStarted.html
- */
-var FieldTextHtml = common.AbstractField.extend(common.ReinitializeFieldMixin, {
-    template: 'FieldTextHtml',
-    init: function() {
-        this._super.apply(this, arguments);
-    },
-    initialize_content: function() {
-        var self = this;
-        if (! this.get("effective_readonly")) {
-            self._updating_editor = false;
-            this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 'calc(100% - 4px)');
-            var height = ((this.node.attrs || {}).editor_height || 250);
-            this.$textarea.cleditor({
-                width:      width, // width not including margins, borders or padding
-                height:     height, // height not including margins, borders or padding
-                controls:   // controls to add to the toolbar
-                            "bold italic underline strikethrough " +
-                            "| removeformat | bullets numbering | outdent " +
-                            "indent | link unlink | source",
-                bodyStyle:  // style to assign to document body contained within the editor
-                            "margin:4px; color:#4c4c4c; font-size:13px; font-family:'Lucida Grande',Helvetica,Verdana,Arial,sans-serif; cursor:text"
-            });
-            this.$cleditor = this.$textarea.cleditor()[0];
-            this.$cleditor.change(function() {
-                if (! self._updating_editor) {
-                    self.$cleditor.updateTextArea();
-                    self.internal_set_value(self.$textarea.val());
-                }
-            });
-            if (this.field.translate) {
-                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
-                    .click(this.on_translate);
-                this.$cleditor.$toolbar.append($img);
-            }
-        }
-    },
-    render_value: function() {
-        if (! this.get("effective_readonly")) {
-            this.$textarea.val(this.get('value') || '');
-            this._updating_editor = true;
-            this.$cleditor.updateFrame();
-            this._updating_editor = false;
-        } else {
-            this.$el.html(this.get('value'));
-        }
-    },
-});
-
 var FieldBoolean = common.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
@@ -701,6 +630,43 @@ var FieldBoolean = common.AbstractField.extend({
 });
 
 /**
+    This widget is intended to be used on stat button boolean fields.
+    It is a read-only field that will display a simple string "<label of value>".
+*/
+var FieldBooleanButton = common.AbstractField.extend({
+    className: 'o_stat_info',
+    init: function() {
+        this._super.apply(this, arguments);
+        switch (this.options["terminology"]) {
+            case "active":
+                this.string_true = _t("Active");
+                this.hover_true = _t("Deactivate");
+                this.string_false = _t("Inactive");
+                this.hover_false = _t("Activate");
+                break;
+            case "archive":
+                this.string_true = _t("Not Archived");
+                this.hover_true = _t("Archive");
+                this.string_false = _t("Archived");
+                this.hover_false = _t("Unarchive");
+                break;
+            default:
+                this.string_true = _t("On");
+                this.hover_true = _t("Switch Off");
+                this.string_false = _t("Off");
+                this.hover_false = _t("Switch On");
+        }
+    },
+    render_value: function() {
+        this._super();
+        this.$el.html(QWeb.render("BooleanButton", {widget: this}));
+    },
+    is_false: function() {
+        return false;
+    },
+});
+
+/**
     The progressbar field expect a float from 0 to 100.
 */
 var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
@@ -711,6 +677,7 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
 
         this.progressbar = new ProgressBar(this, {
             readonly: this.get('effective_readonly'),
+            edit_on_click: true,
             value: this.get('value') || 0,
         });
 
@@ -719,11 +686,14 @@ var FieldProgressBar = common.AbstractField.extend(common.ReinitializeFieldMixin
             self.progressbar.$el.addClass(self.$el.attr('class'));
             self.replaceElement(self.progressbar.$el);
 
-            self.progressbar.on('change:value', self, function() {
-                self.set('value', self.progressbar.get('value'));
+            self.progressbar.on('update', self, function(update) {
+                self.set('value', update.changed_value);
             });
         });
-    }
+    },
+    render_value: function() {
+        this.progressbar.set_value(this.get('value'));
+    },
 });
 
 /**
@@ -1136,7 +1106,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         }
         this.m2o.field.relation = this.get('value')[0];
         this.m2o.set_value(this.get('value')[1]);
-        this.m2o.$el.toggle(!!this.get('value')[0]);
+        this.m2o.do_toggle(!!this.get('value')[0]);
         this.reference_ready = true;
     },
 });
@@ -1179,7 +1149,7 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                 var file = file_node.files[0];
                 if (file.size > this.max_upload_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    core.bus.trigger('display_notification_warning', _t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
                     return false;
                 }
                 var filereader = new FileReader();
@@ -1222,18 +1192,18 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             var filename_fieldname = this.node.attrs.filename;
             var filename_field = this.view.fields && this.view.fields[filename_fieldname];
             this.session.get_file({
-                url: '/web/binary/saveas_ajax',
-                data: {data: JSON.stringify({
-                    model: this.view.dataset.model,
-                    id: (this.view.datarecord.id || ''),
-                    field: this.name,
-                    filename_field: (filename_fieldname || ''),
-                    data: utils.is_bin_size(value) ? null : value,
-                    filename: filename_field ? filename_field.get('value') : null,
-                    context: this.view.dataset.get_context()
-                })},
-                complete: framework.unblockUI,
-                error: c.rpc_error.bind(c)
+                'url': '/web/content',
+                'data': {
+                    'model': this.view.dataset.model,
+                    'id': this.view.datarecord.id,
+                    'field': this.name,
+                    'filename_field': filename_fieldname,
+                    'filename': filename_field ? filename_field.get('value') : null,
+                    'download': true,
+                    'data': utils.is_bin_size(value) ? null : value,
+                },
+                'complete': framework.unblockUI,
+                'error': c.rpc_error.bind(c)
             });
             ev.stopPropagation();
             return false;
@@ -1330,11 +1300,11 @@ var FieldBinaryImage = FieldBinary.extend({
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
-            url = session.url('/web/binary/image', {
+            url = session.url('/web/image', {
                                         model: this.view.dataset.model,
                                         id: id,
                                         field: field,
-                                        t: (new Date().getTime()),
+                                        unique: (this.view.datarecord.__last_update || '').replace(/[^0-9]/g, ''),
             });
         } else {
             url = this.placeholder;
@@ -1357,7 +1327,7 @@ var FieldBinaryImage = FieldBinary.extend({
         });
         $img.on('error', function() {
             $img.attr('src', self.placeholder);
-            core.bus.trigger('display_notification_warning', _t("Image"), _t("Could not display the selected image."));
+            self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
@@ -1657,7 +1627,6 @@ core.form_widget_registry
     .add('email', FieldEmail)
     .add('url', FieldUrl)
     .add('text',FieldText)
-    .add('html', FieldTextHtml)
     .add('char_domain', FieldCharDomain)
     .add('date', FieldDate)
     .add('datetime', FieldDatetime)
@@ -1665,6 +1634,7 @@ core.form_widget_registry
     .add('radio', FieldRadio)
     .add('reference', FieldReference)
     .add('boolean', FieldBoolean)
+    .add('boolean_button', FieldBooleanButton)
     .add('toggle_button', FieldToggleBoolean)
     .add('float', FieldFloat)
     .add('percentpie', FieldPercentPie)
@@ -1676,7 +1646,7 @@ core.form_widget_registry
     .add('binary', FieldBinaryFile)
     .add('statusbar', FieldStatus)
     .add('monetary', FieldMonetary)
-    .add('priority', Priority)
+    .add('priority', FieldPriority)
     .add('kanban_state_selection', KanbanSelection)
     .add('statinfo', StatInfo)
     .add('timezone_mismatch', TimezoneMismatch)

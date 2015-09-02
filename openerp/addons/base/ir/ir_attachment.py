@@ -71,7 +71,7 @@ class ir_attachment(osv.osv):
 
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
-    implement other storage engines, shuch methods should check for other
+    implement other storage engines, such methods should check for other
     location pseudo uri (example: hdfs://hadoppserver)
 
     The default implementation is the file:dirname location that stores files
@@ -104,7 +104,7 @@ class ir_attachment(osv.osv):
 
     def force_storage(self, cr, uid, context=None):
         """Force all attachments to be stored in the currently configured storage"""
-        if not self.pool['res.users'].has_group(cr, uid, 'base.group_erp_manager'):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
             raise AccessError(_('Only administrators can execute this action.'))
 
         location = self._storage(cr, uid, context)
@@ -188,9 +188,6 @@ class ir_attachment(osv.osv):
                 result[attach.id] = self._file_read(cr, uid, attach.store_fname, bin_size)
             else:
                 result[attach.id] = attach.db_datas
-                if bin_size:
-                    result[attach.id] = int(result[attach.id])
-
         return result
 
     def _data_set(self, cr, uid, id, name, value, arg, context=None):
@@ -240,9 +237,8 @@ class ir_attachment(osv.osv):
         """ compute the checksum for the given datas
             :param bin_data : datas in its binary form
         """
-        if bin_data:
-            return hashlib.sha1(bin_data).hexdigest()
-        return False
+        # an empty file has a checksum too (for caching)
+        return hashlib.sha1(bin_data or '').hexdigest()
 
     def _compute_mimetype(self, values):
         """ compute the mimetype of the given values
@@ -282,8 +278,8 @@ class ir_attachment(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
-        'type': fields.selection( [ ('url','URL'), ('binary','Binary'), ],
-                'Type', help="Binary File or URL", required=True, change_default=True),
+        'type': fields.selection( [ ('url','URL'), ('binary','File'), ],
+                'Type', help="You can either upload a file from your computer or copy/paste an internet link to your file", required=True, change_default=True),
         'url': fields.char('Url', size=1024),
         # al: We keep shitty field names for backward compatibility with document
         'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),

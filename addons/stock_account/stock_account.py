@@ -51,7 +51,7 @@ class account_invoice_line(osv.osv):
         inv = i_line.invoice_id
         company_currency = inv.company_id.currency_id.id
 
-        if i_line.product_id.type != 'service' and i_line.product_id.valuation == 'real_time':
+        if i_line.product_id.type == 'product' and i_line.product_id.valuation == 'real_time':
             # debit account dacc will be the output account
             # first check the product, if empty check the category
             dacc = i_line.product_id.property_stock_account_output and i_line.product_id.property_stock_account_output.id
@@ -79,7 +79,7 @@ class account_invoice_line(osv.osv):
                         'price':self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
+                        'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
                         'taxes':i_line.invoice_line_tax_ids,
                     },
@@ -92,7 +92,7 @@ class account_invoice_line(osv.osv):
                         'price': -1 * self._get_price(cr, uid, inv, company_currency, i_line, price_unit),
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
-                        'uos_id':i_line.uos_id.id,
+                        'uom_id':i_line.uom_id.id,
                         'account_analytic_id': False,
                         'taxes':i_line.invoice_line_tax_ids,
                     },
@@ -122,20 +122,6 @@ class account_invoice(osv.osv):
                                                                               fpos,
                                                                               counterpart_acct_id)
         return invoice_data
-
-
-class stock_inventory(osv.osv):
-    _inherit = "stock.inventory"
-    _columns = {
-        'date_account': fields.date('Force Valuation Account Date', help="Choose the accounting period where you want to value the stock moves created by the inventory instead of the default one (chosen by the inventory end date)"),
-    }
-    def post_inventory(self, cr, uid, inv, context=None):
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        if inv.date:
-            ctx['force_period_date'] = inv.date
-        return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
 
 #----------------------------------------------------------
@@ -250,8 +236,8 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, [quant], move, context)
         return quant
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, context=None):
-        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, context=context)
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id=False, context=None):
+        res = super(stock_quant, self).move_quants_write(cr, uid, quants, move, location_dest_id,  dest_package_id, lot_id=lot_id, context=context)
         if move.product_id.valuation == 'real_time':
             self._account_entry_move(cr, uid, quants, move, context=context)
         return res
@@ -425,7 +411,7 @@ class AccountChartTemplate(models.Model):
 
     @api.model
     def generate_journals(self, acc_template_ref, company, journals_dict=None):
-        journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False}]
+        journal_to_add = [{'name': _('Stock Journal'), 'type': 'general', 'code': 'STJ', 'favorite': False, 'sequence': 8}]
         super(AccountChartTemplate, self).generate_journals(acc_template_ref=acc_template_ref, company=company, journals_dict=journal_to_add)
 
     @api.multi
@@ -451,7 +437,7 @@ class AccountChartTemplate(models.Model):
 
         todo_list = [ # Property Stock Accounts
             'property_stock_account_input_categ_id',
-            'property_stock_account_output_categ',
+            'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
         ]
         for record in todo_list:

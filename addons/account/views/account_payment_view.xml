@@ -25,12 +25,12 @@
             <field name="name">account.supplier.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state=='draft'; #707070:state=='sent'; #A0A0A0:state=='reconciled'" edit="false">
+                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="payment_method_id"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Vendor"/>
                     <field name="amount"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
@@ -107,7 +107,7 @@
                                 <label for="amount"/>
                                 <div name="amount_div" class="o_row">
                                     <field name="amount" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </div>
                             </group>
                             <group>
@@ -191,27 +191,27 @@
                                 <label for="amount"/>
                                 <div name="amount_div">
                                     <field name="amount" class="oe_inline"/>
-                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency" class="oe_inline" invisible="1"/>
                                 </div>
                             </group>
                             <group>
                                 <field name="payment_date"/>
                                 <field name="communication"/>
                             </group>
-                            <group attrs="{'invisible': [('payment_difference', '&lt;=', 0.0)]}">
+                            <group attrs="{'invisible': [('payment_difference', '=', 0.0)]}">
                                 <label for="payment_difference"/>
                                 <div>
-                                <field name="payment_difference"/>
-                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                    <field name="payment_difference"/>
+                                    <field name="payment_difference_handling" widget="radio" nolabel="1"/>
                                 </div>
-                                <field name="writeoff_account_id" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')], 'invisible': [('payment_difference_handling', '!=', 'reconcile')]}"/>
+                                <field name="writeoff_account_id" string="Post Difference In"
+                                    attrs="{'invisible': [('payment_difference_handling','=','open')], 'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
                             </group>
                         </group>
                     </sheet>
                     <footer>
-                        <button string='Validate' name="post" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string='Validate' name="post" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -253,9 +253,8 @@
                         </group>
                     </group>
                     <footer>
-                        <button string='Validate' name="create_payment" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
+                        <button string='Validate' name="create_payment" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                </form>
             </field>

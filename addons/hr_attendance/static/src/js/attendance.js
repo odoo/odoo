@@ -4,7 +4,7 @@ odoo.define('hr_attendance.hr_attendance', function(require) {
 var core = require('web.core');
 var data = require('web.data');
 var formats = require('web.formats');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var SystrayMenu = require('web.SystrayMenu');
 var time = require('web.time');
 var Widget = require('web.Widget');

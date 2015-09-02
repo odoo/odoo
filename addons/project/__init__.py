@@ -4,7 +4,6 @@
 import project
 import company
 import report
-import wizard
 import res_partner
 import res_config
 import web_planner

@@ -4,7 +4,7 @@ odoo.define('account.move_line_quickadd', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var ListView = require('web.ListView');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 
 var QWeb = core.qweb;
 
@@ -94,7 +94,6 @@ var QuickAddListView = ListView.extend({
         else self.last_context["period_id"] =  self.current_period;
         self.last_context["journal_type"] = self.current_journal_type;
         self.last_context["currency"] = self.current_journal_currency;
-        self.last_context["analytic_journal_id"] = self.current_journal_analytic;
         var compound_domain = new data.CompoundDomain(self.last_domain, domain);
         self.dataset.domain = compound_domain.eval();
         return self.old_search(compound_domain, self.last_context, self.last_group_by);

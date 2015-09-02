@@ -419,7 +419,7 @@ class ir_mail_server(osv.osv):
 
         x_forge_to = message['X-Forge-To']
         if x_forge_to:
-            # `To:` header forged, e.g. for posting on mail.groups, to avoid confusion
+            # `To:` header forged, e.g. for posting on mail.channels, to avoid confusion
             del message['X-Forge-To']
             del message['To'] # avoid multiple To: headers!
             message['To'] = x_forge_to

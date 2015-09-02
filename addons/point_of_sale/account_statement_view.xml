@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Point of Sale">
+                    <page string="Point of Sale" attrs="{'invisible': [('type','not in',['bank','cash'])]}">
                         <group col="4" colspan="4">
                             <field name="journal_user"/>
                             <field name="amount_authorized_diff"/>

@@ -3,17 +3,15 @@
 
 import time
 import base64
-import itertools
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from operator import itemgetter
 from traceback import format_exception
 from sys import exc_info
 from openerp.tools.safe_eval import safe_eval as eval
 import re
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-from openerp import api
+from openerp import api, SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.report import render_report
 from openerp.tools.translate import _
@@ -203,7 +201,7 @@ class marketing_campaign_segment(osv.osv):
 
     def _get_next_sync(self, cr, uid, ids, fn, args, context=None):
         # next auto sync date is same for all segments
-        sync_job = self.pool.get('ir.model.data').get_object(cr, uid, 'marketing_campaign', 'ir_cron_marketing_campaign_every_day', context=context)
+        sync_job = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'marketing_campaign', 'ir_cron_marketing_campaign_every_day', context=context)
         next_sync = sync_job and sync_job.nextcall or False
         return dict.fromkeys(ids, next_sync)
 
@@ -383,8 +381,6 @@ class marketing_campaign_activity(osv.osv):
   """),
         'email_template_id': fields.many2one('mail.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
-        'report_directory_id': fields.many2one('document.directory','Directory',
-                                help="This folder is used to store the generated reports"),
         'server_action_id': fields.many2one('ir.actions.server', string='Action',
                                 help= "The action to perform when this activity is activated"),
         'to_ids': fields.one2many('marketing.campaign.transition',
@@ -428,9 +424,7 @@ class marketing_campaign_activity(osv.osv):
                                 activity.name,workitem.partner_id.name),
             'datas_fname': '%s.%s'%(activity.report_id.report_name,
                                         activity.report_id.report_type),
-            'parent_id': activity.report_directory_id.id,
             'datas': base64.encodestring(report_data),
-            'file_type': format
         }
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True

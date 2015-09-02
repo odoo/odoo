@@ -100,7 +100,7 @@ OERP_WEBSITE_HTML_1_OUT = [
 ]
 
 OERP_WEBSITE_HTML_2 = """
-<div class="mt16 cke_widget_editable cke_widget_element oe_editable oe_dirty" data-oe-model="blog.post" data-oe-id="6" data-oe-field="content" data-oe-type="html" data-oe-translate="0" data-oe-expression="blog_post.content" data-cke-widget-data="{}" data-cke-widget-keep-attr="0" data-widget="oeref" contenteditable="true" data-cke-widget-editable="text">
+<div class="mt16 cke_widget_editable cke_widget_element o_editable o_dirty" data-oe-model="blog.post" data-oe-id="6" data-oe-field="content" data-oe-type="html" data-oe-expression="blog_post.content" data-cke-widget-data="{}" data-cke-widget-keep-attr="0" data-widget="oeref" contenteditable="true" data-cke-widget-editable="text">
     <section class="mt16 mb16">
         <div class="container">
             <div class="row">
@@ -1116,7 +1116,7 @@ BUG3 = """<div class="oe_msg_body_long" style="/* display: none; */"><p>OpenERP 
 <p>Schedule your picking, packing, receptions and internal moves automatically with Odoo using
 your own routing rules. Define push and procurement rules to organize a warehouse or to manage
 product moves between several warehouses. Track in detail all stock moves, not only in your
-warehouse but wherever else it's taken as well (customers, suppliers or manufacturing
+warehouse but wherever else it's taken as well (customers, vendors or manufacturing
 locations).</p>
 </blockquote>
 </li>

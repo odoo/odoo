@@ -10,7 +10,6 @@ Adds enhanced support for (Ether)Pad attachments in the web client.
 Lets the company customize which Pad installation should be used to link to new
 pads (by default, http://etherpad.com/).
     """,
-    'author': 'OpenERP SA',
     'website': 'https://www.odoo.com/page/notes',
     'depends': ['web'],
     'data': [

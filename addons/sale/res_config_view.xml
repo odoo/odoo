@@ -6,102 +6,27 @@
             <field name="model">sale.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <div name="customer feature" position="before">
-                    <separator string="Invoicing Process"/>
-                    <group>
-                        <label for="id" string="Invoicing Process"/>
+                <div id="main" position="inside">
+                    <group string="Products">
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="module_website_sale_digital" widget="radio"/>
+                        <field name="group_uom" widget="radio"/>
+                        <field name="default_invoice_policy" widget="radio"/>
+                    </group>
+                    <group string="Quotations &amp; Sales" id="sale">
+                        <field name="group_sale_delivery_address" widget="radio"/>
+                        <field name="group_display_incoterm" widget="radio"/>
+                        <field name="group_discount_per_so_line" widget="radio"/>
+                        <field name="module_website_quote" widget="radio"/>
+                        <field name="module_sale_margin" widget="radio"/>
+                    </group>
+                    <group name="manage_price">
+                        <label for="sale_pricelist_setting" string="Sale Price"/>
                         <div>
-                            <div name="timesheet">
-                                <field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
-                                <label for="timesheet"/>
-                            </div>
-                        </div>
-                    </group>
-                    <group name='default_options' invisible="1">
-                        <label for="id" string="Default Options"/>
-                        <div name="div_default_options"/>
-                    </group>
-                </div>
-                <div name="Customer Features" position="inside">
-                    <div>
-                        <field name="group_sale_pricelist" class="oe_inline"/>
-                        <label for="group_sale_pricelist"/>
-                    </div>
-                    <div name="module_warning">
-                        <field name="module_warning" class="oe_inline"/>
-                        <label for="module_warning"/> <span class="oe_grey">Purchase and Warehouse Management will be installed</span>
-                    </div>
-                     <div>
-                          <field name="group_sale_delivery_address" class="oe_inline"/>
-                          <label for="group_sale_delivery_address"/>
-                     </div>
-                </div>
-                <group name="Sale" position="before">
-                    <group>
-                        <label for="id" string="Warehouse Features"/>
-                        <div name="warehouse_features">
-                            <div name='module_sale_stock'>
-                                <field name="module_sale_stock" class="oe_inline"/>
-                                <label for="module_sale_stock"/>
-                            </div>
-                            <div name="display_incoterm" attrs="{'invisible': [('module_sale_stock', '!=', True)]}">
-                                <field name="group_display_incoterm" class="oe_inline"/>
-                                <label for="group_display_incoterm"/>
-                            </div>
-                            <div name='module_sale_journal'>
-                                <field name="module_sale_journal" class="oe_inline"/>
-                                <label for="module_sale_journal"/>
-                            </div>
-                        </div>
-                    </group>
-                </group>
-                <group name="Sale" position="before">
-                    <group name="Product Features">
-                        <label for="id" string="Product Features"/>
-                        <div>
-                            <div>
-                                <field name="group_uom" class="oe_inline"/>
-                                <label for="group_uom"/>
-                            </div>
-                            <div>
-                                <field name="group_discount_per_so_line" class="oe_inline"/>
-                                <label for="group_discount_per_so_line"/>
-                            </div>
-                        </div>
-                    </group>
-                </group>
-                <div name="Sale Features" position="inside">
-                    <div name="module_website_quote">
-                        <field name="module_website_quote" class="oe_inline"/>
-                        <label for="module_website_quote"/>
-                    </div>
-                    <div name="module_sale_margin">
-                        <field name="module_sale_margin" class="oe_inline"/>
-                        <label for="module_sale_margin"/>
-                    </div>
-                    <div name="module_sale_layout">
-                        <field name="module_sale_layout" class="oe_inline"/>
-                        <label for="module_sale_layout"/>
-                    </div>
-                </div>
-                <div name="customer feature" position="after">
-                    <separator string="Contracts Management"/>
-                    <p>
-                        Use contract to be able to manage your services with
-                        multiple invoicing as part of the same contract with
-                        your customer.
-                    </p>
-                    <group>
-                        <label for="id" string="Contract Features"/>
-                        <div>
-                            <div>
-                                <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
-                                <label for="module_account_analytic_analysis"/>
-                            </div>
-                            <div name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
-                                <field name="module_analytic_user_function" class="oe_inline"/>
-                                <label for="module_analytic_user_function"/>
-                            </div>
+                            <field name="sale_pricelist_setting" class="oe_inline" widget="radio" on_change="onchange_sale_price(sale_pricelist_setting)"/>
+                            <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
+                            <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
+                            <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
                         </div>
                     </group>
                 </div>
@@ -125,7 +50,7 @@
                 <group name="analytic_account_sale" position="attributes">
                     <attribute name="invisible">0</attribute>
                 </group>
-                <xpath expr="//group[@name='analytic_account_sale']/div" position="inside">
+                <xpath expr="//group[@name='analytic_account_sale']" position="inside">
                     <div>
                         <field name="group_analytic_account_for_sales" class="oe_inline"/>
                         <label for="group_analytic_account_for_sales"/>

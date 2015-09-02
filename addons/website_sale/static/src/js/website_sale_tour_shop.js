@@ -3,11 +3,12 @@ odoo.define('website_sale.tour_shop', function (require) {
 
 var core = require('web.core');
 var Tour = require('web.Tour');
+var base = require('web_editor.base');
 var website = require('website.website');
 
 var _t = core._t;
 
-website.ready().done(function () {
+base.ready().done(function () {
     Tour.register({
         id: 'shop',
         name: _t("Create a product"),
@@ -72,7 +73,7 @@ website.ready().done(function () {
                 content:   _t("Choose an image from the library."),
                 popover:   { fixed: true },
                 onload: function () {
-                    $('form[action="/website/attach"] .well > *').hide();
+                    $('form[action="/web_editor/attachment/add"] .well > *').hide();
                 }
             },
             {
@@ -98,7 +99,7 @@ website.ready().done(function () {
                 popover:   { fixed: true },
             },
             {
-                waitFor:   '#website-top-navbar:hidden',
+                waitNot:   '#web_editor-top-edit',
                 element:   '.js_publish_management button.js_publish_btn.btn-danger',
                 placement: 'top',
                 title:     _t("Publish your product"),

@@ -61,16 +61,15 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                &amp;nbsp;
-                                <span class="fa fa-exclamation-triangle" title="Not published"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Not published"/>
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar"> <span t-field="post.create_date"/> &amp;nbsp;</span>
+                            <span class="fa fa-calendar mr8"> <span t-field="post.create_date"/></span>
                             <span class="fa fa-folder-open"> In
-                                <a t-attf-href="#{blog_url(blog=post.blog_id)}">
+                                <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
                                 <span t-field="post.blog_id"/>
-                                </a> &amp;nbsp;
+                                </a>
                             </span>
                         </div>
                         <div class="text-muted fa fa-tags">
@@ -102,6 +101,9 @@
 <!-- Blog Post List: Displaying a list of Blog Posts -->
 <template id="blog_post_short" name="Blog Posts">
     <t t-call="website_blog.index">
+        <t t-set="head">
+            <link t-att-href="'/blog/%s/feed' % (blog.id)" type="application/atom+xml" rel="alternate" title="Atom Feed"/>
+        </t>
         <div class="container">
             <t t-call="website.pager" >
                 <t t-set="classname">pull-right</t>
@@ -127,7 +129,7 @@
                   <p class="css_editable_hidden">
                     <h1>No blog post yet.</h1>
                   </p>
-                  <p groups="base.group_document_user">
+                  <p groups="base.group_website_designer">
                     Click on "Content" on the top menu to write your first blog post.
                   </p>
                 </div>
@@ -177,7 +179,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </p>
     </xpath>
@@ -336,7 +338,7 @@
         <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
             <span class="fa fa-tags"/>
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/> &amp;nbsp;
+                <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
             </t>
         </p>
     </xpath>
@@ -454,6 +456,7 @@
                 <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
                 <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
                 <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
+                <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
             </h2>
         </section>
     </xpath>
@@ -482,10 +485,29 @@
 </template>
 
 <!-- User Navbar -->
-<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_document_user">
+<template id="content_new_blogpost" inherit_id="website.user_navbar" groups="base.group_website_designer">
     <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
          <li><a href="#" data-action="new_blog_post">New Blog Post</a></li>
     </xpath>
 </template>
+
+<!-- Atom Feed -->
+<template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+<feed t-att-xmlns="'http://www.w3.org/2005/Atom'">
+    <title t-esc="blog.name"/>
+    <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
+    <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
+    <updated t-esc="(posts[0] if posts else blog).write_date.replace(' ', 'T') + 'Z'"/>
+    <entry t-foreach="posts" t-as="post">
+        <title t-esc="post.name"/>
+        <link t-att-href="'%s/%s' % (base_url, post.website_url)"/>
+        <id t-esc="'%s/%s' % (base_url, post.website_url)"/>
+        <author><name t-esc="post.sudo().author_id.name"/></author>
+        <summary t-esc="post.subtitle"/>
+        <updated t-esc="post.write_date.replace(' ', 'T') + 'Z'"/>
+    </entry>
+</feed>
+</template>
+
 </data>
 </openerp>

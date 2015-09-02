@@ -18,7 +18,7 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for i in xrange(20))
+    return ''.join(random.SystemRandom().choice(chars) for i in xrange(20))
 
 def now(**kwargs):
     dt = datetime.now() + timedelta(**kwargs)
@@ -162,7 +162,7 @@ class res_users(osv.Model):
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'Never Connected'), ('active', 'Activated')]),
+                    selection=[('new', 'Never Connected'), ('active', 'Connected')]),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
@@ -247,7 +247,7 @@ class res_users(osv.Model):
         if not user_ids:
             user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
         if len(user_ids) != 1:
-            raise Exception('Reset password: invalid username or email')
+            raise Exception(_('Reset password: invalid username or email'))
         return self.action_reset_password(cr, uid, user_ids, context=context)
 
     def action_reset_password(self, cr, uid, ids, context=None):

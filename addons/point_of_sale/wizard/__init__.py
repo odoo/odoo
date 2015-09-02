@@ -7,4 +7,3 @@ import pos_details
 import pos_discount
 import pos_open_statement
 import pos_payment
-import pos_session_opening

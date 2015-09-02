@@ -85,11 +85,13 @@
 .editor_enable [data-oe-readonly]:hover {
   cursor: default;
 }
+
 /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
 .o_editable[placeholder]:empty:not(:focus):before {
-    content: attr(placeholder);
-    opacity: 0.3;
+  content: attr(placeholder);
+  opacity: 0.3;
 }
+
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
   -moz-user-select: none;
@@ -271,41 +273,6 @@ table.editorbar-panel td.selected {
   line-height: 2em;
 }
 
-/* ---- TRANSLATIONS ---- {{{ */
-.oe_translate_or {
-  color: white;
-  padding: 0 0 0 1em;
-}
-
-.oe_translate_examples li {
-  margin: 10px;
-  padding: 4px;
-}
-
-.oe_translatable_text {
-  outline: 1px solid black;
-}
-
-.oe_translatable_field {
-  outline: 1px dashed black;
-}
-
-.oe_translatable_text.oe_dirty, .oe_translatable_field.oe_dirty {
-  outline-color: red;
-}
-
-.oe_translatable_text.oe_dirty:empty {
-  padding: 0 10px;
-}
-
-.oe_translatable_todo {
-  background: #ffffb6;
-}
-.oe_translatable_todo:hover {
-  background: inherit;
-  cursor: text;
-}
-
 /* ---- MENU ---- {{{ */
 div.oe_menu_buttons {
   top: -8px;
@@ -401,34 +368,6 @@ ul.oe_menu_editor .disclose {
 }
 .modal .font-icons-selected {
   background-color: #ddd;
-}
-
-.existing-attachments .pager .disabled {
-  display: none;
-}
-.existing-attachments .existing-attachment-cell {
-  position: relative;
-}
-.existing-attachments .existing-attachment-cell .img {
-  border: 1px solid #848490;
-}
-.existing-attachments .existing-attachment-cell .existing-attachment-remove {
-  position: absolute;
-  top: 0;
-  left: 15px;
-  cursor: pointer;
-  background: white;
-  padding: 2px;
-  border: 1px solid #848490;
-  border-top: none;
-  border-left: none;
-  -moz-border-radius-bottomright: 8px;
-  -webkit-border-bottom-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-.existing-attachments .existing-attachment-cell.media_selected > i, .existing-attachments .existing-attachment-cell.media_selected > img {
-  border-width: 5px;
-  border-color: #00f8f8;
 }
 
 .oe_carlos_danger {
@@ -636,7 +575,7 @@ ul.oe_menu_editor .disclose {
 }
 .oe_ace_view_editor.oe_ace_closed {
   z-index: -1000;
-  display: none
+  display: none;
 }
 
 .oe_include_bundles {
@@ -651,7 +590,6 @@ ul.oe_menu_editor .disclose {
 
 #theme_customize_modal {
   overflow: visible;
-  overflow-y: auto;
   z-index: 1020;
   background: transparent;
   display: block;

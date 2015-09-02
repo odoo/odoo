@@ -1,0 +1,116 @@
+#email_theme_list, #email_template_list {
+    clear: both;
+    text-align: center;
+}
+
+#email_theme_list > div, #email_template_list > div {
+    width: 200px;
+    display: inline-block;
+    position: relative;
+}
+
+.theme_thumbnail{
+    position:inherit;
+    margin-top:15px;
+}
+.theme_thumbnail div{
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+.theme_thumbnail img.img{
+    height: 180px;
+    width: auto;
+}
+
+.modal-body  .theme_thumbnail img.img{
+    height: 100px;
+}
+
+.theme_thumbnail div.overlay{
+    z-index: 2;
+    max-height: 135px;
+    position:absolute;
+    padding:25% 0;
+    opacity: 0;
+    width: 100%;
+}
+.theme_thumbnail div.overlay p{
+    color:#616161;
+    font-weight:bold;
+    text-transform: capitalize;
+}
+.theme_thumbnail:hover>img.img{
+    opacity:0.3;
+}
+.theme_thumbnail:hover>div.overlay{
+    opacity: 1;
+}
+
+.email_head {
+    border-width: 0px 0px 2px 0px;
+}
+.email_head div{
+    font-size:14px;
+}
+.email_head .popover-title{
+    font-weight:bold;
+}
+
+.template_name{
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.email_template *{
+    -webkit-transition: opacity 0.5s;
+    transition: opacity 0.5s;
+}
+.email_template:hover .template_thumbnail{
+    opacity:0.3;
+}
+.email_template:hover .template_options{
+    opacity:1;
+}
+
+/***************************/
+
+#templates{
+    margin-top: 50px;
+    width: 98%;
+}
+#choose_template{
+    display: none;
+    margin: 5px;
+    position: fixed;
+    top: 0;
+    right: 28px;
+    z-index: 2000;
+}
+#choose_template span{
+    padding: 1px 5px;
+    height: 24px;
+}
+#templates .template_preview_border{
+    overflow: hidden !important;
+    border: 2px solid grey;
+    height: 300px;
+}
+#email_template_list > div{
+    overflow: hidden;
+    height: 300px;
+}
+#email_template_list .theme_thumbnail div.overlay{
+    max-height: 300px;
+}
+#templates .template_preview{
+    -webkit-transform: scale(.33);
+    -ms-transform: scale(.33);
+    transform: scale(.33);
+    -webkit-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+.theme_thumbnail:hover>.template_preview{
+    opacity:0.3;
+}

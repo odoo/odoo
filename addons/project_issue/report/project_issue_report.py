@@ -4,7 +4,7 @@
 
 from openerp.osv import fields, osv
 from openerp import tools
-from openerp.addons.crm import crm
+
 
 class project_issue_report(osv.osv):
     _name = "project.issue.report"

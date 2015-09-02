@@ -45,14 +45,13 @@
             <field name="model">crm.claim.report</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
+                    <filter string="My Sales Team(s)" context="{'invisible_team': False}" domain="[('team_id.user_id','=',uid)]" help="My Sales Team(s)"/>
                     <separator/>
                     <filter string="My Company" domain="[('company_id.user_ids','=',uid)]" help="My Company" groups="base.group_multi_company"/>
                     <separator/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"
-                            groups="base.group_multi_salesteams"/>
+                    <field name="team_id" string="Sales Team" context="{'invisible_team': False}"/>
                     <group  expand="0" string="Extended Filters...">
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('team_ids', '=', 'team_id')]"/>

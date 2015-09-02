@@ -8,13 +8,11 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I will create bank detail with using manager access rights
         # because account manager can only create bank details.
         self.res_partner_bank_0 = self.env['res.partner.bank'].sudo(self.account_manager.id).create(dict(
-            state='bank',
+            acc_type='bank',
             company_id=self.main_company.id,
             partner_id=self.main_partner.id,
             acc_number='123456789',
-            footer=True,
-            bank=self.main_bank.id,
-            bank_name=self.main_bank.name,
+            bank_id=self.main_bank.id,
         ))
 
         # Test with that user which have rights to make Invoicing and payment and who is accountant.

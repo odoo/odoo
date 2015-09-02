@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
 
@@ -31,7 +29,7 @@ class purchase_requisition(osv.osv):
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids': fields.one2many('purchase.order', 'requisition_id', 'Purchase Orders', states={'done': [('readonly', True)]}),
-        'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
+        'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by vendor'),
         'line_ids': fields.one2many('purchase.requisition.line', 'requisition_id', 'Products to Purchase', states={'done': [('readonly', True)]}, copy=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null', copy=False),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
@@ -40,7 +38,7 @@ class purchase_requisition(osv.osv):
                                    ('cancel', 'Cancelled')],
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
-        'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
+        'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
@@ -88,7 +86,7 @@ class purchase_requisition(osv.osv):
 
     def open_product_line(self, cr, uid, ids, context=None):
         """ This opens product line view to view all lines from the different quotations, groupby default by product and partner to show comparaison
-            between supplier price
+            between vendor price
             @return: the product line tree view
         """
         if context is None:
@@ -117,13 +115,11 @@ class purchase_requisition(osv.osv):
         return res
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
-        supplier_pricelist = supplier.property_product_pricelist_purchase
         return {
             'origin': requisition.name,
             'date_order': requisition.date_end or fields.datetime.now(),
             'partner_id': supplier.id,
-            'pricelist_id': supplier_pricelist.id,
-            'currency_id': supplier_pricelist and supplier_pricelist.currency_id.id or requisition.company_id.currency_id.id,
+            'currency_id': requisition.company_id and requisition.company_id.currency_id.id,
             'location_id': requisition.procurement_id and requisition.procurement_id.location_id.id or requisition.picking_type_id.default_location_dest_id.id,
             'company_id': requisition.company_id.id,
             'fiscal_position_id': supplier.property_account_position_id and supplier.property_account_position_id.id or False,
@@ -143,9 +139,8 @@ class purchase_requisition(osv.osv):
         ctx['tz'] = requisition.user_id.tz
         date_order = requisition.ordering_date and fields.date.date_to_datetime(self, cr, uid, requisition.ordering_date, context=ctx) or fields.datetime.now()
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
-        supplier_pricelist = supplier.property_product_pricelist_purchase and supplier.property_product_pricelist_purchase.id or False
         vals = po_line_obj.onchange_product_id(
-            cr, uid, [], supplier_pricelist, product.id, qty, default_uom_po_id,
+            cr, uid, [], product.id, qty, default_uom_po_id,
             supplier.id, date_order=date_order,
             fiscal_position_id=supplier.property_account_position_id.id,
             date_planned=requisition_line.schedule_date,
@@ -160,10 +155,10 @@ class purchase_requisition(osv.osv):
 
     def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
         """
-        Create New RFQ for Supplier
+        Create New RFQ for Vendor
         """
         context = dict(context or {})
-        assert partner_id, 'Supplier should be specified'
+        assert partner_id, 'Vendor should be specified'
         purchase_order = self.pool.get('purchase.order')
         purchase_order_line = self.pool.get('purchase.order.line')
         res_partner = self.pool.get('res.partner')
@@ -369,7 +364,16 @@ class product_template(osv.osv):
     _inherit = 'product.template'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Call for Tenders', help="Check this box to generate Call for Tenders instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.selection(
+            [('rfq', 'Create a draft purchase order'),
+             ('tenders', 'Propose a call for tenders')],
+            string='Procurement',
+            help="Check this box to generate Call for Tenders instead of generating "
+                 "requests for quotation from procurement."),
+    }
+
+    _defaults = {
+        'purchase_requisition': 'rfq',
     }
 
 
@@ -379,31 +383,39 @@ class procurement_order(osv.osv):
         'requisition_id': fields.many2one('purchase.requisition', 'Latest Requisition')
     }
 
-    def _run(self, cr, uid, procurement, context=None):
+    def make_po(self, cr, uid, ids, context=None):
         requisition_obj = self.pool.get('purchase.requisition')
         warehouse_obj = self.pool.get('stock.warehouse')
-        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
-            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
-            requisition_id = requisition_obj.create(cr, uid, {
-                'origin': procurement.origin,
-                'date_end': procurement.date_planned,
-                'warehouse_id': warehouse_id and warehouse_id[0] or False,
-                'company_id': procurement.company_id.id,
-                'procurement_id': procurement.id,
-                'picking_type_id': procurement.rule_id.picking_type_id.id,
-                'line_ids': [(0, 0, {
-                    'product_id': procurement.product_id.id,
-                    'product_uom_id': procurement.product_uom.id,
-                    'product_qty': procurement.product_qty
-
-                })],
-            })
-            self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
-            return self.write(cr, uid, [procurement.id], {'requisition_id': requisition_id}, context=context)
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        req_ids = []
+        res = {}
+        for procurement in self.browse(cr, uid, ids, context=context):
+            res[procurement.id] = False
+            if procurement.product_id.purchase_requisition == 'tenders':
+                warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id)], context=context)
+                requisition_id = requisition_obj.create(cr, uid, {
+                    'origin': procurement.origin,
+                    'date_end': procurement.date_planned,
+                    'warehouse_id': warehouse_id and warehouse_id[0] or False,
+                    'company_id': procurement.company_id.id,
+                    'procurement_id': procurement.id,
+                    'picking_type_id': procurement.rule_id.picking_type_id.id,
+                    'line_ids': [(0, 0, {
+                        'product_id': procurement.product_id.id,
+                        'product_uom_id': procurement.product_uom.id,
+                        'product_qty': procurement.product_qty
+                    })],
+                })
+                self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
+                self.write(cr, uid, [procurement.id], {'requisition_id': requisition_id}, context=context)
+                req_ids += [procurement.id]
+                res[procurement.id] = True
+        set_others = set(ids) - set(req_ids)
+        if set_others:
+            res.update(super(procurement_order, self).make_po(cr, uid, list(set_others), context=context))
+        return res
 
     def _check(self, cr, uid, procurement, context=None):
-        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition:
+        if procurement.rule_id and procurement.rule_id.action == 'buy' and procurement.product_id.purchase_requisition == 'tenders':
             if procurement.requisition_id.state == 'done':
                 if any([purchase.shipped for purchase in procurement.requisition_id.purchase_ids]):
                     return True

@@ -16,7 +16,6 @@ This module allows the cashier to quickly give a percentage
 sale discount to a customer.
 
 """,
-    'author': 'OpenERP SA',
     'depends': ['point_of_sale'],
     'data': [
         'views/views.xml',

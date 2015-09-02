@@ -2,7 +2,7 @@ odoo.define('purchase_requisition.purchase_requisition', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var ListView = require('web.ListView');
 
 var QWeb = core.qweb;
@@ -24,7 +24,7 @@ var CompareListView = ListView.extend({
     generate_purchase_order: function () {
         var self = this;
         new Model(self.dataset.model).call("generate_po",[self.dataset.context.tender_id,self.dataset.context]).then(function(result) {
-            self.ViewManager.ActionManager.history_back();
+            self.ViewManager.action_manager.history_back();
         });
     },
 });

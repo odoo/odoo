@@ -42,5 +42,5 @@ class WebsiteResPartner(osv.Model):
         return res
 
     _defaults = {
-        'website_published': True
+        'website_private': True,
     }

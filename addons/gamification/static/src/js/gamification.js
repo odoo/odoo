@@ -4,7 +4,7 @@ odoo.define('gamification.gamification', function(require) {
 var mail = require('mail.mail');
 var core = require('web.core');
 var form_common = require('web.form_common');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -113,18 +113,10 @@ var Sidebar = Widget.extend({
     render_user_avatars: function(item) {
         item.find(".oe_user_avatar").each(function() {
             var user_id = parseInt( $(this).attr('data-id'), 10);
-            var url = session.url('/web/binary/image', {model: 'res.users', field: 'image_small', id: user_id});
+            var url = session.url('/web/image', {model: 'res.users', field: 'image_small', id: user_id});
             $(this).attr("src", url);
         });
     }
-});
-
-mail.TimelineView.include({
-    start: function() {
-        this._super();
-        var sidebar = new Sidebar(this);
-        sidebar.appendTo($('.o_timeline__inbox_aside'));
-    },
 });
 
 });

@@ -13,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_account"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount" sum="Total" widget="monetary"/>
@@ -25,7 +25,7 @@
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_unread == True">
+                <tree string="Expenses" decoration-warning="state=='draft'" decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="date"/>
@@ -34,7 +34,7 @@
                     <field name="amount" sum="Total Amount" widget="monetary"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="state"/>
-                    <field name="message_unread" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -94,7 +94,7 @@
                                             <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
                                             <field name="name"/>
                                             <field name="ref"/>
-                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                            <field name="analytic_account"/>
                                         </group>
                                         <group>
                                             <field name="unit_amount"/>
@@ -113,7 +113,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name" string="Description"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>
@@ -130,7 +130,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Accounting Info" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['done', 'paid'])]}">
+                        <page string="Accounting Info" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['done', 'paid', 'accepted'])]}">
                             <group>
                                 <group>
                                     <field name="journal_id" widget="selection" attrs="{'readonly':[('state','=','done')]}" domain="[('type', '=', 'purchase')]" string="Journal"/>
@@ -167,7 +167,7 @@
                     <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Expenses of Your Team Member"/>
                     <separator />
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>

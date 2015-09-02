@@ -12,6 +12,7 @@
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
+      <script type="text/javascript" src="/website_sale/static/src/js/website_sale_rating.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
   </xpath>
 </template>
@@ -43,13 +44,7 @@
         <input type="hidden" name="attrib" t-att-value="'%s-%s' % (a[0], a[1])"/>
       </t>
     </t>
-    <div class="input-group">
-      <input type="text" name="search" class="search-query form-control" placeholder="Search..." t-att-value="search"/>
-      <span class="input-group-btn">
-        <a class="btn btn-default a-submit"><i class="fa fa-search"/></a>
-      </span>
-  </div>
-
+    <t t-call="website.website_search_box"/>
   </form>
 </template>
 
@@ -77,7 +72,7 @@
   </div>
   <div class="oe_product_image">
       <a itemprop="url" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']>1 else None))">
-          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image" #{None if product_image_big else ", \"resize\": \"300x300\""}}'/>
+          <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image" #{None if product_image_big else ", \"resize\": \"300x300\""}}' t-att-alt="product.name"/>
       </a>
   </div>
   <t t-if="show_publish">
@@ -94,11 +89,11 @@
       <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
           <b>
               <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                <del class="text-danger" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
+                <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
                   "from_currency": "product.company_id.currency_id",
                   "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                }'/>&amp;nbsp;
+                }'/>
               </t>
               <span t-field="product.price" style="white-space: nowrap;"  t-field-options='{
                    "widget": "monetary",
@@ -345,8 +340,9 @@
           </div>
           <div class="row">
             <div class="col-sm-7 col-md-7 col-lg-7">
-                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img"}'/>
-            </div><div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1">
+                <span itemprop="image" t-field="product.image" t-field-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name"}'/>
+            </div>
+            <div class="col-sm-5 col-md-5 col-lg-4 col-lg-offset-1" id="product_details">
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
@@ -517,18 +513,18 @@
   </ul>
 </template>
 
-<template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
+<template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Suggested Products">
   <xpath expr="//div[@id='product_full_description']" position="after">
       <div class="container mt32" t-if="product.alternative_product_ids">
           <h3>Suggested alternatives:</h3>
-          <div class='row mt16' style="margin-left: 15px !important;">
+          <div class='row mt16' style="">
           <t t-foreach="product.alternative_product_ids" t-as="product">
-              <div class='col-md-2 thumbnail' style='width: 170px; margin-right: 16px;'>
-                  <div class='mt16 text-center'>
-                      <span t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow" }'/>
+              <div class='col-md-2 thumbnail' style='width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;'>
+                  <div class='mt16 text-center' style="height: 100%;">
+                      <div t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow o_alternative_product" }'/>
                       <h5>
                           <a t-attf-href="/shop/product/#{ slug(product) }" style="display: block">
-                              <span t-field='product.name' style="display: block"/>
+                              <span t-att-title='product.name' t-field='product.name' style="display: block;"/>
                           </a>
                       </h5>
                   </div>
@@ -552,9 +548,16 @@
   </xpath>
 </template>
 
-<!-- Product options: OpenChatter -->
 
-<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion">
+<!-- Product options: OpenChatter -->
+<template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
+  <xpath expr="//div[@id='product_details']" position="inside">
+      <t t-call="rating.rating_card">
+        <t t-set="rating_stat" t-value="rating_product"/>
+        <t t-set="max_rate" t-value="5"/>
+        <t t-set="min_rate" t-value="1"/>
+      </t>
+    </xpath>
     <xpath expr="//div[@t-field='product.website_description']" position="after">
         <hr class="mb32"/>
         <section class="container">
@@ -567,50 +570,41 @@
                         </a>
                     </h3>
                 </div>
-                <ul class="media-list" id="comments-list"  t-if="product.website_message_ids">
-                    <li t-foreach="product.website_message_ids" t-as="message" class="media">
-                        <div class="media-body oe_msg">
-                            <img class="media-object pull-left oe_msg_avatar" t-att-src="website.image_url(message.author_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                            <div class="media-body oe_msg_content">
-                                <t t-call="website.publish_short">
-                                    <t t-set="object" t-value="message"/>
-                                </t>
-                                <h5 class="media-heading">
-                                    <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
-                                </h5>
-                                <div t-field="message.body"/>
-                                <div>
-                                    <div class="oe_msg_attachment" t-foreach='message.attachment_ids' t-as='attachment'>
-                                        <a t-att-href="'/mail/download_attachment?model=mail.message&amp;id='+str(message.id)+'&amp;method=download_attachment&amp;attachment_id='+str(attachment.id)" target="_blank">
-                                            <t t-if="attachment.file_type_icon == 'webimage'">
-                                                <img t-att-src="'/web/binary/image?model=ir.attachment&amp;field=datas&amp;id=' + str(attachment.id) + '&amp;resize=100,80'"
-                                                    class='oe_attachment_embedded'></img>
-                                            </t>
-                                            <t t-if="attachment.file_type_icon != 'webimage'">
-                                                <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.file_type + '.png'"
-                                                    class='oe_attachment_webimage'></img>
-                                            </t>
-                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="css_editable_mode_hidden">
-                    <form id="comment" class="js_website_submit_form" t-attf-action="/shop/product/comment/#{product.id}" method="POST">
-                        <img class="img pull-left img-rounded" t-att-src="website.image_url(user_id.partner_id, 'image_small')" style="width: 50px; margin-right: 10px;"/>
-                        <div class="pull-left mb32" style="width: 75%%">
-                            <textarea rows="3" name="comment" class="form-control" placeholder="Write a comment..."></textarea>
-                            <a class="btn btn-primary mt8 a-submit">Post</a>
-                        </div>
-                    </form>
-                </div>
+                <t t-call="website_mail.message_thread">
+                  <t t-set="object" t-value="product"/>
+                  <t t-set="chatter_mode" t-value="'json'"/>
+                  <t t-set="rating_enable" t-value="True"/>
+                </t>
             </div>
         </section>
     </xpath>
 </template>
+
+
+<!-- extend the generic mail thread message template to add rating widget -->
+<template id="message_thread_rating" inherit_id="website_mail.message_thread" name="Chatter with rating">
+  <xpath expr="//section[contains(@class, 'o_website_mail_thread')]" position="attributes">
+    <attribute name="data-rating-enabled">1</attribute>
+  </xpath>
+  <xpath expr="//textarea[@name='message']" position="before">
+    <t t-if="rating_enable">
+      <t t-call="rating.rating_star_card">
+        <t t-set="rating_input_name" t-value="'rating'"/>
+      </t>
+    </t>
+  </xpath>
+  <xpath expr="//ul[contains(@class, 'o_website_comments')]//h5" position="after">
+    <t t-if="rating_enable">
+      <div t-if="rating_message_values.get(message.id)">
+        <t t-call="rating.rating_star_card">
+          <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)"/>
+          <t t-set="rating_disabled" t-value="True"/>
+        </t>
+      </div>
+    </t>
+  </xpath>
+</template>
+
 
 <!-- /shop/cart -->
 
@@ -765,12 +759,12 @@
                                   </div>
                               </td>
                               <td class="text-center" id="td-price" name="price">
-                                  <del class="text-danger" t-att-style="'' if (compute_currency(line.product_id.lst_price) - line.price_reduce) &gt; 1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
+                                  <del class="text-danger mr8" t-att-style="'' if (compute_currency(line.product_id.lst_price) - line.price_reduce) &gt; 1 else 'display: none;'" style="text-decoration: line-through; white-space: nowrap;"
                                     t-field="line.product_id.lst_price" t-field-options='{
                                         "widget": "monetary",
                                         "from_currency": "line.company_id.currency_id",
                                         "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                                    }'/>&amp;nbsp;
+                                    }'/>
                                 <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
                                      "widget": "monetary",
                                      "from_currency": "website_sale_order.pricelist_id.currency_id",
@@ -872,12 +866,12 @@
                   </td>
                   <td>
                       <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
-                        <del class="text-danger" style="white-space: nowrap;"
+                        <del class="text-danger mr8" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
                               "from_currency": "product.company_id.currency_id",
                               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-                          }'/>&amp;nbsp;
+                          }'/>
                       </t>
                       <span t-field="product.price" style="white-space: nowrap;" t-field-options='{
                            "widget": "monetary",
@@ -1088,7 +1082,7 @@
 
 <template id="payment">
   <t t-call="website.layout">
-      <t t-set="additional_title">Shop - Select Payment Mode</t>
+      <t t-set="additional_title">Shop - Select Payment Method</t>
       <div id="wrap">
         <div class="container oe_website_sale">
           <t t-call="website_sale.wizard_checkout">
@@ -1441,7 +1435,7 @@
 </template>
 
 <!-- Add a link to the product page in the portal orders followup page -->
-<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal.orders_followup">
+<template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
     <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
         <a t-att-href="ol.product_id.website_url">
             <span t-esc="ol.product_id.name"/>

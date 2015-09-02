@@ -2,7 +2,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var Widget = require('web.Widget');
@@ -55,10 +55,6 @@ return Widget.extend({
                 }
             })
             .on('reset', this.proxy('clear_selection'));
-        if (!this.action_id) {
-            this.prepare_dropdown_menu([]);
-            return $.when();
-        }
         return this.model.call('get_filters', [this.target_model, this.action_id],
                                {context: this.searchview.dataset.context})
             .done(this.proxy('prepare_dropdown_menu'));
@@ -68,10 +64,10 @@ return Widget.extend({
     },
     toggle_save_menu: function (is_open) {
         this.$save_search
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$save_name.toggle(is_open);
-        if (this.$save_search.hasClass('open-menu')) {
+        if (this.$save_search.hasClass('o_open_menu')) {
             this.$save_name.find('input').first().focus();
         }
     },
@@ -262,10 +258,11 @@ return Widget.extend({
 });
 
 odoo.define('web.FilterMenu', function (require) {
+"use strict";
 
-var search_filters = require('web.search_filters'),
-    search_inputs = require('web.search_inputs'),
-    Widget = require('web.Widget');
+var search_filters = require('web.search_filters');
+var search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
 
 return Widget.extend({
     template: 'SearchView.FilterMenu',
@@ -320,10 +317,10 @@ return Widget.extend({
     },
     toggle_custom_filter_menu: function (is_open) {
         this.$add_filter
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$add_filter_menu.toggle(is_open);
-        if (this.$add_filter.hasClass('closed-menu') && (!this.propositions.length)) {
+        if (this.$add_filter.hasClass('o_closed_menu') && (!this.propositions.length)) {
             this.append_proposition();
         }
         this.$('.oe-filter-condition').toggle(is_open);
@@ -369,10 +366,11 @@ return Widget.extend({
 });
 
 odoo.define('web.GroupByMenu', function (require) {
+"use strict";
 
-var Widget = require('web.Widget'),
-    core = require('web.core'),
-    search_inputs = require('web.search_inputs');
+var Widget = require('web.Widget');
+var core = require('web.core');
+var search_inputs = require('web.search_inputs');
 
 var QWeb = core.qweb;
 
@@ -392,7 +390,7 @@ return Widget.extend({
     init: function (parent, groups, fields_def) {
         this._super(parent);
         this.groups = groups || [];
-        this.groupable_fields = {};
+        this.groupable_fields = [];
         this.searchview = parent;
         this.fields_def = fields_def.then(this.proxy('get_groupable_fields'));
     },
@@ -417,28 +415,28 @@ return Widget.extend({
         });
     },
     get_groupable_fields: function (fields) {
-        var self = this,
-            groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
-
-        _.each(fields, function (field, name) {
+        var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+        var filter_group_field = _.filter(fields, function(field, name) {
             if (field.store && _.contains(groupable_types, field.type)) {
-                self.groupable_fields[name] = field;
+                field.name = name;
+                return field;
             }
         });
+        this.groupable_fields = _.sortBy(filter_group_field, 'string');
     },
     toggle_add_menu: function (is_open) {
         this.$add_group
-            .toggleClass('closed-menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
-            .toggleClass('open-menu', is_open);
+            .toggleClass('o_closed_menu', !(_.isUndefined(is_open)) ? !is_open : undefined)
+            .toggleClass('o_open_menu', is_open);
         this.$add_group_menu.toggle(is_open);
-        if (this.$add_group.hasClass('open-menu')) {
+        if (this.$add_group.hasClass('o_open_menu')) {
             this.$group_selector.focus();
         }
     },
     add_groupby_to_menu: function (field_name) {
         var filter = new search_inputs.Filter({attrs:{
             context:"{'group_by':'" + field_name + "''}",
-            name: this.groupable_fields[field_name].string,
+            name: _.find(this.groupable_fields, {name: field_name}).string,
         }}, this.searchview);
         var group = new search_inputs.FilterGroup([filter], this.searchview),
             divider = this.$('.divider').show();

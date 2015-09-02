@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import errno
 import glob
+import importlib
 import json
 import logging
 import os
@@ -250,7 +251,7 @@ class HttpCase(TransactionCase):
 
     def url_open(self, url, data=None, timeout=10):
         if url.startswith('/'):
-            url = "http://localhost:%s%s" % (PORT, url)
+            url = "http://%s:%s%s" % (HOST, PORT, url)
         return self.opener.open(url, data, timeout)
 
     def authenticate(self, user, password):
@@ -297,28 +298,38 @@ class HttpCase(TransactionCase):
                 buf.append(s)
 
             # process lines
-            if '\n' in buf:
-                line, buf = buf.split('\n', 1)
+            if '\n' in buf and (not buf.startswith('<phantomLog>') or '</phantomLog>' in buf):
+                if buf.startswith('<phantomLog>'):
+                    line = buf[12:buf.index('</phantomLog>')]
+                    buf = bytearray()
+                else:
+                    line, buf = buf.split('\n', 1)
                 line = str(line)
 
-                # relay everything from console.log, even 'ok' or 'error...' lines
-                _logger.info("phantomjs: %s", line)
+                if line.startswith("error"):
+                    try:
+                        # when errors occur the execution stack may be sent as a JSON
+                        _logger.error("phantomjs: %s", json.loads(line[6:]))
+                    except ValueError:
+                        line_ = line.split('\n\n')
+                        _logger.error("phantomjs: %s", line_[0])
+                        # The second part of the log is for debugging
+                        if len(line_) > 1:
+                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
+                        pass
+                    break
+                elif line.startswith("warning"):
+                    _logger.warn("phantomjs: %s", line)
+                else:
+                    _logger.info("phantomjs: %s", line)
 
                 if line == "ok":
                     break
-                if line.startswith("error"):
-                    line_ = line[6:]
-                    # when error occurs the execution stack may be sent as as JSON
-                    try:
-                        line_ = json.loads(line_)
-                    except ValueError: 
-                        pass
-                    self.fail(line_ or "phantomjs test failed")
 
     def phantom_run(self, cmd, timeout):
         _logger.info('phantom_run executing %s', ' '.join(cmd))
 
-        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_localhost_%s.*'%PORT)
+        ls_glob = os.path.expanduser('~/.qws/share/data/Ofi Labs/PhantomJS/http_%s_%s.*' % (HOST, PORT))
         for i in glob.glob(ls_glob):
             _logger.info('phantomjs unlink localstorage %s', i)
             os.unlink(i)
@@ -334,6 +345,7 @@ class HttpCase(TransactionCase):
                 phantom.terminate()
                 phantom.wait()
             self._wait_remaining_requests()
+            # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
 
     def _wait_remaining_requests(self):
@@ -350,23 +362,6 @@ class HttpCase(TransactionCase):
                         _logger.info('remaining requests')
                         openerp.tools.misc.dumpstacks()
                         t0 = t1
-
-    def phantom_jsfile(self, jsfile, timeout=60, **kw):
-        options = {
-            'timeout' : timeout,
-            'port': PORT,
-            'db': get_db_name(),
-            'session_id': self.session_id,
-        }
-        options.update(kw)
-        phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
-        # phantom.args[0] == phantomtest path
-        # phantom.args[1] == options
-        cmd = [
-            'phantomjs',
-            jsfile, phantomtest, json.dumps(options)
-        ]
-        self.phantom_run(cmd, timeout)
 
     def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -398,3 +393,18 @@ class HttpCase(TransactionCase):
         phantomtest = os.path.join(os.path.dirname(__file__), 'phantomtest.js')
         cmd = ['phantomjs', phantomtest, json.dumps(options)]
         self.phantom_run(cmd, timeout)
+
+def can_import(module):
+    """ Checks if <module> can be imported, returns ``True`` if it can be,
+    ``False`` otherwise.
+
+    To use with ``unittest.skipUnless`` for tests conditional on *optional*
+    dependencies, which may or may be present but must still be tested if
+    possible.
+    """
+    try:
+        importlib.import_module(module)
+    except ImportError:
+        return False
+    else:
+        return True

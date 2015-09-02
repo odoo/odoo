@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
-import cStringIO
-import contextlib
-import datetime
-import hashlib
 import inspect
 import logging
 import math
 import unicodedata
-import os
 import re
-import time
 import urlparse
+import hashlib
 
-from PIL import Image
 from sys import maxint
 
 import werkzeug
@@ -129,7 +123,8 @@ _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
     "^/web/(css|js)/",
-    "^/website/image/",
+    "^/web/image",
+    "^/web/content",
 ]
 
 def unslug(s):
@@ -206,8 +201,8 @@ class website(osv.osv):
 
         # find a free xmlid
         inc = 0
-        dom = [('key', '=', page_xmlid), '|', ('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
-        while view.search(cr, openerp.SUPERUSER_ID, dom, context=dict(context or {}, active_test=False)):
+        dom = [('website_id', '=', False), ('website_id', '=', context.get('website_id'))]
+        while view.search(cr, openerp.SUPERUSER_ID, [('key', '=', page_xmlid), '|'] + dom, context=dict(context or {}, active_test=False)):
             inc += 1
             page_xmlid = "%s.%s" % (template_module, page_name + (inc and "-%s" % inc or ""))
         page_name += (inc and "-%s" % inc or "")
@@ -555,198 +550,20 @@ class website(osv.osv):
                     break
         return res
 
-    def kanban(self, cr, uid, ids, model, domain, column, template, step=None, scope=None, orderby=None, context=None):
-        step = step and int(step) or 10
-        scope = scope and int(scope) or 5
-        orderby = orderby or "name"
-
-        get_args = dict(request.httprequest.args or {})
-        model_obj = self.pool[model]
-        relation = model_obj._columns.get(column)._obj
-        relation_obj = self.pool[relation]
-
-        get_args.setdefault('kanban', "")
-        kanban = get_args.pop('kanban')
-        kanban_url = "?%s&kanban=" % werkzeug.url_encode(get_args)
-
-        pages = {}
-        for col in kanban.split(","):
-            if col:
-                col = col.split("-")
-                pages[int(col[0])] = int(col[1])
-
-        objects = []
-        for group in model_obj.read_group(cr, uid, domain, ["id", column], groupby=column):
-            obj = {}
-
-            # browse column
-            relation_id = group[column][0]
-            obj['column_id'] = relation_obj.browse(cr, uid, relation_id)
-
-            obj['kanban_url'] = kanban_url
-            for k, v in pages.items():
-                if k != relation_id:
-                    obj['kanban_url'] += "%s-%s" % (k, v)
-
-            # pager
-            number = model_obj.search(cr, uid, group['__domain'], count=True)
-            obj['page_count'] = int(math.ceil(float(number) / step))
-            obj['page'] = pages.get(relation_id) or 1
-            if obj['page'] > obj['page_count']:
-                obj['page'] = obj['page_count']
-            offset = (obj['page']-1) * step
-            obj['page_start'] = max(obj['page'] - int(math.floor((scope-1)/2)), 1)
-            obj['page_end'] = min(obj['page_start'] + (scope-1), obj['page_count'])
-
-            # view data
-            obj['domain'] = group['__domain']
-            obj['model'] = model
-            obj['step'] = step
-            obj['orderby'] = orderby
-
-            # browse objects
-            object_ids = model_obj.search(cr, uid, group['__domain'], limit=step, offset=offset, order=orderby)
-            obj['object_ids'] = model_obj.browse(cr, uid, object_ids)
-
-            objects.append(obj)
-
-        values = {
-            'objects': objects,
-            'range': range,
-            'template': template,
-        }
-        return request.website._render("website.kanban_contain", values)
-
-    def kanban_col(self, cr, uid, ids, model, domain, page, template, step, orderby, context=None):
-        html = ""
-        model_obj = self.pool[model]
-        domain = safe_eval(domain)
-        step = int(step)
-        offset = (int(page)-1) * step
-        object_ids = model_obj.search(cr, uid, domain, limit=step, offset=offset, order=orderby)
-        object_ids = model_obj.browse(cr, uid, object_ids)
-        for object_id in object_ids:
-            html += request.website._render(template, {'object_id': object_id})
-        return html
-
     def _image_placeholder(self, response):
-        # file_open may return a StringIO. StringIO can be closed but are
-        # not context managers in Python 2 though that is fixed in 3
-        with contextlib.closing(openerp.tools.misc.file_open(
-                os.path.join('web', 'static', 'src', 'img', 'placeholder.png'),
-                mode='rb')) as f:
-            response.data = f.read()
-            return response.make_conditional(request.httprequest)
+        logger.warning("Deprecated _image_placeholder method, please use this method on ir.attachment")
+        return self.pool['ir.attachment']._image_placeholder(response)
 
     def _image(self, cr, uid, model, id, field, response, max_width=maxint, max_height=maxint, cache=None, context=None):
-        """ Fetches the requested field and ensures it does not go above
-        (max_width, max_height), resizing it if necessary.
-
-        Resizing is bypassed if the object provides a $field_big, which will
-        be interpreted as a pre-resized version of the base field.
-
-        If the record is not found or does not have the requested field,
-        returns a placeholder image via :meth:`~._image_placeholder`.
-
-        Sets and checks conditional response parameters:
-        * :mailheader:`ETag` is always set (and checked)
-        * :mailheader:`Last-Modified is set iif the record has a concurrency
-          field (``__last_update``)
-
-        The requested field is assumed to be base64-encoded image data in
-        all cases.
-        """
-        Model = self.pool[model]
-        id = int(id)
-
-        ids = Model.search(cr, uid,
-                           [('id', '=', id)], context=context)
-        if not ids and 'website_published' in Model._fields:
-            ids = Model.search(cr, openerp.SUPERUSER_ID,
-                               [('id', '=', id), ('website_published', '=', True)], context=context)
-        if not ids:
-            return self._image_placeholder(response)
-
-        concurrency = '__last_update'
-        [record] = Model.read(cr, openerp.SUPERUSER_ID, [id],
-                              [concurrency, field],
-                              context=context)
-
-        if concurrency in record:
-            server_format = openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(
-                    record[concurrency], server_format)
-
-        # Field does not exist on model or field set to False
-        if not record.get(field):
-            # FIXME: maybe a field which does not exist should be a 404?
-            return self._image_placeholder(response)
-
-        response.set_etag(hashlib.sha1(record[field]).hexdigest())
-        response.make_conditional(request.httprequest)
-
-        if cache:
-            response.cache_control.max_age = cache
-            response.expires = int(time.time() + cache)
-
-        # conditional request match
-        if response.status_code == 304:
-            return response
-
-        if model == 'ir.attachment' and field == 'url' and field in record:
-            path = record[field].strip('/')
-
-            # Check that we serve a file from within the module
-            if os.path.normpath(path).startswith('..'):
-                return self._image_placeholder(response)
-
-            # Check that the file actually exists
-            path = path.split('/')
-            resource = openerp.modules.get_module_resource(*path)
-            if not resource:
-                return self._image_placeholder(response)
-
-            data = open(resource, 'rb').read()
-        else:
-            data = record[field].decode('base64')
-        image = Image.open(cStringIO.StringIO(data))
-        response.mimetype = Image.MIME[image.format]
-
-        filename = '%s_%s.%s' % (model.replace('.', '_'), id, str(image.format).lower())
-        response.headers['Content-Disposition'] = 'inline; filename="%s"' % filename
-
-        if (not max_width) and (not max_height):
-            response.data = data
-            return response
-
-        w, h = image.size
-        max_w = int(max_width) if max_width else maxint
-        max_h = int(max_height) if max_height else maxint
-
-        if w < max_w and h < max_h:
-            response.data = data
-        else:
-            size = (max_w, max_h)
-            img = image_resize_and_sharpen(image, size, preserve_aspect_ratio=True)
-            image_save_for_web(img, response.stream, format=image.format)
-            # invalidate content-length computed by make_conditional as
-            # writing to response.stream does not do it (as of werkzeug 0.9.3)
-            del response.headers['Content-Length']
-
-        return response
+        logger.warning("Deprecated _image method, please use this method on ir.attachment")
+        return self.pool['ir.attachment']._image(cr, uid, model, id, field, response, max_width=max_width, max_height=max_height, cache=cache, context=context)
 
     def image_url(self, cr, uid, record, field, size=None, context=None):
         """Returns a local url that points to the image field of a given browse record."""
-        model = record._name
         sudo_record = record.sudo()
-        id = '%s_%s' % (record.id, hashlib.sha1(sudo_record.write_date or sudo_record.create_date or '').hexdigest()[0:7])
+        sha = hashlib.sha1(getattr(sudo_record, '__last_update')).hexdigest()[0:7]
         size = '' if size is None else '/%s' % size
-        return '/website/image/%s/%s/%s%s' % (model, id, field, size)
+        return '/web/image/%s/%s/%s%s?unique=%s' % (record._name, record.id, field, size, sha)
 
 class website_menu(osv.osv):
     _name = "website.menu"
@@ -819,64 +636,11 @@ class website_menu(osv.osv):
 
 
 class ir_attachment(osv.osv):
-
     _inherit = "ir.attachment"
 
-    def _website_url_get(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        for attach in self.browse(cr, uid, ids, context=context):
-            if attach.url:
-                result[attach.id] = attach.url
-            else:
-                result[attach.id] = self.pool['website'].image_url(cr, uid, attach, 'datas')
-        return result
-
-    def _datas_big(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, False)
-        if context and context.get('bin_size'):
-            return result
-
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.res_model != 'ir.ui.view' or not record.datas: continue
-            try:
-                result[record.id] = openerp.tools.image_resize_image_big(record.datas)
-            except IOError: # apparently the error PIL.Image.open raises
-                pass
-
-        return result
-
     _columns = {
-        'website_url': fields.function(_website_url_get, string="Attachment URL", type='char'),
-        'datas_big': fields.function (_datas_big, type='binary', store=True,
-                                      string="Resized file content"),
+        'website_url': fields.related("local_url", string="Attachment URL", type='char', deprecated=True), # related for backward compatibility with saas-6
     }
-
-    def try_remove(self, cr, uid, ids, context=None):
-        """ Removes a web-based image attachment if it is used by no view
-        (template)
-
-        Returns a dict mapping attachments which would not be removed (if any)
-        mapped to the views preventing their removal
-        """
-        Views = self.pool['ir.ui.view']
-        attachments_to_remove = []
-        # views blocking removal of the attachment
-        removal_blocked_by = {}
-
-        for attachment in self.browse(cr, uid, ids, context=context):
-            # in-document URLs are html-escaped, a straight search will not
-            # find them
-            url = escape(attachment.website_url)
-            ids = Views.search(cr, uid, ["|", ('arch_db', 'like', '"%s"' % url), ('arch_db', 'like', "'%s'" % url)], context=context)
-
-            if ids:
-                removal_blocked_by[attachment.id] = Views.read(
-                    cr, uid, ids, ['name'], context=context)
-            else:
-                attachments_to_remove.append(attachment.id)
-        if attachments_to_remove:
-            self.unlink(cr, uid, attachments_to_remove, context=context)
-        return removal_blocked_by
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -970,10 +734,10 @@ class website_published_mixin(osv.AbstractModel):
         return dict.fromkeys(ids, '#')
 
     def website_publish_button(self, cr, uid, ids, context=None):
-        if self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher'):
-            return self.open_website_url(cr, uid, ids, context)
-        for r in self.browse(cr, uid, ids, context=context):
-            r.write({'website_published': not r.website_published})
+        for i in self.browse(cr, uid, ids, context):
+            if self.pool['res.users'].has_group(cr, uid, 'base.group_website_publisher') and i.website_url != '#':
+                return self.open_website_url(cr, uid, ids, context)
+            i.write({'website_published': not i.website_published})
         return True
 
     def open_website_url(self, cr, uid, ids, context=None):

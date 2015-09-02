@@ -23,7 +23,7 @@ var form_widgets = require('web.form_widgets'); // necessary
 var framework = require('web.framework');
 var ListView = require('web.ListView');
 var Menu = require('web.Menu');
-var Model = require('web.Model');
+var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var Registry = require('web.Registry');
 var SearchView = require('web.SearchView');
@@ -261,14 +261,5 @@ ListView.include({
      },
 });
 
-
-});
-
-odoo.define('mail.compatibility', function (require) {
-var mail = require('mail.mail');
-
-window.openerp = window.openerp || {};
-openerp.mail = {};
-openerp.mail.Wall = mail.Wall;
 
 });

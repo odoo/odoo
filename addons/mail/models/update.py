@@ -8,7 +8,6 @@ import urllib2
 
 from openerp import release, SUPERUSER_ID
 from openerp.models import AbstractModel
-from openerp.osv import osv
 from openerp.tools.translate import _
 from openerp.tools.config import config
 from openerp.tools import misc
@@ -38,7 +37,7 @@ class publisher_warranty_contract(AbstractModel):
             nbr_active_share_users = user_count([("share", "=", True), ("login_date", ">=", limit_date_str)])
         user = Users.browse(cr, uid, uid)
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
-        apps = self.pool['ir.module.module'].search_read(cr, uid, domain, ['name'])
+        apps = self.pool['ir.module.module'].search_read(cr, SUPERUSER_ID, domain, ['name'])
 
         web_base_url = get_param('web.base.url')
         msg = {
@@ -93,7 +92,7 @@ class publisher_warranty_contract(AbstractModel):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             IMD = self.pool['ir.model.data']
             user = self.pool['res.users'].browse(cr, SUPERUSER_ID, SUPERUSER_ID)
-            poster = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'mail.group_all_employees', context=context)
+            poster = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'mail.channel_all_employees', context=context)
             if not (poster and poster.exists()):
                 if not user.exists():
                     return True

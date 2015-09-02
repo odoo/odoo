@@ -14,10 +14,10 @@
                         <field name="mode"/>
                         <field name="product_qty" colspan="2" on_change="on_change_qty(product_qty, consume_lines, context)"/>
                         <field name="product_id" invisible="1"/>
-                        <field name="track_production" invisible="1"/>
+                        <field name="tracking" invisible="1"/>
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
                                     context="{'default_product_id':product_id}"
-                                    attrs="{'required': [('track_production', '=', True), ('mode', '=', 'consume_produce')]}"
+                                    attrs="{'required': [('tracking', '!=', 'none'), ('mode', '=', 'consume_produce')]}"
                                     groups="stock.group_production_lot"/>
                     </group>
                     <group string="To Consume">
@@ -32,9 +32,8 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
+                        <button name="do_produce" type="object" string="Confirm" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
                     </footer>
                 </form>
             </field>

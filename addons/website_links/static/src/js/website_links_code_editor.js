@@ -2,10 +2,13 @@ odoo.define('website_links.code_editor', function (require) {
 'use strict';
 
 var ajax = require('web.ajax');
+var base = require('web_editor.base');
 var website = require('website.website');
 
-website.ready().done(function() {
-website.if_dom_contains('.o_website_links_edit_code', function() {
+
+if(!$('.o_website_links_edit_code').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_website_links_edit_code'");
+}
 
     // Edit the short URL code
     $('.o_website_links_edit_code').on('click', function(e) {
@@ -36,6 +39,12 @@ website.if_dom_contains('.o_website_links_edit_code', function() {
         function submit_code() {
             var init_code = $('#edit-code-form #init_code').val();
             var new_code = $('#edit-code-form #new_code').val();
+
+            if(new_code === '') {
+                self.$('.o_website_links_code_error').html("The code cannot be left empty");
+                self.$('.o_website_links_code_error').show();
+                return;
+            }
 
             function show_new_code(new_code) {
                 $('.o_website_links_code_error').html('');
@@ -83,5 +92,4 @@ website.if_dom_contains('.o_website_links_edit_code', function() {
     });
 
 });
-});
-});
+

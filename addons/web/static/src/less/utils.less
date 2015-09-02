@@ -137,7 +137,6 @@
     li {
         position: relative;
         > a {
-            padding: 3px 25px;
             color: @odoo-main-text-color;
             &:hover {
                 color: darken(@odoo-main-text-color, 10%);
@@ -178,6 +177,26 @@
 }
 
 // ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+.o-animation(@name: none, @duration: 0s, @timing-function: ease, @delay: 0s, @iteration-count: 1, @direction: normal, @fill-mode: none, @play-state: running) {
+    -webkit-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -moz-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    -o-animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+    animation: @name @duration @timing-function @delay @iteration-count @direction @fill-mode @play-state;
+}
+
+// ------------------------------------------------------------------
+// Transition
+// ------------------------------------------------------------------
+.o-transition(@property: all, @duration: 0s, @timing-function: easy, @transition-delay: 0s) {
+    -webkit-transition: @property @duration @timing-function @transition-delay;
+    -moz-transition: @property @duration @timing-function @transition-delay;
+    -o-transition: @property @duration @timing-function @transition-delay;
+    transition: @property @duration @timing-function @transition-delay;
+}
+
+// ------------------------------------------------------------------
 // Position absolute
 // ------------------------------------------------------------------
 .o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
@@ -186,4 +205,16 @@
     left: @left;
     bottom: @bottom;
     right: @right;
+}
+
+// ------------------------------------------------------------------
+// Text overflow
+// ------------------------------------------------------------------
+.o-text-overflow(@display: inline-block) {
+    display: @display;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top; // To update display context changed by overflow:hidden
 }

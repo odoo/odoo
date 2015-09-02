@@ -673,7 +673,7 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         def time_expired(n, stack):
-            _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', self.pid, config['limit_time_cpu'])
             # We dont suicide in such case
             raise Exception('CPU time limit exceeded.')
         signal.signal(signal.SIGXCPU, time_expired)
@@ -769,7 +769,7 @@ class WorkerCron(Worker):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.service.db.exp_list(True)
+            db_names = openerp.service.db.list_dbs(True)
         return db_names
 
     def process_work(self):
