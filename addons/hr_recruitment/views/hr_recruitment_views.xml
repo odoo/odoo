@@ -107,6 +107,11 @@
                         attrs="{'invisible': [('emp_id', '=', False)]}">
                         <field name="employee_name" widget="statinfo" string="Employee"/>
                     </button>
+                    <button name="toggle_active" type="object"
+                            class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                    </button>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -142,7 +147,6 @@
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
                         <field name="reference"/>
-                        <field name="active" invisible="1"/>
                     </group>
                     <group string="Job">
                         <field name="survey" invisible="1"/>
@@ -214,6 +218,7 @@
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <separator/>
                 <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
@@ -269,6 +274,7 @@
                 <field name="categ_ids"/>
                 <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
+                <field name="active"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">

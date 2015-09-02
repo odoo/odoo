@@ -141,7 +141,13 @@
             <field name="arch" type="xml">
                 <form string="Partners">
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                     <div class="oe_title">
                         <field name="is_company" invisible="1"/>
@@ -311,7 +317,6 @@
                                 <group string="Misc">
                                     <field name="ref"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="active"/>
                                 </group>
                             </group>
                         </page>
@@ -335,6 +340,7 @@
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1), ('parent_id', '=', False)]"/>
                    <filter string="Vendors" name="supplier" domain="[('supplier','=',1), ('parent_id', '=', False)]"/>
+                   <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>

@@ -66,6 +66,11 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
+                            <button name="toggle_active" type="object"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
                             <button name="%(event.act_event_registration_from_event)d"
                                 type="action"
                                 class="oe_stat_button oe_event_attendee_button"
@@ -230,6 +235,7 @@
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>

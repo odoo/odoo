@@ -106,25 +106,24 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="action_set_unactive" string="Archive"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
                     <button name="action_set_won" string="Mark Won"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
                     <button name="action_set_lost" string="Mark Lost"
                             type="object" class="oe_highlight"
                             attrs="{'invisible': [('active', '=', False)]}"/>
-                    <button name="action_set_active" string="Unarchive"
-                            type="object" class="oe_highlight"
-                            attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             options="{'fold_field': 'fold'}"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
+                                attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
                     <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
                     <div class="oe_title">
@@ -192,7 +191,6 @@
                                 </group>
                                 <group string="Opportunity" name="misc">
                                     <field name="probability" groups="base.group_no_one"/>
-                                    <field name="active"/>
                                 </group>
                                 <group string="Analysis" groups="base.group_no_one">
                                     <field name="date_open"/>
@@ -408,9 +406,6 @@
             <field name="arch" type="xml">
                 <form string="Opportunities">
                     <header>
-                        <button name="action_set_unactive" string="Archive"
-                                type="object" class="oe_highlight"
-                                attrs="{'invisible': ['|', ('active','=',False), ('probability', '&lt;', 100)]}"/>
                         <button name="action_set_won" string="Mark Won"
                                 type="object" class="oe_highlight"
                                 attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
@@ -418,9 +413,6 @@
                                 type="action" class="oe_highlight"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False)]}"/>
-                        <button name="action_set_active" string="Unarchive"
-                                type="object" class="oe_highlight"
-                                attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"
                             domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
@@ -428,6 +420,10 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
+                                    attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
                             <button class="oe_stat_button" type="object"
                                 context="{'partner_id': partner_id}"
                                 name="action_schedule_meeting" icon="fa-calendar">
@@ -553,7 +549,6 @@
                                     <field name="source_id" />
                                 </group>
                                 <group string="Misc" name="Misc">
-                                    <field name="active"/>
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>

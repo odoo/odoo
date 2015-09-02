@@ -35,6 +35,7 @@
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -76,9 +77,6 @@
             <field name="arch" type="xml">
                 <form string="Project">
                 <header>
-                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" class="oe_highlight" groups="base.group_user"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
                     <field name="state" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Project">
@@ -90,6 +88,13 @@
                         </button>
                         <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
+                        </button>
+                        <button name="toggle_active" type="object"
+                                confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
+                                class="oe_stat_button" icon="fa-archive"
+                                attrs="{'invisible':[('state','in',['open', 'pending'])]}">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -121,7 +126,6 @@
                                 </group>
                                 <group string="Configuration" groups="base.group_no_one">
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
                                 </group>
                             </group>
                         </page>
@@ -165,6 +169,7 @@
                     <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By">
@@ -245,14 +250,21 @@
                             options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_user"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                        <field name="kanban_state" widget="kanban_state_selection"
+                            options='{
+                            "states_legend_field": "stage_id",
+                            "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
+                    </div>
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
                             <field name="name" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="kanban_state_selection"
-                                options='{
-                                "states_legend_field": "stage_id",
-                                "states_legend": {"normal": "legend_normal", "blocked": "legend_blocked", "done": "legend_done"}}'/>
                         </h1>
                     </div>
                     <group>
@@ -325,6 +337,7 @@
                     <field name="message_needaction_counter"/>
                     <field name="tag_ids"/>
                     <field name="displayed_image_id"/>
+                    <field name="active"/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
