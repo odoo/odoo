@@ -67,7 +67,6 @@ var DashboardInvitations = Widget.extend({
     template: 'DashboardInvitations',
     events: {
         'click .o_send_invitations': 'send_invitations',
-        'click .optional_message_toggler': 'optional_message_toggler',
         'click .user': 'on_user_clicked',
     },
     init: function(parent, data){
@@ -85,12 +84,11 @@ var DashboardInvitations = Widget.extend({
         var is_valid_emails = _.every(user_emails, function(email) {
             return re.test(email);
         });
-        var optional_message = this.$('#optional_message').val();
         if (is_valid_emails) {
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             new Model("res.users")
-                .call("web_dashboard_create_users", [user_emails, optional_message])
+                .call("web_dashboard_create_users", [user_emails])
                 .then(function() {
                     self.reload();
                 });
@@ -118,10 +116,6 @@ var DashboardInvitations = Widget.extend({
     reload:function(){
         return this.parent.load(['invitations']);
     },
-    optional_message_toggler: function(){
-        this.$('.optional_message_toggler').remove();
-        this.$('textarea.optional_message').slideToggle("fast");
-    }
 });
 
 var DashboardPlanner = Widget.extend({
