@@ -36,10 +36,12 @@
         <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
         <field name="arch" type="xml">
             <xpath expr='//div[@name="bank_journal_default_cta"]' position='inside'>
-                <br/><button type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <br/><button t-if="dashboard.number_to_reconcile == 0" type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <a t-if="dashboard.number_to_reconcile > 0" type="object" name="import_statement" class="oe_inline">Import Statement</a>
             </xpath>
             <xpath expr='//div[@name="bank_journal_cta"]' position='inside'>
-                <button t-if="dashboard.bank_statements_source == 'file_import'" type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <button t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile == 0" type="object" name="import_statement" class="btn btn-primary btn-sm">Import Statement</button>
+                <a t-if="dashboard.bank_statements_source == 'file_import' &amp;&amp; dashboard.number_to_reconcile > 0" type="object" name="import_statement" class="oe_inline">Import Statement</a>
             </xpath>
             <xpath expr='//div[@name="bank_cash_commands"]' position="after">
                 <t t-if="journal_type == 'bank'">
