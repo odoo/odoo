@@ -28,6 +28,7 @@ from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
+import pytz
 
 class resource_calendar(osv.osv):
     """ Calendar model for a resource. It has
@@ -427,6 +428,8 @@ class resource_calendar(osv.osv):
         """
         if day_dt is None:
             day_dt = datetime.datetime.now()
+        day_dt = fields.datetime.context_timestamp(cr, uid, day_dt, context=context)
+        tz_info = day_dt.tzinfo
         backwards = (hours < 0)
         hours = abs(hours)
         intervals = []
@@ -469,7 +472,7 @@ class resource_calendar(osv.osv):
             # avoid infinite loops
             iterations += 1
 
-        return intervals
+        return [tuple(inter.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None) for inter in interv) for interv in intervals]
 
     def schedule_hours_get_date(self, cr, uid, id, hours, day_dt=None,
                                 compute_leaves=False, resource_id=None,
@@ -598,7 +601,7 @@ class resource_calendar(osv.osv):
         for dt_str, hours, calendar_id in date_and_hours_by_cal:
             result = self.schedule_hours(
                 cr, uid, calendar_id, hours,
-                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(minute=0, second=0),
+                day_dt=datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M:%S').replace(second=0),
                 compute_leaves=True, resource_id=resource,
                 default_interval=(8, 16)
             )
