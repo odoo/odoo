@@ -15,12 +15,15 @@ var _t = core._t;
 
 var Dashboard = Widget.extend({
     template: 'DashboardMain',
+
     events: {
         'click .o_browse_apps': 'on_new_apps',
     },
+
     start: function(){
         return this.load(['apps', 'invitations', 'planner', 'share'])
     },
+
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
@@ -129,16 +132,20 @@ var DashboardInvitations = Widget.extend({
 });
 
 var DashboardPlanner = Widget.extend({
+
     template: 'DashboardPlanner',
+
     events: {
         'click .o_web_settings_dashboard_progress_title,.progress': 'on_planner_clicked',
     },
+
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
         this.planner_by_menu = {};
         this._super.apply(this, arguments);
     },
+
     willStart:function(){
         var self = this;
         return new Model('web.planner').query().all().then(function(res) {
@@ -150,12 +157,14 @@ var DashboardPlanner = Widget.extend({
             self.set_overall_progress();
         });
     },
+
     update_planner_progress: function(){
         this.set_overall_progress();
         this.$('.o_web_settings_dashboard_planners_list').replaceWith(
             QWeb.render("DashboardPlanner.PlannersList", {'planners': this.planners})
         );
     },
+
     set_overall_progress: function(){
         var self = this;
         this.sort_planners_list();
@@ -165,10 +174,12 @@ var DashboardPlanner = Widget.extend({
         self.overall_progress = Math.floor(average);
         self.$('.o_web_settings_dashboard_planner_overall_progress').text(self.overall_progress);
     },
+
     sort_planners_list: function(){
         // sort planners alphabetically but with fully completed planners at the end:
         this.planners = _.sortBy(this.planners, function(planner){return (planner.progress == 100) + planner.name});
     },
+
     on_planner_clicked: function(e){
 
         var menu_id = $(e.currentTarget).attr('data-menu-id');
@@ -180,6 +191,7 @@ var DashboardPlanner = Widget.extend({
             this.setup_planner(menu_id);
         }
     },
+
     setup_planner: function(menu_id){
         var self = this;
         this.planner = self.planner_by_menu[menu_id];
@@ -205,24 +217,29 @@ var DashboardShare = Widget.extend({
         'click .fb_share': 'share_facebook',
         'click .li_share': 'share_linkedin',
     },
+
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
         this.share_url = 'http://www.odoo.com/';
         this.share_text = encodeURIComponent("#IamUsingOdoo, an Open-Source Web App that manages my Sales, Projects, Accounting, Website, Warehouse, Shop and more");
     },
+
     share_twitter: function(){
         var popup_url = _.str.sprintf( 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=%s %s',this.share_text,this.share_url);
         this.sharer(popup_url);
     },
+
     share_facebook: function(){
         var popup_url = _.str.sprintf('https://www.facebook.com/sharer/sharer.php?u=%s', encodeURIComponent(this.share_url));
         this.sharer(popup_url);
     },
+
     share_linkedin: function(){
         var popup_url = _.str.sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=I am using odoo&summary=%s&source=www.odoo.com', encodeURIComponent(this.share_url), this.share_text);
         this.sharer(popup_url);
     },
+
     sharer: function(popup_url){
         window.open(
             popup_url,
