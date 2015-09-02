@@ -26,7 +26,6 @@
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
     currency_id: base.EUR
-    location_id: stock.stock_location_stock
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 10.0
@@ -36,12 +35,13 @@
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo1}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_fifo1")])
 - 
-  I check the "Approved" status of purchase order 1
+  I check the "Purchase" status of purchase order 1
 -
   !assert {model: purchase.order, id: purchase_order_fifo1}:
-    - state == 'approved'
+    - state == 'purchase'
 - 
   Process the reception of purchase order 1 and set date
 -
@@ -58,7 +58,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_fifo2}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 30.0
@@ -68,7 +67,8 @@
 - 
   I confirm the second purchase order
 - 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo2}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_fifo2")])
 - 
   Process the reception of purchase order 2
 - 
@@ -160,7 +160,6 @@
   !record {model: purchase.order, id: purchase_order_fifo_usd}:
     partner_id: base.res_partner_3
     currency_id: new_USD
-    location_id: stock.stock_location_stock
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 30000
@@ -174,7 +173,8 @@
 - 
   I confirm the purchase order in USD
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_usd}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_fifo_usd")])
 - 
   Process the reception of purchase order with usd
 -
@@ -202,7 +202,7 @@
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_cur")])
-- 
+-
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.picking}: |
@@ -218,7 +218,7 @@
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_ret}:
     picking_type_id: stock.picking_type_out
--
+- 
   Picking needs movement from stock
 -
   !record {model: stock.move, id: outgoing_shipment_fifo_icecream_ret}:
@@ -320,7 +320,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_fifo_neg}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
     order_line:
       - product_id: product_fifo_negative
         product_qty: 50.0
@@ -330,7 +329,8 @@
 - 
   I confirm the first purchase order
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_neg}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_fifo_neg")])
 - 
   Process the reception of purchase order 1
 -
@@ -348,7 +348,6 @@
 - 
   !record {model: purchase.order, id: purchase_order_fifo_neg2}:
     partner_id: base.res_partner_3
-    location_id: stock.stock_location_stock
     order_line:
       - product_id: product_fifo_negative
         product_qty: 60.0
@@ -358,7 +357,8 @@
 - 
   I confirm the second negative purchase order
 - 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_neg2}
+  !python {model: purchase.order}: |
+    self.button_confirm(cr, uid, [ref("purchase_order_fifo_neg2")])
 - 
   Process the reception of purchase order 2
 - 

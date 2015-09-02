@@ -15,11 +15,6 @@ class purchase_config_settings(osv.osv_memory):
             ], "Product Variants",
             help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
             implied_group='product.group_product_variant'),
-        'default_invoice_method': fields.selection(
-            [('manual', 'Control vendor bill on purchase order line'),
-             ('picking', 'Control vendor bill on incoming shipments'),
-             ('order', 'Control vendor bill on a pregenerated draft invoice'),
-            ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_uom':fields.selection([
             (0, 'Products have only one unit of measure (easier)'),
             (1, 'Some products may be sold/puchased in different unit of measures (advanced)')
@@ -51,10 +46,6 @@ class purchase_config_settings(osv.osv_memory):
             ], "Dropshipping",
             help='\nCreates the dropship Route and add more complex tests'
                  '-This installs the module stock_dropshipping.'),
-    }
-
-    _defaults = {
-        'default_invoice_method': 'order',
     }
 
 
