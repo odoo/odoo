@@ -43,11 +43,11 @@ Dashboard for CRM will include:
     ],
     'data': [
         'data/crm_action_data.xml',
-        'crm_data.xml',
+        'data/crm_data.xml',
         'data/crm_stage_data.xml',
         'data/sales_config_settings_data.xml',
-        'crm_lead_data.xml',
-        'crm_tip_data.xml',
+        'data/crm_lead_data.xml',
+        'data/crm_tip_data.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',
@@ -57,33 +57,33 @@ Dashboard for CRM will include:
         'wizard/crm_lead_to_opportunity_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
-        'crm_view.xml',
-        'crm_stage_views.xml',
-        'crm_lead_view.xml',
-        'crm_lead_menu.xml',
+        'views/crm_view.xml',
+        'views/crm_stage_views.xml',
+        'views/crm_lead_view.xml',
+        'views/crm_lead_menu.xml',
         'views/crm_action_views.xml',
 
-        'calendar_event_menu.xml',
+        'views/calendar_event_menu.xml',
 
         'report/crm_activity_report_view.xml',
         'report/crm_opportunity_report_view.xml',
 
-        'res_partner_view.xml',
+        'views/res_partner_view.xml',
 
-        'res_config_view.xml',
-        'base_partner_merge_view.xml',
+        'views/res_config_view.xml',
+        'wizard/base_partner_merge_view.xml',
 
-        'sales_team_view.xml',
+        'views/sales_team_view.xml',
         'views/crm.xml',
-        'web_planner_data.xml',
-        'sales_team_dashboard.xml',
+        'data/web_planner_data.xml',
+        'views/sales_team_dashboard.xml',
         'crm_mail_template_data.xml'
     ],
     'demo': [
-        'crm_demo.xml',
-        'crm_lead_demo.xml',
+        'data/crm_demo.xml',
+        'data/crm_lead_demo.xml',
         'data/crm_action_demo.xml',
-        'crm_action_rule_demo.xml',
+        'data/crm_action_rule_demo.xml',
     ],
     'test': [
         'test/crm_access_group_users.yml',

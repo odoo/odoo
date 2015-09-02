@@ -10,7 +10,7 @@ from werkzeug import url_encode
 from openerp import SUPERUSER_ID
 from openerp import tools, api
 from openerp.addons.base.res.res_partner import format_address
-from openerp.addons.crm import crm_stage
+from openerp.addons.crm.models import crm_stage
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import email_re, email_split
