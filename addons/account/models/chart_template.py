@@ -150,7 +150,7 @@ class AccountChartTemplate(models.Model):
             return default_account
 
         journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'sequence': 5},
-                    {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('EXJ'), 'favorite': True, 'sequence': 6},
+                    {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'sequence': 6},
                     {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
                     {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},]
         if journals_dict != None:
