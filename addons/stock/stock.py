@@ -397,7 +397,7 @@ class stock_quant(osv.osv):
         elif float_compare(reserved_availability, 0, precision_rounding=rounding) > 0 and not move.partially_available:
             self.pool.get('stock.move').write(cr, uid, [move.id], {'partially_available': True}, context=context)
 
-    def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, context=None):
+    def quants_move(self, cr, uid, quants, move, location_to, location_from=False, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, entire_pack=False, context=None):
         """Moves all given stock.quant in the given destination location.  Unreserve from current move.
         :param quants: list of tuple(browse record(stock.quant) or None, quantity to move)
         :param move: browse record (stock.move)
@@ -421,7 +421,7 @@ class stock_quant(osv.osv):
             quants_reconcile.append(quant)
         if to_move_quants:
             to_recompute_move_ids = [x.reservation_id.id for x in to_move_quants if x.reservation_id and x.reservation_id.id != move.id]
-            self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, lot_id=lot_id, context=context)
+            self.move_quants_write(cr, uid, to_move_quants, move, location_to, dest_package_id, lot_id=lot_id, entire_pack=entire_pack, context=context)
             self.pool.get('stock.move').recalculate_move_state(cr, uid, to_recompute_move_ids, context=context)
         if location_to.usage == 'internal':
             # Do manual search for quant to avoid full table scan (order by id)
@@ -433,14 +433,14 @@ class stock_quant(osv.osv):
                 for quant in quants_reconcile:
                     self._quant_reconcile_negative(cr, uid, quant, move, context=context)
 
-    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id = False, context=None):
+    def move_quants_write(self, cr, uid, quants, move, location_dest_id, dest_package_id, lot_id = False, entire_pack=False, context=None):
         context=context or {}
         vals = {'location_id': location_dest_id.id,
                 'history_ids': [(4, move.id)],
                 'reservation_id': False}
         if lot_id and any(x.id for x in quants if not x.lot_id.id):
             vals['lot_id'] = lot_id
-        if not context.get('entire_pack'):
+        if not entire_pack:
             vals.update({'package_id': dest_package_id})
         self.write(cr, SUPERUSER_ID, [q.id for q in quants], vals, context=context)
 
@@ -2551,18 +2551,22 @@ class stock_move(osv.osv):
             if ops.picking_id:
                 pickings.add(ops.picking_id.id)
             main_domain = [('qty', '>', 0)]
+            entire_pack=False
             if ops.product_id:
                 #If a product is given, the result is always put immediately in the result package (if it is False, they are without package)
                 quant_dest_package_id  = ops.result_package_id.id
-                ctx = context
             else:
                 # When a pack is moved entirely, the quants should not be written anything for the destination package
                 quant_dest_package_id = False
-                ctx = context.copy()
-                ctx['entire_pack'] = True #Should be in params
+                entire_pack=True
             lot_qty = {}
+            tot_qty = 0.0
             for pack_lot in ops.pack_lot_ids:
-                lot_qty[pack_lot.lot_id.id] = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, pack_lot.qty, ops.product_id.uom_id.id)
+                qty = uom_obj._compute_qty(cr, uid, ops.product_uom_id.id, pack_lot.qty, ops.product_id.uom_id.id)
+                lot_qty[pack_lot.lot_id.id] = qty
+                tot_qty += pack_lot.qty
+            if ops.pack_lot_ids and ops.product_id and float_compare(tot_qty, ops.product_qty, precision_rounding=ops.product_uom_id.rounding) != 0.0:
+                raise UserError(_('You have a difference between the quantity on the operation and the quantities specified for the lots. '))
             quants_taken = []
             false_quants = []
             lot_move_qty = {}
@@ -2580,7 +2584,7 @@ class stock_move(osv.osv):
 
                     quant_obj.quants_move(cr, uid, quants, move, ops.location_dest_id, location_from=ops.location_id,
                                           lot_id=False, owner_id=ops.owner_id.id, src_package_id=ops.package_id.id,
-                                          dest_package_id=quant_dest_package_id, context=ctx)
+                                          dest_package_id=quant_dest_package_id, entire_pack=entire_pack, context=context)
                 else:
                     # Check what you can do with reserved quants already
                     qty_on_link = record.qty
@@ -2605,7 +2609,7 @@ class stock_move(osv.osv):
 
             #Handle lots separately
             if ops.pack_lot_ids:
-                self._move_quants_by_lot(cr, uid, ops, lot_qty, quants_taken, false_quants, lot_move_qty, quant_dest_package_id, context=ctx)
+                self._move_quants_by_lot(cr, uid, ops, lot_qty, quants_taken, false_quants, lot_move_qty, quant_dest_package_id, context=context)
 
             # Handle pack in pack
             if not ops.product_id and ops.package_id and ops.result_package_id.id != ops.package_id.parent_id.id:
@@ -4290,6 +4294,9 @@ class stock_pack_operation(osv.osv):
     def _compute_lots_visible(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for pack in self.browse(cr, uid, ids, context=context):
+            if pack.pack_lot_ids:
+                res[pack.id] = True
+                continue
             pick = pack.picking_id
             product_requires = (pack.product_id.tracking != 'none')
             if pick.picking_type_id:
