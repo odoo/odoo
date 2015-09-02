@@ -32,7 +32,4 @@ class WebDashboard(http.Controller):
                 'template_user_id': request.env['ir.config_parameter'].get_param('auth_signup.template_user_id'),
                 'user_form_id': request.env['ir.model.data'].xmlid_to_res_id("base.view_users_form")
             },
-            'gift': {
-                'user_email': request.env.user.email
-            }
         }
