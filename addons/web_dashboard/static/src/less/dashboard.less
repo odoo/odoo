@@ -1,8 +1,8 @@
-.o_web_dashboard {
+.o_web_settings_dashboard {
 
     @bg-dashboard-col: #FFF;
 
-    .o_dashboard_card() {
+    .o_web_settings_dashboard_card() {
         box-shadow: 0 1px 2px 0 rgba(0,0,0,.14);
         background: @bg-dashboard-col;
         border-radius: 2px;
@@ -11,7 +11,7 @@
     background: #F7F7F7;
     height: 100%;
 
-    .o_web_dashboard_col {
+    .o_web_settings_dashboard_col {
         padding: 10px 8px;
 
         > div > hr {
@@ -20,18 +20,18 @@
         }
 
         > div:first-child {
-            .o_dashboard_card();
+            .o_web_settings_dashboard_card();
             padding: 25px 18px 18px 18px;
-                .o_web_dashboard_header {
+                .o_web_settings_dashboard_header {
                     font-size: 22px;
                     margin-bottom: 8px;
                 }
         }
-        .o_web_dashboard_pills {
+        .o_web_settings_dashboard_pills {
             margin-top: 10px;
 
             > li > a {
-                .o_dashboard_card();
+                .o_web_settings_dashboard_card();
                 padding: 10px;
 
                 > i.fa {
@@ -46,64 +46,64 @@
                 }
             }
         }
-        .btn.o_browse_apps, .btn.o_send_invitations {
+        .btn.o_browse_apps, .btn.o_web_settings_dashboard_invitations {
             margin-top: 12px;
         }
-        .o_compact_subtitle {
+        .o_web_settings_dashboard_compact_subtitle {
             line-height: 12px;
             display: block;
         }
-        .o_web_dashboard_invitations {
-            .o_invitation_form {
+        .o_web_settings_dashboard_invitations {
+            .o_web_settings_dashboard_invitation_form {
                 text-align: left;
                 > textarea {
                     resize: vertical;
                     width: 100%;
                 }
             }
-            a.o_access_rights {
+            a.o_web_settings_dashboard_user {
               line-height: 24px;
             }
         }
-        .o_web_dashboard_planner {
+        .o_web_settings_dashboard_planner {
             .progress {
                 height: 10px;
                 background-color: darken(@bg-dashboard-col, 15%);
                 cursor: pointer;
                 margin-bottom: 30px;
             }
-            .o_dashboard_planner_progress_text {
+            .o_web_settings_dashboard_planner_progress_text {
                 font-size: 18px;
                 padding-right: 0px;
                 padding-top: 3px;
             }
-            .o_dashboard_planner_progress_bar {
+            .o_web_settings_dashboard_planner_progress_bar {
                 padding-left: 10px;
             }
-            .o_progress_title {
+            .o_web_settings_dashboard_progress_title {
                 font-weight: bold;
                 cursor: pointer;
                 color: @odoo-brand-optional;
             }
-            .o_progress_100 {
+            .o_web_settings_dashboard_progress_100 {
                 -webkit-filter: grayscale(100%);
                 filter: grayscale(100%);
-                &.o_dashboard_planner_progress_text {
+                &.o_web_settings_dashboard_planner_progress_text {
                     font-size: 15px
                 }
             }
         }
-        .o_web_dashboard_gift {
-            .o_dashboard_sharearea {
+        .o_web_settings_dashboard_gift {
+            .o_web_settings_dashboard_sharearea {
                 width: 100%;
                 resize: none;
                 word-break: break-all;
                 cursor: pointer;
             }
-            .o_dashboard_sharearea:focus {
+            .o_web_settings_dashboard_sharearea:focus {
                 outline: none;
             }
-            .o_dashboard_separator {
+            .o_web_settings_dashboard_separator {
                 position: relative;
                 margin-top: 14px;
                 > span {
@@ -120,7 +120,7 @@
                     margin: -10px 0px 15px 0px;
                 }
             }
-            .o_clipbord_success_alert {
+            .o_web_settings_dashboard_clipbord_success_alert {
                 display: none;
             }
         }

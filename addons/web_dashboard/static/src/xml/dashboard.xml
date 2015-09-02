@@ -2,25 +2,25 @@
 
 <templates xml:space="preserve">
     <t t-name="DashboardMain">
-        <div class="container-fluid o_web_dashboard">
+        <div class="container-fluid o_web_settings_dashboard">
             <div class="row">
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_dashboard_col"> <div class="text-center o_web_dashboard_apps"></div>
-                    <ul class="nav nav-pills o_web_dashboard_pills">
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> <div class="text-center o_web_settings_dashboard_apps"></div>
+                    <ul class="nav nav-pills o_web_settings_dashboard_pills">
                         <li role="presentation" class="text-center"><a href="https://www.odoo.com/apps/modules" target="_blank"><i class="fa fa-rocket fa-2x text-muted"/> App store </a></li>
                         <li role="presentation" class="text-center pull-right"><a href="https://www.odoo.com/apps/themes" target="_blank"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a></li>
                     </ul>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_dashboard_col"> 
-                    <div class="text-center o_web_dashboard_invitations"></div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> 
+                    <div class="text-center o_web_settings_dashboard_invitations"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_dashboard_col">
-                    <div class="text-center o_web_dashboard_planner"></div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_planner"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_dashboard_col hidden">
-                    <div class="text-center o_web_dashboard_gift"></div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col hidden">
+                    <div class="text-center o_web_settings_dashboard_gift"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_dashboard_col">
-                    <div class="text-center o_web_dashboard_share"></div>
+                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
+                    <div class="text-center o_web_settings_dashboard_share"></div>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
 
     <t t-name="DashboardApps">
         <i class="fa fa-cog fa-4x text-muted"></i>
-        <div class="o_web_dashboard_header">
+        <div class="o_web_settings_dashboard_header">
             <t t-if="installed_apps">
                 <t t-esc="installed_apps"></t>
                 <t t-if="installed_apps == 1">Installed App</t>
@@ -43,9 +43,9 @@
         </div>
     </t>
     <t t-name="DashboardInvitations">
-        <div class="text-center o_web_dashboard_invitations">
+        <div class="text-center o_web_settings_dashboard_invitations">
             <i class="fa fa-users fa-4x text-muted"></i>
-            <div class="o_web_dashboard_header">
+            <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="users" t-value="widget.data.users"></t>
                 <t t-if="active_users">
@@ -53,26 +53,26 @@
                 </t>
             </div>
             <div class="text-center">
-                <a class="o_access_rights user" t-att-data-user-id="widget.data.template_user_id"> Manage access rights</a>
+                <a href="#" class="o_web_settings_dashboard_user" t-att-data-user-id="widget.data.template_user_id"> Manage access rights</a>
             </div>
             <hr/>
-            <div class="o_invitation_form">
+            <div class="o_web_settings_dashboard_invitation_form">
                 <strong>Invite new users</strong> <small class="text-muted">(with default rights)</small>
-                <textarea rows="3" id="user_emails" placeholder="Email addresses (one per line)"></textarea>
-                <button class="btn btn-primary btn-block o_send_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Send Invitations</strong></button>
+                <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses"></textarea>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Send Invitations</strong></button>
             </div>
             <div>
-                <small class="text-muted text-center">
+                <small class="o_web_settings_dashboard_pending_users text-muted text-center">
                     <t t-if="users.pending.length">
                         <br/>
                         <strong>Pending invitations:</strong><br/>
                         <t t-foreach="users.pending" t-as="pending">
-                            <a><div class="user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
+                            <a><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
                         </t>
                         <br/>
                         <strong>Expired invitations: </strong><br/>
                         <t t-foreach="users.expired" t-as="expired">
-                            <a><div class="user" t-att-data-user-id="expired[0]" >  <t t-esc="expired[1]"/></div></a>
+                            <a><div class="o_web_settings_dashboard_user" t-att-data-user-id="expired[0]" >  <t t-esc="expired[1]"/></div></a>
                         </t>
                     </t>
                 </small>
@@ -80,14 +80,14 @@
         </div>
     </t>
     <t t-name="DashboardPlanner">
-        <div class="text-center o_web_dashboard_planner">
+        <div class="text-center o_web_settings_dashboard_planner">
             <i class="fa fa-info-circle fa-4x text-muted"></i>
-            <div class="o_web_dashboard_header">
-                <span class="o_dashboard_planner_overall_progress"><t t-esc="widget.overall_progress"></t></span>%
+            <div class="o_web_settings_dashboard_header">
+                <span class="o_web_settings_dashboard_planner_overall_progress"><t t-esc="widget.overall_progress"></t></span>%
                 Implementation
             </div>
             <div>
-                <small class="text-muted text-center o_compact_subtitle">
+                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
                     Follow these Implementation Guides to get the maximum value for your business.
                 </small>
             </div>
@@ -98,13 +98,13 @@
     </t>
     
     <t t-name="DashboardPlanner.PlannersList">
-        <div class="row o_dashboard_planners_list">
+        <div class="row o_web_settings_dashboard_planners_list">
             <t t-foreach="planners" t-as="p">
-                <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_dashboard_planner_progress_text o_progress_#{p.progress}">
+                <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_web_settings_dashboard_planner_progress_text o_web_settings_dashboard_progress_#{p.progress}">
                     <t t-esc="p.progress"/>%
                 </div>
-                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_dashboard_planner_progress_bar o_progress_#{p.progress}">
-                    <div class="o_progress_title text-left" t-att-data-menu-id="p.menu_id[0]">
+                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_web_settings_dashboard_planner_progress_bar o_web_settings_dashboard_progress_#{p.progress}">
+                    <div class="o_web_settings_dashboard_progress_title text-left" t-att-data-menu-id="p.menu_id[0]">
                         <t t-esc="p.menu_id[1]"></t> <i class="fa fa-arrow-right pull-right"/>
                     </div>
                     <div class="progress" t-att-data-menu-id="p.menu_id[0]">
@@ -117,23 +117,23 @@
     </t>
 
     <t t-name="DashboardGift">
-        <div class="text-center o_web_dashboard_gift">
+        <div class="text-center o_web_settings_dashboard_gift">
             <i class="fa fa-gift fa-4x text-muted"></i>
-            <div class="o_web_dashboard_header">
+            <div class="o_web_settings_dashboard_header">
                 $50 Gift Card
             </div>
             <div>
-                <small class="text-muted text-center o_compact_subtitle">
+                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
                     Get a <strong><a href="http://www.amazon.com/gift-cards/" target="_new">$50 Amazon Gift Card</a></strong> for each customer who subscribes to Odoo through your referral link.
                 </small>
             </div>
             <hr/>
             <strong >Copy &amp; Share this url:</strong>
             <div class="mt16 alert alert-warning">
-                <span class="o_dashboard_sharearea" title="Click here to copy share URL" t-att-data-clipboard-text="widget.share_url"><t t-esc="widget.share_url"/></span>
-                <span class="o_clipbord_success_alert" t-att-data-clipboard-text="widget.share_url"><i class="fa fa-link"></i> URL copied to clipboard.</span>
+                <span class="o_web_settings_dashboard_sharearea" title="Click here to copy share URL" t-att-data-clipboard-text="widget.share_url"><t t-esc="widget.share_url"/></span>
+                <span class="o_web_settings_dashboard_clipbord_success_alert" t-att-data-clipboard-text="widget.share_url"><i class="fa fa-link"></i> URL copied to clipboard.</span>
             </div>
-            <h3 class="text-center o_dashboard_separator"><span>or</span><hr/></h3>
+            <h3 class="text-center o_web_settings_dashboard_separator"><span>or</span><hr/></h3>
 
             <strong class="mt16">Share it directly on:</strong>
             <div class="row mt16">
@@ -145,11 +145,11 @@
     </t>
 
     <t t-name="DashboardShare">
-        <div class="text-center o_web_dashboard_gift">
+        <div class="text-center o_web_settings_dashboard_gift">
             <i class="fa fa-share-alt fa-4x text-muted"/>
-            <div class="o_web_dashboard_header">Social Share</div>
+            <div class="o_web_settings_dashboard_header">Social Share</div>
             <div>
-                <small class="text-muted text-center o_compact_subtitle">
+                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
                     Help us spread the word: Share Odoo's awesomeness with your friends!
                 </small>
             </div>

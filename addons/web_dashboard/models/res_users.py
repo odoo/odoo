@@ -19,6 +19,7 @@ class Users(models.Model):
         # Process existing users
         for user in existing_users:
             if not user.login_date and not user.signup_valid:
+                # Reset if expired
                 user.action_reset_password()
             else:
                 # Already a user, to reactivate if desactivated
