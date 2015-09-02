@@ -56,6 +56,9 @@ rpc_response = logging.getLogger(__name__ + '.rpc.response')
 # 1 week cache for statics as advised by Google Page Speed
 STATIC_CACHE = 60 * 60 * 24 * 7
 
+# Session validity in seconds
+SESSION_VALIDITY = 60 * 60 * 24 * 7
+
 #----------------------------------------------------------
 # RequestHandler
 #----------------------------------------------------------
@@ -1164,7 +1167,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
-        last_week = time.time() - 60*60*24*7
+        last_week = time.time() - SESSION_VALIDITY
         for fname in os.listdir(session_store.path):
             path = os.path.join(session_store.path, fname)
             try:
@@ -1390,7 +1393,7 @@ class Root(object):
         #   (the one using the cookie). That is a special feature of the Session Javascript class.
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
-            response.set_cookie('session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60)
+            response.set_cookie('session_id', httprequest.session.sid, max_age=SESSION_VALIDITY)
 
         return response
 
