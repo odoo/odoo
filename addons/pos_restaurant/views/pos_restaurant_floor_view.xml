@@ -1,63 +1,62 @@
-<?xml version="1.0"?>
-<openerp>
-    <data>
-        <record model="ir.ui.view" id="view_restaurant_floor_form">
-            <field name="name">Restaurant Floors</field>
-            <field name="model">restaurant.floor</field>
-            <field name="arch" type="xml">
-                <form string="Restaurant Floor">
-                    <sheet>
-                        <group col="4">
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="restaurant_floor_view_form" model="ir.ui.view">
+        <field name="name">Restaurant Floors</field>
+        <field name="model">restaurant.floor</field>
+        <field name="arch" type="xml">
+            <form string="Restaurant Floor">
+                <sheet>
+                    <group col="4">
+                        <field name="name" />
+                        <field name="pos_config_id" />
+                        <field name="background_image" widget="image" />
+                        <field name="background_color" />
+                    </group>
+                    <field name="table_ids">
+                        <tree string='Tables'>
                             <field name="name" />
-                            <field name="pos_config_id" />
-                            <field name="background_image" widget="image" />
-                            <field name="background_color" />
-                        </group>
-                        <field name="table_ids">
-                            <tree string='Tables'>
-                                <field name="name" />
-                                <field name="seats" />
-                                <field name="shape" />
-                            </tree>
-                        </field>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                            <field name="seats" />
+                            <field name="shape" />
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model="ir.ui.view" id="view_restaurant_floor_tree">
-            <field name="name">Restaurant Floors</field>
-            <field name="model">restaurant.floor</field>
-            <field name="arch" type="xml">
-                <tree string="Restaurant Floors">
-                    <field name="sequence" widget="handle" />
-                    <field name="name" />
-                    <field name="pos_config_id" />
-                </tree>
-            </field>
-        </record>
+    <record id="restaurant_floor_view_tree" model="ir.ui.view">
+        <field name="name">Restaurant Floors</field>
+        <field name="model">restaurant.floor</field>
+        <field name="arch" type="xml">
+            <tree string="Restaurant Floors">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="pos_config_id" />
+            </tree>
+        </field>
+    </record>
 
-        <record model="ir.actions.act_window" id="action_restaurant_floor_form">
-            <field name="name">Floor Plans</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">restaurant.floor</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
+    <record id="restaurant_floor_action" model="ir.actions.act_window">
+        <field name="name">Floor Plans</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">restaurant.floor</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
                 Click to add a Restaurant Floor.
-              </p><p>
+            </p>
+            <p>
                 A restaurant floor represents the place where customers are served, this is where you can
                 define and position the tables.
-              </p>
-            </field>
-        </record>
+            </p>
+        </field>
+    </record>
 
-        <menuitem
-            parent="point_of_sale.menu_point_config_product"
-            action="action_restaurant_floor_form"
-            id="menu_restaurant_floor_all"
-            sequence="30"
-            groups="point_of_sale.group_pos_manager"/>
-    </data>
-</openerp>
+    <menuitem
+        id="menu_restaurant_menu"
+        parent="point_of_sale.menu_point_config_product"
+        action="restaurant_floor_action"
+        sequence="30"
+        groups="point_of_sale.group_pos_manager"/>
+</odoo>

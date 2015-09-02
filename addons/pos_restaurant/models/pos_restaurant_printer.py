@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields, osv
+from odoo import fields, models
 
 
-class restaurant_printer(osv.osv):
+class RestaurantPrinter(models.Model):
     _name = 'restaurant.printer'
 
-    _columns = {
-        'name' : fields.char('Printer Name', size=32, required=True, help='An internal identification of the printer'),
-        'proxy_ip': fields.char('Proxy IP Address', size=32, help="The IP Address or hostname of the Printer's hardware proxy"),
-        'product_categories_ids': fields.many2many('pos.category','printer_category_rel', 'printer_id','category_id',string='Printed Product Categories'),
-    }
-
-    _defaults = {
-        'name' : 'Printer',
-    }
+    name = fields.Char(string='Printer Name', required=True, help='An internal identification of the printer', default='Printer')
+    proxy_ip = fields.Char(string='Proxy IP Address', size=32, help="The IP Address or hostname of the Printer's hardware proxy")
+    product_categories_ids = fields.Many2many('pos.category', 'printer_category_rel', 'printer_id', 'category_id', string='Printed Product Categories')
