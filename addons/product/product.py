@@ -470,7 +470,7 @@ class product_template(osv.osv):
         if context is None:
             context = {}
         res = {}
-        partner = context.get('partner')
+        partner = context.get('partner_id')
         minimal_quantity = context.get('quantity', 0.0)
         date = context.get('date', time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         for product in self.browse(cr, uid, ids, context=context):

@@ -51,7 +51,7 @@
 -
   !python {model: product.product}: |
     from openerp.tools import float_compare
-    context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4')})
+    context.update({'quantity':1, 'date': False, 'partner_id': ref('base.res_partner_4')})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
     assert float_compare(product.seller_price, 790, precision_digits=2) == 0, "Wrong cost price: LCD Monitor."
 -
