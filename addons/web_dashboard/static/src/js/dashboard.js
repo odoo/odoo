@@ -15,47 +15,56 @@ var _t = core._t;
 
 var Dashboard = Widget.extend({
     template: 'DashboardMain',
+
     events: {
         'click .o_browse_apps': 'on_new_apps',
     },
+
     start: function(){
-        // Add 'gift' instead of 'share' to enable amazone dashboard
         return this.load(['apps', 'invitations', 'planner', 'share'])
     },
+
     load: function(dashboards){
         var self = this;
         var loading_done = new $.Deferred();
-        session.rpc("/dashboard/data", {}).then(function (data) {
-            var deferred_promises = []
+        session.rpc("/web_settings_dashboard/data", {}).then(function (data) {
+            // Load each dashboard
+            var all_dashboards_defs = []
             _.each(dashboards, function(dashboard) {
-                var def = self[dashboard](data);
-                if (def) {
-                    deferred_promises.push(def);
+                var dashboard_def = self['load_' + dashboard](data);
+                if (dashboard_def) {
+                    all_dashboards_defs.push(dashboard_def);
                 }
-                framework.unblockUI();
             });
-            $.when.apply($, deferred_promises)
-                .then(function() {
-                    loading_done.resolve();
-                });
+
+            // Resolve loading_done when all dashboards defs are resolved 
+            $.when.apply($, all_dashboards_defs).then(function() {
+                loading_done.resolve();
+            });
         });
         return loading_done;
     },
-    apps: function(data){
-        this.$('.o_web_dashboard_apps').append(QWeb.render("DashboardApps", data['apps']));
+
+    load_apps: function(data){
+        this.$('.o_web_settings_dashboard_apps').append(QWeb.render("DashboardApps", data['apps']));
     },
-    share: function(data){
-        return new DashboardShare(this, {}).replace(this.$('.o_web_dashboard_share'));
+
+    load_share: function(data){
+        return new DashboardShare(this, {}).replace(this.$('.o_web_settings_dashboard_share'));
     },
-    invitations: function(data){
-        return new DashboardInvitations(this, data['users_info']).replace(this.$('.o_web_dashboard_invitations'));
+
+    load_invitations: function(data){
+        return new DashboardInvitations(this, data['users_info']).replace(this.$('.o_web_settings_dashboard_invitations'));
     },
-    planner: function(data){
-        return  new DashboardPlanner(this, data['planner']).replace(this.$('.o_web_dashboard_planner'));
+
+    load_planner: function(data){
+        return  new DashboardPlanner(this, data['planner']).replace(this.$('.o_web_settings_dashboard_planner'));
     },
-    gift: function(data){
-        return new DashboardGift(this, data['gift']).replace(this.$('.o_web_dashboard_gift'));
+
+    load_gift: function(data){
+        return new DashboardGift(this, data['gift']).replace(this.$('.o_web_settings_dashboard_gift'));
     },
+
     on_new_apps: function(){
         this.do_action('base.open_module_tree', {
             'additional_context': {'search_default_app': 1, 'search_default_not_installed': 1}
@@ -66,9 +75,8 @@ var Dashboard = Widget.extend({
 var DashboardInvitations = Widget.extend({
     template: 'DashboardInvitations',
     events: {
-        'click .o_send_invitations': 'send_invitations',
-        'click .optional_message_toggler': 'optional_message_toggler',
-        'click .user': 'on_user_clicked',
+        'click .o_web_settings_dashboard_invitations': 'send_invitations',
+        'click .o_web_settings_dashboard_user': 'on_user_clicked',
     },
     init: function(parent, data){
         this.data = data;
@@ -85,14 +93,20 @@ var DashboardInvitations = Widget.extend({
         var is_valid_emails = _.every(user_emails, function(email) {
             return re.test(email);
         });
-        var optional_message = this.$('#optional_message').val();
         if (is_valid_emails) {
+            // Disable button
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
+            // Try to create user accountst
             new Model("res.users")
-                .call("web_dashboard_create_users", [user_emails, optional_message])
+                .call("web_dashboard_create_users", [user_emails])
                 .then(function() {
                     self.reload();
+                })
+                .fail(function() {
+                    // Re-enable button
+                    self.$('.o_web_settings_dashboard_invitations').prop('disabled', false);
+                    self.$('i.fa-cog').addClass('hidden');
                 });
 
         }
@@ -102,6 +116,7 @@ var DashboardInvitations = Widget.extend({
     },
     on_user_clicked: function (e) {
         var self = this;
+        e.preventDefault();
         var user_id = $(e.currentTarget).data('user-id');
         var action = {
             type: 'ir.actions.act_window',
@@ -118,40 +133,42 @@ var DashboardInvitations = Widget.extend({
     reload:function(){
         return this.parent.load(['invitations']);
     },
-    optional_message_toggler: function(){
-        this.$('.optional_message_toggler').remove();
-        this.$('textarea.optional_message').slideToggle("fast");
-    }
 });
 
 var DashboardPlanner = Widget.extend({
+
     template: 'DashboardPlanner',
+
     events: {
-        'click .o_progress_title,.progress': 'on_planner_clicked',
+        'click .o_web_settings_dashboard_progress_title,.progress': 'on_planner_clicked',
     },
+
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
         this.planner_by_menu = {};
         this._super.apply(this, arguments);
     },
+
     willStart:function(){
         var self = this;
         return new Model('web.planner').query().all().then(function(res) {
             self.planners = res;
             _.each(self.planners, function(planner) {
                 self.planner_by_menu[planner.menu_id[0]] = planner;
-                self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(self.planner_by_menu[planner.menu_id[0]].data) || {};
+                self.planner_by_menu[planner.menu_id[0]].data = $.parseJSON(planner.data) || {};
             });
             self.set_overall_progress();
         });
     },
+
     update_planner_progress: function(){
         this.set_overall_progress();
-        this.$('.o_dashboard_planners_list').replaceWith(
+        this.$('.o_web_settings_dashboard_planners_list').replaceWith(
             QWeb.render("DashboardPlanner.PlannersList", {'planners': this.planners})
         );
     },
+
     set_overall_progress: function(){
         var self = this;
         this.sort_planners_list();
@@ -159,25 +176,26 @@ var DashboardPlanner = Widget.extend({
             return planner.progress + memo;
         }, 0) / (self.planners.length || 1);
         self.overall_progress = Math.floor(average);
-        self.$('.o_dashboard_planner_overall_progress').text(self.overall_progress);
+        self.$('.o_web_settings_dashboard_planner_overall_progress').text(self.overall_progress);
     },
+
     sort_planners_list: function(){
-        /* sorted planner in such way so,
-            - partially completed planners displayed first(sorted by name)
-            - fully completed planners displayed at the end
-        */
-        this.planners = _.sortBy(this.planners, function(planner){ return (planner.progress == 100) ? "zz" + planner.name : planner.name});
+        // sort planners alphabetically but with fully completed planners at the end:
+        this.planners = _.sortBy(this.planners, function(planner){return (planner.progress == 100) + planner.name});
     },
+
     on_planner_clicked: function(e){
 
         var menu_id = $(e.currentTarget).attr('data-menu-id');
+        // Setup the planner if we didn't do it yet
         if (this.planner && this.planner.menu_id[0] == menu_id) {
-             this.dialog.$el.modal('show');
+            this.dialog.$el.modal('show');
         }
         else {
             this.setup_planner(menu_id);
         }
     },
+
     setup_planner: function(menu_id){
         var self = this;
         this.planner = self.planner_by_menu[menu_id];
@@ -202,6 +220,7 @@ var DashboardGift = Widget.extend({
         'click .fb_share': 'share_facebook',
         'click .li_share': 'share_linkedin',
     },
+
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
@@ -214,28 +233,32 @@ var DashboardGift = Widget.extend({
     start: function(){
         var self = this;
         return $.when(this._super()).then(function() {
-            var client = new ZeroClipboard(self.$('.o_dashboard_sharearea'));
+            var client = new ZeroClipboard(self.$('.o_web_settings_dashboard_sharearea'));
             client.on("ready", function(readyEvent) {
                 client.on("aftercopy", function(e) {
                     $(e.currentTarget).hide();
-                    self.$('.o_clipbord_success_alert').show();
+                    self.$('.o_web_settings_dashboard_clipbord_success_alert').show();
                 });
             });
-            new ZeroClipboard(self.$('.o_clipbord_success_alert'));
+            new ZeroClipboard(self.$('.o_web_settings_dashboard_clipbord_success_alert'));
         });
     },
+
     share_twitter: function(){
         var popup_url = _.str.sprintf( 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=%s %s',this.share_text,this.share_url);
         this.sharer(popup_url);
     },
+
     share_facebook: function(){
         var popup_url = _.str.sprintf('https://www.facebook.com/sharer/sharer.php?u=%s', encodeURIComponent(this.share_url));
         this.sharer(popup_url);
     },
+
     share_linkedin: function(){
         var popup_url = _.str.sprintf('http://www.linkedin.com/shareArticle?mini=true&url=%s&title=I am using odoo&summary=%s&source=www.odoo.com', encodeURIComponent(this.share_url), this.share_text);
         this.sharer(popup_url);
     },
+
     sharer: function(popup_url){
         window.open(
             popup_url,

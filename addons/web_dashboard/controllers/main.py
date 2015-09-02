@@ -6,8 +6,8 @@ from openerp.http import request
 
 class WebDashboard(http.Controller):
 
-    @http.route('/dashboard/data', type='json', auth='user')
-    def web_dashboard_data(self, **kw):
+    @http.route('/web_settings_dashboard/data', type='json', auth='user')
+    def web_settings_dashboard_data(self, **kw):
 
         installed_apps = request.env['ir.module.module'].search_count([
             ('application', '=',  True),
