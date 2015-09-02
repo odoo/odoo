@@ -17,4 +17,21 @@
         </t>
     </t>
 
+    <!-- duplicate the template extend because qweb don't apply the previous extend on website.contentMenu.dialog.add -->
+    <t t-name="website.contentMenu.dialog.add" t-extend="web_editor.dialog.link">
+        <t t-jquery=".list-group-item.form-group">
+            this.removeClass('active');
+        </t>
+        <t t-jquery=".list-group-item.form-group:has(#link-external)" t-operation="before">
+            <li class="list-group-item form-group">
+                <h4 class="list-group-item-heading">
+                    <label for="link-page" class="control-label">
+                        Page
+                    </label>
+                </h4>
+                <input class="page form-control url-source" id="link-page" type="hidden"/>
+            </li>
+        </t>
+    </t>
+
 </templates>
