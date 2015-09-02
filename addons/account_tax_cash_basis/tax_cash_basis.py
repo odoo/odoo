@@ -29,7 +29,7 @@ class AccountConfigSettings(models.TransientModel):
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Tax Cash Basis Journal", domain=[('type', '=', 'general')])
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', string="Tax Cash Basis Journal")
 
 
 class AccountPartialReconcileCashBasis(models.Model):
