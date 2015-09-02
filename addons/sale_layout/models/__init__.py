@@ -1,1 +1,5 @@
 import sale_layout
+import account_invoice
+import account_invoice_line
+import sale_order
+import sale_order_line
