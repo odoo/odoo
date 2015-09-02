@@ -153,7 +153,7 @@ var QuickCreate = Dialog.extend({
         });
         pop.on('create_completed', self, function() {
             created = true;
-            self.trigger('slowadded');
+            self.trigger('slowadded', id);
         });
         def.then(function() {
             if (created) {
