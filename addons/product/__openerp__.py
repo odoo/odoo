@@ -12,7 +12,7 @@
         'data/product_image_demo.xml',
     ],
     'description': """
-This is the base module for managing products and pricelists in OpenERP.
+This is the base module for managing products and pricelists in Odoo.
 ========================================================================
 
 Products support variants, different pricing methods, vendors information,
@@ -44,10 +44,5 @@ Print product labels with barcode.
         'views/pricelist_report.xml',
         'views/productlabel_report.xml'
     ],
-    'test': [
-        'product_pricelist_demo.yml',
-        'test/product_pricelist.yml',
-    ],
     'installable': True,
-    'auto_install': False,
 }

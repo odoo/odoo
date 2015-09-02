@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
         <menuitem id="base.menu_sale_config_sales" name="Configuration"
             parent="base.menu_base_partner" sequence="100" groups="base.group_configuration"/>
@@ -81,7 +80,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product_pricelist_view_search">
+        <record id="product_pricelist_view_search" model="ir.ui.view">
             <field name="name">product.pricelist.search</field>
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
@@ -165,5 +164,4 @@
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
             parent="product.menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
-    </data>
-</openerp>
+</odoo>

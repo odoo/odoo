@@ -368,7 +368,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
+                qty += inv_line.uom_id._compute_qty_obj(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('move_ids.state')
@@ -452,7 +452,7 @@ class PurchaseOrderLine(models.Model):
             # Fullfill all related procurements with this po line
             diff_quantity = line.product_qty
             for procurement in line.procurement_ids:
-                procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_uom, procurement.product_qty, line.product_uom)
+                procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_qty, line.product_uom)
                 tmp = template.copy()
                 tmp.update({
                     'product_uom_qty': min(procurement_qty, diff_quantity),
@@ -572,7 +572,7 @@ class PurchaseOrderLine(models.Model):
         # Switch quantity to uom_id
         quantity_seller_uom_id = quantity
         if quantity_seller_uom_id and seller_product_uom != product_uom:
-            quantity_seller_uom_id = product_uom._compute_qty_obj(product_uom, quantity_seller_uom_id, seller_product_uom)
+            quantity_seller_uom_id = product_uom._compute_qty_obj(quantity_seller_uom_id, seller_product_uom)
 
         product = product_id.with_context({
             'lang': partner_id.lang,
@@ -584,7 +584,7 @@ class PurchaseOrderLine(models.Model):
         # Switch quantity back in product_uom
         quantity = max(quantity_seller_uom_id, product.seller_qty)
         if quantity and seller_product_uom != product_uom:
-            quantity = seller_product_uom._compute_qty_obj(seller_product_uom, quantity, product_uom)
+            quantity = seller_product_uom._compute_qty_obj(quantity, product_uom)
 
         price_unit = product.seller_price
         if price_unit and seller_currency_id != currency_id:
@@ -631,7 +631,7 @@ class ProcurementOrder(models.Model):
                 others_procs = procurement.purchase_line_id.procurement_ids.filtered(lambda r: r != procurement)
                 for other_proc in others_procs:
                     if other_proc.state not in ['cancel', 'draft']:
-                        product_qty += other_proc.product_uom._compute_qty_obj(other_proc.product_uom, other_proc.product_qty, procurement.purchase_line_id.product_uom)
+                        product_qty += other_proc.product_uom._compute_qty_obj(other_proc.product_qty, procurement.purchase_line_id.product_uom)
 
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if not float_is_zero(product_qty, precision_digits=precision):
