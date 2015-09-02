@@ -27,12 +27,6 @@ class purchase_config_settings(osv.osv_memory):
             ], "Costing Methods",
             implied_group='stock_account.group_inventory_valuation',
             help="""Allows you to compute product cost price based on average cost."""),
-        'module_purchase_double_validation': fields.selection([
-            (0, 'Confirm purchase orders in one step'),
-            (1, 'Get 2 levels of approvals to confirm a purchase order')
-            ], "Levels of Approvals",
-            help='Provide a double validation mechanism for purchases exceeding minimum amount.\n'
-                 '-This installs the module purchase_double_validation.'),
         'module_purchase_requisition': fields.selection([
             (0, 'Purchase propositions trigger draft purchase orders to a single supplier'),
             (1, 'Allow using call for tenders to get quotes from multiple suppliers (advanced)')
