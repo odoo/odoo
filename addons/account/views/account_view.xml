@@ -925,50 +925,6 @@
                                     <field name="amount_type" />
                                     <field name="amount" />
                                 </tree>
-                                <form string="Account Tax">
-                                    <group>
-                                        <group>
-                                            <field name="name"/>
-                                        </group>
-                                        <group>
-                                            <field name="type_tax_use"/>
-                                        </group>
-                                    </group>
-                                    <notebook>
-                                        <page string="Definition">
-                                            <group>
-                                                <group>
-                                                    <field name="amount_type" />
-                                                    <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
-                                                    <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
-                                                        <field name="amount" class="oe_inline" />
-                                                        <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
-                                                    </div>
-                                                    <field name="tax_group_id"/>
-                                                </group>
-                                                <group attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
-                                                    <field name="account_id"/>
-                                                    <field name="refund_account_id"/>
-                                                </group>
-                                            </group>
-                                        </page>
-                                        <page string="Advanced Options">
-                                            <group>
-                                                <group>
-                                                    <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                                    <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
-                                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                                    <field name="active" groups="base.group_no_one"/>
-                                                </group>
-                                                <group>
-                                                    <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                                    <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                                    <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
-                                                </group>
-                                            </group>
-                                        </page>
-                                    </notebook>
-                                </form>
                             </field>
                         </page>
                         <page string="Advanced Options">
@@ -981,7 +937,7 @@
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="active" groups="base.group_no_one"/>
                                 </group>
-                                <group>
+                                <group name="advanced_booleans">
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                 </group>
