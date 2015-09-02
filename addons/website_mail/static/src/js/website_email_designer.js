@@ -333,7 +333,7 @@
                 });
                 if (content) {
                     var size = parseInt(parseFloat($font.css("font-size"))/parseFloat($font.parent().css("font-size")),10);
-                    var src = _.str.sprintf('/website_mail/font_to_img/%s/%s/'+$font.width(), window.encodeURI(content), window.encodeURI($font.css("color")));
+                    var src = _.str.sprintf('/website_mail/font_to_img/%s/%s/'+$font.width(), window.encodeURI(content), window.encodeURI($font.css("color").replace(/\s/g, '')));
                     var $img = $("<img/>").attr("src", src)
                         .attr("data-class", $font.attr("class"))
                         .attr("style", $font.attr("style"))
