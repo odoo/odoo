@@ -16,9 +16,6 @@
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_planner"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col hidden">
-                    <div class="text-center o_web_settings_dashboard_gift"></div>
-                </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_share"></div>
                 </div>
@@ -116,36 +113,8 @@
         </div>
     </t>
 
-    <t t-name="DashboardGift">
-        <div class="text-center o_web_settings_dashboard_gift">
-            <i class="fa fa-gift fa-4x text-muted"></i>
-            <div class="o_web_settings_dashboard_header">
-                $50 Gift Card
-            </div>
-            <div>
-                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                    Get a <strong><a href="http://www.amazon.com/gift-cards/" target="_new">$50 Amazon Gift Card</a></strong> for each customer who subscribes to Odoo through your referral link.
-                </small>
-            </div>
-            <hr/>
-            <strong >Copy &amp; Share this url:</strong>
-            <div class="mt16 alert alert-warning">
-                <span class="o_web_settings_dashboard_sharearea" title="Click here to copy share URL" t-att-data-clipboard-text="widget.share_url"><t t-esc="widget.share_url"/></span>
-                <span class="o_web_settings_dashboard_clipbord_success_alert" t-att-data-clipboard-text="widget.share_url"><i class="fa fa-link"></i> URL copied to clipboard.</span>
-            </div>
-            <h3 class="text-center o_web_settings_dashboard_separator"><span>or</span><hr/></h3>
-
-            <strong class="mt16">Share it directly on:</strong>
-            <div class="row mt16">
-                <div class="col-xs-4"><a><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
-                <div class="col-xs-4"><a><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
-                <div class="col-xs-4"><a><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="DashboardShare">
-        <div class="text-center o_web_settings_dashboard_gift">
+        <div class="text-center o_web_settings_dashboard_share">
             <i class="fa fa-share-alt fa-4x text-muted"/>
             <div class="o_web_settings_dashboard_header">Social Share</div>
             <div>

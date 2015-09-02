@@ -58,10 +58,6 @@ var Dashboard = Widget.extend({
         return  new DashboardPlanner(this, data['planner']).replace(this.$('.o_web_settings_dashboard_planner'));
     },
 
-    load_gift: function(data){
-        return new DashboardGift(this, data['gift']).replace(this.$('.o_web_settings_dashboard_gift'));
-    },
-
     on_new_apps: function(){
         this.do_action('base.open_module_tree', {
             'additional_context': {'search_default_app': 1, 'search_default_not_installed': 1}
@@ -201,8 +197,9 @@ var DashboardPlanner = Widget.extend({
     }
 });
 
-var DashboardGift = Widget.extend({
-    template: 'DashboardGift',
+var DashboardShare = Widget.extend({
+    template: 'DashboardShare',
+
     events: {
         'click .tw_share': 'share_twitter',
         'click .fb_share': 'share_facebook',
@@ -211,24 +208,8 @@ var DashboardGift = Widget.extend({
     init: function(parent, data){
         this.data = data;
         this.parent = parent;
-        this.share_url = _.str.sprintf('http://www.odoo.com/?referral=%s', this.data.user_email);
+        this.share_url = 'http://www.odoo.com/';
         this.share_text = encodeURIComponent("#IamUsingOdoo, an Open-Source Web App that manages my Sales, Projects, Accounting, Website, Warehouse, Shop and more");
-        var ZeroClipboard = window.ZeroClipboard;
-        ZeroClipboard.config({swfPath: location.origin + "/web/static/lib/zeroclipboard/ZeroClipboard.swf" });
-        return this._super.apply(this, arguments);
-    },
-    start: function(){
-        var self = this;
-        return $.when(this._super()).then(function() {
-            var client = new ZeroClipboard(self.$('.o_web_settings_dashboard_sharearea'));
-            client.on("ready", function(readyEvent) {
-                client.on("aftercopy", function(e) {
-                    $(e.currentTarget).hide();
-                    self.$('.o_web_settings_dashboard_clipbord_success_alert').show();
-                });
-            });
-            new ZeroClipboard(self.$('.o_web_settings_dashboard_clipbord_success_alert'));
-        });
     },
     share_twitter: function(){
         var popup_url = _.str.sprintf( 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=%s %s',this.share_text,this.share_url);
@@ -250,24 +231,13 @@ var DashboardGift = Widget.extend({
     }
 });
 
-
-var DashboardShare = DashboardGift.extend({
-    template: 'DashboardShare',
-    init: function(parent, data){
-        this.data = data;
-        this.parent = parent;
-        this.share_url = 'http://www.odoo.com/';
-        this.share_text = encodeURIComponent("#IamUsingOdoo, an Open-Source Web App that manages my Sales, Projects, Accounting, Website, Warehouse, Shop and more");
-    }
-});
-
 core.action_registry.add('web_dashboard.main', Dashboard);
 
 return {
     Dashboard: Dashboard,
     DashboardInvitations: DashboardInvitations,
     DashboardPlanner: DashboardPlanner,
-    DashboardGift: DashboardGift,
+    DashboardShare: DashboardShare,
 };
 
 });
