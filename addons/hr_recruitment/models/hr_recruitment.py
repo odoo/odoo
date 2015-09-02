@@ -290,20 +290,7 @@ class Applicant(models.Model):
         # post processing: if stage changed, post a message in the chatter
         if vals.get('stage_id'):
             if self.stage_id.template_id:
-                # TDENOTE: probably factorize me in a message_post_with_template generic method FIXME
-                composer = self.env['mail.compose.message'].with_context(active_ids=self.ids).create(
-                    {
-                        'model': self._name,
-                        'composition_mode': 'mass_mail',
-                        'template_id': self.stage_id.template_id.id,
-                        'notify': True,
-                    })
-                values = composer.onchange_template_id(
-                    self.stage_id.template_id.id, 'mass_mail', self._name, False)['value']
-                if values.get('attachment_ids'):
-                    values['attachment_ids'] = [(6, 0, values['attachment_ids'])]
-                composer.write(values)
-                composer.send_mail()
+                self.message_post_with_template(self.stage_id.template_id.id, notify=True, composition_mode='mass_mail')
         return res
 
     @api.model

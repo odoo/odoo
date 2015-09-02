@@ -325,22 +325,9 @@ class SaleOrder(models.Model):
         for order in self:
             email_act = order.action_quotation_send()
             if email_act and email_act.get('context'):
-                composer_obj = self.env['mail.compose.message']
                 email_ctx = email_act['context']
-                template_values = [
-                    email_ctx.get('default_template_id'),
-                    email_ctx.get('default_composition_mode'),
-                    email_ctx.get('default_model'),
-                    email_ctx.get('default_res_id'),
-                ]
-                composer_values = composer_obj.onchange_template_id(*template_values).get('value', {})
-                if not composer_values.get('email_from'):
-                    composer_values['email_from'] = order.company_id.email
-                for key in ['attachment_ids', 'partner_ids']:
-                    if composer_values.get(key):
-                        composer_values[key] = [(6, 0, composer_values[key])]
-                composer_id = composer_obj.with_context(email_ctx).create(composer_values)
-                composer_id.with_context(email_ctx).send_mail()
+                email_ctx.update(default_email_from=order.company_id.email)
+                order.with_context(email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
         return True
 
     @api.multi
@@ -784,4 +771,3 @@ class ProductTemplate(models.Model):
          ('delivery', 'Delivered quantities'),
          ('cost', 'Invoice based on time and material')],
         string='Invoicing Policy', default='order')
-

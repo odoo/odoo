@@ -94,18 +94,8 @@ class MailComposer(models.TransientModel):
             result['model'] = 'res.partner'
             result['res_id'] = self.env.user.partner_id.id
 
-        # Override to pre-fill the data when having a template in single-email mode
-        # and not going through the view: the on_change is not called in that case.
-        if result.get('composition_mode') != 'mass_mail' and self._context.get('default_template_id') and result.get('model') and result.get('res_id'):
-            result.update(
-                self.onchange_template_id(
-                    self._context['default_template_id'], result.get('composition_mode'),
-                    result.get('model'), result.get('res_id')
-                )['value']
-            )
         if fields is not None:
             [result.pop(field, None) for field in result.keys() if field not in fields]
-
         return result
 
     @api.model
@@ -330,7 +320,7 @@ class MailComposer(models.TransientModel):
     #------------------------------------------------------
 
     @api.multi
-    @api.onchange('template_id', 'composition_mode', 'model', 'res_id')
+    @api.onchange('template_id')
     def onchange_template_id_wrapper(self):
         self.ensure_one()
         values = self.onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
@@ -340,7 +330,9 @@ class MailComposer(models.TransientModel):
     @api.multi
     def onchange_template_id(self, template_id, composition_mode, model, res_id):
         """ - mass_mailing: we cannot render, so return the template values
-            - normal mode: return rendered values """
+            - normal mode: return rendered values
+            /!\ for x2many field, this onchange return command instead of ids
+        """
         if template_id and composition_mode == 'mass_mail':
             template = self.env['mail.template'].browse(template_id)
             fields = ['subject', 'body_html', 'email_from', 'reply_to', 'mail_server_id']
@@ -373,6 +365,15 @@ class MailComposer(models.TransientModel):
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
+
+        # This onchange should return command instead of ids for x2many field.
+        # ORM handle the assignation of command list on new onchange (api.v8),
+        # this force the complete replacement of x2many field with the (6, 0, ids)
+        # command and is compatible with onchange api.v7
+        for field_name in values.keys():
+            if self._fields[field_name].type == 'many2many' or self._fields[field_name].type == 'one2many':
+                values[field_name] = [(6, 0, values[field_name])]
+
         return {'value': values}
 
     @api.multi
