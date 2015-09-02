@@ -465,7 +465,7 @@ class PurchaseOrderLine(models.Model):
         res = self._get_name_price_quantity_date(
             self.product_id,
             self.partner_id,
-            datetime.strptime(self.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT) if self.order_id.date_order else datetime.today(),
+            self.order_id.date_order and self.order_id.date_order[:10],
             self.product_qty,
             self.product_uom,
             self.order_id.currency_id)
@@ -497,7 +497,6 @@ class PurchaseOrderLine(models.Model):
 
            :param browse_record product_id: product.product, for which we want to
                 get the information
-           :param str lang: language in which we want the product name
            :param browse_record partner_id: res.partner, supplier of the product
            :param str date: order date
            :param float quantity: quantity of product in product_uom UoM
@@ -578,7 +577,7 @@ class ProcurementOrder(models.Model):
                     res = self.env['purchase.order.line']._get_name_price_quantity_date(
                         procurement.product_id,
                         procurement.purchase_line_id.partner_id,
-                        datetime.strptime(procurement.purchase_line_id.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT),
+                        procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
                         product_qty,
                         procurement.product_uom,
                         procurement.purchase_line_id.order_id.currency_id)
@@ -651,7 +650,7 @@ class ProcurementOrder(models.Model):
         res = self.env['purchase.order.line']._get_name_price_quantity_date(
             self.product_id,
             supplier.name,
-            datetime.strptime(po.date_order, DEFAULT_SERVER_DATETIME_FORMAT),
+            po.date_order and po.date_order[:10],
             self.product_qty,
             self.product_uom,
             po.currency_id,
@@ -738,7 +737,7 @@ class ProcurementOrder(models.Model):
                     res = self.env['purchase.order.line']._get_name_price_quantity_date(
                         self.product_id,
                         partner,
-                        datetime.strptime(po.date_order, DEFAULT_SERVER_DATETIME_FORMAT),
+                        po.date_order and po.date_order[:10],
                         line.product_qty + procurement.product_qty,
                         self.product_uom,
                         po.currency_id)

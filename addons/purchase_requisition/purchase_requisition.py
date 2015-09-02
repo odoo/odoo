@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import UserError
@@ -150,7 +150,7 @@ class purchase_requisition(osv.osv):
         res = po_line_obj._get_name_price_quantity_date(cr, uid,
             requisition_line.product_id,
             supplier,
-            date_order,
+            date_order and date_order[:10],
             qty,
             product.uom_po_id,
             po.currency_id,
