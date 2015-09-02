@@ -751,7 +751,7 @@ class mail_message(osv.Model):
         document_related_ids = []
         for model, doc_ids in model_record_ids.items():
             model_obj = self.pool[model]
-            mids = model_obj.exists(cr, uid, list(doc_ids))
+            mids = list(doc_ids)
             if hasattr(model_obj, 'check_mail_message_access'):
                 model_obj.check_mail_message_access(cr, uid, mids, operation, context=context)
             else:
