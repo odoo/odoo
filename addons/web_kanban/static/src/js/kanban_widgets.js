@@ -114,7 +114,7 @@ var KanbanSelection = AbstractField.extend({
             var leg_opt = self.options && self.options.states_legend || null;
             if (leg_opt) {
                 var key = leg_opt[value.name];
-                var legend = self.parent.group_info[key];
+                var legend = self.parent.group_info && self.parent.group_info[key];
                 if (legend) {
                     value.state_name = legend;
                     value.tooltip = legend;
