@@ -190,12 +190,6 @@ class project(osv.osv):
         'date': fields.date('Expiration Date', select=True, track_visibility='onchange'),
      }
 
-    def _get_type_common(self, cr, uid, context):
-        return [(0, 0, {
-            'name': _('New'),
-            'sequence': 1,
-        })]
-
     _order = "sequence, name, id"
     _defaults = {
         'active': True,
@@ -204,7 +198,6 @@ class project(osv.osv):
         'state': 'open',
         'sequence': 10,
         'user_id': lambda self,cr,uid,ctx: uid,
-        'type_ids': _get_type_common,
         'alias_model': 'project.task',
         'privacy_visibility': 'employees',
     }

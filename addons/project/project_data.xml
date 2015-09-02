@@ -106,6 +106,12 @@
             <field name="alias_model">project.task</field>
         </record>
 
+        <record id="project_stage_data_0" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">New</field>
+            <field name="project_ids" eval="[(4, ref('project_project_data'))]"/>
+        </record>
+
         <record id="project_stage_data_1" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Basic</field>
@@ -126,6 +132,7 @@
             <field name="name">Welcome to Odoo</field>
             <field name="description">Welcome! This project has the objective to show you all the main feature in the project app. Each card will help you to manage your projects easily in a few minutes.</field>
             <field name="color">2</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
         <record id="project_task_data_1" model="project.task">
@@ -134,6 +141,7 @@
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">This is a card</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
         <record id="project_task_data_5" model="project.task">
@@ -143,6 +151,7 @@
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">Try to drag a task wherever your want</field>
             <field name="kanban_state">done</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
         <record id="project_task_data_2" model="project.task">
@@ -152,6 +161,7 @@
             <field name="project_id" ref="project.project_project_data"/>
             <field name="name">Guess what happens if you set this task in high priority?</field>
             <field name="description">Click on the star to change the priority and come back in the tasks view. You task is now at the top.</field>
+            <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
         <record id="project_task_data_4" model="project.task">
