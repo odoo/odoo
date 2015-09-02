@@ -442,7 +442,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                qty += inv_line.uom_id._compute_qty_obj(inv_line.uom_id, inv_line.quantity, line.product_uom)
+                qty += inv_line.uom_id._compute_qty_obj(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
     @api.depends('order_id.state', 'move_ids.state')
@@ -566,7 +566,7 @@ class PurchaseOrderLine(models.Model):
             # Fullfill all related procurements with this po line
             diff_quantity = line.product_qty
             for procurement in line.procurement_ids:
-                procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_uom, procurement.product_qty, line.product_uom)
+                procurement_qty = procurement.product_uom._compute_qty_obj(procurement.product_qty, line.product_uom)
                 tmp = template.copy()
                 tmp.update({
                     'product_uom_qty': min(procurement_qty, diff_quantity),
@@ -648,7 +648,6 @@ class PurchaseOrderLine(models.Model):
             return
 
         seller = self.product_id._select_seller(
-            self.product_id,
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
@@ -665,7 +664,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
 
         if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
+            price_unit = seller.product_uom._compute_price(price_unit, to_uom_id=self.product_uom.id)
 
         self.price_unit = price_unit
 
@@ -713,12 +712,11 @@ class ProcurementOrder(models.Model):
                 others_procs = procurement.purchase_line_id.procurement_ids.filtered(lambda r: r != procurement)
                 for other_proc in others_procs:
                     if other_proc.state not in ['cancel', 'draft']:
-                        product_qty += other_proc.product_uom._compute_qty_obj(other_proc.product_uom, other_proc.product_qty, procurement.purchase_line_id.product_uom)
+                        product_qty += other_proc.product_uom._compute_qty_obj(other_proc.product_qty, procurement.purchase_line_id.product_uom)
 
                 precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
                 if not float_is_zero(product_qty, precision_digits=precision):
                     seller = procurement.product_id._select_seller(
-                        procurement.product_id,
                         partner_id=procurement.purchase_line_id.partner_id,
                         quantity=product_qty,
                         date=procurement.purchase_line_id.order_id.date_order and procurement.purchase_line_id.order_id.date_order[:10],
@@ -729,7 +727,7 @@ class ProcurementOrder(models.Model):
                         price_unit = seller.currency_id.compute(price_unit, procurement.purchase_line_id.order_id.currency_id)
 
                     if seller and seller.product_uom != procurement.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=procurement.product_uom.id)
+                        price_unit = seller.product_uom._compute_price(price_unit, to_uom_id=procurement.product_uom.id)
 
                 procurement.purchase_line_id.product_qty = product_qty
                 procurement.purchase_line_id.price_unit = price_unit
@@ -772,7 +770,7 @@ class ProcurementOrder(models.Model):
     @api.v8
     def _get_purchase_order_date(self, schedule_date):
         self.ensure_one()
-        seller_delay = int(self.product_id._select_seller(self.product_id).delay)
+        seller_delay = int(self.product_id._select_seller().delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.v7
@@ -786,7 +784,7 @@ class ProcurementOrder(models.Model):
            :rtype: datetime
            :return: the desired Order Date for the PO
         """
-        seller_delay = int(procurement.product_id._select_seller(procurement.product_id).delay)
+        seller_delay = int(procurement.product_id._select_seller().delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi
@@ -794,7 +792,6 @@ class ProcurementOrder(models.Model):
         self.ensure_one()
 
         seller = self.product_id._select_seller(
-            self.product_id,
             partner_id=supplier.name,
             quantity=self.product_qty,
             date=po.date_order and po.date_order[:10],
@@ -812,7 +809,7 @@ class ProcurementOrder(models.Model):
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
         if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
+            price_unit = seller.product_uom._compute_price(price_unit, to_uom_id=self.product_uom.id)
 
         product_lang = self.product_id.with_context({
             'lang': supplier.name.lang,
@@ -908,7 +905,6 @@ class ProcurementOrder(models.Model):
             for line in po.order_line:
                 if line.product_id == procurement.product_id and line.product_uom == procurement.product_uom:
                     seller = self.product_id._select_seller(
-                        self.product_id,
                         partner_id=partner,
                         quantity=line.product_qty + procurement.product_qty,
                         date=po.date_order and po.date_order[:10],
@@ -919,7 +915,7 @@ class ProcurementOrder(models.Model):
                         price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
                     if seller and self.product_uom and seller.product_uom != self.product_uom:
-                        price_unit = self.env['product.uom']._compute_price(seller.product_uom.id, price_unit, to_uom_id=self.product_uom.id)
+                        price_unit = seller.product_uom._compute_price(price_unit, to_uom_id=self.product_uom.id)
 
                     po_line = line.write({
                         'product_qty': line.product_qty + procurement.product_qty,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!--
     Resource: product.uom.categ
@@ -32,19 +32,19 @@
              Precisions
         -->
 
-        <record forcecreate="True" id="decimal_price" model="decimal.precision">
+        <record id="decimal_price" model="decimal.precision" forcecreate="True">
             <field name="name">Product Price</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="decimal_discount" model="decimal.precision">
+        <record id="decimal_discount" model="decimal.precision" forcecreate="True">
             <field name="name">Discount</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
+        <record id="decimal_stock_weight" model="decimal.precision" forcecreate="True">
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
+        <record id="decimal_product_uom" model="decimal.precision" forcecreate="True">
             <field name="name">Product Unit of Measure</field>
             <field name="digits" eval="3"/>
         </record>
@@ -84,7 +84,7 @@
         </record>
         <record id="product_uom_day" model="product.uom">
             <field name="name">Day(s)</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="category_id" eval="uom_categ_wtime"/>
             <field name="factor" eval="1.0"/>
         </record>
         <record id="product_uom_ton" model="product.uom">
@@ -199,11 +199,11 @@ parameter) will see those record just disappear.
         <!--
         Property
         -->
-        <record forcecreate="True" id="property_product_pricelist" model="ir.property">
+        <record id="property_product_pricelist" model="ir.property" forcecreate="True">
             <field name="name">property_product_pricelist</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
-            <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
+            <field name="value" eval="'product.pricelist,'+str(ref('list0'))"/>
         </record>
 
     </data>
-</openerp>
+</odoo>

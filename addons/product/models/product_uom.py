@@ -1,138 +1,136 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 
-from openerp.exceptions import UserError
-from openerp.tools.float_utils import float_round
 
-#----------------------------------------------------------
-# UOM
-#----------------------------------------------------------
-
-class product_uom_categ(osv.osv):
+class ProductUomCateg(models.Model):
     _name = 'product.uom.categ'
     _description = 'Product uom categ'
-    _columns = {
-        'name': fields.char('Name', required=True, translate=True),
-    }
 
-class product_uom(osv.osv):
+    name = fields.Char(required=True, translate=True)
+
+
+class ProductUom(models.Model):
     _name = 'product.uom'
     _description = 'Product Unit of Measure'
-
-    def _compute_factor_inv(self, factor):
-        return factor and (1.0 / factor) or 0.0
-
-    def _factor_inv(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for uom in self.browse(cursor, user, ids, context=context):
-            res[uom.id] = self._compute_factor_inv(uom.factor)
-        return res
-
-    def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
-        return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
-
-    def name_create(self, cr, uid, name, context=None):
-        """ The UoM category and factor are required, so we'll have to add temporary values
-            for imported UoMs """
-        if not context:
-            context = {}
-        uom_categ = self.pool.get('product.uom.categ')
-        values = {self._rec_name: name, 'factor': 1}
-        # look for the category based on the english name, i.e. no context on purpose!
-        # TODO: should find a way to have it translated but not created until actually used
-        if not context.get('default_category_id'):
-            categ_misc = 'Unsorted/Imported Units'
-            categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
-            if categ_id:
-                values['category_id'] = categ_id[0]
-            else:
-                values['category_id'] = uom_categ.name_create(
-                    cr, uid, categ_misc, context=context)[0]
-        uom_id = self.create(cr, uid, values, context=context)
-        return self.name_get(cr, uid, [uom_id], context=context)[0]
-
-    def create(self, cr, uid, data, context=None):
-        if 'factor_inv' in data:
-            if data['factor_inv'] != 1:
-                data['factor'] = self._compute_factor_inv(data['factor_inv'])
-            del(data['factor_inv'])
-        return super(product_uom, self).create(cr, uid, data, context)
-
     _order = "name"
-    _columns = {
-        'name': fields.char('Unit of Measure', required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
-            help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
-        'factor': fields.float('Ratio', required=True, digits=0, # force NUMERIC with unlimited precision
-            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
-                    '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits=0, # force NUMERIC with unlimited precision
-            fnct_inv=_factor_inv_write,
-            string='Bigger Ratio',
-            help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
-                    '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits=0, required=True,
-            help="The computed quantity will be a multiple of this value. "\
-                 "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
-        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
-        'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
-                                      ('reference','Reference Unit of Measure for this category'),
-                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
-    }
 
-    _defaults = {
-        'active': 1,
-        'rounding': 0.01,
-        'factor': 1,
-        'uom_type': 'reference',
-        'factor': 1.0,
-    }
+    name = fields.Char(string='Unit of Measure', required=True, translate=True)
+    category_id = fields.Many2one('product.uom.categ', string='Unit of Measure Category', required=True, ondelete='cascade',
+        help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
+    factor = fields.Float(string='Ratio', required=True, digits=0,  # force NUMERIC with unlimited precision
+        help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
+                '1 * (reference unit) = ratio * (this unit)', default=1)
+    factor_inv = fields.Float(compute='_compute_factor_inv', digits=0,  # force NUMERIC with unlimited precision
+        inverse='_compute_factor_inv_write', string='Bigger Ratio',
+        help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
+                '1 * (this unit) = ratio * (reference unit)', required=True)
+    rounding = fields.Float(string='Rounding Precision', digits=0, required=True,
+        help="The computed quantity will be a multiple of this value. "\
+             "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece.", default=0.01)
+    active = fields.Boolean(help="By unchecking the active field you can disable a unit of measure without deleting it.", default=True)
+    uom_type = fields.Selection([('bigger', 'Bigger than the reference Unit of Measure'),
+                                  ('reference', 'Reference Unit of Measure for this category'),
+                                  ('smaller', 'Smaller than the reference Unit of Measure')], string='Type', required=True, default='reference')
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
-        if not from_uom_id or not qty or not to_uom_id:
-            return qty
-        uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
-        if uoms[0].id == from_uom_id:
-            from_unit, to_unit = uoms[0], uoms[-1]
-        else:
-            from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round, rounding_method=rounding_method)
+    def _get_factor_inv(self, factor):
+        return factor and (1.0 / factor) or 0.0
 
+    @api.depends('factor')
+    def _compute_factor_inv(self):
+        for uom in self:
+            uom.factor_inv = self._get_factor_inv(uom.factor)
+
+    def _compute_factor_inv_write(self):
+        for uom in self:
+            uom.factor = self._get_factor_inv(uom.factor)
+
+    @api.model
+    def name_create(self, name):
+        """ The UoM category and factor are required, so we'll have to add temporary values
+             for imported UoMs """
+
+        ProductUomCateg = self.env['product.uom.categ']
+        # look for the category based on the english name, i.e. no context on purpose!
+        # TODO: should find a way to have it translated but not created until actually used
+        categ_misc = 'Unsorted/Imported Units'
+        categ_id = ProductUomCateg.search([('name', '=', categ_misc)], limit=1).id
+        if not categ_id:
+            categ_id, _ = ProductUomCateg.name_create(categ_misc)
+        product_uom = self.create({self._rec_name: name,
+                                        'category_id': categ_id,
+                                        'factor': 1})
+        return product_uom.name_get()[0]
+
+    @api.v7
+    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True, rounding_method='UP'):
+        from_uom = self.browse(cr, uid, from_uom_id)
+        return from_uom._compute_qty(qty, to_uom_id=to_uom_id, round=round, rounding_method=rounding_method)
+
+    @api.v8
+    def _compute_qty(self, qty, to_uom_id=False, round=True, rounding_method='UP'):
+        if not self or not qty or not to_uom_id:
+            return qty
+        to_uom = self.browse(to_uom_id)
+        if to_uom == self:
+            from_unit, to_unit = to_uom, self
+        else:
+            from_unit, to_unit = self, to_uom
+        return from_unit._compute_qty_obj(qty, to_unit, round=round, rounding_method=rounding_method)
+
+    @api.v7
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, rounding_method='UP', context=None):
-        if context is None:
-            context = {}
-        if from_unit.category_id.id != to_unit.category_id.id:
-            if context.get('raise-exception', True):
-                raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name, to_unit.name))
+        return from_unit._compute_qty_obj(qty, to_unit, round=round, rounding_method=rounding_method)
+
+    @api.v8
+    def _compute_qty_obj(self, qty, to_unit, round=True, rounding_method='UP'):
+        if self.category_id != to_unit.category_id:
+            if self.env.context.get('raise-exception', True):
+                raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (self.name, to_unit.name))
             else:
                 return qty
-        amount = qty/from_unit.factor
+        amount = qty/self.factor
         if to_unit:
             amount = amount * to_unit.factor
             if round:
                 amount = float_round(amount, precision_rounding=to_unit.rounding, rounding_method=rounding_method)
         return amount
 
+    @api.v7
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
-        if (not from_uom_id or not price or not to_uom_id
-                or (to_uom_id == from_uom_id)):
+        from_unit = self.browse(cr, uid, from_uom_id)
+        return from_unit._compute_price(price, to_uom_id=to_uom_id)
+
+    @api.v8
+    def _compute_price(self, price, to_uom_id=False):
+        if (not price or not to_uom_id
+                or (to_uom_id == self.id)):
             return price
-        from_unit, to_unit = self.browse(cr, uid, [from_uom_id, to_uom_id])
-        if from_unit.category_id.id != to_unit.category_id.id:
+        to_unit = self.browse(to_uom_id)
+        if self.category_id != to_unit.category_id:
             return price
-        amount = price * from_unit.factor
+        amount = price * self.factor
         if to_uom_id:
             amount = amount / to_unit.factor
         return amount
 
-    def onchange_type(self, cursor, user, ids, value):
-        if value == 'reference':
-            return {'value': {'factor': 1, 'factor_inv': 1}}
-        return {}
+    @api.onchange('uom_type')
+    def onchange_type(self):
+        if self.uom_type == 'reference':
+            self.factor = 1
+            self.factor_inv = 1
+
+    @api.model
+    def create(self, vals):
+        if 'factor_inv' in vals:
+            if vals['factor_inv'] != 1:
+                vals['factor'] = self._get_factor_inv(vals['factor_inv'])
+            del(vals['factor_inv'])
+        return super(ProductUom, self).create(vals)

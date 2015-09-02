@@ -35,8 +35,8 @@ Print product labels with barcode.
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'wizard/product_price_views.xml',
-        'views/res_config_views.xml',
         'data/product_data.xml',
+        'views/res_config_views.xml',
         'report/product_report.xml',
         'views/product_views.xml',
         'views/pricelist_views.xml',
@@ -47,7 +47,5 @@ Print product labels with barcode.
     'test': [
         'product_pricelist_demo.yml',
         'test/product_pricelist.yml',
-    ],
-    'installable': True,
-    'auto_install': False,
+    ]
 }

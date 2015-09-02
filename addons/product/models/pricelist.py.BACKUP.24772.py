@@ -125,8 +125,13 @@ class ProductPricelist(models.Model):
             'AND (categ_id IS NULL OR categ_id = any(%s)) '
             'AND (pricelist_id = %s) '
             'AND ((i.date_start IS NULL OR i.date_start<=%s) AND (i.date_end IS NULL OR i.date_end>=%s))'
+<<<<<<< HEAD
             'ORDER BY applied_on, min_quantity desc',
+            (prod_tmpl_ids, prod_ids, categ_ids, pricelist.id, date, date))
+=======
+            'ORDER BY sequence, applied_on, min_quantity desc',
             (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
+>>>>>>> 3778af7... [MIG] PRODUCT: Migrated into new api.
 
         item_ids = [x[0] for x in self.env.cr.fetchall()]
         pricelist_items = self.env['product.pricelist.item'].browse(item_ids)
