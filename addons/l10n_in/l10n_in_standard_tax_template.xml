@@ -8,8 +8,32 @@
         <field name="name">(standard)Input Excise Duty @ 12.36%</field>
         <field name="applicability">taxes</field>
     </record>
+    <record id="st_tax_tag_01a" model="account.account.tag">
+        <field name="name">(standard)Input Excise Duty @ 12.36% - 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_01b" model="account.account.tag">
+        <field name="name">(standard)Input Excise Duty @ 12.36% - 2%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_01c" model="account.account.tag">
+        <field name="name">(standard)Input Excise Duty @ 12.36% - 1%</field>
+        <field name="applicability">taxes</field>
+    </record>
     <record id="st_tax_tag_02" model="account.account.tag">
         <field name="name">(standard)Output Excise Duty @ 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_02a" model="account.account.tag">
+        <field name="name">(standard)Output Excise Duty @ 12.36% - 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_02b" model="account.account.tag">
+        <field name="name">(standard)Output Excise Duty @ 12.36% - 2%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_02c" model="account.account.tag">
+        <field name="name">(standard)Output Excise Duty @ 12.36% - 1%</field>
         <field name="applicability">taxes</field>
     </record>
     <record id="st_tax_tag_03" model="account.account.tag">
@@ -40,8 +64,32 @@
         <field name="name">(standard)Input Service Tax @ 12.36%</field>
         <field name="applicability">taxes</field>
     </record>
+    <record id="st_tax_tag_09a" model="account.account.tag">
+        <field name="name">(standard)Input Service Tax @ 12.36% - 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_09b" model="account.account.tag">
+        <field name="name">(standard)Input Service Tax @ 12.36% - 2%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_09c" model="account.account.tag">
+        <field name="name">(standard)Input Service Tax @ 12.36% - 1%</field>
+        <field name="applicability">taxes</field>
+    </record>
     <record id="st_tax_tag_10" model="account.account.tag">
         <field name="name">(standard)Output Service Tax @ 12.36%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_10a" model="account.account.tag">
+        <field name="name">(standard)Output Service Tax @ 12.36% - 12%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_10b" model="account.account.tag">
+        <field name="name">(standard)Output Service Tax @ 12.36% - 2%</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_10c" model="account.account.tag">
+        <field name="name">(standard)Output Service Tax @ 12.36% - 1%</field>
         <field name="applicability">taxes</field>
     </record>
     <record id="st_tax_tag_11" model="account.account.tag">
@@ -92,7 +140,14 @@
         <field name="name">(standard)Additional Output VAT @ 2.5%</field>
         <field name="applicability">taxes</field>
     </record>
-
+    <record id="st_tax_tag_23" model="account.account.tag">
+        <field name="name">(standard)Output Sales Tax @ 2% Against C Form</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="st_tax_tag_24" model="account.account.tag">
+        <field name="name">(standard)Input Sales Tax @ 2% Against C Form</field>
+        <field name="applicability">taxes</field>
+    </record>
     <!-- Account Tax Templates -->
 
     <record id="input_tax_15" model="account.tax.template">
@@ -201,6 +256,7 @@
         <field name="account_id" ref="p112331"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_01a')])]"/>
     </record>
     <record id="sale_edu_cess_Excise_Duty_2" model="account.tax.template">
         <field name="name">(standard)Input Education Cess @ 2% On Excise Duty</field>
@@ -211,6 +267,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="p112332"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_01b')])]"/>
     </record>
     <record id="sale_hedu_cess_Excise_Duty_1" model="account.tax.template">
         <field name="name">(standard)Input Higher Education Cess @ 1% On Excise Duty</field>
@@ -221,6 +278,7 @@
         <field name="sequence">3</field>
         <field name="account_id" ref="p112333"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_01c')])]"/>
     </record>
     <record id="sale_Excise_Duty_12" model="account.tax.template">
         <field name="name">(standard)Input Excise Duty @ 12.36%</field>
@@ -245,6 +303,7 @@
         <field name="account_id" ref="p112341"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_09a')])]"/>
     </record>
     <record id="sale_edu_cess_service_tax_2" model="account.tax.template">
         <field name="name">(standard)Input Education Cess @ 2% On Service Tax</field>
@@ -255,16 +314,18 @@
         <field name="sequence">14</field>
         <field name="account_id" ref="p112342"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_09b')])]"/>
     </record>
     <record id="sale_high_edu_service_tax_1" model="account.tax.template">
         <field name="name">(standard)Input Higher Education Cess @ 1% On Service Tax</field>
         <field name="description">(standard)Input Higher Education Cess @ 1% On Service Tax</field>
         <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">0.12</field>
+        <field name="amount">0.1224</field>
         <field name="sequence">15</field>
         <field name="account_id" ref="p112343"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_09c')])]"/>
     </record>
     <record id="sale_service_tax_12" model="account.tax.template">
         <field name="name">(standard)Input Service Tax @ 12.36%</field>
@@ -290,6 +351,7 @@
         <field name="account_id" ref="p11235"/>
         <field name="refund_account_id" ref="p20011"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_24')])]"/>
     </record>
     <record id="input_vat_4" model="account.tax.template">
         <field name="name">(standard)Input VAT @ 4%</field>
@@ -411,26 +473,29 @@
         <field name="account_id" ref="p100521"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_02a')])]"/>
     </record>
     <record id="purchase_edu_cess_Excise_Duty_2" model="account.tax.template">
         <field name="name">(standard)Output Education Cess @ 2% Excise Duty</field>
         <field name="description">(standard)Output Education Cess @ 2% Excise Duty</field>
         <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">2</field>
+        <field name="amount">0.24</field>
         <field name="sequence">3</field>
         <field name="account_id" ref="p100522"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_02b')])]"/>
     </record>
     <record id="purchase_hedu_cess_Excise_Duty_1" model="account.tax.template">
         <field name="name">(standard)Output Higher Education Cess @ 1% Excise Duty</field>
         <field name="description">(standard)Output Higher Education Cess @ 1% Excise Duty</field>
         <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">1</field>
+        <field name="amount">0.1224</field>
         <field name="sequence">4</field>
         <field name="account_id" ref="p100523"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_02c')])]"/>
     </record>
     <record id="purchase_Excise_Duty_12" model="account.tax.template">
         <field name="name">(standard)Output Excise Duty @ 12.36%</field>
@@ -456,26 +521,29 @@
         <field name="account_id" ref="p100531"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_10a')])]"/>
     </record>
     <record id="purchase_edu_cess_service_tax_2" model="account.tax.template">
         <field name="name">(standard)Output Education Cess @ 2% On Service Tax</field>
         <field name="description">(standard)Output Education Cess @ 2% On Service Tax</field>
         <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">2</field>
+        <field name="amount">0.24</field>
         <field name="sequence">10</field>
         <field name="account_id" ref="p100532"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_10b')])]"/>
     </record>
     <record id="purchase_high_edu_service_tax_1" model="account.tax.template">
         <field name="name">(standard)Output Higher Education Cess @ 1% On Service Tax</field>
         <field name="description">(standard)Output Higher Education Cess @ 1% On Service Tax</field>
         <field name="type_tax_use">none</field>
         <field name="amount_type">percent</field>
-        <field name="amount">1</field>
+        <field name="amount">0.1224</field>
         <field name="sequence">11</field>
         <field name="account_id" ref="p100533"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_10c')])]"/>
     </record>
     <record id="st_purchase_service_tax_12" model="account.tax.template">
         <field name="name">(standard)Output Service Tax @ 12.36%</field>
@@ -513,6 +581,7 @@
         <field name="account_id" ref="p10050"/>
         <field name="refund_account_id" ref="p2107"/>
         <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tag_ids" eval="[(6,0,[ref('st_tax_tag_23')])]"/>
     </record>
 
     </data>
