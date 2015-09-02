@@ -4,6 +4,7 @@ odoo.define('barcodes.FormViewBarcodeHandler', function(require) {
 var core = require('web.core');
 var utils = require('web.utils');
 var common = require('web.form_common');
+var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 
 var _t = core._t;
@@ -42,6 +43,8 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         var action = this.map_barcode_method[barcode];
         if (typeof action === "function")
             return $.when(action());
+        if (_.any(BarcodeEvents.ReservedBarcodePrefixes, function(prefix) { return barcode.indexOf(prefix) === 0 }))
+            return;
         // Warn the user if form view is not editable
         else if (this.form_view.get('actual_mode') === 'view')
             this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));

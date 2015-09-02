@@ -1,4 +1,4 @@
-odoo.define('web.BarcodeEvents', function(require) {
+odoo.define('barcodes.BarcodeEvents', function(require) {
 "use strict";
 
 var core = require('web.core');
@@ -164,6 +164,11 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 });
 
-return new BarcodeEvents();
+return {
+    // Singleton that emits barcode_scanned events on core.bus
+    BarcodeEvents: new BarcodeEvents(),
+    // List of barcode prefixes that are reserved for internal purposes
+    ReservedBarcodePrefixes: ['O-CMD'],
+};
 
 });
