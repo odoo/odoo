@@ -2,6 +2,7 @@ odoo.define('barcode.InheritedFormWidgetButton', function (require) {
 "use strict";
 
 var widgets = require('web.form_widgets');
+var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 
 // If the button has a barcode_trigger attribute, dynamically inherit
@@ -23,6 +24,8 @@ var ButtonBarcodeHandlerMixin = _.extend({}, BarcodeHandlerMixin, {
         }
     },
 });
+
+BarcodeEvents.ReservedBarcodePrefixes.push('O-BTN');
 
 widgets.WidgetButton.include(ButtonBarcodeHandlerMixin);
 
