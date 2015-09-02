@@ -40,7 +40,7 @@
         <menuitem
             id="menu_stock_unit_measure_stock" name="Units of Measure"
             parent="stock.menu_product_in_config_stock"  sequence="35" groups="product.group_uom"/>
-        
+
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
             <field name="model">stock.inventory.line</field>
@@ -173,7 +173,7 @@
             <field name="search_view_id" ref="view_inventory_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to start an inventory. 
+                Click to start an inventory.
               </p><p>
                 Periodical Inventories are used to count the number of products
                 available per location. You can use it once a year when you do
@@ -311,8 +311,8 @@
             <field name="arch" type="xml">
                 <form string="Stock Location">
                     <div class="oe_button_box" name="button_box">
-                        <button string="Current Stock" 
-                                class="oe_stat_button" 
+                        <button string="Current Stock"
+                                class="oe_stat_button"
                                 icon="fa-building-o" name="%(location_open_quants)d" type="action"
                                 context="{'search_default_internal_loc': 1}"/>
                         <button string="Products"
@@ -378,7 +378,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_putaway" model="ir.ui.view">
             <field name="name">product.putaway.form</field>
             <field name="model">product.putaway</field>
@@ -393,8 +393,8 @@
                        <field name="fixed_location_ids" colspan="4" nolabel="1">
                            <tree editable="top">
                                <field name="sequence" widget='handle'/>
-                               <field name="category_id"/> 
-                               <field name="fixed_location_id"/> 
+                               <field name="category_id"/>
+                               <field name="fixed_location_id"/>
                            </tree>
                        </field>
                    </div>
@@ -484,8 +484,8 @@
                         <div class="oe_inline" colspan="2">
                             <p attrs="{'invisible':[('parent_id','=',False)]}">
                             The following routes will apply to the products in this category taking into account parent categories:
-                            </p>
                             <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
+                            </p>
                         </div>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
                     </group>
@@ -511,7 +511,7 @@
                 vendors) and virtual locations which are the counterpart of
                 the stock operations like the manufacturing orders
                 consumptions, inventories, etc.
-              </p><p>  
+              </p><p>
                 Every stock operation in Odoo moves the products from one
                 location to another one.  For instance, if you receive products
                 from a vendor, Odoo will move products from the Vendor
@@ -537,11 +537,11 @@
                 <form string="Warehouse">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="view_all_routes_for_wh" 
+                            <button name="view_all_routes_for_wh"
                                     string="Routes"
                                     icon="fa-refresh"
-                                    class="oe_stat_button" 
-                                    type="object"/> 
+                                    class="oe_stat_button"
+                                    type="object"/>
                         </div>
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -560,7 +560,7 @@
                                     <field name="reception_steps" widget='radio'/>
                                     <field name="delivery_steps" widget='radio'/>
                                     <field name="default_resupply_wh_id" widget='selection' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
-                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/> 
+                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes' on_change="onchange_filter_default_resupply_wh_id(default_resupply_wh_id, resupply_wh_ids)"/>
                                 </group>
                             </page>
                             <page string="Technical Information" groups='base.group_no_one'>
@@ -989,7 +989,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1014,7 +1014,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1038,7 +1038,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1062,7 +1062,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
              <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1087,7 +1087,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1111,7 +1111,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1136,7 +1136,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1161,7 +1161,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1184,7 +1184,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a stock operation. 
+                Click to create a stock operation.
               </p><p>
                 Most operations are prepared automatically by Odoo according
                 to your preconfigured logistics rules, but you can also record
@@ -1193,7 +1193,7 @@
             </field>
         </record>
 
-        
+
         <record id="action_picking_form" model="ir.actions.act_window">
             <field name="name">New Transfer</field>
             <field name="res_model">stock.picking</field>
@@ -1210,7 +1210,7 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click here to create a new transfer.  
+                Click here to create a new transfer.
               </p><p>
                 You can either do it immediatly or mark it as Todo for future processing. Use your scanner to validate the transferred quantity quicker.
               </p>
@@ -1454,7 +1454,7 @@
               </p>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window.view" id="action_stock_move_tree_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -1545,7 +1545,7 @@
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a product receipt. 
+                Click to register a product receipt.
               </p><p>
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
@@ -1659,12 +1659,12 @@
             <field name="domain">[('code', '!=', 'internal')]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new picking type. 
+                Click to create a new picking type.
               </p><p>
                 The picking type system allows you to assign each stock
-                operation a specific type which will alter its views accordingly.  
-                On the picking type you could e.g. specify if packing is needed by default, 
-                if it should show the customer.  
+                operation a specific type which will alter its views accordingly.
+                On the picking type you could e.g. specify if packing is needed by default,
+                if it should show the customer.
               </p>
             </field>
         </record>
@@ -1677,12 +1677,12 @@
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new picking type. 
+                Click to create a new picking type.
               </p><p>
                 The picking type system allows you to assign each stock
-                operation a specific type which will alter its views accordingly.  
-                On the picking type you could e.g. specify if packing is needed by default, 
-                if it should show the customer.  
+                operation a specific type which will alter its views accordingly.
+                On the picking type you could e.g. specify if packing is needed by default,
+                if it should show the customer.
               </p>
             </field>
         </record>
@@ -1702,7 +1702,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_picking_type_list" model="ir.actions.act_window">
             <field name="name">All Operations</field>
             <field name="res_model">stock.picking.type</field>
@@ -1715,7 +1715,7 @@
               </p><p>
                     You can either do it immediatly or mark it as Todo for future processing.
               </p><p>
-                    Use your scanner to validate the transferred quantity quicker. 
+                    Use your scanner to validate the transferred quantity quicker.
               </p>
             </field>
 
@@ -1736,12 +1736,12 @@
             name="Dashboard"
             groups="stock.group_locations"/>
 
-        <menuitem 
-            id="menu_pickingtype" 
-            name="Types of Operation" 
-            parent="stock.menu_stock_config_settings" 
+        <menuitem
+            id="menu_pickingtype"
+            name="Types of Operation"
+            parent="stock.menu_stock_config_settings"
             action="action_picking_type_list" />
-        
+
 
         <!-- Order Point -->
         <record id="do_view_procurement_op" model="ir.actions.act_window">
@@ -1793,7 +1793,7 @@
                 <form string="Reordering Rules">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="%(stock.do_view_procurement_op)d" type="action" string="Procurements" class="oe_stat_button" icon="fa-refresh"/>
+                            <button name="action_view_proc_to_process" type="object" string="Procurement Orders to Process"/>
                         </div>
                         <group>
                             <group>
@@ -1927,7 +1927,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="procrules">
             <field name="context">{'search_default_route_false':1}</field>
             <field name="name">Procurement Rules</field>
@@ -1939,7 +1939,7 @@
             <field name="name">Push Rules</field>
             <field name="res_model">stock.location.path</field>
         </record>
-        
+
         <record id="quant_search_view" model="ir.ui.view">
             <field name="name">stock.quant.search</field>
             <field name="model">stock.quant</field>
@@ -1969,7 +1969,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="quantsact">
             <field name="name">Quants</field>
             <field name="res_model">stock.quant</field>
@@ -2084,7 +2084,7 @@
            <field name="domain">[('product_id', '=', active_id)]</field>
             <field name="res_model">stock.quant</field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_quant_package_form">
             <field name="name">stock.quant.package.form</field>
             <field name="model">stock.quant.package</field>
@@ -2095,7 +2095,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="unpack" string="Unpack" type="object" groups="base.group_no_one"/>
                             <button class="oe_stat_button" name="%(action_picking_tree_all)d"
-                            string="Package Transfers" type="action" 
+                            string="Package Transfers" type="action"
                             widget="statinfo" icon="fa-dropbox"/>
                             <button name="get_content_package" type="object" string="View Contained Packages content" icon="gtk-execute" attrs="{'invisible': [('children_ids','=',[])]}"/>
                         </div>
@@ -2135,13 +2135,13 @@
                                     </tree>
                                 </field>
                             </page>
-                        </notebook> 
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record model="ir.ui.view" id="view_quant_package_tree">
             <field name="name">stock.quant.package.tree</field>
             <field name="model">stock.quant.package</field>
@@ -2186,8 +2186,8 @@
         <menuitem id="menu_packagings" name="Packagings" parent="stock.menu_warehouse_report" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
         <menuitem id="menu_packagings_config" name="Packagings" parent="menu_packs_config" action="product.action_packaging_view" groups="product.group_stock_packaging" sequence="3"/>
 
-        
-        
+
+
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
             <field name="name">stock.location.route.tree</field>
@@ -2249,7 +2249,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_routes_form" model="ir.actions.act_window">
             <field name="name">Routes</field>
             <field name="res_model">stock.location.route</field>
@@ -2267,7 +2267,7 @@
                     on procurement or sales order. </p>
             </field>
         </record>
-        
+
         <menuitem action="action_routes_form" id="menu_stock_routes"
             parent="stock.menu_routes_config" sequence="1" />
 
@@ -2276,7 +2276,7 @@
             <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-        <field name="domain">[('group_id','=',active_id)]</field>
+            <field name="domain">[('group_id','=',active_id)]</field>
         </record>
         <record id="procurement_group_form_view_herited" model="ir.ui.view">
             <field name="name">procurement.group.form.herited</field>
@@ -2292,6 +2292,6 @@
         <!-- Barcode Nomenclatures -->
         <menuitem parent="menu_stock_config_settings" action="barcodes.action_barcode_nomenclature_form" id="menu_wms_barcode_nomenclature_all"
             sequence="50" groups="base.group_no_one"/>
-       
+
     </data>
 </openerp>
