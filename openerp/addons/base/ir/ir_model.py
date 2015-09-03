@@ -205,7 +205,7 @@ class ir_model_fields(osv.osv):
     _rec_name = 'field_description'
 
     _columns = {
-        'name': fields.char('Name', required=True, select=1),
+        'name': fields.char('Field Name', required=True, select=1),
         'complete_name': fields.char('Complete Name', select=1),
         'model': fields.char('Object Name', required=True, select=1,
             help="The technical name of the model this field belongs to"),
