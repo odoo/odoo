@@ -185,8 +185,7 @@ class lang(osv.osv):
         if 'active' in vals:
             users = self.pool.get('res.users')
             trans_obj = self.pool.get('ir.translation')
-            for id in ids:
-                language = self.browse(cr, uid, id, context=context)
+            for language in self.browse(cr, uid, ids, context=context):
                 user_lang = users.search_count(cr, uid, [('lang', '=', language.code)], context=context)
                 if vals['active'] is False and user_lang:
                     raise UserError(_("Cannot unactivate a language that is currently used by users."))

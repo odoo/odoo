@@ -22,22 +22,30 @@
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
                 <form string="Languages">
-                   <sheet>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-check">
+                            <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
                     <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="code" />
+                        <field name="code"/>
                         <field name="iso_code"/>
+                        <field name="translatable"/>
                         <newline/>
-                        <field name="grouping" />
+                        <field name="grouping"/>
                         <field name="date_format"/>
                         <field name="time_format"/>
                         <newline/>
-                        <field name="direction" />
+                        <field name="direction"/>
                         <field name="decimal_point"/>
                         <field name="thousands_sep"/>
                         <newline/>
-                        <field name="active" widget="toggle_button"/>
-                        <field name="translatable"/>
+                        <field name="position"/>
                     </group>
                     <separator colspan="4" string="Legends for supported Date and Time Formats"/>
                     <group col="4" colspan="4">
@@ -83,7 +91,7 @@
                         <label align="0.0" string="9. %%w              ==> 5 ( Friday is the 6th day)"/>
                         <newline/>
                     </group>
-                  </sheet>
+                </sheet>
                 </form>
             </field>
         </record>
