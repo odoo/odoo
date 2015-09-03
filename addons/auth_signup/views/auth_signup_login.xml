@@ -19,7 +19,7 @@
             <div class="form-group field-name">
                 <label for="name" class="control-label">Your Name</label>
                 <input type="text" name="name" t-att-value="name" id="name" class="form-control" placeholder="e.g. John Doe"
-                    required="required" t-att-readonly="'readonly' if (only_passwords and name != login) else None"
+                    required="required" t-att-readonly="'readonly' if only_passwords else None"
                     t-att-autofocus="'autofocus' if login and not only_passwords else None" />
             </div>
 
