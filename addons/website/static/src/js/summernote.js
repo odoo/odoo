@@ -595,9 +595,9 @@ define(['summernote/editing/Editor', 'summernote/summernote'], function (Editor)
                 sc = $("<br/>")[0];
                 so = 0;
                 $(ancestor).prepend(sc);
-            } else if (before) {
+            } else if (dom.isText(sc)) {
                 var text = sc.textContent.replace(/[ \t\n\r]+$/, '\u00A0');
-                so -= sc.textContent.length - text.length;
+                so = Math.min(so, text.length);
                 sc.textContent = text;
             }
 
