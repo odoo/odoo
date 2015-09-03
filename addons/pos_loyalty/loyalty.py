@@ -71,7 +71,7 @@ class loyalty_reward(osv.osv):
         'minimum_points':       fields.float('Minimum Points', help='The minimum amount of points the customer must have to qualify for this reward'),
         'type':                 fields.selection((('gift','Gift'),('discount','Discount'),('resale','Resale')), 'Type', required=True, help='The type of the reward'),
         'gift_product_id':           fields.many2one('product.product','Gift Product', help='The product given as a reward'),
-        'point_cost':           fields.float('Point Cost', help='The cost of the reward'),
+        'point_cost':           fields.float('Point Cost', help='The cost of the reward per monetary unit discounted'),
         'discount_product_id':  fields.many2one('product.product','Discount Product', help='The product used to apply discounts'),
         'discount':             fields.float('Discount',help='The discount percentage'),
         'point_product_id':    fields.many2one('product.product', 'Point Product', help='The product that represents a point that is sold by the customer'),
