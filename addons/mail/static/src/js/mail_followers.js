@@ -94,7 +94,14 @@ var Followers = form_common.AbstractField.extend({
         });
 
         // event: click on 'invite' button, that opens the invite wizard
-        this.$el.on('click', '.o_add_follower', self.on_invite_follower);
+        this.$el.on('click', '.o_add_follower', function(e){
+            e.preventDefault();
+            self.on_invite_follower(false);
+        });
+        this.$el.on('click', '.o_add_follower_channel', function(e){
+            e.preventDefault();
+            self.on_invite_follower(true);
+        });
 
         // event: click on 'edit_subtype(pencil)' button to edit subscription
         this.$el.on('click', '.o_edit_subtype', self.on_edit_subtype);
@@ -126,9 +133,8 @@ var Followers = form_common.AbstractField.extend({
         return self.fetch_subtypes(user_pid);
     },
 
-    on_invite_follower: function (event) {
+    on_invite_follower: function (channel_only) {
         var self = this;
-        event.preventDefault();
         var action = {
             type: 'ir.actions.act_window',
             res_model: 'mail.wizard.invite',
@@ -140,6 +146,7 @@ var Followers = form_common.AbstractField.extend({
             context: {
                 'default_res_model': this.view.dataset.model,
                 'default_res_id': this.view.datarecord.id,
+                'mail_invite_follower_channel_only': channel_only,
             },
         };
         this.do_action(action, {
