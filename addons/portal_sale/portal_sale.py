@@ -22,14 +22,14 @@ class sale_order(osv.Model):
             pass
         return action_dict
 
-    def action_button_confirm(self, cr, uid, ids, context=None):
+    def action_confirm(self, cr, uid, ids, context=None):
         # fetch the partner's id and subscribe the partner to the sale order
         assert len(ids) == 1
         document = self.browse(cr, uid, ids[0], context=context)
         partner = document.partner_id
         if partner not in document.message_partner_ids:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
-        return super(sale_order, self).action_button_confirm(cr, uid, ids, context=context)
+        return super(sale_order, self).action_confirm(cr, uid, ids, context=context)
 
     def get_signup_url(self, cr, uid, ids, context=None):
         assert len(ids) == 1

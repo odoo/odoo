@@ -800,7 +800,7 @@ class website_sale(http.Controller):
 
         # confirm the quotation
         if tx.acquirer_id.auto_confirm == 'at_pay_now':
-            request.registry['sale.order'].action_button_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
+            request.registry['sale.order'].action_confirm(cr, SUPERUSER_ID, [order.id], context=request.context)
 
         return tx_id
 
@@ -868,7 +868,7 @@ class website_sale(http.Controller):
             if (not order.amount_total and not tx):
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
-                order.with_context(dict(context, send_email=True)).action_button_confirm()
+                order.with_context(dict(context, send_email=True)).action_confirm()
         elif tx and tx.state == 'cancel':
             # cancel the quotation
             sale_order_obj.action_cancel(cr, SUPERUSER_ID, [order.id], context=request.context)
