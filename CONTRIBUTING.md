@@ -27,4 +27,4 @@ For convenience we might suggest you some preformulated posts, which you might j
 Hi, is this still an issue? There has been little activity on this issue lately.
 
 @ISSUEPOSTER If you feel, this is rather configuration, than a code issue, you might consider closing this. Else, I would suggest, to elaborate your description, to make it as convenient as possible for other volunteers to reproduce this exact error on their computers. This is an importent fist step to improve your chances of getting this solved. If you need any guidance on how to start, make sure to check the following link first: https://github.com/odoo/odoo/blob/8.0/CONTRIBUTING.md
-```
+``` 
