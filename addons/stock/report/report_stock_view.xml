@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
            <!-- report , stock inventories date... start -->
-        <record model="ir.ui.view" id="report_stock_lines_date_tree">
+        <record id="report_stock_lines_date_tree" model="ir.ui.view">
             <field name="name">report.stock.lines.date.tree</field>
             <field name="model">report.stock.lines.date</field>
             <field name="arch" type="xml">
@@ -15,7 +14,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="report_stock_lines_date_search">
+        <record id="report_stock_lines_date_search" model="ir.ui.view">
             <field name="name">report.stock.lines.date.search</field>
             <field name="model">report.stock.lines.date</field>
             <field name="arch" type="xml">
@@ -31,7 +30,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="report_stock_lines_date_form">
+        <record id="report_stock_lines_date_form" model="ir.ui.view">
             <field name="name">report.stock.lines.date.form</field>
             <field name="model">report.stock.lines.date</field>
             <field name="arch" type="xml">
@@ -45,7 +44,7 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_stock_line_date">
+        <record id="action_stock_line_date" model="ir.actions.act_window">
             <field name="name">Latest Inventories &amp; Moves</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
@@ -57,5 +56,4 @@
         <menuitem parent="menu_warehouse_report" action="action_stock_line_date" id="menu_report_stock_line_date" sequence="2"
             groups="base.group_no_one"/>
 
-    </data>
-</openerp>
+</odoo>

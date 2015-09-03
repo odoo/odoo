@@ -510,35 +510,29 @@ class product_template(osv.osv):
                         raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         return super(product_template, self).write(cr, uid, ids, vals, context=context)
 
-
-class product_removal_strategy(osv.osv):
+from openerp import api, fields, models
+class ProductRemovalStrategy(models.Model):
     _name = 'product.removal'
     _description = 'Removal Strategy'
 
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'method': fields.char("Method", required=True, help="FIFO, LIFO..."),
-    }
+    name = fields.Char(required=True)
+    method = fields.Char(required=True, help="FIFO, LIFO...")
 
 
-class product_putaway_strategy(osv.osv):
+class ProductPutawayStrategy(models.Model):
     _name = 'product.putaway'
     _description = 'Put Away Strategy'
 
-    def _get_putaway_options(self, cr, uid, context=None):
+    @api.model
+    def _get_putaway_options(self):
         return [('fixed', 'Fixed Location')]
 
-    _columns = {
-        'name': fields.char('Name', required=True),
-        'method': fields.selection(_get_putaway_options, "Method", required=True),
-        'fixed_location_ids': fields.one2many('stock.fixed.putaway.strat', 'putaway_id', 'Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products", copy=True),
-    }
+    name = fields.Char(required=True)
+    method = fields.Selection(_get_putaway_options, required=True, default='fixed')
+    fixed_location_ids = fields.One2many('stock.fixed.putaway.strat', 'putaway_id', string='Fixed Locations Per Product Category', help="When the method is fixed, this location will be used to store the products", copy=True)
 
-    _defaults = {
-        'method': 'fixed',
-    }
-
-    def putaway_apply(self, cr, uid, putaway_strat, product, context=None):
+    @api.model
+    def putaway_apply(self, putaway_strat, product):
         if putaway_strat.method == 'fixed':
             for strat in putaway_strat.fixed_location_ids:
                 categ = product.categ_id
@@ -548,23 +542,24 @@ class product_putaway_strategy(osv.osv):
                     categ = categ.parent_id
 
 
-class fixed_putaway_strat(osv.osv):
+class FixedPutawayStrat(models.Model):
     _name = 'stock.fixed.putaway.strat'
     _order = 'sequence'
-    _columns = {
-        'putaway_id': fields.many2one('product.putaway', 'Put Away Method', required=True),
-        'category_id': fields.many2one('product.category', 'Product Category', required=True),
-        'fixed_location_id': fields.many2one('stock.location', 'Location', required=True),
-        'sequence': fields.integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list."),
-    }
+
+    putaway_id = fields.Many2one(comodel_name='product.putaway', string='Put Away Method', required=True)
+    category_id = fields.Many2one(comodel_name='product.category', string='Product Category', required=True)
+    fixed_location_id = fields.Many2one(comodel_name='stock.location', string='Location', required=True)
+    sequence = fields.Integer(string='Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
 
 
-class product_category(osv.osv):
+class ProductCategory(models.Model):
     _inherit = 'product.category'
 
-    def calculate_total_routes(self, cr, uid, ids, name, args, context=None):
+    @api.one
+    @api.depends('route_ids', 'parent_id')
+    def calculate_total_routes(self):
         res = {}
-        for categ in self.browse(cr, uid, ids, context=context):
+        for categ in self:
             categ2 = categ
             routes = [x.id for x in categ.route_ids]
             while categ2.parent_id:
@@ -573,8 +568,7 @@ class product_category(osv.osv):
             res[categ.id] = routes
         return res
 
-    _columns = {
-        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', 'Routes', domain="[('product_categ_selectable', '=', True)]"),
-        'removal_strategy_id': fields.many2one('product.removal', 'Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category"),
-        'total_route_ids': fields.function(calculate_total_routes, relation='stock.location.route', type='many2many', string='Total routes', readonly=True),
-    }
+    route_ids = fields.Many2many('stock.location.route', 'stock_location_route_categ', 'categ_id', 'route_id', string='Routes', domain="[('product_categ_selectable', '=', True)]")
+    removal_strategy_id = fields.Many2one('product.removal', string='Force Removal Strategy', help="Set a specific removal strategy that will be used regardless of the source location for this product category")
+    total_route_ids = fields.Many2many('stock.location.route', compute="calculate_total_routes", string='Total routes', readonly=True)
+

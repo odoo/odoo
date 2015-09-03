@@ -1,24 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-from openerp.tools.sql import drop_view_if_exists
+from openerp import models, fields
+from openerp import tools
 
-class report_stock_lines_date(osv.osv):
+class ReportStockLinesDate(models.Model):
     _name = "report.stock.lines.date"
     _description = "Dates of Inventories and latest Moves"
     _auto = False
     _order = "date"
-    _columns = {
-        'id': fields.integer('Product Id', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-        'date': fields.datetime('Date of latest Inventory', readonly=True),
-        'move_date': fields.datetime('Date of latest Stock Move', readonly=True),
-        "active": fields.boolean("Active", readonly=True),
-    }
+
+    id = fields.Integer('Product Id', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True, select=True)
+    date = fields.Datetime('Date of latest Inventory', readonly=True)
+    move_date = fields.Datetime('Date of latest Stock Move', readonly=True)
+    active = fields.Boolean(readonly=True)
 
     def init(self, cr):
-        drop_view_if_exists(cr, 'report_stock_lines_date')
+        tools.drop_view_if_exists(cr, 'report_stock_lines_date')
         cr.execute("""
             create or replace view report_stock_lines_date as (
                 select

@@ -19,7 +19,7 @@
                         <field name="warehouse_id" groups="stock.group_locations"/>
                         <field name="product_tmpl_id" invisible="1"/>
                         <field name="product_variant_count" invisible="1"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id, context)"
+                        <field name="product_id"
                             widget="selection"
                             domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                             attrs="{'readonly': [('product_variant_count', '=', 1)]}"/>
