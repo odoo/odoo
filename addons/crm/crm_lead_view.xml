@@ -477,7 +477,7 @@
                                         class="oe_inline" options="{'no_create': True, 'no_open': True}"
                                         domain="['|',('team_id','=',False),('team_id','=',team_id)]"
                                         on_change="onchange_next_activity_id(next_activity_id)"/>
-                                    <span attrs="{'invisible': ['|', ('last_activity_id','=',False), ('next_activity_id', '&lt;&gt;', False)]}">
+                                    <span attrs="{'invisible': ['|', ('last_activity_id','=',False), ('next_activity_id', '&lt;&gt;', False)]}" class="oe_edit_only">
                                         <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
                                             <field name="next_activity_1" class="oe_inline" readonly="1"/>
                                         </button>
@@ -493,7 +493,7 @@
                                     <field name="date_action" nolabel="1" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..." class="oe_inline"/>
                                     <field name="title_action" nolabel="1" placeholder="e.g. Discuss proposal"
                                         attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
-                                    <div class="oe_read_only" attrs="{'invisible': [('next_activity_id', '=', False)]}">
+                                    <div class="oe_edit_only" attrs="{'invisible': [('next_activity_id', '=', False)]}">
                                         <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
                                         <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
                                     </div>
