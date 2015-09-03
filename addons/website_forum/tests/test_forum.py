@@ -189,7 +189,7 @@ class TestForum(TestForumCommon):
         post.state = 'pending'
         init_karma = post.create_uid.karma
         post.sudo(self.user_portal).refuse()
-        self.assertEqual(post.validator_id, self.user_portal, 'website_forum: wrong validator_id when refusing')
+        self.assertEqual(post.moderator_id, self.user_portal, 'website_forum: wrong moderator_id when refusing')
         self.assertEqual(post.create_uid.karma, init_karma, 'website_forum: wrong karma when refusing a post')
 
     def test_mark_a_post_as_offensive(self):

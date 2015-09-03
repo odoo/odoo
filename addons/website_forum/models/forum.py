@@ -183,7 +183,6 @@ class Post(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
     _order = "is_correct DESC, vote_count DESC, write_date DESC"
 
-
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content', strip_style=True)
@@ -203,6 +202,7 @@ class Post(models.Model):
         domain=lambda self: ['&', ('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])],
         string='Post Messages', help="Comments on forum post",
     )
+
     # history
     create_date = fields.Datetime('Asked on', select=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
@@ -279,7 +279,6 @@ class Post(models.Model):
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
-
 
     @api.multi
     def _get_user_vote(self):
@@ -520,12 +519,11 @@ class Post(models.Model):
         if self.state == 'pending':
             self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
 
-        self.validator_id = self.env.user
+        self.moderator_id = self.env.user
 
         self.write({
             'state': 'active',
             'active': True,
-            'flags_uid': [(5, 0, 0)],
         })
         return True
 
@@ -534,7 +532,7 @@ class Post(models.Model):
         if not self.can_moderate:
             raise KarmaError('Not enough karma to refuse a post')
 
-        self.validator_id = self.env.user
+        self.moderator_id = self.env.user
         return True
 
     @api.one
@@ -542,18 +540,16 @@ class Post(models.Model):
         if not self.can_flag:
             raise KarmaError('Not enough karma to flag a post')
 
-        if(self.env.user in self.flags_uid):
+        if(self.state == 'flagged'):
             return {'error': 'post_already_flagged'}
-
-        state = 'flagged'
-        if(self.state in ['pending', 'offensive', 'close']):
-            state = self.state
-
-        self.write({
-            'state': state,
-            'flags_uid': [(4, self.env.user.id, 0)],
-        })
-        return {'flags_count': len(self.flags_uid)}
+        elif(self.state == 'active'):
+            self.write({
+                'state': 'flagged',
+                'flag_user_id': self.env.user.id,
+            })
+            return self.can_moderate and {'success': 'post_flagged_moderator'} or {'success': 'post_flagged_non_moderator'}
+        else:
+            return {'error': 'post_non_flaggable'}
 
     @api.one
     def mark_as_offensive(self, reason_id):
@@ -561,14 +557,13 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to mark a post as offensive')
 
         # remove some karma
-        for post in self:
-            # TODO: consider making this a tunable karma parameter
-            _logger.info('Downvoting user <%s> for posting spam/offensive contents', post.create_uid)
-            post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
+        # TODO: consider making this a tunable karma parameter (cfr close)
+        _logger.info('Downvoting user <%s> for posting spam/offensive contents', self.create_uid)
+        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_downvote * 5)
 
         self.write({
             'state': 'offensive',
-            'flag_moderator_id': self._uid,
+            'moderator_id': self.env.user.id,
             'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
             'closed_reason_id': reason_id,
             'active': False,

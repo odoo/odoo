@@ -465,7 +465,7 @@ class WebsiteForum(http.Controller):
 
         Post = request.env['forum.post']
         domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
-        flagged_posts_ids = Post.search(domain, order='flags_count DESC, write_date DESC')
+        flagged_posts_ids = Post.search(domain, order='write_date DESC')
 
         values = self._prepare_forum_values(forum=forum)
         values.update({
@@ -514,7 +514,7 @@ class WebsiteForum(http.Controller):
     def post_flag(self, forum, post, **kwargs):
         if not request.session.uid:
             return {'error': 'anonymous_user'}
-        return post.flag()
+        return post.flag()[0]
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/ask_for_mark_as_offensive', type='http', auth="user", methods=['GET'], website=True)
     def post_ask_for_mark_as_offensive(self, forum, post):

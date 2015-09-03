@@ -257,10 +257,9 @@
                     Comment<t t-if="question.child_count&gt;1">s</t>
                 </t>
             </a>
-            <t t-if="question.flags_count != 0">
+            <t t-if="question.state == 'flagged'">
                 <span> • </span>
-                <t t-esc="question.flags_count"/>
-                Flag<t t-if="question.flags_count&gt;1">s</t>
+                Flagged
             </t>
         </small>
     </div>
@@ -310,10 +309,9 @@
             <b>[Answer]</b>
             <span t-if="not answer.active and answer.state=='offensive'"><b> [Offensive]</b></span>
             <span t-if="not answer.active and answer.state=='offensive' and answer.closed_reason_id"><b> [<t t-esc="answer.closed_reason_id.name[0].upper() + answer.closed_reason_id.name[1:]"/>]</b></span>
-            <t t-if="answer.flags_count != 0">
+            <t t-if="answer.state == 'flagged'">
                 <small class="text-muted">
-                    <t t-esc="answer.flags_count"/>
-                    Flag<t t-if="answer.flags_count&gt;1">s</t>
+                    Flagged
                 </small>
             </t>
             <t t-if="len(answer.website_message_ids)&gt;0">
@@ -843,8 +841,7 @@
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                 t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag"
                                 >
-                                Flag
-                                <span class="vote_count" t-esc="len(question.flags_uid) != 0 and ' (' + str(len(question.flags_uid)) + ')' or ''"/>
+                                <t class="flag_flagged_label" t-esc="question.state == 'flagged' and 'Flagged' or 'Flag'"/>
                             </a>
                         </li>
                     </ul>
@@ -873,9 +870,11 @@
             </div>
         </div>
         <div t-foreach="question.child_ids" t-as="post_answer" class="mt16 mb32">
-            <hr class="mb4 mt4"/>
-            <t t-call="website_forum.post_answers">
-                <t t-set="answer" t-value="post_answer"/>
+            <t t-if="post_answer.state != 'flagged' or (post_answer.state == 'flagged' and post_answer.can_moderate)">
+                <hr class="mb4 mt4"/>
+                <t t-call="website_forum.post_answers">
+                    <t t-set="answer" t-value="post_answer"/>
+                </t>
             </t>
         </div>
         <div id="post_reply"
@@ -944,8 +943,7 @@
                             t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
                             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag"
                             >
-                            Flag
-                            <span class="vote_count" t-esc="len(answer.flags_uid) != 0 and ' (' + str(len(answer.flags_uid)) + ')' or ''"/>
+                            <t class="flag_flagged_label" t-esc="answer.state == 'flagged' and 'Flagged' or 'Flag'"/>
                         </a>
                     </li>
                     <li t-if="question.post_type == 'question'">
