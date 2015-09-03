@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
 from psycopg2 import OperationalError
 
-from openerp import api
-from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
 import openerp
+from openerp import api, fields, models
+from openerp.tools.translate import _
 from openerp.exceptions import UserError
+import openerp.addons.decimal_precision as dp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 
-class procurement_group(osv.osv):
+
+class ProcurementGroup(models.Model):
     '''
     The procurement group class is used to group products together
     when computing procurements. (tasks, physical products, ...)
@@ -40,19 +38,13 @@ class procurement_group(osv.osv):
     _name = 'procurement.group'
     _description = 'Procurement Requisition'
     _order = "id desc"
-    _columns = {
-        'name': fields.char('Reference', required=True),
-        'move_type': fields.selection([
-            ('direct', 'Partial'), ('one', 'All at once')],
-            'Delivery Type', required=True),
-        'procurement_ids': fields.one2many('procurement.order', 'group_id', 'Procurements'),
-    }
-    _defaults = {
-        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').next_by_code(cr, uid, 'procurement.group') or '',
-        'move_type': lambda self, cr, uid, c: 'direct'
-    }
 
-class procurement_rule(osv.osv):
+    name = fields.Char(string='Reference', required=True, default=lambda self: self.env['ir.sequence'].next_by_code('procurement_group') or '')
+    move_type = fields.Selection([('direct', 'Partial'), ('one', 'All at once')], string='Delivery Type', required=True, default=lambda self: 'direct')
+    procurement_ids = fields.One2many('procurement.order', 'group_id', string='Procurements')
+
+
+class ProcurementRule(models.Model):
     '''
     A rule describe what a procurement should do; produce, buy, move, ...
     '''
@@ -60,178 +52,141 @@ class procurement_rule(osv.osv):
     _description = "Procurement Rule"
     _order = "name"
 
-    def _get_action(self, cr, uid, context=None):
+    @api.model
+    def _get_action(self):
         return []
 
-    _columns = {
-        'name': fields.char('Name', required=True, translate=True,
-            help="This field will fill the packing origin and the name of its moves"),
-        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the rule without removing it."),
-        'group_propagation_option': fields.selection([('none', 'Leave Empty'), ('propagate', 'Propagate'), ('fixed', 'Fixed')], string="Propagation of Procurement Group"),
-        'group_id': fields.many2one('procurement.group', 'Fixed Procurement Group'),
-        'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
-            string='Action', required=True),
-        'sequence': fields.integer('Sequence'),
-        'company_id': fields.many2one('res.company', 'Company'),
-    }
-
-    _defaults = {
-        'group_propagation_option': 'propagate',
-        'sequence': 20,
-        'active': True,
-    }
+    name = fields.Char(required=True, translate=True, help="This field will fill the packing origin and the name of its moves")
+    active = fields.Boolean(help="If unchecked, it will allow you to hide the rule without removing it.", default=True)
+    group_propagation_option = fields.Selection([('none', 'Leave Empty'), ('propagate', 'Propagate'), ('fixed', 'Fixed')], string="Propagation of Procurement Group", default='propagate')
+    group_id = fields.Many2one('procurement.group', string='Fixed Procurement Group')
+    action = fields.Selection(selection=lambda s: s._get_action(), required=True)
+    sequence = fields.Integer(default=20)
+    company_id = fields.Many2one('res.company', string='Company')
 
 
-class procurement_order(osv.osv):
+class ProcurementOrder(models.Model):
     """
     Procurement Orders
     """
     _name = "procurement.order"
     _description = "Procurement"
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = 'priority desc, date_planned, id asc'
-    _inherit = ['mail.thread','ir.needaction_mixin']
-    _columns = {
-        'name': fields.text('Description', required=True),
+    _log_create = False
 
-        'origin': fields.char('Source Document',
-            help="Reference of the document that created this Procurement.\n"
-            "This is automatically completed by Odoo."),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+    name = fields.Text(string='Description', required=True)
+    origin = fields.Char(string='Source Document', help="Reference of the document that created this Procurement. This is automatically completed by Odoo.")
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    # These two fields are used for shceduling
+    priority = fields.Selection(PROCUREMENT_PRIORITIES, required=True, select=True, track_visibility='onchange', default='1')
+    date_planned = fields.Datetime(string='Scheduled Date', required=True, default=fields.Datetime.now(), select=True, track_visibility='onchange')
+    group_id = fields.Many2one('procurement.group', string='Procurement Group')
+    rule_id = fields.Many2one('procurement.rule', string='Rule', track_visibility='onchange', help="Chosen rule for the procurement resolution. Usually chosen by the system but can be manually set by the procurement manager to force an unusual behavior.")
+    product_id = fields.Many2one('product.product', string='Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True)
+    product_qty = fields.Float(string='Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'confirmed': [('readonly', False)]}, readonly=True)
+    product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True, states={'confirmed': [('readonly', False)]}, readonly=True)
+    state = fields.Selection([('cancel', 'Cancelled'), ('confirmed', 'Confirmed'), ('exception', 'Exception'), ('running', 'Running'), ('done', 'Done')], string='Status', required=True, track_visibility='onchange', copy=False, default='confirmed')
 
-        # These two fields are used for shceduling
-        'priority': fields.selection(PROCUREMENT_PRIORITIES, 'Priority', required=True, select=True, track_visibility='onchange'),
-        'date_planned': fields.datetime('Scheduled Date', required=True, select=True, track_visibility='onchange'),
+    @api.model
+    def _needaction_domain_get(self):
+        return [('state', '=', 'exception')]
 
-        'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'rule_id': fields.many2one('procurement.rule', 'Rule', track_visibility='onchange', help="Chosen rule for the procurement resolution. Usually chosen by the system but can be manually set by the procurement manager to force an unusual behavior."),
+    @api.multi
+    def unlink(self):
+        unlink_ids = self.filtered(lambda procurements: procurements.state == 'cancel')
+        for s in (self-unlink_ids):
+            if s.state != 'cancel':
+                raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s.state)
+        return super(ProcurementOrder, unlink_ids).unlink()
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
+    @api.model
+    def create(self, vals):
+        procurement = super(ProcurementOrder, self).create(vals)
+        if not self._context.get('procurement_autorun_defer'):
+            procurement.run()
+        return procurement
 
-        'state': fields.selection([
-            ('cancel', 'Cancelled'),
-            ('confirmed', 'Confirmed'),
-            ('exception', 'Exception'),
-            ('running', 'Running'),
-            ('done', 'Done')
-        ], 'Status', required=True, track_visibility='onchange', copy=False),
-    }
-
-    _defaults = {
-        'state': 'confirmed',
-        'priority': '1',
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
-    }
-
-    def _needaction_domain_get(self, cr, uid, context=None):
-        return [('state', '=', 'exception')] 
-        
-    def unlink(self, cr, uid, ids, context=None):
-        procurements = self.read(cr, uid, ids, ['state'], context=context)
-        unlink_ids = []
-        for s in procurements:
-            if s['state'] == 'cancel':
-                unlink_ids.append(s['id'])
-            else:
-                raise UserError(_('Cannot delete Procurement Order(s) which are in %s state.') % s['state'])
-        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-
-    def create(self, cr, uid, vals, context=None):
-        context = context or {}
-        procurement_id = super(procurement_order, self).create(cr, uid, vals, context=context)
-        if not context.get('procurement_autorun_defer'):
-            self.run(cr, uid, [procurement_id], context=context)
-        return procurement_id
-
-    def do_view_procurements(self, cr, uid, ids, context=None):
+    @api.multi
+    def do_view_procurements(self):
         '''
         This function returns an action that display existing procurement orders
         of same procurement group of given ids.
         '''
-        act_obj = self.pool.get('ir.actions.act_window')
-        action_id = self.pool.get('ir.model.data').xmlid_to_res_id(cr, uid, 'procurement.do_view_procurements', raise_if_not_found=True)
-        result = act_obj.read(cr, uid, [action_id], context=context)[0]
-        group_ids = set([proc.group_id.id for proc in self.browse(cr, uid, ids, context=context) if proc.group_id])
+        result = self.env['ir.actions.act_window'].for_xml_id('procurement', 'do_view_procurements')
+        group_ids = set([proc.group_id.id for proc in self if proc.group_id])
         result['domain'] = "[('group_id','in',[" + ','.join(map(str, list(group_ids))) + "])]"
         return result
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+    @api.onchange('product_id')
+    def onchange_product_id(self):
         """ Finds UoM of changed product.
-        @param product_id: Changed id of product.
-        @return: Dictionary of values.
         """
-        if product_id:
-            w = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v = {
-                'product_uom': w.uom_id.id,
-            }
-            return {'value': v}
-        return {}
+        if self.product_id:
+            self.product_uom = self.product_id.uom_id.id
 
-    def get_cancel_ids(self, cr, uid, ids, context=None):
-        return [proc.id for proc in self.browse(cr, uid, ids, context=context) if proc.state != 'done']
+    @api.multi
+    def get_cancel_ids(self):
+        return [proc.id for proc in self if proc.state != 'done']
 
-    def cancel(self, cr, uid, ids, context=None):
-        #cancel only the procurements that aren't done already
-        to_cancel_ids = self.get_cancel_ids(cr, uid, ids, context=context)
+    @api.multi
+    def cancel(self):
+        # cancel only the procurements that aren't done already
+        to_cancel_ids = self.get_cancel_ids()
         if to_cancel_ids:
-            return self.write(cr, uid, to_cancel_ids, {'state': 'cancel'}, context=context)
+            return self.browse(to_cancel_ids).write({'state': 'cancel'})
 
-    def reset_to_confirmed(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
+    @api.multi
+    def reset_to_confirmed(self):
+        return self.write({'state': 'confirmed'})
 
-    def run(self, cr, uid, ids, autocommit=False, context=None):
-        for procurement_id in ids:
-            #we intentionnaly do the browse under the for loop to avoid caching all ids which would be resource greedy
-            #and useless as we'll make a refresh later that will invalidate all the cache (and thus the next iteration
-            #will fetch all the ids again) 
-            procurement = self.browse(cr, uid, procurement_id, context=context)
+    @api.multi
+    def run(self, autocommit=False):
+        for procurement in self:
             if procurement.state not in ("running", "done"):
                 try:
-                    if self._assign(cr, uid, procurement, context=context):
-                        res = self._run(cr, uid, procurement, context=context or {})
+                    if procurement._assign():
+                        res = procurement._run()
                         if res:
-                            self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                            procurement.write({'state': 'running'})
                         else:
-                            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                            procurement.write({'state': 'exception'})
                     else:
-                        self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
-                        self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                        procurement.message_post(body=_('No rule matching this procurement'))
+                        procurement.write({'state': 'exception'})
                     if autocommit:
-                        cr.commit()
+                        self._cr.commit()
                 except OperationalError:
                     if autocommit:
-                        cr.rollback()
+                        self._cr.rollback()
                         continue
                     else:
                         raise
         return True
 
-    def check(self, cr, uid, ids, autocommit=False, context=None):
-        done_ids = []
-        for procurement in self.browse(cr, uid, ids, context=context):
+    @api.multi
+    def check(self, autocommit=False):
+        done_procs = self.env['procurement.order']
+        for procurement in self:
             try:
-                result = self._check(cr, uid, procurement, context=context)
+                result = procurement._check()
                 if result:
-                    done_ids.append(procurement.id)
+                    done_procs |= procurement
                 if autocommit:
-                    cr.commit()
+                    self._cr.commit()
             except OperationalError:
                 if autocommit:
-                    cr.rollback()
+                    self._cr.rollback()
                     continue
                 else:
                     raise
-        if done_ids:
-            self.write(cr, uid, done_ids, {'state': 'done'}, context=context)
-        return done_ids
+        if done_procs:
+            done_procs.write({'state': 'done'})
+        return done_procs
 
-    #
     # Method to overwrite in different procurement modules
-    #
-    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+    @api.multi
+    def _find_suitable_rule(self):
         '''This method returns a procurement.rule that depicts what to do with the given procurement
         in order to complete its needs. It returns False if no suiting rule is found.
             :param procurement: browse record
@@ -239,59 +194,42 @@ class procurement_order(osv.osv):
         '''
         return False
 
-    def _assign(self, cr, uid, procurement, context=None):
+    @api.multi
+    def _assign(self):
         '''This method check what to do with the given procurement in order to complete its needs.
         It returns False if no solution is found, otherwise it stores the matching rule (if any) and
-        returns True.
-            :param procurement: browse record
-            :rtype: boolean
-        '''
-        #if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
-        if procurement.rule_id:
+        returns True.'''
+        # if the procurement already has a rule assigned, we keep it (it has a higher priority as it may have been chosen manually)
+        if self.rule_id:
             return True
-        elif procurement.product_id.type not in ('service', 'digital'):
-            rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
+        elif self.product_id.type not in ('service', 'digital'):
+            rule_id = self._find_suitable_rule()
             if rule_id:
-                self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
+                self.write({'rule_id': rule_id})
                 return True
         return False
 
-    def _run(self, cr, uid, procurement, context=None):
+    @api.multi
+    def _run(self):
         '''This method implements the resolution of the given procurement
-            :param procurement: browse record
             :returns: True if the resolution of the procurement was a success, False otherwise to set it in exception
         '''
         return True
 
-    def _check(self, cr, uid, procurement, context=None):
+    @api.multi
+    def _check(self):
         '''Returns True if the given procurement is fulfilled, False otherwise
             :param procurement: browse record
             :rtype: boolean
         '''
         return False
 
-    #
     # Scheduler
-    #
-    def run_scheduler(self, cr, uid, use_new_cursor=False, company_id = False, context=None):
-        '''
-        Call the scheduler to check the procurement order. This is intented to be done for all existing companies at
-        the same time, so we're running all the methods as SUPERUSER to avoid intercompany and access rights issues.
-
-        @param self: The object pointer
-        @param cr: The current row, from the database cursor,
-        @param uid: The current user ID for security checks
-        @param ids: List of selected IDs
-        @param use_new_cursor: if set, use a dedicated cursor and auto-commit after processing each procurement.
-            This is appropriate for batch jobs only.
-        @param context: A standard dictionary for contextual values
-        @return:  Dictionary of values
-        '''
-        if context is None:
-            context = {}
+    @api.model
+    def run_scheduler(self, use_new_cursor=False, company_id=False):
         try:
             if use_new_cursor:
-                cr = openerp.registry(cr.dbname).cursor()
+                cr = openerp.registry(self._cr.dbname).cursor()
 
             # Run confirmed procurements
             dom = [('state', '=', 'confirmed')]
@@ -299,12 +237,12 @@ class procurement_order(osv.osv):
                 dom += [('company_id', '=', company_id)]
             prev_ids = []
             while True:
-                ids = self.search(cr, SUPERUSER_ID, dom, context=context)
+                ids = self.sudo().search(dom)
                 if not ids or prev_ids == ids:
                     break
                 else:
                     prev_ids = ids
-                self.run(cr, SUPERUSER_ID, ids, autocommit=use_new_cursor, context=context)
+                ids.sudo().run(autocommit=use_new_cursor)
                 if use_new_cursor:
                     cr.commit()
 
@@ -315,12 +253,12 @@ class procurement_order(osv.osv):
                 dom += [('company_id', '=', company_id)]
             prev_ids = []
             while True:
-                ids = self.search(cr, SUPERUSER_ID, dom, offset=offset, context=context)
+                ids = self.sudo().search(dom, offset=offset)
                 if not ids or prev_ids == ids:
                     break
                 else:
                     prev_ids = ids
-                self.check(cr, SUPERUSER_ID, ids, autocommit=use_new_cursor, context=context)
+                ids.sudo().check(autocommit=use_new_cursor)
                 if use_new_cursor:
                     cr.commit()
 

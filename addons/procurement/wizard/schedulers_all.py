@@ -3,32 +3,26 @@
 
 import logging
 import threading
-from openerp import SUPERUSER_ID
-from openerp import tools
-
-from openerp.osv import osv
+from openerp import api, models, tools
 from openerp.api import Environment
 
 _logger = logging.getLogger(__name__)
 
-class procurement_compute_all(osv.osv_memory):
+
+class ProcurementComputeAll(models.TransientModel):
     _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
 
-    def _procure_calculation_all(self, cr, uid, ids, context=None):
+    @api.multi
+    def _procure_calculation_all(self):
         """
         @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
         """
         with Environment.manage():
-            proc_obj = self.pool.get('procurement.order')
             #As this function is in a new thread, i need to open a new cursor, because the old one may be closed
 
             new_cr = self.pool.cursor()
-            scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, SUPERUSER_ID, 'procurement', 'ir_cron_scheduler_action')[1]
+            scheduler_cron_id = self.pool['ir.model.data'].get_object_reference(new_cr, self.env.uid, 'procurement', 'ir_cron_scheduler_action')[1]
             # Avoid to run the scheduler multiple times in the same time
             try:
                 with tools.mute_logger('openerp.sql_db'):
@@ -38,22 +32,20 @@ class procurement_compute_all(osv.osv_memory):
                 new_cr.rollback()
                 new_cr.close()
                 return {}
-            user = self.pool.get('res.users').browse(new_cr, uid, uid, context=context)
+            # pool Use For new_cr is cursor
+            user = self.pool['res.users'].browse(new_cr, self.env.uid, self.env.uid, context=self.env.context)
             comps = [x.id for x in user.company_ids]
             for comp in comps:
-                proc_obj.run_scheduler(new_cr, uid, use_new_cursor=new_cr.dbname, company_id = comp, context=context)
+                self.pool['procurement.order'].run_scheduler(new_cr, self.env.uid, use_new_cursor=new_cr.dbname, company_id=comp)
             #close the new cursor
             new_cr.close()
             return {}
 
-    def procure_calculation(self, cr, uid, ids, context=None):
+    @api.multi
+    def procure_calculation(self):
         """
         @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected
-        @param context: A standard dictionary
         """
-        threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
+        threaded_calculation = threading.Thread(target=self._procure_calculation_all)
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}

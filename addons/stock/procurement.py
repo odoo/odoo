@@ -254,8 +254,9 @@ class procurement_order(osv.osv):
                     res = pull_obj.search(cr, uid, domain + [('route_id', '=', False)], order='sequence', context=context)
         return res
 
-    def _find_suitable_rule(self, cr, uid, procurement, context=None):
-        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+    def _find_suitable_rule(self, cr, uid, ids, context=None):
+        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, ids, context=context)
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if not rule_id:
             #a rule defined on 'Stock' is suitable for a procurement in 'Stock\Bin A'
             all_parent_location_ids = self._find_parent_locations(cr, uid, procurement, context=context)
@@ -307,7 +308,8 @@ class procurement_order(osv.osv):
         }
         return vals
 
-    def _run(self, cr, uid, procurement, context=None):
+    def _run(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if procurement.rule_id and procurement.rule_id.action == 'move':
             if not procurement.rule_id.location_src_id:
                 self.message_post(cr, uid, [procurement.id], body=_('No source location defined!'), context=context)
@@ -317,7 +319,7 @@ class procurement_order(osv.osv):
             #create the move as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             move_obj.create(cr, SUPERUSER_ID, move_dict, context=context)
             return True
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._run(cr, uid, ids, context=context)
 
     def run(self, cr, uid, ids, autocommit=False, context=None):
         new_ids = [x.id for x in self.browse(cr, uid, ids, context=context) if x.state not in ('running', 'done', 'cancel')]
@@ -338,10 +340,11 @@ class procurement_order(osv.osv):
             res = res and self.run(cr, uid, procurement_ids, autocommit=autocommit, context=context)
         return res
 
-    def _check(self, cr, uid, procurement, context=None):
+    def _check(self, cr, uid, ids, context=None):
         ''' Implement the procurement checking for rules of type 'move'. The procurement will be satisfied only if all related
             moves are done/cancel and if the requested quantity is moved.
         '''
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if procurement.rule_id and procurement.rule_id.action == 'move':
             uom_obj = self.pool.get('product.uom')
             # In case Phantom BoM splits only into procurements
@@ -361,7 +364,7 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'cancel'}, context=context)
             return False
 
-        return super(procurement_order, self)._check(cr, uid, procurement, context)
+        return super(procurement_order, self)._check(cr, uid, ids, context)
 
     def do_view_pickings(self, cr, uid, ids, context=None):
         '''

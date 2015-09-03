@@ -17,18 +17,20 @@ class procurement_order(osv.osv):
     def _is_procurement_task(self, cr, uid, procurement, context=None):
         return procurement.product_id.type == 'service' and procurement.product_id.track_service=='task' or False
 
-    def _assign(self, cr, uid, procurement, context=None):
-        res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+    def _assign(self, cr, uid, ids, context=None):
+        res = super(procurement_order, self)._assign(cr, uid, ids, context=context)
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if not res:
             #if there isn't any specific procurement.rule defined for the product, we may want to create a task
             return self._is_procurement_task(cr, uid, procurement, context=context)
         return res
 
-    def _run(self, cr, uid, procurement, context=None):
+    def _run(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids[0], context=context)
         if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
             #create a task for the procurement
             return self._create_service_task(cr, uid, procurement, context=context)
-        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._run(cr, uid, ids, context=context)
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
         product_uom = self.pool.get('product.uom')

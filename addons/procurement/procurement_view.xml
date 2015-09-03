@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!--
         Procurement
         -->
@@ -39,7 +38,7 @@
                         </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                            <field name="product_id"/>
                             <label for="product_qty"/>
                             <div>
                                 <div>
@@ -246,10 +245,10 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_procurement_rule_tree">
+        <record id="view_procurement_rule_tree" model="ir.ui.view">
             <field name="name">procurement.rule.tree</field>
             <field name="model">procurement.rule</field>
-            <field eval="10" name="priority"/>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Rules">
                     <field name="name"/>
@@ -260,10 +259,10 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_procurement_rule_form">
+        <record id="view_procurement_rule_form" model="ir.ui.view">
             <field name="name">procurement.rule.form</field>
             <field name="model">procurement.rule</field>
-            <field eval="10" name="priority"/>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Procurement Rule">
                     <div class="oe_button_box" name="button_box">
@@ -309,5 +308,4 @@
             <field name="value" eval="'ir.actions.server,' + str(ref('procurement_order_server_action'))" />
         </record>
 
-    </data>
-</openerp>
+</odoo>
