@@ -70,6 +70,7 @@ var DashboardInvitations = Widget.extend({
     template: 'DashboardInvitations',
     events: {
         'click .o_web_settings_dashboard_invitations': 'send_invitations',
+        'click .o_web_settings_dashboard_access_rights': 'on_access_rights_clicked',
         'click .o_web_settings_dashboard_user': 'on_user_clicked',
     },
     init: function(parent, data){
@@ -97,7 +98,7 @@ var DashboardInvitations = Widget.extend({
                 .then(function() {
                     self.reload();
                 })
-                .fail(function() {
+                .always(function() {
                     // Re-enable button
                     self.$('.o_web_settings_dashboard_invitations').prop('disabled', false);
                     self.$('i.fa-cog').addClass('hidden');
@@ -108,6 +109,13 @@ var DashboardInvitations = Widget.extend({
             this.do_warn(_t("Please provide valid email addresses"), "");
         }
     },
+    on_access_rights_clicked: function (e) {
+        var self = this;
+        e.preventDefault();
+        this.do_action('base.action_res_users', {
+            on_reverse_breadcrumb: function(){ return self.reload();}
+        });
+    },
     on_user_clicked: function (e) {
         var self = this;
         e.preventDefault();
@@ -117,7 +125,7 @@ var DashboardInvitations = Widget.extend({
             view_type: 'form',
             view_mode: 'form',
             res_model: 'res.users',
-            views: [[this.data.user_form_id, 'form']],
+            views: [[this.data.user_form_view_id, 'form']],
             res_id: user_id,
         }
         this.do_action(action,{

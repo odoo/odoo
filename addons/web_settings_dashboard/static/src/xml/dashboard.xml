@@ -44,32 +44,27 @@
             <i class="fa fa-users fa-4x text-muted"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
-                <t t-set="users" t-value="widget.data.users"></t>
+                <t t-set="pending_users" t-value="widget.data.pending_users"></t>
                 <t t-if="active_users">
                     <t t-esc="active_users"></t> Active User<t t-if="active_users > 1">s</t>
                 </t>
             </div>
             <div class="text-center">
-                <a href="#" class="o_web_settings_dashboard_user" t-att-data-user-id="widget.data.template_user_id"> Manage access rights</a>
+                <a href="#" class="o_web_settings_dashboard_access_rights"> Manage access rights</a>
             </div>
             <hr/>
             <div class="o_web_settings_dashboard_invitation_form">
-                <strong>Invite new users</strong> <small class="text-muted">(with default rights)</small>
+                <strong>Add new users</strong> <small class="text-muted">(with default rights)</small>
                 <textarea rows="3" id="user_emails" placeholder="Enter e-mail addresses"></textarea>
-                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Send Invitations</strong></button>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invitations" role="button"> <strong><i class="fa fa-cog fa-spin hidden"/> Add Users</strong></button>
             </div>
             <div>
                 <small class="o_web_settings_dashboard_pending_users text-muted text-center">
-                    <t t-if="users.pending.length">
+                    <t t-if="pending_users.length">
                         <br/>
-                        <strong>Pending invitations:</strong><br/>
-                        <t t-foreach="users.pending" t-as="pending">
-                            <a><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
-                        </t>
-                        <br/>
-                        <strong>Expired invitations: </strong><br/>
-                        <t t-foreach="users.expired" t-as="expired">
-                            <a><div class="o_web_settings_dashboard_user" t-att-data-user-id="expired[0]" >  <t t-esc="expired[1]"/></div></a>
+                        <strong>Pending users:</strong><br/>
+                        <t t-foreach="pending_users" t-as="pending">
+                            <a href="#"><div class="o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/></div></a>
                         </t>
                     </t>
                 </small>

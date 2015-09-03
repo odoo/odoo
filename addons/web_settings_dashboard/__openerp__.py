@@ -2,14 +2,14 @@
 {
     'name': 'Odoo Settings Dashboard',
     'version': '1.0',
-    'summary': 'Quick actions for installing new app, user invitation, planners',
+    'summary': 'Quick actions for installing new app, adding users, completing planners, etc.',
     'category': 'Tools',
     'description':
     """
 Odoo dashboard
 ==============
 * Quick access to install apps
-* Quick users invite
+* Quick users add
 * Access all planners at one place
 * Quick access to the `App Store` and `Theme Store`
 
@@ -18,7 +18,7 @@ Odoo dashboard
         'views/dashboard_views.xml',
         'views/dashboard_templates.xml',
     ],
-    'depends': ['auth_signup', 'web_planner'],
+    'depends': ['web_planner'],
     'qweb': ['static/src/xml/dashboard.xml'],
     'auto_install': True,
 }
