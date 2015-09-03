@@ -10,7 +10,6 @@
         'views/ldap_installer_views.xml',
         'security/ir.model.access.csv',
     ],
-    'auto_install': False,
     'external_dependencies' : {
         'python' : ['ldap'],
     }

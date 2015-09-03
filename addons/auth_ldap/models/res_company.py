@@ -1,11 +1,11 @@
+# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ldap
-from openerp.osv import fields, osv
+from odoo import fields, models
 
-class res_company(osv.osv):
+
+class ResCompany(models.Model):
     _inherit = "res.company"
-    _columns = {
-        'ldaps': fields.one2many(
-            'res.company.ldap', 'company', 'LDAP Parameters', copy=True, groups="base.group_system"),
-    }
+
+    ldaps = fields.One2many('res.company.ldap', 'company', string='LDAP Parameters',
+                               copy=True, groups="base.group_system")
