@@ -766,7 +766,7 @@ class test_views(ViewCase):
                 E.p("Replacement data"),
                 E.footer(
                     E.button(name="action_next", type="object", string="New button"),
-                    thing="bibi bob lolo", otherthing="bibi,lolo"
+                    thing="bob lolo bibi", otherthing="lolo,bibi"
                 ),
                 string="Replacement title", version="7.0"))
 
