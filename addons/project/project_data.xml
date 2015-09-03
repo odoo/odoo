@@ -164,6 +164,15 @@
             <field name="stage_id" ref="project_stage_data_0"/>
         </record>
 
+        <record id="project_task_data_2" model="project.task">
+            <field name="sequence">4</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="priority">0</field>
+            <field name="project_id" ref="project.project_project_data"/>
+            <field name="name">Guess what happens if you set this task in high priority?</field>
+            <field name="description">Click on the star to change the priority and come back in the tasks view. You task is now at the top.</field>
+        </record>
+
         <record id="project_task_data_4" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
