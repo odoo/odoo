@@ -319,6 +319,8 @@ class ir_model_fields(osv.osv):
                 return {'warning': {'title': _("Warning"), 'message': e.message}}
             self.ttype = field.type
             self.relation = field.comodel_name
+            self.readonly = True
+            self.copy = False
 
     @api.one
     @api.constrains('relation_table')
