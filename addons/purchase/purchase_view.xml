@@ -151,10 +151,7 @@
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Set to Done" states="purchase"
                         help="If a purchase order is done, you can not modify it manually anymore. But you will still be able to bill or receive."/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"
-                        attrs="{'invisible': [('po_double_validation', '=', 'two_step')]}"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,to approve,purchase,done" readonly="1"
-                        attrs="{'invisible': [('po_double_validation', '=', 'one_step')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

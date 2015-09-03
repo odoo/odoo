@@ -280,12 +280,14 @@ class PurchaseOrder(models.Model):
                 line.product_id.write(vals)
 
         # Deal with double validation process
-        if self.user_has_groups('purchase.group_purchase_manager'):
+        if self.po_double_validation == 'one_step'\
+                or (self.po_double_validation == 'two_step'\
+                    and self.amount_total < self.env.user.company_id.currency_id.compute(self.company_id.po_double_validation_amount, self.currency_id))\
+                or self.user_has_groups('purchase.group_purchase_manager'):
             return self.button_approve()
-        elif self.po_double_validation == 'two_step':
-            self.write({'state': 'to approve'})
         else:
-            return self.button_approve()
+            self.write({'state': 'to approve'})
+            return {}
 
     @api.multi
     def button_cancel(self):
