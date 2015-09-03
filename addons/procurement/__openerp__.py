@@ -3,11 +3,10 @@
 
 
 {
-    'name' : 'Procurements',
-    'version' : '1.0',
+    'name': 'Procurements',
     'website': 'https://www.odoo.com/page/manufacturing',
-    'category' : 'Hidden/Dependency',
-    'depends' : ['base', 'product'],
+    'category': 'Hidden/Dependency',
+    'depends': ['base', 'product'],
     'description': """
 This is the module for computing Procurements.
 ==============================================
@@ -38,8 +37,6 @@ Procurements in exception should be checked manually and can be re-run.
         'company_view.xml',
         'product_product_view.xml',
     ],
-    'demo': [],
     'test': ['test/procurement.yml'],
-    'installable': True,
     'auto_install': True,
 }
