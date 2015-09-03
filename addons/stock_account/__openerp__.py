@@ -24,19 +24,19 @@ Dashboard / Reports for Warehouse Management includes:
     'category': 'Hidden',
     'sequence': 16,
     'demo': [
-        'stock_account_demo.yml'
+        'data/stock_account_demo.yml'
     ],
     'data': [
         'security/stock_account_security.xml',
         'security/ir.model.access.csv',
-        'stock_account_data.xml',
+        'data/stock_account_data.xml',
         'wizard/stock_change_standard_price_view.xml',
         'wizard/stock_valuation_history_view.xml',
-        'product_data.xml',
-        'product_view.xml',
-        'stock_account_view.xml',
-        'res_config_view.xml',
-        'stock_account_post_install.yml',
+        'data/product_data.xml',
+        'views/product_view.xml',
+        'views/stock_account_view.xml',
+        'views/stock_config_settings_view.xml',
+        'data/stock_account_post_install.yml',
     ],
     'test': [
 
