@@ -231,17 +231,3 @@ class GamificationBadge(models.Model):
 
         # badge.rule_auth == 'everyone' -> no check
         return self.CAN_GRANT
-
-    def check_progress(self, cr, uid, context=None):
-        try:
-            model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'badge_hidden')
-        except ValueError:
-            return True
-        badge_user_obj = self.pool.get('gamification.badge.user')
-        if not badge_user_obj.search(cr, uid, [('user_id', '=', uid), ('badge_id', '=', res_id)], context=context):
-            values = {
-                'user_id': uid,
-                'badge_id': res_id,
-            }
-            badge_user_obj.create(cr, SUPERUSER_ID, values, context=context)
-        return True

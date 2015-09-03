@@ -304,12 +304,6 @@ class GamificationChallenge(models.Model):
         self.check_challenge_reward()
         return True
 
-    def quick_update(self, cr, uid, challenge_id, context=None):
-        """Update all the goals of a specific challenge, no generation of new goals"""
-        goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('challenge_id', '=', challenge_id)], context=context)
-        self.pool.get('gamification.goal').update_goal(cr, uid, goal_ids, context=context)
-        return True
-
     def _get_challenger_users(self, domain):
         return self.env['res.users'].search(eval(ustr(domain)))
 
@@ -596,36 +590,6 @@ class GamificationChallenge(models.Model):
         return self.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
-    # TODO in trunk, remove unused parameter user_id
-    def accept_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
-        """The user accept the suggested challenge"""
-        return self._accept_challenge(cr, uid, uid, challenge_ids, context=context)
-
-    def _accept_challenge(self, cr, uid, user_id, challenge_ids, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
-        message = "%s has joined the challenge" % user.name
-        self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
-        self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
-        return self._generate_goals_from_challenge(cr, SUPERUSER_ID, challenge_ids, context=context)
-
-    # TODO in trunk, remove unused parameter user_id
-    def discard_challenge(self, cr, uid, challenge_ids, context=None, user_id=None):
-        """The user discard the suggested challenge"""
-        return self._discard_challenge(cr, uid, uid, challenge_ids, context=context)
-
-    def _discard_challenge(self, cr, uid, user_id, challenge_ids, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
-        message = "%s has refused the challenge" % user.name
-        self.message_post(cr, SUPERUSER_ID, challenge_ids, body=message, context=context)
-        return self.write(cr, SUPERUSER_ID, challenge_ids, {'invited_user_ids': (3, user_id)}, context=context)
-
-    def reply_challenge_wizard(self, cr, uid, challenge_id, context=None):
-        result = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'gamification', 'challenge_wizard')
-        id = result and result[1] or False
-        result = self.pool.get('ir.actions.act_window').read(cr, uid, [id], context=context)[0]
-        result['res_id'] = challenge_id
-        return result
-
     def check_challenge_reward(self, force=False):
         """Actions for the end of a challenge
 
